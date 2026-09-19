@@ -45,7 +45,7 @@ export function BoardScreen() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">Board and executives</h1>
+        <h1 className="font-display text-2xl leading-tight">Board and executives</h1>
         {pendingQuarter !== undefined && (
           <Button variant="primary" onClick={() => setPreparing(true)}>
             Prepare the Q{pendingQuarter} board paper

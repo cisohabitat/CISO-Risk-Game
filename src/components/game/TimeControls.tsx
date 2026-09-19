@@ -38,30 +38,46 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <div className="flex items-center gap-1 rounded-lg border border-line bg-surface-2 p-1">
-        <Button
-          size="sm"
-          variant={paused ? 'primary' : 'ghost'}
-          className="compact min-h-9 px-3"
-          aria-pressed={paused}
-          onClick={() => dispatch({ type: 'setSpeed', speed: 'paused' })}
-        >
-          <span aria-hidden="true">❚❚</span>
-          <span className="sr-only">Pause</span>
-        </Button>
-        {SPEEDS.map((speed) => (
+        {/* Phones get a single play/pause toggle; the speeds appear from the
+            tablet breakpoint up, where there is room for them. */}
+        <div className="sm:hidden">
           <Button
-            key={speed.value}
             size="sm"
-            variant={!paused && state.speed === speed.value ? 'primary' : 'ghost'}
-            className="compact min-h-9 px-3 tabular-nums"
-            aria-pressed={!paused && state.speed === speed.value}
-            title={speed.title}
+            variant={paused ? 'secondary' : 'primary'}
+            className="compact min-h-9 px-3"
             disabled={state.finished}
-            onClick={() => dispatch({ type: 'setSpeed', speed: speed.value })}
+            onClick={() => dispatch({ type: 'setSpeed', speed: paused ? '1x' : 'paused' })}
           >
-            {speed.label}
+            <span aria-hidden="true">{paused ? '▶' : '❚❚'}</span>
+            <span className="sr-only">{paused ? 'Resume time' : 'Pause time'}</span>
           </Button>
-        ))}
+        </div>
+        <div className="hidden items-center gap-1 sm:flex">
+          <Button
+            size="sm"
+            variant={paused ? 'primary' : 'ghost'}
+            className="compact min-h-9 px-3"
+            aria-pressed={paused}
+            onClick={() => dispatch({ type: 'setSpeed', speed: 'paused' })}
+          >
+            <span aria-hidden="true">❚❚</span>
+            <span className="sr-only">Pause</span>
+          </Button>
+          {SPEEDS.map((speed) => (
+            <Button
+              key={speed.value}
+              size="sm"
+              variant={!paused && state.speed === speed.value ? 'primary' : 'ghost'}
+              className="compact min-h-9 px-3 tabular-nums"
+              aria-pressed={!paused && state.speed === speed.value}
+              title={speed.title}
+              disabled={state.finished}
+              onClick={() => dispatch({ type: 'setSpeed', speed: speed.value })}
+            >
+              {speed.label}
+            </Button>
+          ))}
+        </div>
       </div>
       <Button
         size="sm"

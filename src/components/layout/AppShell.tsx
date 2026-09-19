@@ -35,17 +35,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-paper lg:flex-row">
+    /* On wide screens the rail stays put and only the content pane scrolls;
+       on small screens the page scrolls normally under a fixed bottom bar. */
+    <div className="flex min-h-[100dvh] flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:flex-row lg:overflow-hidden">
       {/* Desktop rail */}
       <nav
         aria-label="Primary"
-        className="hidden shrink-0 border-r border-line bg-surface lg:flex lg:w-60 lg:flex-col xl:w-64"
+        className="hidden shrink-0 border-r border-line bg-surface lg:flex lg:h-full lg:w-60 lg:flex-col xl:w-64"
       >
         <div className="border-b border-line px-5 py-5">
-          <p className="font-display text-lg leading-tight">CISO: First Year</p>
+          <p className="font-display text-xl leading-tight">CISO: First Year</p>
           <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
         </div>
-        <ul className="flex-1 space-y-1 p-3">
+        <ul className="scroll-area flex-1 space-y-1 p-3">
           {DESTINATIONS.map((destination) => (
             <li key={destination.id}>
               <button
@@ -99,7 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </nav>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col lg:h-full lg:overflow-hidden">
         <ShellHeader />
         <main
           id="main"
@@ -221,8 +223,10 @@ function ShellHeader() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
-        <div className="min-w-0 flex-1">
+      {/* One row on wide screens; on phones the clock drops to its own row so
+          the date and the save/theme controls stay readable. */}
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6 sm:py-3">
+        <div className="order-1 min-w-0 flex-1 lg:flex-none">
           <p className="truncate text-sm font-medium">
             {view.dateLabel}
             <span className="text-ink-faint"> · {view.weekLabel} · Q{view.quarter}</span>
@@ -231,8 +235,7 @@ function ShellHeader() {
             {money(view.budgetRemaining)} left · {view.focusRemaining}/{view.focusPerWeek} attention
           </p>
         </div>
-        <TimeControls compact />
-        <div className="flex items-center gap-1">
+        <div className="order-2 flex items-center gap-1 lg:order-3">
           <Button
             size="sm"
             variant="ghost"
@@ -253,6 +256,9 @@ function ShellHeader() {
             <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
             <span className="sr-only">{theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}</span>
           </Button>
+        </div>
+        <div className="order-3 w-full lg:order-2 lg:flex lg:w-auto lg:flex-1 lg:justify-end">
+          <TimeControls compact />
         </div>
       </div>
     </header>

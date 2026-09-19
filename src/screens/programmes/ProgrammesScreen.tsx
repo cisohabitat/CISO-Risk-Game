@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { programmeViews, type ProgrammeView } from '@/store/selectors'
-import { money, plural, statusLabel } from '@/lib/formatting/labels'
+import { functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
 
 export function ProgrammesScreen() {
   const state = useGameStore((store) => store.state)
@@ -37,7 +37,7 @@ export function ProgrammesScreen() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">Programmes</h1>
+        <h1 className="font-display text-2xl leading-tight">Programmes</h1>
         <p className="text-sm text-ink-muted text-pretty">
           {money(state.resources.budgetRemaining)} of cyber budget remains. Everything still on the table would cost{' '}
           {money(totalCost)}, so this is a choice rather than a plan.
@@ -173,7 +173,7 @@ export function ProgrammesScreen() {
                       <Fact label="Runs for" value={`about ${Math.round(programme.durationDays / 30)} months`} />
                       <Fact
                         label="People it needs"
-                        value={programme.capacityDemand.map((demand) => `${demand.fn} ${demand.days}d/wk`).join(', ')}
+                        value={programme.capacityDemand.map((demand) => `${functionLabel(demand.fn)} ${demand.days}d/wk`).join(', ')}
                       />
                       <Fact label="Improves" value={programme.controlImpact.join(', ')} />
                     </dl>

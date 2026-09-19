@@ -56,7 +56,7 @@ export function InboxScreen() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">Inbox</h1>
+        <h1 className="font-display text-2xl leading-tight">Inbox</h1>
         <Tabs value={filter} onChange={(value) => setFilter(value as Filter)}>
           <TabList label="Filter messages">
             {FILTERS.map((item) => (

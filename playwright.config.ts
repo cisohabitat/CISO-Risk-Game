@@ -17,6 +17,9 @@ const chromiumLaunch = existsSync(LOCAL_CHROMIUM)
  */
 export default defineConfig({
   testDir: './tests/e2e',
+  // The screenshot gallery is a review aid, not a check: run it on demand with
+  // `pnpm screenshots`.
+  testIgnore: ['**/screenshots.spec.ts'],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

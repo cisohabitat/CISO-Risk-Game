@@ -31,3 +31,36 @@ export async function expectNoHorizontalScroll(page: Page): Promise<void> {
   })
   expect(overflow, 'page-level horizontal scrolling appeared').toBeLessThanOrEqual(1)
 }
+
+/**
+ * Returns the labels of any control that is cut off by the viewport.
+ *
+ * A control inside a deliberately scrollable strip (a filter row, a tab list)
+ * is reachable and does not count; one that simply overflows the page does.
+ */
+export async function offscreenControls(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const viewportWidth = document.documentElement.clientWidth
+    const inScrollableStrip = (element: Element): boolean => {
+      let current: Element | null = element.parentElement
+      while (current && current !== document.body) {
+        const style = getComputedStyle(current)
+        const scrolls = style.overflowX === 'auto' || style.overflowX === 'scroll'
+        if (scrolls && current.scrollWidth > current.clientWidth + 1) return true
+        current = current.parentElement
+      }
+      return false
+    }
+
+    const problems: string[] = []
+    for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"]'))) {
+      const rect = element.getBoundingClientRect()
+      if (rect.width === 0 && rect.height === 0) continue
+      if (inScrollableStrip(element)) continue
+      if (rect.left < -1 || rect.right > viewportWidth + 1) {
+        problems.push((element.textContent ?? element.ariaLabel ?? 'control').trim().slice(0, 40))
+      }
+    }
+    return problems
+  })
+}

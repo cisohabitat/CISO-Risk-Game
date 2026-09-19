@@ -40,7 +40,7 @@ export function DebriefScreen() {
   if (!review) {
     return (
       <div className="space-y-4">
-        <h1 className="text-xl font-semibold">Your year</h1>
+        <h1 className="font-display text-2xl leading-tight">Your year</h1>
         <Card>
           <CardBody className="space-y-3">
             <p className="text-pretty">

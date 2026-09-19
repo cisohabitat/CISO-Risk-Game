@@ -15,6 +15,7 @@ import type {
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
 import { commitCapacity, delegationDelayDays, delegationQuality, teamStrain } from './capacity'
+import { DIFFICULTY_PROFILES } from '../engine/setup'
 
 export interface AssignmentTickResult {
   effects: GameEffect[]
@@ -41,8 +42,11 @@ export function startInvestigation(
 
   state.team.assignmentCounter += 1
   const id = `asg-${state.team.assignmentCounter}`
-  // Slower when the person is already loaded; never faster than authored.
-  const loadPenalty = Math.round(def.durationDays * 0.4 * clamp01(leader.workload))
+  // Slower when the person is already loaded, and slower again on the harder
+  // difficulties, where everything takes longer than it should.
+  const speed = DIFFICULTY_PROFILES[state.difficulty].investigationSpeed
+  const baseDays = Math.max(3, Math.round(def.durationDays * speed))
+  const loadPenalty = Math.round(baseDays * 0.4 * clamp01(leader.workload))
   const assignment: AssignmentState = {
     id,
     kind: 'investigation',
@@ -50,7 +54,7 @@ export function startInvestigation(
     title: def.name,
     leaderId,
     startedDay: state.currentDay,
-    dueDay: state.currentDay + def.durationDays + loadPenalty,
+    dueDay: state.currentDay + baseDays + loadPenalty,
     progress: 0,
     capacityPerDay: def.capacityPerDay,
     status: 'running',

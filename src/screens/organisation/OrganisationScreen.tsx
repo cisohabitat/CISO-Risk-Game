@@ -37,7 +37,7 @@ export function OrganisationScreen() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold">Organisation</h1>
+          <h1 className="font-display text-2xl leading-tight">Organisation</h1>
           <p className="text-sm text-ink-muted">
             {plural(nodes.length, 'system')} discovered.{' '}
             {unknown.nodes + unknown.edges > 0
@@ -118,7 +118,7 @@ export function OrganisationScreen() {
             </div>
 
             <div className={cn(graphMode === 'graph' && 'sm:hidden')}>
-              <ul className="space-y-2">
+              <ul className="space-y-2" aria-label="Discovered systems">
                 {filtered.map((node) => (
                   <li key={node.id}>
                     <button

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
+import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign } from './helpers'
 
 test.describe('a first year at Nexora', () => {
   test('a new player reaches a real decision within the first minute', async ({ page }) => {
@@ -115,6 +115,24 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByText('Warehouse Management (Meridian)')).toHaveCount(0)
   })
 
+  test('the dependency graph renders and has a list equivalent', async ({ page }) => {
+    await startCampaign(page, 'e2e-graph')
+    await goTo(page, 'Organisation')
+
+    const width = page.viewportSize()?.width ?? 1280
+    if (width >= 640) {
+      await page.getByRole('button', { name: 'Graph', exact: true }).click()
+      // The graph library is lazy-loaded, so give the chunk time to arrive.
+      await expect(page.getByText('Nexora Pay').first()).toBeVisible({ timeout: 20_000 })
+    }
+
+    // The list view is always available, and is the default on small screens.
+    await page.getByRole('button', { name: 'List', exact: true }).click()
+    const list = page.getByRole('list', { name: 'Discovered systems' })
+    await expect(list.getByText('Nexora Pay').first()).toBeVisible()
+    await expect(list.getByText('Business service').first()).toBeVisible()
+  })
+
   test('the glossary is reachable from anywhere', async ({ page }) => {
     await startCampaign(page, 'e2e-glossary')
     const nav = page.getByRole('navigation', { name: 'Primary' })
@@ -186,16 +204,8 @@ test.describe('a first year at Nexora', () => {
     for (const screen of ['Briefing', 'Inbox', 'Risk', 'Organisation', 'Programmes', 'Team', 'Board']) {
       await goTo(page, screen)
       await expectNoHorizontalScroll(page)
-      // Primary actions must stay on screen.
-      const buttons = page.getByRole('button')
-      const count = Math.min(await buttons.count(), 12)
-      const width = page.viewportSize()?.width ?? 1280
-      for (let i = 0; i < count; i += 1) {
-        const box = await buttons.nth(i).boundingBox()
-        if (!box) continue
-        expect(box.x).toBeGreaterThanOrEqual(-1)
-        expect(box.x + box.width).toBeLessThanOrEqual(width + 1)
-      }
+      const offscreen = await offscreenControls(page)
+      expect(offscreen, `controls off-screen on ${screen}: ${offscreen.join(', ')}`).toEqual([])
     }
   })
 

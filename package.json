@@ -18,7 +18,10 @@
     "test:soak": "vitest run tests/engine/soak.test.ts",
     "validate:content": "tsx scripts/validate-content.ts",
     "test:e2e": "playwright test",
-    "check": "pnpm typecheck && pnpm lint && pnpm validate:content && pnpm test"
+    "check": "pnpm typecheck && pnpm lint && pnpm validate:content && pnpm test",
+    "test:e2e:local": "playwright test --project=desktop-chromium --project=tablet-portrait --project=tablet-landscape --project=phone --project=phone-320",
+    "screenshots": "playwright test --config playwright.screenshots.config.ts --project=desktop-chromium --project=phone",
+    "soak": "tsx scripts/soak.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

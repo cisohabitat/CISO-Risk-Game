@@ -221,7 +221,9 @@ export interface DiscoveredNodeView {
 export function discoveredNodes(state: GameState, index: ContentIndex): DiscoveredNodeView[] {
   const pathNodeIds = new Set<string>()
   for (const scenario of Object.values(state.risks.scenarios)) {
-    if (scenario.status === 'closed') continue
+    // Only scenarios the player has actually worked up reveal their attack
+    // paths. An inherited "emerging" entry is a hint, not an understanding.
+    if (scenario.status === 'closed' || scenario.status === 'emerging') continue
     const def = index.riskScenario.get(scenario.id)
     for (const pathId of def?.attackPathIds ?? []) {
       for (const step of index.attackPath.get(pathId)?.steps ?? []) pathNodeIds.add(step.nodeId)

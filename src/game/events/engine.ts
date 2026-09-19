@@ -90,7 +90,11 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
     for (let i = 0; i < budget; i += 1) {
       const remaining = pool.filter((def) => !firedThisDay.has(def.id))
       if (remaining.length === 0) break
-      const chosen = rng.weighted(remaining, (def) => def.weight)
+      // Harder difficulties bury the material signal in more noise (plan §44).
+      const noiseMultiplier = state.difficulty === 'guided' ? 0.7 : state.difficulty === 'high-pressure' ? 1.3 : 1
+      const chosen = rng.weighted(remaining, (def) =>
+        def.tags.includes('noise') ? def.weight * noiseMultiplier : def.weight,
+      )
       if (!chosen) break
       fire(chosen)
     }

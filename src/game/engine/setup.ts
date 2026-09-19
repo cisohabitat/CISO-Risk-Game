@@ -79,11 +79,15 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
 
   const nodes: Record<string, OrgNodeState> = {}
   for (const def of content.nodes) {
+    // Difficulty changes how much of the estate the previous CISO left
+    // documented, rather than changing attack probability (plan §44).
+    const inheritedSight =
+      def.knownAtStart || (def.criticality !== 'low' && worldRng.chance(profile.startingDiscovery * 0.5))
     nodes[def.id] = {
       id: def.id,
       exists: true,
-      discovered: def.knownAtStart,
-      discoveryConfidence: def.knownAtStart ? clamp01(0.55 + worldRng.jitter(0.15)) : 0,
+      discovered: inheritedSight,
+      discoveryConfidence: inheritedSight ? clamp01(0.35 + profile.startingDiscovery + worldRng.jitter(0.15)) : 0,
       exposure: clamp01(def.exposure + worldRng.jitter(0.12)),
       weakness: clamp01(def.weakness + worldRng.jitter(0.14)),
       notes: [],

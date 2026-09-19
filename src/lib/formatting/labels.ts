@@ -138,3 +138,16 @@ export function plural(count: number, singular: string, pluralForm?: string): st
 export function dayLabel(day: number): string {
   return `Day ${day}`
 }
+
+const FUNCTION_SHORT_LABELS: Record<string, string> = {
+  soc: 'SOC',
+  engineering: 'Engineering',
+  architecture: 'Architecture',
+  grc: 'Cyber risk',
+  iam: 'Identity',
+  'incident-response': 'Incident response',
+}
+
+export function functionLabel(fn: string): string {
+  return FUNCTION_SHORT_LABELS[fn] ?? fn
+}

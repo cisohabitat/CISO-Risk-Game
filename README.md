@@ -32,8 +32,11 @@ Other commands:
 | `pnpm test:soak` | Seeded soak campaigns only |
 | `pnpm validate:content` | Schema and referential validation of the campaign |
 | `pnpm test:e2e` | Playwright across desktop, tablet, phone and 320px |
+| `pnpm test:e2e:local` | The same without WebKit, for machines that cannot fetch it |
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm check` | Everything short of end-to-end |
+| `pnpm soak 1000` | 1,000 headless campaigns, checking for crashes and invariant failures |
+| `pnpm screenshots` | Capture the screens for visual review |
 | `pnpm tsx scripts/tune.ts 25` | Balance harness across policies and seeds |
 
 ## How it is put together
@@ -92,6 +95,24 @@ schemas and a referential integrity pass:
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.
 
+## How it behaves
+
+1,000 automated campaigns across all three difficulties (`pnpm soak 1000`, about
+50 seconds):
+
+```
+  crashes            0
+  invariant failures 0
+  incidents per run  1.32
+  years with none    26%
+  years with 4+      3%
+```
+
+A year is neither a procession of disasters nor a year in which nothing happens,
+and stronger controls measurably reduce both the number of incidents and what
+they cost — without ever guaranteeing a clean year. Both properties are asserted
+in `tests/engine/soak.test.ts`.
+
 ## Replayability
 
 Every campaign has a visible seed. The seed fixes which awkward dependencies
@@ -111,6 +132,9 @@ IndexedDB. See [`docs/HOSTING.md`](docs/HOSTING.md), including the release gate.
 
 Vercel Hobby is for personal, non-commercial use. A commercial or organisational
 deployment needs an appropriate paid plan.
+
+WebKit coverage runs in CI (`pnpm exec playwright install webkit`). Sandboxes
+that cannot download it should use `pnpm test:e2e:local`.
 
 ## Accessibility
 
