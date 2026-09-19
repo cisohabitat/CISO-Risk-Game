@@ -4,9 +4,10 @@
  */
 import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
 import { DecisionList } from '@/components/decisions/DecisionList'
+import { Collisions } from '@/components/game/Collisions'
 import { useGameStore } from '@/store/game-store'
 import { briefing, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
-import { bandTone, capacityTone, confidenceTone, money, plural, statusLabel } from '@/lib/formatting/labels'
+import { bandTone, capacityTone, confidenceTone, money, plural } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
@@ -27,27 +28,6 @@ export function HomeScreen() {
 
   return (
     <div className="space-y-6">
-      {view.activeIncident && (
-        <Card className="border-band-severe/60 bg-band-severe-soft/40">
-          <CardBody>
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <Badge tone="severe">Live incident</Badge>
-                <h2 className="mt-2 text-lg font-semibold">{view.activeIncident.name}</h2>
-                <p className="mt-1 text-sm text-ink-muted">
-                  {statusLabel(view.activeIncident.phase)}
-                  {view.activeIncident.servicesAffected.length > 0 &&
-                    ` · affecting ${view.activeIncident.servicesAffected.join(', ')}`}
-                </p>
-              </div>
-              <Button variant="primary" onClick={() => setScreen('inbox')}>
-                Go to the response
-              </Button>
-            </div>
-          </CardBody>
-        </Card>
-      )}
-
       <section aria-labelledby="standing">
         <h1 id="standing" className="sr-only">Today's briefing</h1>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -79,6 +59,8 @@ export function HomeScreen() {
           />
         </div>
       </section>
+
+      <Collisions />
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">

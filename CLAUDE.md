@@ -62,6 +62,37 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **An incident looked like ordinary management.** The simulation ran incidents
+  well and the interface showed one as a line on the Home screen, so the
+  organisation could be in crisis while the game still looked like a quiet
+  Tuesday. There is now a command view above every screen while an incident
+  runs: what the player has been told, what they have already decided, and what
+  is waiting on them. It is assembled from their own inbox and their own
+  choices — reading the attack path would put the hidden graph on screen, and a
+  test checks every timeline entry against a message they were actually sent.
+
+  Wiring it up found a dead field. `IncidentRuntime.decisionsTaken` was
+  initialised at creation and nothing ever wrote to it, so no record of what was
+  decided during a response existed anywhere. Choices taken while an incident is
+  live are now recorded against it; the section appears in every campaign that
+  has an incident, where it appeared in none before.
+
+- **The three clocks never met on screen.** The business date, the programme
+  that would cover it and the risks raised against it each lived on their own
+  screen, leaving the player to notice for themselves that the control arrives
+  after the launch. `collisions` joins them: an objective due soon, the
+  programme whose next milestone would cover what it depends on, and whether
+  that milestone lands first. Expressed as *covered*, *close*, *too late* or
+  *not started*, never as a date the game cannot stand behind.
+
+  Two things it deliberately does not do. It follows dependencies only through
+  edges the player has discovered, so the collision becomes visible as they map
+  the organisation rather than being handed to them. And it says nothing at all
+  about an objective no programme could cover — "nothing covers this" every day
+  for a year teaches people to stop reading. Measured over 24 campaigns: an
+  engaged player meets a collision in 9, all of them *close* or *too late*; an
+  idle one carries a *not started* warning about the platform launch from day 60.
+
 - **The whole campaign was inside the app's JavaScript chunk.** 298 kB of
   content JSON sat in a 587 kB main chunk, and it grows with every authored
   event — the consequence callbacks added 23 kB without anybody noticing. The

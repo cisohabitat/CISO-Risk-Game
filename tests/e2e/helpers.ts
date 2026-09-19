@@ -3,7 +3,12 @@ import { expect, type Page } from '@playwright/test'
 export async function startCampaign(page: Page, seed = 'e2e-seed'): Promise<void> {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+  // The seed is a replay tool, folded away so a first-time player is not asked
+  // about the machinery before they have started. A player who wants a
+  // particular world opens it, and so does this helper.
+  await page.locator('summary', { hasText: 'Replay settings' }).click()
   const seedField = page.getByLabel('Campaign seed')
+  await expect(seedField).toBeVisible()
   await seedField.fill(seed)
   await page.getByRole('button', { name: 'Begin your first day' }).click()
   await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible({ timeout: 20_000 })

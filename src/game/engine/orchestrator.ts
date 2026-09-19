@@ -172,6 +172,21 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       state.decisions.openIds = state.decisions.openIds.filter((id) => id !== action.decisionId)
       state.decisions.resolvedIds.push(action.decisionId)
 
+      // A choice taken while an incident is running belongs to that incident's
+      // record. The field existed and nothing ever wrote to it, so neither the
+      // live command view nor the reconstruction could show what was decided
+      // during the response.
+      const liveIncident = Object.values(state.incidents.incidents).find(
+        (candidate) => candidate.phase !== 'closed',
+      )
+      if (liveIncident) {
+        liveIncident.decisionsTaken.push({
+          decisionId: action.decisionId,
+          optionId: option.id,
+          day: state.currentDay,
+        })
+      }
+
       for (const assumptionDefId of option.assumptionIds ?? []) {
         const id = recordAssumption(state, { index, rng, source: 'decision' }, assumptionDefId, action.decisionId)
         if (id) decision.assumptionIds.push(id)

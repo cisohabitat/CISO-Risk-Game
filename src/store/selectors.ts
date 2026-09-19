@@ -18,6 +18,7 @@ import { calculateControlEffectiveness, controlBand } from '@/game/controls/effe
 import { capacityBand, functionStrain, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
+import { statusLabel } from '@/lib/formatting/labels'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -578,4 +579,195 @@ export function incidentViews(state: GameState, index: ContentIndex) {
       }
     })
     .filter((view): view is NonNullable<typeof view> => Boolean(view))
+}
+
+export interface IncidentCommandView {
+  id: string
+  name: string
+  phase: string
+  phaseLabel: string
+  startedDay: number
+  detectedDay?: number
+  daysRunning: number
+  servicesAffected: string[]
+  /** What the player has been told, in the order they were told it. */
+  timeline: { day: number; text: string }[]
+  /** Response choices waiting on the CISO right now. */
+  awaiting: { decisionId: string; title: string }[]
+  /** Choices already made in this incident, so the record is visible while it runs. */
+  taken: { day: number; title: string; option: string }[]
+}
+
+/**
+ * The live incident, assembled for a command view rather than a status line.
+ *
+ * Built only from what the player has been told — the incident messages in
+ * their inbox and the choices they have made — rather than from the simulation's
+ * own knowledge of the path. Reading the attack path here would put the hidden
+ * graph on screen, which is the one thing the UI may never do.
+ */
+export function incidentCommand(state: GameState, index: ContentIndex): IncidentCommandView | undefined {
+  const incident = Object.values(state.incidents.incidents).find((candidate) => candidate.phase !== 'closed')
+  if (!incident) return undefined
+  const family = index.incidentFamily.get(incident.familyId)
+
+  const timeline = state.inbox.messages
+    .filter((message) => message.type === 'incident' && message.day >= incident.startedDay)
+    .map((message) => ({ day: message.day, text: message.body || message.subject }))
+    .sort((a, b) => a.day - b.day)
+
+  const awaiting: IncidentCommandView['awaiting'] = []
+  for (const decisionId of state.decisions.openIds) {
+    const runtime = state.decisions.decisions[decisionId]
+    const def = runtime ? index.decision.get(runtime.defId) : undefined
+    if (!def || !def.id.startsWith('dec-inc-')) continue
+    awaiting.push({ decisionId, title: def.title })
+  }
+
+  const taken: IncidentCommandView['taken'] = []
+  for (const entry of incident.decisionsTaken) {
+    const runtime = state.decisions.decisions[entry.decisionId]
+    const def = runtime ? index.decision.get(runtime.defId) : undefined
+    const option = def?.options.find((candidate) => candidate.id === entry.optionId)
+    if (def) taken.push({ day: entry.day, title: def.title, option: option?.label ?? entry.optionId })
+  }
+
+  return {
+    id: incident.id,
+    name: family?.name ?? 'Incident',
+    phase: incident.phase,
+    phaseLabel: statusLabel(incident.phase),
+    startedDay: incident.startedDay,
+    detectedDay: incident.detectionDay,
+    daysRunning: state.currentDay - incident.startedDay,
+    servicesAffected: incident.affectedServiceIds
+      .map((serviceId) => index.service.get(serviceId)?.name)
+      .filter((name): name is string => Boolean(name)),
+    timeline,
+    awaiting,
+    taken: taken.sort((a, b) => a.day - b.day),
+  }
+}
+
+export interface CollisionView {
+  objectiveId: string
+  objectiveName: string
+  ownerName?: string
+  daysUntilTarget: number
+  /** The programme that would cover this objective's dependencies, if any. */
+  programmeName?: string
+  milestoneName?: string
+  /** Where the cover lands relative to the business date, in plain words. */
+  verdict: 'covered' | 'close' | 'too-late' | 'not-started' | 'nothing-relevant'
+  /** Risks the player has already raised on the same dependencies. */
+  exposedRiskTitles: string[]
+}
+
+/**
+ * Where the business clock, the programme clock and the threat picture meet
+ * (plan §13). All three were simulated and shown separately, so the player had
+ * to hold them in their head to notice that the control which would cover a
+ * launch is not going to arrive until after it.
+ *
+ * Everything here is derived from what the player can already see: the
+ * objective's own date, the progress their programme has actually made, and
+ * risks they have raised themselves.
+ */
+export function collisions(state: GameState, index: ContentIndex, horizonDays = 120): CollisionView[] {
+  const out: CollisionView[] = []
+
+  for (const def of index.content.objectives) {
+    const runtime = state.business.objectives[def.id]
+    if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue
+    const targetDay = runtime.targetDay + runtime.delayDays
+    const daysUntilTarget = targetDay - state.currentDay
+    if (daysUntilTarget < 0 || daysUntilTarget > horizonDays) continue
+
+    // What the objective rests on, plus what those things rest on in turn —
+    // but only through dependencies the player has actually discovered. The
+    // collision becomes visible as they map the organisation, which is the
+    // right way round: you cannot see it coming if you never looked.
+    const dependencies = new Set(def.dependencyNodeIds)
+    for (const edgeDef of index.content.edges) {
+      const edge = state.organisation.edges[edgeDef.id]
+      if (!edge?.exists || !edge.discovered) continue
+      if (dependencies.has(edgeDef.from)) dependencies.add(edgeDef.to)
+      if (dependencies.has(edgeDef.to)) dependencies.add(edgeDef.from)
+    }
+
+    // Controls that actually sit on what this objective depends on.
+    const relevantControls = new Set(
+      index.content.controls
+        .filter((control) => control.targetNodeIds.some((nodeId) => dependencies.has(nodeId)))
+        .map((control) => control.id),
+    )
+
+    let best:
+      | { programmeName: string; milestoneName: string; verdict: CollisionView['verdict'] }
+      | undefined
+
+    for (const programme of index.content.programmes) {
+      const covers = programme.milestones.some((milestone) =>
+        milestone.controlEffects.some((effect) => relevantControls.has(effect.controlId)),
+      )
+      if (!covers) continue
+      const programmeRuntime = state.programmes.programmes[programme.id]
+      if (!programmeRuntime) continue
+
+      const next = programme.milestones.find(
+        (milestone) =>
+          !programmeRuntime.completedMilestoneIds.includes(milestone.id) &&
+          milestone.controlEffects.some((effect) => relevantControls.has(effect.controlId)),
+      )
+      if (!next) {
+        best = { programmeName: programme.name, milestoneName: 'already delivered', verdict: 'covered' }
+        break
+      }
+      if (programmeRuntime.status === 'proposed') {
+        if (!best) best = { programmeName: programme.name, milestoneName: next.name, verdict: 'not-started' }
+        continue
+      }
+
+      // Rate the programme has actually managed, not the rate it was sold at.
+      const daysRunning = Math.max(1, state.currentDay - (programmeRuntime.startedDay ?? state.currentDay))
+      const rate = programmeRuntime.progress / daysRunning
+      const remaining = next.atProgress - programmeRuntime.progress
+      const daysToMilestone = rate > 0 ? remaining / rate : Number.POSITIVE_INFINITY
+      const verdict: CollisionView['verdict'] =
+        daysToMilestone <= daysUntilTarget
+          ? 'covered'
+          : daysToMilestone <= daysUntilTarget * 1.3
+            ? 'close'
+            : 'too-late'
+      const rank = { covered: 0, close: 1, 'too-late': 2, 'not-started': 3, 'nothing-relevant': 4 }
+      if (!best || rank[verdict] < rank[best.verdict]) {
+        best = { programmeName: programme.name, milestoneName: next.name, verdict }
+      }
+    }
+
+    const exposedRiskTitles = Object.values(state.risks.scenarios)
+      .filter((scenario) => scenario.status === 'open' || scenario.status === 'accepted')
+      .map((scenario) => index.riskScenario.get(scenario.id))
+      .filter((scenarioDef): scenarioDef is NonNullable<typeof scenarioDef> => Boolean(scenarioDef))
+      .filter((scenarioDef) => scenarioDef.triggerNodeIds.some((nodeId) => dependencies.has(nodeId)))
+      .map((scenarioDef) => scenarioDef.title)
+
+    // An objective nothing you could run would help is not a collision, it is
+    // just a date. Saying so daily would teach the player to stop reading this.
+    if (!best) continue
+
+    out.push({
+      objectiveId: def.id,
+      objectiveName: def.name,
+      ownerName: index.stakeholder.get(def.ownerStakeholderId)?.name,
+      daysUntilTarget,
+      programmeName: best?.programmeName,
+      milestoneName: best?.milestoneName,
+      verdict: best?.verdict ?? 'nothing-relevant',
+      exposedRiskTitles,
+    })
+  }
+
+  // Soonest first: the collision that matters is the one arriving next.
+  return out.sort((a, b) => a.daysUntilTarget - b.daysUntilTarget)
 }

@@ -17,6 +17,7 @@ import { DebriefScreen } from '@/screens/debrief/DebriefScreen'
 import { DecisionDialog } from '@/components/decisions/DecisionDialog'
 import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
+import { IncidentCommand } from '@/components/game/IncidentCommand'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
@@ -63,6 +64,7 @@ export function App() {
         Skip to content
       </a>
       <AppShell>
+        <IncidentCommand />
         <Onboarding />
         {state.finished && screen !== 'debrief' && (
           <Card className="mb-4 border-brass/50 bg-brass-soft/40">

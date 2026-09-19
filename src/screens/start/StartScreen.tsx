@@ -145,24 +145,32 @@ export function StartScreen() {
               </div>
             </fieldset>
 
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
-                Campaign seed
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <input
-                  value={seed}
-                  onChange={(event) => setSeed(event.target.value)}
-                  className="min-w-0 flex-1 rounded-lg border border-line bg-surface-2 px-3 py-2.5 text-base"
-                  aria-describedby="seed-help"
-                />
-                <Button variant="quiet" onClick={() => setSeed(randomSeed())}>New seed</Button>
-              </div>
-              <p id="seed-help" className="mt-2 text-sm text-ink-muted text-pretty">
-                The seed fixes this world's hidden configuration: which awkward dependencies exist, how good the controls
-                really are, and what the executives are like. The same seed always produces the same Nexora.
-              </p>
-            </label>
+            {/*
+              Folded away by default. The seed is a replay tool, not part of
+              arriving as the new CISO, and a first-time player asked to choose
+              one before they have started is being asked about the machinery.
+            */}
+            <details className="rounded-lg border border-line bg-surface-2/60 p-3">
+              <summary className="cursor-pointer text-sm font-medium">Replay settings</summary>
+              <label className="mt-3 block">
+                <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+                  Campaign seed
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <input
+                    value={seed}
+                    onChange={(event) => setSeed(event.target.value)}
+                    className="min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 py-2.5 text-base"
+                    aria-describedby="seed-help"
+                  />
+                  <Button variant="quiet" onClick={() => setSeed(randomSeed())}>New seed</Button>
+                </div>
+                <p id="seed-help" className="mt-2 text-sm text-ink-muted text-pretty">
+                  The seed fixes this world's hidden configuration: which awkward dependencies exist, how good the
+                  controls really are, and what the executives are like. The same seed always produces the same Nexora.
+                </p>
+              </label>
+            </details>
 
             <Button
               variant="primary"
