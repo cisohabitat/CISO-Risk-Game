@@ -226,6 +226,24 @@ export function DebriefScreen() {
         </section>
       )}
 
+      {(review.reasoning ?? []).length > 0 && (
+        <section aria-labelledby="reasoning">
+          <SectionHeading><span id="reasoning">The reasoning you used</span></SectionHeading>
+          <Card>
+            <CardBody>
+              <ul className="space-y-3 text-sm">
+                {(review.reasoning ?? []).map((line) => (
+                  <li key={line.tagId} className="border-b border-line pb-3 last:border-0 last:pb-0">
+                    <p className="font-medium">{line.label}</p>
+                    <p className="mt-0.5 text-ink-muted text-pretty">{line.verdict}</p>
+                  </li>
+                ))}
+              </ul>
+            </CardBody>
+          </Card>
+        </section>
+      )}
+
       {review.blindSpots.length > 0 && (
         <section aria-labelledby="blind-spots">
           <SectionHeading><span id="blind-spots">What you never looked at</span></SectionHeading>

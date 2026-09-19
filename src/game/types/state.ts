@@ -459,6 +459,24 @@ export interface AnnualReview {
   performanceBand: string
   businessOutcome: string
   blindSpots: string[]
+  /**
+   * The reasons the player gave for their choices, and how they held up.
+   * Optional because a finished campaign's review is stored in the save, and
+   * one written before this existed cannot have it reconstructed — the section
+   * is simply absent there rather than the debrief failing to open.
+   */
+  reasoning?: ReasoningLine[]
+}
+
+export interface ReasoningLine {
+  tagId: string
+  label: string
+  uses: number
+  /** Risks carried on this reasoning that reached the business anyway. */
+  materialised: number
+  /** Assumptions recorded alongside it that turned out not to hold. */
+  assumptionsFailed: number
+  verdict: string
 }
 
 export interface TutorialState {

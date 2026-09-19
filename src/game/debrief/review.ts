@@ -11,6 +11,7 @@ import type {
   GameEffect,
   GameState,
   QuarterReviewState,
+  ReasoningLine,
 } from '../types'
 import { clamp01 } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
@@ -124,6 +125,93 @@ export function buildQuarterReview(
     completed: true,
     effects,
   }
+}
+
+/**
+ * The reasons the player gave, and whether the year bore them out.
+ *
+ * A count of how many choices carried a rationale says nothing about whether
+ * the reasoning was any good. This joins each rationale to what happened next:
+ * a risk carried as "within tolerance" that reached the business anyway, an
+ * assurance assumption recorded beside a choice that later turned out not to
+ * hold. It is the question the whole game is asking, so the debrief should put
+ * it to the player in their own words rather than in a score.
+ */
+export function reasoningReview(state: GameState, index: ContentIndex): ReasoningLine[] {
+  const tally = new Map<string, { uses: number; materialised: number; assumptionsFailed: number }>()
+  // Counted as occasions, not incidents: a choice contradicted by three of its
+  // assumptions is one occasion where the reasoning did not hold, so the tallies
+  // stay readable against the number of times the reasoning was used.
+  const bump = (tagId: string, field: 'uses' | 'materialised' | 'assumptionsFailed') => {
+    const row = tally.get(tagId) ?? { uses: 0, materialised: 0, assumptionsFailed: 0 }
+    row[field] += 1
+    tally.set(tagId, row)
+  }
+
+  const incidentPaths = new Set(
+    Object.values(state.incidents.incidents)
+      .map((incident) => incident.pathId)
+      .filter((pathId): pathId is string => Boolean(pathId)),
+  )
+  const assumptions = Object.values(state.assumptions.assumptions)
+
+  // Choices the player took themselves. A lapsed decision carries no reasoning
+  // by definition, so it is not evidence about any rationale.
+  for (const decision of Object.values(state.decisions.decisions)) {
+    if (decision.resolvedByDefault || decision.resolvedDay === undefined) continue
+    const failedHere = assumptions.filter(
+      (assumption) => assumption.linkedDecisionId === decision.id && assumption.status === 'invalidated',
+    ).length
+    for (const tagId of decision.rationaleTagIds) {
+      bump(tagId, 'uses')
+      if (failedHere > 0) bump(tagId, 'assumptionsFailed')
+    }
+  }
+
+  // Risks the player decided to carry, and what became of them.
+  for (const entry of state.history.entries) {
+    if (entry.kind !== 'risk-accepted') continue
+    const [scenarioId, ...tagIds] = entry.refs ?? []
+    if (!scenarioId || tagIds.length === 0) continue
+    const def = index.riskScenario.get(scenarioId)
+    const scenario = state.risks.scenarios[scenarioId]
+    const realised = Boolean(def?.attackPathIds.some((pathId) => incidentPaths.has(pathId)))
+    const failedHere = (scenario?.assumptionIds ?? []).filter(
+      (id) => state.assumptions.assumptions[id]?.status === 'invalidated',
+    ).length
+    for (const tagId of tagIds) {
+      bump(tagId, 'uses')
+      if (realised) bump(tagId, 'materialised')
+      if (failedHere > 0) bump(tagId, 'assumptionsFailed')
+    }
+  }
+
+  const lines: ReasoningLine[] = []
+  for (const [tagId, row] of tally) {
+    const label = index.rationaleTag.get(tagId)?.label ?? tagId
+    const times = `${row.uses} time${row.uses === 1 ? '' : 's'}`
+    let verdict: string
+    if (row.materialised > 0 && row.assumptionsFailed > 0) {
+      verdict = `You leaned on this ${times}. On ${row.materialised} the risk you carried reached the business anyway, and on ${row.assumptionsFailed} the assurance underneath it turned out not to hold.`
+    } else if (row.materialised > 0) {
+      verdict = `You leaned on this ${times}. On ${row.materialised} of them the risk you carried reached the business anyway.`
+    } else if (row.assumptionsFailed > 0) {
+      verdict = `You leaned on this ${times}. On ${row.assumptionsFailed} of them the assurance underneath it turned out not to hold.`
+    } else {
+      // Deliberately not "it was right": nothing contradicting a belief is not
+      // the same as the belief having been tested.
+      verdict = `You leaned on this ${times}, and nothing this year contradicted it.`
+    }
+    lines.push({ tagId, label, uses: row.uses, materialised: row.materialised, assumptionsFailed: row.assumptionsFailed, verdict })
+  }
+
+  // Contradicted reasoning first: it is the part worth reading.
+  return lines
+    .sort((a, b) => {
+      const weight = (line: ReasoningLine) => line.materialised * 10 + line.assumptionsFailed
+      return weight(b) - weight(a) || b.uses - a.uses
+    })
+    .slice(0, 6)
 }
 
 function band(value: number): AnnualReviewDimension['band'] {
@@ -386,6 +474,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     performanceBand,
     businessOutcome,
     blindSpots: spots,
+    reasoning: reasoningReview(state, index),
   }
 }
 

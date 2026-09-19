@@ -206,6 +206,37 @@ describe('reviews', () => {
     expect(playStyle('prompt')).toBe('strong')
   })
 
+  it('reckons with the reasons the player gave, not just that they gave one', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'reason-1' })
+
+    // Carry a risk explicitly, on a stated rationale, with assumptions under it.
+    applyAction(state, index, { type: 'openRisk', scenarioId: 'risk-supplier-ransomware' })
+    const accepted = applyAction(state, index, {
+      type: 'acceptRisk',
+      scenarioId: 'risk-supplier-ransomware',
+      rationaleTagIds: ['rat-within-tolerance'],
+      assumptionDefIds: index.content.assumptions.slice(0, 2).map((a) => a.id),
+      days: 200,
+    })
+    expect(accepted.ok).toBe(true)
+    runDays(state, index, 364)
+
+    const review = buildAnnualReview(state, index)
+    // Always produced by the builder; optional only on the stored review.
+    const reasoning = review.reasoning ?? []
+    const line = reasoning.find((entry) => entry.tagId === 'rat-within-tolerance')
+    expect(line, 'the rationale the player actually used should appear').toBeDefined()
+    expect(line!.uses).toBeGreaterThan(0)
+    // Counted as occasions, so a contradiction can never outnumber the uses.
+    expect(line!.materialised).toBeLessThanOrEqual(line!.uses)
+    expect(line!.assumptionsFailed).toBeLessThanOrEqual(line!.uses)
+    expect(line!.verdict).toMatch(/leaned on this/)
+
+    // A rationale the player never used is not editorialised about.
+    expect(reasoning.some((entry) => entry.tagId === 'rat-retirement')).toBe(false)
+  })
+
   it('names material blind spots left at the end of the year', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'rev-4' })
