@@ -67,5 +67,12 @@ Measured, not yet fixed. Ranked.
 
 ## Further reading
 
-`docs/ARCHITECTURE.md`, `docs/CONTENT.md` (authoring), `docs/HOSTING.md`
-(the release gate).
+**`docs/IMPLEMENTATION_PLAN.md` is the original build specification**, committed
+verbatim. It is the source of truth for what this game is meant to be: the
+product principles, the core loop, the content budget, the difficulty design,
+the release gate and the definition of done. Section numbers referenced in code
+comments (plan §13, plan §39, and so on) point into it. Read it before changing
+a system, and update it if the architecture genuinely moves.
+
+Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring) and
+`docs/HOSTING.md` (the release gate).

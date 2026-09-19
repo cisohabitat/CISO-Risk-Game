@@ -72,7 +72,10 @@ Rules the code holds to, and tests enforce:
 - **The tick order is a contract.** `src/game/engine/tick.ts` runs a fixed
   seventeen-step day, covered by a test that fails if it is reordered.
 
-Full notes: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+The original build specification is committed verbatim at
+[`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) — it is what the
+code comments mean when they cite "plan §13". Alongside it:
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
 [`docs/CONTENT.md`](docs/CONTENT.md), [`docs/HOSTING.md`](docs/HOSTING.md).
 
 ## Campaign content
