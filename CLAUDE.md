@@ -68,6 +68,33 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **A collision named a problem and left the player to find the screen.** The
+  card now carries ways into the decision — open the programme that is running
+  late, see the risk already raised against the same dependencies, take it to
+  the business — which is navigation into existing mechanics rather than a new
+  one. A test checks the ids it navigates by resolve to real content.
+
+  The incident command view gained the same treatment: containment and recovery
+  now show as words beside the affected services, so the player can see where
+  the response has got to without opening anything. They are 0..1 internally
+  and are never rendered as numbers.
+
+### Checked and left alone
+
+- **Message pacing.** Worth recording because the worry was reasonable and the
+  measurement did not support acting on it. Over 20 campaigns and 1,040
+  player-weeks: 175 messages a year, a median of 3 a week, 6 at the 90th
+  percentile and 10 at the worst. 18% of weeks carry nothing or one thing, and
+  the average campaign has an eleven-day stretch with no message at all. The
+  priority mix is shaped rather than flat — 25% routine, 52% notable, 18%
+  urgent, 6% critical — so an urgent thing still reads as urgent. Quiet periods
+  exist; nothing was changed.
+
+  The first measurement said the opposite (82% urgent, one message repeated
+  2,808 times) and was wrong: inbox messages are prepended, and the probe
+  counted new arrivals by position, so it re-counted the oldest message every
+  day. Check the harness before believing a finding.
+
 - **The end-to-end suite could pass against a build nobody made.** Playwright
   reused whatever was listening on port 4173, so a preview server left over from
   an earlier run kept answering after its `dist` had been deleted: seventy-five

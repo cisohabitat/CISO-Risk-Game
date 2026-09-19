@@ -589,6 +589,9 @@ export interface IncidentCommandView {
   startedDay: number
   detectedDay?: number
   daysRunning: number
+  /** Words, never the internal number: how far containment and recovery got. */
+  containmentLabel: string
+  recoveryLabel: string
   servicesAffected: string[]
   /** What the player has been told, in the order they were told it. */
   timeline: { day: number; text: string }[]
@@ -632,6 +635,9 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
     if (def) taken.push({ day: entry.day, title: def.title, option: option?.label ?? entry.optionId })
   }
 
+  const progressLabel = (value: number, done: string, most: string, some: string, none: string): string =>
+    value >= 0.95 ? done : value >= 0.6 ? most : value >= 0.25 ? some : none
+
   return {
     id: incident.id,
     name: family?.name ?? 'Incident',
@@ -640,6 +646,14 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
     startedDay: incident.startedDay,
     detectedDay: incident.detectionDay,
     daysRunning: state.currentDay - incident.startedDay,
+    containmentLabel: progressLabel(
+      incident.containment,
+      'Contained',
+      'Mostly contained',
+      'Partly contained',
+      'Not yet contained',
+    ),
+    recoveryLabel: progressLabel(incident.recovery, 'Recovered', 'Mostly recovered', 'Recovering', 'Not yet recovering'),
     servicesAffected: incident.affectedServiceIds
       .map((serviceId) => index.service.get(serviceId)?.name)
       .filter((name): name is string => Boolean(name)),
@@ -655,12 +669,13 @@ export interface CollisionView {
   ownerName?: string
   daysUntilTarget: number
   /** The programme that would cover this objective's dependencies, if any. */
+  programmeId?: string
   programmeName?: string
   milestoneName?: string
   /** Where the cover lands relative to the business date, in plain words. */
   verdict: 'covered' | 'close' | 'too-late' | 'not-started' | 'nothing-relevant'
   /** Risks the player has already raised on the same dependencies. */
-  exposedRiskTitles: string[]
+  exposedRisks: { id: string; title: string }[]
 }
 
 /**
@@ -703,7 +718,7 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
     )
 
     let best:
-      | { programmeName: string; milestoneName: string; verdict: CollisionView['verdict'] }
+      | { programmeId: string; programmeName: string; milestoneName: string; verdict: CollisionView['verdict'] }
       | undefined
 
     for (const programme of index.content.programmes) {
@@ -720,11 +735,23 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
           milestone.controlEffects.some((effect) => relevantControls.has(effect.controlId)),
       )
       if (!next) {
-        best = { programmeName: programme.name, milestoneName: 'already delivered', verdict: 'covered' }
+        best = {
+          programmeId: programme.id,
+          programmeName: programme.name,
+          milestoneName: 'already delivered',
+          verdict: 'covered',
+        }
         break
       }
       if (programmeRuntime.status === 'proposed') {
-        if (!best) best = { programmeName: programme.name, milestoneName: next.name, verdict: 'not-started' }
+        if (!best) {
+          best = {
+            programmeId: programme.id,
+            programmeName: programme.name,
+            milestoneName: next.name,
+            verdict: 'not-started',
+          }
+        }
         continue
       }
 
@@ -741,16 +768,16 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
             : 'too-late'
       const rank = { covered: 0, close: 1, 'too-late': 2, 'not-started': 3, 'nothing-relevant': 4 }
       if (!best || rank[verdict] < rank[best.verdict]) {
-        best = { programmeName: programme.name, milestoneName: next.name, verdict }
+        best = { programmeId: programme.id, programmeName: programme.name, milestoneName: next.name, verdict }
       }
     }
 
-    const exposedRiskTitles = Object.values(state.risks.scenarios)
+    const exposedRisks = Object.values(state.risks.scenarios)
       .filter((scenario) => scenario.status === 'open' || scenario.status === 'accepted')
       .map((scenario) => index.riskScenario.get(scenario.id))
       .filter((scenarioDef): scenarioDef is NonNullable<typeof scenarioDef> => Boolean(scenarioDef))
       .filter((scenarioDef) => scenarioDef.triggerNodeIds.some((nodeId) => dependencies.has(nodeId)))
-      .map((scenarioDef) => scenarioDef.title)
+      .map((scenarioDef) => ({ id: scenarioDef.id, title: scenarioDef.title }))
 
     // An objective nothing you could run would help is not a collision, it is
     // just a date. Saying so daily would teach the player to stop reading this.
@@ -761,10 +788,11 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
       objectiveName: def.name,
       ownerName: index.stakeholder.get(def.ownerStakeholderId)?.name,
       daysUntilTarget,
+      programmeId: best?.programmeId,
       programmeName: best?.programmeName,
       milestoneName: best?.milestoneName,
       verdict: best?.verdict ?? 'nothing-relevant',
-      exposedRiskTitles,
+      exposedRisks,
     })
   }
 

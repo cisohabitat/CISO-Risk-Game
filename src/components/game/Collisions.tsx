@@ -7,7 +7,7 @@
  * This says it in one line, which is the decision the job actually turns on:
  * what do you do in the gap?
  */
-import { Badge, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { collisions, type CollisionView } from '@/store/selectors'
 import { plural } from '@/lib/formatting/labels'
@@ -42,6 +42,8 @@ function verdictLine(collision: CollisionView): { tone: 'severe' | 'high' | 'ele
 export function Collisions({ limit = 2 }: { limit?: number }) {
   const state = useGameStore((store) => store.state)
   const index = useGameStore((store) => store.index)
+  const setScreen = useGameStore((store) => store.setScreen)
+  const setUi = useGameStore((store) => store.setUi)
   if (!state) return null
 
   // Only the ones where something is actually going to be missed: a collision
@@ -69,15 +71,50 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
                     <h3 className="font-medium text-balance">{collision.objectiveName}</h3>
                   </div>
                   <p className="text-sm text-ink-muted text-pretty">{verdict.text}</p>
-                  {collision.exposedRiskTitles.length > 0 && (
+                  {collision.exposedRisks.length > 0 && (
                     <p className="text-sm text-ink-faint text-pretty">
-                      You have already raised {collision.exposedRiskTitles.slice(0, 2).join(' and ')} against what this
+                      You have already raised{' '}
+                      {collision.exposedRisks.slice(0, 2).map((risk) => risk.title).join(' and ')} against what this
                       depends on.
                     </p>
                   )}
                   {collision.ownerName && (
                     <p className="text-xs text-ink-faint">{collision.ownerName} owns the date.</p>
                   )}
+                  {/*
+                    Ways into the decision, not a new mechanic: naming a problem
+                    and leaving the player to find the screen it lives on is
+                    half a feature.
+                  */}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {collision.programmeId && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                          setUi({ selectedProgrammeId: collision.programmeId })
+                          setScreen('programmes')
+                        }}
+                      >
+                        Open {collision.programmeName}
+                      </Button>
+                    )}
+                    {collision.exposedRisks[0] && (
+                      <Button
+                        variant="quiet"
+                        size="sm"
+                        onClick={() => {
+                          setUi({ selectedScenarioId: collision.exposedRisks[0]!.id })
+                          setScreen('risk')
+                        }}
+                      >
+                        See the risk
+                      </Button>
+                    )}
+                    <Button variant="quiet" size="sm" onClick={() => setScreen('board')}>
+                      Talk to the business
+                    </Button>
+                  </div>
                 </CardBody>
               </Card>
             </li>

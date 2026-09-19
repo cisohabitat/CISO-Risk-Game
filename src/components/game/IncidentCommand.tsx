@@ -43,13 +43,31 @@ export function IncidentCommand() {
             <p className="mt-1 text-sm text-ink-muted text-pretty">
               {incident.phaseLabel} · day {incident.daysRunning} of the response
               {incident.detectedDay === undefined && ' · not yet confirmed detected'}
-              {incident.servicesAffected.length > 0 && ` · ${incident.servicesAffected.join(', ')}`}
             </p>
           </div>
           {incident.awaiting.length === 0 && (
             <Button variant="secondary" size="sm" onClick={() => setScreen('inbox')}>
               Open the response log
             </Button>
+          )}
+        </div>
+
+        {/*
+          The operational state, in words. Containment is a 0..1 number
+          internally and never appears as one: the player is told where the
+          response has got to, not given a percentage to optimise.
+        */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          <span className="text-ink-muted">
+            <span className="text-ink-faint">Containment:</span> {incident.containmentLabel}
+          </span>
+          <span className="text-ink-muted">
+            <span className="text-ink-faint">Recovery:</span> {incident.recoveryLabel}
+          </span>
+          {incident.servicesAffected.length > 0 && (
+            <span className="text-ink-muted">
+              <span className="text-ink-faint">Services:</span> {incident.servicesAffected.join(', ')}
+            </span>
           )}
         </div>
 

@@ -76,6 +76,12 @@ describe('collisions', () => {
         expect(collision.verdict).not.toBe('nothing-relevant')
         expect(collision.programmeName, collision.objectiveName).toBeTruthy()
         expect(collision.daysUntilTarget).toBeGreaterThanOrEqual(0)
+        // The card offers a way into the decision, so the ids it navigates by
+        // have to be real ones.
+        expect(index.programme.get(collision.programmeId!), collision.programmeId).toBeDefined()
+        for (const risk of collision.exposedRisks) {
+          expect(index.riskScenario.get(risk.id), risk.id).toBeDefined()
+        }
       }
       runDays(state, index, 1)
     }
