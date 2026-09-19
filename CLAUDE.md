@@ -68,6 +68,35 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **Three defects that only a screenshot could find.** `pnpm screenshots` had
+  never been run against the new work, and it turned up things no test was
+  looking at.
+
+  The header showed **30 February**. Months were a uniform 30.33 days, so every
+  date after January was wrong and some did not exist. It is a real calendar
+  now, pinned by a test that walks all 365 days.
+
+  The annual review called a team **strong** and "able to do this again next
+  year" with its architecture function at zero morale, because the dimension
+  averaged morale across functions — the same flat-average mistake that once
+  hid team strain. It now leans on the worst function and caps the band when
+  any function is spent: a team is as sustainable as the part of it closest to
+  walking out. Measured over 24 campaigns, a burnt-out function read `solid` or
+  `strong` in 11 of them and now reads so in none. Morale in the evidence lines
+  is words rather than percentages, which the bands-not-numbers rule asked for
+  all along.
+
+  The incident command view was **quieter than the teaching note under it** and
+  scrolled away with the page. It is sticky while an incident runs and carries
+  a solid `INCIDENT ACTIVE` bar. Two Tailwind classes were silently doing
+  nothing on the way there: the severe "soft" token is near-white in light
+  mode, and `bg-[--token]` is Tailwind 3 syntax that v4 ignores.
+
+  The gallery itself only ever photographed the calm state. It now captures the
+  pattern offer, a collision and a live incident — the screens most likely to
+  look wrong — and its default seed was one of the roughly quarter of campaigns
+  that never has an incident at all.
+
 - **Forming a hypothesis was filing, not discovery.** The mechanic was right and
   the interaction was not: the player opened a dialog, read a list of templates
   and matched them against evidence from memory, which turns the most

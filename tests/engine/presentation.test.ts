@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
-import { collisions, incidentCommand, patternSuggestions } from '@/store/selectors'
+import { buildAnnualReview } from '@/game/debrief/review'
+import { collisions, formatGameDate, incidentCommand, patternSuggestions } from '@/store/selectors'
 import { testIndex } from './helpers'
 
 describe('incident command view', () => {
@@ -154,5 +155,80 @@ describe('pattern suggestions', () => {
       runDays(state, index, 1)
     }
     throw new Error('no pattern was offered within a year')
+  })
+})
+
+describe('the date in the header', () => {
+  it('never shows a day that does not exist', () => {
+    const lengths: Record<string, number> = {
+      January: 31, February: 28, March: 31, April: 30, May: 31, June: 30,
+      July: 31, August: 31, September: 30, October: 31, November: 30, December: 31,
+    }
+    // Every day a campaign can reach. The old formatter used a uniform 30.33-day
+    // month and printed "30 February"; only a screenshot caught it.
+    for (let day = 0; day < 365; day += 1) {
+      const { label, month } = formatGameDate(day)
+      const dayOfMonth = Number(label.split(' ')[0])
+      expect(Number.isFinite(dayOfMonth), label).toBe(true)
+      expect(dayOfMonth, label).toBeGreaterThanOrEqual(1)
+      expect(dayOfMonth, `${label} does not exist`).toBeLessThanOrEqual(lengths[month]!)
+    }
+  })
+
+  it('advances one day at a time and never goes backwards', () => {
+    let previous = ''
+    for (let day = 0; day < 365; day += 1) {
+      const label = formatGameDate(day).label
+      expect(label).not.toBe(previous)
+      previous = label
+    }
+    expect(formatGameDate(0).label).toBe('1 January')
+    expect(formatGameDate(31).label).toBe('1 February')
+    expect(formatGameDate(59).label).toBe('1 March')
+  })
+})
+
+describe('team sustainability', () => {
+  it('cannot read well while a function is spent', () => {
+    const index = testIndex()
+    // A team is as sustainable as the part of it closest to walking out. The
+    // defect this guards: a flat average across functions let one sit at zero
+    // while the others carried the score, and the review told the player their
+    // team could do it all again next year.
+    for (let seed = 0; seed < 8; seed += 1) {
+      const state = newGame(index, { seed: `sustain-${seed}` })
+      const commissioned: Record<string, number> = {}
+      for (let day = 0; day < 364; day += 1) {
+        if (day % 5 === 0) {
+          const order = [...index.content.investigations].sort(
+            (a, b) => (commissioned[a.id] ?? 0) - (commissioned[b.id] ?? 0),
+          )
+          for (const investigation of order) {
+            const result = applyAction(state, index, {
+              type: 'startInvestigation',
+              investigationId: investigation.id,
+              leaderId: index.content.leaders[day % index.content.leaders.length]!.id,
+            })
+            if (result.ok) {
+              commissioned[investigation.id] = (commissioned[investigation.id] ?? 0) + 1
+              break
+            }
+          }
+        }
+        runDays(state, index, 1)
+      }
+
+      const worst = Math.min(...Object.values(state.team.functions).map((fn) => fn.morale))
+      const dimension = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'team-sustainability')!
+      if (worst < 0.25) {
+        expect(
+          ['weak', 'developing'],
+          `a function at ${worst.toFixed(2)} morale still read ${dimension.band}`,
+        ).toContain(dimension.band)
+        expect(dimension.narrative).toMatch(/spent/)
+        return
+      }
+    }
+    throw new Error('no campaign burned a function out, so the cap was never exercised')
   })
 })

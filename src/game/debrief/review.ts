@@ -17,7 +17,7 @@ import { clamp01 } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { riskBand } from '../risk/bands'
-import { teamStrain } from '../team/capacity'
+import { moraleLabel, teamStrain } from '../team/capacity'
 
 export interface QuarterReviewInput {
   quarter: number
@@ -376,21 +376,42 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   // 7. Team sustainability.
+  //
+  // Leaning on the worst function, not the average of all of them. A flat mean
+  // let one function sit at nothing while the others carried the score: the
+  // review called a team "strong" and able to do it again next year with its
+  // architects at zero morale. A team is as sustainable as the part of it that
+  // is closest to walking out.
   const strain = teamStrain(state)
-  const morale =
-    Object.values(state.team.functions).reduce((sum, fn) => sum + fn.morale, 0) /
-    Math.max(1, Object.values(state.team.functions).length)
-  const sustainability = clamp01(0.55 * morale + 0.45 * (1 - strain))
+  const functions = Object.values(state.team.functions)
+  const meanMorale = functions.reduce((sum, fn) => sum + fn.morale, 0) / Math.max(1, functions.length)
+  const worstMorale = functions.reduce((lowest, fn) => Math.min(lowest, fn.morale), 1)
+  const morale = 0.45 * meanMorale + 0.55 * worstMorale
+  const spent = functions.filter((fn) => fn.morale < 0.25)
+  // A cap, not a penalty. Weighting the worst function was not enough on its
+  // own: a team with two functions at nothing still read "solid" because
+  // nobody happened to be overloaded on the last day of the year, and a
+  // low-strain term carried the score. You cannot call a team sustainable when
+  // part of it is finished, however rested the rest of it looks.
+  const ceiling = spent.length >= 2 ? 0.29 : spent.length === 1 ? 0.51 : 1
+  const sustainability = Math.min(ceiling, clamp01(0.55 * morale + 0.45 * (1 - strain)))
   dimensions.push({
     id: 'team-sustainability',
     label: 'Team sustainability',
     band: band(sustainability),
     narrative:
-      morale > 0.6
-        ? 'Your team ends the year in a state where they could do this again next year.'
-        : 'Your team carried the year on goodwill that has now run out.',
-    evidence: Object.values(state.team.functions).map(
-      (fn) => `${fn.fn}: ${Math.round(fn.morale * 100)}% morale, ${fn.vacancies} vacancies`,
+      spent.length > 0
+        ? `Your ${spent.map((fn) => fn.fn).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
+        : morale > 0.6
+          ? 'Your team ends the year in a state where they could do this again next year.'
+          : 'Your team carried the year on goodwill that has now run out.',
+    // Words rather than percentages: morale is an internal 0..1 and the game
+    // does not render internal numbers.
+    evidence: functions.map(
+      (fn) =>
+        `${fn.fn}: ${moraleLabel(fn.morale).toLowerCase()}${
+          fn.vacancies > 0 ? `, ${fn.vacancies} ${fn.vacancies === 1 ? 'vacancy' : 'vacancies'}` : ', fully staffed'
+        }`,
     ),
   })
 

@@ -10,7 +10,7 @@
  * Everything shown comes from what the player has been told. The attack path is
  * hidden truth and does not appear here.
  */
-import { Badge, Button, Card, CardBody } from '@/components/ui/primitives'
+import { Button, Card, CardBody } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
 import { plural } from '@/lib/formatting/labels'
@@ -27,21 +27,35 @@ export function IncidentCommand() {
 
   return (
     <Card
-      className="mb-4 border-band-severe/60 bg-band-severe-soft/30"
+      // Sticky while the incident runs. It sat at the top of a scrolling page,
+      // so a player who had scrolled down had nothing but a pill in the header
+      // telling them the organisation was in crisis — which is the opposite of
+      // what "normal management has stopped" should feel like.
+      // Loud on purpose. At a third opacity it read quieter than the teaching
+      // note sitting under it, which is the wrong way round when the
+      // organisation is in crisis: a full-strength band, a heavier border and a
+      // rule down the left so it is the first thing the eye lands on.
+      // A solid bar rather than a tint. The severe "soft" token is nearly white
+      // in light mode, so a tinted card read quieter than the teaching note
+      // under it — the wrong way round when the organisation is in crisis.
+      className="sticky top-0 z-10 mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
       role="region"
       aria-labelledby="incident-command"
     >
+      <p className="bg-[var(--band-severe)] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--surface)]">
+        Incident active
+      </p>
       <CardBody className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <Badge tone="severe">Incident active</Badge>
-            <h2 id="incident-command" className="mt-2 text-lg font-semibold text-balance">
+            <h2 id="incident-command" className="text-lg font-semibold text-balance">
               {incident.name}
             </h2>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
-              {incident.phaseLabel} · day {incident.daysRunning} of the response
+              {incident.phaseLabel} ·{' '}
+              {incident.daysRunning === 0 ? 'today' : `day ${incident.daysRunning + 1} of the response`}
               {incident.detectedDay === undefined && ' · not yet confirmed detected'}
             </p>
           </div>

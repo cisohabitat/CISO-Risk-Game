@@ -25,13 +25,26 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
 
-/** Day 0 is the first Monday of the campaign year. */
+/** A real year, because the header shows the date to the player. */
+const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+/**
+ * Day 0 is the first Monday of the campaign year.
+ *
+ * Months used to be a uniform 30.33 days, which put "30 February" in the header
+ * and made every date after January wrong by a day or two. Nothing tested it
+ * because nothing reads the string; it took looking at a screenshot.
+ */
 export function formatGameDate(day: number): { label: string; month: string; weekLabel: string } {
-  const monthIndex = Math.min(11, Math.floor(day / 30.33))
-  const dayOfMonth = Math.floor(day - monthIndex * 30.33) + 1
+  let remaining = Math.max(0, Math.floor(day))
+  let monthIndex = 0
+  while (monthIndex < MONTH_LENGTHS.length - 1 && remaining >= MONTH_LENGTHS[monthIndex]!) {
+    remaining -= MONTH_LENGTHS[monthIndex]!
+    monthIndex += 1
+  }
   const month = MONTHS[monthIndex] ?? 'December'
   return {
-    label: `${dayOfMonth} ${month}`,
+    label: `${remaining + 1} ${month}`,
     month,
     weekLabel: `Week ${Math.floor(day / 7) + 1}`,
   }
