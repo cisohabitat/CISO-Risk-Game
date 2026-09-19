@@ -7,12 +7,14 @@
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
+import { completeQuarterIfDue, leastCommissioned } from './play-helpers'
 import type { ContentIndex, Difficulty, GameState } from '../src/game/types'
 
 const DIFFICULTIES: Difficulty[] = ['guided', 'ciso', 'high-pressure']
 
 function play(index: ContentIndex, seed: string, difficulty: Difficulty, engaged: boolean): GameState {
   const state = newGame(index, { seed, difficulty })
+  const commissioned: Record<string, number> = {}
   let programmeIndex = 0
   for (let day = 0; day < 364; day += 1) {
     for (const decisionId of [...state.decisions.openIds]) {
@@ -29,16 +31,24 @@ function play(index: ContentIndex, seed: string, difficulty: Difficulty, engaged
       })
     }
 
+    completeQuarterIfDue(state, index)
+
     if (engaged) {
       // Commission whatever is affordable, form hypotheses, raise and accept risks.
       if (day % 7 === 0) {
-        for (const investigation of index.content.investigations) {
+        // Work down the list rather than pressing the first button that works:
+        // the repeatable investigations sit near the top, so a naive loop
+        // commissions the same threat hunt all year and never reaches the rest.
+        for (const investigation of leastCommissioned(index, commissioned)) {
           const result = applyAction(state, index, {
             type: 'startInvestigation',
             investigationId: investigation.id,
             leaderId: index.content.leaders[day % index.content.leaders.length]!.id,
           })
-          if (result.ok) break
+          if (result.ok) {
+            commissioned[investigation.id] = (commissioned[investigation.id] ?? 0) + 1
+            break
+          }
         }
       }
       if (day % 11 === 0) {

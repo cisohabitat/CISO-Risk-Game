@@ -7,12 +7,14 @@ import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { nexoraContent } from '../src/content/nexora'
+import { completeQuarterIfDue, leastCommissioned } from './play-helpers'
 import type { GameState, ContentIndex, Difficulty } from '../src/game/types'
 
 type Policy = 'passive' | 'defensive' | 'business' | 'balanced'
 
 function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Difficulty): GameState {
   const state = newGame(index, { seed, difficulty })
+  const commissioned: Record<string, number> = {}
   const programmesByPolicy: Record<Policy, string[]> = {
     passive: [],
     defensive: ['prog-identity', 'prog-ransomware', 'prog-detection', 'prog-segmentation', 'prog-thirdparty', 'prog-cloud'],
@@ -54,15 +56,21 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
         }
       }
     }
+    if (policy !== 'passive') completeQuarterIfDue(state, index)
     // Commission work when there is attention and capacity.
     if (policy !== 'passive' && state.resources.focusRemaining >= 2 && day % 9 === 0) {
-      for (const investigation of index.content.investigations) {
+      // Least-commissioned first: a naive first-that-works loop reruns the same
+      // repeatable investigation all year and never reaches the rest.
+      for (const investigation of leastCommissioned(index, commissioned)) {
         const result = applyAction(state, index, {
           type: 'startInvestigation',
           investigationId: investigation.id,
           leaderId: index.content.leaders[day % index.content.leaders.length]?.id ?? 'lead-grc',
         })
-        if (result.ok) break
+        if (result.ok) {
+          commissioned[investigation.id] = (commissioned[investigation.id] ?? 0) + 1
+          break
+        }
       }
     }
     runDays(state, index, 1)
