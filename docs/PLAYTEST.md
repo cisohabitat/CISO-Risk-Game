@@ -1,0 +1,66 @@
+# Playtesting
+
+The harnesses in `CLAUDE.md` answer whether the game *works*. They cannot answer
+whether it *lands*. Everything below is the second question, and it needs people.
+
+What automation already establishes, so a session need not check it: mechanics
+fire, play styles diverge, hidden information stays hidden, the difficulty ladder
+is monotonic, every authored event and decision is reachable, saves resume, the
+year completes, nothing overflows at 320px, and the build stays inside its size
+budget. Treat all of that as given and spend the session on what it cannot see.
+
+## What a session is for
+
+Five questions, none of which a test can answer:
+
+1. **Where did they stop understanding?** Not "did they fail" — where did the
+   game stop explaining itself. The moment someone reads a screen twice.
+2. **Where did they get bored?** Which stretch of the year did they click
+   through rather than play.
+3. **What did they not notice?** A collision, a pattern offer, an assumption
+   failing. Anything the game surfaced and the player walked past.
+4. **Which decision made them stop and think?** If none did, the game is a
+   quiz. Note the one that did, and what made it hard.
+5. **What did they think the year had been about?** Ask before showing them the
+   annual review, then compare. A gap between their account and the debrief's is
+   the most useful thing a session produces.
+
+## Running one
+
+Half an hour is enough. A first year takes twenty minutes at a normal pace.
+
+- Give them the seed and the difficulty, nothing else. No explanation of the
+  mechanics: whether the game teaches itself is one of the things under test.
+- Ask them to think aloud. Prompt with "what are you looking at?" rather than
+  "what are you doing?" — the second one makes people narrate rather than play.
+- Do not answer questions during play. Write the question down; an unanswered
+  question is data, and answering it destroys the thing you came to measure.
+- Note times, not just events. "Went quiet from about day 120" is worth more
+  than "seemed engaged".
+- Stop them at the end of Q3 and ask question 5 before they reach the review.
+
+Five sessions is enough to find the things everyone hits. Three is enough to
+find the worst one.
+
+## Turning a session into a change
+
+Write findings into the **Known weaknesses** list in `CLAUDE.md` the same way a
+measured finding goes in: what was observed, by how many people, and what it
+suggests. "Two of three players never opened the Organisation screen" is a
+finding. "The UI is confusing" is not.
+
+Then resist fixing it immediately. The failure mode of this project has been
+acting on a single reading — a fifteen-seed balance run, a probe that counted the
+wrong thing, a pattern notice that turned into a backlog. One player's confusion
+is a hypothesis; two players' identical confusion is a defect.
+
+## What not to change on playtest feedback alone
+
+- **The bands.** "I want to see the actual number" is the most common request a
+  risk game gets and the one thing it must never grant. The whole point is that
+  a CISO argues from judgement rather than from a score.
+- **The uncertainty.** Players will ask to be told whether a control really
+  works. Being unable to know without going and checking is the subject.
+- **The pace of consequence.** A decision whose cost arrives four months later
+  will feel unfair to somebody who played for twenty minutes. It is not unfair;
+  it is the job.

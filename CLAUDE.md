@@ -51,11 +51,22 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm screenshots` | What do the screens currently look like? |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
+None of them answer whether the game lands: that needs people, and
+`docs/PLAYTEST.md` is how to ask them.
+
 The end-to-end suite starts its own server from a fresh build every run and
 refuses to reuse one already on the port. If it stops with "4173 is already
 used", a previous run left a server behind: kill it rather than setting
 `reuseExistingServer`, because a stale server can hide a real break as easily as
 it can invent one.
+
+## Where the project is
+
+**The feature set is complete and the major systems are frozen.** The remaining
+work is playtesting, tightening and rewriting unclear text — not new mechanics.
+Further simulation is now more likely to make the game worse than better unless
+a human playtest asks for it. `docs/PLAYTEST.md` covers what a session is for and
+what not to change on one player's word.
 
 ## Known weaknesses
 
@@ -67,6 +78,9 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **A collision said "talk to the business".** The date belongs to a person, and
+  that is who has to be talked to, so the button names them: "Talk to Priya".
 
 - **Three defects that only a screenshot could find.** `pnpm screenshots` had
   never been run against the new work, and it turned up things no test was
@@ -366,5 +380,6 @@ the release gate and the definition of done. Section numbers referenced in code
 comments (plan §13, plan §39, and so on) point into it. Read it before changing
 a system, and update it if the architecture genuinely moves.
 
-Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring) and
-`docs/HOSTING.md` (the release gate).
+Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring),
+`docs/HOSTING.md` (the release gate) and `docs/PLAYTEST.md` (the question the
+harnesses cannot answer).
