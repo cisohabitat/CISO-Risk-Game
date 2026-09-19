@@ -288,12 +288,30 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     id: 'prioritisation',
     label: 'Prioritisation',
     band: band(prioritisation),
-    narrative:
-      lapsed === 0 && inGoodTime === resolved.length
-        ? 'You made your choices deliberately and with room to spare, and recorded why.'
-        : lapsed === 0
-          ? `You answered everything put to you, though ${resolved.length - inGoodTime} of ${resolved.length} went to the wire.`
-          : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`,
+    // Led by the band it sits beside. Picking the sentence from its own
+    // thresholds produced "STRONG — 3 decisions lapsed and the organisation
+    // chose for you": a verdict and an explanation that contradict each other,
+    // and the player reads the sentence.
+    narrative: (() => {
+      const lapses = lapsed === 0 ? '' : ` ${lapsed} lapsed and the organisation chose ${lapsed === 1 ? 'that one' : 'those'} for you.`
+      const late = resolved.length - inGoodTime
+      switch (band(prioritisation)) {
+        case 'strong':
+          return lapsed === 0 && late === 0
+            ? 'You made your choices deliberately and with room to spare, and recorded why.'
+            : `You answered what was put to you in good time and recorded why.${lapses}`
+        case 'solid':
+          return late > 0
+            ? `You answered what was put to you, though ${late} of ${resolved.length} went to the wire.${lapses}`
+            : `You answered what was put to you and recorded why.${lapses}`
+        case 'developing':
+          return `Too much went to the wire, and${lapsed === 0 ? ' some of it was decided in a hurry.' : lapses}`
+        default:
+          return lapsed === 0
+            ? 'You left your choices until the last moment all year.'
+            : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`
+      }
+    })(),
     evidence: [
       `${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`,
       `${inGoodTime} of ${resolved.length} were taken while there was still time to act on them`,
@@ -366,12 +384,20 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     id: 'communication',
     label: 'Communication and escalation',
     band: band(communication),
-    narrative:
-      boardConfidence > 0.65
-        ? 'The board came to rely on your judgement, including when you told them what you did not know.'
-        : boardConfidence > 0.4
-          ? 'The board listened, but never quite came to depend on you.'
-          : 'The board ended the year unsure whether they were hearing the whole picture.',
+    // Band-led, for the same reason: this read "STRONG — the board listened,
+    // but never quite came to depend on you."
+    narrative: (() => {
+      switch (band(communication)) {
+        case 'strong':
+          return 'The board came to rely on your judgement, including when you told them what you did not know.'
+        case 'solid':
+          return 'The board followed your argument, and took what you brought them seriously.'
+        case 'developing':
+          return 'The board listened, but never quite came to depend on you.'
+        default:
+          return 'The board ended the year unsure whether they were hearing the whole picture.'
+      }
+    })(),
     evidence: [`${quarters.length} quarterly reviews prepared`],
   })
 

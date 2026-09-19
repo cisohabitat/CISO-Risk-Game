@@ -278,3 +278,25 @@ describe('what you never looked at', () => {
     expect(review.blindSpots.length).toBeLessThanOrEqual(12)
   })
 })
+
+describe('a dimension and its explanation', () => {
+  it('never scores a player well and then tells them they did badly', () => {
+    // Found by playing: "STRONG — 3 decisions lapsed and the organisation chose
+    // for you", and "STRONG — the board listened, but never quite came to
+    // depend on you". The band and the sentence were computed from separate
+    // thresholds, and the player reads the sentence.
+    const index = testIndex()
+    const failureWords = /lapsed and the organisation chose|never quite came to depend|unsure whether they were hearing|goodwill that has now run out|spent the year acting on an inherited picture|never verified/
+    for (let seed = 0; seed < 6; seed += 1) {
+      const state = newGame(index, { seed: `voice-${seed}` })
+      runDays(state, index, 364)
+      for (const dimension of buildAnnualReview(state, index).dimensions) {
+        if (dimension.band !== 'strong' && dimension.band !== 'solid') continue
+        expect(
+          failureWords.test(dimension.narrative),
+          `${dimension.label} reads ${dimension.band} but says: ${dimension.narrative}`,
+        ).toBe(false)
+      }
+    }
+  })
+})

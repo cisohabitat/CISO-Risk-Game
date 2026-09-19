@@ -80,6 +80,22 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **The annual review graded a player well and told them they had failed.**
+  Found by playing a whole year one decision at a time and reading the closing
+  screen: prioritisation read `STRONG — 3 decisions lapsed and the organisation
+  chose for you`, and communication read `STRONG — the board listened, but never
+  quite came to depend on you`. Each dimension's sentence was picked from its
+  own thresholds, independently of the band printed beside it, so the verdict
+  and the explanation could contradict each other — and the sentence is the part
+  a player reads. Narratives are now led by the band, with the specifics as
+  qualifiers after it. `tests/engine/presentation.test.ts` fails the build if a
+  `strong` or `solid` dimension uses failure language.
+
+  The playthrough itself is now a harness: `pnpm play` runs the campaign until
+  something needs the player, prints the situation and stops, so a year can be
+  played a decision at a time and the state survives between invocations. It is
+  the only harness that reads what the game actually says.
+
 - **Three things found by playing a year and looking at every screen.** None
   would have failed a test, and all three undercut the game's own argument.
 
