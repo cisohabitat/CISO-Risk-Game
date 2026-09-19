@@ -1,5 +1,23 @@
 # Hosting
 
+## Build size
+
+`pnpm build && pnpm size` prints the transfer size of every chunk against a
+budget and fails if one is exceeded. CI runs it on every push, next to the
+check that the output is still static.
+
+The campaign ships inside the client bundle — that is the point of a static
+build, and it is why no request is made per tick — so every authored event adds
+to what a first-time player downloads. Twenty-three kilobytes of consequence
+callbacks went in during one session without anybody noticing, which is what the
+budget is for: the cost of content should be a decision, not a drift.
+
+The campaign is its own chunk. It changes on a different cadence from the app,
+so a content edit does not invalidate the cached app code and vice versa, and
+the browser fetches both at once rather than one after the other. Raising a
+budget is fine when the content is worth it; do it deliberately, in
+`scripts/size-budget.ts`.
+
 ## The constraint
 
 The MVP is a **static client application**. Its normal play loop must not touch

@@ -26,6 +26,8 @@ jobs:
       - run: pnpm validate:content
       - run: pnpm test
       - run: pnpm build
+      - name: Check the build stayed within its size budget
+        run: pnpm size
       - name: Check the build stayed static
         run: |
           # The MVP must deploy with no server runtime at all (plan §50).

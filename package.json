@@ -23,7 +23,8 @@
     "screenshots": "playwright test --config playwright.screenshots.config.ts --project=desktop-chromium --project=phone",
     "soak": "tsx scripts/soak.ts",
     "test:e2e:live": "playwright test --config playwright.live.config.ts",
-    "coverage": "tsx scripts/coverage.ts"
+    "coverage": "tsx scripts/coverage.ts",
+    "size": "tsx scripts/size-budget.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

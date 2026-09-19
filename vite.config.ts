@@ -19,6 +19,11 @@ export default defineConfig({
         manualChunks(id) {
           // Keep the heavy graph library out of the initial shell bundle.
           if (id.includes('@xyflow')) return 'graph'
+          // The campaign is data, not code: it changes on a different cadence
+          // from the app, it is fetched in parallel rather than after it, and
+          // its size is the thing most likely to creep as content is authored.
+          // Its own chunk makes all three true and visible (plan §48).
+          if (id.includes('src/content/nexora')) return 'campaign'
           if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react'
           return undefined
         },

@@ -49,6 +49,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm coverage 60` | Which authored content does a player actually reach? |
 | `pnpm tsx scripts/tune.ts 25` | Do different play styles produce different outcomes? |
 | `pnpm screenshots` | What do the screens currently look like? |
+| `pnpm build && pnpm size` | What does a first-time player download? |
 
 ## Known weaknesses
 
@@ -60,6 +61,20 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **The whole campaign was inside the app's JavaScript chunk.** 298 kB of
+  content JSON sat in a 587 kB main chunk, and it grows with every authored
+  event — the consequence callbacks added 23 kB without anybody noticing. The
+  campaign is now its own chunk (94 kB gzip of app code against 152 kB before,
+  with 56 kB of campaign beside it), so a content edit no longer invalidates
+  cached app code, the two are fetched at once rather than one after the other,
+  and the size of the content is visible in the build output. `pnpm size`
+  checks every chunk against a budget and CI fails on a breach, because the
+  cost of authoring should be a decision rather than a drift. The page also
+  paints a static shell now instead of staying blank until React mounts.
+
+  Zod was the other suspect and was not worth touching: building without the
+  schema path saved 5.4 kB gzip.
 
 - **Five of the eight mechanics the plan says to teach had no lesson.** Risk
   scenario, investigation, stakeholder influence, assumption and incident were
