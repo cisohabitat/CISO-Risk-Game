@@ -35,7 +35,13 @@ export default defineConfig({
   webServer: {
     command: 'pnpm build && pnpm preview --port 4173 --host 127.0.0.1',
     url: 'http://127.0.0.1:4173',
-    reuseExistingServer: !process.env.CI,
+    // Never reuse whatever happens to be listening on the port. Reusing it
+    // once cost a whole run: a preview server left over from an earlier run was
+    // still serving a dist that had since been deleted, so all seventy-five
+    // tests failed against a build nobody had made, and the failure looked like
+    // a regression in the app. A stale server can hide a real break just as
+    // easily. The rebuild it forces takes about a second.
+    reuseExistingServer: false,
     timeout: 180_000,
   },
   projects: [

@@ -51,6 +51,12 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm screenshots` | What do the screens currently look like? |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
+The end-to-end suite starts its own server from a fresh build every run and
+refuses to reuse one already on the port. If it stops with "4173 is already
+used", a previous run left a server behind: kill it rather than setting
+`reuseExistingServer`, because a stale server can hide a real break as easily as
+it can invent one.
+
 ## Known weaknesses
 
 Measured, not yet fixed. Ranked.
@@ -61,6 +67,25 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **The end-to-end suite could pass against a build nobody made.** Playwright
+  reused whatever was listening on port 4173, so a preview server left over from
+  an earlier run kept answering after its `dist` had been deleted: seventy-five
+  tests failed against nothing, and the failure looked like a regression in the
+  app. It reuses nothing now and builds its own server each run. A stale server
+  can hide a real break as easily as invent one.
+
+  Checked by mutation rather than by reading: leaking undiscovered systems into
+  the Organisation view fails the suite, and shipping an empty annual review
+  fails it. One mutation was *not* caught — making the Save campaign button
+  write nothing left the test green, because the game autosaves constantly and
+  the resume step took whatever save was newest. The test now resumes the manual
+  save specifically, and fails when that button does nothing.
+
+  The hidden-truth rule was guarded end-to-end by one assertion that one named
+  system is absent from one screen, which a leak of any other node would pass.
+  `tests/engine/hidden-truth.test.ts` now checks every node and dependency the
+  selectors emit, across whole campaigns.
 
 - **An incident looked like ordinary management.** The simulation ran incidents
   well and the interface showed one as a line on the Home screen, so the

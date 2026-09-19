@@ -96,8 +96,11 @@ test.describe('a first year at Nexora', () => {
 
     await page.reload()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    const resume = page.getByRole('button', { name: /Day \d+/ }).first()
-    await expect(resume).toBeVisible()
+    // Resume the manual save specifically. The game also autosaves on every
+    // action, so resuming "whatever is newest" passed even when the Save
+    // campaign button wrote nothing at all — the autosave answered for it.
+    const resume = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'manual' }).first()
+    await expect(resume, 'no manual save appeared to resume from').toBeVisible()
     await resume.click()
 
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
