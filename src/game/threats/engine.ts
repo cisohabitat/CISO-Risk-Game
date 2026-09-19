@@ -16,6 +16,7 @@ import type {
 } from '../types'
 import { CAMPAIGN_STAGES, clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
+import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { assessPathSteps, calculatePathViability, calculateThreatPressure } from '../risk/calculations'
 
 export interface ThreatTickResult {
@@ -64,7 +65,7 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
     breaches: [],
   }
 
-  const difficultyFactor = state.difficulty === 'guided' ? 0.72 : state.difficulty === 'high-pressure' ? 1.28 : 1
+  const difficultyFactor = DIFFICULTY_PROFILES[state.difficulty].threatTempo
 
   // 1. Actor mood. Interest tracks how exposed the organisation currently looks.
   for (const def of index.content.actors) {
@@ -209,7 +210,7 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
 
 /** Sector-wide pressure wanders and is nudged by world events. */
 export function driftSectorPressure(state: GameState, rng: Rng): void {
-  const pull = state.difficulty === 'high-pressure' ? 0.62 : state.difficulty === 'guided' ? 0.34 : 0.48
+  const pull = DIFFICULTY_PROFILES[state.difficulty].sectorPressurePull
   state.threats.sectorPressure = clamp01(
     state.threats.sectorPressure + (pull - state.threats.sectorPressure) * 0.01 + rng.jitter(0.012),
   )

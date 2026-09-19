@@ -14,11 +14,27 @@ import { CYBER_FUNCTIONS, SAVE_SCHEMA_VERSION, clamp01 } from '../types'
 import { deriveRng } from './rng'
 import { recomputeUnderstanding } from '../knowledge/discovery'
 
+/**
+ * Everything a difficulty mode changes, in one place (plan §44).
+ *
+ * The profile is the only description of a mode. Branching on
+ * `state.difficulty` anywhere else splits that description across files, which
+ * is how this game ended up escalating threat three times over: the profile
+ * multiplier at setup, a second hard-coded factor applied daily in the threat
+ * engine, and a third in sector pressure — while `noiseMultiplier` sat here
+ * unread because the event engine had its own copy of the numbers. A test
+ * fails the build on a difficulty branch outside this file.
+ */
 export interface DifficultyProfile {
   budgetMultiplier: number
   capacityMultiplier: number
   focusPerWeek: number
+  /** Applied once at setup, to starting actor activity and sector pressure. */
   threatMultiplier: number
+  /** Applied daily, to how readily campaigns start and advance. */
+  threatTempo: number
+  /** Where sector-wide pressure settles over the year. */
+  sectorPressurePull: number
   startingDiscovery: number
   noiseMultiplier: number
   executiveTolerance: number
@@ -31,6 +47,8 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     capacityMultiplier: 1.2,
     focusPerWeek: 6,
     threatMultiplier: 0.75,
+    threatTempo: 0.72,
+    sectorPressurePull: 0.34,
     startingDiscovery: 0.45,
     noiseMultiplier: 0.7,
     executiveTolerance: 0.62,
@@ -41,20 +59,28 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     capacityMultiplier: 1,
     focusPerWeek: 5,
     threatMultiplier: 1,
+    threatTempo: 1,
+    sectorPressurePull: 0.48,
     startingDiscovery: 0.3,
     noiseMultiplier: 1,
     executiveTolerance: 0.5,
     investigationSpeed: 1,
   },
+  // High pressure makes the world harsher and leaves the player's levers close
+  // to intact. Squeezing both — as this used to — cuts the very channels
+  // through which skill pays, which is how hard mode ended up flatter than
+  // normal: good play bought 26% fewer incidents here against 37% on CISO.
   'high-pressure': {
-    budgetMultiplier: 0.78,
-    capacityMultiplier: 0.85,
-    focusPerWeek: 4,
+    budgetMultiplier: 0.9,
+    capacityMultiplier: 0.95,
+    focusPerWeek: 5,
     threatMultiplier: 1.3,
+    threatTempo: 1.1,
+    sectorPressurePull: 0.62,
     startingDiscovery: 0.2,
     noiseMultiplier: 1.3,
     executiveTolerance: 0.38,
-    investigationSpeed: 1.2,
+    investigationSpeed: 1.1,
   },
 }
 

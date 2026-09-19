@@ -116,6 +116,24 @@ recovery → debrief). The CISO makes executive decisions only. The reconstructi
 is assembled from real world state and links to the decisions that preceded it,
 without labelling any of them correct or incorrect.
 
+## Difficulty
+
+`DIFFICULTY_PROFILES` in `src/game/engine/setup.ts` is the entire description of
+a mode (plan §44). Ten dials: what the player starts knowing, what they can
+spend, who they have, how much attention they get, how fast work comes back, and
+how hostile the world is. Nothing outside that file may compare
+`state.difficulty` against a mode name — a test fails the build on it — because
+a second copy of the numbers elsewhere is how this game once escalated threat
+three times over while its profile claimed one multiplier.
+
+The dials split in two, and the split is the design rule. The world dials
+(`threatMultiplier` at setup, `threatTempo` daily, `sectorPressurePull`,
+`noiseMultiplier`, `startingDiscovery`, `executiveTolerance`) get harsher as the
+mode does. The player's dials (`budgetMultiplier`, `capacityMultiplier`,
+`focusPerWeek`, `investigationSpeed`) stay close to normal, because they are the
+channels through which skill pays: cutting them alongside a harsher world makes
+a mode flatter rather than harder, which is measurably what happened before.
+
 ## Adding to the game
 
 1. Read the plan section that covers the area.

@@ -83,3 +83,34 @@ describe('seeded rng', () => {
     }
   })
 })
+
+describe('difficulty is described in one place', () => {
+  it('branches on difficulty only in the profile that defines it', async () => {
+    const { readdir, readFile } = await import('node:fs/promises')
+    const root = new URL('../../src/game/', import.meta.url)
+    const files: URL[] = []
+    const walk = async (dir: URL) => {
+      for (const entry of await readdir(dir, { withFileTypes: true })) {
+        const child = new URL(entry.name + (entry.isDirectory() ? '/' : ''), dir)
+        if (entry.isDirectory()) await walk(child)
+        else if (entry.name.endsWith('.ts')) files.push(child)
+      }
+    }
+    await walk(root)
+
+    const offenders: string[] = []
+    for (const file of files) {
+      // setup.ts is where the profiles live, so it is allowed to name modes.
+      if (file.pathname.endsWith('/engine/setup.ts')) continue
+      const source = await readFile(file, 'utf8')
+      const code = source
+        .split('\n')
+        .filter((line) => !line.trimStart().startsWith('*') && !line.trimStart().startsWith('//') && !line.trimStart().startsWith('/*'))
+        .join('\n')
+      // A comparison against a mode name is a second, hidden copy of what the
+      // profile is supposed to say. Indexing DIFFICULTY_PROFILES is fine.
+      if (/difficulty\s*===\s*['"]/.test(code)) offenders.push(file.pathname)
+    }
+    expect(offenders, `these compare difficulty to a mode name instead of reading the profile:\n${offenders.join('\n')}`).toEqual([])
+  })
+})

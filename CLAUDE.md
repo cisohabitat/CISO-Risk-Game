@@ -17,6 +17,11 @@ simulation runs in the browser and there is no server component.
 
 These are enforced by lint or by tests, so breaking one fails the build.
 
+- **Difficulty lives in one place.** `DIFFICULTY_PROFILES` in
+  `src/game/engine/setup.ts` is the whole description of a mode. Nothing else
+  may compare `state.difficulty` to a mode name; read the profile instead. A
+  test scans every engine file.
+
 - **The engine is pure.** Nothing under `src/game/` may import React, the DOM,
   storage or any SDK.
 - **No `Math.random()` in simulation.** Every draw comes from the seeded RNG in
@@ -55,6 +60,26 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **High pressure was flatter than normal difficulty, not harder.** Good play
+  bought 26% fewer incidents there against 37% on CISO, and over 100 seeds the
+  defensive player came out *worse* than the passive one (1.96 incidents per
+  run against 1.81). Two causes. The profile was not the whole story: the
+  threat engine held its own hard-coded difficulty factor applied daily on top
+  of the profile's multiplier, sector pressure held a third, and the event
+  engine had its own copy of the noise numbers, leaving the profile's
+  `noiseMultiplier` dead — so hard mode escalated threat three times over while
+  claiming one. And the mode squeezed the player's levers (budget, capacity,
+  attention, how fast work comes back) alongside the world's hostility, which
+  cuts the very channels skill flows through.
+
+  Every difficulty branch now reads the profile, which gained `threatTempo` and
+  `sectorPressurePull` so the hidden dials are visible. High pressure keeps its
+  harsher world — more threat, less inherited knowledge, more noise, less
+  executive patience — and returns the player's levers to near normal. Good
+  play now buys 31%, the defensive player beats the passive one (1.55 against
+  1.63, and 20% clean years against 13%), and the ladder is monotonic: idle
+  players take 0.57, 1.25 and 1.63 incidents a year across the three modes.
 
 - **The organisation did not remember what the player chose.** Twenty-six of
   the twenty-eight flags a decision option can set were written and never read

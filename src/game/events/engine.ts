@@ -5,6 +5,7 @@
  */
 import type { ContentIndex, GameEffect, GameEventDef, GameState } from '../types'
 import type { Rng } from '../engine/rng'
+import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { evaluateAll } from './conditions'
 
 export interface FiredEvent {
@@ -91,7 +92,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
       const remaining = pool.filter((def) => !firedThisDay.has(def.id))
       if (remaining.length === 0) break
       // Harder difficulties bury the material signal in more noise (plan §44).
-      const noiseMultiplier = state.difficulty === 'guided' ? 0.7 : state.difficulty === 'high-pressure' ? 1.3 : 1
+      const noiseMultiplier = DIFFICULTY_PROFILES[state.difficulty].noiseMultiplier
       const chosen = rng.weighted(remaining, (def) =>
         def.tags.includes('noise') ? def.weight * noiseMultiplier : def.weight,
       )
