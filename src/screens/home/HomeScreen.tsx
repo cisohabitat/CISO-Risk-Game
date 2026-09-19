@@ -5,6 +5,7 @@
 import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
+import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useGameStore } from '@/store/game-store'
 import { briefing, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
 import { bandTone, capacityTone, confidenceTone, money, plural } from '@/lib/formatting/labels'
@@ -61,6 +62,9 @@ export function HomeScreen() {
       </section>
 
       <Collisions />
+
+      {/* The moment something clicks should find the player, not wait on a tab. */}
+      <PatternNotice />
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">

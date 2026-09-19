@@ -48,6 +48,7 @@ export type PlayerAction =
   | { type: 'markRead'; messageId: string }
   | { type: 'markEvidenceRead'; evidenceId: string }
   | { type: 'completeQuarterReview'; quarter: number; topics: string[]; recommendations: string[]; communicateUncertainty: boolean }
+  | { type: 'dismissPattern'; templateId: string }
   | { type: 'dismissTutorial'; id: string }
   | { type: 'finishCampaign' }
 
@@ -645,6 +646,12 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       state.pauseReasons = state.pauseReasons.filter((r: PauseReason) => r !== 'quarter-end')
       commit()
       return { ok: true, message: review.boardReaction }
+    }
+
+    case 'dismissPattern': {
+      const dismissed = (state.risks.dismissedPatternIds ??= [])
+      if (!dismissed.includes(action.templateId)) dismissed.push(action.templateId)
+      return { ok: true, message: 'Noted. That one will not be raised again.' }
     }
 
     case 'dismissTutorial': {

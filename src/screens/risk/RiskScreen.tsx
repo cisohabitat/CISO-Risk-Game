@@ -8,6 +8,7 @@ import { useGameStore } from '@/store/game-store'
 import { assumptionViews, evidenceList, visibleRisks } from '@/store/selectors'
 import { InvestigationPanel } from '@/components/risk/InvestigationPanel'
 import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
+import { PatternNotice } from '@/components/risk/PatternNotice'
 import { RiskDetail } from '@/components/risk/RiskDetail'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { bandTone, confidenceTone, evidenceSourceLabel, statusLabel } from '@/lib/formatting/labels'
@@ -144,6 +145,9 @@ export function RiskScreen() {
         </TabPanel>
 
         <TabPanel value="hypotheses">
+          <div className="mb-4">
+            <PatternNotice />
+          </div>
           <HypothesisWorkspace />
         </TabPanel>
 

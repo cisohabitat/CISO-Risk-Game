@@ -199,6 +199,12 @@ export interface RiskState {
   hypotheses: Record<string, HypothesisRuntime>
   scenarios: Record<string, RiskScenarioRuntime>
   hypothesisCounter: number
+  /**
+   * Patterns the game offered and the player judged not worth pursuing. Kept so
+   * a dismissed suggestion stays dismissed; optional so saves written before it
+   * existed load without migration.
+   */
+  dismissedPatternIds?: string[]
 }
 
 export interface StakeholderRuntime {

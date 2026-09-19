@@ -68,6 +68,20 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **Forming a hypothesis was filing, not discovery.** The mechanic was right and
+  the interaction was not: the player opened a dialog, read a list of templates
+  and matched them against evidence from memory, which turns the most
+  interesting moment in the game — when something clicks — into paperwork. The
+  game now says what it noticed. `patternSuggestions` offers a proposition the
+  evidence in hand would support, names the evidence behind it, and stops there:
+  forming it still costs attention and "Not this" is a real answer that sticks.
+
+  The first version offered every supported template every day — fourteen on
+  screen at once, on 95% of days. That is a backlog wearing an insight's
+  clothes. A pattern is now offered only while the evidence that revealed it is
+  recent, which halves the days one is waiting and makes the offer a moment the
+  player can miss rather than a queue they must clear.
+
 - **A collision named a problem and left the player to find the screen.** The
   card now carries ways into the decision — open the programme that is running
   late, see the risk already raised against the same dependencies, take it to

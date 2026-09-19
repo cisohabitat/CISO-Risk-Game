@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
-import { collisions, incidentCommand } from '@/store/selectors'
+import { collisions, incidentCommand, patternSuggestions } from '@/store/selectors'
 import { testIndex } from './helpers'
 
 describe('incident command view', () => {
@@ -102,5 +102,57 @@ describe('collisions', () => {
     const started = collisions(working, index)
     const identityCollision = started.find((collision) => collision.programmeName === def.name)
     if (identityCollision) expect(identityCollision.verdict).not.toBe('not-started')
+  })
+})
+
+describe('pattern suggestions', () => {
+  it('offers a pattern when the evidence for it arrives, and not forever', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'pattern-1' })
+    let everOffered = false
+    let daysWithOffer = 0
+
+    for (let day = 0; day < 364; day += 1) {
+      const suggestions = patternSuggestions(state, index)
+      if (suggestions.length > 0) {
+        everOffered = true
+        daysWithOffer += 1
+        for (const suggestion of suggestions) {
+          // Everything it shows has to be real and already in the player's hands.
+          expect(index.hypothesisTemplate.get(suggestion.templateId)).toBeDefined()
+          expect(suggestion.evidence.length).toBeGreaterThanOrEqual(2)
+          for (const item of suggestion.evidence) {
+            expect(state.evidence.items[item.id], `${item.id} was suggested but never received`).toBeDefined()
+          }
+        }
+      }
+      runDays(state, index, 1)
+    }
+
+    expect(everOffered, 'a whole year produced no pattern at all').toBe(true)
+    // Offered at a moment rather than standing open all year: the failure this
+    // guards is a permanent backlog dressed up as an insight.
+    expect(daysWithOffer).toBeLessThan(300)
+  })
+
+  it('keeps a dismissed pattern dismissed', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'pattern-2' })
+    for (let day = 0; day < 364; day += 1) {
+      const suggestion = patternSuggestions(state, index)[0]
+      if (suggestion) {
+        const result = applyAction(state, index, { type: 'dismissPattern', templateId: suggestion.templateId })
+        expect(result.ok).toBe(true)
+        expect(patternSuggestions(state, index).some((s) => s.templateId === suggestion.templateId)).toBe(false)
+        runDays(state, index, 30)
+        expect(
+          patternSuggestions(state, index).some((s) => s.templateId === suggestion.templateId),
+          'a dismissed pattern came back',
+        ).toBe(false)
+        return
+      }
+      runDays(state, index, 1)
+    }
+    throw new Error('no pattern was offered within a year')
   })
 })

@@ -799,3 +799,72 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
   // Soonest first: the collision that matters is the one arriving next.
   return out.sort((a, b) => a.daysUntilTarget - b.daysUntilTarget)
 }
+
+export interface PatternSuggestion {
+  templateId: string
+  title: string
+  statement: string
+  /** The evidence the player already holds that suggests it. */
+  evidence: { id: string; title: string }[]
+  /** When the most recent piece of that evidence arrived. */
+  newestEvidenceDay: number
+}
+
+/**
+ * Patterns the evidence in hand would support, offered rather than hunted for.
+ *
+ * The mechanic was sound and the interaction was not: forming a hypothesis
+ * meant opening a dialog, reading a list of templates and matching them against
+ * evidence by memory, which turns the most interesting moment in the game — the
+ * moment something clicks — into filing. The game now says what it noticed and
+ * names the evidence behind it. The judgement stays with the player: forming
+ * one still costs attention, and dismissing one is a real answer.
+ *
+ * A pattern is offered when it has just become visible, not for as long as it
+ * remains true. Offering every supported template every day put fourteen of
+ * them on screen at once on 95% of days, which is a backlog rather than an
+ * insight; tying the offer to the arrival of the evidence makes it a moment,
+ * and one the player can miss.
+ */
+export function patternSuggestions(state: GameState, index: ContentIndex, freshDays = 12): PatternSuggestion[] {
+  const dismissed = new Set(state.risks.dismissedPatternIds ?? [])
+  const known = state.evidence.order
+    .map((id) => index.evidence.get(id))
+    .filter((def): def is NonNullable<typeof def> => Boolean(def))
+  const knownTags = new Set(known.flatMap((def) => def.tags))
+  const formed = new Set(Object.values(state.risks.hypotheses).map((hypothesis) => hypothesis.templateId))
+
+  const out: PatternSuggestion[] = []
+  for (const template of index.content.hypothesisTemplates) {
+    if (dismissed.has(template.id) || formed.has(template.id)) continue
+    if (!template.requiresTags.every((tag) => knownTags.has(tag))) continue
+    // Only worth raising once the player holds something that actually speaks
+    // to it; the required tag alone can be a single passing mention.
+    const supporting = known.filter((def) => def.tags.some((tag) => template.supportingTags.includes(tag)))
+    if (supporting.length < 2) continue
+
+    const newestDay = supporting.reduce(
+      (latest, def) => Math.max(latest, state.evidence.items[def.id]?.discoveredDay ?? 0),
+      0,
+    )
+    if (state.currentDay - newestDay > freshDays) continue
+
+    out.push({
+      templateId: template.id,
+      title: template.title,
+      statement: template.statement,
+      newestEvidenceDay: newestDay,
+      evidence: supporting
+        // Newest first: the thing that just arrived is why this is on screen.
+        .slice()
+        .sort(
+          (a, b) =>
+            (state.evidence.items[b.id]?.discoveredDay ?? 0) - (state.evidence.items[a.id]?.discoveredDay ?? 0),
+        )
+        .slice(0, 4)
+        .map((def) => ({ id: def.id, title: def.title })),
+    })
+  }
+  // Freshest first, so what the player is shown is what just clicked.
+  return out.sort((a, b) => b.newestEvidenceDay - a.newestEvidenceDay)
+}
