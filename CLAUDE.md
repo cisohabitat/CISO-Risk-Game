@@ -49,19 +49,34 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 Measured, not yet fixed. Ranked.
 
-1. **`dec-programme-tradeoff` and `evt-org-programme-tradeoff` never fire.**
-   The only authored content still unreached after 60 campaigns; the rest of
-   the events reach 99% and the decisions 96%. Its condition presumably needs
-   two programmes competing for one team in a way no policy produces.
-2. **The prioritisation dimension is binary.** Across 25 campaigns it scored
-   `weak` (the passive player, everything lapses) or `strong` (everyone else,
-   everything answered with a rationale) and never anything between. A player
-   who answers most things and lets a few go should land in the middle.
-
-Add measured findings here rather than suspicions — each entry below was found
-with one of the harnesses above and closed the same way.
+Nothing ranked at present. Add measured findings here rather than suspicions —
+each entry below was found with one of the harnesses above and closed the same
+way. Note how often the finding turned out to be in the harness: check what the
+simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **The prioritisation dimension was binary.** It scored `weak` or `strong` and
+  nothing between: the lapse term forgave anything under half a year's
+  decisions, and the rationale term was constant because the game requires a
+  rationale where it matters. It now composes three things multiplicatively
+  rather than averaging them — whether the player decided at all, whether they
+  decided while there was still time to act, and whether they recorded why —
+  because a weighted sum let a perfect rationale record carry somebody who let
+  four decisions in ten go by default. Answering everything promptly reads
+  `strong`, everything at the wire `solid`, ignoring a third `developing`, and
+  ignoring a third *and* answering the rest late `weak`. Fixed a double
+  penalty on the way: the decisions log records lapses too, and they carry no
+  rationale by definition, so the old rationale share charged a player twice
+  for the same lapse.
+
+- **`dec-programme-tradeoff` was reachable all along.** It fires when the
+  identity and segmentation programmes are live together, which the coverage
+  harness never arranged: it started programmes in content order one every
+  forty days, so segmentation began around day 200, long after identity had
+  finished. A player who runs both meets the event in 13 of 20 campaigns. The
+  harness now starts the contending pair together in a quarter of its runs, and
+  **every authored event and decision is now reached** — 97/97 and 26/26.
 
 - **Discovery was not earned.** The blind-spots dimension scored `strong` in
   25 of 25 campaigns, including for a player who did nothing all year: the

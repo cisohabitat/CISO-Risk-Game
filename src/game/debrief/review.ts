@@ -167,21 +167,49 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   // 2. Prioritisation.
-  const decisions = state.history.decisionsLog.length
-  const withRationale = state.history.decisionsLog.filter((d) => d.rationaleTagIds.length > 0).length
-  const lapsed = Object.values(state.decisions.decisions).filter((d) => d.resolvedByDefault).length
-  const prioritisation = clamp01(
-    0.5 * (decisions > 0 ? withRationale / decisions : 0) + 0.5 * (1 - clamp01(lapsed / Math.max(4, decisions))),
-  )
+  //
+  // Deciding is only half of it: a choice taken on the deadline day, when the
+  // option has already been overtaken, is not the same as one taken while it
+  // still had room to matter. Scoring lapses alone made this dimension binary —
+  // everything or nothing — because letting more than half a year's decisions
+  // go by default is the only way to fail it.
+  const allDecisions = Object.values(state.decisions.decisions)
+  const lapsed = allDecisions.filter((d) => d.resolvedByDefault).length
+  const resolved = allDecisions.filter((d) => !d.resolvedByDefault && d.resolvedDay !== undefined)
+  // Over the choices the player actually made. The decisions log records
+  // lapses too, and they carry no rationale by definition, so counting against
+  // it charged a player twice for the same lapse.
+  const withRationale = resolved.filter((d) => d.rationaleTagIds.length > 0).length
+  const inGoodTime = resolved.filter((d) => {
+    if (d.deadlineDay === undefined) return true
+    const window = d.deadlineDay - d.createdDay
+    if (window <= 0) return false
+    // Room to spare means a third of the window still left when it was taken.
+    return (d.deadlineDay - (d.resolvedDay ?? d.deadlineDay)) / window >= 0.33
+  }).length
+  const put = resolved.length + lapsed
+  // Composed rather than averaged, because these compound: a weighted sum lets
+  // a perfect rationale record carry a player who let four decisions in ten go
+  // by default. Letting the organisation choose for you is the failure this
+  // dimension exists to name, so it scales everything else.
+  const decidedTerm = Math.max(0, 1 - 1.6 * (put > 0 ? lapsed / put : 1))
+  const timelyTerm = resolved.length > 0 ? inGoodTime / resolved.length : 0
+  const recordedTerm = resolved.length > 0 ? withRationale / resolved.length : 0
+  const prioritisation = clamp01(decidedTerm * (0.5 + 0.5 * timelyTerm) * (0.8 + 0.2 * recordedTerm))
   dimensions.push({
     id: 'prioritisation',
     label: 'Prioritisation',
     band: band(prioritisation),
     narrative:
-      lapsed === 0
-        ? 'You made your choices deliberately and on time, and recorded why.'
-        : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`,
-    evidence: [`${withRationale} of ${decisions} decisions carried a recorded rationale`],
+      lapsed === 0 && inGoodTime === resolved.length
+        ? 'You made your choices deliberately and with room to spare, and recorded why.'
+        : lapsed === 0
+          ? `You answered everything put to you, though ${resolved.length - inGoodTime} of ${resolved.length} went to the wire.`
+          : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`,
+    evidence: [
+      `${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`,
+      `${inGoodTime} of ${resolved.length} were taken while there was still time to act on them`,
+    ],
   })
 
   // 3. Resilience.

@@ -165,6 +165,47 @@ describe('reviews', () => {
     expect(['developing', 'solid', 'strong']).toContain(band)
   })
 
+  it('tells apart deciding late, deciding some, and deciding nothing', () => {
+    // The defect this guards: prioritisation scored `weak` or `strong` and
+    // nothing between, because only letting more than half a year's decisions
+    // lapse could fail it, and the rationale half was constant.
+    const index = testIndex()
+
+    const playStyle = (style: 'ignore' | 'lastMinute' | 'someLapse' | 'prompt') => {
+      const state = newGame(index, { seed: 'prio-1' })
+      for (let day = 0; day < 364; day += 1) {
+        for (const decisionId of [...state.decisions.openIds]) {
+          const runtime = state.decisions.decisions[decisionId]
+          const def = runtime ? index.decision.get(runtime.defId) : undefined
+          if (!def || !runtime) continue
+          if (style === 'ignore') continue
+          // Ignores a third of the topics outright, so they genuinely lapse.
+          if (style === 'someLapse' && def.id.length % 3 === 0) continue
+          if (
+            style === 'lastMinute' &&
+            runtime.deadlineDay !== undefined &&
+            state.currentDay < runtime.deadlineDay - 1
+          ) {
+            continue
+          }
+          applyAction(state, index, {
+            type: 'resolveDecision',
+            decisionId,
+            optionId: def.options[0]!.id,
+            rationaleTagIds: ['rat-within-tolerance'],
+          })
+        }
+        runDays(state, index, 1)
+      }
+      return buildAnnualReview(state, index).dimensions.find((d) => d.id === 'prioritisation')!.band
+    }
+
+    expect(playStyle('ignore')).toBe('weak')
+    expect(playStyle('someLapse')).toBe('developing')
+    expect(playStyle('lastMinute')).toBe('solid')
+    expect(playStyle('prompt')).toBe('strong')
+  })
+
   it('names material blind spots left at the end of the year', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'rev-4' })
