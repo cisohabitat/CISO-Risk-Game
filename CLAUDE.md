@@ -61,6 +61,24 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **Five of the eight mechanics the plan says to teach had no lesson.** Risk
+  scenario, investigation, stakeholder influence, assumption and incident were
+  all encountered with nothing explaining them, against the plan's "teach
+  mechanics when first encountered" and the definition of done's "new player
+  can start without reading external documentation". They have one now, in the
+  same one-at-a-time dismissible note. A sixth problem surfaced while testing
+  it: `lesson-hypothesis` also required no raised scenario, so a player who
+  raised one before forming a hypothesis could never be taught what a
+  hypothesis is for — the trigger now fires on forming one.
+
+  Lessons live in `src/components/game/lessons.ts`, apart from the component,
+  so a test can run their triggers against real campaigns. One test fails the
+  build if a mechanic the plan names has no lesson; another plays four
+  campaigns and fails if any lesson never becomes showable, because a note
+  nobody can reach teaches nobody anything. Measured over 30 campaigns: eight
+  of the nine reach the player in 100% of runs, and the incident lesson in 80%
+  — the share of campaigns that have an incident to teach from.
+
 - **High pressure was flatter than normal difficulty, not harder.** Good play
   bought 26% fewer incidents there against 37% on CISO, and over 100 seeds the
   defensive player came out *worse* than the passive one (1.96 incidents per

@@ -127,6 +127,24 @@ the cost of the choice was applied when it was made. Evidence, a stakeholder
 remembering, and a line of dialogue are the right effects here; fresh exposure
 or a new control weakness is double-charging.
 
+## Teaching a mechanic
+
+Lessons live in `src/components/game/lessons.ts`, not in the campaign JSON:
+they explain how the game works rather than what is happening at Nexora. Each
+one names the mechanic it `teaches` and a `when` predicate over game state.
+
+Two tests hold the set honest. One fails if a mechanic the plan names has no
+lesson. The other plays four campaigns and fails if any lesson never becomes
+showable — a trigger that cannot be met teaches nobody, and nothing else in the
+build would notice. Write the predicate for the moment the player first meets
+the mechanic, and do not add "and they have not done the next thing yet"
+clauses: one of those made the hypothesis lesson unreachable for anyone who
+raised a risk scenario first.
+
+Order in the array is priority, because only the first undismissed lesson whose
+moment has arrived is shown. What is happening right now goes above standing
+advice.
+
 ## Balance
 
 `pnpm tsx scripts/tune.ts 25` plays seeded campaigns under passive, defensive,
