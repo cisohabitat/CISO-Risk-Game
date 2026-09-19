@@ -20,7 +20,8 @@
 
   --ink: oklch(0.22 0.02 260);
   --ink-muted: oklch(0.45 0.015 260);
-  --ink-faint: oklch(0.6 0.012 260);
+  /* Kept above the 4.5:1 contrast floor: this colour carries small labels. */
+  --ink-faint: oklch(0.505 0.014 260);
   --ink-inverse: oklch(0.98 0.003 250);
 
   --line: oklch(0.89 0.008 260);
@@ -33,20 +34,22 @@
   --brass: oklch(0.66 0.11 75);
   --brass-soft: oklch(0.95 0.04 80);
 
-  --band-low: oklch(0.58 0.09 175);
-  --band-low-soft: oklch(0.94 0.03 175);
-  --band-moderate: oklch(0.58 0.07 230);
-  --band-moderate-soft: oklch(0.94 0.025 230);
-  --band-elevated: oklch(0.65 0.12 75);
-  --band-elevated-soft: oklch(0.95 0.045 80);
-  --band-high: oklch(0.6 0.15 40);
-  --band-high-soft: oklch(0.95 0.045 45);
-  --band-severe: oklch(0.52 0.18 20);
-  --band-severe-soft: oklch(0.94 0.05 25);
+  /* Band colours double as label text on their own soft backgrounds, so they
+     are held at or above the 4.5:1 contrast floor rather than tuned by eye. */
+  --band-low: oklch(0.465 0.09 175);
+  --band-low-soft: oklch(0.945 0.03 175);
+  --band-moderate: oklch(0.46 0.08 235);
+  --band-moderate-soft: oklch(0.945 0.025 230);
+  --band-elevated: oklch(0.465 0.1 70);
+  --band-elevated-soft: oklch(0.955 0.045 80);
+  --band-high: oklch(0.47 0.15 38);
+  --band-high-soft: oklch(0.955 0.045 45);
+  --band-severe: oklch(0.45 0.18 22);
+  --band-severe-soft: oklch(0.945 0.05 25);
 
-  --positive: oklch(0.55 0.1 160);
-  --warning: oklch(0.64 0.13 70);
-  --danger: oklch(0.53 0.18 22);
+  --positive: oklch(0.465 0.1 160);
+  --warning: oklch(0.465 0.11 68);
+  --danger: oklch(0.47 0.18 24);
 
   --shadow-soft: 0 1px 2px oklch(0.2 0.03 260 / 0.06), 0 8px 24px oklch(0.2 0.03 260 / 0.06);
   --shadow-lift: 0 2px 4px oklch(0.2 0.03 260 / 0.08), 0 16px 40px oklch(0.2 0.03 260 / 0.1);
@@ -63,7 +66,7 @@
 
   --ink: oklch(0.95 0.006 250);
   --ink-muted: oklch(0.75 0.012 255);
-  --ink-faint: oklch(0.6 0.014 255);
+  --ink-faint: oklch(0.695 0.014 255);
   --ink-inverse: oklch(0.18 0.02 265);
 
   --line: oklch(0.32 0.02 265);
@@ -84,8 +87,8 @@
   --band-elevated-soft: oklch(0.32 0.05 75);
   --band-high: oklch(0.73 0.13 45);
   --band-high-soft: oklch(0.33 0.06 40);
-  --band-severe: oklch(0.68 0.16 22);
-  --band-severe-soft: oklch(0.32 0.08 22);
+  --band-severe: oklch(0.74 0.15 22);
+  --band-severe-soft: oklch(0.3 0.08 22);
 
   --positive: oklch(0.72 0.1 162);
   --warning: oklch(0.79 0.11 72);

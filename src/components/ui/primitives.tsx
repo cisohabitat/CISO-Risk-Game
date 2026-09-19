@@ -450,3 +450,50 @@ export function Fact({ label, value, hint }: { label: string; value: ReactNode; 
     </div>
   )
 }
+
+/* ------------------------------------------------------- SegmentedControl -- */
+
+/**
+ * A filter row. Deliberately not the tab pattern: tabs promise a panel each,
+ * and these switch the contents of one list.
+ */
+export function SegmentedControl<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value: T
+  options: { id: T; label: string; count?: number }[]
+  onChange: (value: T) => void
+}) {
+  return (
+    <div role="group" aria-label={label} className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
+      {options.map((option) => {
+        const selected = option.id === value
+        return (
+          <button
+            key={option.id}
+            type="button"
+            aria-pressed={selected}
+            onClick={() => onChange(option.id)}
+            className={cn(
+              'shrink-0 rounded-lg border px-3 py-2 text-sm font-medium transition-colors',
+              selected
+                ? 'border-line-strong bg-surface-3 text-ink'
+                : 'border-transparent text-ink-muted hover:bg-surface-2 hover:text-ink',
+            )}
+          >
+            {option.label}
+            {option.count !== undefined && option.count > 0 && (
+              <span className="ml-2 rounded-full bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent-ink tabular-nums">
+                {option.count}
+              </span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}

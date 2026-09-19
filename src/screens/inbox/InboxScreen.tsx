@@ -5,7 +5,7 @@
  * Mobile shows a list that pushes to a reader; tablet and desktop show both.
  */
 import { useEffect, useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, EmptyState, Tab, TabList, Tabs } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { cn } from '@/lib/utils/cn'
 import type { InboxMessage } from '@/game/types'
@@ -57,15 +57,12 @@ export function InboxScreen() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl leading-tight">Inbox</h1>
-        <Tabs value={filter} onChange={(value) => setFilter(value as Filter)}>
-          <TabList label="Filter messages">
-            {FILTERS.map((item) => (
-              <Tab key={item.id} value={item.id}>
-                {item.label}
-              </Tab>
-            ))}
-          </TabList>
-        </Tabs>
+        <SegmentedControl
+          label="Filter messages"
+          value={filter}
+          options={FILTERS.map((item) => ({ id: item.id, label: item.label }))}
+          onChange={setFilter}
+        />
       </div>
 
       {messages.length === 0 ? (

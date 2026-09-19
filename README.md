@@ -143,6 +143,11 @@ focus, 44px touch targets, 16px body input text, no hover-only information,
 motion that respects `prefers-reduced-motion`, textual equivalents for the
 dependency graph, and risk state that never depends on colour perception.
 
+An automated axe-core audit runs as part of the end-to-end suite
+(`tests/e2e/accessibility.spec.ts`): every screen, in both themes, at desktop and
+320px, with zero WCAG 2 A/AA violations. It is not a substitute for manual
+testing with a screen reader, which has not been done.
+
 ## Licence
 
 The code and campaign content in this repository are provided for the purposes
