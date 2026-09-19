@@ -12,9 +12,30 @@ import type { ContentIndex, Difficulty, GameState } from '../src/game/types'
 
 const DIFFICULTIES: Difficulty[] = ['guided', 'ciso', 'high-pressure']
 
-function play(index: ContentIndex, seed: string, difficulty: Difficulty, engaged: boolean): GameState {
+/**
+ * Programme order matters to what a campaign can reach. Starting them in
+ * content order, one every forty days, never has two of them live at once, so
+ * content about programmes competing for the same team is unreachable however
+ * many campaigns are run. Half the engaged campaigns therefore start the two
+ * programmes that contend for the architecture team together.
+ */
+function programmeOrder(index: ContentIndex, concurrent: boolean): string[] {
+  const all = index.content.programmes.map((def) => def.id)
+  if (!concurrent) return all
+  const contending = ['prog-identity', 'prog-segmentation'].filter((id) => all.includes(id))
+  return [...contending, ...all.filter((id) => !contending.includes(id))]
+}
+
+function play(
+  index: ContentIndex,
+  seed: string,
+  difficulty: Difficulty,
+  engaged: boolean,
+  concurrentProgrammes: boolean,
+): GameState {
   const state = newGame(index, { seed, difficulty })
   const commissioned: Record<string, number> = {}
+  const order = programmeOrder(index, concurrentProgrammes)
   let programmeIndex = 0
   for (let day = 0; day < 364; day += 1) {
     for (const decisionId of [...state.decisions.openIds]) {
@@ -85,20 +106,14 @@ function play(index: ContentIndex, seed: string, difficulty: Difficulty, engaged
           })
         }
       }
-      if (day % 40 === 0 && programmeIndex < index.content.programmes.length) {
-        const def = index.content.programmes[programmeIndex]!
-        if (applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok) {
+      // Concurrent runs start the contending pair back to back so they are
+      // genuinely live together; the rest keep the spaced-out order.
+      const interval = concurrentProgrammes && programmeIndex < 2 ? 10 : 40
+      if (day % interval === 0 && programmeIndex < order.length) {
+        const def = index.programme.get(order[programmeIndex]!)
+        if (def && applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok) {
           programmeIndex += 1
         }
-      }
-      if (state.reviews.pendingQuarter !== undefined) {
-        applyAction(state, index, {
-          type: 'completeQuarterReview',
-          quarter: state.reviews.pendingQuarter,
-          topics: [],
-          recommendations: [],
-          communicateUncertainty: true,
-        })
       }
     }
     runDays(state, index, 1)
@@ -129,7 +144,7 @@ function main(): void {
 
   for (let i = 0; i < runs; i += 1) {
     const engaged = i % 2 === 0
-    const state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged)
+    const state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0)
 
     for (const id of state.events.firedEventIds) firedEvents.add(id)
     for (const runtime of Object.values(state.decisions.decisions)) openedDecisions.add(runtime.defId)
