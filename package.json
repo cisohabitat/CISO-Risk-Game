@@ -24,7 +24,8 @@
     "soak": "tsx scripts/soak.ts",
     "test:e2e:live": "playwright test --config playwright.live.config.ts",
     "coverage": "tsx scripts/coverage.ts",
-    "size": "tsx scripts/size-budget.ts"
+    "size": "tsx scripts/size-budget.ts",
+    "playthrough": "playwright test --config playwright.playthrough.config.ts --project=desktop-chromium"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

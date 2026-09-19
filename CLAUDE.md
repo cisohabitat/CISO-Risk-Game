@@ -49,6 +49,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm coverage 60` | Which authored content does a player actually reach? |
 | `pnpm tsx scripts/tune.ts 25` | Do different play styles produce different outcomes? |
 | `pnpm screenshots` | What do the screens currently look like? |
+| `pnpm playthrough` | One campaign played end to end, photographed as it goes |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
 None of them answer whether the game lands: that needs people, and
@@ -78,6 +79,27 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **Three things found by playing a year and looking at every screen.** None
+  would have failed a test, and all three undercut the game's own argument.
+
+  The Briefing told a brand-new player **"Organisation understood: 53%"** before
+  they had checked anything — a rendered percentage on the main screen, claiming
+  understanding nobody had earned, which is the exact mistake the verification
+  model exists to teach. It now reads "Checked for yourself: none of it yet",
+  in words, and rises as the player actually examines things.
+
+  A pattern offer cited **"Supplier assurance questionnaire returned clean"**
+  under *what suggests it*. That evidence is tagged both `supplier` and
+  `contradicts-supplier` — it is about suppliers and argues the other way — and
+  matching on the supporting tag alone made the game cite reassurance as
+  grounds for alarm. Contradicting evidence is now excluded from the list.
+
+  The annual review named **Engineering Workstations twice**, once as "never
+  brought into view" and once as "taken on trust and never examined", which
+  cannot both be true of the same system. "Taken on trust" now applies only to
+  things the player knew were there, and the list caps at twelve rather than
+  running to thirty lines nobody reads.
 
 - **A collision said "talk to the business".** The date belongs to a person, and
   that is who has to be talked to, so the button names them: "Talk to Priya".

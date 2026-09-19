@@ -419,6 +419,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // Things taken on trust sit behind things never seen at all: both are blind
   // spots, but not knowing something exists is the worse of the two.
   spots.push(...examined.names)
+  // A year's worth of these runs to thirty lines and stops being read. The
+  // dimension keeps the count; the list names the worst of them.
+  spots.splice(12)
   // Relying on something untrue for a year without ever checking is the purest
   // blind spot the simulation can identify, so it is named explicitly.
   for (const assumption of unexaminedAssumptions(state)) {

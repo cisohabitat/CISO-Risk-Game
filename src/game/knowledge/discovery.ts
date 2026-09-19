@@ -181,7 +181,11 @@ export function unexaminedMaterial(
     if (!node?.exists) continue
     reachable += 1
     if (node.verified) examined += 1
-    else names.push(`${def.name} was taken on trust and never examined`)
+    // "Taken on trust" only makes sense about something you knew was there.
+    // Something never discovered is named by blindSpots as never seen, and the
+    // review listed both, so one system appeared twice in the same list under
+    // two descriptions that contradict each other.
+    else if (node.discovered) names.push(`${def.name} was taken on trust and never examined`)
   }
 
   for (const def of index.content.edges) {

@@ -232,3 +232,49 @@ describe('team sustainability', () => {
     throw new Error('no campaign burned a function out, so the cap was never exercised')
   })
 })
+
+describe('what a pattern cites', () => {
+  it('never cites evidence that argues against the proposition', () => {
+    const index = testIndex()
+    for (const seed of ['cite-1', 'cite-2']) {
+      const state = newGame(index, { seed })
+      for (let day = 0; day < 364; day += 1) {
+        for (const suggestion of patternSuggestions(state, index)) {
+          const template = index.hypothesisTemplate.get(suggestion.templateId)!
+          for (const item of suggestion.evidence) {
+            const evidence = index.evidence.get(item.id)!
+            // Evidence can be tagged both ways: about the subject, and against
+            // the claim. Citing such a piece as grounds reads as nonsense.
+            const contradicts = evidence.tags.some((tag) => template.contradictingTags.includes(tag))
+            expect(contradicts, `${item.id} argues against ${template.id} and was cited as suggesting it`).toBe(false)
+          }
+        }
+        runDays(state, index, 1)
+      }
+    }
+  })
+})
+
+describe('what you never looked at', () => {
+  it('does not name the same thing twice under contradictory descriptions', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'spots-1' })
+    runDays(state, index, 364)
+    const review = buildAnnualReview(state, index)
+
+    // "Never brought into view" and "taken on trust and never examined" are
+    // mutually exclusive: you cannot take on trust what you never saw.
+    const subjects = new Map<string, string[]>()
+    for (const spot of review.blindSpots) {
+      for (const def of index.content.nodes) {
+        if (!spot.startsWith(def.name)) continue
+        subjects.set(def.name, [...(subjects.get(def.name) ?? []), spot])
+      }
+    }
+    for (const [name, lines] of subjects) {
+      expect(lines.length, `${name} is named ${lines.length} times:\n${lines.join('\n')}`).toBe(1)
+    }
+    // And the list stays readable rather than running to thirty lines.
+    expect(review.blindSpots.length).toBeLessThanOrEqual(12)
+  })
+})

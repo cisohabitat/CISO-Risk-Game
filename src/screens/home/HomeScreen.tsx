@@ -149,11 +149,18 @@ export function HomeScreen() {
                   valueLabel={`${view.focusRemaining} of ${view.focusPerWeek} left`}
                   tone={view.focusRemaining === 0 ? 'high' : 'accent'}
                 />
+                {/*
+                  What the player has checked for themselves, not what they
+                  were handed. This read "Organisation understood 53%" on day
+                  one, before they had looked at anything: a number the game
+                  does not render elsewhere, asserting understanding nobody had
+                  earned, on the screen that sets the tone for the year.
+                */}
                 <Meter
-                  label="Organisation understood"
-                  value={view.understandingPercent}
-                  valueLabel={`${view.understandingPercent}%`}
-                  tone={view.understandingPercent < 40 ? 'elevated' : 'low'}
+                  label="Checked for yourself"
+                  value={Math.round(view.examinedShare * 100)}
+                  valueLabel={examinedLabel(view.examinedShare)}
+                  tone={view.examinedShare < 0.4 ? 'elevated' : 'low'}
                 />
                 <p className="text-sm text-ink-muted text-pretty">
                   {unknown.nodes > 0 || unknown.edges > 0
@@ -329,4 +336,18 @@ function StatCard({
       </CardBody>
     </Card>
   )
+}
+
+/**
+ * Words rather than a percentage, and about verification rather than sight:
+ * the inherited register makes most of Nexora visible on day one, and treating
+ * that as understanding is the mistake the whole game is about.
+ */
+function examinedLabel(share: number): string {
+  if (share <= 0) return 'none of it yet'
+  if (share < 0.2) return 'barely started'
+  if (share < 0.45) return 'a start'
+  if (share < 0.7) return 'a fair amount'
+  if (share < 0.9) return 'most of it'
+  return 'nearly all of it'
 }

@@ -19,6 +19,7 @@ import { capacityBand, functionStrain, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { statusLabel } from '@/lib/formatting/labels'
+import { unexaminedMaterial } from '@/game/knowledge/discovery'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -488,6 +489,8 @@ export interface BriefingView {
   activeIncident?: { id: string; name: string; phase: string; servicesAffected: string[] }
   runningWork: number
   understandingPercent: number
+  /** How much of what the player could have checked themselves, they have. */
+  examinedShare: number
 }
 
 export function briefing(state: GameState, index: ContentIndex): BriefingView {
@@ -535,6 +538,10 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
       : undefined,
     runningWork: state.team.assignments.filter((assignment) => assignment.status === 'running').length,
     understandingPercent: Math.round(clamp01(state.organisation.understanding['overall'] ?? 0) * 100),
+    examinedShare: (() => {
+      const examined = unexaminedMaterial(state, index)
+      return examined.reachable > 0 ? examined.examined / examined.reachable : 0
+    })(),
   }
 }
 
@@ -853,7 +860,17 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
     if (!template.requiresTags.every((tag) => knownTags.has(tag))) continue
     // Only worth raising once the player holds something that actually speaks
     // to it; the required tag alone can be a single passing mention.
-    const supporting = known.filter((def) => def.tags.some((tag) => template.supportingTags.includes(tag)))
+    // A piece can carry both a supporting and a contradicting tag — the clean
+    // supplier questionnaire is tagged "supplier" and "contradicts-supplier",
+    // because it is about suppliers and argues the other way. Matching on the
+    // supporting tag alone listed "Supplier assurance questionnaire returned
+    // clean" under "what suggests it", which cites reassurance as grounds for
+    // alarm. What argues against a proposition is not evidence for it.
+    const supporting = known.filter(
+      (def) =>
+        def.tags.some((tag) => template.supportingTags.includes(tag)) &&
+        !def.tags.some((tag) => template.contradictingTags.includes(tag)),
+    )
     if (supporting.length < 2) continue
 
     const newestDay = supporting.reduce(
