@@ -413,6 +413,7 @@ export const eventSchema = z.object({
   conditions: z.array(conditionSchema),
   weight: z.number().positive(),
   pinned: z.boolean(),
+  scheduledOnly: z.boolean().optional(),
   oncePerCampaign: z.boolean(),
   cooldownDays: z.number().int().positive().optional(),
   effectsOnReveal: z.array(effectSchema).optional(),

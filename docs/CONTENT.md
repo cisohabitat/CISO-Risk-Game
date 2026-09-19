@@ -108,6 +108,25 @@ player having examined something — a penetration test, an audit — give it an
 investigation rather than an event, so the annual review can tell the
 difference between what somebody was told and what they checked.
 
+## Consequences of earlier choices
+
+A decision option that records a flag should have something read that flag
+later. The organisation is meant to remember what the player chose, and a flag
+nobody consults is a choice it immediately forgets — `tests/content/content.test.ts`
+fails the build on one.
+
+Write the callback as a `scheduledOnly` event and schedule it from the option
+that causes it, with an `event.schedule` effect carrying the delay. Scheduled
+events fire on their day regardless of the daily draw; leaving a callback in
+the weighted pool instead dilutes every other event's chance of being drawn,
+which measurably cost the campaign some of its other content when these were
+first written.
+
+A callback makes an earlier choice visible. It should not charge for it again:
+the cost of the choice was applied when it was made. Evidence, a stakeholder
+remembering, and a line of dialogue are the right effects here; fresh exposure
+or a new control weakness is double-charging.
+
 ## Balance
 
 `pnpm tsx scripts/tune.ts 25` plays seeded campaigns under passive, defensive,

@@ -56,6 +56,33 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **The organisation did not remember what the player chose.** Twenty-six of
+  the twenty-eight flags a decision option can set were written and never read
+  by anything: the machinery for consequences existed and no content used it,
+  so the plan's "the organisation appears to remember past decisions" was not
+  true. Every one of those choices now has a callback that refers back to it,
+  in the voice of somebody who was there — the four weeks you asked the CEO
+  for, the launch you waved through, the provider access you left alone, the
+  update you waited six weeks for. A content test fails the build on a flag
+  that is set and never read.
+
+  Two measurement lessons came out of it. Authored as ordinary pool events, the
+  twenty-six callbacks diluted the weighted daily draw enough to cost engaged
+  players real outcomes (defensive clean years 37% to 30% over 100 seeds), so
+  events can now be `scheduledOnly` and are scheduled by the choice that causes
+  them; balance returned to baseline. And the coverage harness took the same
+  decision option in every campaign, so half of them looked unreachable until
+  it was made to vary its choices per campaign. Every authored event and
+  decision is now reached: 123/123 and 26/26.
+
+- **The debrief counted rationales without reckoning with them.** It reported
+  how many decisions carried a recorded reason, which says nothing about
+  whether the reasoning was any good. The annual review now joins each
+  rationale to what followed it — a risk carried as "within tolerance" that
+  reached the business anyway, an assurance assumption recorded beside a choice
+  that later turned out not to hold — and puts it to the player in their own
+  words. See `reasoningReview` in `src/game/debrief/review.ts`.
+
 - **The prioritisation dimension was binary.** It scored `weak` or `strong` and
   nothing between: the lapse term forgave anything under half a year's
   decisions, and the rationale term was constant because the game requires a

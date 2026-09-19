@@ -18,6 +18,7 @@ import spineEvents from './events/spine.json'
 import businessEvents from './events/business.json'
 import threatEvents from './events/threat.json'
 import organisationEvents from './events/organisation.json'
+import consequenceEvents from './events/consequences.json'
 import type { CampaignContent } from '@/game/types'
 
 /** Assembled, unvalidated campaign content. Validation happens in the loader. */
@@ -44,6 +45,7 @@ export const nexoraContentRaw: unknown = {
     ...businessEvents.events,
     ...threatEvents.events,
     ...organisationEvents.events,
+    ...consequenceEvents.events,
   ],
   rationaleTags: risks.rationaleTags,
   assumptions: risks.assumptions,

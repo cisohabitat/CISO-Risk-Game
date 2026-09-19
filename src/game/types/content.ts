@@ -344,6 +344,13 @@ export interface GameEventDef {
   weight: number
   /** Guaranteed narrative beat: fires as soon as conditions hold. */
   pinned: boolean
+  /**
+   * Fires only when something schedules it, never from the weighted daily
+   * pool. Delayed consequences of a specific choice belong here: leaving them
+   * in the pool dilutes every other event's chance of being drawn, so authoring
+   * a callback would quietly cost the campaign some of its other content.
+   */
+  scheduledOnly?: boolean
   oncePerCampaign: boolean
   cooldownDays?: number
   effectsOnReveal?: GameEffect[]

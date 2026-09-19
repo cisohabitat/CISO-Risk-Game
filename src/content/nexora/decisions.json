@@ -16,14 +16,16 @@
             { "type": "edge.reveal", "edgeId": "edge-orders-wms" },
             { "type": "evidence.reveal", "evidenceId": "ev-launch-pressure", "note": "Service owner conversations" },
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.06, "reason": "You asked operations what mattered before telling them what to do." },
-            { "type": "flag.set", "flag": "start.services" }
+            { "type": "flag.set", "flag": "start.services" },
+            { "type": "event.schedule", "eventId": "evt-con-start-services-recalled", "dayOffset": 95 }
           ] },
         { "id": "opt-first-register", "label": "Start with the inherited risk register", "description": "Work the 23 open entries you have been handed.", "visibleKnownEffects": ["Fastest way to sound informed this morning", "The register may not describe anything current"],
           "immediateEffects": [
             { "type": "evidence.reveal", "evidenceId": "ev-audit-stale-register", "note": "Inherited risk register" },
             { "type": "evidence.reveal", "evidenceId": "ev-audit-repeat-finding", "note": "Inherited risk register" },
             { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.03, "reason": "You engaged with the register the board already knows." },
-            { "type": "flag.set", "flag": "start.register" }
+            { "type": "flag.set", "flag": "start.register" },
+            { "type": "event.schedule", "eventId": "evt-con-start-register-recalled", "dayOffset": 95 }
           ] },
         { "id": "opt-first-team", "label": "Start with your own leadership team", "description": "Find out what your four heads already know and what they have been unable to get done.", "visibleKnownEffects": ["Your team will feel heard", "You will be relying on their existing framing"],
           "immediateEffects": [
@@ -31,28 +33,32 @@
             { "type": "evidence.reveal", "evidenceId": "ev-pam-adoption", "note": "Head of Security Engineering" },
             { "type": "team.morale", "delta": 0.06 },
             { "type": "leader.morale", "leaderId": "lead-soc", "delta": 0.08 },
-            { "type": "flag.set", "flag": "start.team" }
+            { "type": "flag.set", "flag": "start.team" },
+            { "type": "event.schedule", "eventId": "evt-con-start-team-recalled", "dayOffset": 95 }
           ] },
         { "id": "opt-first-architecture", "label": "Start with the architecture", "description": "Ask how the organisation actually fits together before deciding what threatens it.", "visibleKnownEffects": ["Slow to produce anything the CEO can use this morning", "Most likely to change what you believe"],
           "immediateEffects": [
             { "type": "node.reveal", "nodeId": "node-mgmt-server", "confidence": 0.5 },
             { "type": "evidence.reveal", "evidenceId": "ev-legacy-inventory", "note": "Architecture review" },
             { "type": "stakeholder.trust", "stakeholderId": "stk-cio", "delta": 0.04, "reason": "You went to the architecture before the audit findings." },
-            { "type": "flag.set", "flag": "start.architecture" }
+            { "type": "flag.set", "flag": "start.architecture" },
+            { "type": "event.schedule", "eventId": "evt-con-start-architecture-recalled", "dayOffset": 95 }
           ] },
         { "id": "opt-first-threat", "label": "Start with the threat picture", "description": "Find out what is actually happening to organisations like this one.", "visibleKnownEffects": ["Useful framing for the CEO", "Tells you nothing about Nexora specifically"],
           "immediateEffects": [
             { "type": "evidence.reveal", "evidenceId": "ev-ransomware-sector", "note": "Threat intelligence" },
             { "type": "evidence.reveal", "evidenceId": "ev-credential-campaign", "note": "Threat intelligence" },
             { "type": "threat.interest", "actorId": "actor-ransom", "delta": 0 },
-            { "type": "flag.set", "flag": "start.threat" }
+            { "type": "flag.set", "flag": "start.threat" },
+            { "type": "event.schedule", "eventId": "evt-con-start-threat-recalled", "dayOffset": 95 }
           ] },
         { "id": "opt-first-controls", "label": "Start with recent control testing", "description": "Read the penetration test and control assurance reports before forming a view.", "visibleKnownEffects": ["Evidence-based, if the testing was scoped well"],
           "immediateEffects": [
             { "type": "evidence.reveal", "evidenceId": "ev-pen-test-segmentation", "note": "Last year's penetration test" },
             { "type": "evidence.reveal", "evidenceId": "ev-pen-test-scope-limited", "note": "Last year's penetration test" },
             { "type": "control.assess", "controlId": "ctl-edr" },
-            { "type": "flag.set", "flag": "start.controls" }
+            { "type": "flag.set", "flag": "start.controls" },
+            { "type": "event.schedule", "eventId": "evt-con-start-controls-recalled", "dayOffset": 95 }
           ] }
       ]
     },
@@ -72,19 +78,22 @@
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.08, "reason": "You told her what you did not yet know." },
             { "type": "stakeholder.understanding", "stakeholderId": "stk-ceo", "delta": 0.06 },
             { "type": "board.confidence", "delta": 0.03 },
-            { "type": "flag.set", "flag": "ceo.honest" }
+            { "type": "flag.set", "flag": "ceo.honest" },
+            { "type": "event.schedule", "eventId": "evt-con-ceo-honest-returns", "dayOffset": 110 }
           ] },
         { "id": "opt-ceo-confident", "label": "Give her three risks with confidence", "description": "Name the three that sound most serious and commit to them.", "visibleKnownEffects": ["Reassuring today", "Harder to change position later"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.05, "reason": "You gave her a clear answer on day one." },
-            { "type": "flag.set", "flag": "ceo.confident" }
+            { "type": "flag.set", "flag": "ceo.confident" },
+            { "type": "event.schedule", "eventId": "evt-con-ceo-confident-tested", "dayOffset": 110 }
           ],
           "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.06, "reason": "Your day-one risks turned out not to be the ones that mattered." } ], "note": "The CEO has noticed your opening risks have quietly changed." } ] },
         { "id": "opt-ceo-defer", "label": "Ask for four weeks before answering", "description": "Tell her you will not guess, and come back with something defensible.", "visibleKnownEffects": ["Buys you time", "She has a board meeting in three weeks"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.04, "reason": "You would not give her anything on day one." },
             { "type": "focus.change", "amount": 1 },
-            { "type": "flag.set", "flag": "ceo.deferred" }
+            { "type": "flag.set", "flag": "ceo.deferred" },
+            { "type": "event.schedule", "eventId": "evt-con-ceo-deferred-recalled", "dayOffset": 90 }
           ] },
         { "id": "opt-ceo-vague", "label": "Talk in general terms about the threat landscape", "description": "Ransomware, supply chain, the usual.", "visibleKnownEffects": ["Says nothing about Nexora"],
           "immediateEffects": [
@@ -109,7 +118,8 @@
             { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": 0.09, "reason": "You backed the launch without conditions." },
             { "type": "objective.progress", "objectiveId": "obj-platform-launch", "delta": 0.08 },
             { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": 0.1 },
-            { "type": "flag.set", "flag": "launch.unconditional" }
+            { "type": "flag.set", "flag": "launch.unconditional" },
+            { "type": "event.schedule", "eventId": "evt-con-launch-unconditional-recalled", "dayOffset": 70 }
           ],
           "assumptionIds": ["asm-payments-stable"] },
         { "id": "opt-launch-conditions", "label": "Support, with conditions", "description": "Launch proceeds if administrative MFA is closed out and the exposed findings on checkout are fixed first.", "visibleKnownEffects": ["A short delay is likely", "The delivery team will resent the process, not the outcome"],
@@ -120,7 +130,8 @@
             { "type": "control.coverage", "controlId": "ctl-mfa", "delta": 0.08 },
             { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.15 },
             { "type": "operationalTolerance", "delta": -0.03 },
-            { "type": "flag.set", "flag": "launch.conditional" }
+            { "type": "flag.set", "flag": "launch.conditional" },
+            { "type": "event.schedule", "eventId": "evt-con-launch-conditions-honoured", "dayOffset": 70 }
           ] },
         { "id": "opt-launch-oppose", "label": "Oppose the launch until the identity work is done", "description": "Refuse sign-off. The identity model has to change first.", "visibleKnownEffects": ["A public commitment will be missed", "You will need the CEO behind you"],
           "immediateEffects": [
@@ -130,14 +141,16 @@
             { "type": "objective.delay", "objectiveId": "obj-platform-launch", "days": 45 },
             { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.15 },
             { "type": "operationalTolerance", "delta": -0.12 },
-            { "type": "flag.set", "flag": "launch.blocked" }
+            { "type": "flag.set", "flag": "launch.blocked" },
+            { "type": "event.schedule", "eventId": "evt-con-launch-blocked-recalled", "dayOffset": 70 }
           ] },
         { "id": "opt-launch-compensate", "label": "Support now, compensate afterwards", "description": "Let it launch, with enhanced monitoring on checkout and a committed fix window.", "visibleKnownEffects": ["Launch is unaffected", "You are carrying the exposure in the meantime"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": 0.05, "reason": "You found a way to launch on time." },
             { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.06 },
             { "type": "objective.progress", "objectiveId": "obj-platform-launch", "delta": 0.05 },
-            { "type": "flag.set", "flag": "launch.compensated" }
+            { "type": "flag.set", "flag": "launch.compensated" },
+            { "type": "event.schedule", "eventId": "evt-con-launch-compensated-due", "dayOffset": 80 }
           ],
           "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.1 } ], "note": "The committed fix window on checkout has closed out." } ],
           "assumptionIds": ["asm-payments-stable"] }
@@ -178,7 +191,7 @@
           ],
           "assumptionIds": ["asm-supplier-no-priv"] },
         { "id": "opt-msp-nothing", "label": "Leave it for now", "description": "There are bigger problems this quarter.", "visibleKnownEffects": ["Nothing changes"],
-          "immediateEffects": [ { "type": "flag.set", "flag": "msp.deferred" } ],
+          "immediateEffects": [ { "type": "flag.set", "flag": "msp.deferred" }, { "type": "event.schedule", "eventId": "evt-con-msp-deferred-returns", "dayOffset": 90 } ],
           "assumptionIds": ["asm-supplier-no-priv"] }
       ]
     },
@@ -204,6 +217,7 @@
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-cio", "delta": -0.06, "reason": "You pushed on a migration date he does not control." },
             { "type": "flag.set", "flag": "legacy.retirementDay", "value": 210 },
+            { "type": "event.schedule", "eventId": "evt-con-legacy-acceleration-slips", "dayOffset": 150 },
             { "type": "objective.progress", "objectiveId": "obj-cloud-migration", "delta": 0.05 }
           ],
           "assumptionIds": ["asm-retirement"] },
@@ -220,7 +234,8 @@
             { "type": "control.coverage", "controlId": "ctl-ir", "delta": 0.08 },
             { "type": "control.operational", "controlId": "ctl-backup", "delta": 0.06 },
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.1, "reason": "You funded a fallback operations could actually use." },
-            { "type": "flag.set", "flag": "legacy.fallback" }
+            { "type": "flag.set", "flag": "legacy.fallback" },
+            { "type": "event.schedule", "eventId": "evt-con-legacy-fallback-used", "dayOffset": 120 }
           ] }
       ]
     },
@@ -238,7 +253,8 @@
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.08, "reason": "You gave audit a credible, dated answer." },
             { "type": "board.confidence", "delta": 0.06 },
-            { "type": "flag.set", "flag": "audit.committed" }
+            { "type": "flag.set", "flag": "audit.committed" },
+            { "type": "event.schedule", "eventId": "evt-con-audit-commitment-due", "dayOffset": 100 }
           ] },
         { "id": "opt-audit-plan", "label": "Produce a remediation plan", "description": "The standard response: a plan, an owner and a target date.", "visibleKnownEffects": ["Audit will accept it", "So did the last two plans"],
           "immediateEffects": [
@@ -428,7 +444,8 @@
         { "id": "opt-anomaly-ask", "label": "Ask the provider to explain it", "description": "Cheap, fast, and depends entirely on the provider being both honest and informed.", "visibleKnownEffects": ["Costs almost nothing", "Tells you what the provider believes, not what happened"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.02 },
-            { "type": "flag.set", "flag": "anomaly.asked" }
+            { "type": "flag.set", "flag": "anomaly.asked" },
+            { "type": "event.schedule", "eventId": "evt-con-anomaly-asked-answered", "dayOffset": 14 }
           ] },
         { "id": "opt-anomaly-suspend", "label": "Suspend vendor access until it is explained", "description": "Close the route now, ask questions afterwards.", "visibleKnownEffects": ["Night operations are affected immediately", "The provider will escalate"],
           "immediateEffects": [
@@ -521,7 +538,7 @@
             { "type": "board.confidence", "delta": 0.02 }
           ] },
         { "id": "opt-board-wait", "label": "Wait for the scheduled meeting", "description": "Six weeks is not long.", "visibleKnownEffects": ["Nothing happens now"],
-          "immediateEffects": [ { "type": "flag.set", "flag": "board.delayed" } ],
+          "immediateEffects": [ { "type": "flag.set", "flag": "board.delayed" }, { "type": "event.schedule", "eventId": "evt-con-board-delay-noticed", "dayOffset": 25 } ],
           "delayedEffects": [ { "dayOffset": 42, "effects": [ { "type": "board.confidence", "delta": -0.05 } ], "note": "The risk chair asks why he is hearing this six weeks after it was assessed." } ] }
       ]
     },
@@ -539,6 +556,7 @@
           "immediateEffects": [
             { "type": "incident.containment", "delta": 0.18 },
             { "type": "flag.set", "flag": "incident.command" },
+            { "type": "event.schedule", "eventId": "evt-con-incident-command-recalled", "dayOffset": 18 },
             { "type": "team.morale", "delta": -0.03 },
             { "type": "operationalTolerance", "delta": -0.05 },
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.04, "reason": "You took visible control of the incident." }
@@ -587,6 +605,7 @@
             { "type": "budget.change", "amount": -320, "note": "Emergency incident response engagement." },
             { "type": "incident.containment", "delta": 0.2 },
             { "type": "flag.set", "flag": "incident.external" },
+            { "type": "event.schedule", "eventId": "evt-con-incident-external-invoiced", "dayOffset": 21 },
             { "type": "team.morale", "delta": 0.05 }
           ] },
         { "id": "opt-inc-ext-no", "label": "Run it in-house", "description": "Your team handles it.", "visibleKnownEffects": ["No cost", "Your team will be exhausted"],
@@ -613,7 +632,7 @@
             { "type": "incident.consequence", "delta": -0.04 }
           ] },
         { "id": "opt-inc-notify-wait", "label": "Establish the facts first", "description": "Take the time to know what you are reporting.", "visibleKnownEffects": ["A better first report", "The clock is running"],
-          "immediateEffects": [ { "type": "flag.set", "flag": "incident.notify.delayed" } ],
+          "immediateEffects": [ { "type": "flag.set", "flag": "incident.notify.delayed" }, { "type": "event.schedule", "eventId": "evt-con-notify-delay-questioned", "dayOffset": 21 } ],
           "delayedEffects": [ { "dayOffset": 6, "effects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": -0.05, "reason": "Notification went out later than she was comfortable with." } ], "note": "Legal has flagged the notification timing." } ] }
       ]
     },
@@ -710,7 +729,7 @@
           ],
           "delayedEffects": [ { "dayOffset": 18, "effects": [ { "type": "capacity.change", "fn": "grc", "delta": 0.5 }, { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.05 } ], "note": "The HR provider has confirmed the scope of its incident." } ] },
         { "id": "opt-hr-wait", "label": "Wait for their next update", "description": "They have promised more information.", "visibleKnownEffects": ["Costs nothing"],
-          "immediateEffects": [ { "type": "flag.set", "flag": "hr.waiting" } ] }
+          "immediateEffects": [ { "type": "flag.set", "flag": "hr.waiting" }, { "type": "event.schedule", "eventId": "evt-con-hr-wait-resolved", "dayOffset": 35 } ] }
       ]
     },
     {
@@ -779,17 +798,20 @@
         { "id": "opt-tradeoff-identity", "label": "Prioritise identity", "description": "Concentrate the capacity where most attack paths converge.", "visibleKnownEffects": ["Segmentation slips", "Identity delivers faster"],
           "immediateEffects": [
             { "type": "programme.progress", "programmeId": "prog-identity", "delta": 0.06 },
-            { "type": "flag.set", "flag": "priority.identity" }
+            { "type": "flag.set", "flag": "priority.identity" },
+            { "type": "event.schedule", "eventId": "evt-con-priority-identity-felt", "dayOffset": 45 }
           ] },
         { "id": "opt-tradeoff-segmentation", "label": "Prioritise segmentation", "description": "Concentrate on limiting what any single compromise can reach.", "visibleKnownEffects": ["Identity slips", "Segmentation delivers faster"],
           "immediateEffects": [
             { "type": "programme.progress", "programmeId": "prog-segmentation", "delta": 0.06 },
-            { "type": "flag.set", "flag": "priority.segmentation" }
+            { "type": "flag.set", "flag": "priority.segmentation" },
+            { "type": "event.schedule", "eventId": "evt-con-priority-segmentation-felt", "dayOffset": 45 }
           ] },
         { "id": "opt-tradeoff-both", "label": "Run both at reduced pace", "description": "Keep both alive.", "visibleKnownEffects": ["Neither is delivered quickly", "Nobody has to be told no"],
           "immediateEffects": [
             { "type": "team.morale", "fn": "architecture", "delta": -0.05 },
-            { "type": "flag.set", "flag": "priority.split" }
+            { "type": "flag.set", "flag": "priority.split" },
+            { "type": "event.schedule", "eventId": "evt-con-priority-split-felt", "dayOffset": 45 }
           ] }
       ]
     }

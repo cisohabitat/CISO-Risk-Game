@@ -32,6 +32,7 @@ function play(
   difficulty: Difficulty,
   engaged: boolean,
   concurrentProgrammes: boolean,
+  optionOffset: number,
 ): GameState {
   const state = newGame(index, { seed, difficulty })
   const commissioned: Record<string, number> = {}
@@ -42,7 +43,10 @@ function play(
       const runtime = state.decisions.decisions[decisionId]
       const def = runtime ? index.decision.get(runtime.defId) : undefined
       if (!def) continue
-      const option = def.options[day % def.options.length]
+      // Offset per campaign as well as per day: a decision that opens on a
+      // fixed day otherwise takes the same option in every campaign, so the
+      // content behind its other options is never reached.
+      const option = def.options[(day + optionOffset) % def.options.length]
       if (!option) continue
       applyAction(state, index, {
         type: 'resolveDecision',
@@ -144,7 +148,7 @@ function main(): void {
 
   for (let i = 0; i < runs; i += 1) {
     const engaged = i % 2 === 0
-    const state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0)
+    const state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0, i)
 
     for (const id of state.events.firedEventIds) firedEvents.add(id)
     for (const runtime of Object.values(state.decisions.decisions)) openedDecisions.add(runtime.defId)

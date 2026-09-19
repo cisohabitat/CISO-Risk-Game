@@ -76,7 +76,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
 
   // 2. Pinned narrative beats fire as soon as they become possible.
   for (const def of index.content.events) {
-    if (!def.pinned) continue
+    if (!def.pinned || def.scheduledOnly) continue
     if (!isEligible(state, index, def)) continue
     fire(def)
   }
@@ -85,7 +85,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
   const budget = dailyBudget(state, rng)
   if (budget > 0) {
     const pool = index.content.events.filter(
-      (def) => !def.pinned && !firedThisDay.has(def.id) && isEligible(state, index, def),
+      (def) => !def.pinned && !def.scheduledOnly && !firedThisDay.has(def.id) && isEligible(state, index, def),
     )
     for (let i = 0; i < budget; i += 1) {
       const remaining = pool.filter((def) => !firedThisDay.has(def.id))

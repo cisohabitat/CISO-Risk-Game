@@ -91,3 +91,69 @@ describe('campaign content', () => {
     expect(total).toBeGreaterThan(content.meta.startingBudget)
   })
 })
+
+describe('the organisation remembers what the player chose', () => {
+  const content = parsed.success ? (parsed.data as unknown as CampaignContent) : undefined
+
+  /** Every flag any condition anywhere consults. */
+  function flagsRead(): Set<string> {
+    const out = new Set<string>()
+    const walk = (value: unknown): void => {
+      if (Array.isArray(value)) {
+        for (const item of value) walk(item)
+        return
+      }
+      if (!value || typeof value !== 'object') return
+      const record = value as Record<string, unknown>
+      const kind = record['kind']
+      if (typeof kind === 'string' && kind.startsWith('flag.') && typeof record['flag'] === 'string') {
+        out.add(record['flag'])
+      }
+      for (const nested of Object.values(record)) walk(nested)
+    }
+    walk(content!.events)
+    walk(content!.decisions)
+    return out
+  }
+
+  it('consults every flag a decision option sets', () => {
+    expect(content).toBeDefined()
+    const read = flagsRead()
+    const unread: string[] = []
+    for (const decision of content!.decisions) {
+      for (const option of decision.options) {
+        for (const effect of option.immediateEffects ?? []) {
+          if (effect.type !== 'flag.set') continue
+          if (!read.has(effect.flag)) unread.push(`${decision.id}/${option.id} sets ${effect.flag}`)
+        }
+      }
+    }
+    // A flag set and never read is a choice the organisation immediately
+    // forgets, which is the opposite of what the flag is for.
+    expect(unread, `these choices are recorded and never referred to again:\n${unread.join('\n')}`).toEqual([])
+  })
+})
+
+describe('delayed consequences', () => {
+  const content = parsed.success ? (parsed.data as unknown as CampaignContent) : undefined
+
+  it('schedules every consequence rather than leaving it to the draw', () => {
+    expect(content).toBeDefined()
+    const scheduled = new Set<string>()
+    for (const decision of content!.decisions) {
+      for (const option of decision.options) {
+        for (const effect of [...(option.immediateEffects ?? []), ...(option.delayedEffects ?? []).flatMap((d) => d.effects)]) {
+          if (effect.type === 'event.schedule') scheduled.add(effect.eventId)
+        }
+      }
+    }
+    for (const event of content!.events) {
+      for (const effect of event.effectsOnReveal ?? []) {
+        if (effect.type === 'event.schedule') scheduled.add(effect.eventId)
+      }
+    }
+    // A scheduled-only event that nothing schedules can never fire at all.
+    const orphans = content!.events.filter((event) => event.scheduledOnly && !scheduled.has(event.id)).map((e) => e.id)
+    expect(orphans, `nothing ever schedules these:\n${orphans.join('\n')}`).toEqual([])
+  })
+})

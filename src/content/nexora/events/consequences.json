@@ -1,0 +1,724 @@
+{
+  "events": [
+    {
+      "id": "evt-con-ceo-honest-returns",
+      "type": "executive",
+      "title": "She remembered what you said you did not know",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "When you gave me your three risks in your first month, you told me which of them you were unsure about. I have had cause to repeat that to the board, and it has done you no harm at all. Tell me what you are unsure about now.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "ceo.honest"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-ceo",
+          "delta": 0.05,
+          "reason": "You told her what you did not know, and it held up."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-ceo-confident-tested",
+      "type": "executive",
+      "title": "The three risks you were sure about",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "You gave me three risks in your first month and you gave them to me straight, no hedging. I have been repeating them since. If any of that has changed I would rather hear it from you than find out in a board paper.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "ceo.confident"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-ceo-deferred-recalled",
+      "type": "executive",
+      "title": "The four weeks you asked for",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "You asked me for four weeks before answering, back at the start. I gave them to you and I have not pressed since. The board has begun asking me what our top risks are, and I would like to stop telling them that our CISO is still looking.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "ceo.deferred"
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-ceo",
+          "delta": -0.04,
+          "reason": "The four weeks you asked for became four months."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-launch-conditions-honoured",
+      "type": "business",
+      "title": "Your conditions on the launch",
+      "from": "Priya Nandakumar, Managing Director, Digital",
+      "body": "We took the launch with your conditions attached. My team met them, mostly, and the ones we did not meet we wrote down. I want you to see the list before somebody else shows it to you.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "launch.conditional"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-shadow-integration",
+          "note": "Digital launch conditions"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-launch-unconditional-recalled",
+      "type": "business",
+      "title": "You waved the launch through",
+      "from": "Priya Nandakumar, Managing Director, Digital",
+      "body": "You backed the launch without conditions and I have not forgotten it. My people took that as permission to move at the same speed on the next two integrations. I am telling you because you will want to know before you find them.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "launch.unconditional"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-digital",
+          "delta": 0.04,
+          "reason": "You backed the launch when it mattered to her."
+        }
+      ],
+      "relatedNodeIds": [
+        "node-app-portal"
+      ],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-launch-blocked-recalled",
+      "type": "business",
+      "title": "The launch you stopped",
+      "from": "Priya Nandakumar, Managing Director, Digital",
+      "body": "We are three months behind where we told the market we would be, and the reason on the slide is security. I am not relitigating it. I am telling you that the next time I need to move quickly, I will be going to the CIO first.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "launch.blocked"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-digital",
+          "delta": -0.06,
+          "reason": "You stopped her launch and she is routing around you."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-launch-compensated-due",
+      "type": "business",
+      "title": "The compensating work you promised",
+      "from": "Dev Raghunathan, Chief Information Officer",
+      "body": "You let the launch go ahead on the understanding that the work would follow it. The launch happened. I cannot find the work. Either it is somewhere I am not looking or it is one of the things that quietly did not get done.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "launch.compensated"
+        }
+      ],
+      "weight": 28,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-cio",
+          "delta": -0.04,
+          "reason": "The compensating work you promised after the launch was never visible to him."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-notify-delay-questioned",
+      "type": "board",
+      "title": "Why the notification waited",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "You chose to establish the facts before notifying. I supported that at the time and I would again. The regulator has now asked, in writing, when we first knew. I need the timeline you were working from, and I need it to say what you actually did.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "incident.notify.delayed"
+        }
+      ],
+      "weight": 32,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-board-delay-noticed",
+      "type": "board",
+      "title": "The chair read it in the papers",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "You held a material risk for the scheduled meeting rather than bringing it to me when you had it. That is a defensible choice and I am not criticising it. I am telling you that I would have preferred the phone call, and that next time I will assume there is one coming.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "board.delayed"
+        }
+      ],
+      "weight": 28,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": -0.03,
+          "reason": "You waited for the meeting rather than calling him."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-msp-deferred-returns",
+      "type": "supplier",
+      "title": "The provider access you left alone",
+      "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+      "body": "You decided not to act on the managed provider's access. Their contract renewal is in front of me now, and the account list has grown since you looked at it. If you want anything changed, this is the cheapest moment of the year to ask for it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "msp.deferred"
+        }
+      ],
+      "weight": 28,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "supplier",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-commitment-due",
+      "type": "board",
+      "title": "The dates you gave the auditors",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "We committed to a funded programme with dates against the audit finding. The follow-up is scheduled and they will ask about the dates rather than the intent. I would rather we told them where we actually are than where we said we would be.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "audit.committed"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-legacy-fallback-used",
+      "type": "business",
+      "title": "The fallback you paid for",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "The manual fulfilment fallback you funded was exercised last week, for four hours, during a planned change that did not go to plan. Nobody outside the warehouse noticed. I thought you should know that the money did something.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "legacy.fallback"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-coo",
+          "delta": 0.05,
+          "reason": "The fallback you funded was used and it worked."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-hr-wait-resolved",
+      "type": "supplier",
+      "title": "The update you waited for",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "You chose to wait for the HR provider's next update rather than press them. It has arrived. It is four paragraphs, it confirms that our data was in scope, and it does not say what was taken. We are now asking the questions we could have asked six weeks ago.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "hr.waiting"
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-legal",
+          "delta": -0.03,
+          "reason": "Waiting for the provider cost six weeks."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "supplier",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priority-identity-felt",
+      "type": "programme",
+      "title": "What prioritising identity cost",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "You told me to put the architecture capacity behind identity. I did. Identity is further along than it would have been and segmentation is where you left it. I am not complaining — I am making sure you know that is what the choice bought.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priority.identity"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "programme",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priority-segmentation-felt",
+      "type": "programme",
+      "title": "What prioritising segmentation cost",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Segmentation got the people, as you asked. The identity work has been running on what was left, which is less than it needs. You will see it in the dates before you see it anywhere else.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priority.segmentation"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "programme",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priority-split-felt",
+      "type": "programme",
+      "title": "Both, at half pace",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "We kept both programmes alive, as you decided. Neither has moved much. I said at the time that running both badly was possible, and I would like the record to show that we are now doing it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priority.split"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "programme",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-anomaly-asked-answered",
+      "type": "supplier",
+      "title": "The provider's explanation",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "The provider came back on the anomaly you asked them about. Their answer is that it was a scheduled maintenance session from an engineer who has since left. The session was after the leaving date on their own record. I would like to keep pulling this thread.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "anomaly.asked"
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-msp-standing-access",
+          "note": "Provider response"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "supplier",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-incident-command-recalled",
+      "type": "incident",
+      "title": "What standing up command changed",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "You stood up formal command during the incident. Reading it back, the decisions have times against them and the handovers are written down. Whatever else the year does to us, that record is the difference between explaining ourselves and guessing.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "incident.command"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "incident",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-incident-external-invoiced",
+      "type": "incident",
+      "title": "The incident response retainer, invoiced",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The external responders you called in have invoiced. It is a large number for a small number of days, and I am not questioning the decision — I am asking you to tell me, before the next one, what we are buying that we cannot do ourselves.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "incident.external"
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "incident",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-services-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "You came to the service owners first, before anything else. Six months on they still bring things to you directly rather than through the change process, which is either a compliment or a problem depending on the week.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.services"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-coo",
+          "delta": 0.04,
+          "reason": "You started with her services and she noticed."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-register-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "You started with the inherited register. It gave you something to say in week one, and it has shaped what we have looked at since — we have been working somebody else's list of what matters. Worth asking whether it is still ours.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.register"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-team-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "You sat with us first, before the board, before the register. It was noticed. People here will tell you things they would not have told your predecessor, which is worth more than it sounds.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.team"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "team.morale",
+          "fn": "engineering",
+          "delta": 0.04
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-architecture-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "You started with the architecture. It means you can hold the shape of this place in your head, which most people in your chair cannot. It also means you spent your first weeks with me rather than with the business, and they have noticed that too.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.architecture"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-threat-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "You started with the threat picture. We are better at naming who might come for us than at saying what they would reach if they did. That gap has not closed on its own.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.threat"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-start-controls-recalled",
+      "type": "discovery",
+      "title": "Where you started",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "You began with the recent control testing. It was the fastest way to an answer and it gave you one. What it did not give you is any sense of what the controls are there to protect, and we have been catching up on that since.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "start.controls"
+        }
+      ],
+      "weight": 24,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "discovery",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-legacy-acceleration-slips",
+      "type": "business",
+      "title": "The retirement date you pushed for",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "You pushed to accelerate Meridian's retirement and we set a date against it. The programme has moved that date once already, quietly, and I would rather you heard it from me. Despatch still runs on it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.atLeast",
+          "flag": "legacy.retirementDay",
+          "value": 1
+        }
+      ],
+      "weight": 26,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    }
+  ]
+}
