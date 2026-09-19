@@ -19,7 +19,7 @@ import type {
 } from './primitives'
 import type { GameEffect } from './effects'
 
-export const SAVE_SCHEMA_VERSION = 3
+export const SAVE_SCHEMA_VERSION = 4
 
 export interface OrgNodeState {
   id: string
@@ -299,6 +299,12 @@ export interface AssumptionRuntime {
   linkedScenarioIds: string[]
   linkedNodeIds: string[]
   status: 'valid' | 'uncertain' | 'invalidated'
+  /**
+   * Whether the assumption was actually true at the moment it was recorded.
+   * False means the player relied on something that was never the case, which
+   * the simulation surfaces only once their knowledge catches up.
+   */
+  heldWhenRecorded: boolean
   invalidatedDay?: number
   invalidationReason?: string
   reviewedDay?: number

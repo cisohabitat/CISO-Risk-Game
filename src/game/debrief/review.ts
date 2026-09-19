@@ -14,6 +14,7 @@ import type {
 } from '../types'
 import { clamp01 } from '../types'
 import { blindSpots } from '../knowledge/discovery'
+import { unexaminedAssumptions } from '../assumptions/validation'
 import { riskBand } from '../risk/bands'
 import { teamStrain } from '../team/capacity'
 
@@ -274,6 +275,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   const spots = blindSpots(state, index)
+  // Relying on something untrue for a year without ever checking is the purest
+  // blind spot the simulation can identify, so it is named explicitly.
+  for (const assumption of unexaminedAssumptions(state)) {
+    spots.unshift(`you relied on "${assumption.statement}" all year without ever testing it, and it was not true`)
+  }
   dimensions.push({
     id: 'blind-spots',
     label: 'Material blind spots',

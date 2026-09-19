@@ -170,6 +170,9 @@ export function RiskScreen() {
                         >
                           {statusLabel(assumption.status)}
                         </Badge>
+                        {assumption.status === 'invalidated' && !assumption.heldWhenRecorded && (
+                          <Badge tone="severe" glyph={false}>Was never true</Badge>
+                        )}
                         <span className="text-xs text-ink-faint tabular-nums">recorded day {assumption.createdDay}</span>
                       </div>
                       <p className="mt-2 font-medium text-pretty">{assumption.statement}</p>

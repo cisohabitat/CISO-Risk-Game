@@ -48,6 +48,16 @@ const MIGRATIONS: Record<number, Migration> = {
     tutorial: state.tutorial ?? { seen: [], dismissed: [] },
     schemaVersion: 2,
   }),
+  3: (state) => {
+    // v4 records whether each assumption was true when it was made. Existing
+    // saves predate the distinction, so treat them as having held: that keeps
+    // their behaviour exactly as the player experienced it.
+    const assumptions = state.assumptions as { assumptions?: Record<string, Record<string, unknown>> } | undefined
+    for (const assumption of Object.values(assumptions?.assumptions ?? {})) {
+      assumption.heldWhenRecorded ??= true
+    }
+    return { ...state, schemaVersion: 4 }
+  },
   2: (state) => ({
     ...state,
     // v3 added deferred effects and the weekly trend snapshots.

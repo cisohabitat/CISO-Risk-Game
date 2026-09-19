@@ -49,21 +49,28 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 Measured, not yet fixed. Ranked.
 
-1. **Assumptions can be recorded when already false.** Four of ten are false on
-   day 1, so they invalidate on the next tick and the mechanic reads as noise
-   rather than "the world changed". Fires ~10× per run. The player should not
-   simply be told which are false — their belief differs from the truth, and
-   discovering that is the point — so this is about timing and framing.
-2. **Team capacity is close to inert.** Commissioning everything legal every day
+1. **Team capacity is close to inert.** Commissioning everything legal every day
    for a year peaks at 0.81 strain (never "overloaded") and morale *rises*,
    because recovery outpaces decline. `dec-team-overload` and
    `evt-org-morale-low` are unreachable as a result.
-3. **Control drift is uniform and severe.** Every control loses 0.11–0.25
+2. **Control drift is uniform and severe.** Every control loses 0.11–0.25
    coverage over an idle year; IR readiness falls to 0.05. Worth retuning per
    control rather than a flat rate.
-4. **The annual review headline ignores the dimensions.** Three very different
+3. **The annual review headline ignores the dimensions.** Three very different
    strategies produced the same closing line, though the dimensions underneath
    differed correctly.
+
+### Fixed
+
+- **Assumptions recorded when already false** used to invalidate on the next
+  tick, so the game announced "the world changed" about something it had always
+  known to be untrue. Assumptions now record whether they held when made, and a
+  never-true one stays quiet until the player's knowledge catches up — the
+  relevant control is assessed or dependency discovered — at which point it is
+  worded as a failure of assurance rather than of change. An investigative
+  player now meets them ~29 days after recording; an incurious one never does,
+  and the annual review names them as things relied on all year and never
+  tested. See `src/game/assumptions/validation.ts`.
 
 ## Further reading
 

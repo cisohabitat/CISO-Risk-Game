@@ -88,3 +88,34 @@ describe('save migration', () => {
     expect(restored.state).toEqual(JSON.parse(JSON.stringify(state)))
   })
 })
+
+describe('save migration to version 4', () => {
+  it('treats assumptions in a pre-v4 save as having held when recorded', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'migrate-4' })
+    runDays(state, index, 20)
+    // Record one so there is something to migrate.
+    const legacy = JSON.parse(JSON.stringify(state)) as Record<string, unknown>
+    const assumptions = legacy.assumptions as { assumptions: Record<string, Record<string, unknown>>; counter: number }
+    assumptions.counter = 1
+    assumptions.assumptions['asm-1'] = {
+      id: 'asm-1',
+      defId: 'asm-mfa-admins',
+      statement: 'Multi-factor authentication covers all external and administrative access.',
+      createdDay: 5,
+      linkedScenarioIds: [],
+      linkedNodeIds: [],
+      status: 'valid',
+      acknowledged: false,
+    }
+    legacy.schemaVersion = 3
+
+    const migrated = migrateSave(record(legacy, 3))
+    expect(migrated.schemaVersion).toBe(SAVE_SCHEMA_VERSION)
+    const carried = migrated.state.assumptions.assumptions['asm-1']!
+    // Old saves predate the distinction; assuming it held preserves the
+    // behaviour the player already experienced rather than rewriting it.
+    expect(carried.heldWhenRecorded).toBe(true)
+    expect(checkInvariants(migrated.state, index)).toEqual([])
+  })
+})

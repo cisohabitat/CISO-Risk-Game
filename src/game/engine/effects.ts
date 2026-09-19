@@ -11,6 +11,7 @@ import { revealEdge, revealEvidence, revealNode } from '../knowledge/discovery'
 import { openDecision } from '../decisions/open'
 import { createIncident } from '../incidents/create'
 import { pushMessage } from '../inbox/messages'
+import { evaluateAssumption } from '../assumptions/validation'
 import type { Rng } from './rng'
 
 export interface EffectContext {
@@ -445,6 +446,9 @@ export function recordAssumption(
     linkedScenarioIds: scenarioId ? [scenarioId] : [],
     linkedNodeIds: def.linkedNodeIds,
     status: 'valid',
+    // Checked once, here, against the truth. The player is told nothing now:
+    // if this is false they find out when they go and look.
+    heldWhenRecorded: evaluateAssumption(state, context.index, def.validationRuleId)?.holds ?? true,
     nextReviewDay: state.currentDay + def.reviewAfterDays,
     acknowledged: false,
   }
