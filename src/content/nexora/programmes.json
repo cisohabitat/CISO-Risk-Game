@@ -1,0 +1,182 @@
+{
+  "programmes": [
+    {
+      "id": "prog-identity",
+      "name": "Identity and privileged access uplift",
+      "shortName": "Identity uplift",
+      "description": "Finish multi-factor coverage, bring standing administrative access into the vault, and put service accounts under ownership and rotation.",
+      "rationale": "Nearly every path an attacker could take through Nexora runs through an identity that nobody is watching.",
+      "budgetCost": 850,
+      "durationDays": 200,
+      "capacityDemand": { "iam": 2, "engineering": 1.5, "architecture": 0.5 },
+      "preferredSponsorId": "stk-cio",
+      "businessFriction": 0.35,
+      "tags": ["identity", "privileged"],
+      "milestones": [
+        { "id": "ms-identity-1", "name": "Administrative MFA closed out", "atProgress": 0.25, "description": "The exception population for administrative accounts is cleared.",
+          "controlEffects": [{ "controlId": "ctl-mfa", "coverage": 0.16, "exceptionRate": -0.14 }] },
+        { "id": "ms-identity-2", "name": "Privileged sessions brokered", "atProgress": 0.55, "description": "Administrative access to production runs through the vault with session recording.",
+          "controlEffects": [{ "controlId": "ctl-pam", "coverage": 0.25, "operationalEffectiveness": 0.14, "monitoringQuality": 0.14 }] },
+        { "id": "ms-identity-3", "name": "Service accounts owned and rotated", "atProgress": 0.8, "description": "Every non-human account has an owner, a purpose and a rotation schedule.",
+          "controlEffects": [{ "controlId": "ctl-pam", "coverage": 0.14, "exceptionRate": -0.18 }],
+          "effects": [{ "type": "node.weakness", "nodeId": "node-svc-accounts", "delta": -0.3 }] },
+        { "id": "ms-identity-4", "name": "Programme complete", "atProgress": 1, "description": "Identity is now a controlled, monitored surface rather than an assumption.",
+          "controlEffects": [{ "controlId": "ctl-mfa", "coverage": 0.12, "configurationQuality": 0.1 }, { "controlId": "ctl-pam", "operationalEffectiveness": 0.12 }] }
+      ],
+      "blockers": [
+        { "id": "blk-identity-exec", "name": "Executive exemption requests", "description": "Three executives have asked to be exempted from the new privileged access flow. Their assistants have already escalated.", "chancePerDay": 0.004, "progressMultiplier": 0.55,
+          "resolution": { "label": "Hold the line with the CIO", "focus": 1, "stakeholderId": "stk-cio", "description": "The CIO backs you, at the cost of some goodwill he will want back later." } },
+        { "id": "blk-identity-legacy", "name": "Legacy applications cannot federate", "description": "Two legacy applications cannot support modern authentication without an upgrade nobody has budgeted for.", "chancePerDay": 0.003, "progressMultiplier": 0.65,
+          "resolution": { "label": "Fund a compatibility shim", "budget": 120, "description": "An interim gateway lets the legacy applications ride the modern identity flow." } }
+      ]
+    },
+    {
+      "id": "prog-ransomware",
+      "name": "Ransomware resilience and recovery",
+      "shortName": "Recovery uplift",
+      "description": "Immutable backups, a tested restore path for the services that matter, and an incident response capability that has actually been exercised.",
+      "rationale": "Nexora can survive being attacked. It cannot currently prove it can survive being encrypted.",
+      "budgetCost": 700,
+      "durationDays": 170,
+      "capacityDemand": { "engineering": 1.5, "incident-response": 1, "architecture": 0.5 },
+      "preferredSponsorId": "stk-coo",
+      "businessFriction": 0.2,
+      "tags": ["recovery", "ransomware"],
+      "milestones": [
+        { "id": "ms-ransom-1", "name": "Immutable backup tier", "atProgress": 0.3, "description": "Critical workloads are backed up to storage an attacker with domain rights cannot delete.",
+          "controlEffects": [{ "controlId": "ctl-backup", "configurationQuality": 0.22, "coverage": 0.12 }] },
+        { "id": "ms-ransom-2", "name": "Restore tested end to end", "atProgress": 0.6, "description": "A full restore of a critical service has been performed and timed.",
+          "controlEffects": [{ "controlId": "ctl-backup", "operationalEffectiveness": 0.3, "monitoringQuality": 0.15 }] },
+        { "id": "ms-ransom-3", "name": "Response exercised with the executive", "atProgress": 0.85, "description": "The executive team has been through a ransomware exercise and knows who decides what.",
+          "controlEffects": [{ "controlId": "ctl-ir", "coverage": 0.25, "operationalEffectiveness": 0.25 }],
+          "effects": [{ "type": "stakeholder.understanding", "stakeholderId": "stk-ceo", "delta": 0.1 }] },
+        { "id": "ms-ransom-4", "name": "Programme complete", "atProgress": 1, "description": "Recovery is a capability rather than a hope.",
+          "controlEffects": [{ "controlId": "ctl-backup", "operationalEffectiveness": 0.12 }, { "controlId": "ctl-ir", "operationalEffectiveness": 0.15 }] }
+      ],
+      "blockers": [
+        { "id": "blk-ransom-window", "name": "No maintenance window for restore testing", "description": "Operations will not release a window to test restores during the peak trading period.", "chancePerDay": 0.004, "progressMultiplier": 0.5,
+          "resolution": { "label": "Negotiate a window with the COO", "focus": 1, "stakeholderId": "stk-coo", "description": "You get a weekend window, on the condition that it does not become a habit." } },
+        { "id": "blk-ransom-cost", "name": "Storage cost challenged", "description": "Finance has flagged the immutable storage cost as unbudgeted.", "chancePerDay": 0.003, "progressMultiplier": 0.6,
+          "resolution": { "label": "Fund it from the cyber budget", "budget": 150, "description": "You absorb the cost rather than reopen the argument." } }
+      ]
+    },
+    {
+      "id": "prog-detection",
+      "name": "Detection and telemetry modernisation",
+      "shortName": "Detection uplift",
+      "description": "Close the telemetry gaps, rebuild detection content around how Nexora is actually attacked, and change what the SOC is asked to do.",
+      "rationale": "The SOC cannot triage what it never receives. Most of the estate sends it nothing useful.",
+      "budgetCost": 620,
+      "durationDays": 160,
+      "capacityDemand": { "soc": 2, "engineering": 1 },
+      "preferredSponsorId": "stk-cio",
+      "businessFriction": 0.1,
+      "tags": ["detection"],
+      "milestones": [
+        { "id": "ms-detect-1", "name": "Identity and cloud telemetry onboarded", "atProgress": 0.3, "description": "Sign-in, privileged action and cloud control-plane events now reach the SOC.",
+          "controlEffects": [{ "controlId": "ctl-logging", "coverage": 0.22, "monitoringQuality": 0.15 }] },
+        { "id": "ms-detect-2", "name": "Detection content rebuilt", "atProgress": 0.6, "description": "Detections are written against Nexora's own attack paths rather than a generic library.",
+          "controlEffects": [{ "controlId": "ctl-soc", "operationalEffectiveness": 0.2, "monitoringQuality": 0.2 }] },
+        { "id": "ms-detect-3", "name": "Legacy estate visible", "atProgress": 0.85, "description": "Even the legacy data centre now produces usable telemetry.",
+          "controlEffects": [{ "controlId": "ctl-logging", "coverage": 0.18 }, { "controlId": "ctl-edr", "coverage": 0.12 }] },
+        { "id": "ms-detect-4", "name": "Programme complete", "atProgress": 1, "description": "Detection is designed, measured and owned.",
+          "controlEffects": [{ "controlId": "ctl-soc", "coverage": 0.15, "monitoringQuality": 0.12 }] }
+      ],
+      "blockers": [
+        { "id": "blk-detect-licence", "name": "Telemetry ingest costs spike", "description": "Log volume has tripled the ingest bill and Finance wants it stopped.", "chancePerDay": 0.005, "progressMultiplier": 0.6,
+          "resolution": { "label": "Fund the ingest and tier the data", "budget": 130, "description": "You tier the data and absorb the difference." } },
+        { "id": "blk-detect-soc", "name": "SOC provider resists scope change", "description": "The SOC contract does not cover the new use cases and the provider wants a change request.", "chancePerDay": 0.004, "progressMultiplier": 0.55,
+          "resolution": { "label": "Work it through procurement", "focus": 1, "stakeholderId": "stk-procurement", "description": "Procurement reopens the schedule, reluctantly." } }
+      ]
+    },
+    {
+      "id": "prog-cloud",
+      "name": "Cloud security uplift",
+      "shortName": "Cloud uplift",
+      "description": "Guardrails, baseline enforcement and pipeline security across the cloud tenancies.",
+      "rationale": "The cloud estate grew faster than anyone's ability to say what good looks like in it.",
+      "budgetCost": 680,
+      "durationDays": 180,
+      "capacityDemand": { "engineering": 1.5, "architecture": 1 },
+      "preferredSponsorId": "stk-cio",
+      "businessFriction": 0.4,
+      "tags": ["cloud"],
+      "milestones": [
+        { "id": "ms-cloud-1", "name": "Guardrails enforced in production", "atProgress": 0.3, "description": "Preventative guardrails now block the configurations that caused last year's exposure.",
+          "controlEffects": [{ "controlId": "ctl-cloud-posture", "coverage": 0.2, "configurationQuality": 0.15 }] },
+        { "id": "ms-cloud-2", "name": "Pipeline credentials brokered", "atProgress": 0.6, "description": "Deployment credentials are short-lived and scoped.",
+          "controlEffects": [{ "controlId": "ctl-cloud-posture", "operationalEffectiveness": 0.18 }, { "controlId": "ctl-pam", "coverage": 0.1 }],
+          "effects": [{ "type": "node.weakness", "nodeId": "node-ci-pipeline", "delta": -0.25 }] },
+        { "id": "ms-cloud-3", "name": "Non-production separated", "atProgress": 0.85, "description": "The peering between non-production and production is severed.",
+          "controlEffects": [{ "controlId": "ctl-segmentation", "coverage": 0.12 }],
+          "effects": [{ "type": "node.exposure", "nodeId": "node-cloud-dev", "delta": -0.25 }] },
+        { "id": "ms-cloud-4", "name": "Programme complete", "atProgress": 1, "description": "The cloud estate has a baseline it is held to.",
+          "controlEffects": [{ "controlId": "ctl-cloud-posture", "coverage": 0.15, "monitoringQuality": 0.15 }] }
+      ],
+      "blockers": [
+        { "id": "blk-cloud-velocity", "name": "Engineering blocked by guardrails", "description": "Two delivery teams say the new guardrails have broken their deployment flow.", "chancePerDay": 0.006, "progressMultiplier": 0.5,
+          "resolution": { "label": "Pair with engineering to fix the flow", "focus": 1, "stakeholderId": "stk-digital", "description": "You spend a week with the delivery teams and the friction drops." } }
+      ]
+    },
+    {
+      "id": "prog-thirdparty",
+      "name": "Third-party security programme",
+      "shortName": "Supplier programme",
+      "description": "Understand what suppliers can reach, bring their access under control, and make assurance mean something.",
+      "rationale": "Nexora's most privileged users do not work for Nexora.",
+      "budgetCost": 520,
+      "durationDays": 190,
+      "capacityDemand": { "grc": 2, "iam": 0.5 },
+      "preferredSponsorId": "stk-procurement",
+      "businessFriction": 0.3,
+      "tags": ["third-party", "supplier"],
+      "milestones": [
+        { "id": "ms-3p-1", "name": "Supplier access inventory", "atProgress": 0.3, "description": "For the first time there is a list of who can reach what.",
+          "controlEffects": [{ "controlId": "ctl-3p-access", "monitoringQuality": 0.2, "coverage": 0.12 }],
+          "effects": [{ "type": "edge.reveal", "edgeId": "edge-msp-admins-identity" }, { "type": "node.reveal", "nodeId": "node-app-portal", "confidence": 0.8 }] },
+        { "id": "ms-3p-2", "name": "Standing access removed", "atProgress": 0.6, "description": "Supplier access is now requested, time-bound and recorded.",
+          "controlEffects": [{ "controlId": "ctl-3p-access", "coverage": 0.25, "operationalEffectiveness": 0.2, "exceptionRate": -0.2 }] },
+        { "id": "ms-3p-3", "name": "Assurance rebuilt around access", "atProgress": 0.85, "description": "Supplier assurance now tests the access path rather than the questionnaire.",
+          "controlEffects": [{ "controlId": "ctl-3p-access", "configurationQuality": 0.2, "monitoringQuality": 0.15 }] },
+        { "id": "ms-3p-4", "name": "Programme complete", "atProgress": 1, "description": "Third-party access is governed rather than assumed.",
+          "controlEffects": [{ "controlId": "ctl-3p-access", "coverage": 0.15 }] }
+      ],
+      "blockers": [
+        { "id": "blk-3p-contract", "name": "Contract does not permit the change", "description": "The managed service contract does not oblige the provider to change how its engineers connect.", "chancePerDay": 0.005, "progressMultiplier": 0.45,
+          "resolution": { "label": "Reopen the contract through procurement", "focus": 1, "budget": 60, "stakeholderId": "stk-procurement", "description": "Procurement reopens the schedule; the provider prices the change." } },
+        { "id": "blk-3p-ops", "name": "Out-of-hours cover at risk", "description": "Removing standing access would leave night operations unable to respond quickly.", "chancePerDay": 0.004, "progressMultiplier": 0.6,
+          "resolution": { "label": "Design a break-glass path", "focus": 1, "description": "A monitored break-glass route preserves night cover without standing rights." } }
+      ]
+    },
+    {
+      "id": "prog-segmentation",
+      "name": "Security architecture and segmentation",
+      "shortName": "Segmentation",
+      "description": "Establish real boundaries between corporate, production and legacy, and keep an architecture picture that stays true.",
+      "rationale": "A flat network turns every small compromise into a large one.",
+      "budgetCost": 900,
+      "durationDays": 240,
+      "capacityDemand": { "architecture": 2, "engineering": 1.5 },
+      "preferredSponsorId": "stk-cio",
+      "businessFriction": 0.5,
+      "tags": ["network", "architecture"],
+      "milestones": [
+        { "id": "ms-seg-1", "name": "Dependency picture established", "atProgress": 0.25, "description": "The architecture team has mapped what actually talks to what.",
+          "controlEffects": [{ "controlId": "ctl-segmentation", "configurationQuality": 0.12 }],
+          "effects": [{ "type": "edge.reveal", "edgeId": "edge-legacy-to-core" }, { "type": "edge.reveal", "edgeId": "edge-mgmt-corp" }, { "type": "node.reveal", "nodeId": "node-mgmt-server", "confidence": 0.9 }] },
+        { "id": "ms-seg-2", "name": "Legacy estate contained", "atProgress": 0.55, "description": "The legacy data centre can no longer route into the production zone.",
+          "controlEffects": [{ "controlId": "ctl-segmentation", "coverage": 0.25, "operationalEffectiveness": 0.15 }] },
+        { "id": "ms-seg-3", "name": "Administrative tiering enforced", "atProgress": 0.85, "description": "Administration of production happens from dedicated, separated infrastructure.",
+          "controlEffects": [{ "controlId": "ctl-segmentation", "coverage": 0.18 }, { "controlId": "ctl-pam", "coverage": 0.1 }] },
+        { "id": "ms-seg-4", "name": "Programme complete", "atProgress": 1, "description": "The boundaries on the diagram are the boundaries in the estate.",
+          "controlEffects": [{ "controlId": "ctl-segmentation", "configurationQuality": 0.18, "monitoringQuality": 0.12 }] }
+      ],
+      "blockers": [
+        { "id": "blk-seg-outage", "name": "Segmentation change caused an outage", "description": "A firewall change took order management offline for two hours. Operations wants the work stopped.", "chancePerDay": 0.005, "progressMultiplier": 0.4,
+          "resolution": { "label": "Rebuild confidence with the COO", "focus": 2, "stakeholderId": "stk-coo", "description": "You walk operations through the change process personally and the work restarts." } },
+        { "id": "blk-seg-migration", "name": "Blocked behind the cloud migration", "description": "The remaining legacy systems cannot be separated until they move, and the migration is late.", "chancePerDay": 0.004, "progressMultiplier": 0.5,
+          "resolution": { "label": "Sequence around the migration", "focus": 1, "stakeholderId": "stk-cio", "description": "You agree a sequencing compromise with the CIO." } }
+      ]
+    }
+  ]
+}

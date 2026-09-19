@@ -1,0 +1,246 @@
+@import 'tailwindcss';
+
+/*
+ * Visual language (plan §30): a premium enterprise strategy game. Restrained
+ * palette, strong typography, clear data hierarchy. Deliberately not a stock
+ * admin dashboard and deliberately not neon "hacker" green.
+ *
+ * Every token is a CSS variable so light and dark are a single source swap and
+ * so risk colour is never the only carrier of meaning (plan §31).
+ */
+
+:root {
+  color-scheme: light;
+
+  --paper: oklch(0.98 0.004 250);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.965 0.005 250);
+  --surface-3: oklch(0.935 0.008 250);
+  --overlay: oklch(0.2 0.03 260 / 0.45);
+
+  --ink: oklch(0.22 0.02 260);
+  --ink-muted: oklch(0.45 0.015 260);
+  --ink-faint: oklch(0.6 0.012 260);
+  --ink-inverse: oklch(0.98 0.003 250);
+
+  --line: oklch(0.89 0.008 260);
+  --line-strong: oklch(0.8 0.012 260);
+
+  --accent: oklch(0.52 0.12 250);
+  --accent-soft: oklch(0.93 0.035 250);
+  --accent-ink: oklch(0.32 0.1 250);
+
+  --brass: oklch(0.66 0.11 75);
+  --brass-soft: oklch(0.95 0.04 80);
+
+  --band-low: oklch(0.58 0.09 175);
+  --band-low-soft: oklch(0.94 0.03 175);
+  --band-moderate: oklch(0.58 0.07 230);
+  --band-moderate-soft: oklch(0.94 0.025 230);
+  --band-elevated: oklch(0.65 0.12 75);
+  --band-elevated-soft: oklch(0.95 0.045 80);
+  --band-high: oklch(0.6 0.15 40);
+  --band-high-soft: oklch(0.95 0.045 45);
+  --band-severe: oklch(0.52 0.18 20);
+  --band-severe-soft: oklch(0.94 0.05 25);
+
+  --positive: oklch(0.55 0.1 160);
+  --warning: oklch(0.64 0.13 70);
+  --danger: oklch(0.53 0.18 22);
+
+  --shadow-soft: 0 1px 2px oklch(0.2 0.03 260 / 0.06), 0 8px 24px oklch(0.2 0.03 260 / 0.06);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.03 260 / 0.08), 0 16px 40px oklch(0.2 0.03 260 / 0.1);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: oklch(0.17 0.018 265);
+  --surface: oklch(0.21 0.02 265);
+  --surface-2: oklch(0.245 0.022 265);
+  --surface-3: oklch(0.29 0.024 265);
+  --overlay: oklch(0.1 0.02 265 / 0.66);
+
+  --ink: oklch(0.95 0.006 250);
+  --ink-muted: oklch(0.75 0.012 255);
+  --ink-faint: oklch(0.6 0.014 255);
+  --ink-inverse: oklch(0.18 0.02 265);
+
+  --line: oklch(0.32 0.02 265);
+  --line-strong: oklch(0.42 0.022 265);
+
+  --accent: oklch(0.72 0.1 245);
+  --accent-soft: oklch(0.3 0.05 250);
+  --accent-ink: oklch(0.85 0.08 245);
+
+  --brass: oklch(0.78 0.1 78);
+  --brass-soft: oklch(0.32 0.05 75);
+
+  --band-low: oklch(0.72 0.09 175);
+  --band-low-soft: oklch(0.29 0.04 175);
+  --band-moderate: oklch(0.72 0.07 230);
+  --band-moderate-soft: oklch(0.29 0.035 235);
+  --band-elevated: oklch(0.79 0.11 78);
+  --band-elevated-soft: oklch(0.32 0.05 75);
+  --band-high: oklch(0.73 0.13 45);
+  --band-high-soft: oklch(0.33 0.06 40);
+  --band-severe: oklch(0.68 0.16 22);
+  --band-severe-soft: oklch(0.32 0.08 22);
+
+  --positive: oklch(0.72 0.1 162);
+  --warning: oklch(0.79 0.11 72);
+  --danger: oklch(0.68 0.16 24);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
+  --shadow-lift: 0 2px 6px oklch(0 0 0 / 0.4), 0 18px 48px oklch(0 0 0 / 0.45);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-overlay: var(--overlay);
+
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-ink-inverse: var(--ink-inverse);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-brass: var(--brass);
+  --color-brass-soft: var(--brass-soft);
+
+  --color-band-low: var(--band-low);
+  --color-band-low-soft: var(--band-low-soft);
+  --color-band-moderate: var(--band-moderate);
+  --color-band-moderate-soft: var(--band-moderate-soft);
+  --color-band-elevated: var(--band-elevated);
+  --color-band-elevated-soft: var(--band-elevated-soft);
+  --color-band-high: var(--band-high);
+  --color-band-high-soft: var(--band-high-soft);
+  --color-band-severe: var(--band-severe);
+  --color-band-severe-soft: var(--band-severe-soft);
+
+  --color-positive: var(--positive);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Georgia', ui-serif, serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'JetBrains Mono', monospace;
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* iOS Safari: keep the chrome out of the way of the bottom navigation. */
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    /* Body input text at 16px minimum so iOS never zooms on focus (plan §27.1). */
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button, input, select, textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Touch targets are never smaller than 44px (plan §27.1, §31). */
+  button, [role='button'], a, summary, input[type='checkbox'], input[type='radio'] {
+    min-height: 44px;
+  }
+
+  button.compact, a.compact, [role='button'].compact {
+    min-height: 0;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  .card-grain {
+    background-image:
+      linear-gradient(to bottom right, oklch(1 0 0 / 0.02), transparent 60%);
+  }
+
+  .scroll-area {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Subtle motion only, and none at all when the player asks for none. */
+  .animate-rise {
+    animation: rise 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .animate-fade {
+    animation: fade 180ms ease-out;
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* An incident makes the shell visibly tense without becoming a cartoon. */
+:root[data-incident='true'] {
+  --paper: color-mix(in oklch, var(--paper) 94%, var(--band-severe));
+}

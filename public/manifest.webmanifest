@@ -1,0 +1,13 @@
+{
+  "name": "CISO: First Year",
+  "short_name": "CISO",
+  "description": "A single-player cyber risk strategy game. Inherit an organisation, discover what actually matters, and live with your judgement.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1b1d26",
+  "theme_color": "#1b1d26",
+  "orientation": "any",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

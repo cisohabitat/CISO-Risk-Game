@@ -1,0 +1,160 @@
+/**
+ * Delegated work: investigations, reviews and oversight (plan §11).
+ *
+ * Every assignment consumes capacity for its duration and returns a quality
+ * that depends on who did it and how loaded they were. A thin result reveals
+ * less and carries lower confidence — which is exactly how bad delegation hurts.
+ */
+import type {
+  AssignmentState,
+  ContentIndex,
+  GameEffect,
+  GameState,
+  InvestigationDef,
+} from '../types'
+import { clamp01 } from '../types'
+import type { Rng } from '../engine/rng'
+import { commitCapacity, delegationDelayDays, delegationQuality, teamStrain } from './capacity'
+
+export interface AssignmentTickResult {
+  effects: GameEffect[]
+  completed: {
+    assignmentId: string
+    title: string
+    leaderId: string
+    quality: number
+    summary: string
+    evidenceIds: string[]
+  }[]
+  delayed: { assignmentId: string; title: string; days: number }[]
+}
+
+export function startInvestigation(
+  state: GameState,
+  index: ContentIndex,
+  def: InvestigationDef,
+  leaderId: string,
+  rng: Rng,
+): AssignmentState | undefined {
+  const leader = state.team.leaders[leaderId]
+  if (!leader) return undefined
+
+  state.team.assignmentCounter += 1
+  const id = `asg-${state.team.assignmentCounter}`
+  // Slower when the person is already loaded; never faster than authored.
+  const loadPenalty = Math.round(def.durationDays * 0.4 * clamp01(leader.workload))
+  const assignment: AssignmentState = {
+    id,
+    kind: 'investigation',
+    refId: def.id,
+    title: def.name,
+    leaderId,
+    startedDay: state.currentDay,
+    dueDay: state.currentDay + def.durationDays + loadPenalty,
+    progress: 0,
+    capacityPerDay: def.capacityPerDay,
+    status: 'running',
+    quality: 0,
+    delivered: false,
+    producedEvidenceIds: [],
+  }
+  state.team.assignments.push(assignment)
+  commitCapacity(state, def.capacityPerDay, 1)
+  void rng
+  void index
+  return assignment
+}
+
+export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng): AssignmentTickResult {
+  const result: AssignmentTickResult = { effects: [], completed: [], delayed: [] }
+  const strain = teamStrain(state)
+
+  for (const assignment of state.team.assignments) {
+    if (assignment.status !== 'running') continue
+    const total = Math.max(1, assignment.dueDay - assignment.startedDay)
+    assignment.progress = clamp01((state.currentDay - assignment.startedDay) / total)
+    if (state.currentDay < assignment.dueDay) continue
+
+    const leader = state.team.leaders[assignment.leaderId]
+    if (!leader) {
+      assignment.status = 'abandoned'
+      continue
+    }
+
+    // One slip check per assignment, at the point it was due.
+    if (!assignment.delivered) {
+      const delay = delegationDelayDays(leader, strain, rng.next())
+      if (delay > 0) {
+        assignment.dueDay += delay
+        assignment.delivered = true // slip already spent; no repeated slipping
+        leader.assignmentsLate += 1
+        result.delayed.push({ assignmentId: assignment.id, title: assignment.title, days: delay })
+        continue
+      }
+      assignment.delivered = true
+    }
+
+    const quality = delegationQuality(leader, strain, rng.next())
+    assignment.quality = quality
+    assignment.status = 'complete'
+    leader.assignmentsCompleted += 1
+    commitCapacity(state, assignment.capacityPerDay, -1)
+
+    const def = index.investigation.get(assignment.refId)
+    if (!def) continue
+
+    const evidenceIds: string[] = []
+    for (const evidenceId of def.guaranteedEvidenceIds) {
+      evidenceIds.push(evidenceId)
+      result.effects.push({ type: 'evidence.reveal', evidenceId, note: def.name })
+    }
+    // Quality decides how much of the optional picture comes back.
+    for (const evidenceId of def.possibleEvidenceIds) {
+      if (rng.chance(0.25 + 0.7 * quality)) {
+        evidenceIds.push(evidenceId)
+        result.effects.push({ type: 'evidence.reveal', evidenceId, note: def.name })
+      }
+    }
+    for (const nodeId of def.revealsNodeIds) {
+      result.effects.push({ type: 'node.reveal', nodeId, confidence: clamp01(0.45 + 0.55 * quality) })
+    }
+    for (const edgeId of def.revealsEdgeIds) {
+      // A thin review can miss a dependency entirely.
+      if (quality > 0.35 || rng.chance(0.4)) result.effects.push({ type: 'edge.reveal', edgeId })
+    }
+    for (const controlId of def.assessesControlIds) {
+      if (quality > 0.3) result.effects.push({ type: 'control.assess', controlId })
+    }
+
+    assignment.producedEvidenceIds = evidenceIds
+    assignment.resultSummary = summariseQuality(def, quality)
+    result.completed.push({
+      assignmentId: assignment.id,
+      title: assignment.title,
+      leaderId: assignment.leaderId,
+      quality,
+      summary: assignment.resultSummary,
+      evidenceIds,
+    })
+  }
+
+  // Keep completed work for the debrief but bound the array.
+  if (state.team.assignments.length > 120) {
+    state.team.assignments = state.team.assignments.filter(
+      (a) => a.status === 'running' || state.currentDay - a.dueDay < 120,
+    )
+  }
+
+  return result
+}
+
+function summariseQuality(def: InvestigationDef, quality: number): string {
+  if (quality < 0.3) return `${def.name} came back thin — the team was stretched and the picture is incomplete.`
+  if (quality < 0.55) return `${def.name} answered part of the question and raised others.`
+  if (quality < 0.78) return `${def.name} produced a solid, usable picture.`
+  return `${def.name} was thorough: the team went further than asked.`
+}
+
+export function runningAssignments(state: GameState): AssignmentState[] {
+  return state.team.assignments.filter((a) => a.status === 'running')
+}

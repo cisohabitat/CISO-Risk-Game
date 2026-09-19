@@ -1,0 +1,56 @@
+/**
+ * Keeps risk scenario assessments current and surfaces reviews that are due.
+ * Assessment is derived, never authored: the bands follow world state.
+ */
+import type { ContentIndex, GameState } from '../types'
+import { assessScenario } from './calculations'
+import { confidenceFromUncertainty } from './bands'
+
+export interface RiskReviewResult {
+  dueForReview: string[]
+  materiallyWorse: { scenarioId: string; previous: number; current: number }[]
+}
+
+export function refreshScenarioAssessments(state: GameState, index: ContentIndex): RiskReviewResult {
+  const result: RiskReviewResult = { dueForReview: [], materiallyWorse: [] }
+
+  for (const scenario of Object.values(state.risks.scenarios)) {
+    const def = index.riskScenario.get(scenario.id)
+    if (!def) continue
+    const assessment = assessScenario(state, index, def)
+    const previous = scenario.lastAssessed?.residual
+    scenario.lastAssessed = {
+      day: state.currentDay,
+      exposure: assessment.exposure,
+      consequence: assessment.consequence,
+      residual: assessment.residual,
+    }
+    scenario.confidence = confidenceFromUncertainty(assessment.uncertainty)
+
+    if (previous !== undefined && assessment.residual - previous > 0.12) {
+      result.materiallyWorse.push({ scenarioId: scenario.id, previous, current: assessment.residual })
+      scenario.nextReviewDay = Math.min(scenario.nextReviewDay, state.currentDay + 7)
+    }
+    if (scenario.status === 'accepted' && scenario.acceptedUntilDay !== undefined) {
+      if (state.currentDay >= scenario.acceptedUntilDay) {
+        scenario.status = 'open'
+        scenario.nextReviewDay = state.currentDay
+      }
+    }
+    if (state.currentDay >= scenario.nextReviewDay && scenario.status !== 'closed') {
+      result.dueForReview.push(scenario.id)
+    }
+  }
+  return result
+}
+
+/** Hypothesis confidence follows the balance of evidence attached to it. */
+export function refreshHypothesisConfidence(state: GameState): void {
+  for (const hypothesis of Object.values(state.risks.hypotheses)) {
+    if (hypothesis.status === 'rejected' || hypothesis.status === 'converted') continue
+    const support = hypothesis.supportingEvidenceIds.length
+    const against = hypothesis.contradictingEvidenceIds.length
+    const net = support - against
+    hypothesis.confidence = net >= 3 ? 'high' : net >= 1 ? 'medium' : 'low'
+  }
+}

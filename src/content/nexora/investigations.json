@@ -1,0 +1,171 @@
+{
+  "investigations": [
+    {
+      "id": "inv-service-review", "name": "Critical business service review", "description": "Sit with the service owners and establish what the business actually cannot lose, and what each service depends on.",
+      "workingNarrative": "Your architecture lead is working through the service owners one by one.",
+      "functions": ["architecture", "grc"], "capacityPerDay": { "architecture": 1, "grc": 0.5 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
+      "guaranteedEvidenceIds": ["ev-launch-pressure"], "possibleEvidenceIds": ["ev-cardholder-scope", "ev-shadow-integration"],
+      "revealsNodeIds": ["node-app-wms", "node-app-portal"], "revealsEdgeIds": ["edge-orders-wms", "edge-platform-pii"], "assessesControlIds": [],
+      "tags": ["discovery", "business"], "repeatable": false
+    },
+    {
+      "id": "inv-architecture-review", "name": "Architecture and dependency review", "description": "Map what actually connects to what, rather than what the diagrams say.",
+      "workingNarrative": "The architecture team is reconciling three different network diagrams against reality.",
+      "functions": ["architecture"], "capacityPerDay": { "architecture": 1.5 }, "durationDays": 21, "focusCost": 2, "budgetCost": 40,
+      "guaranteedEvidenceIds": ["ev-legacy-routable"], "possibleEvidenceIds": ["ev-cloud-peering", "ev-pipeline-credentials", "ev-legacy-inventory", "ev-shadow-integration"],
+      "revealsNodeIds": ["node-dc-legacy", "node-mgmt-server", "node-ci-pipeline"], "revealsEdgeIds": ["edge-legacy-to-core", "edge-mgmt-corp", "edge-devcloud-prod", "edge-ci-cloud"], "assessesControlIds": ["ctl-segmentation"],
+      "tags": ["discovery", "architecture"], "repeatable": false
+    },
+    {
+      "id": "inv-access-review", "name": "Privileged access review", "description": "Establish who actually holds administrative rights, including accounts that do not belong to employees.",
+      "workingNarrative": "The IAM team is pulling every privileged group membership and matching it against HR records.",
+      "functions": ["iam", "grc"], "capacityPerDay": { "iam": 1.5, "grc": 0.5 }, "durationDays": 14, "focusCost": 1, "budgetCost": 20,
+      "guaranteedEvidenceIds": ["ev-priv-recert-overdue", "ev-mfa-exceptions"], "possibleEvidenceIds": ["ev-msp-standing-access", "ev-service-accounts", "ev-failed-access-review", "ev-pam-adoption"],
+      "revealsNodeIds": ["node-svc-accounts"], "revealsEdgeIds": ["edge-msp-admins-identity", "edge-svcaccounts-idp", "edge-oms-svcaccounts"], "assessesControlIds": ["ctl-mfa", "ctl-pam"],
+      "tags": ["identity", "discovery"], "repeatable": false
+    },
+    {
+      "id": "inv-supplier-review", "name": "Supplier access review", "description": "Establish what each major supplier can reach, with which accounts, and who watches them.",
+      "workingNarrative": "Cyber risk is working through supplier contracts and the access they actually rely on.",
+      "functions": ["grc", "iam"], "capacityPerDay": { "grc": 1.5, "iam": 0.5 }, "durationDays": 18, "focusCost": 1, "budgetCost": 30,
+      "guaranteedEvidenceIds": ["ev-msp-standing-access"], "possibleEvidenceIds": ["ev-msp-no-mfa", "ev-logistics-integration", "ev-supplier-questionnaire-clean", "ev-portal-shared-directory"],
+      "revealsNodeIds": ["node-app-portal"], "revealsEdgeIds": ["edge-msp-admins-identity", "edge-logistics-oms", "edge-portal-idp"], "assessesControlIds": ["ctl-3p-access"],
+      "tags": ["supplier", "third-party"], "repeatable": false
+    },
+    {
+      "id": "inv-threat-hunt", "name": "Targeted threat hunt", "description": "Hunt for signs that someone is already inside, focused on privileged identity and remote access.",
+      "workingNarrative": "The SOC team is hunting through what telemetry exists for evidence of activity nobody has explained.",
+      "functions": ["soc"], "capacityPerDay": { "soc": 2 }, "durationDays": 12, "focusCost": 2, "budgetCost": 60,
+      "guaranteedEvidenceIds": [], "possibleEvidenceIds": ["ev-soc-anomaly-remote", "ev-soc-coverage-gap", "ev-soc-noise-printers"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": ["ctl-logging", "ctl-soc"],
+      "tags": ["detection", "threat"], "repeatable": true
+    },
+    {
+      "id": "inv-recovery-test", "name": "Recovery test for a critical service", "description": "Attempt a full restore of a critical service and time it honestly.",
+      "workingNarrative": "Engineering is running a restore in a clean environment. Operations is watching nervously.",
+      "functions": ["engineering", "incident-response"], "capacityPerDay": { "engineering": 1.5, "incident-response": 0.5 }, "durationDays": 16, "focusCost": 2, "budgetCost": 80,
+      "guaranteedEvidenceIds": ["ev-backup-test-failed"], "possibleEvidenceIds": ["ev-backup-same-credentials", "ev-backup-coverage-gap"],
+      "revealsNodeIds": ["node-backup"], "revealsEdgeIds": ["edge-backup-legacy"], "assessesControlIds": ["ctl-backup"],
+      "tags": ["recovery"], "repeatable": true
+    },
+    {
+      "id": "inv-control-testing", "name": "Control effectiveness testing", "description": "Test whether the controls the organisation believes it has are actually operating.",
+      "workingNarrative": "Cyber risk is testing controls rather than reading control descriptions.",
+      "functions": ["grc", "engineering"], "capacityPerDay": { "grc": 1, "engineering": 0.5 }, "durationDays": 14, "focusCost": 1, "budgetCost": 40,
+      "guaranteedEvidenceIds": [], "possibleEvidenceIds": ["ev-pam-adoption", "ev-patch-slow", "ev-soc-coverage-gap", "ev-ir-untested"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": ["ctl-edr", "ctl-email", "ctl-vuln", "ctl-ir"],
+      "tags": ["assurance"], "repeatable": true
+    },
+    {
+      "id": "inv-vuln-triage", "name": "Vulnerability triage by exposure", "description": "Re-cut the vulnerability backlog by what is actually reachable and what it would reach.",
+      "workingNarrative": "Security engineering is cross-referencing findings against exposure rather than severity.",
+      "functions": ["engineering"], "capacityPerDay": { "engineering": 1 }, "durationDays": 9, "focusCost": 1, "budgetCost": 0,
+      "guaranteedEvidenceIds": ["ev-vuln-internet-facing", "ev-vuln-dev-cluster"], "possibleEvidenceIds": ["ev-patch-slow", "ev-exploit-available"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": ["ctl-vuln"],
+      "tags": ["vulnerability"], "repeatable": true
+    },
+    {
+      "id": "inv-cloud-review", "name": "Cloud configuration review", "description": "Review the production and non-production tenancies against a baseline worth having.",
+      "workingNarrative": "The architecture team is working through cloud configuration with the platform engineers.",
+      "functions": ["architecture", "engineering"], "capacityPerDay": { "architecture": 1, "engineering": 1 }, "durationDays": 15, "focusCost": 1, "budgetCost": 50,
+      "guaranteedEvidenceIds": ["ev-cloud-public-storage"], "possibleEvidenceIds": ["ev-cloud-peering", "ev-k8s-permissions", "ev-pipeline-credentials"],
+      "revealsNodeIds": ["node-ci-pipeline", "node-dev-workstations"], "revealsEdgeIds": ["edge-devcloud-prod", "edge-ci-cloud", "edge-devws-ci"], "assessesControlIds": ["ctl-cloud-posture"],
+      "tags": ["cloud"], "repeatable": false
+    },
+    {
+      "id": "inv-data-review", "name": "Data holdings and access review", "description": "Establish what data Nexora holds, where, and who can read it.",
+      "workingNarrative": "Cyber risk and Legal are working through data holdings together.",
+      "functions": ["grc", "architecture"], "capacityPerDay": { "grc": 1.5, "architecture": 0.5 }, "durationDays": 20, "focusCost": 2, "budgetCost": 40,
+      "guaranteedEvidenceIds": ["ev-data-lake-access"], "possibleEvidenceIds": ["ev-data-retention", "ev-cardholder-scope", "ev-shadow-integration"],
+      "revealsNodeIds": ["node-data-analytics"], "revealsEdgeIds": ["edge-analytics-lake", "edge-analytics-idp"], "assessesControlIds": ["ctl-dlp"],
+      "tags": ["data", "privacy"], "repeatable": false
+    },
+    {
+      "id": "inv-legacy-inventory", "name": "Legacy estate inventory", "description": "Find out what is actually still running in the legacy data centre.",
+      "workingNarrative": "Two engineers are physically walking the legacy estate with a clipboard and a scanner.",
+      "functions": ["architecture", "engineering"], "capacityPerDay": { "architecture": 0.5, "engineering": 1 }, "durationDays": 24, "focusCost": 1, "budgetCost": 60,
+      "guaranteedEvidenceIds": ["ev-legacy-inventory", "ev-legacy-unsupported"], "possibleEvidenceIds": ["ev-backup-coverage-gap", "ev-legacy-routable"],
+      "revealsNodeIds": ["node-dc-legacy", "node-app-wms"], "revealsEdgeIds": ["edge-wms-legacy", "edge-erp-legacy", "edge-corp-legacy"], "assessesControlIds": [],
+      "tags": ["legacy", "discovery"], "repeatable": false
+    },
+    {
+      "id": "inv-pen-test", "name": "Commission a penetration test", "description": "Pay someone to walk the paths you suspect exist.",
+      "workingNarrative": "The testers are in. Nobody in infrastructure is enjoying it.",
+      "functions": ["engineering", "architecture"], "capacityPerDay": { "engineering": 0.5, "architecture": 0.5 }, "durationDays": 22, "focusCost": 1, "budgetCost": 140,
+      "guaranteedEvidenceIds": ["ev-pen-test-segmentation"], "possibleEvidenceIds": ["ev-pen-test-scope-limited", "ev-legacy-routable", "ev-k8s-permissions", "ev-msp-no-mfa"],
+      "revealsNodeIds": ["node-mgmt-server"], "revealsEdgeIds": ["edge-mgmt-corp", "edge-mgmt-cloud"], "assessesControlIds": ["ctl-segmentation", "ctl-edr"],
+      "tags": ["assurance"], "repeatable": true
+    },
+    {
+      "id": "inv-ir-readiness", "name": "Incident response readiness review", "description": "Establish whether the organisation could actually run an incident.",
+      "workingNarrative": "Your SOC lead is walking the response plan against a realistic scenario.",
+      "functions": ["incident-response", "grc"], "capacityPerDay": { "incident-response": 1, "grc": 0.5 }, "durationDays": 12, "focusCost": 1, "budgetCost": 30,
+      "guaranteedEvidenceIds": ["ev-ir-untested"], "possibleEvidenceIds": ["ev-no-retainer", "ev-team-burnout"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": ["ctl-ir"],
+      "tags": ["recovery", "incident"], "repeatable": false
+    },
+    {
+      "id": "inv-team-review", "name": "Cyber team capability review", "description": "Understand what your own team can actually sustain.",
+      "workingNarrative": "You are spending time with each function lead rather than reading their reports.",
+      "functions": ["grc"], "capacityPerDay": { "grc": 0.5 }, "durationDays": 8, "focusCost": 1, "budgetCost": 0,
+      "guaranteedEvidenceIds": ["ev-team-vacancies"], "possibleEvidenceIds": ["ev-team-burnout"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": [],
+      "tags": ["team"], "repeatable": false
+    },
+    {
+      "id": "inv-threat-intel", "name": "Sector threat intelligence review", "description": "Find out what is actually happening to organisations like this one.",
+      "workingNarrative": "Cyber risk is reading sector reporting rather than generic threat feeds.",
+      "functions": ["grc", "soc"], "capacityPerDay": { "grc": 0.5, "soc": 0.5 }, "durationDays": 7, "focusCost": 1, "budgetCost": 25,
+      "guaranteedEvidenceIds": ["ev-ransomware-sector"], "possibleEvidenceIds": ["ev-credential-campaign", "ev-espionage-interest", "ev-exploit-available"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": [],
+      "tags": ["threat"], "repeatable": true
+    },
+    {
+      "id": "inv-acquisition-dd", "name": "Technical due diligence on the acquisition", "description": "Examine Kestrel Digital's estate before it is connected to Nexora's.",
+      "workingNarrative": "Two of your people are on site at Kestrel with a very short list of questions.",
+      "functions": ["architecture", "grc"], "capacityPerDay": { "architecture": 1, "grc": 1 }, "durationDays": 18, "focusCost": 2, "budgetCost": 90,
+      "guaranteedEvidenceIds": ["ev-kestrel-unknown"], "possibleEvidenceIds": ["ev-shadow-integration"],
+      "revealsNodeIds": ["node-acq-kestrel"], "revealsEdgeIds": ["edge-kestrel-corp"], "assessesControlIds": [],
+      "tags": ["acquisition", "third-party"], "repeatable": false,
+      "requiresCondition": { "kind": "day.after", "day": 60 }
+    },
+    {
+      "id": "inv-risk-register-review", "name": "Review the inherited risk register", "description": "Work out which of the 23 inherited entries describe anything that is still true.",
+      "workingNarrative": "Cyber risk is testing each inherited entry against current evidence.",
+      "functions": ["grc"], "capacityPerDay": { "grc": 1 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
+      "guaranteedEvidenceIds": ["ev-audit-stale-register"], "possibleEvidenceIds": ["ev-audit-repeat-finding", "ev-priv-recert-overdue"],
+      "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": [],
+      "tags": ["governance"], "repeatable": false
+    },
+    {
+      "id": "inv-hr-supplier-check", "name": "Check exposure to the HR provider incident", "description": "Establish whether People Cloud's incident touched Nexora's employee data.",
+      "workingNarrative": "Cyber risk is pressing the provider for specifics rather than reassurance.",
+      "functions": ["grc"], "capacityPerDay": { "grc": 1 }, "durationDays": 8, "focusCost": 1, "budgetCost": 15,
+      "guaranteedEvidenceIds": ["ev-hr-saas-breach-notice"], "possibleEvidenceIds": [],
+      "revealsNodeIds": [], "revealsEdgeIds": ["edge-hr-data"], "assessesControlIds": [],
+      "tags": ["supplier", "privacy"], "repeatable": false,
+      "requiresCondition": { "kind": "event.fired", "eventId": "evt-org-hr-provider-incident" }
+    }
+  ],
+  "glossary": [
+    { "id": "gls-evidence", "term": "Evidence", "definition": "An observation about the organisation. A finding, an alert, a test result or something someone told you. Evidence is not a risk until you interpret it.", "guidedNote": "Collect evidence, then decide what it means. The two are different jobs." },
+    { "id": "gls-hypothesis", "term": "Risk hypothesis", "definition": "A proposition about how harm could occur, which evidence can support or contradict. Hypotheses are meant to be tested, not defended.", "guidedNote": "Forming a hypothesis costs you attention. Choose which ones are worth testing." },
+    { "id": "gls-scenario", "term": "Risk scenario", "definition": "Threat, pathway and business consequence stated together. 'Unpatched server' is not a scenario; 'an actor reaches fulfilment through an unpatched server and stops despatch for a day' is.", "guidedNote": "A scenario the business can picture is a scenario the business can decide about." },
+    { "id": "gls-residual", "term": "Residual exposure", "definition": "What remains after the controls that actually operate, rather than the controls that exist on paper.", "guidedNote": "Bands, not numbers. The precision would be false." },
+    { "id": "gls-assumption", "term": "Assumption", "definition": "Something a decision depends on being true. When the world changes, assumptions can quietly stop being true without anyone revisiting the decision.", "guidedNote": "Record assumptions when you accept risk. The game will tell you when one fails." },
+    { "id": "gls-control-effectiveness", "term": "Control effectiveness", "definition": "Coverage, configuration quality, operating effectiveness and exceptions taken together. A control that covers 40% of the estate is a 40% control.", "guidedNote": "'We have MFA' is a statement about procurement, not about security." },
+    { "id": "gls-attack-path", "term": "Attack path", "definition": "The sequence of steps an actor would take from where they start to what they want. Controls sit on specific steps.", "guidedNote": "Breaking one step can be worth more than improving five controls." },
+    { "id": "gls-dwell", "term": "Dwell time", "definition": "How long an actor operates inside the environment before anyone notices.", "guidedNote": "Detection coverage and dwell time are the same conversation." },
+    { "id": "gls-focus", "term": "CISO attention", "definition": "Your own week. Every intervention, review and meeting costs some of it, and it does not carry over.", "guidedNote": "Attention is the scarcest resource you have, and the easiest to waste." },
+    { "id": "gls-capacity", "term": "Team capacity", "definition": "What your functions can actually deliver. Committing beyond capacity does not produce more work; it produces worse work, later.", "guidedNote": "An overloaded team returns thinner investigations and misses more." },
+    { "id": "gls-delegation", "term": "Delegation", "definition": "Assigning work to a leader. Their skill, workload and morale shape both the quality and the timeliness of what comes back.", "guidedNote": "You cannot do everything yourself, and who you ask matters." },
+    { "id": "gls-programme", "term": "Cyber programme", "definition": "A long-running investment that improves controls gradually. Programmes take months, hit blockers and compete for the same people.", "guidedNote": "No control upgrade is instant." },
+    { "id": "gls-influence", "term": "Executive influence", "definition": "Whether an executive will act on your advice. Built by understanding their priorities and spent by asking for things.", "guidedNote": "Escalating everything is how influence is lost." },
+    { "id": "gls-tolerance", "term": "Operational tolerance", "definition": "How much friction, downtime and process the business will currently absorb for security reasons.", "guidedNote": "Spend it deliberately. It recovers slowly." },
+    { "id": "gls-noise", "term": "Risk noise", "definition": "Severe-looking findings that do not matter, and moderate findings that do. Volume is not risk.", "guidedNote": "A critical vulnerability on an isolated test system matters less than a moderate weakness in identity." },
+    { "id": "gls-concentration", "term": "Dependency concentration", "definition": "Several important services leaning on the same platform, identity or supplier, so one failure becomes many.", "guidedNote": "Concentration turns an incident into a crisis." },
+    { "id": "gls-reconstruction", "term": "Incident reconstruction", "definition": "The post-incident view of the path taken, what helped, what hurt, and which earlier decisions shaped the outcome.", "guidedNote": "Not a verdict on whether you were right. A record of what mattered." },
+    { "id": "gls-uncertainty", "term": "Confidence", "definition": "How much of a risk assessment rests on things you have actually verified rather than inherited.", "guidedNote": "Communicating uncertainty honestly is a skill boards value." },
+    { "id": "gls-seed", "term": "Campaign seed", "definition": "The value that determines this world's hidden configuration. The same seed always produces the same Nexora.", "guidedNote": "Share a seed to compare how differently two people play the same organisation." }
+  ]
+}

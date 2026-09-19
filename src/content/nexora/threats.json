@@ -1,0 +1,230 @@
+{
+  "actors": [
+    {
+      "id": "actor-ransom",
+      "name": "Nightfall Syndicate",
+      "archetype": "Financially motivated ransomware group",
+      "motivation": "Extortion at scale, with data theft as leverage",
+      "description": "A mature extortion operation that buys access rather than earning it, favours managed service providers and privileged identities, and negotiates professionally.",
+      "capability": 0.72,
+      "persistence": 0.6,
+      "baseActivity": 0.5,
+      "variance": 0.12,
+      "targetPreferences": ["privileged access", "managed service providers", "backup infrastructure"],
+      "techniquePreferences": ["supplier-remote-access", "privilege-abuse", "lateral-movement", "encryption-impact"],
+      "objective": "extortion"
+    },
+    {
+      "id": "actor-credential",
+      "name": "Grey Harbour",
+      "archetype": "Opportunistic credential-focused criminal group",
+      "motivation": "Fraud and resale of access",
+      "description": "High-volume, low-sophistication and relentless. Works through exposed applications, phishing and credential reuse, and sells on what it cannot use.",
+      "capability": 0.45,
+      "persistence": 0.75,
+      "baseActivity": 0.65,
+      "variance": 0.1,
+      "targetPreferences": ["internet-facing applications", "customer accounts", "partner portals"],
+      "techniquePreferences": ["credential-stuffing", "phishing", "exploit-public-app", "data-exfiltration"],
+      "objective": "theft"
+    },
+    {
+      "id": "actor-espionage",
+      "name": "Silent Meridian",
+      "archetype": "Strategic espionage actor",
+      "motivation": "Long-term access to commercially sensitive data",
+      "description": "Patient and quiet. Interested in the behavioural data lake and the acquisition pipeline. Would rather stay for a year than be noticed in a week.",
+      "capability": 0.85,
+      "persistence": 0.9,
+      "baseActivity": 0.25,
+      "variance": 0.08,
+      "targetPreferences": ["data platforms", "acquisition activity", "engineering pipelines"],
+      "techniquePreferences": ["phishing", "persistence", "lateral-movement", "data-exfiltration"],
+      "objective": "espionage"
+    }
+  ],
+  "incidentFamilies": [
+    {
+      "id": "fam-ransomware",
+      "name": "Ransomware and service encryption",
+      "description": "An extortion actor reaches administrative control and encrypts what the business runs on.",
+      "headline": "Nexora woke up to encrypted infrastructure and a negotiation window.",
+      "baseDisruption": 0.75,
+      "baseDataImpact": 0.5,
+      "baseDurationDays": 12,
+      "regulatoryInterest": 0.6,
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate", "dec-inc-external"],
+      "whatHelped": ["Backups that could not be reached from the compromised accounts", "A rehearsed decision path"],
+      "whatHurt": ["Administrative accounts shared between environments", "Recovery that had never been timed"]
+    },
+    {
+      "id": "fam-data-breach",
+      "name": "Customer data exposure",
+      "description": "Customer records leave the estate through an internet-facing weakness.",
+      "headline": "Customer records left Nexora through a door nobody had looked at recently.",
+      "baseDisruption": 0.35,
+      "baseDataImpact": 0.85,
+      "baseDurationDays": 9,
+      "regulatoryInterest": 0.9,
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-notify"],
+      "whatHelped": ["Egress monitoring that flagged the volume", "Legal engaged from the first hour"],
+      "whatHurt": ["Data held longer than the retention policy allowed", "Weak control over who could query the data"]
+    },
+    {
+      "id": "fam-data-theft",
+      "name": "Targeted data theft",
+      "description": "A patient actor takes commercially sensitive material over a long period.",
+      "headline": "Someone had been reading Nexora's commercial data for months.",
+      "baseDisruption": 0.2,
+      "baseDataImpact": 0.7,
+      "baseDurationDays": 14,
+      "regulatoryInterest": 0.5,
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-external"],
+      "whatHelped": ["Telemetry retained long enough to reconstruct the intrusion"],
+      "whatHurt": ["Detection tuned for noise rather than patience", "Standing access that never expired"]
+    },
+    {
+      "id": "fam-legacy-outage",
+      "name": "Legacy platform compromise and outage",
+      "description": "An unsupported platform is compromised and taken out of service.",
+      "headline": "The warehouse platform stopped, and nobody could say when it would return.",
+      "baseDisruption": 0.6,
+      "baseDataImpact": 0.2,
+      "baseDurationDays": 10,
+      "regulatoryInterest": 0.2,
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-shutdown"],
+      "whatHelped": ["A manual fulfilment fallback that had been documented"],
+      "whatHurt": ["An unsupported operating system with no patch path", "No current inventory of the legacy estate"]
+    },
+    {
+      "id": "fam-supplier-disruption",
+      "name": "Supplier-driven disruption",
+      "description": "A supplier's own compromise propagates into Nexora's operations.",
+      "headline": "Nexora's problem started inside somebody else's network.",
+      "baseDisruption": 0.5,
+      "baseDataImpact": 0.3,
+      "baseDurationDays": 8,
+      "regulatoryInterest": 0.4,
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate"],
+      "whatHelped": ["The ability to cut supplier access without cutting the business"],
+      "whatHurt": ["Integration accounts with more rights than the integration needed"]
+    }
+  ],
+  "attackPaths": [
+    {
+      "id": "path-msp-ransom",
+      "name": "Managed service provider to production",
+      "summary": "Compromise of provider credentials, in through vendor remote access, up through privileged identity, out across production.",
+      "actorAffinity": { "actor-ransom": 1, "actor-credential": 0.3, "actor-espionage": 0.4 },
+      "attractiveness": 0.9,
+      "impactedServiceIds": ["svc-payments", "svc-platform", "svc-orders"],
+      "incidentFamilyId": "fam-ransomware",
+      "steps": [
+        { "id": "step-msp-1", "nodeId": "node-sup-msp", "technique": "supplier-remote-access", "narrative": "A provider engineer's credentials are obtained and reused.", "difficulty": 0.25, "controlIds": ["ctl-3p-access", "ctl-mfa"] },
+        { "id": "step-msp-2", "nodeId": "node-net-remote", "technique": "supplier-remote-access", "narrative": "Vendor remote access accepts the session without challenge.", "difficulty": 0.3, "controlIds": ["ctl-mfa", "ctl-3p-access", "ctl-logging"] },
+        { "id": "step-msp-3", "nodeId": "node-idp", "technique": "privilege-abuse", "narrative": "A standing administrative account in the identity platform is used to mint further access.", "difficulty": 0.4, "controlIds": ["ctl-pam", "ctl-mfa", "ctl-logging"] },
+        { "id": "step-msp-4", "nodeId": "node-mgmt-server", "technique": "lateral-movement", "narrative": "Jump servers give a route into production administration.", "difficulty": 0.35, "controlIds": ["ctl-pam", "ctl-segmentation", "ctl-edr"] },
+        { "id": "step-msp-5", "nodeId": "node-cloud-prod", "technique": "encryption-impact", "narrative": "Production workloads and their backups are encrypted together.", "difficulty": 0.4, "controlIds": ["ctl-backup", "ctl-edr", "ctl-cloud-posture"] }
+      ]
+    },
+    {
+      "id": "path-phish-legacy",
+      "name": "Phishing into the legacy estate",
+      "summary": "A phished endpoint, a flat corporate network, and an unsupported warehouse platform.",
+      "actorAffinity": { "actor-ransom": 0.7, "actor-credential": 0.6, "actor-espionage": 0.3 },
+      "attractiveness": 0.6,
+      "impactedServiceIds": ["svc-orders", "svc-corporate"],
+      "incidentFamilyId": "fam-legacy-outage",
+      "steps": [
+        { "id": "step-phish-1", "nodeId": "node-endpoints", "technique": "phishing", "narrative": "A finance user opens an invoice attachment.", "difficulty": 0.2, "controlIds": ["ctl-email", "ctl-edr"] },
+        { "id": "step-phish-2", "nodeId": "node-net-corp", "technique": "lateral-movement", "narrative": "The device is used to reach broader corporate infrastructure.", "difficulty": 0.3, "controlIds": ["ctl-edr", "ctl-segmentation", "ctl-logging"] },
+        { "id": "step-phish-3", "nodeId": "node-dc-legacy", "technique": "exploit-public-app", "narrative": "An unsupported system in the legacy data centre is trivially exploited.", "difficulty": 0.2, "controlIds": ["ctl-vuln", "ctl-segmentation", "ctl-edr"] },
+        { "id": "step-phish-4", "nodeId": "node-app-wms", "technique": "encryption-impact", "narrative": "The warehouse platform is encrypted mid-shift.", "difficulty": 0.3, "controlIds": ["ctl-backup", "ctl-edr"] }
+      ]
+    },
+    {
+      "id": "path-checkout-data",
+      "name": "Internet-facing application to customer data",
+      "summary": "An exposed weakness in checkout, then a straight line to the customer record store.",
+      "actorAffinity": { "actor-credential": 1, "actor-espionage": 0.4, "actor-ransom": 0.3 },
+      "attractiveness": 0.75,
+      "impactedServiceIds": ["svc-platform"],
+      "incidentFamilyId": "fam-data-breach",
+      "steps": [
+        { "id": "step-checkout-1", "nodeId": "node-app-checkout", "technique": "exploit-public-app", "narrative": "A weakness in the checkout service is found and exploited.", "difficulty": 0.35, "controlIds": ["ctl-vuln", "ctl-cloud-posture"] },
+        { "id": "step-checkout-2", "nodeId": "node-k8s", "technique": "privilege-abuse", "narrative": "Container workload identity is over-permissioned.", "difficulty": 0.4, "controlIds": ["ctl-cloud-posture", "ctl-pam", "ctl-logging"] },
+        { "id": "step-checkout-3", "nodeId": "node-data-pii", "technique": "data-exfiltration", "narrative": "Customer records are queried in bulk and extracted.", "difficulty": 0.3, "controlIds": ["ctl-dlp", "ctl-cloud-posture", "ctl-logging"] }
+      ]
+    },
+    {
+      "id": "path-portal-credential",
+      "name": "Partner portal credential abuse",
+      "summary": "Reused partner credentials, a portal that shares an identity platform with staff.",
+      "actorAffinity": { "actor-credential": 0.9, "actor-ransom": 0.5, "actor-espionage": 0.3 },
+      "attractiveness": 0.6,
+      "impactedServiceIds": ["svc-orders", "svc-platform"],
+      "incidentFamilyId": "fam-data-breach",
+      "steps": [
+        { "id": "step-portal-1", "nodeId": "node-app-portal", "technique": "credential-stuffing", "narrative": "Reused partner credentials succeed against the extranet.", "difficulty": 0.2, "controlIds": ["ctl-mfa", "ctl-3p-access"] },
+        { "id": "step-portal-2", "nodeId": "node-idp", "technique": "privilege-abuse", "narrative": "The partner identity turns out to sit in the same directory as staff.", "difficulty": 0.45, "controlIds": ["ctl-mfa", "ctl-pam", "ctl-logging"] },
+        { "id": "step-portal-3", "nodeId": "node-app-orders", "technique": "data-exfiltration", "narrative": "Order and customer data is pulled through the integration.", "difficulty": 0.35, "controlIds": ["ctl-dlp", "ctl-logging"] }
+      ]
+    },
+    {
+      "id": "path-ci-supply",
+      "name": "Engineering pipeline to production",
+      "summary": "A developer workstation, the build pipeline, and standing deployment credentials.",
+      "actorAffinity": { "actor-espionage": 1, "actor-ransom": 0.6, "actor-credential": 0.2 },
+      "attractiveness": 0.65,
+      "impactedServiceIds": ["svc-platform", "svc-payments"],
+      "incidentFamilyId": "fam-ransomware",
+      "steps": [
+        { "id": "step-ci-1", "nodeId": "node-dev-workstations", "technique": "phishing", "narrative": "An engineer is targeted with a convincing package-related lure.", "difficulty": 0.3, "controlIds": ["ctl-email", "ctl-edr"] },
+        { "id": "step-ci-2", "nodeId": "node-ci-pipeline", "technique": "persistence", "narrative": "Pipeline credentials are harvested and a build step is modified.", "difficulty": 0.45, "controlIds": ["ctl-cloud-posture", "ctl-pam", "ctl-logging"] },
+        { "id": "step-ci-3", "nodeId": "node-cloud-prod", "technique": "privilege-abuse", "narrative": "The pipeline deploys the actor's access straight into production.", "difficulty": 0.35, "controlIds": ["ctl-cloud-posture", "ctl-edr", "ctl-segmentation"] }
+      ]
+    },
+    {
+      "id": "path-analytics-espionage",
+      "name": "Quiet route to the data lake",
+      "summary": "A phished analyst, federated access, and a data lake nobody monitors.",
+      "actorAffinity": { "actor-espionage": 1, "actor-credential": 0.4, "actor-ransom": 0.2 },
+      "attractiveness": 0.55,
+      "impactedServiceIds": ["svc-data"],
+      "incidentFamilyId": "fam-data-theft",
+      "steps": [
+        { "id": "step-analytics-1", "nodeId": "node-endpoints", "technique": "phishing", "narrative": "An analyst's session is stolen rather than their password.", "difficulty": 0.35, "controlIds": ["ctl-email", "ctl-edr", "ctl-mfa"] },
+        { "id": "step-analytics-2", "nodeId": "node-app-analytics", "technique": "privilege-abuse", "narrative": "Broad standing read access across the platform is inherited.", "difficulty": 0.3, "controlIds": ["ctl-pam", "ctl-dlp", "ctl-logging"] },
+        { "id": "step-analytics-3", "nodeId": "node-data-analytics", "technique": "data-exfiltration", "narrative": "Behavioural data is extracted slowly enough not to trip anything.", "difficulty": 0.4, "controlIds": ["ctl-dlp", "ctl-cloud-posture"] }
+      ]
+    },
+    {
+      "id": "path-logistics-supplier",
+      "name": "Logistics partner into order management",
+      "summary": "A supplier's compromise arrives through an integration nobody documented.",
+      "actorAffinity": { "actor-ransom": 0.6, "actor-credential": 0.6, "actor-espionage": 0.2 },
+      "attractiveness": 0.5,
+      "impactedServiceIds": ["svc-orders"],
+      "incidentFamilyId": "fam-supplier-disruption",
+      "steps": [
+        { "id": "step-log-1", "nodeId": "node-sup-logistics", "technique": "supplier-remote-access", "narrative": "The logistics partner is compromised in its own estate.", "difficulty": 0.2, "controlIds": ["ctl-3p-access"] },
+        { "id": "step-log-2", "nodeId": "node-app-orders", "technique": "privilege-abuse", "narrative": "The integration account turns out to have far more than read access.", "difficulty": 0.35, "controlIds": ["ctl-pam", "ctl-logging", "ctl-3p-access"] },
+        { "id": "step-log-3", "nodeId": "node-svc-orders", "technique": "encryption-impact", "narrative": "Fulfilment data is corrupted and despatch stops.", "difficulty": 0.4, "controlIds": ["ctl-backup", "ctl-edr"] }
+      ]
+    },
+    {
+      "id": "path-cloud-misconfig",
+      "name": "Non-production into production",
+      "summary": "Loose non-production controls and a peering link that should not exist.",
+      "actorAffinity": { "actor-credential": 0.7, "actor-espionage": 0.6, "actor-ransom": 0.5 },
+      "attractiveness": 0.5,
+      "impactedServiceIds": ["svc-platform", "svc-data"],
+      "incidentFamilyId": "fam-data-breach",
+      "steps": [
+        { "id": "step-cm-1", "nodeId": "node-cloud-dev", "technique": "exploit-public-app", "narrative": "A test environment exposed to the internet is taken over.", "difficulty": 0.15, "controlIds": ["ctl-vuln", "ctl-cloud-posture"] },
+        { "id": "step-cm-2", "nodeId": "node-cloud-prod", "technique": "lateral-movement", "narrative": "The peering link carries the actor into the production tenancy.", "difficulty": 0.4, "controlIds": ["ctl-segmentation", "ctl-cloud-posture", "ctl-logging"] },
+        { "id": "step-cm-3", "nodeId": "node-data-pii", "technique": "data-exfiltration", "narrative": "Customer records are copied out through cloud storage.", "difficulty": 0.35, "controlIds": ["ctl-dlp", "ctl-cloud-posture"] }
+      ]
+    }
+  ]
+}

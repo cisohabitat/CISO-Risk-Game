@@ -1,0 +1,797 @@
+{
+  "decisions": [
+    {
+      "id": "dec-first-week-focus",
+      "title": "Where do you start?",
+      "description": "The CEO wants three cyber risks in twenty-three minutes. You have an inherited backlog, a stale register and no picture of your own.",
+      "context": "There is no mechanically superior answer here. Each route buys you a different kind of understanding, and you cannot have all of them first.",
+      "defaultOptionId": "opt-first-register",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "teaches": "Cyber risk cannot be understood from one data source.",
+      "options": [
+        { "id": "opt-first-services", "label": "Start with the business services", "description": "Find out what the business actually cannot lose before deciding what to protect.", "visibleKnownEffects": ["Service owners will expect follow-up", "The backlog keeps growing while you do this"],
+          "immediateEffects": [
+            { "type": "node.reveal", "nodeId": "node-app-wms", "confidence": 0.6 },
+            { "type": "edge.reveal", "edgeId": "edge-orders-wms" },
+            { "type": "evidence.reveal", "evidenceId": "ev-launch-pressure", "note": "Service owner conversations" },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.06, "reason": "You asked operations what mattered before telling them what to do." },
+            { "type": "flag.set", "flag": "start.services" }
+          ] },
+        { "id": "opt-first-register", "label": "Start with the inherited risk register", "description": "Work the 23 open entries you have been handed.", "visibleKnownEffects": ["Fastest way to sound informed this morning", "The register may not describe anything current"],
+          "immediateEffects": [
+            { "type": "evidence.reveal", "evidenceId": "ev-audit-stale-register", "note": "Inherited risk register" },
+            { "type": "evidence.reveal", "evidenceId": "ev-audit-repeat-finding", "note": "Inherited risk register" },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.03, "reason": "You engaged with the register the board already knows." },
+            { "type": "flag.set", "flag": "start.register" }
+          ] },
+        { "id": "opt-first-team", "label": "Start with your own leadership team", "description": "Find out what your four heads already know and what they have been unable to get done.", "visibleKnownEffects": ["Your team will feel heard", "You will be relying on their existing framing"],
+          "immediateEffects": [
+            { "type": "evidence.reveal", "evidenceId": "ev-team-vacancies", "note": "Leadership team" },
+            { "type": "evidence.reveal", "evidenceId": "ev-pam-adoption", "note": "Head of Security Engineering" },
+            { "type": "team.morale", "delta": 0.06 },
+            { "type": "leader.morale", "leaderId": "lead-soc", "delta": 0.08 },
+            { "type": "flag.set", "flag": "start.team" }
+          ] },
+        { "id": "opt-first-architecture", "label": "Start with the architecture", "description": "Ask how the organisation actually fits together before deciding what threatens it.", "visibleKnownEffects": ["Slow to produce anything the CEO can use this morning", "Most likely to change what you believe"],
+          "immediateEffects": [
+            { "type": "node.reveal", "nodeId": "node-mgmt-server", "confidence": 0.5 },
+            { "type": "evidence.reveal", "evidenceId": "ev-legacy-inventory", "note": "Architecture review" },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cio", "delta": 0.04, "reason": "You went to the architecture before the audit findings." },
+            { "type": "flag.set", "flag": "start.architecture" }
+          ] },
+        { "id": "opt-first-threat", "label": "Start with the threat picture", "description": "Find out what is actually happening to organisations like this one.", "visibleKnownEffects": ["Useful framing for the CEO", "Tells you nothing about Nexora specifically"],
+          "immediateEffects": [
+            { "type": "evidence.reveal", "evidenceId": "ev-ransomware-sector", "note": "Threat intelligence" },
+            { "type": "evidence.reveal", "evidenceId": "ev-credential-campaign", "note": "Threat intelligence" },
+            { "type": "threat.interest", "actorId": "actor-ransom", "delta": 0 },
+            { "type": "flag.set", "flag": "start.threat" }
+          ] },
+        { "id": "opt-first-controls", "label": "Start with recent control testing", "description": "Read the penetration test and control assurance reports before forming a view.", "visibleKnownEffects": ["Evidence-based, if the testing was scoped well"],
+          "immediateEffects": [
+            { "type": "evidence.reveal", "evidenceId": "ev-pen-test-segmentation", "note": "Last year's penetration test" },
+            { "type": "evidence.reveal", "evidenceId": "ev-pen-test-scope-limited", "note": "Last year's penetration test" },
+            { "type": "control.assess", "controlId": "ctl-edr" },
+            { "type": "flag.set", "flag": "start.controls" }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-ceo-three-risks",
+      "title": "The CEO wants your three risks",
+      "description": "Twenty-three minutes is up. Marianne Okafor wants to know what she should be worried about.",
+      "context": "You have had one morning. What you say now sets expectations for the year, and she will remember whether you pretended to know more than you did.",
+      "deadlineDays": 1,
+      "defaultOptionId": "opt-ceo-vague",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "teaches": "Communicating uncertainty well can build more credibility than false confidence.",
+      "options": [
+        { "id": "opt-ceo-honest", "label": "Give her your three, and say how confident you are in each", "description": "Name what you have seen, and be explicit that you have had one morning.", "visibleKnownEffects": ["She may find this less reassuring than she wanted"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.08, "reason": "You told her what you did not yet know." },
+            { "type": "stakeholder.understanding", "stakeholderId": "stk-ceo", "delta": 0.06 },
+            { "type": "board.confidence", "delta": 0.03 },
+            { "type": "flag.set", "flag": "ceo.honest" }
+          ] },
+        { "id": "opt-ceo-confident", "label": "Give her three risks with confidence", "description": "Name the three that sound most serious and commit to them.", "visibleKnownEffects": ["Reassuring today", "Harder to change position later"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.05, "reason": "You gave her a clear answer on day one." },
+            { "type": "flag.set", "flag": "ceo.confident" }
+          ],
+          "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.06, "reason": "Your day-one risks turned out not to be the ones that mattered." } ], "note": "The CEO has noticed your opening risks have quietly changed." } ] },
+        { "id": "opt-ceo-defer", "label": "Ask for four weeks before answering", "description": "Tell her you will not guess, and come back with something defensible.", "visibleKnownEffects": ["Buys you time", "She has a board meeting in three weeks"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.04, "reason": "You would not give her anything on day one." },
+            { "type": "focus.change", "amount": 1 },
+            { "type": "flag.set", "flag": "ceo.deferred" }
+          ] },
+        { "id": "opt-ceo-vague", "label": "Talk in general terms about the threat landscape", "description": "Ransomware, supply chain, the usual.", "visibleKnownEffects": ["Says nothing about Nexora"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.07, "reason": "You gave her a conference talk instead of an answer." },
+            { "type": "stakeholder.concern", "stakeholderId": "stk-ceo", "concern": "Whether the new CISO understands this business" }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-launch-conditions",
+      "title": "Security conditions on the platform launch",
+      "description": "The digital team wants sign-off for the new customer platform. The launch date is public. You have concerns about the checkout service and the identity model behind it.",
+      "context": "Priya Nandakumar is not asking permission so much as confirming you will not be a problem. Whatever you do here, you will live with the precedent.",
+      "deadlineDays": 7,
+      "defaultOptionId": "opt-launch-support",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-app-checkout", "node-svc-platform"],
+      "teaches": "Supporting with conditions is usually more effective than opposing outright.",
+      "options": [
+        { "id": "opt-launch-support", "label": "Support the launch as planned", "description": "Do not stand in the way of a public commitment.", "visibleKnownEffects": ["The launch proceeds on time", "Whatever is weak in checkout goes live with it"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": 0.09, "reason": "You backed the launch without conditions." },
+            { "type": "objective.progress", "objectiveId": "obj-platform-launch", "delta": 0.08 },
+            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": 0.1 },
+            { "type": "flag.set", "flag": "launch.unconditional" }
+          ],
+          "assumptionIds": ["asm-payments-stable"] },
+        { "id": "opt-launch-conditions", "label": "Support, with conditions", "description": "Launch proceeds if administrative MFA is closed out and the exposed findings on checkout are fixed first.", "visibleKnownEffects": ["A short delay is likely", "The delivery team will resent the process, not the outcome"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.03, "reason": "You attached conditions to the launch." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cio", "delta": 0.05, "reason": "You found a way to say yes." },
+            { "type": "objective.delay", "objectiveId": "obj-platform-launch", "days": 10 },
+            { "type": "control.coverage", "controlId": "ctl-mfa", "delta": 0.08 },
+            { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.15 },
+            { "type": "operationalTolerance", "delta": -0.03 },
+            { "type": "flag.set", "flag": "launch.conditional" }
+          ] },
+        { "id": "opt-launch-oppose", "label": "Oppose the launch until the identity work is done", "description": "Refuse sign-off. The identity model has to change first.", "visibleKnownEffects": ["A public commitment will be missed", "You will need the CEO behind you"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.18, "reason": "You blocked the launch." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.08, "reason": "You cost the company a public date." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.04, "reason": "You were willing to say no." },
+            { "type": "objective.delay", "objectiveId": "obj-platform-launch", "days": 45 },
+            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.15 },
+            { "type": "operationalTolerance", "delta": -0.12 },
+            { "type": "flag.set", "flag": "launch.blocked" }
+          ] },
+        { "id": "opt-launch-compensate", "label": "Support now, compensate afterwards", "description": "Let it launch, with enhanced monitoring on checkout and a committed fix window.", "visibleKnownEffects": ["Launch is unaffected", "You are carrying the exposure in the meantime"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": 0.05, "reason": "You found a way to launch on time." },
+            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.06 },
+            { "type": "objective.progress", "objectiveId": "obj-platform-launch", "delta": 0.05 },
+            { "type": "flag.set", "flag": "launch.compensated" }
+          ],
+          "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.1 } ], "note": "The committed fix window on checkout has closed out." } ],
+          "assumptionIds": ["asm-payments-stable"] }
+      ]
+    },
+    {
+      "id": "dec-msp-access",
+      "title": "Standing supplier access",
+      "description": "Corvus Managed Services holds permanent privileged accounts. Removing them is a contractual conversation and an operational one.",
+      "context": "Nadia Farrell in procurement will help if the ask is specific. Helen Brandt will resist anything that risks out-of-hours cover.",
+      "deadlineDays": 21,
+      "defaultOptionId": "opt-msp-nothing",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-sup-msp", "node-idp"],
+      "teaches": "Third-party access is a control problem and a contract problem at the same time.",
+      "options": [
+        { "id": "opt-msp-remove", "label": "Remove standing access immediately", "description": "Cut the permanent accounts now and deal with the consequences.", "visibleKnownEffects": ["Out-of-hours response will be slower", "The provider will escalate commercially"],
+          "immediateEffects": [
+            { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.22 },
+            { "type": "control.exceptions", "controlId": "ctl-3p-access", "delta": -0.15 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.1, "reason": "You removed supplier access without an alternative for night operations." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": -0.06, "reason": "You forced a mid-term contract conversation." },
+            { "type": "operationalTolerance", "delta": -0.08 },
+            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 1, "note": "A route the extortion actor was working has closed." }
+          ] },
+        { "id": "opt-msp-breakglass", "label": "Replace standing access with a monitored break-glass path", "description": "Time-bound, requested, recorded access, with a documented emergency route.", "visibleKnownEffects": ["Takes six to eight weeks to implement", "Keeps night operations working"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.05, "reason": "You protected night operations while closing the gap." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.02, "reason": "You brought procurement a specific, bounded ask." },
+            { "type": "budget.change", "amount": -80 }
+          ],
+          "delayedEffects": [ { "dayOffset": 50, "effects": [ { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.25 }, { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.2 }, { "type": "control.exceptions", "controlId": "ctl-3p-access", "delta": -0.2 } ], "note": "The break-glass path for supplier access is live." } ] },
+        { "id": "opt-msp-monitor", "label": "Leave access in place, monitor it closely", "description": "Accept the access, but make sure you would see it being misused.", "visibleKnownEffects": ["No operational disruption", "You are detecting rather than preventing"],
+          "immediateEffects": [
+            { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.18 },
+            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.06 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.03, "reason": "You did not disrupt operations." }
+          ],
+          "assumptionIds": ["asm-supplier-no-priv"] },
+        { "id": "opt-msp-nothing", "label": "Leave it for now", "description": "There are bigger problems this quarter.", "visibleKnownEffects": ["Nothing changes"],
+          "immediateEffects": [ { "type": "flag.set", "flag": "msp.deferred" } ],
+          "assumptionIds": ["asm-supplier-no-priv"] }
+      ]
+    },
+    {
+      "id": "dec-legacy-retirement",
+      "title": "The legacy warehouse platform",
+      "description": "Meridian runs on unsupported software and cannot be patched. It supports despatch across three sites. Retirement is planned but repeatedly slips.",
+      "context": "The COO cannot lose despatch. The CIO owns the migration that keeps slipping. Neither will thank you for a decision that makes their year harder.",
+      "deadlineDays": 30,
+      "defaultOptionId": "opt-legacy-accept",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-app-wms", "node-dc-legacy"],
+      "teaches": "Accepting risk is legitimate. Accepting it without recording the assumptions behind it is not.",
+      "options": [
+        { "id": "opt-legacy-isolate", "label": "Isolate it properly", "description": "Fund a containment project: strict network controls around the platform until it retires.", "visibleKnownEffects": ["Integration work for the operations team", "Meaningfully reduces what a compromise could reach"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -180 },
+            { "type": "control.coverage", "controlId": "ctl-segmentation", "delta": 0.12 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.03, "reason": "You added constraints around the warehouse platform." }
+          ],
+          "delayedEffects": [ { "dayOffset": 40, "effects": [ { "type": "node.exposure", "nodeId": "node-dc-legacy", "delta": -0.2 }, { "type": "node.exposure", "nodeId": "node-app-wms", "delta": -0.2 } ], "note": "Containment around the legacy warehouse platform is in place." } ] },
+        { "id": "opt-legacy-accelerate", "label": "Push to accelerate retirement", "description": "Take the argument to the CIO: the platform has to go this year, not next.", "visibleKnownEffects": ["Depends entirely on the migration programme", "Costs you credit with the CIO"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cio", "delta": -0.06, "reason": "You pushed on a migration date he does not control." },
+            { "type": "flag.set", "flag": "legacy.retirementDay", "value": 210 },
+            { "type": "objective.progress", "objectiveId": "obj-cloud-migration", "delta": 0.05 }
+          ],
+          "assumptionIds": ["asm-retirement"] },
+        { "id": "opt-legacy-accept", "label": "Accept until retirement, with compensating controls", "description": "Accept the exposure on the basis that the platform retires this year, with monitoring in the meantime.", "visibleKnownEffects": ["No operational disruption", "Depends on the retirement date holding"],
+          "immediateEffects": [
+            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.04 },
+            { "type": "risk.open", "scenarioId": "risk-legacy-outage" },
+            { "type": "risk.status", "scenarioId": "risk-legacy-outage", "status": "accepted" }
+          ],
+          "assumptionIds": ["asm-retirement", "asm-legacy-isolated"] },
+        { "id": "opt-legacy-manual", "label": "Fund a manual fulfilment fallback", "description": "Rather than protect the platform, make its loss survivable.", "visibleKnownEffects": ["Does nothing to prevent compromise", "Materially reduces what an outage costs"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -110 },
+            { "type": "control.coverage", "controlId": "ctl-ir", "delta": 0.08 },
+            { "type": "control.operational", "controlId": "ctl-backup", "delta": 0.06 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.1, "reason": "You funded a fallback operations could actually use." },
+            { "type": "flag.set", "flag": "legacy.fallback" }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-audit-finding",
+      "title": "The repeat audit finding",
+      "description": "External audit has raised privileged access management for the third consecutive year. The CFO wants to know what you are going to do about it.",
+      "context": "The board has seen this finding before. How you respond shapes whether they believe the fourth year will be different.",
+      "deadlineDays": 14,
+      "defaultOptionId": "opt-audit-plan",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-pam"],
+      "options": [
+        { "id": "opt-audit-programme", "label": "Commit to a funded programme with dates", "description": "Tell audit and the board that this is being fixed properly, and commit to milestones.", "visibleKnownEffects": ["You will be held to the dates", "Requires real budget and capacity"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.08, "reason": "You gave audit a credible, dated answer." },
+            { "type": "board.confidence", "delta": 0.06 },
+            { "type": "flag.set", "flag": "audit.committed" }
+          ] },
+        { "id": "opt-audit-plan", "label": "Produce a remediation plan", "description": "The standard response: a plan, an owner and a target date.", "visibleKnownEffects": ["Audit will accept it", "So did the last two plans"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.02 },
+            { "type": "board.confidence", "delta": -0.01 }
+          ] },
+        { "id": "opt-audit-reframe", "label": "Reframe the finding around business consequence", "description": "Accept the finding, but re-present it to the board as what it would actually cost rather than as a control gap.", "visibleKnownEffects": ["Changes the conversation", "Requires you to be right"],
+          "immediateEffects": [
+            { "type": "stakeholder.understanding", "stakeholderId": "stk-cfo", "delta": 0.1 },
+            { "type": "stakeholder.understanding", "stakeholderId": "stk-board", "delta": 0.08 },
+            { "type": "board.confidence", "delta": 0.04 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.05, "reason": "You translated an audit finding into a business consequence." }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-soc-contract",
+      "title": "The SOC contract renewal",
+      "description": "Sentinel SOC's contract renews shortly. Procurement wants a decision. The service is cheap, the escalation quality is poor, and the coverage gaps are yours, not theirs.",
+      "context": "Replacing a SOC provider takes six months and a great deal of your team's attention.",
+      "deadlineDays": 21,
+      "defaultOptionId": "opt-soc-renew",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-sup-soc"],
+      "options": [
+        { "id": "opt-soc-renew", "label": "Renew as-is", "description": "Keep the service and spend your energy elsewhere.", "visibleKnownEffects": ["No disruption", "The escalation quality problem persists"],
+          "immediateEffects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.04, "reason": "You renewed without reopening the contract." } ] },
+        { "id": "opt-soc-renegotiate", "label": "Renew with a rewritten scope", "description": "Same provider, different service: use cases tied to Nexora's attack paths, and escalation quality measured.", "visibleKnownEffects": ["Costs more", "Takes three months to take effect"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -140 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": -0.04, "reason": "You reopened a contract schedule mid-cycle." }
+          ],
+          "delayedEffects": [ { "dayOffset": 75, "effects": [ { "type": "control.operational", "controlId": "ctl-soc", "delta": 0.18 }, { "type": "control.monitoring", "controlId": "ctl-soc", "delta": 0.15 } ], "note": "The rewritten SOC scope is now in effect." } ] },
+        { "id": "opt-soc-replace", "label": "Go to market for a replacement", "description": "Start a procurement for a different provider.", "visibleKnownEffects": ["Six months of your team's attention", "Detection quality dips during transition"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -60 },
+            { "type": "capacity.change", "fn": "soc", "delta": -1 },
+            { "type": "control.operational", "controlId": "ctl-soc", "delta": -0.08 }
+          ],
+          "delayedEffects": [ { "dayOffset": 150, "effects": [ { "type": "control.operational", "controlId": "ctl-soc", "delta": 0.28 }, { "type": "control.coverage", "controlId": "ctl-soc", "delta": 0.15 }, { "type": "capacity.change", "fn": "soc", "delta": 1 } ], "note": "The new monitoring provider is fully live." } ] }
+      ]
+    },
+    {
+      "id": "dec-acquisition-integration",
+      "title": "Connecting the acquisition",
+      "description": "Kestrel Digital completes shortly. Integration wants to join its network to Nexora's corporate network on day one.",
+      "context": "The CFO owns the deal timetable. Nobody has examined Kestrel's estate in any depth.",
+      "deadlineDays": 14,
+      "defaultOptionId": "opt-acq-connect",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-acq-kestrel", "node-net-corp"],
+      "teaches": "Integration deadlines and security conditions are usually negotiable together, not separately.",
+      "options": [
+        { "id": "opt-acq-connect", "label": "Connect on schedule", "description": "Do not be the reason the deal timetable slips.", "visibleKnownEffects": ["Integration proceeds", "You inherit whatever is already in their estate"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.07, "reason": "You did not delay the acquisition." },
+            { "type": "objective.progress", "objectiveId": "obj-acquisition", "delta": 0.12 },
+            { "type": "node.exposure", "nodeId": "node-net-corp", "delta": 0.14 },
+            { "type": "threat.interest", "actorId": "actor-ransom", "delta": 0.06 }
+          ] },
+        { "id": "opt-acq-quarantine", "label": "Connect through a quarantined zone first", "description": "Join the estates, but keep Kestrel behind a controlled boundary until it has been examined.", "visibleKnownEffects": ["Integration is slower and more expensive", "Contains what you have not yet seen"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -120 },
+            { "type": "objective.delay", "objectiveId": "obj-acquisition", "days": 20 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.03, "reason": "You added cost and time to the integration." },
+            { "type": "control.coverage", "controlId": "ctl-segmentation", "delta": 0.06 }
+          ] },
+        { "id": "opt-acq-delay", "label": "Refuse connection until due diligence is done", "description": "No network join until someone has actually looked.", "visibleKnownEffects": ["Deal value realisation slips", "The CFO will escalate"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.14, "reason": "You blocked the integration." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.05, "reason": "You delayed value from the acquisition." },
+            { "type": "objective.delay", "objectiveId": "obj-acquisition", "days": 55 },
+            { "type": "operationalTolerance", "delta": -0.08 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-budget-reallocation",
+      "title": "Finance asks for the cyber budget back",
+      "description": "The cost reduction programme needs a contribution. Finance has asked for 15% of the remaining cyber budget.",
+      "context": "Saying no costs credit. Saying yes costs capability. Saying yes with conditions is harder to argue but usually lands better.",
+      "deadlineDays": 10,
+      "defaultOptionId": "opt-budget-give",
+      "requiresRationale": true,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-budget-give", "label": "Give it up", "description": "Take the cut and reprioritise.", "visibleKnownEffects": ["Programmes will move more slowly"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -220, "note": "Budget returned to the cost programme." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.1, "reason": "You contributed to the cost programme without a fight." },
+            { "type": "objective.progress", "objectiveId": "obj-cost-programme", "delta": 0.1 }
+          ] },
+        { "id": "opt-budget-refuse", "label": "Refuse, and explain what it would cost", "description": "Set out precisely which capability would not be delivered.", "visibleKnownEffects": ["Protects the programme", "The CFO will remember at the next budget round"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.08, "reason": "You refused to contribute to the cost programme." },
+            { "type": "stakeholder.understanding", "stakeholderId": "stk-cfo", "delta": 0.06 },
+            { "type": "objective.delay", "objectiveId": "obj-cost-programme", "days": 20 }
+          ] },
+        { "id": "opt-budget-partial", "label": "Offer a smaller contribution from a specific line", "description": "Give back what you can name, and protect what you cannot.", "visibleKnownEffects": ["Half the cut", "Requires you to know your own plan well"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -110, "note": "Partial contribution to the cost programme." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.05, "reason": "You made a specific, defensible offer." },
+            { "type": "objective.progress", "objectiveId": "obj-cost-programme", "delta": 0.05 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-exception-request",
+      "title": "An executive exception request",
+      "description": "Three senior leaders have asked to be exempted from the new privileged access flow. Their assistants cannot work with session recording.",
+      "context": "Exceptions are how good controls quietly become partial controls.",
+      "deadlineDays": 7,
+      "defaultOptionId": "opt-exception-grant",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-pam", "node-idp"],
+      "options": [
+        { "id": "opt-exception-grant", "label": "Grant the exceptions", "description": "Keep the peace.", "visibleKnownEffects": ["The exception population grows", "Others will ask"],
+          "immediateEffects": [
+            { "type": "control.exceptions", "controlId": "ctl-pam", "delta": 0.1 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.03, "reason": "You were pragmatic about executive access." }
+          ] },
+        { "id": "opt-exception-refuse", "label": "Refuse", "description": "The control applies to everyone or it applies to no one.", "visibleKnownEffects": ["Three senior people will be annoyed", "The control stays meaningful"],
+          "immediateEffects": [
+            { "type": "control.exceptions", "controlId": "ctl-pam", "delta": -0.05 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.05, "reason": "You refused an executive exception." },
+            { "type": "operationalTolerance", "delta": -0.04 }
+          ] },
+        { "id": "opt-exception-redesign", "label": "Redesign the flow so the exception is unnecessary", "description": "Spend the engineering effort to make the control workable for delegated access.", "visibleKnownEffects": ["Costs engineering capacity", "Removes the argument permanently"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -60 },
+            { "type": "capacity.change", "fn": "iam", "delta": -0.5 },
+            { "type": "control.configuration", "controlId": "ctl-pam", "delta": 0.1 }
+          ],
+          "delayedEffects": [ { "dayOffset": 35, "effects": [ { "type": "capacity.change", "fn": "iam", "delta": 0.5 }, { "type": "control.exceptions", "controlId": "ctl-pam", "delta": -0.12 } ], "note": "The redesigned privileged access flow is live; the executive exceptions have lapsed." } ] }
+      ]
+    },
+    {
+      "id": "dec-exploit-published",
+      "title": "A working exploit for the checkout framework",
+      "description": "A public exploit exists for the framework version running the checkout service. The delivery team's next release window is in eleven days.",
+      "context": "Priya will not want an emergency change during the launch run-up. The alternative is carrying a known, weaponised weakness on an internet-facing service.",
+      "deadlineDays": 4,
+      "defaultOptionId": "opt-exploit-window",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-app-checkout"],
+      "options": [
+        { "id": "opt-exploit-emergency", "label": "Force an emergency patch", "description": "Invoke emergency change and patch this week.", "visibleKnownEffects": ["Disrupts the delivery plan", "Closes the exposure quickly"],
+          "immediateEffects": [
+            { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.25 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.08, "reason": "You forced an emergency change during the launch run-up." },
+            { "type": "operationalTolerance", "delta": -0.06 },
+            { "type": "threat.setback", "actorId": "actor-credential", "stages": 1 }
+          ] },
+        { "id": "opt-exploit-window", "label": "Wait for the scheduled window", "description": "Eleven days is not long.", "visibleKnownEffects": ["No disruption", "Eleven days of exposure to a public exploit"],
+          "immediateEffects": [
+            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": 0.08 },
+            { "type": "threat.interest", "actorId": "actor-credential", "delta": 0.08 }
+          ],
+          "delayedEffects": [ { "dayOffset": 11, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.2 }, { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.08 } ], "note": "The checkout framework has been patched in the scheduled window." } ] },
+        { "id": "opt-exploit-mitigate", "label": "Mitigate at the edge, patch in the window", "description": "Block the exploit path at the perimeter now and patch on schedule.", "visibleKnownEffects": ["No delivery disruption", "Mitigation is not the same as a fix"],
+          "immediateEffects": [
+            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.1 },
+            { "type": "control.coverage", "controlId": "ctl-vuln", "delta": 0.04 },
+            { "type": "capacity.change", "fn": "engineering", "delta": -0.5 }
+          ],
+          "delayedEffects": [ { "dayOffset": 11, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.2 }, { "type": "capacity.change", "fn": "engineering", "delta": 0.5 } ], "note": "Checkout has been patched; the edge mitigation is retired." } ] }
+      ]
+    },
+    {
+      "id": "dec-anomaly-response",
+      "title": "Out-of-hours vendor access",
+      "description": "The SOC has flagged vendor remote access sessions at 03:40 on three consecutive nights, outside the provider's contracted hours. Confidence is low.",
+      "context": "This is exactly the kind of signal that is usually nothing, and occasionally is the only warning anyone gets.",
+      "deadlineDays": 3,
+      "defaultOptionId": "opt-anomaly-watch",
+      "requiresRationale": false,
+      "relatedNodeIds": ["node-net-remote", "node-sup-msp"],
+      "teaches": "Investigating costs real resources. So does not investigating.",
+      "options": [
+        { "id": "opt-anomaly-hunt", "label": "Commission a focused threat hunt", "description": "Put the SOC team on it properly for a week.", "visibleKnownEffects": ["Costs SOC capacity you may want later", "Most likely outcome is that it was nothing"],
+          "immediateEffects": [
+            { "type": "capacity.change", "fn": "soc", "delta": -1 },
+            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.05 },
+            { "type": "flag.set", "flag": "anomaly.hunted" }
+          ],
+          "delayedEffects": [ { "dayOffset": 8, "effects": [ { "type": "capacity.change", "fn": "soc", "delta": 1 }, { "type": "threat.setback", "actorId": "actor-ransom", "stages": 2, "note": "The hunt disrupted activity that had been running through vendor access." } ], "note": "The threat hunt has reported." } ] },
+        { "id": "opt-anomaly-ask", "label": "Ask the provider to explain it", "description": "Cheap, fast, and depends entirely on the provider being both honest and informed.", "visibleKnownEffects": ["Costs almost nothing", "Tells you what the provider believes, not what happened"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.02 },
+            { "type": "flag.set", "flag": "anomaly.asked" }
+          ] },
+        { "id": "opt-anomaly-suspend", "label": "Suspend vendor access until it is explained", "description": "Close the route now, ask questions afterwards.", "visibleKnownEffects": ["Night operations are affected immediately", "The provider will escalate"],
+          "immediateEffects": [
+            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 2, "note": "Vendor access was suspended mid-operation." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.09, "reason": "You suspended supplier access with no notice." },
+            { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.08 },
+            { "type": "operationalTolerance", "delta": -0.07 }
+          ] },
+        { "id": "opt-anomaly-watch", "label": "Note it and keep watching", "description": "Low confidence, high volume, limited capacity.", "visibleKnownEffects": ["Costs nothing now"],
+          "immediateEffects": [ { "type": "flag.set", "flag": "anomaly.ignored" } ],
+          "assumptionIds": ["asm-no-active-threat"] }
+      ]
+    },
+    {
+      "id": "dec-data-retention",
+      "title": "Customer data held beyond policy",
+      "description": "Records for closed accounts are retained indefinitely in the analytics estate. Legal is uncomfortable. The analytics team says the data is commercially valuable.",
+      "context": "Ruth Ahmadi will support you if the facts are clear. The Insight Services business will not.",
+      "deadlineDays": 21,
+      "defaultOptionId": "opt-retention-defer",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-data-pii", "node-data-analytics"],
+      "options": [
+        { "id": "opt-retention-delete", "label": "Enforce the retention policy", "description": "Delete what should not be there.", "visibleKnownEffects": ["Analytics loses historical depth", "Materially reduces what a breach would expose"],
+          "immediateEffects": [
+            { "type": "node.exposure", "nodeId": "node-data-pii", "delta": -0.12 },
+            { "type": "node.weakness", "nodeId": "node-data-analytics", "delta": -0.1 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.1, "reason": "You enforced the retention policy." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.05, "reason": "You deleted data the analytics business wanted." },
+            { "type": "objective.progress", "objectiveId": "obj-new-market", "delta": -0.03 }
+          ] },
+        { "id": "opt-retention-restrict", "label": "Restrict access rather than delete", "description": "Keep the data, cut the 190 standing readers down to a governed few.", "visibleKnownEffects": ["Commercially acceptable", "The data still exists to be taken"],
+          "immediateEffects": [
+            { "type": "control.coverage", "controlId": "ctl-dlp", "delta": 0.12 },
+            { "type": "node.exposure", "nodeId": "node-data-analytics", "delta": -0.08 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.04 }
+          ] },
+        { "id": "opt-retention-defer", "label": "Defer until after the launch", "description": "There is too much happening this quarter.", "visibleKnownEffects": ["Nothing changes"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": -0.06, "reason": "You deferred a regulatory exposure she had raised." },
+            { "type": "stakeholder.concern", "stakeholderId": "stk-legal", "concern": "Retention of closed-account data" }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-hire-or-outsource",
+      "title": "Five vacancies and a long recruitment cycle",
+      "description": "Two roles have been open for over six months. Recruitment takes about two months when it works.",
+      "context": "The team is carrying the gap. That is not free, and it is not sustainable.",
+      "defaultOptionId": "opt-hire-recruit",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-hire-recruit", "label": "Recruit properly", "description": "Take the time to hire the right people.", "visibleKnownEffects": ["Two months before anyone starts", "Permanent capability"],
+          "immediateEffects": [ { "type": "budget.change", "amount": -140 } ],
+          "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "team.vacancyFilled", "fn": "iam" }, { "type": "team.morale", "delta": 0.05 } ], "note": "A new identity engineer has joined." } ] },
+        { "id": "opt-hire-contract", "label": "Bring in contractors now", "description": "Buy capacity immediately at a premium.", "visibleKnownEffects": ["Capacity within weeks", "Expensive, and it leaves when the money stops"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -260 },
+            { "type": "capacity.change", "fn": "engineering", "delta": 1.5 },
+            { "type": "capacity.change", "fn": "iam", "delta": 1 }
+          ],
+          "delayedEffects": [ { "dayOffset": 140, "effects": [ { "type": "capacity.change", "fn": "engineering", "delta": -1.5 }, { "type": "capacity.change", "fn": "iam", "delta": -1 }, { "type": "team.morale", "delta": -0.04 } ], "note": "The contractors have rolled off and taken their knowledge with them." } ] },
+        { "id": "opt-hire-nothing", "label": "Hold the vacancies and protect the budget", "description": "Keep the money for programme delivery.", "visibleKnownEffects": ["More budget for programmes", "The team absorbs the gap"],
+          "immediateEffects": [
+            { "type": "team.morale", "delta": -0.06 },
+            { "type": "leader.morale", "leaderId": "lead-eng", "delta": -0.1 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-board-material-risk",
+      "title": "A material risk the board has not heard about",
+      "description": "You are holding a risk assessment the board has never seen. The next scheduled meeting is in six weeks.",
+      "context": "Sir Alan Whitcombe's stated concern is whether management knows what it does not know. He is more forgiving of bad news than of late news.",
+      "deadlineDays": 10,
+      "defaultOptionId": "opt-board-wait",
+      "requiresRationale": true,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-board-now", "label": "Brief the risk chair now, out of cycle", "description": "Do not let him find out from the papers.", "visibleKnownEffects": ["Costs you a difficult conversation", "He will not be surprised later"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.09, "reason": "You briefed him before he had to ask." },
+            { "type": "board.confidence", "delta": 0.05 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.03, "reason": "You went to the board chair before finishing the conversation with her." }
+          ] },
+        { "id": "opt-board-ceo-first", "label": "Brief the CEO first, then the board together", "description": "Respect the reporting line, accept the delay.", "visibleKnownEffects": ["Keeps the CEO on side", "Slower"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.07, "reason": "You brought her the bad news first." },
+            { "type": "board.confidence", "delta": 0.02 }
+          ] },
+        { "id": "opt-board-wait", "label": "Wait for the scheduled meeting", "description": "Six weeks is not long.", "visibleKnownEffects": ["Nothing happens now"],
+          "immediateEffects": [ { "type": "flag.set", "flag": "board.delayed" } ],
+          "delayedEffects": [ { "dayOffset": 42, "effects": [ { "type": "board.confidence", "delta": -0.05 } ], "note": "The risk chair asks why he is hearing this six weeks after it was assessed." } ] }
+      ]
+    },
+    {
+      "id": "dec-inc-command",
+      "title": "Incident command",
+      "description": "An incident is running. The question is whether you stand up formal incident command, with the disruption that brings, or manage it through the existing line.",
+      "context": "Standing up command costs operational normality across the business. Not standing it up costs coordination when you most need it.",
+      "deadlineDays": 2,
+      "defaultOptionId": "opt-inc-line",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-inc-command-yes", "label": "Stand up incident command now", "description": "Formal command, executive cadence, single decision path.", "visibleKnownEffects": ["Business-wide disruption", "Much faster containment"],
+          "immediateEffects": [
+            { "type": "incident.containment", "delta": 0.18 },
+            { "type": "flag.set", "flag": "incident.command" },
+            { "type": "team.morale", "delta": -0.03 },
+            { "type": "operationalTolerance", "delta": -0.05 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.04, "reason": "You took visible control of the incident." }
+          ] },
+        { "id": "opt-inc-line", "label": "Manage it through the line", "description": "Keep it contained within security operations for now.", "visibleKnownEffects": ["Less disruption", "Slower coordination if it grows"],
+          "immediateEffects": [ { "type": "incident.containment", "delta": 0.04 } ] }
+      ]
+    },
+    {
+      "id": "dec-inc-isolate",
+      "title": "Isolate the route in",
+      "description": "The route into the environment appears to run through third-party access. Cutting it stops the actor and stops the supplier.",
+      "context": "Operations depends on that supplier. So, apparently, does the actor.",
+      "deadlineDays": 1,
+      "defaultOptionId": "opt-inc-isolate-partial",
+      "requiresRationale": false,
+      "relatedNodeIds": ["node-net-remote", "node-sup-msp"],
+      "options": [
+        { "id": "opt-inc-isolate-yes", "label": "Cut all third-party access immediately", "description": "Everything external goes now.", "visibleKnownEffects": ["Operations will be affected", "Closes the route"],
+          "immediateEffects": [
+            { "type": "incident.containment", "delta": 0.3 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.07, "reason": "You cut supplier access during an incident with no warning." },
+            { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.05 }
+          ] },
+        { "id": "opt-inc-isolate-partial", "label": "Cut only the implicated accounts", "description": "Targeted, if you have identified the right accounts.", "visibleKnownEffects": ["Minimal operational impact", "Depends on your identification being right"],
+          "immediateEffects": [ { "type": "incident.containment", "delta": 0.14 } ] },
+        { "id": "opt-inc-isolate-no", "label": "Keep access open and watch", "description": "Observe the actor rather than alerting them.", "visibleKnownEffects": ["You learn more", "They also do more"],
+          "immediateEffects": [
+            { "type": "incident.consequence", "delta": 0.08 },
+            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.04 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-inc-external",
+      "title": "External response support",
+      "description": "Your team is running the incident. Specialist external support would help, and there is no retainer in place.",
+      "context": "Procuring response support during an incident is expensive and slow, but the alternative is your own people going without sleep.",
+      "deadlineDays": 2,
+      "defaultOptionId": "opt-inc-ext-no",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-inc-ext-yes", "label": "Bring in external response support", "description": "Pay the emergency rate.", "visibleKnownEffects": ["Expensive", "Materially better forensics and containment"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -320, "note": "Emergency incident response engagement." },
+            { "type": "incident.containment", "delta": 0.2 },
+            { "type": "flag.set", "flag": "incident.external" },
+            { "type": "team.morale", "delta": 0.05 }
+          ] },
+        { "id": "opt-inc-ext-no", "label": "Run it in-house", "description": "Your team handles it.", "visibleKnownEffects": ["No cost", "Your team will be exhausted"],
+          "immediateEffects": [
+            { "type": "team.morale", "fn": "incident-response", "delta": -0.12 },
+            { "type": "team.morale", "fn": "soc", "delta": -0.08 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-inc-notify",
+      "title": "Regulatory notification",
+      "description": "Customer data may have left the environment. The notification clock is either running or about to start.",
+      "context": "Ruth Ahmadi needs a decision, and she needs the facts to be straight before it is made.",
+      "deadlineDays": 1,
+      "defaultOptionId": "opt-inc-notify-wait",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-data-pii"],
+      "options": [
+        { "id": "opt-inc-notify-early", "label": "Notify early, on incomplete facts", "description": "Notify the regulator now and update as you learn more.", "visibleKnownEffects": ["Demonstrates good faith", "You may be correcting yourself publicly"],
+          "immediateEffects": [
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.08, "reason": "You notified promptly." },
+            { "type": "board.confidence", "delta": 0.03 },
+            { "type": "incident.consequence", "delta": -0.04 }
+          ] },
+        { "id": "opt-inc-notify-wait", "label": "Establish the facts first", "description": "Take the time to know what you are reporting.", "visibleKnownEffects": ["A better first report", "The clock is running"],
+          "immediateEffects": [ { "type": "flag.set", "flag": "incident.notify.delayed" } ],
+          "delayedEffects": [ { "dayOffset": 6, "effects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": -0.05, "reason": "Notification went out later than she was comfortable with." } ], "note": "Legal has flagged the notification timing." } ] }
+      ]
+    },
+    {
+      "id": "dec-inc-shutdown",
+      "title": "Take the platform down",
+      "description": "The affected platform is still running. Taking it offline stops the damage spreading and stops the business with it.",
+      "context": "The COO will want a number: how long. You do not have one.",
+      "deadlineDays": 1,
+      "defaultOptionId": "opt-inc-shutdown-no",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-inc-shutdown-yes", "label": "Take it offline", "description": "Stop it now.", "visibleKnownEffects": ["Immediate operational impact", "Limits the damage"],
+          "immediateEffects": [
+            { "type": "incident.containment", "delta": 0.28 },
+            { "type": "incident.consequence", "delta": -0.06 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.05, "reason": "You took the platform down without a restoration estimate." }
+          ] },
+        { "id": "opt-inc-shutdown-no", "label": "Keep it running while you contain", "description": "Contain around it rather than stopping it.", "visibleKnownEffects": ["Business continues", "The damage may continue too"],
+          "immediateEffects": [ { "type": "incident.consequence", "delta": 0.07 } ] }
+      ]
+    },
+    {
+      "id": "dec-post-incident",
+      "title": "After the incident",
+      "description": "The incident is closed. What you do with it now determines whether the organisation learns anything.",
+      "context": "This is the moment the organisation is most willing to change, and least willing to hear that it was predictable.",
+      "deadlineDays": 14,
+      "defaultOptionId": "opt-post-report",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-post-honest", "label": "Present the reconstruction honestly, including what you chose not to do", "description": "Show the path, the controls that mattered, and the decisions, including yours.", "visibleKnownEffects": ["Uncomfortable", "Builds durable credibility"],
+          "immediateEffects": [
+            { "type": "board.confidence", "delta": 0.08 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.1, "reason": "You presented your own decisions in the incident reconstruction." },
+            { "type": "stakeholder.understanding", "stakeholderId": "stk-ceo", "delta": 0.1 },
+            { "type": "operationalTolerance", "delta": 0.1 }
+          ] },
+        { "id": "opt-post-report", "label": "Produce a standard post-incident report", "description": "Facts, timeline, actions.", "visibleKnownEffects": ["Expected", "Changes little"],
+          "immediateEffects": [ { "type": "board.confidence", "delta": 0.01 } ] },
+        { "id": "opt-post-leverage", "label": "Use it to fund the programme", "description": "Take the moment and ask for what you needed before it happened.", "visibleKnownEffects": ["Likely to succeed now", "May be seen as opportunistic"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": 400, "note": "Post-incident funding released." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.05, "reason": "You used the incident to reopen the budget." },
+            { "type": "board.confidence", "delta": 0.03 },
+            { "type": "operationalTolerance", "delta": 0.08 }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-pentest-scope",
+      "title": "Penetration test scope",
+      "description": "The annual test is being scoped. The legacy estate was excluded last year on cost grounds.",
+      "context": "The part of the estate least likely to pass is the part nobody wants in scope.",
+      "deadlineDays": 12,
+      "defaultOptionId": "opt-pentest-standard",
+      "requiresRationale": false,
+      "relatedNodeIds": ["node-dc-legacy"],
+      "options": [
+        { "id": "opt-pentest-full", "label": "Include the legacy estate", "description": "Test the part you understand least.", "visibleKnownEffects": ["Costs more", "Likely to produce uncomfortable findings"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -90 },
+            { "type": "evidence.reveal", "evidenceId": "ev-legacy-routable", "note": "Penetration test" },
+            { "type": "node.reveal", "nodeId": "node-dc-legacy", "confidence": 0.85 },
+            { "type": "edge.reveal", "edgeId": "edge-legacy-to-core" }
+          ] },
+        { "id": "opt-pentest-standard", "label": "Keep the existing scope", "description": "Cloud and corporate, as before.", "visibleKnownEffects": ["Cheaper", "Another clean report about the same half of the estate"],
+          "immediateEffects": [ { "type": "evidence.reveal", "evidenceId": "ev-pen-test-scope-limited", "note": "Penetration test scoping" } ] },
+        { "id": "opt-pentest-assumed", "label": "Run an assumed-breach test instead", "description": "Start the testers inside and see how far they get.", "visibleKnownEffects": ["Tests detection as well as prevention", "Will embarrass somebody"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -70 },
+            { "type": "evidence.reveal", "evidenceId": "ev-pen-test-segmentation", "note": "Assumed-breach test" },
+            { "type": "control.assess", "controlId": "ctl-segmentation" },
+            { "type": "control.assess", "controlId": "ctl-edr" }
+          ] }
+      ]
+    },
+    {
+      "id": "dec-hr-provider-incident",
+      "title": "The HR provider's incident",
+      "description": "People Cloud has disclosed unauthorised access to a support system. Your exposure is unconfirmed and they are being vague.",
+      "context": "Employee data, an unclear disclosure, and a supplier who would prefer this went away.",
+      "deadlineDays": 10,
+      "defaultOptionId": "opt-hr-wait",
+      "requiresRationale": false,
+      "relatedNodeIds": ["node-sup-hr", "node-data-hr"],
+      "options": [
+        { "id": "opt-hr-press", "label": "Press them for specifics", "description": "Formal request, contractual footing, named questions.", "visibleKnownEffects": ["Costs GRC capacity", "You will get an answer, eventually"],
+          "immediateEffects": [
+            { "type": "capacity.change", "fn": "grc", "delta": -0.5 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.06, "reason": "You pursued the provider's disclosure properly." }
+          ],
+          "delayedEffects": [ { "dayOffset": 18, "effects": [ { "type": "capacity.change", "fn": "grc", "delta": 0.5 }, { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.05 } ], "note": "The HR provider has confirmed the scope of its incident." } ] },
+        { "id": "opt-hr-wait", "label": "Wait for their next update", "description": "They have promised more information.", "visibleKnownEffects": ["Costs nothing"],
+          "immediateEffects": [ { "type": "flag.set", "flag": "hr.waiting" } ] }
+      ]
+    },
+    {
+      "id": "dec-team-overload",
+      "title": "Your team is past sustainable load",
+      "description": "The SOC lead has told you plainly that the team cannot carry the current volume of work.",
+      "context": "Everything you have commissioned is being delivered by people who are already beyond capacity.",
+      "deadlineDays": 14,
+      "defaultOptionId": "opt-overload-push",
+      "requiresRationale": false,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-overload-stop", "label": "Stop something", "description": "Pull work back and accept the delay.", "visibleKnownEffects": ["Some things will not get done", "The team recovers"],
+          "immediateEffects": [
+            { "type": "team.morale", "delta": 0.12 },
+            { "type": "leader.morale", "leaderId": "lead-soc", "delta": 0.15 },
+            { "type": "focus.change", "amount": 1 }
+          ] },
+        { "id": "opt-overload-buy", "label": "Buy capacity", "description": "Spend budget to relieve the pressure.", "visibleKnownEffects": ["Immediate relief", "Expensive"],
+          "immediateEffects": [
+            { "type": "budget.change", "amount": -200 },
+            { "type": "capacity.change", "fn": "soc", "delta": 1.5 },
+            { "type": "team.morale", "delta": 0.06 }
+          ] },
+        { "id": "opt-overload-push", "label": "Ask them to push through the quarter", "description": "It is only a few more weeks.", "visibleKnownEffects": ["Nothing stops", "It is never only a few more weeks"],
+          "immediateEffects": [
+            { "type": "team.morale", "delta": -0.1 },
+            { "type": "leader.morale", "leaderId": "lead-soc", "delta": -0.15 },
+            { "type": "leader.confidence", "leaderId": "lead-soc", "delta": -0.05 }
+          ],
+          "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "capacity.change", "fn": "soc", "delta": -1 }, { "type": "team.morale", "fn": "soc", "delta": -0.08 } ], "note": "A senior SOC analyst has resigned." } ] }
+      ]
+    },
+    {
+      "id": "dec-cardholder-scope",
+      "title": "Card data outside the payment environment",
+      "description": "Unencrypted card data has been found in application logs outside the defined payment environment. The acquirer does not know.",
+      "context": "This is a compliance question and a risk question, and they have different answers.",
+      "deadlineDays": 7,
+      "defaultOptionId": "opt-card-fix",
+      "requiresRationale": true,
+      "relatedNodeIds": ["node-data-cardholder", "node-app-paygw"],
+      "options": [
+        { "id": "opt-card-disclose", "label": "Fix it and tell the acquirer", "description": "Remediate and disclose the scope issue.", "visibleKnownEffects": ["Acquirer scrutiny", "Nobody can say you concealed it"],
+          "immediateEffects": [
+            { "type": "node.exposure", "nodeId": "node-data-cardholder", "delta": -0.15 },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.08, "reason": "You disclosed the payment scope issue." },
+            { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.05, "reason": "You invited acquirer scrutiny." },
+            { "type": "board.confidence", "delta": 0.04 }
+          ] },
+        { "id": "opt-card-fix", "label": "Fix it quietly", "description": "Remediate without a formal disclosure.", "visibleKnownEffects": ["No immediate scrutiny", "It will be found at the next assessment"],
+          "immediateEffects": [ { "type": "node.exposure", "nodeId": "node-data-cardholder", "delta": -0.12 } ],
+          "delayedEffects": [ { "dayOffset": 120, "effects": [ { "type": "board.confidence", "delta": -0.06 }, { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": -0.06, "reason": "The payment scope issue surfaced at assessment rather than from you." } ], "note": "The payment scope issue has surfaced during assessment." } ] }
+      ]
+    },
+    {
+      "id": "dec-programme-tradeoff",
+      "title": "Two programmes, one team",
+      "description": "Both the identity and segmentation programmes need the same architecture capacity. Running both properly is not possible this quarter.",
+      "context": "Choosing is the job. Running both at half staffing is how neither gets delivered.",
+      "deadlineDays": 10,
+      "defaultOptionId": "opt-tradeoff-both",
+      "requiresRationale": true,
+      "relatedNodeIds": [],
+      "options": [
+        { "id": "opt-tradeoff-identity", "label": "Prioritise identity", "description": "Concentrate the capacity where most attack paths converge.", "visibleKnownEffects": ["Segmentation slips", "Identity delivers faster"],
+          "immediateEffects": [
+            { "type": "programme.progress", "programmeId": "prog-identity", "delta": 0.06 },
+            { "type": "flag.set", "flag": "priority.identity" }
+          ] },
+        { "id": "opt-tradeoff-segmentation", "label": "Prioritise segmentation", "description": "Concentrate on limiting what any single compromise can reach.", "visibleKnownEffects": ["Identity slips", "Segmentation delivers faster"],
+          "immediateEffects": [
+            { "type": "programme.progress", "programmeId": "prog-segmentation", "delta": 0.06 },
+            { "type": "flag.set", "flag": "priority.segmentation" }
+          ] },
+        { "id": "opt-tradeoff-both", "label": "Run both at reduced pace", "description": "Keep both alive.", "visibleKnownEffects": ["Neither is delivered quickly", "Nobody has to be told no"],
+          "immediateEffects": [
+            { "type": "team.morale", "fn": "architecture", "delta": -0.05 },
+            { "type": "flag.set", "flag": "priority.split" }
+          ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+/**
+ * Public surface of the simulation engine. The application layer imports from
+ * here only; nothing in this tree may import React, the DOM, storage or a
+ * cloud SDK (enforced by eslint.config.js).
+ */
+export * from './types'
+export { createRng, deriveRng, type Rng } from './engine/rng'
+export { buildContentIndex } from './engine/content-index'
+export { createInitialState, DIFFICULTY_PROFILES, type NewGameOptions } from './engine/setup'
+export { applyEffects, applyEffect, recordAssumption, type EffectContext } from './engine/effects'
+export { tickDay, TICK_ORDER, type TickResult } from './engine/tick'
+export { applyAction, newGame, runDays, type PlayerAction, type ActionResult } from './engine/orchestrator'
+export { checkInvariants, assertSerialisable, type InvariantViolation } from './engine/invariants'
+export * from './risk/bands'
+export * from './risk/calculations'
+export { refreshScenarioAssessments } from './risk/review'
+export * from './controls/effectiveness'
+export * from './team/capacity'
+export { runningAssignments, startInvestigation } from './team/assignments'
+export * from './stakeholders/relationships'
+export { tickProgrammes, deliveryConfidence, deliveryConfidenceLabel, computeStaffing } from './programmes/progression'
+export { objectiveStatusLabel } from './business/objectives'
+export { stageLabel, pathAttractiveness } from './threats/engine'
+export { activeIncidents } from './incidents/create'
+export { buildReconstruction } from './incidents/engine'
+export { VALIDATION_RULES, invalidatedAssumptions } from './assumptions/validation'
+export { blindSpots, recomputeUnderstanding } from './knowledge/discovery'
+export { buildAnnualReview, buildQuarterReview, materialTopics } from './debrief/review'
+export { evaluateCondition, evaluateAll, describeCondition } from './events/conditions'
+export { unreadCount } from './inbox/messages'

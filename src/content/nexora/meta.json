@@ -1,0 +1,11 @@
+{
+  "id": "nexora-first-year",
+  "title": "CISO: First Year",
+  "organisation": "Nexora Group",
+  "summary": "Nexora Group is a mid-sized digital services company: 4,500 people, a payments business, a cloud-heavy platform, a legacy estate nobody has counted, and a security function that has been running on goodwill. You are its new CISO.",
+  "openingBriefing": "08:07, Monday. Your first day as CISO of Nexora Group.\n\nThe CEO meeting starts in 23 minutes. She wants to know what the three cyber risks she should be most concerned about are.\n\nWhat you have inherited: 6,283 critical vulnerabilities, 17 high-priority audit findings, 23 open risk register entries, four major transformation programmes, fourteen important suppliers, five security vacancies and a cyber budget that looked generous until you saw the estate.\n\nWhat you do not have: a picture of how any of it fits together.",
+  "durationDays": 364,
+  "startingBudget": 2400,
+  "focusPerWeek": 5,
+  "version": "1.0.0"
+}

@@ -1,0 +1,210 @@
+{
+  "stakeholders": [
+    {
+      "id": "stk-ceo",
+      "name": "Marianne Okafor",
+      "role": "Chief Executive",
+      "shortRole": "CEO",
+      "priorities": ["Growth in the new market", "A clean acquisition", "No surprises at the board"],
+      "baseCyberUnderstanding": 0.35,
+      "baseRiskTolerance": 0.55,
+      "baseTrust": 0.5,
+      "variance": 0.12,
+      "activeConcerns": ["Whether cyber risk is being overstated or understated", "The cost line for security"],
+      "voice": "Direct, impatient with abstraction, unforgiving of being surprised."
+    },
+    {
+      "id": "stk-cio",
+      "name": "Dev Raghunathan",
+      "role": "Chief Information Officer",
+      "shortRole": "CIO",
+      "priorities": ["Platform launch on schedule", "Cloud migration completion", "Keeping engineering productive"],
+      "baseCyberUnderstanding": 0.7,
+      "baseRiskTolerance": 0.6,
+      "baseTrust": 0.45,
+      "variance": 0.14,
+      "activeConcerns": ["Security slowing delivery", "Who owns the legacy estate"],
+      "voice": "Technically fluent, protective of delivery dates, argues in trade-offs."
+    },
+    {
+      "id": "stk-coo",
+      "name": "Helen Brandt",
+      "role": "Chief Operating Officer",
+      "shortRole": "COO",
+      "priorities": ["Fulfilment throughput", "Supplier performance", "Operational continuity"],
+      "baseCyberUnderstanding": 0.3,
+      "baseRiskTolerance": 0.4,
+      "baseTrust": 0.5,
+      "variance": 0.12,
+      "activeConcerns": ["Anything that stops despatch", "Legacy warehouse platform reliability"],
+      "voice": "Practical, sceptical of anything that adds process to operations."
+    },
+    {
+      "id": "stk-cfo",
+      "name": "Tomas Lindqvist",
+      "role": "Chief Financial Officer",
+      "shortRole": "CFO",
+      "priorities": ["Cost discipline", "Acquisition completion", "Audit and regulatory standing"],
+      "baseCyberUnderstanding": 0.25,
+      "baseRiskTolerance": 0.35,
+      "baseTrust": 0.42,
+      "variance": 0.13,
+      "activeConcerns": ["Unbudgeted security spend", "The external audit finding on privileged access"],
+      "voice": "Numerate, wants the business case, respects a clearly bounded ask."
+    },
+    {
+      "id": "stk-digital",
+      "name": "Priya Nandakumar",
+      "role": "Managing Director, Digital",
+      "shortRole": "Digital MD",
+      "priorities": ["Platform launch", "Customer experience", "Release velocity"],
+      "baseCyberUnderstanding": 0.4,
+      "baseRiskTolerance": 0.7,
+      "baseTrust": 0.4,
+      "variance": 0.15,
+      "activeConcerns": ["Anything that delays the launch", "Friction in the customer journey"],
+      "voice": "Fast, commercially driven, treats security conditions as negotiable."
+    },
+    {
+      "id": "stk-board",
+      "name": "Sir Alan Whitcombe",
+      "role": "Chair, Board Risk Committee",
+      "shortRole": "Board Risk Chair",
+      "priorities": ["Credible risk reporting", "Regulatory standing", "Management competence"],
+      "baseCyberUnderstanding": 0.45,
+      "baseRiskTolerance": 0.3,
+      "baseTrust": 0.48,
+      "variance": 0.1,
+      "activeConcerns": ["Whether management knows what it does not know", "Repeat audit findings"],
+      "voice": "Measured, forensic, allergic to reassurance without evidence."
+    },
+    {
+      "id": "stk-procurement",
+      "name": "Nadia Farrell",
+      "role": "Director of Procurement and Supplier Management",
+      "shortRole": "Procurement",
+      "priorities": ["Supplier cost", "Contract renewals", "Vendor relationships"],
+      "baseCyberUnderstanding": 0.3,
+      "baseRiskTolerance": 0.5,
+      "baseTrust": 0.5,
+      "variance": 0.12,
+      "activeConcerns": ["Reopening supplier contracts mid-term", "The SOC contract renewal"],
+      "voice": "Contractual, helpful when the ask is specific, resistant to open-ended demands."
+    },
+    {
+      "id": "stk-legal",
+      "name": "Ruth Ahmadi",
+      "role": "General Counsel and Data Protection Officer",
+      "shortRole": "General Counsel",
+      "priorities": ["Regulatory notification obligations", "Contractual liability", "Privacy compliance"],
+      "baseCyberUnderstanding": 0.5,
+      "baseRiskTolerance": 0.3,
+      "baseTrust": 0.55,
+      "variance": 0.1,
+      "activeConcerns": ["Undocumented processing in the data lake", "Breach notification readiness"],
+      "voice": "Careful, precise, an ally when the facts are straight."
+    }
+  ],
+  "leaders": [
+    {
+      "id": "lead-soc",
+      "name": "Jo Mbeki",
+      "role": "Head of Security Operations",
+      "functions": ["soc", "incident-response"],
+      "baseSkill": 0.72,
+      "baseReliability": 0.68,
+      "baseMorale": 0.55,
+      "strengths": ["Detection engineering", "Incident command", "Managing the SOC provider"],
+      "weaknesses": ["Stretched across too many alerts", "Little time for proactive work"],
+      "variance": 0.12
+    },
+    {
+      "id": "lead-arch",
+      "name": "Stefan Alvarez",
+      "role": "Head of Security Architecture",
+      "functions": ["architecture", "engineering"],
+      "baseSkill": 0.78,
+      "baseReliability": 0.6,
+      "baseMorale": 0.6,
+      "strengths": ["Dependency analysis", "Cloud architecture", "Seeing the whole picture"],
+      "weaknesses": ["Chronically over-committed", "Perfectionist about documentation"],
+      "variance": 0.13
+    },
+    {
+      "id": "lead-grc",
+      "name": "Fenella Osei",
+      "role": "Head of Cyber Risk and Governance",
+      "functions": ["grc"],
+      "baseSkill": 0.65,
+      "baseReliability": 0.82,
+      "baseMorale": 0.62,
+      "strengths": ["Supplier assurance", "Regulatory engagement", "Turning findings into decisions"],
+      "weaknesses": ["Limited technical depth", "Inherited a stale risk register"],
+      "variance": 0.1
+    },
+    {
+      "id": "lead-eng",
+      "name": "Callum Reid",
+      "role": "Head of Security Engineering",
+      "functions": ["engineering", "iam"],
+      "baseSkill": 0.68,
+      "baseReliability": 0.55,
+      "baseMorale": 0.48,
+      "strengths": ["Identity engineering", "Automation", "Getting things shipped"],
+      "weaknesses": ["Two vacancies in his team", "Optimistic about timelines"],
+      "variance": 0.15
+    }
+  ],
+  "objectives": [
+    {
+      "id": "obj-platform-launch",
+      "name": "Launch the new customer platform",
+      "description": "A rebuilt checkout and account experience, committed to the market for the end of Q2.",
+      "targetDay": 175,
+      "importance": "critical",
+      "dependencyNodeIds": ["node-svc-platform", "node-app-checkout"],
+      "ownerStakeholderId": "stk-digital",
+      "value": 0.3
+    },
+    {
+      "id": "obj-cloud-migration",
+      "name": "Complete the cloud migration",
+      "description": "Close the legacy data centre and move the remaining estate. Two years late already.",
+      "targetDay": 300,
+      "importance": "high",
+      "dependencyNodeIds": ["node-dc-legacy", "node-cloud-prod"],
+      "ownerStakeholderId": "stk-cio",
+      "value": 0.25
+    },
+    {
+      "id": "obj-acquisition",
+      "name": "Complete and integrate the Kestrel acquisition",
+      "description": "Acquire Kestrel Digital and integrate its technology within the year.",
+      "targetDay": 245,
+      "importance": "high",
+      "dependencyNodeIds": ["node-acq-kestrel", "node-net-corp"],
+      "ownerStakeholderId": "stk-cfo",
+      "value": 0.2
+    },
+    {
+      "id": "obj-new-market",
+      "name": "Enter the Nordic market",
+      "description": "Open trading in a new regulatory jurisdiction with a local payments partner.",
+      "targetDay": 280,
+      "importance": "medium",
+      "dependencyNodeIds": ["node-svc-payments", "node-app-paygw"],
+      "ownerStakeholderId": "stk-ceo",
+      "value": 0.15
+    },
+    {
+      "id": "obj-cost-programme",
+      "name": "Deliver the operating cost reduction",
+      "description": "Take 8% out of the technology and operations cost base.",
+      "targetDay": 330,
+      "importance": "medium",
+      "dependencyNodeIds": ["node-svc-corporate"],
+      "ownerStakeholderId": "stk-cfo",
+      "value": 0.1
+    }
+  ]
+}

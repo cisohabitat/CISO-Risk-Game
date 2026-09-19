@@ -1,0 +1,108 @@
+{
+  "controls": [
+    {
+      "id": "ctl-mfa", "name": "Multi-factor authentication", "shortName": "MFA", "category": "identity",
+      "description": "Second-factor enforcement on staff, partner and administrative sign-in. Coverage was reported as complete; the exception list tells a different story.",
+      "baseCoverage": 0.62, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.65, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.3, "variance": 0.12,
+      "targetNodeIds": ["node-idp", "node-net-remote", "node-app-portal", "node-mgmt-server"],
+      "mitigates": { "credential-stuffing": 0.8, "phishing": 0.55, "supplier-remote-access": 0.5 },
+      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0004
+    },
+    {
+      "id": "ctl-pam", "name": "Privileged access management", "shortName": "PAM", "category": "privileged-access",
+      "description": "Vaulting, brokering and session recording for administrative access. Adoption stalled at the point it became inconvenient.",
+      "baseCoverage": 0.35, "baseConfigurationQuality": 0.55, "baseOperationalEffectiveness": 0.5, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.4, "variance": 0.13,
+      "targetNodeIds": ["node-pam", "node-mgmt-server", "node-svc-accounts", "node-idp"],
+      "mitigates": { "privilege-abuse": 0.85, "lateral-movement": 0.45, "supplier-remote-access": 0.6 },
+      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0005
+    },
+    {
+      "id": "ctl-segmentation", "name": "Network segmentation", "shortName": "Segmentation", "category": "network",
+      "description": "Separation between corporate, production and legacy zones. Largely a diagram rather than an enforced boundary.",
+      "baseCoverage": 0.3, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.35, "variance": 0.12,
+      "targetNodeIds": ["node-net-corp", "node-net-prod", "node-dc-legacy", "node-cloud-prod"],
+      "mitigates": { "lateral-movement": 0.8, "encryption-impact": 0.35, "supplier-remote-access": 0.3 },
+      "detectionStrength": 0.1, "recoveryStrength": 0.15, "driftPerDay": 0.0004
+    },
+    {
+      "id": "ctl-edr", "name": "Endpoint detection and response", "shortName": "EDR", "category": "endpoint",
+      "description": "Behavioural detection and containment on endpoints and servers. Server coverage lags endpoint coverage badly.",
+      "baseCoverage": 0.58, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.6, "baseExceptionRate": 0.2, "variance": 0.12,
+      "targetNodeIds": ["node-endpoints", "node-dev-workstations", "node-mgmt-server", "node-dc-legacy"],
+      "mitigates": { "phishing": 0.5, "lateral-movement": 0.45, "encryption-impact": 0.55, "persistence": 0.5 },
+      "detectionStrength": 0.6, "recoveryStrength": 0.1, "driftPerDay": 0.0003
+    },
+    {
+      "id": "ctl-logging", "name": "Logging and telemetry", "shortName": "Telemetry", "category": "detection",
+      "description": "Collection of security-relevant events across the estate. Legacy and cloud coverage are both partial.",
+      "baseCoverage": 0.45, "baseConfigurationQuality": 0.5, "baseOperationalEffectiveness": 0.5, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.25, "variance": 0.12,
+      "targetNodeIds": ["node-cloud-prod", "node-dc-legacy", "node-idp", "node-net-remote", "node-k8s"],
+      "mitigates": {},
+      "detectionStrength": 0.55, "recoveryStrength": 0.05, "driftPerDay": 0.0005
+    },
+    {
+      "id": "ctl-soc", "name": "Security monitoring service", "shortName": "SOC", "category": "detection",
+      "description": "The outsourced SOC's triage and escalation capability. It can only see what it is sent.",
+      "baseCoverage": 0.55, "baseConfigurationQuality": 0.5, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.55, "baseExceptionRate": 0.2, "variance": 0.12,
+      "targetNodeIds": ["node-sup-soc", "node-net-prod", "node-net-corp"],
+      "mitigates": { "persistence": 0.25 },
+      "detectionStrength": 0.65, "recoveryStrength": 0.05, "driftPerDay": 0.0004
+    },
+    {
+      "id": "ctl-backup", "name": "Backup and recovery", "shortName": "Backup", "category": "recovery",
+      "description": "Backup coverage, immutability and tested restore capability. The last full restore test was 14 months ago.",
+      "baseCoverage": 0.6, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.3, "variance": 0.14,
+      "targetNodeIds": ["node-backup", "node-cloud-prod", "node-dc-legacy"],
+      "mitigates": { "encryption-impact": 0.2 },
+      "detectionStrength": 0, "recoveryStrength": 0.8, "driftPerDay": 0.0006
+    },
+    {
+      "id": "ctl-ir", "name": "Incident response readiness", "shortName": "IR readiness", "category": "recovery",
+      "description": "Playbooks, retainer, exercised roles and the ability to make decisions at speed.",
+      "baseCoverage": 0.4, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.35, "baseExceptionRate": 0.2, "variance": 0.12,
+      "targetNodeIds": ["node-sup-soc"],
+      "mitigates": {},
+      "detectionStrength": 0.1, "recoveryStrength": 0.55, "driftPerDay": 0.0007
+    },
+    {
+      "id": "ctl-3p-access", "name": "Supplier access governance", "shortName": "Supplier access", "category": "third-party",
+      "description": "Control over what third parties can reach, with what accounts, watched by whom.",
+      "baseCoverage": 0.3, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.45, "variance": 0.13,
+      "targetNodeIds": ["node-sup-msp", "node-net-remote", "node-sup-logistics", "node-app-portal"],
+      "mitigates": { "supplier-remote-access": 0.8, "privilege-abuse": 0.35 },
+      "detectionStrength": 0.25, "recoveryStrength": 0, "driftPerDay": 0.0005
+    },
+    {
+      "id": "ctl-vuln", "name": "Vulnerability management", "shortName": "Vuln management", "category": "vulnerability",
+      "description": "Finding and fixing technical weakness. Finds a great deal; fixes a narrower slice.",
+      "baseCoverage": 0.65, "baseConfigurationQuality": 0.55, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.5, "baseExceptionRate": 0.4, "variance": 0.12,
+      "targetNodeIds": ["node-cloud-prod", "node-dc-legacy", "node-app-checkout", "node-app-portal"],
+      "mitigates": { "exploit-public-app": 0.7, "lateral-movement": 0.2 },
+      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0006
+    },
+    {
+      "id": "ctl-cloud-posture", "name": "Cloud security posture", "shortName": "Cloud posture", "category": "cloud",
+      "description": "Guardrails, baseline configuration and drift detection in the cloud tenancies.",
+      "baseCoverage": 0.42, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.35, "variance": 0.13,
+      "targetNodeIds": ["node-cloud-prod", "node-cloud-dev", "node-k8s", "node-ci-pipeline"],
+      "mitigates": { "exploit-public-app": 0.4, "privilege-abuse": 0.4, "data-exfiltration": 0.35 },
+      "detectionStrength": 0.35, "recoveryStrength": 0.1, "driftPerDay": 0.0006
+    },
+    {
+      "id": "ctl-email", "name": "Email and web filtering", "shortName": "Email security", "category": "endpoint",
+      "description": "Filtering, attachment handling and user reporting for inbound phishing.",
+      "baseCoverage": 0.72, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.6, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.15, "variance": 0.1,
+      "targetNodeIds": ["node-endpoints"],
+      "mitigates": { "phishing": 0.7 },
+      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0003
+    },
+    {
+      "id": "ctl-dlp", "name": "Data protection controls", "shortName": "Data protection", "category": "cloud",
+      "description": "Classification, access control and egress monitoring over the data estate.",
+      "baseCoverage": 0.28, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.35, "baseExceptionRate": 0.3, "variance": 0.12,
+      "targetNodeIds": ["node-data-pii", "node-data-analytics", "node-data-cardholder"],
+      "mitigates": { "data-exfiltration": 0.7 },
+      "detectionStrength": 0.4, "recoveryStrength": 0, "driftPerDay": 0.0005
+    }
+  ]
+}
