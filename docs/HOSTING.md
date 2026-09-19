@@ -33,6 +33,16 @@ Node.js:           22.x or 24.x (build only — nothing runs at request time)
 `vercel.json` sets SPA rewrites, immutable caching for hashed assets and a strict
 Content-Security-Policy. It defines no functions and no cron.
 
+The SPA fallback deliberately excludes `assets/`, `favicon.svg` and
+`manifest.webmanifest`. Vercel checks the filesystem before applying rewrites, so
+those files would be served anyway, but excluding them means the rule does not
+depend on that ordering.
+
+Note that Vercel schema-validates this file and **rejects any property it does
+not recognise**, including comment keys — adding one fails the deployment. The
+constraints above are therefore asserted in `tests/content/deployment.test.ts`
+rather than written into the file as comments.
+
 ## Release gate
 
 A build is not release-ready unless all of the following hold:

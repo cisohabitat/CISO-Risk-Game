@@ -6,7 +6,6 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
-  "_comment_rewrites": "SPA fallback. Vercel checks the filesystem before rewrites, but the static files are excluded explicitly so the favicon and manifest are served even if that order ever changes.",
   "rewrites": [
     { "source": "/((?!assets/|favicon\\.svg|manifest\\.webmanifest).*)", "destination": "/index.html" }
   ],
