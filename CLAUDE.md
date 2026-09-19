@@ -49,14 +49,31 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 Measured, not yet fixed. Ranked.
 
-1. **Control drift is uniform and severe.** Every control loses 0.11–0.25
-   coverage over an idle year; IR readiness falls to 0.05. Worth retuning per
-   control rather than a flat rate.
-2. **The annual review headline ignores the dimensions.** Three very different
-   strategies produced the same closing line, though the dimensions underneath
-   differed correctly.
+Nothing ranked at present. Add measured findings here rather than suspicions —
+each entry below was found with one of the harnesses above and closed the same
+way.
 
 ### Fixed
+
+- **The annual review headline ignored the dimensions** — it keyed on incident
+  count alone, so three very different strategies closed on the same line while
+  the dimensions underneath differed correctly. `chooseHeadline` now reads the
+  shape of the year: the tensions between dimensions first (business delivered
+  at the cost of the programme, capability built on a team that is finished, an
+  organisation understood but never changed), then severe single-dimension
+  verdicts, then the weakest dimension by name. The blind-spots dimension is
+  also scored proportionally now, against how much there was to find, so a large
+  estate is not penalised for being large. Twelve runs across three seeds and
+  four play styles produce five distinct closing lines where they produced one.
+  See `chooseHeadline` in `src/game/debrief/review.ts`.
+
+- **Control drift was uniform and severe** — every control lost coverage at a
+  flat rate toward zero, taking IR readiness to 0.05 over an idle year. Drift
+  now has three shapes matching why a control actually decays, and runs toward
+  a floor set as a share of the best level ever reached, so built capability
+  persists and a programme raises the floor as well as the value. An idle year
+  now leaves IR readiness deployed but unexercised rather than gone. See
+  `applyDrift` in `src/game/controls/effectiveness.ts`.
 
 - **Team capacity was close to inert** because only investigations ever
   committed capacity — programmes declared a demand but never occupied anyone,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
-import { buildAnnualReview, buildQuarterReview, materialTopics } from '@/game/debrief/review'
+import { buildAnnualReview, buildQuarterReview, chooseHeadline, materialTopics } from '@/game/debrief/review'
+import type { AnnualReviewDimension } from '@/game/types'
 import { testIndex } from './helpers'
 
 describe('reviews', () => {
@@ -62,6 +63,62 @@ describe('reviews', () => {
     const prioritisation = review.dimensions.find((d) => d.id === 'prioritisation')!
     expect(prioritisation.evidence.join(' ')).toMatch(/recorded rationale/)
     expect(state.history.decisionsLog.every((entry) => entry.rationaleTagIds.length > 0)).toBe(true)
+  })
+
+  it('closes with a line that reflects which dimensions diverged', () => {
+    // The defect this guards: the headline used to key on incident count alone,
+    // so three very different years closed on the same sentence.
+    const profile = (
+      bands: Partial<Record<string, AnnualReviewDimension['band']>>,
+      fallback: AnnualReviewDimension['band'] = 'developing',
+    ): AnnualReviewDimension[] =>
+      (
+        [
+          'risk-understanding',
+          'prioritisation',
+          'resilience',
+          'programme-execution',
+          'business-enablement',
+          'communication',
+          'team-sustainability',
+          'blind-spots',
+        ] as const
+      ).map((id) => ({
+        id,
+        label: id.replace(/-/g, ' '),
+        band: bands[id] ?? fallback,
+        narrative: 'x',
+        evidence: [],
+      }))
+
+    const years = [
+      // Delivered for the business, built nothing.
+      chooseHeadline(profile({ 'business-enablement': 'strong', 'programme-execution': 'weak' }), false),
+      // Built everything, the business missed its year.
+      chooseHeadline(profile({ 'programme-execution': 'strong', 'business-enablement': 'weak' }), false),
+      // Built everything, on people who are finished.
+      chooseHeadline(
+        profile({ 'programme-execution': 'strong', 'business-enablement': 'solid', 'team-sustainability': 'weak' }),
+        false,
+      ),
+      // Understood the place, never changed it.
+      chooseHeadline(profile({ 'risk-understanding': 'strong', 'programme-execution': 'weak' }), false),
+      // Burned the team without building anything with it.
+      chooseHeadline(profile({ 'team-sustainability': 'weak' }), false),
+      // Tested and held.
+      chooseHeadline(profile({ resilience: 'strong' }), true),
+      // Tested and did not hold.
+      chooseHeadline(profile({ resilience: 'weak' }), true),
+      // Acted all year on a picture never verified.
+      chooseHeadline(profile({ 'blind-spots': 'weak' }), false),
+      // Solid across the board.
+      chooseHeadline(profile({}, 'solid'), false),
+      // Middling across the board.
+      chooseHeadline(profile({}), false),
+    ]
+
+    expect(new Set(years).size).toBe(years.length)
+    for (const line of years) expect(line.length).toBeGreaterThan(12)
   })
 
   it('names material blind spots left at the end of the year', () => {

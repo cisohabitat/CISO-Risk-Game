@@ -13,7 +13,7 @@ import type {
   QuarterReviewState,
 } from '../types'
 import { clamp01 } from '../types'
-import { blindSpots } from '../knowledge/discovery'
+import { blindSpots, materialBlindSpotRatio } from '../knowledge/discovery'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { riskBand } from '../risk/bands'
 import { teamStrain } from '../team/capacity'
@@ -283,7 +283,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   dimensions.push({
     id: 'blind-spots',
     label: 'Material blind spots',
-    band: band(clamp01(1 - spots.length / 6)),
+    // Scored against how much there was to find, so a big estate is not
+    // penalised for being big, and the dimension actually discriminates.
+    band: band(clamp01(1 - materialBlindSpotRatio(state, index) - unexaminedAssumptions(state).length * 0.08)),
     narrative:
       spots.length === 0
         ? 'Nothing material was left unexamined.'
@@ -292,6 +294,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   const overall = dimensions.reduce((sum, d) => sum + bandValue(d.band), 0) / dimensions.length
+  const headline = chooseHeadline(dimensions, incidents.length > 0)
   const performanceBand =
     overall > 0.78 ? 'Exceptional first year' : overall > 0.6 ? 'Credible first year' : overall > 0.42 ? 'Mixed first year' : 'Difficult first year'
 
@@ -344,16 +347,77 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     day: state.currentDay,
     dimensions,
     narrative,
-    headline:
-      incidents.length === 0 && enablement > 0.6
-        ? 'A quiet year that bought the organisation real capability.'
-        : incidents.length > 0 && resilience > 0.6
-          ? 'Tested, and it held.'
-          : 'A year that exposed what was never understood.',
+    headline,
     performanceBand,
     businessOutcome,
     blindSpots: spots,
   }
+}
+
+/**
+ * The closing line describes the shape of the year, not its average.
+ *
+ * Two players can end on the same overall band having run completely different
+ * organisations — one that built capability at the cost of delivery, one that
+ * delivered everything on a team that is now finished. A single line keyed on
+ * incident count could not tell them apart, so the headline is chosen from the
+ * dimensions that actually diverged: the strongest, the weakest, and the
+ * tension between them.
+ */
+export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean): string {
+  const score = (id: string) => {
+    const dimension = dimensions.find((d) => d.id === id)
+    return dimension ? bandValue(dimension.band) : 0.5
+  }
+  const strong = (id: string) => score(id) >= 0.68
+  const weak = (id: string) => score(id) <= 0.45
+
+  const resilience = score('resilience')
+  const business = score('business-enablement')
+  const programme = score('programme-execution')
+  const understanding = score('risk-understanding')
+  const team = score('team-sustainability')
+
+  const weakest = dimensions.reduce((lowest, d) => (bandValue(d.band) < bandValue(lowest.band) ? d : lowest))
+
+  const failing = (id: string) => dimensions.find((d) => d.id === id)?.band === 'weak'
+
+  // Trade-offs first. A tension between two dimensions says more about how
+  // somebody played than any single score does, and it is what separates two
+  // players who finished on the same overall band. Single-dimension verdicts
+  // follow, and only when they are severe — otherwise one common failure would
+  // describe nearly every year.
+  if (strong('business-enablement') && weak('programme-execution')) {
+    return 'The business got its year. The security programme did not.'
+  }
+  if (strong('programme-execution') && weak('business-enablement')) {
+    return 'You built the capability, and the business paid for it in delivery.'
+  }
+  if (strong('risk-understanding') && weak('programme-execution')) {
+    return 'You came to understand this organisation. You have not yet changed it.'
+  }
+  if (strong('programme-execution') && failing('team-sustainability')) {
+    return 'You built the capability on people who cannot do it again.'
+  }
+  if (hadIncident && strong('resilience')) return 'Tested, and it held.'
+  if (failing('team-sustainability')) return 'Delivered on the backs of people who cannot do it again.'
+  if (hadIncident && weakest.id === 'resilience') return 'Tested, and it did not hold.'
+  if (failing('blind-spots')) return 'A year spent acting on a picture you never verified.'
+  if (weak('risk-understanding')) return 'A year of decisions taken on an inherited picture.'
+  if (strong('communication') && strong('risk-understanding')) {
+    return 'You made cyber risk legible to the people who decide.'
+  }
+  if (!hadIncident && business >= 0.68 && programme >= 0.68) {
+    return 'A quiet year that bought the organisation real capability.'
+  }
+  if (!hadIncident) return 'A quiet year. Whether that was judgement or fortune is worth asking.'
+
+  // Nothing stood out: name the weakest thing, which is still informative.
+  const shape = [resilience, business, programme, understanding, team]
+  const spread = Math.max(...shape) - Math.min(...shape)
+  return spread < 0.2
+    ? 'A year of competent, unremarkable management.'
+    : `A year held back by ${weakest.label.toLowerCase()}.`
 }
 
 function bandValue(band: AnnualReviewDimension['band']): number {

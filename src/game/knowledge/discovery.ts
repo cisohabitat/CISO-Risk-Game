@@ -131,3 +131,35 @@ export function blindSpots(state: GameState, index: ContentIndex): string[] {
   }
   return out.slice(0, 8)
 }
+
+/**
+ * The share of materially important things that were never brought into view.
+ *
+ * Counting raw blind spots punishes a large organisation for being large: a
+ * fixed divisor made this read "weak" in almost every campaign, which told the
+ * player nothing. Measuring the proportion of what there was to find makes the
+ * dimension discriminate between someone who looked and someone who did not.
+ */
+export function materialBlindSpotRatio(state: GameState, index: ContentIndex): number {
+  let material = 0
+  let unseen = 0
+
+  for (const def of index.content.nodes) {
+    if (def.criticality !== 'critical' && def.criticality !== 'high') continue
+    const node = state.organisation.nodes[def.id]
+    if (!node?.exists) continue
+    material += 1
+    if (!node.discovered) unseen += 1
+  }
+  for (const def of index.content.edges) {
+    const from = index.node.get(def.from)
+    const to = index.node.get(def.to)
+    if (from?.criticality !== 'critical' && to?.criticality !== 'critical') continue
+    const edge = state.organisation.edges[def.id]
+    if (!edge?.exists) continue
+    material += 1
+    if (!edge.discovered) unseen += 1
+  }
+
+  return material > 0 ? clamp01(unseen / material) : 0
+}
