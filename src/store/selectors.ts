@@ -211,6 +211,8 @@ export interface DiscoveredNodeView {
   description: string
   criticality: string
   confidence: number
+  /** True when the player established this themselves rather than inheriting it. */
+  verified: boolean
   dependencies: { id: string; name: string; type: string; relationship: string; confidence: number }[]
   dependents: { id: string; name: string; relationship: string }[]
   controls: { id: string; name: string; band: string }[]
@@ -271,6 +273,7 @@ export function discoveredNodes(state: GameState, index: ContentIndex): Discover
       description: def.description,
       criticality: def.criticality,
       confidence: runtime.discoveryConfidence,
+      verified: runtime.verified ?? false,
       dependencies,
       dependents,
       controls,

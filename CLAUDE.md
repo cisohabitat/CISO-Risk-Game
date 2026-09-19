@@ -49,11 +49,46 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 Measured, not yet fixed. Ranked.
 
-Nothing ranked at present. Add measured findings here rather than suspicions —
-each entry below was found with one of the harnesses above and closed the same
-way.
+1. **`dec-programme-tradeoff` and `evt-org-programme-tradeoff` never fire.**
+   The only authored content still unreached after 60 campaigns; the rest of
+   the events reach 99% and the decisions 96%. Its condition presumably needs
+   two programmes competing for one team in a way no policy produces.
+2. **The prioritisation dimension is binary.** Across 25 campaigns it scored
+   `weak` (the passive player, everything lapses) or `strong` (everyone else,
+   everything answered with a rationale) and never anything between. A player
+   who answers most things and lets a few go should land in the middle.
+
+Add measured findings here rather than suspicions — each entry below was found
+with one of the harnesses above and closed the same way.
 
 ### Fixed
+
+- **Discovery was not earned.** The blind-spots dimension scored `strong` in
+  25 of 25 campaigns, including for a player who did nothing all year: the
+  inherited register starts most of the estate "discovered", and passing
+  mentions in events reveal the rest, so by day 365 an idle campaign had seen
+  every node. Entities now record whether the player established them
+  themselves — investigations and assessments set `verified`, inheritance and
+  hearsay do not — and the review scores the share of what was reachable that
+  was actually examined. An idle year now reads `weak` (0 of 30), a frantic one
+  `developing` (13-15 of 30, because over-commissioning returns thin work that
+  reveals little) and a measured one `solid` to `strong` (21-25 of 30). Risk
+  understanding moved with it, and the overall band spans Difficult to Credible
+  where it previously read Credible for almost everyone. The distinction is
+  visible on the Organisation screen — an unverified system is badged "Taken on
+  trust" and the inspector says so in words — because the review should not
+  penalise a player for something the game never showed them. See
+  `unexaminedMaterial` in `src/game/knowledge/discovery.ts`.
+
+- **The harnesses were measuring a player who pressed one button.** Every
+  offline loop commissioned the first investigation that would start, which is
+  always the same repeatable threat hunt near the top of the content file — one
+  run reached 6 of 18 investigations and repeated one of them 90 times — and
+  none of them ever went to the board, which made the communication dimension
+  look impossible to pass. They now work down the list least-commissioned first
+  and prepare the quarterly board pack. Content reach rose to 99% of events,
+  and a player who does the board reviews reaches `strong` communication. See
+  `scripts/play-helpers.ts`.
 
 - **The annual review headline ignored the dimensions** — it keyed on incident
   count alone, so three very different strategies closed on the same line while

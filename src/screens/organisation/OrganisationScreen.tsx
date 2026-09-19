@@ -134,7 +134,14 @@ export function OrganisationScreen() {
                         <Badge tone="neutral" glyph={false}>{nodeTypeLabel(node.type)}</Badge>
                         {node.criticality === 'critical' && <Badge tone="high" glyph={false}>Critical</Badge>}
                         {node.onKnownAttackPath && <Badge tone="elevated" glyph={false}>On an attack path</Badge>}
-                        {node.confidence < 0.6 && <Badge tone="warning" glyph={false}>Partly understood</Badge>}
+                        {/* One knowledge badge per row: not having checked
+                            something subsumes not understanding it well. The
+                            list visibly clears as the player verifies things. */}
+                        {!node.verified ? (
+                          <Badge tone="warning" glyph={false}>Taken on trust</Badge>
+                        ) : (
+                          node.confidence < 0.6 && <Badge tone="warning" glyph={false}>Partly understood</Badge>
+                        )}
                       </div>
                       <p className="mt-1.5 font-medium">{node.name}</p>
                       <p className="mt-0.5 line-clamp-2 text-sm text-ink-muted text-pretty">{node.description}</p>

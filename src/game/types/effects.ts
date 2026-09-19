@@ -24,8 +24,8 @@ export type GameEffect =
   | { type: 'programme.resolveBlocker'; programmeId: string; blockerId: string }
   | { type: 'programme.sponsor'; programmeId: string; stakeholderId: string }
   | { type: 'evidence.reveal'; evidenceId: string; note?: string }
-  | { type: 'node.reveal'; nodeId: string; confidence?: number }
-  | { type: 'edge.reveal'; edgeId: string }
+  | { type: 'node.reveal'; nodeId: string; confidence?: number; verified?: boolean }
+  | { type: 'edge.reveal'; edgeId: string; verified?: boolean }
   | { type: 'node.exposure'; nodeId: string; delta: number }
   | { type: 'node.weakness'; nodeId: string; delta: number }
   | { type: 'assumption.record'; assumptionId: string; decisionId?: string }

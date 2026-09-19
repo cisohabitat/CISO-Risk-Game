@@ -178,11 +178,11 @@ export function applyEffect(
       break
     }
     case 'node.reveal': {
-      revealNode(state, effect.nodeId, effect.confidence ?? 0.8)
+      revealNode(state, effect.nodeId, effect.confidence ?? 0.8, effect.verified ?? false)
       break
     }
     case 'edge.reveal': {
-      revealEdge(state, index, effect.edgeId)
+      revealEdge(state, index, effect.edgeId, 0.8, effect.verified ?? false)
       break
     }
     case 'node.exposure': {

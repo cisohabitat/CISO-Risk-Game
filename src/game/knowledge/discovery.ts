@@ -6,24 +6,36 @@
 import type { ContentIndex, EvidenceState, GameState, OrganisationState } from '../types'
 import { clamp01 } from '../types'
 
-export function revealNode(state: GameState, nodeId: string, confidence = 0.8): boolean {
+export function revealNode(state: GameState, nodeId: string, confidence = 0.8, verified = false): boolean {
   const node = state.organisation.nodes[nodeId]
   if (!node || !node.exists) return false
   const first = !node.discovered
   node.discovered = true
   node.discoveryConfidence = clamp01(Math.max(node.discoveryConfidence, confidence))
+  // Verification only ever goes one way: hearing about something again does
+  // not undo having examined it, and examining it cannot be undone by hearsay.
+  if (verified) node.verified = true
   return first
 }
 
-export function revealEdge(state: GameState, index: ContentIndex, edgeId: string, confidence = 0.8): boolean {
+export function revealEdge(
+  state: GameState,
+  index: ContentIndex,
+  edgeId: string,
+  confidence = 0.8,
+  verified = false,
+): boolean {
   const edge = state.organisation.edges[edgeId]
   if (!edge || !edge.exists) return false
   const first = !edge.discovered
   edge.discovered = true
   edge.discoveryConfidence = clamp01(Math.max(edge.discoveryConfidence, confidence))
+  if (verified) edge.verified = true
   const def = index.edge.get(edgeId)
   if (def) {
-    // Seeing a relationship implies seeing both ends of it.
+    // Seeing a relationship implies seeing both ends of it — but only that they
+    // are there. Tracing a dependency is not the same as having examined what
+    // sits at either end of it, so the ends are not marked verified here.
     revealNode(state, def.from, Math.min(confidence, 0.7))
     revealNode(state, def.to, Math.min(confidence, 0.7))
   }
@@ -133,33 +145,75 @@ export function blindSpots(state: GameState, index: ContentIndex): string[] {
 }
 
 /**
- * The share of materially important things that were never brought into view.
+ * What the player could have examined for themselves, and did not.
  *
- * Counting raw blind spots punishes a large organisation for being large: a
- * fixed divisor made this read "weak" in almost every campaign, which told the
- * player nothing. Measuring the proportion of what there was to find makes the
- * dimension discriminate between someone who looked and someone who did not.
+ * Counting undiscovered entities does not work: most of the estate arrives in
+ * the inherited register or gets mentioned in passing by an event, so by the
+ * end of an idle year almost everything is "discovered" and the measure reads
+ * strong for a player who never looked at anything. The inherited picture is
+ * belief, not knowledge — that is the whole premise — so this counts what was
+ * established by the player's own work instead.
+ *
+ * The denominator is only what was actually reachable: material nodes and
+ * dependencies some investigation could have examined, plus the controls,
+ * which can all be assessed. Scoring against the whole estate would make the
+ * dimension unwinnable, which is the same defect pointing the other way.
  */
-export function materialBlindSpotRatio(state: GameState, index: ContentIndex): number {
-  let material = 0
-  let unseen = 0
+export function unexaminedMaterial(
+  state: GameState,
+  index: ContentIndex,
+): { examined: number; reachable: number; names: string[] } {
+  const reachableNodes = new Set<string>()
+  const reachableEdges = new Set<string>()
+  for (const def of index.content.investigations) {
+    for (const id of def.revealsNodeIds) reachableNodes.add(id)
+    for (const id of def.revealsEdgeIds) reachableEdges.add(id)
+  }
+
+  let examined = 0
+  let reachable = 0
+  const names: string[] = []
 
   for (const def of index.content.nodes) {
+    if (!reachableNodes.has(def.id)) continue
     if (def.criticality !== 'critical' && def.criticality !== 'high') continue
     const node = state.organisation.nodes[def.id]
     if (!node?.exists) continue
-    material += 1
-    if (!node.discovered) unseen += 1
+    reachable += 1
+    if (node.verified) examined += 1
+    else names.push(`${def.name} was taken on trust and never examined`)
   }
+
   for (const def of index.content.edges) {
+    if (!reachableEdges.has(def.id)) continue
     const from = index.node.get(def.from)
     const to = index.node.get(def.to)
     if (from?.criticality !== 'critical' && to?.criticality !== 'critical') continue
     const edge = state.organisation.edges[def.id]
     if (!edge?.exists) continue
-    material += 1
-    if (!edge.discovered) unseen += 1
+    reachable += 1
+    if (edge.verified) examined += 1
+    else if (from && to) names.push(`the dependency between ${from.name} and ${to.name} was never traced`)
   }
 
-  return material > 0 ? clamp01(unseen / material) : 0
+  for (const def of index.content.controls) {
+    const control = state.controls.controls[def.id]
+    if (!control) continue
+    reachable += 1
+    // Assurance ages. A test from ten months ago describes a control that has
+    // drifted since, so it no longer counts as knowing.
+    if (control.believed && state.currentDay - control.believed.assessedOnDay < ASSURANCE_LIFE_DAYS) examined += 1
+    else names.push(`${def.name} was never independently assessed`)
+  }
+
+  return { examined, reachable, names }
+}
+
+/** How long an assessment describes the control it was taken from. */
+export const ASSURANCE_LIFE_DAYS = 200
+
+/** The share of what could have been examined that never was. */
+export function materialBlindSpotRatio(state: GameState, index: ContentIndex): number {
+  const { examined, reachable } = unexaminedMaterial(state, index)
+  return reachable > 0 ? clamp01(1 - examined / reachable) : 0
 }

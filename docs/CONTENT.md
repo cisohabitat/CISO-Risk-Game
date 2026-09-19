@@ -94,6 +94,20 @@ programme that lifts a control also lifts the level it will not fall below.
 Keep floors in the 0.65–0.85 range. Lower and an idle year destroys the
 organisation; higher and inaction costs nothing.
 
+## What counts as knowing something
+
+The player's picture has two layers. `discovered` means the entity is visible
+to them — the inherited register starts most of the estate that way, and events
+mention more of it as the year goes on. `verified` means they established it
+themselves, through an investigation they commissioned or an assessment they
+ran. Only investigation effects set it.
+
+Author accordingly: an event that mentions a system reveals it, but does not
+verify it, and it should not pretend to. If new content ought to count as the
+player having examined something — a penetration test, an audit — give it an
+investigation rather than an event, so the annual review can tell the
+difference between what somebody was told and what they checked.
+
 ## Balance
 
 `pnpm tsx scripts/tune.ts 25` plays seeded campaigns under passive, defensive,

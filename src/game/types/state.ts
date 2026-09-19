@@ -27,6 +27,13 @@ export interface OrgNodeState {
   exists: boolean
   discovered: boolean
   discoveryConfidence: number
+  /**
+   * Whether the player established this themselves rather than inheriting it
+   * or hearing it mentioned. The inherited register is belief, not knowledge,
+   * so the annual review scores what was actually examined. Optional, so saves
+   * written before it existed load without migration.
+   */
+  verified?: boolean
   exposure: number
   weakness: number
   criticalityOverride?: Criticality
@@ -39,6 +46,8 @@ export interface OrgEdgeState {
   exists: boolean
   discovered: boolean
   discoveryConfidence: number
+  /** As for nodes: established by the player's own work, not inherited. */
+  verified?: boolean
 }
 
 export interface OrganisationState {

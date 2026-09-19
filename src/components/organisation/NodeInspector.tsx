@@ -18,10 +18,17 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
           <p className="mt-1 text-sm text-ink-muted text-pretty">{node.description}</p>
         </div>
 
-        {node.confidence < 0.7 && (
+        {!node.verified ? (
           <p className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-ink-muted text-pretty">
-            Your picture of this is partial. What you can see here may not be all of it.
+            This is what you were handed, not what you have checked. Nobody on your watch has looked at
+            it — commission work that covers it if it matters.
           </p>
+        ) : (
+          node.confidence < 0.7 && (
+            <p className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-ink-muted text-pretty">
+              Your picture of this is partial. What you can see here may not be all of it.
+            </p>
+          )
         )}
 
         {node.serviceHealth !== undefined && (

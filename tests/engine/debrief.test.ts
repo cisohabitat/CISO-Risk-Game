@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview, buildQuarterReview, chooseHeadline, materialTopics } from '@/game/debrief/review'
+import { unexaminedMaterial } from '@/game/knowledge/discovery'
 import type { AnnualReviewDimension } from '@/game/types'
 import { testIndex } from './helpers'
 
@@ -119,6 +120,49 @@ describe('reviews', () => {
 
     expect(new Set(years).size).toBe(years.length)
     for (const line of years) expect(line.length).toBeGreaterThan(12)
+  })
+
+  it('separates what the player examined from what they were handed', () => {
+    // The defect this guards: blind spots were counted as things never
+    // discovered, but the inherited register and passing mentions in events
+    // discover nearly the whole estate within a year. The dimension read
+    // "strong" for a player who looked at nothing.
+    const index = testIndex()
+
+    const idle = newGame(index, { seed: 'exam-idle' })
+    runDays(idle, index, 364)
+    const idleExamined = unexaminedMaterial(idle, index)
+    expect(idleExamined.reachable).toBeGreaterThan(20)
+    expect(idleExamined.examined).toBe(0)
+    expect(buildAnnualReview(idle, index).dimensions.find((d) => d.id === 'blind-spots')!.band).toBe('weak')
+
+    const working = newGame(index, { seed: 'exam-idle' })
+    const commissioned: Record<string, number> = {}
+    for (let day = 0; day < 364; day += 1) {
+      if (day % 12 === 0) {
+        // Work down the list rather than pressing the same button all year.
+        const order = [...index.content.investigations].sort(
+          (a, b) => (commissioned[a.id] ?? 0) - (commissioned[b.id] ?? 0),
+        )
+        for (const investigation of order) {
+          const result = applyAction(working, index, {
+            type: 'startInvestigation',
+            investigationId: investigation.id,
+            leaderId: index.content.leaders[day % index.content.leaders.length]!.id,
+          })
+          if (result.ok) {
+            commissioned[investigation.id] = (commissioned[investigation.id] ?? 0) + 1
+            break
+          }
+        }
+      }
+      runDays(working, index, 1)
+    }
+
+    const workedExamined = unexaminedMaterial(working, index)
+    expect(workedExamined.examined).toBeGreaterThan(idleExamined.examined)
+    const band = buildAnnualReview(working, index).dimensions.find((d) => d.id === 'blind-spots')!.band
+    expect(['developing', 'solid', 'strong']).toContain(band)
   })
 
   it('names material blind spots left at the end of the year', () => {

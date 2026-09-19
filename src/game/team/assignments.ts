@@ -119,11 +119,12 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
       }
     }
     for (const nodeId of def.revealsNodeIds) {
-      result.effects.push({ type: 'node.reveal', nodeId, confidence: clamp01(0.45 + 0.55 * quality) })
+      // Work the player commissioned: this is knowledge they established.
+      result.effects.push({ type: 'node.reveal', nodeId, confidence: clamp01(0.45 + 0.55 * quality), verified: true })
     }
     for (const edgeId of def.revealsEdgeIds) {
       // A thin review can miss a dependency entirely.
-      if (quality > 0.35 || rng.chance(0.4)) result.effects.push({ type: 'edge.reveal', edgeId })
+      if (quality > 0.35 || rng.chance(0.4)) result.effects.push({ type: 'edge.reveal', edgeId, verified: true })
     }
     for (const controlId of def.assessesControlIds) {
       if (quality > 0.3) result.effects.push({ type: 'control.assess', controlId })

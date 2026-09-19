@@ -13,7 +13,7 @@ import type {
   QuarterReviewState,
 } from '../types'
 import { clamp01 } from '../types'
-import { blindSpots, materialBlindSpotRatio } from '../knowledge/discovery'
+import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { riskBand } from '../risk/bands'
 import { teamStrain } from '../team/capacity'
@@ -140,12 +140,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const understanding = state.organisation.understanding['overall'] ?? 0
   const dependencies = state.organisation.understanding['dependencies'] ?? 0
   const assessedControls = Object.values(state.controls.controls).filter(
-    (c) => c.believed && state.currentDay - c.believed.assessedOnDay < 200,
+    (c) => c.believed && state.currentDay - c.believed.assessedOnDay < ASSURANCE_LIFE_DAYS,
   ).length
-  const controlAssurance = index.content.controls.length
-    ? assessedControls / index.content.controls.length
-    : 0
-  const understandingScore = clamp01(0.45 * understanding + 0.3 * dependencies + 0.25 * controlAssurance)
+  // What the player established themselves, weighted above what they inherited:
+  // the register they were handed counts for something, but a year of taking it
+  // on trust is not understanding, and scoring it as such made this dimension
+  // read the same however hard the player looked.
+  const examined = unexaminedMaterial(state, index)
+  const examinedShare = examined.reachable > 0 ? examined.examined / examined.reachable : 0
+  const understandingScore = clamp01(0.3 * understanding + 0.2 * dependencies + 0.5 * examinedShare)
   dimensions.push({
     id: 'risk-understanding',
     label: 'Risk understanding',
@@ -158,6 +161,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           : 'You spent the year acting on an inherited picture you never verified.',
     evidence: [
       `${Math.round(understanding * 100)}% of the estate was brought into view`,
+      `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       `${assessedControls} of ${index.content.controls.length} controls were independently assessed`,
     ],
   })
@@ -275,6 +279,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   const spots = blindSpots(state, index)
+  // Things taken on trust sit behind things never seen at all: both are blind
+  // spots, but not knowing something exists is the worse of the two.
+  spots.push(...examined.names)
   // Relying on something untrue for a year without ever checking is the purest
   // blind spot the simulation can identify, so it is named explicitly.
   for (const assumption of unexaminedAssumptions(state)) {
@@ -285,12 +292,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     label: 'Material blind spots',
     // Scored against how much there was to find, so a big estate is not
     // penalised for being big, and the dimension actually discriminates.
-    band: band(clamp01(1 - materialBlindSpotRatio(state, index) - unexaminedAssumptions(state).length * 0.08)),
+    band: band(clamp01(examinedShare - unexaminedAssumptions(state).length * 0.08)),
     narrative:
       spots.length === 0
         ? 'Nothing material was left unexamined.'
         : `Material parts of Nexora were never brought into view: ${spots.slice(0, 3).join('; ')}.`,
-    evidence: spots,
+    evidence: spots.slice(0, 12),
   })
 
   const overall = dimensions.reduce((sum, d) => sum + bandValue(d.band), 0) / dimensions.length
