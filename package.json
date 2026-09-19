@@ -21,7 +21,8 @@
     "check": "pnpm typecheck && pnpm lint && pnpm validate:content && pnpm test",
     "test:e2e:local": "playwright test --project=desktop-chromium --project=tablet-portrait --project=tablet-landscape --project=phone --project=phone-320",
     "screenshots": "playwright test --config playwright.screenshots.config.ts --project=desktop-chromium --project=phone",
-    "soak": "tsx scripts/soak.ts"
+    "soak": "tsx scripts/soak.ts",
+    "test:e2e:live": "playwright test --config playwright.live.config.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

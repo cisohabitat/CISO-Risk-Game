@@ -33,6 +33,7 @@ Other commands:
 | `pnpm validate:content` | Schema and referential validation of the campaign |
 | `pnpm test:e2e` | Playwright across desktop, tablet, phone and 320px |
 | `pnpm test:e2e:local` | The same without WebKit, for machines that cannot fetch it |
+| `BASE_URL=… pnpm test:e2e:live` | Run the suite against a deployed URL |
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm check` | Everything short of end-to-end |
 | `pnpm soak 1000` | 1,000 headless campaigns, checking for crashes and invariant failures |

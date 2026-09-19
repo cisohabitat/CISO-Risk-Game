@@ -51,7 +51,17 @@ A build is not release-ready unless all of the following hold:
 11. Playwright passes desktop, tablet, phone and 320px projects against the
     production build.
 12. The Vercel deployment succeeds under Hobby settings.
-13. Vercel usage after a scripted full playthrough shows no unexpected compute.
+13. The suite passes against the deployed URL, not only against a local build:
+
+    ```bash
+    BASE_URL=https://ciso-risk-game.vercel.app pnpm test:e2e:live
+    ```
+
+    This is the only check that exercises the hosting configuration itself —
+    SPA rewrites, headers, caching and asset paths.
+14. Vercel usage after a scripted full playthrough shows no unexpected compute.
+    The Functions tab should show no invocations at all: normal gameplay makes
+    no request after the app shell and content have loaded.
 
 CI covers 1–3, 6 and 11 on every push; the remainder are checked before release.
 
