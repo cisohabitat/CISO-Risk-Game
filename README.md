@@ -37,6 +37,7 @@ Other commands:
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
 | `pnpm check` | Everything short of end-to-end |
 | `pnpm soak 1000` | 1,000 headless campaigns, checking for crashes and invariant failures |
+| `pnpm coverage 60` | Which authored content a player actually reaches, and which mechanics ever fire |
 | `pnpm screenshots` | Capture the screens for visual review |
 | `pnpm tsx scripts/tune.ts 25` | Balance harness across policies and seeds |
 

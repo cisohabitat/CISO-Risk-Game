@@ -88,3 +88,16 @@ business-first and balanced policies and reports incidents per run, clean-year
 rate, worst consequence, objectives achieved, board confidence and programmes
 completed. Use it after changing rates or costs; the soak test in
 `tests/engine/soak.test.ts` enforces the outer bounds.
+
+## Checking content is actually reached
+
+`pnpm coverage 60` plays campaigns under two policies and reports which authored
+content a player encounters and which mechanics ever fire. Authoring an event
+nobody sees is the same as not authoring it, and a gate set slightly too tight
+is invisible without this.
+
+It lists anything never reached. At the time of writing five events and two
+decisions never fire, because their gates — sustained team overload, low morale,
+two named programmes running at once — are not reachable under the current
+capacity and morale rates. Run it after changing either the content gates or the
+rates that drive them.
