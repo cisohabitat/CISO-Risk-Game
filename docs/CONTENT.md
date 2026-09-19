@@ -81,6 +81,19 @@ Add it to `risks.json` with a `validationRuleId`, then implement that rule in
 predicates over game state, which keeps invalidation deterministic and testable.
 The content validator fails if a rule name does not exist.
 
+## Control drift
+
+Every control declares how it decays when no programme maintains it:
+`driftPerDay`, a `driftKind` and a `driftFloor`. The kind matters because the
+causes differ — `coverage-erosion` for controls the growing estate outruns,
+`operational-decay` for capability that is still deployed but stops being
+exercised, `exception-accumulation` for controls hollowed out from inside. The
+floor is the share of the best level ever reached that survives unaided, so a
+programme that lifts a control also lifts the level it will not fall below.
+
+Keep floors in the 0.65–0.85 range. Lower and an idle year destroys the
+organisation; higher and inaction costs nothing.
+
 ## Balance
 
 `pnpm tsx scripts/tune.ts 25` plays seeded campaigns under passive, defensive,

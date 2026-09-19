@@ -9,7 +9,7 @@ import {
   calculateThreatPressure,
   calculateUncertainty,
 } from '@/game/risk/calculations'
-import { calculateControlEffectiveness, resistanceToTechnique } from '@/game/controls/effectiveness'
+import { applyDrift, calculateControlEffectiveness, resistanceToTechnique } from '@/game/controls/effectiveness'
 import { riskBand, confidenceFromUncertainty, describeChange } from '@/game/risk/bands'
 import { testIndex } from './helpers'
 
@@ -166,5 +166,62 @@ describe('control effectiveness', () => {
       expect(step.detectionChance).toBeGreaterThanOrEqual(0)
       expect(step.detectionChance).toBeLessThanOrEqual(1)
     }
+  })
+})
+
+describe('control drift', () => {
+  it('settles at a floor rather than decaying toward nothing', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'drift-floor' })
+    const before = structuredClone(state.controls.controls)
+    // Two full years of pure drift, far longer than a campaign, isolated from
+    // everything else a tick would do.
+    for (let i = 0; i < 726; i += 1) {
+      for (const def of index.content.controls) {
+        applyDrift(state.controls.controls[def.id]!, def, false)
+      }
+    }
+
+    for (const def of index.content.controls) {
+      const now = state.controls.controls[def.id]!
+      const then = before[def.id]!
+      // Nothing collapses to nothing: capability built mostly persists.
+      if (def.driftKind === 'coverage-erosion') {
+        expect(now.coverage, def.id).toBeGreaterThanOrEqual(then.coverage * def.driftFloor - 1e-6)
+      } else if (def.driftKind === 'operational-decay') {
+        expect(now.operationalEffectiveness, def.id).toBeGreaterThanOrEqual(
+          then.operationalEffectiveness * def.driftFloor - 1e-6,
+        )
+      } else {
+        expect(now.exceptionRate, def.id).toBeLessThanOrEqual(0.85 + 1e-6)
+      }
+    }
+  })
+
+  it('raises the floor when a programme raises the control', () => {
+    // Capability that has been built should not decay back to where it started.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'drift-peak' })
+    const def = index.content.controls.find((c) => c.id === 'ctl-mfa')!
+    const control = state.controls.controls['ctl-mfa']!
+    const startingFloor = control.coverage * def.driftFloor
+
+    control.coverage = 0.95
+    for (let i = 0; i < 700; i += 1) applyDrift(control, def, false)
+
+    expect(control.coverage).toBeGreaterThan(startingFloor)
+    expect(control.coverage).toBeCloseTo(0.95 * def.driftFloor, 2)
+  })
+
+  it('leaves a maintained control alone', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'drift-maintained' })
+    const def = index.content.controls.find((c) => c.id === 'ctl-logging')!
+    const control = state.controls.controls[def.id]!
+    const before = { ...control }
+    for (let i = 0; i < 200; i += 1) applyDrift(control, def, true)
+    expect(control.coverage).toBe(before.coverage)
+    expect(control.operationalEffectiveness).toBe(before.operationalEffectiveness)
+    expect(control.exceptionRate).toBe(before.exceptionRate)
   })
 })

@@ -70,14 +70,76 @@ export function controlBand(value: number): 'absent' | 'partial' | 'developing' 
 }
 
 /**
- * Controls decay when nothing maintains them: estates grow, exceptions
- * accumulate, configurations drift. An active programme offsets this.
+ * Controls decay when nothing maintains them, but not all for the same reason
+ * and not without limit.
+ *
+ * Three shapes, because the causes are genuinely different:
+ *
+ *   coverage-erosion      the estate grows faster than deployment does, so the
+ *                         control covers a smaller share of it each month
+ *   operational-decay     the capability is still deployed but stops being
+ *                         exercised — an unrehearsed plan, an untested restore.
+ *                         Coverage is unchanged; it simply would not work well
+ *   exception-accumulation standing exceptions pile up faster than anyone
+ *                         retires them, hollowing the control from inside
+ *
+ * Decay runs toward a floor rather than toward zero. Capability that has been
+ * built mostly persists: what erodes is the margin above it. The floor is a
+ * share of the best that dimension has ever reached, so a programme that lifts
+ * a control also lifts the level it will not fall below unaided.
  */
 export function applyDrift(control: ControlRuntime, def: SecurityControlDef, maintained: boolean): void {
+  // The high-water mark tracks upward regardless, so improvements stick.
+  const peak = (control.peak ??= {
+    coverage: control.coverage,
+    configurationQuality: control.configurationQuality,
+    operationalEffectiveness: control.operationalEffectiveness,
+    monitoringQuality: control.monitoringQuality,
+    exceptionRate: control.exceptionRate,
+  })
+  peak.coverage = Math.max(peak.coverage, control.coverage)
+  peak.configurationQuality = Math.max(peak.configurationQuality, control.configurationQuality)
+  peak.operationalEffectiveness = Math.max(peak.operationalEffectiveness, control.operationalEffectiveness)
+  peak.monitoringQuality = Math.max(peak.monitoringQuality, control.monitoringQuality)
+  // The best (lowest) exception rate reached; drift runs the other way here.
+  peak.exceptionRate = Math.min(peak.exceptionRate, control.exceptionRate)
+
   if (maintained) return
   const drift = def.driftPerDay
   if (drift <= 0) return
-  control.coverage = clamp01(control.coverage - drift)
-  control.configurationQuality = clamp01(control.configurationQuality - drift * 0.6)
-  control.exceptionRate = clamp01(control.exceptionRate + drift * 0.8)
+  const retained = clamp01(def.driftFloor)
+
+  switch (def.driftKind) {
+    case 'operational-decay': {
+      // Still deployed, no longer exercised.
+      const floor = peak.operationalEffectiveness * retained
+      control.operationalEffectiveness = Math.max(floor, control.operationalEffectiveness - drift)
+      control.monitoringQuality = Math.max(
+        peak.monitoringQuality * retained,
+        control.monitoringQuality - drift * 0.5,
+      )
+      break
+    }
+    case 'exception-accumulation': {
+      // Exceptions granted faster than they are retired. The ceiling is the
+      // point at which the control is carrying about as much as it can.
+      const ceiling = Math.min(0.85, peak.exceptionRate + (1 - retained))
+      control.exceptionRate = Math.min(ceiling, control.exceptionRate + drift)
+      control.configurationQuality = Math.max(
+        peak.configurationQuality * retained,
+        control.configurationQuality - drift * 0.4,
+      )
+      break
+    }
+    default: {
+      // The estate outgrows the deployment.
+      const floor = peak.coverage * retained
+      control.coverage = Math.max(floor, control.coverage - drift)
+      control.configurationQuality = Math.max(
+        peak.configurationQuality * retained,
+        control.configurationQuality - drift * 0.5,
+      )
+      break
+    }
+  }
 }

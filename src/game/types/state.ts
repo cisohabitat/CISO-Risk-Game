@@ -55,6 +55,18 @@ export interface ControlRuntime {
   operationalEffectiveness: number
   monitoringQuality: number
   exceptionRate: number
+  /**
+   * The best each dimension has reached. Drift runs toward a share of this, so
+   * capability that has been built does not evaporate. Lazily initialised, so
+   * saves written before it existed load without migration.
+   */
+  peak?: {
+    coverage: number
+    configurationQuality: number
+    operationalEffectiveness: number
+    monitoringQuality: number
+    exceptionRate: number
+  }
   /** What the player currently believes, refreshed by assurance activity. */
   believed: {
     coverage: number

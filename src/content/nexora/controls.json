@@ -6,7 +6,7 @@
       "baseCoverage": 0.62, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.65, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.3, "variance": 0.12,
       "targetNodeIds": ["node-idp", "node-net-remote", "node-app-portal", "node-mgmt-server"],
       "mitigates": { "credential-stuffing": 0.8, "phishing": 0.55, "supplier-remote-access": 0.5 },
-      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0004
+      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0004, "driftKind": "coverage-erosion", "driftFloor": 0.78
     },
     {
       "id": "ctl-pam", "name": "Privileged access management", "shortName": "PAM", "category": "privileged-access",
@@ -14,7 +14,7 @@
       "baseCoverage": 0.35, "baseConfigurationQuality": 0.55, "baseOperationalEffectiveness": 0.5, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.4, "variance": 0.13,
       "targetNodeIds": ["node-pam", "node-mgmt-server", "node-svc-accounts", "node-idp"],
       "mitigates": { "privilege-abuse": 0.85, "lateral-movement": 0.45, "supplier-remote-access": 0.6 },
-      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0005
+      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0005, "driftKind": "exception-accumulation", "driftFloor": 0.72
     },
     {
       "id": "ctl-segmentation", "name": "Network segmentation", "shortName": "Segmentation", "category": "network",
@@ -22,7 +22,7 @@
       "baseCoverage": 0.3, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.35, "variance": 0.12,
       "targetNodeIds": ["node-net-corp", "node-net-prod", "node-dc-legacy", "node-cloud-prod"],
       "mitigates": { "lateral-movement": 0.8, "encryption-impact": 0.35, "supplier-remote-access": 0.3 },
-      "detectionStrength": 0.1, "recoveryStrength": 0.15, "driftPerDay": 0.0004
+      "detectionStrength": 0.1, "recoveryStrength": 0.15, "driftPerDay": 0.0004, "driftKind": "coverage-erosion", "driftFloor": 0.8
     },
     {
       "id": "ctl-edr", "name": "Endpoint detection and response", "shortName": "EDR", "category": "endpoint",
@@ -30,7 +30,7 @@
       "baseCoverage": 0.58, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.6, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-endpoints", "node-dev-workstations", "node-mgmt-server", "node-dc-legacy"],
       "mitigates": { "phishing": 0.5, "lateral-movement": 0.45, "encryption-impact": 0.55, "persistence": 0.5 },
-      "detectionStrength": 0.6, "recoveryStrength": 0.1, "driftPerDay": 0.0003
+      "detectionStrength": 0.6, "recoveryStrength": 0.1, "driftPerDay": 0.0003, "driftKind": "coverage-erosion", "driftFloor": 0.8
     },
     {
       "id": "ctl-logging", "name": "Logging and telemetry", "shortName": "Telemetry", "category": "detection",
@@ -38,7 +38,7 @@
       "baseCoverage": 0.45, "baseConfigurationQuality": 0.5, "baseOperationalEffectiveness": 0.5, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.25, "variance": 0.12,
       "targetNodeIds": ["node-cloud-prod", "node-dc-legacy", "node-idp", "node-net-remote", "node-k8s"],
       "mitigates": {},
-      "detectionStrength": 0.55, "recoveryStrength": 0.05, "driftPerDay": 0.0005
+      "detectionStrength": 0.55, "recoveryStrength": 0.05, "driftPerDay": 0.0005, "driftKind": "coverage-erosion", "driftFloor": 0.72
     },
     {
       "id": "ctl-soc", "name": "Security monitoring service", "shortName": "SOC", "category": "detection",
@@ -46,7 +46,7 @@
       "baseCoverage": 0.55, "baseConfigurationQuality": 0.5, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.55, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-sup-soc", "node-net-prod", "node-net-corp"],
       "mitigates": { "persistence": 0.25 },
-      "detectionStrength": 0.65, "recoveryStrength": 0.05, "driftPerDay": 0.0004
+      "detectionStrength": 0.65, "recoveryStrength": 0.05, "driftPerDay": 0.0004, "driftKind": "operational-decay", "driftFloor": 0.75
     },
     {
       "id": "ctl-backup", "name": "Backup and recovery", "shortName": "Backup", "category": "recovery",
@@ -54,7 +54,7 @@
       "baseCoverage": 0.6, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.3, "variance": 0.14,
       "targetNodeIds": ["node-backup", "node-cloud-prod", "node-dc-legacy"],
       "mitigates": { "encryption-impact": 0.2 },
-      "detectionStrength": 0, "recoveryStrength": 0.8, "driftPerDay": 0.0006
+      "detectionStrength": 0, "recoveryStrength": 0.8, "driftPerDay": 0.0006, "driftKind": "operational-decay", "driftFloor": 0.7
     },
     {
       "id": "ctl-ir", "name": "Incident response readiness", "shortName": "IR readiness", "category": "recovery",
@@ -62,7 +62,7 @@
       "baseCoverage": 0.4, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.35, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-sup-soc"],
       "mitigates": {},
-      "detectionStrength": 0.1, "recoveryStrength": 0.55, "driftPerDay": 0.0007
+      "detectionStrength": 0.1, "recoveryStrength": 0.55, "driftPerDay": 0.0007, "driftKind": "operational-decay", "driftFloor": 0.65
     },
     {
       "id": "ctl-3p-access", "name": "Supplier access governance", "shortName": "Supplier access", "category": "third-party",
@@ -70,7 +70,7 @@
       "baseCoverage": 0.3, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.45, "variance": 0.13,
       "targetNodeIds": ["node-sup-msp", "node-net-remote", "node-sup-logistics", "node-app-portal"],
       "mitigates": { "supplier-remote-access": 0.8, "privilege-abuse": 0.35 },
-      "detectionStrength": 0.25, "recoveryStrength": 0, "driftPerDay": 0.0005
+      "detectionStrength": 0.25, "recoveryStrength": 0, "driftPerDay": 0.0005, "driftKind": "exception-accumulation", "driftFloor": 0.68
     },
     {
       "id": "ctl-vuln", "name": "Vulnerability management", "shortName": "Vuln management", "category": "vulnerability",
@@ -78,7 +78,7 @@
       "baseCoverage": 0.65, "baseConfigurationQuality": 0.55, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.5, "baseExceptionRate": 0.4, "variance": 0.12,
       "targetNodeIds": ["node-cloud-prod", "node-dc-legacy", "node-app-checkout", "node-app-portal"],
       "mitigates": { "exploit-public-app": 0.7, "lateral-movement": 0.2 },
-      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0006
+      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0006, "driftKind": "coverage-erosion", "driftFloor": 0.75
     },
     {
       "id": "ctl-cloud-posture", "name": "Cloud security posture", "shortName": "Cloud posture", "category": "cloud",
@@ -86,7 +86,7 @@
       "baseCoverage": 0.42, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.35, "variance": 0.13,
       "targetNodeIds": ["node-cloud-prod", "node-cloud-dev", "node-k8s", "node-ci-pipeline"],
       "mitigates": { "exploit-public-app": 0.4, "privilege-abuse": 0.4, "data-exfiltration": 0.35 },
-      "detectionStrength": 0.35, "recoveryStrength": 0.1, "driftPerDay": 0.0006
+      "detectionStrength": 0.35, "recoveryStrength": 0.1, "driftPerDay": 0.0006, "driftKind": "coverage-erosion", "driftFloor": 0.7
     },
     {
       "id": "ctl-email", "name": "Email and web filtering", "shortName": "Email security", "category": "endpoint",
@@ -94,7 +94,7 @@
       "baseCoverage": 0.72, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.6, "baseMonitoringQuality": 0.45, "baseExceptionRate": 0.15, "variance": 0.1,
       "targetNodeIds": ["node-endpoints"],
       "mitigates": { "phishing": 0.7 },
-      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0003
+      "detectionStrength": 0.3, "recoveryStrength": 0, "driftPerDay": 0.0003, "driftKind": "coverage-erosion", "driftFloor": 0.85
     },
     {
       "id": "ctl-dlp", "name": "Data protection controls", "shortName": "Data protection", "category": "cloud",
@@ -102,7 +102,7 @@
       "baseCoverage": 0.28, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.35, "baseExceptionRate": 0.3, "variance": 0.12,
       "targetNodeIds": ["node-data-pii", "node-data-analytics", "node-data-cardholder"],
       "mitigates": { "data-exfiltration": 0.7 },
-      "detectionStrength": 0.4, "recoveryStrength": 0, "driftPerDay": 0.0005
+      "detectionStrength": 0.4, "recoveryStrength": 0, "driftPerDay": 0.0005, "driftKind": "coverage-erosion", "driftFloor": 0.72
     }
   ]
 }

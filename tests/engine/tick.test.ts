@@ -91,12 +91,24 @@ describe('daily tick', () => {
     expect(state.flags['test.delayed']).toBe(true)
   })
 
-  it('degrades unmaintained controls over time', () => {
+  it('degrades unmaintained controls in the dimension that actually erodes', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'tick-6' })
-    const before = state.controls.controls['ctl-backup']!.coverage
+    const before = structuredClone(state.controls.controls)
     runDays(state, index, 180)
-    expect(state.controls.controls['ctl-backup']!.coverage).toBeLessThan(before)
+
+    // Coverage erosion: the estate outgrows the deployment.
+    expect(state.controls.controls['ctl-mfa']!.coverage).toBeLessThan(before['ctl-mfa']!.coverage)
+
+    // Operational decay: still deployed, no longer exercised. Coverage holds.
+    const backup = state.controls.controls['ctl-backup']!
+    expect(backup.operationalEffectiveness).toBeLessThan(before['ctl-backup']!.operationalEffectiveness)
+    expect(backup.coverage).toBeCloseTo(before['ctl-backup']!.coverage, 5)
+
+    // Exception accumulation: granted faster than they are retired.
+    const pam = state.controls.controls['ctl-pam']!
+    expect(pam.exceptionRate).toBeGreaterThan(before['ctl-pam']!.exceptionRate)
+    expect(pam.coverage).toBeCloseTo(before['ctl-pam']!.coverage, 5)
   })
 
   it('records a weekly snapshot for trend reporting', () => {

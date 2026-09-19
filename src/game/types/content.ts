@@ -120,6 +120,13 @@ export interface SecurityControlDef {
   recoveryStrength: number
   /** Ongoing degradation per day when no programme maintains it. */
   driftPerDay: number
+  /** Which dimension erodes, and why. See applyDrift. */
+  driftKind: 'coverage-erosion' | 'operational-decay' | 'exception-accumulation'
+  /**
+   * Share of the best level reached that survives unaided. 0.7 means a control
+   * settles at roughly two thirds of its peak rather than decaying to nothing.
+   */
+  driftFloor: number
 }
 
 export interface ControlEffectDef {
