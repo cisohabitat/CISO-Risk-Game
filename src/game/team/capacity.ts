@@ -1,12 +1,18 @@
 /**
  * Team capacity, workload and delegation quality (plan §10.2, §11).
  *
- * Capacity is expressed in "days of effort per week" per function. Assignments
- * commit capacity for their duration; committed capacity above the available
- * pool becomes strain, which degrades quality and morale. The CISO cannot do
+ * Capacity is "days of effort per week" per function. Two things consume it and
+ * they compete for the same people: delegated work (investigations, reviews)
+ * and live cyber programmes. Committed capacity is therefore *derived* from
+ * both every day rather than incremented and decremented as work starts and
+ * stops — an accounting that quietly drifts and, in an earlier version of this
+ * file, let programmes demand people without ever occupying them.
+ *
+ * Committed capacity above the available pool becomes strain, which degrades
+ * the quality of delegated work and grinds morale down. The CISO cannot do
  * everything personally: leaders carry the work, and tired leaders do it worse.
  */
-import type { CapacityBand, CyberFunction, GameState, LeaderRuntime } from '../types'
+import type { CapacityBand, ContentIndex, CyberFunction, GameState, LeaderRuntime } from '../types'
 import { CYBER_FUNCTIONS, clamp01 } from '../types'
 
 export function functionStrain(state: GameState, fn: CyberFunction): number {
@@ -15,18 +21,30 @@ export function functionStrain(state: GameState, fn: CyberFunction): number {
   return clamp01(runtime.committed / runtime.capacity)
 }
 
-/** Whole-team strain, weighted by how much capacity each function holds. */
+/**
+ * Whole-team strain.
+ *
+ * Deliberately not a simple average of committed over capacity. Identity can be
+ * at a hundred per cent while the SOC idles, and an IAM engineer cannot cover a
+ * SOC shift — a plain average hides exactly the situation the player needs to
+ * see. The measure therefore leans on the most pressed functions while still
+ * accounting for the whole team, so one busy corner registers without a single
+ * small team dominating the reading.
+ */
 export function teamStrain(state: GameState): number {
   let committed = 0
   let capacity = 0
+  let worst = 0
   for (const fn of CYBER_FUNCTIONS) {
     const runtime = state.team.functions[fn]
     if (!runtime) continue
     committed += runtime.committed
     capacity += runtime.capacity
+    worst = Math.max(worst, functionStrain(state, fn))
   }
   if (capacity <= 0) return 1
-  return clamp01(committed / capacity)
+  const across = clamp01(committed / capacity)
+  return clamp01(0.4 * across + 0.6 * worst)
 }
 
 export function capacityBand(strain: number): CapacityBand {
@@ -60,12 +78,55 @@ export function canAfford(state: GameState, demand: Partial<Record<CyberFunction
   return true
 }
 
-export function commitCapacity(state: GameState, demand: Partial<Record<CyberFunction, number>>, sign = 1): void {
-  for (const [fn, amount] of Object.entries(demand)) {
-    if (!amount) continue
+/**
+ * What each function is currently committed to, counted from the work that
+ * actually exists. `excludeProgrammeId` lets a programme ask how loaded the
+ * team would be without its own demand, so it does not starve itself.
+ */
+export function computeCommitted(
+  state: GameState,
+  index: ContentIndex,
+  excludeProgrammeId?: string,
+): Record<string, number> {
+  const committed: Record<string, number> = {}
+  for (const fn of CYBER_FUNCTIONS) committed[fn] = 0
+
+  for (const assignment of state.team.assignments) {
+    if (assignment.status !== 'running') continue
+    for (const [fn, amount] of Object.entries(assignment.capacityPerDay)) {
+      if (amount) committed[fn] = (committed[fn] ?? 0) + amount
+    }
+  }
+
+  // Live programmes hold people for as long as they run. This is the pressure
+  // that makes "start everything" a real choice rather than a budget question.
+  for (const programme of Object.values(state.programmes.programmes)) {
+    if (programme.id === excludeProgrammeId) continue
+    if (programme.status !== 'active' && programme.status !== 'at-risk') continue
+    const def = index.programme.get(programme.id)
+    if (!def) continue
+    for (const [fn, amount] of Object.entries(def.capacityDemand)) {
+      if (amount) committed[fn] = (committed[fn] ?? 0) + amount
+    }
+  }
+
+  // Short-lived surges (an incident, a burst of unplanned work) decay on their own.
+  for (const fn of CYBER_FUNCTIONS) {
+    const runtime = state.team.functions[fn]
+    if (runtime?.surge) committed[fn] = (committed[fn] ?? 0) + runtime.surge
+  }
+  return committed
+}
+
+/** Recomputes committed capacity for every function. Called once per tick. */
+export function refreshCommittedCapacity(state: GameState, index: ContentIndex): void {
+  const committed = computeCommitted(state, index)
+  for (const fn of CYBER_FUNCTIONS) {
     const runtime = state.team.functions[fn]
     if (!runtime) continue
-    runtime.committed = Math.max(0, runtime.committed + amount * sign)
+    runtime.committed = Math.round((committed[fn] ?? 0) * 100) / 100
+    // Surges fade rather than persisting for the rest of the campaign.
+    if (runtime.surge) runtime.surge = Math.max(0, Math.round((runtime.surge - 0.15) * 100) / 100)
   }
 }
 
@@ -116,15 +177,17 @@ export function updateTeamWellbeing(state: GameState): void {
     const runtime = state.team.functions[fn]
     if (!runtime) continue
     const strain = functionStrain(state, fn)
-    if (strain > 0.85) runtime.morale = clamp01(runtime.morale - 0.004 * (1 + (strain - 0.85) * 4))
-    else if (strain < 0.6) runtime.morale = clamp01(runtime.morale + 0.0018)
-    if (runtime.vacancies > 0) runtime.morale = clamp01(runtime.morale - 0.0008 * runtime.vacancies)
+    // Grinding down is faster than recovering, which is what makes sustained
+    // overload a decision with a cost rather than a temporary inconvenience.
+    if (strain > 0.7) runtime.morale = clamp01(runtime.morale - 0.006 * (1 + (strain - 0.7) * 5))
+    else if (strain < 0.5) runtime.morale = clamp01(runtime.morale + 0.0012)
+    if (runtime.vacancies > 0) runtime.morale = clamp01(runtime.morale - 0.0015 * runtime.vacancies)
   }
   for (const leader of Object.values(state.team.leaders)) {
     const target = clamp01(leaderLoad(state, leader.id))
     leader.workload = clamp01(leader.workload + (target - leader.workload) * 0.25)
-    if (leader.workload > 0.8) leader.morale = clamp01(leader.morale - 0.003)
-    else if (leader.workload < 0.5) leader.morale = clamp01(leader.morale + 0.0015)
+    if (leader.workload > 0.7) leader.morale = clamp01(leader.morale - 0.005)
+    else if (leader.workload < 0.45) leader.morale = clamp01(leader.morale + 0.001)
   }
 }
 

@@ -212,6 +212,8 @@ export interface FunctionRuntime {
   morale: number
   vacancies: number
   hiringDaysRemaining?: number
+  /** Short-lived unplanned load on top of committed work; decays daily. */
+  surge?: number
 }
 
 export interface AssignmentState {

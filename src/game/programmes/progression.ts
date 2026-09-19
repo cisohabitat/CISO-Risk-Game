@@ -6,7 +6,7 @@
 import type { ContentIndex, GameEffect, GameState, ProgrammeRuntime } from '../types'
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
-import { availableCapacity } from '../team/capacity'
+import { computeCommitted } from '../team/capacity'
 
 export interface ProgrammeTickResult {
   effects: GameEffect[]
@@ -21,6 +21,9 @@ export function computeStaffing(state: GameState, index: ContentIndex, programme
   if (!def) return 0
   const demands = Object.entries(def.capacityDemand)
   if (demands.length === 0) return 1
+
+  // Measured against everyone else's load, so a programme never starves itself.
+  const others = computeCommitted(state, index, programme.id)
   let met = 0
   let total = 0
   for (const [fn, demand] of demands) {
@@ -28,9 +31,8 @@ export function computeStaffing(state: GameState, index: ContentIndex, programme
     total += demand
     const runtime = state.team.functions[fn]
     if (!runtime) continue
-    // Programmes run on whatever capacity delegated work has not already taken.
-    // This is the tension: commissioning investigations slows delivery.
-    met += Math.min(demand, availableCapacity(state, fn as never))
+    const spare = Math.max(0, runtime.capacity - (others[fn] ?? 0))
+    met += Math.min(demand, spare)
   }
   return total > 0 ? clamp01(met / total) : 1
 }

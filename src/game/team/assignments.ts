@@ -14,7 +14,7 @@ import type {
 } from '../types'
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
-import { commitCapacity, delegationDelayDays, delegationQuality, teamStrain } from './capacity'
+import { delegationDelayDays, delegationQuality, teamStrain } from './capacity'
 import { DIFFICULTY_PROFILES } from '../engine/setup'
 
 export interface AssignmentTickResult {
@@ -62,8 +62,8 @@ export function startInvestigation(
     delivered: false,
     producedEvidenceIds: [],
   }
+  // Capacity is derived from running assignments, so pushing it is the commit.
   state.team.assignments.push(assignment)
-  commitCapacity(state, def.capacityPerDay, 1)
   void rng
   void index
   return assignment
@@ -102,7 +102,6 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
     assignment.quality = quality
     assignment.status = 'complete'
     leader.assignmentsCompleted += 1
-    commitCapacity(state, assignment.capacityPerDay, -1)
 
     const def = index.investigation.get(assignment.refId)
     if (!def) continue

@@ -19,7 +19,7 @@ import { applyEffects, recordAssumption } from './effects'
 import { tickDay, type TickResult } from './tick'
 export type { TickResult }
 import { createInitialState, type NewGameOptions } from './setup'
-import { canAfford } from '../team/capacity'
+import { canAfford, refreshCommittedCapacity } from '../team/capacity'
 import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
 import { pushMessage } from '../inbox/messages'
@@ -109,6 +109,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
   const rng = createRng(state.seed, state.rngCursor)
   const commit = () => {
     state.rngCursor = rng.cursor
+    // Committed capacity is derived, so refresh it the moment the set of live
+    // work changes. Otherwise a player could commission several investigations
+    // in one day, each checked against a figure that predates the last.
+    refreshCommittedCapacity(state, index)
   }
 
   switch (action.type) {
@@ -467,6 +471,8 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         summary: `${def.name} ${action.status === 'paused' ? 'paused' : 'resumed'}.`,
         refs: [def.id],
       })
+      // Pausing frees the people it was holding; resuming takes them back.
+      commit()
       return { ok: true, message: action.status === 'paused' ? `${def.name} paused.` : `${def.name} resumed.` }
     }
 

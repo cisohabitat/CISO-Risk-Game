@@ -43,6 +43,8 @@ describe('player actions', () => {
       leaderId: 'lead-eng',
     })
     expect(result.ok).toBe(true)
+    // Committed capacity is derived, and must be accurate immediately so a
+    // second commission the same day is checked against the first.
     expect(state.team.functions['iam']!.committed).toBeGreaterThan(before)
     runDays(state, index, 60)
     expect(state.evidence.order).toContain('ev-priv-recert-overdue')

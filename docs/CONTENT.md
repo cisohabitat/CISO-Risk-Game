@@ -96,8 +96,11 @@ content a player encounters and which mechanics ever fire. Authoring an event
 nobody sees is the same as not authoring it, and a gate set slightly too tight
 is invisible without this.
 
-It lists anything never reached. At the time of writing five events and two
-decisions never fire, because their gates — sustained team overload, low morale,
-two named programmes running at once — are not reachable under the current
-capacity and morale rates. Run it after changing either the content gates or the
-rates that drive them.
+It lists anything never reached. At the time of writing a campaign reaches 98%
+of events and 96% of decisions. Two pieces remain unreached under the harness's
+policies: `evt-thr-detection-worked`, which needs telemetry coverage a player
+only gets well into the detection programme, and the pair
+`evt-org-programme-tradeoff` / `dec-programme-tradeoff`, which need two
+specific programmes running at once. Both are legitimately gated on particular
+play rather than unreachable, but they are worth re-checking after any change
+to the gates or to the rates that drive them.

@@ -1,45 +1,1223 @@
 {
   "events": [
-    { "id": "evt-org-vacancy-pressure", "type": "people", "title": "Two vacancies, six months open", "from": "Callum Reid, Head of Security Engineering", "body": "Both identity engineering roles are still open. We have been covering with the people we have, and it is starting to show in what we can commit to.", "priority": "notable", "availableFromDay": 18, "conditions": [], "weight": 13, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-hire-or-outsource", "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-team-vacancies", "note": "Security engineering" }], "relatedNodeIds": [], "tags": ["team"] },
-    { "id": "evt-org-team-overload", "type": "people", "title": "The team is past sustainable load", "from": "Jo Mbeki, Head of Security Operations", "body": "I need to be straight with you. We are running above what the team can sustain and have been for a while. If you add anything else, something already committed will slip, and I would rather choose which.", "priority": "urgent", "availableFromDay": 40, "conditions": [{ "kind": "team.capacityBandAtLeast", "band": "overloaded" }], "weight": 20, "pinned": false, "oncePerCampaign": false, "cooldownDays": 90, "decisionId": "dec-team-overload", "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-team-burnout", "note": "Security operations" }], "relatedNodeIds": [], "tags": ["team"] },
-    { "id": "evt-org-morale-low", "type": "people", "title": "Someone is thinking of leaving", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "One of the senior analysts has been approached and is considering it. They have not said so directly, which is how these things usually surface.", "priority": "notable", "availableFromDay": 70, "conditions": [{ "kind": "team.moraleBelow", "value": 0.42 }], "weight": 14, "pinned": false, "oncePerCampaign": false, "cooldownDays": 80, "relatedNodeIds": [], "tags": ["team"] },
-    { "id": "evt-org-good-delegation", "type": "people", "title": "Your architecture lead went further than asked", "from": "Stefan Alvarez, Head of Security Architecture", "body": "While mapping dependencies I also pulled the firewall rule base. There are rules between the legacy estate and production that nobody can account for. I have documented them.", "priority": "notable", "availableFromDay": 45, "conditions": [{ "kind": "node.discovered", "nodeId": "node-dc-legacy" }], "weight": 10, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-legacy-routable", "note": "Security architecture" }, { "type": "edge.reveal", "edgeId": "edge-legacy-to-core" }], "relatedNodeIds": ["node-dc-legacy"], "tags": ["discovery", "architecture"] },
-    { "id": "evt-org-doc-contradiction", "type": "discovery", "title": "Two documents, two different answers", "from": "Stefan Alvarez, Head of Security Architecture", "body": "The architecture pack says the legacy estate is fully segregated from production. The firewall rule base says otherwise. Both are current documents.", "priority": "notable", "availableFromDay": 50, "conditions": [], "weight": 11, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-legacy-isolated-claim", "note": "Architecture review" }], "relatedNodeIds": ["node-dc-legacy"], "tags": ["discovery", "legacy"] },
-    { "id": "evt-org-supplier-questionnaire", "type": "supplier", "title": "Corvus returns a clean questionnaire", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "Corvus has returned the annual assurance questionnaire fully compliant, including enforced multi-factor authentication for all privileged access.\n\nI would like to believe it. I have not tested it.", "priority": "routine", "availableFromDay": 30, "conditions": [], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-supplier-questionnaire-clean", "note": "Supplier assurance" }], "relatedNodeIds": ["node-sup-msp"], "tags": ["supplier", "assurance"] },
-    { "id": "evt-org-supplier-contradiction", "type": "supplier", "title": "The questionnaire was wrong", "from": "Callum Reid, Head of Security Engineering", "body": "Corvus told us their privileged access enforces multi-factor authentication. I checked the remote access configuration this morning. It does not, and it never has.", "priority": "urgent", "availableFromDay": 55, "conditions": [{ "kind": "evidence.known", "evidenceId": "ev-supplier-questionnaire-clean" }, { "kind": "any", "conditions": [{ "kind": "evidence.tagKnown", "tag": "supplier" }, { "kind": "control.coverageBelow", "controlId": "ctl-3p-access", "value": 0.45 }] }], "weight": 16, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-msp-no-mfa", "note": "Security engineering" }, { "type": "evidence.reveal", "evidenceId": "ev-msp-standing-access", "note": "Security engineering" }, { "type": "edge.reveal", "edgeId": "edge-msp-admins-identity" }], "relatedNodeIds": ["node-sup-msp", "node-net-remote"], "tags": ["supplier", "identity"] },
-    { "id": "evt-org-msp-decision", "type": "supplier", "title": "What do we do about standing supplier access?", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "We now have it documented: fourteen permanent privileged accounts belonging to Corvus, no expiry, no second factor. Procurement will help if we give them something specific. Operations will resist anything that touches night cover.", "priority": "urgent", "availableFromDay": 58, "conditions": [{ "kind": "evidence.known", "evidenceId": "ev-msp-standing-access" }], "weight": 20, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-msp-access", "relatedNodeIds": ["node-sup-msp", "node-idp"], "tags": ["supplier", "identity"] },
-    { "id": "evt-org-hr-provider-incident", "type": "supplier", "title": "People Cloud discloses an incident", "from": "Ruth Ahmadi, General Counsel", "body": "Our HR provider has notified customers of unauthorised access to a support system. The notification is vague about scope and firm about there being no evidence of customer data access.", "priority": "notable", "availableFromDay": 88, "conditions": [], "weight": 10, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-hr-provider-incident", "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-hr-saas-breach-notice", "note": "Supplier notification" }], "relatedNodeIds": ["node-sup-hr"], "tags": ["supplier", "privacy"] },
-    { "id": "evt-org-logistics-integration", "type": "supplier", "title": "The logistics integration has write access", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "Lattice Logistics' integration account can write to and delete records in order management. The integration only ever needed to read them.", "priority": "notable", "availableFromDay": 95, "conditions": [{ "kind": "any", "conditions": [{ "kind": "evidence.tagKnown", "tag": "supplier" }, { "kind": "node.discovered", "nodeId": "node-app-portal" }] }], "weight": 11, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-logistics-integration", "note": "Supplier review" }, { "type": "edge.reveal", "edgeId": "edge-logistics-oms" }], "relatedNodeIds": ["node-sup-logistics", "node-app-orders"], "tags": ["supplier"] },
-    { "id": "evt-org-vuln-volume", "type": "discovery", "title": "6,283 critical vulnerabilities", "from": "Callum Reid, Head of Security Engineering", "body": "The number people keep quoting at you is real. It is also close to meaningless: about a third sit on an isolated development cluster with no inbound routes and no real data.\n\nEleven of them are on internet-facing services. Those are the ones I would look at.", "priority": "notable", "availableFromDay": 8, "conditions": [], "weight": 18, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-vuln-volume", "note": "Vulnerability management" }, { "type": "evidence.reveal", "evidenceId": "ev-vuln-dev-cluster", "note": "Vulnerability management" }], "relatedNodeIds": ["node-cloud-dev"], "tags": ["discovery", "vulnerability"] },
-    { "id": "evt-org-patch-backlog", "type": "programme", "title": "Remediation is the constraint, not detection", "from": "Callum Reid, Head of Security Engineering", "body": "Median time to remediate a critical finding on production is 94 days. We are very good at finding things. We are not resourced to fix them.", "priority": "routine", "availableFromDay": 60, "conditions": [], "weight": 10, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-patch-slow", "note": "Security engineering" }], "relatedNodeIds": [], "tags": ["vulnerability"] },
-    { "id": "evt-org-backup-test", "type": "programme", "title": "The last restore test was abandoned", "from": "Jo Mbeki, Head of Security Operations", "body": "I went looking for the last recovery test report. The test was abandoned after eleven hours and the report was never reissued. Fourteen months ago.", "priority": "urgent", "availableFromDay": 35, "conditions": [], "weight": 14, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-backup-test-failed", "note": "Security operations" }], "relatedNodeIds": ["node-backup"], "tags": ["recovery"] },
-    { "id": "evt-org-backup-credentials", "type": "discovery", "title": "Backups share credentials with what they protect", "from": "Stefan Alvarez, Head of Security Architecture", "body": "The backup platform is administered with the same privileged accounts as the systems it backs up. An actor with production administration would be able to remove the recovery path and the systems together.", "priority": "urgent", "availableFromDay": 70, "conditions": [{ "kind": "any", "conditions": [{ "kind": "evidence.tagKnown", "tag": "recovery" }, { "kind": "node.discovered", "nodeId": "node-mgmt-server" }] }], "weight": 13, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-backup-same-credentials", "note": "Architecture review" }], "relatedNodeIds": ["node-backup"], "tags": ["recovery", "privileged"] },
-    { "id": "evt-org-ir-plan", "type": "programme", "title": "The incident response plan names someone who left", "from": "Jo Mbeki, Head of Security Operations", "body": "The plan names an incident commander who left in March. It has not been exercised in two years. If something happens tomorrow, we will be inventing the process while using it.", "priority": "notable", "availableFromDay": 42, "conditions": [], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-ir-untested", "note": "Security operations" }, { "type": "evidence.reveal", "evidenceId": "ev-no-retainer", "note": "Security operations" }], "relatedNodeIds": [], "tags": ["recovery", "incident"] },
-    { "id": "evt-org-cloud-public-bucket", "type": "discovery", "title": "Publicly readable storage in production", "from": "Callum Reid, Head of Security Engineering", "body": "Two storage buckets in the production tenancy permit anonymous read. One contains application logs including session identifiers. They have been like this for at least seven months.", "priority": "urgent", "availableFromDay": 38, "conditions": [], "weight": 13, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-cloud-public-storage", "note": "Cloud review" }, { "type": "node.exposure", "nodeId": "node-cloud-prod", "delta": 0.04 }], "relatedNodeIds": ["node-cloud-prod"], "tags": ["cloud", "discovery"] },
-    { "id": "evt-org-cloud-peering", "type": "discovery", "title": "A peering link nobody remembers creating", "from": "Stefan Alvarez, Head of Security Architecture", "body": "There is a network peering link between the development and production cloud tenancies. It was created for a migration in 2023. The migration finished. The link did not go away.", "priority": "urgent", "availableFromDay": 85, "conditions": [{ "kind": "edge.exists", "edgeId": "edge-devcloud-prod" }], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-cloud-peering", "note": "Architecture review" }, { "type": "edge.reveal", "edgeId": "edge-devcloud-prod" }], "relatedNodeIds": ["node-cloud-dev", "node-cloud-prod"], "tags": ["cloud", "discovery"] },
-    { "id": "evt-org-k8s-permissions", "type": "discovery", "title": "Container workloads can read the customer store", "from": "Stefan Alvarez, Head of Security Architecture", "body": "Workloads on the shared cluster inherit a platform role with broad read access to production data stores. Any compromised workload becomes a data problem.", "priority": "notable", "availableFromDay": 105, "conditions": [], "weight": 10, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-k8s-permissions", "note": "Cloud review" }], "relatedNodeIds": ["node-k8s", "node-data-pii"], "tags": ["cloud", "data"] },
-    { "id": "evt-org-service-accounts", "type": "discovery", "title": "412 service accounts, no owners", "from": "Callum Reid, Head of Security Engineering", "body": "412 non-human accounts. 78 have passwords older than five years. 31 hold privileged rights. Nobody owns them, which means nobody can safely remove them.", "priority": "notable", "availableFromDay": 48, "conditions": [], "weight": 13, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-service-accounts", "note": "Identity engineering" }, { "type": "node.reveal", "nodeId": "node-svc-accounts", "confidence": 0.7 }], "relatedNodeIds": ["node-svc-accounts"], "tags": ["identity", "discovery"] },
-    { "id": "evt-org-mfa-exceptions", "type": "discovery", "title": "The MFA exception register", "from": "Callum Reid, Head of Security Engineering", "body": "214 accounts sit on the multi-factor exception register. Most were granted as temporary. The oldest is three years old. Nineteen of them are administrative.", "priority": "urgent", "availableFromDay": 26, "conditions": [], "weight": 15, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-mfa-exceptions", "note": "Identity engineering" }], "relatedNodeIds": ["node-idp"], "tags": ["identity", "discovery"] },
-    { "id": "evt-org-portal-directory", "type": "discovery", "title": "Partner accounts live in the staff directory", "from": "Stefan Alvarez, Head of Security Architecture", "body": "Partner identities for the extranet are held in the same identity platform, and the same tenant, as employee accounts. A partner credential compromise starts from inside our identity boundary.", "priority": "urgent", "availableFromDay": 80, "conditions": [{ "kind": "edge.exists", "edgeId": "edge-portal-idp" }], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-portal-shared-directory", "note": "Architecture review" }, { "type": "edge.reveal", "edgeId": "edge-portal-idp" }, { "type": "node.reveal", "nodeId": "node-app-portal", "confidence": 0.8 }], "relatedNodeIds": ["node-app-portal", "node-idp"], "tags": ["identity", "third-party"] },
-    { "id": "evt-org-access-review-failed", "type": "discovery", "title": "An access review failed", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "A sample access review on order management found nine leavers with active accounts and two accounts with rights nobody could explain. The reviewer had approved the previous round without reading it.", "priority": "notable", "availableFromDay": 52, "conditions": [], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-failed-access-review", "note": "Cyber risk" }], "relatedNodeIds": ["node-app-orders"], "tags": ["identity", "governance"] },
-    { "id": "evt-org-data-retention", "type": "discovery", "title": "Closed-account data is being kept indefinitely", "from": "Ruth Ahmadi, General Counsel", "body": "Records for closed accounts are retained indefinitely in the analytics estate, contrary to our published retention policy. I have been told this is a technical limitation. I do not believe that is the whole story.", "priority": "notable", "availableFromDay": 100, "conditions": [], "weight": 11, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-data-retention", "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-data-retention", "note": "Legal" }], "relatedNodeIds": ["node-data-pii", "node-data-analytics"], "tags": ["data", "privacy"] },
-    { "id": "evt-org-cardholder-scope", "type": "discovery", "title": "Card data outside the payment environment", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "A discovery scan found unencrypted card data in two application log stores outside the defined payment environment. The regulated boundary is wider than the one we have been describing.", "priority": "urgent", "availableFromDay": 92, "conditions": [], "weight": 11, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-cardholder-scope", "note": "Cyber risk" }], "relatedNodeIds": ["node-data-cardholder"], "tags": ["payments", "data"] },
-    { "id": "evt-org-legacy-inventory", "type": "discovery", "title": "Nobody can say what is in the legacy data centre", "from": "Stefan Alvarez, Head of Security Architecture", "body": "Three asset lists disagree on how many systems remain in the legacy estate. The range is between 60 and 140. Two of them are in the backup schedule. We think.", "priority": "notable", "availableFromDay": 44, "conditions": [], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-legacy-inventory", "note": "Architecture review" }, { "type": "node.reveal", "nodeId": "node-dc-legacy", "confidence": 0.6 }], "relatedNodeIds": ["node-dc-legacy"], "tags": ["legacy", "discovery"] },
-    { "id": "evt-org-programme-blocked", "type": "programme", "title": "A programme has stalled", "from": "Stefan Alvarez, Head of Security Architecture", "body": "One of your programmes has not moved in three weeks. The blocker is not technical and it is not money. It needs somebody senior to make a decision.", "priority": "notable", "availableFromDay": 60, "conditions": [{ "kind": "programme.anyActive" }], "weight": 10, "pinned": false, "oncePerCampaign": false, "cooldownDays": 60, "relatedNodeIds": [], "tags": ["programme"] },
-    { "id": "evt-org-programme-win", "type": "programme", "title": "A programme is ahead of plan", "from": "Callum Reid, Head of Security Engineering", "body": "We are ahead on delivery for once. The team would like that noticed before it is quietly absorbed into the next set of expectations.", "priority": "routine", "availableFromDay": 120, "conditions": [{ "kind": "programme.anyActive" }], "weight": 8, "pinned": false, "oncePerCampaign": false, "cooldownDays": 90, "effectsOnReveal": [{ "type": "team.morale", "delta": 0.05 }], "relatedNodeIds": [], "tags": ["programme"] },
-    { "id": "evt-org-control-drift", "type": "programme", "title": "Coverage has quietly gone backwards", "from": "Callum Reid, Head of Security Engineering", "body": "Endpoint coverage has slipped four points this quarter. Nothing broke. The estate simply grew faster than deployment did.", "priority": "routine", "availableFromDay": 150, "conditions": [], "weight": 9, "pinned": false, "oncePerCampaign": false, "cooldownDays": 100, "effectsOnReveal": [{ "type": "control.coverage", "controlId": "ctl-edr", "delta": -0.03 }], "relatedNodeIds": [], "tags": ["programme"] },
-    { "id": "evt-org-tooling-overlap", "type": "programme", "title": "Two tools doing the same job", "from": "Nadia Farrell, Procurement", "body": "We appear to be paying for two products that do broadly the same thing, bought by different teams eighteen months apart.", "priority": "routine", "availableFromDay": 135, "conditions": [], "weight": 7, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "budget.change", "amount": 90, "note": "A duplicate tool has been cancelled." }], "relatedNodeIds": [], "tags": ["budget"] },
-    { "id": "evt-org-new-starter", "type": "people", "title": "A new starter, and a reminder", "from": "Callum Reid, Head of Security Engineering", "body": "Our new identity engineer starts on Monday. They will take about two months to be useful, which is worth remembering before we commit them to anything.", "priority": "routine", "availableFromDay": 90, "conditions": [], "weight": 7, "pinned": false, "oncePerCampaign": false, "cooldownDays": 120, "relatedNodeIds": [], "tags": ["team"] },
-    { "id": "evt-org-assumption-prompt", "type": "assumption", "title": "An assumption is due for review", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "Several of the assumptions behind decisions taken earlier this year are now past their review date. They may still hold. Somebody should check rather than hope.", "priority": "notable", "availableFromDay": 120, "conditions": [], "weight": 9, "pinned": false, "oncePerCampaign": false, "cooldownDays": 70, "relatedNodeIds": [], "tags": ["governance"] },
-    { "id": "evt-org-post-incident", "type": "incident", "title": "What do we do with what we learned?", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "The incident is closed and the reconstruction is written. How we present it will decide whether anything actually changes.", "priority": "urgent", "availableFromDay": 30, "conditions": [{ "kind": "incident.resolvedCountAtLeast", "value": 1 }], "weight": 30, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-post-incident", "relatedNodeIds": [], "tags": ["incident"] },
-    { "id": "evt-org-programme-tradeoff", "type": "programme", "title": "Two programmes, one architecture team", "from": "Stefan Alvarez, Head of Security Architecture", "body": "Identity and segmentation both need my people this quarter. Running both properly is not possible. Running both badly is, and I would rather not.", "priority": "notable", "availableFromDay": 100, "conditions": [{ "kind": "programme.status", "programmeId": "prog-identity", "status": "active" }, { "kind": "programme.status", "programmeId": "prog-segmentation", "status": "active" }], "weight": 22, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-programme-tradeoff", "relatedNodeIds": [], "tags": ["programme"] },
-    { "id": "evt-org-board-risk-unseen", "type": "board", "title": "A material risk the board has not seen", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "We are holding an assessment at severe residual exposure that the board has never been shown. The next scheduled committee is six weeks away.", "priority": "urgent", "availableFromDay": 70, "conditions": [{ "kind": "risk.openCountAtLeast", "value": 2 }], "weight": 15, "pinned": false, "oncePerCampaign": true, "decisionId": "dec-board-material-risk", "relatedNodeIds": [], "tags": ["board"] },
-    { "id": "evt-org-jo-observation", "type": "people", "title": "An observation from your SOC lead", "from": "Jo Mbeki, Head of Security Operations", "body": "Something I have noticed: we spend most of our time on the estate we can see, which is the estate that was built recently and properly. The parts I worry about are the parts we have no telemetry for, so they never appear on any of our reports.", "priority": "routine", "availableFromDay": 65, "conditions": [], "weight": 9, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-soc-coverage-gap", "note": "Security operations" }], "relatedNodeIds": [], "tags": ["detection"] },
-    { "id": "evt-org-pam-adoption", "type": "discovery", "title": "The privileged vault covers a third of administrators", "from": "Callum Reid, Head of Security Engineering", "body": "The vault was bought two years ago and deployed to about a third of administrators. Adoption stopped at the point the infrastructure team objected to session recording, and nobody pushed.", "priority": "notable", "availableFromDay": 32, "conditions": [], "weight": 13, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-pam-adoption", "note": "Identity engineering" }], "relatedNodeIds": ["node-pam"], "tags": ["identity", "privileged"] },
-    { "id": "evt-org-pipeline-credentials", "type": "discovery", "title": "One credential, forty repositories", "from": "Callum Reid, Head of Security Engineering", "body": "The build pipeline authenticates to production with a single long-lived credential shared across forty repositories. Anyone who can influence a build can reach production.", "priority": "urgent", "availableFromDay": 110, "conditions": [{ "kind": "node.discovered", "nodeId": "node-ci-pipeline" }], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-pipeline-credentials", "note": "Security engineering" }, { "type": "edge.reveal", "edgeId": "edge-ci-cloud" }], "relatedNodeIds": ["node-ci-pipeline"], "tags": ["engineering", "cloud"] },
-    { "id": "evt-org-mgmt-servers", "type": "discovery", "title": "The jump servers sit on the corporate network", "from": "Stefan Alvarez, Head of Security Architecture", "body": "Production administration runs through jump servers that sit on the same network as staff laptops. A phished laptop and an administrative session are two steps apart, not ten.", "priority": "urgent", "availableFromDay": 75, "conditions": [{ "kind": "edge.exists", "edgeId": "edge-mgmt-corp" }], "weight": 12, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-pen-test-segmentation", "note": "Architecture review" }, { "type": "edge.reveal", "edgeId": "edge-mgmt-corp" }, { "type": "node.reveal", "nodeId": "node-mgmt-server", "confidence": 0.85 }], "relatedNodeIds": ["node-mgmt-server", "node-net-corp"], "tags": ["network", "privileged"] },
-    { "id": "evt-org-backup-legacy-gap", "type": "discovery", "title": "Some legacy systems are not backed up at all", "from": "Jo Mbeki, Head of Security Operations", "body": "A sample showed 23 legacy systems outside the central backup schedule, including two that support despatch. The systems least able to defend themselves are also the least recoverable.", "priority": "urgent", "availableFromDay": 115, "conditions": [{ "kind": "node.discovered", "nodeId": "node-dc-legacy" }], "weight": 11, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "evidence.reveal", "evidenceId": "ev-backup-coverage-gap", "note": "Recovery review" }], "relatedNodeIds": ["node-dc-legacy", "node-backup"], "tags": ["recovery", "legacy"] },
-    { "id": "evt-org-quiet-week", "type": "people", "title": "A quiet week", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "Nothing to escalate this week. Worth noting, because it does not happen often and because it is the right time to do something you have been putting off.", "priority": "routine", "availableFromDay": 30, "conditions": [{ "kind": "incident.none" }], "weight": 10, "pinned": false, "oncePerCampaign": false, "cooldownDays": 55, "relatedNodeIds": [], "tags": ["quiet"] },
-    { "id": "evt-org-register-cleanup", "type": "programme", "title": "The risk register has been rewritten", "from": "Fenella Osei, Head of Cyber Risk and Governance", "body": "I have closed eleven inherited entries that described systems we no longer run, and rewritten the rest as scenarios rather than findings. It reads like a description of this business now.", "priority": "routine", "availableFromDay": 110, "conditions": [{ "kind": "risk.openCountAtLeast", "value": 3 }], "weight": 9, "pinned": false, "oncePerCampaign": true, "effectsOnReveal": [{ "type": "board.confidence", "delta": 0.03 }, { "type": "stakeholder.trust", "stakeholderId": "stk-board", "delta": 0.04, "reason": "The risk register now describes the business as it is." }], "relatedNodeIds": [], "tags": ["governance"] }
+    {
+      "id": "evt-org-vacancy-pressure",
+      "type": "people",
+      "title": "Two vacancies, six months open",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Both identity engineering roles are still open. We have been covering with the people we have, and it is starting to show in what we can commit to.",
+      "priority": "notable",
+      "availableFromDay": 18,
+      "conditions": [],
+      "weight": 13,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-hire-or-outsource",
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-team-vacancies",
+          "note": "Security engineering"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "team"
+      ]
+    },
+    {
+      "id": "evt-org-team-overload",
+      "type": "people",
+      "title": "The team is past sustainable load",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "I need to be straight with you. We are running above what the team can sustain and have been for a while. If you add anything else, something already committed will slip, and I would rather choose which.",
+      "priority": "urgent",
+      "availableFromDay": 40,
+      "conditions": [
+        {
+          "kind": "team.capacityBandAtLeast",
+          "band": "stretched"
+        }
+      ],
+      "weight": 20,
+      "pinned": true,
+      "oncePerCampaign": false,
+      "cooldownDays": 90,
+      "decisionId": "dec-team-overload",
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-team-burnout",
+          "note": "Security operations"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "team"
+      ]
+    },
+    {
+      "id": "evt-org-morale-low",
+      "type": "people",
+      "title": "Someone is thinking of leaving",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "One of the senior analysts has been approached and is considering it. They have not said so directly, which is how these things usually surface.",
+      "priority": "notable",
+      "availableFromDay": 70,
+      "conditions": [
+        {
+          "kind": "team.moraleBelow",
+          "value": 0.42
+        }
+      ],
+      "weight": 14,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 80,
+      "relatedNodeIds": [],
+      "tags": [
+        "team"
+      ]
+    },
+    {
+      "id": "evt-org-good-delegation",
+      "type": "people",
+      "title": "Your architecture lead went further than asked",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "While mapping dependencies I also pulled the firewall rule base. There are rules between the legacy estate and production that nobody can account for. I have documented them.",
+      "priority": "notable",
+      "availableFromDay": 45,
+      "conditions": [
+        {
+          "kind": "node.discovered",
+          "nodeId": "node-dc-legacy"
+        }
+      ],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-legacy-routable",
+          "note": "Security architecture"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-legacy-to-core"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-dc-legacy"
+      ],
+      "tags": [
+        "discovery",
+        "architecture"
+      ]
+    },
+    {
+      "id": "evt-org-doc-contradiction",
+      "type": "discovery",
+      "title": "Two documents, two different answers",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "The architecture pack says the legacy estate is fully segregated from production. The firewall rule base says otherwise. Both are current documents.",
+      "priority": "notable",
+      "availableFromDay": 50,
+      "conditions": [],
+      "weight": 11,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-legacy-isolated-claim",
+          "note": "Architecture review"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-dc-legacy"
+      ],
+      "tags": [
+        "discovery",
+        "legacy"
+      ]
+    },
+    {
+      "id": "evt-org-supplier-questionnaire",
+      "type": "supplier",
+      "title": "Corvus returns a clean questionnaire",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Corvus has returned the annual assurance questionnaire fully compliant, including enforced multi-factor authentication for all privileged access.\n\nI would like to believe it. I have not tested it.",
+      "priority": "routine",
+      "availableFromDay": 30,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-supplier-questionnaire-clean",
+          "note": "Supplier assurance"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-sup-msp"
+      ],
+      "tags": [
+        "supplier",
+        "assurance"
+      ]
+    },
+    {
+      "id": "evt-org-supplier-contradiction",
+      "type": "supplier",
+      "title": "The questionnaire was wrong",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Corvus told us their privileged access enforces multi-factor authentication. I checked the remote access configuration this morning. It does not, and it never has.",
+      "priority": "urgent",
+      "availableFromDay": 55,
+      "conditions": [
+        {
+          "kind": "evidence.known",
+          "evidenceId": "ev-supplier-questionnaire-clean"
+        },
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "evidence.tagKnown",
+              "tag": "supplier"
+            },
+            {
+              "kind": "control.coverageBelow",
+              "controlId": "ctl-3p-access",
+              "value": 0.45
+            }
+          ]
+        }
+      ],
+      "weight": 16,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-msp-no-mfa",
+          "note": "Security engineering"
+        },
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-msp-standing-access",
+          "note": "Security engineering"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-msp-admins-identity"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-sup-msp",
+        "node-net-remote"
+      ],
+      "tags": [
+        "supplier",
+        "identity"
+      ]
+    },
+    {
+      "id": "evt-org-msp-decision",
+      "type": "supplier",
+      "title": "What do we do about standing supplier access?",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "We now have it documented: fourteen permanent privileged accounts belonging to Corvus, no expiry, no second factor. Procurement will help if we give them something specific. Operations will resist anything that touches night cover.",
+      "priority": "urgent",
+      "availableFromDay": 58,
+      "conditions": [
+        {
+          "kind": "evidence.known",
+          "evidenceId": "ev-msp-standing-access"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-msp-access",
+      "relatedNodeIds": [
+        "node-sup-msp",
+        "node-idp"
+      ],
+      "tags": [
+        "supplier",
+        "identity"
+      ]
+    },
+    {
+      "id": "evt-org-hr-provider-incident",
+      "type": "supplier",
+      "title": "People Cloud discloses an incident",
+      "from": "Ruth Ahmadi, General Counsel",
+      "body": "Our HR provider has notified customers of unauthorised access to a support system. The notification is vague about scope and firm about there being no evidence of customer data access.",
+      "priority": "notable",
+      "availableFromDay": 88,
+      "conditions": [],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-hr-provider-incident",
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-hr-saas-breach-notice",
+          "note": "Supplier notification"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-sup-hr"
+      ],
+      "tags": [
+        "supplier",
+        "privacy"
+      ]
+    },
+    {
+      "id": "evt-org-logistics-integration",
+      "type": "supplier",
+      "title": "The logistics integration has write access",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Lattice Logistics' integration account can write to and delete records in order management. The integration only ever needed to read them.",
+      "priority": "notable",
+      "availableFromDay": 95,
+      "conditions": [
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "evidence.tagKnown",
+              "tag": "supplier"
+            },
+            {
+              "kind": "node.discovered",
+              "nodeId": "node-app-portal"
+            }
+          ]
+        }
+      ],
+      "weight": 11,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-logistics-integration",
+          "note": "Supplier review"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-logistics-oms"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-sup-logistics",
+        "node-app-orders"
+      ],
+      "tags": [
+        "supplier"
+      ]
+    },
+    {
+      "id": "evt-org-vuln-volume",
+      "type": "discovery",
+      "title": "6,283 critical vulnerabilities",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The number people keep quoting at you is real. It is also close to meaningless: about a third sit on an isolated development cluster with no inbound routes and no real data.\n\nEleven of them are on internet-facing services. Those are the ones I would look at.",
+      "priority": "notable",
+      "availableFromDay": 8,
+      "conditions": [],
+      "weight": 18,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-vuln-volume",
+          "note": "Vulnerability management"
+        },
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-vuln-dev-cluster",
+          "note": "Vulnerability management"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-cloud-dev"
+      ],
+      "tags": [
+        "discovery",
+        "vulnerability"
+      ]
+    },
+    {
+      "id": "evt-org-patch-backlog",
+      "type": "programme",
+      "title": "Remediation is the constraint, not detection",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Median time to remediate a critical finding on production is 94 days. We are very good at finding things. We are not resourced to fix them.",
+      "priority": "routine",
+      "availableFromDay": 60,
+      "conditions": [],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-patch-slow",
+          "note": "Security engineering"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "vulnerability"
+      ]
+    },
+    {
+      "id": "evt-org-backup-test",
+      "type": "programme",
+      "title": "The last restore test was abandoned",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "I went looking for the last recovery test report. The test was abandoned after eleven hours and the report was never reissued. Fourteen months ago.",
+      "priority": "urgent",
+      "availableFromDay": 35,
+      "conditions": [],
+      "weight": 14,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-backup-test-failed",
+          "note": "Security operations"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-backup"
+      ],
+      "tags": [
+        "recovery"
+      ]
+    },
+    {
+      "id": "evt-org-backup-credentials",
+      "type": "discovery",
+      "title": "Backups share credentials with what they protect",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "The backup platform is administered with the same privileged accounts as the systems it backs up. An actor with production administration would be able to remove the recovery path and the systems together.",
+      "priority": "urgent",
+      "availableFromDay": 70,
+      "conditions": [
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "evidence.tagKnown",
+              "tag": "recovery"
+            },
+            {
+              "kind": "node.discovered",
+              "nodeId": "node-mgmt-server"
+            }
+          ]
+        }
+      ],
+      "weight": 13,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-backup-same-credentials",
+          "note": "Architecture review"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-backup"
+      ],
+      "tags": [
+        "recovery",
+        "privileged"
+      ]
+    },
+    {
+      "id": "evt-org-ir-plan",
+      "type": "programme",
+      "title": "The incident response plan names someone who left",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "The plan names an incident commander who left in March. It has not been exercised in two years. If something happens tomorrow, we will be inventing the process while using it.",
+      "priority": "notable",
+      "availableFromDay": 42,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-ir-untested",
+          "note": "Security operations"
+        },
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-no-retainer",
+          "note": "Security operations"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "recovery",
+        "incident"
+      ]
+    },
+    {
+      "id": "evt-org-cloud-public-bucket",
+      "type": "discovery",
+      "title": "Publicly readable storage in production",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Two storage buckets in the production tenancy permit anonymous read. One contains application logs including session identifiers. They have been like this for at least seven months.",
+      "priority": "urgent",
+      "availableFromDay": 38,
+      "conditions": [],
+      "weight": 13,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-cloud-public-storage",
+          "note": "Cloud review"
+        },
+        {
+          "type": "node.exposure",
+          "nodeId": "node-cloud-prod",
+          "delta": 0.04
+        }
+      ],
+      "relatedNodeIds": [
+        "node-cloud-prod"
+      ],
+      "tags": [
+        "cloud",
+        "discovery"
+      ]
+    },
+    {
+      "id": "evt-org-cloud-peering",
+      "type": "discovery",
+      "title": "A peering link nobody remembers creating",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "There is a network peering link between the development and production cloud tenancies. It was created for a migration in 2023. The migration finished. The link did not go away.",
+      "priority": "urgent",
+      "availableFromDay": 85,
+      "conditions": [
+        {
+          "kind": "edge.exists",
+          "edgeId": "edge-devcloud-prod"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-cloud-peering",
+          "note": "Architecture review"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-devcloud-prod"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-cloud-dev",
+        "node-cloud-prod"
+      ],
+      "tags": [
+        "cloud",
+        "discovery"
+      ]
+    },
+    {
+      "id": "evt-org-k8s-permissions",
+      "type": "discovery",
+      "title": "Container workloads can read the customer store",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Workloads on the shared cluster inherit a platform role with broad read access to production data stores. Any compromised workload becomes a data problem.",
+      "priority": "notable",
+      "availableFromDay": 105,
+      "conditions": [],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-k8s-permissions",
+          "note": "Cloud review"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-k8s",
+        "node-data-pii"
+      ],
+      "tags": [
+        "cloud",
+        "data"
+      ]
+    },
+    {
+      "id": "evt-org-service-accounts",
+      "type": "discovery",
+      "title": "412 service accounts, no owners",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "412 non-human accounts. 78 have passwords older than five years. 31 hold privileged rights. Nobody owns them, which means nobody can safely remove them.",
+      "priority": "notable",
+      "availableFromDay": 48,
+      "conditions": [],
+      "weight": 13,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-service-accounts",
+          "note": "Identity engineering"
+        },
+        {
+          "type": "node.reveal",
+          "nodeId": "node-svc-accounts",
+          "confidence": 0.7
+        }
+      ],
+      "relatedNodeIds": [
+        "node-svc-accounts"
+      ],
+      "tags": [
+        "identity",
+        "discovery"
+      ]
+    },
+    {
+      "id": "evt-org-mfa-exceptions",
+      "type": "discovery",
+      "title": "The MFA exception register",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "214 accounts sit on the multi-factor exception register. Most were granted as temporary. The oldest is three years old. Nineteen of them are administrative.",
+      "priority": "urgent",
+      "availableFromDay": 26,
+      "conditions": [],
+      "weight": 15,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-mfa-exceptions",
+          "note": "Identity engineering"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-idp"
+      ],
+      "tags": [
+        "identity",
+        "discovery"
+      ]
+    },
+    {
+      "id": "evt-org-portal-directory",
+      "type": "discovery",
+      "title": "Partner accounts live in the staff directory",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Partner identities for the extranet are held in the same identity platform, and the same tenant, as employee accounts. A partner credential compromise starts from inside our identity boundary.",
+      "priority": "urgent",
+      "availableFromDay": 80,
+      "conditions": [
+        {
+          "kind": "edge.exists",
+          "edgeId": "edge-portal-idp"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-portal-shared-directory",
+          "note": "Architecture review"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-portal-idp"
+        },
+        {
+          "type": "node.reveal",
+          "nodeId": "node-app-portal",
+          "confidence": 0.8
+        }
+      ],
+      "relatedNodeIds": [
+        "node-app-portal",
+        "node-idp"
+      ],
+      "tags": [
+        "identity",
+        "third-party"
+      ]
+    },
+    {
+      "id": "evt-org-access-review-failed",
+      "type": "discovery",
+      "title": "An access review failed",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "A sample access review on order management found nine leavers with active accounts and two accounts with rights nobody could explain. The reviewer had approved the previous round without reading it.",
+      "priority": "notable",
+      "availableFromDay": 52,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-failed-access-review",
+          "note": "Cyber risk"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-app-orders"
+      ],
+      "tags": [
+        "identity",
+        "governance"
+      ]
+    },
+    {
+      "id": "evt-org-data-retention",
+      "type": "discovery",
+      "title": "Closed-account data is being kept indefinitely",
+      "from": "Ruth Ahmadi, General Counsel",
+      "body": "Records for closed accounts are retained indefinitely in the analytics estate, contrary to our published retention policy. I have been told this is a technical limitation. I do not believe that is the whole story.",
+      "priority": "notable",
+      "availableFromDay": 100,
+      "conditions": [],
+      "weight": 11,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-data-retention",
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-data-retention",
+          "note": "Legal"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-data-pii",
+        "node-data-analytics"
+      ],
+      "tags": [
+        "data",
+        "privacy"
+      ]
+    },
+    {
+      "id": "evt-org-cardholder-scope",
+      "type": "discovery",
+      "title": "Card data outside the payment environment",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "A discovery scan found unencrypted card data in two application log stores outside the defined payment environment. The regulated boundary is wider than the one we have been describing.",
+      "priority": "urgent",
+      "availableFromDay": 92,
+      "conditions": [],
+      "weight": 11,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-cardholder-scope",
+          "note": "Cyber risk"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-data-cardholder"
+      ],
+      "tags": [
+        "payments",
+        "data"
+      ]
+    },
+    {
+      "id": "evt-org-legacy-inventory",
+      "type": "discovery",
+      "title": "Nobody can say what is in the legacy data centre",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Three asset lists disagree on how many systems remain in the legacy estate. The range is between 60 and 140. Two of them are in the backup schedule. We think.",
+      "priority": "notable",
+      "availableFromDay": 44,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-legacy-inventory",
+          "note": "Architecture review"
+        },
+        {
+          "type": "node.reveal",
+          "nodeId": "node-dc-legacy",
+          "confidence": 0.6
+        }
+      ],
+      "relatedNodeIds": [
+        "node-dc-legacy"
+      ],
+      "tags": [
+        "legacy",
+        "discovery"
+      ]
+    },
+    {
+      "id": "evt-org-programme-blocked",
+      "type": "programme",
+      "title": "A programme has stalled",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "One of your programmes has not moved in three weeks. The blocker is not technical and it is not money. It needs somebody senior to make a decision.",
+      "priority": "notable",
+      "availableFromDay": 60,
+      "conditions": [
+        {
+          "kind": "programme.anyActive"
+        }
+      ],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 60,
+      "relatedNodeIds": [],
+      "tags": [
+        "programme"
+      ]
+    },
+    {
+      "id": "evt-org-programme-win",
+      "type": "programme",
+      "title": "A programme is ahead of plan",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "We are ahead on delivery for once. The team would like that noticed before it is quietly absorbed into the next set of expectations.",
+      "priority": "routine",
+      "availableFromDay": 120,
+      "conditions": [
+        {
+          "kind": "programme.anyActive"
+        }
+      ],
+      "weight": 8,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 90,
+      "effectsOnReveal": [
+        {
+          "type": "team.morale",
+          "delta": 0.05
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "programme"
+      ]
+    },
+    {
+      "id": "evt-org-control-drift",
+      "type": "programme",
+      "title": "Coverage has quietly gone backwards",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Endpoint coverage has slipped four points this quarter. Nothing broke. The estate simply grew faster than deployment did.",
+      "priority": "routine",
+      "availableFromDay": 150,
+      "conditions": [],
+      "weight": 9,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 100,
+      "effectsOnReveal": [
+        {
+          "type": "control.coverage",
+          "controlId": "ctl-edr",
+          "delta": -0.03
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "programme"
+      ]
+    },
+    {
+      "id": "evt-org-tooling-overlap",
+      "type": "programme",
+      "title": "Two tools doing the same job",
+      "from": "Nadia Farrell, Procurement",
+      "body": "We appear to be paying for two products that do broadly the same thing, bought by different teams eighteen months apart.",
+      "priority": "routine",
+      "availableFromDay": 135,
+      "conditions": [],
+      "weight": 7,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "budget.change",
+          "amount": 90,
+          "note": "A duplicate tool has been cancelled."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "budget"
+      ]
+    },
+    {
+      "id": "evt-org-new-starter",
+      "type": "people",
+      "title": "A new starter, and a reminder",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Our new identity engineer starts on Monday. They will take about two months to be useful, which is worth remembering before we commit them to anything.",
+      "priority": "routine",
+      "availableFromDay": 90,
+      "conditions": [],
+      "weight": 7,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 120,
+      "relatedNodeIds": [],
+      "tags": [
+        "team"
+      ]
+    },
+    {
+      "id": "evt-org-assumption-prompt",
+      "type": "assumption",
+      "title": "An assumption is due for review",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Several of the assumptions behind decisions taken earlier this year are now past their review date. They may still hold. Somebody should check rather than hope.",
+      "priority": "notable",
+      "availableFromDay": 120,
+      "conditions": [],
+      "weight": 9,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 70,
+      "relatedNodeIds": [],
+      "tags": [
+        "governance"
+      ]
+    },
+    {
+      "id": "evt-org-post-incident",
+      "type": "incident",
+      "title": "What do we do with what we learned?",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The incident is closed and the reconstruction is written. How we present it will decide whether anything actually changes.",
+      "priority": "urgent",
+      "availableFromDay": 30,
+      "conditions": [
+        {
+          "kind": "incident.resolvedCountAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-post-incident",
+      "relatedNodeIds": [],
+      "tags": [
+        "incident"
+      ]
+    },
+    {
+      "id": "evt-org-programme-tradeoff",
+      "type": "programme",
+      "title": "Two programmes, one architecture team",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Identity and segmentation both need my people this quarter. Running both properly is not possible. Running both badly is, and I would rather not.",
+      "priority": "notable",
+      "availableFromDay": 100,
+      "conditions": [
+        {
+          "kind": "programme.status",
+          "programmeId": "prog-identity",
+          "status": "active"
+        },
+        {
+          "kind": "programme.status",
+          "programmeId": "prog-segmentation",
+          "status": "active"
+        }
+      ],
+      "weight": 22,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-programme-tradeoff",
+      "relatedNodeIds": [],
+      "tags": [
+        "programme"
+      ]
+    },
+    {
+      "id": "evt-org-board-risk-unseen",
+      "type": "board",
+      "title": "A material risk the board has not seen",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "We are holding an assessment at severe residual exposure that the board has never been shown. The next scheduled committee is six weeks away.",
+      "priority": "urgent",
+      "availableFromDay": 70,
+      "conditions": [
+        {
+          "kind": "risk.openCountAtLeast",
+          "value": 2
+        }
+      ],
+      "weight": 15,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "decisionId": "dec-board-material-risk",
+      "relatedNodeIds": [],
+      "tags": [
+        "board"
+      ]
+    },
+    {
+      "id": "evt-org-jo-observation",
+      "type": "people",
+      "title": "An observation from your SOC lead",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Something I have noticed: we spend most of our time on the estate we can see, which is the estate that was built recently and properly. The parts I worry about are the parts we have no telemetry for, so they never appear on any of our reports.",
+      "priority": "routine",
+      "availableFromDay": 65,
+      "conditions": [],
+      "weight": 9,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-soc-coverage-gap",
+          "note": "Security operations"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "detection"
+      ]
+    },
+    {
+      "id": "evt-org-pam-adoption",
+      "type": "discovery",
+      "title": "The privileged vault covers a third of administrators",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The vault was bought two years ago and deployed to about a third of administrators. Adoption stopped at the point the infrastructure team objected to session recording, and nobody pushed.",
+      "priority": "notable",
+      "availableFromDay": 32,
+      "conditions": [],
+      "weight": 13,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-pam-adoption",
+          "note": "Identity engineering"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-pam"
+      ],
+      "tags": [
+        "identity",
+        "privileged"
+      ]
+    },
+    {
+      "id": "evt-org-pipeline-credentials",
+      "type": "discovery",
+      "title": "One credential, forty repositories",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The build pipeline authenticates to production with a single long-lived credential shared across forty repositories. Anyone who can influence a build can reach production.",
+      "priority": "urgent",
+      "availableFromDay": 110,
+      "conditions": [
+        {
+          "kind": "node.discovered",
+          "nodeId": "node-ci-pipeline"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-pipeline-credentials",
+          "note": "Security engineering"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-ci-cloud"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-ci-pipeline"
+      ],
+      "tags": [
+        "engineering",
+        "cloud"
+      ]
+    },
+    {
+      "id": "evt-org-mgmt-servers",
+      "type": "discovery",
+      "title": "The jump servers sit on the corporate network",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "Production administration runs through jump servers that sit on the same network as staff laptops. A phished laptop and an administrative session are two steps apart, not ten.",
+      "priority": "urgent",
+      "availableFromDay": 75,
+      "conditions": [
+        {
+          "kind": "edge.exists",
+          "edgeId": "edge-mgmt-corp"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-pen-test-segmentation",
+          "note": "Architecture review"
+        },
+        {
+          "type": "edge.reveal",
+          "edgeId": "edge-mgmt-corp"
+        },
+        {
+          "type": "node.reveal",
+          "nodeId": "node-mgmt-server",
+          "confidence": 0.85
+        }
+      ],
+      "relatedNodeIds": [
+        "node-mgmt-server",
+        "node-net-corp"
+      ],
+      "tags": [
+        "network",
+        "privileged"
+      ]
+    },
+    {
+      "id": "evt-org-backup-legacy-gap",
+      "type": "discovery",
+      "title": "Some legacy systems are not backed up at all",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "A sample showed 23 legacy systems outside the central backup schedule, including two that support despatch. The systems least able to defend themselves are also the least recoverable.",
+      "priority": "urgent",
+      "availableFromDay": 115,
+      "conditions": [
+        {
+          "kind": "node.discovered",
+          "nodeId": "node-dc-legacy"
+        }
+      ],
+      "weight": 11,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-backup-coverage-gap",
+          "note": "Recovery review"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-dc-legacy",
+        "node-backup"
+      ],
+      "tags": [
+        "recovery",
+        "legacy"
+      ]
+    },
+    {
+      "id": "evt-org-quiet-week",
+      "type": "people",
+      "title": "A quiet week",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Nothing to escalate this week. Worth noting, because it does not happen often and because it is the right time to do something you have been putting off.",
+      "priority": "routine",
+      "availableFromDay": 30,
+      "conditions": [
+        {
+          "kind": "incident.none"
+        }
+      ],
+      "weight": 10,
+      "pinned": false,
+      "oncePerCampaign": false,
+      "cooldownDays": 55,
+      "relatedNodeIds": [],
+      "tags": [
+        "quiet"
+      ]
+    },
+    {
+      "id": "evt-org-register-cleanup",
+      "type": "programme",
+      "title": "The risk register has been rewritten",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "I have closed eleven inherited entries that described systems we no longer run, and rewritten the rest as scenarios rather than findings. It reads like a description of this business now.",
+      "priority": "routine",
+      "availableFromDay": 110,
+      "conditions": [
+        {
+          "kind": "risk.openCountAtLeast",
+          "value": 3
+        }
+      ],
+      "weight": 9,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "board.confidence",
+          "delta": 0.03
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": 0.04,
+          "reason": "The risk register now describes the business as it is."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "governance"
+      ]
+    }
   ]
 }

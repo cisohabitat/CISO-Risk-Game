@@ -13,7 +13,7 @@ import { applyDrift } from '../controls/effectiveness'
 import { maintainedControlIds, tickProgrammes } from '../programmes/progression'
 import { recoverServiceHealth, tickObjectives } from '../business/objectives'
 import { tickAssignments } from '../team/assignments'
-import { updateTeamWellbeing } from '../team/capacity'
+import { refreshCommittedCapacity, updateTeamWellbeing } from '../team/capacity'
 import { tickRelationships } from '../stakeholders/relationships'
 import { tickAssumptions } from '../assumptions/validation'
 import { driftSectorPressure, tickThreats } from '../threats/engine'
@@ -137,7 +137,10 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     highlights.push(`${delayed.title} has slipped by ${delayed.days} day${delayed.days === 1 ? '' : 's'}.`)
   }
 
-  // 7. Team workload and morale.
+  // 7. Team workload and morale. Committed capacity is recomputed first, from
+  // the work that actually exists, so strain reflects assignments and live
+  // programmes competing for the same people.
+  refreshCommittedCapacity(state, index)
   updateTeamWellbeing(state)
 
   // 8. Stakeholders.

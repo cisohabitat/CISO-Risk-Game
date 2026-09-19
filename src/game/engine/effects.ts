@@ -315,8 +315,10 @@ export function applyEffect(
       break
     }
     case 'team.workload': {
+      // Committed capacity is derived from real work, so unplanned load is
+      // modelled as a surge that decays rather than a permanent commitment.
       const fn = state.team.functions[effect.fn]
-      if (fn) fn.committed = Math.max(0, fn.committed + effect.delta)
+      if (fn) fn.surge = Math.max(0, (fn.surge ?? 0) + effect.delta)
       break
     }
     case 'leader.morale': {

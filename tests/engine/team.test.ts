@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { capacityBand, delegationQuality, teamStrain, updateTeamWellbeing } from '@/game/team/capacity'
+import { CYBER_FUNCTIONS } from '@/game/types'
 import { relationshipBand, supportLikelihood } from '@/game/stakeholders/relationships'
 import { computeStaffing, deliveryConfidence } from '@/game/programmes/progression'
 import { testIndex } from './helpers'
@@ -35,7 +36,12 @@ describe('team and delegation', () => {
     const def = index.programme.get('prog-identity')!
     applyAction(staffed, index, { type: 'startProgramme', programmeId: 'prog-identity', budget: def.budgetCost })
     applyAction(starved, index, { type: 'startProgramme', programmeId: 'prog-identity', budget: def.budgetCost })
-    for (const fn of Object.values(starved.team.functions)) fn.committed = fn.capacity
+    // Starve it with real competing work rather than by poking the counter:
+    // every other programme is running and holding the same people.
+    for (const other of index.content.programmes) {
+      if (other.id === 'prog-identity') continue
+      starved.programmes.programmes[other.id]!.status = 'active'
+    }
     expect(computeStaffing(starved, index, starved.programmes.programmes['prog-identity']!)).toBeLessThan(
       computeStaffing(staffed, index, staffed.programmes.programmes['prog-identity']!),
     )
@@ -91,5 +97,101 @@ describe('stakeholders', () => {
     const memory = state.stakeholders.stakeholders['stk-coo']!.memory
     expect(memory.length).toBeGreaterThan(0)
     expect(memory[0]!.day).toBe(state.currentDay)
+  })
+})
+
+describe('capacity is consumed by the work that actually exists', () => {
+  it('holds people for as long as a programme runs', () => {
+    // The original bug: programmes declared a capacity demand but never
+    // occupied anyone, so "delegated work competes with programme delivery"
+    // was untrue and the team could never be overloaded.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'commit-1' })
+    const before = state.team.functions['iam']!.committed
+    const def = index.programme.get('prog-identity')!
+
+    applyAction(state, index, { type: 'startProgramme', programmeId: 'prog-identity', budget: def.budgetCost })
+    const committed = state.team.functions['iam']!.committed
+    expect(committed).toBeGreaterThan(before)
+    expect(committed).toBeCloseTo(def.capacityDemand.iam ?? 0, 5)
+
+    // Pausing gives them back; resuming takes them again.
+    applyAction(state, index, { type: 'setProgrammeStatus', programmeId: 'prog-identity', status: 'paused' })
+    expect(state.team.functions['iam']!.committed).toBeCloseTo(before, 5)
+    applyAction(state, index, { type: 'setProgrammeStatus', programmeId: 'prog-identity', status: 'active' })
+    expect(state.team.functions['iam']!.committed).toBeCloseTo(committed, 5)
+  })
+
+  it('counts a second commission against the first on the same day', () => {
+    // Derived capacity must be refreshed immediately, or same-day commissions
+    // are each checked against a figure that predates the last.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'commit-2' })
+    let accepted = 0
+    for (const investigation of index.content.investigations) {
+      if (
+        applyAction(state, index, {
+          type: 'startInvestigation',
+          investigationId: investigation.id,
+          leaderId: 'lead-grc',
+        }).ok
+      ) {
+        accepted += 1
+      }
+    }
+    for (const fn of CYBER_FUNCTIONS) {
+      const runtime = state.team.functions[fn]!
+      expect(runtime.committed, `${fn} is committed beyond its capacity`).toBeLessThanOrEqual(runtime.capacity + 1e-6)
+    }
+    expect(accepted).toBeGreaterThan(0)
+  })
+
+  it('reads strain from the most pressed function, not the average', () => {
+    // An IAM engineer cannot cover a SOC shift, so an average would hide the
+    // situation the player most needs to see.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'commit-3' })
+    for (const fn of CYBER_FUNCTIONS) state.team.functions[fn]!.committed = 0
+    const iam = state.team.functions['iam']!
+    iam.committed = iam.capacity
+
+    const strain = teamStrain(state)
+    const flatAverage =
+      CYBER_FUNCTIONS.reduce((sum, fn) => sum + state.team.functions[fn]!.committed, 0) /
+      CYBER_FUNCTIONS.reduce((sum, fn) => sum + state.team.functions[fn]!.capacity, 0)
+    expect(strain).toBeGreaterThan(flatAverage)
+    expect(capacityBand(strain)).not.toBe('available')
+  })
+
+  it('lets an over-committing player reach overload, and a restrained one not', () => {
+    const index = testIndex()
+    const peak = (everything: boolean) => {
+      const state = newGame(index, { seed: 'commit-4' })
+      let worst = 0
+      for (let day = 0; day < 240; day += 1) {
+        if (everything) {
+          for (const programme of index.content.programmes) {
+            applyAction(state, index, { type: 'startProgramme', programmeId: programme.id, budget: programme.budgetCost })
+          }
+          for (const investigation of index.content.investigations) {
+            applyAction(state, index, {
+              type: 'startInvestigation',
+              investigationId: investigation.id,
+              leaderId: index.content.leaders[day % 4]!.id,
+            })
+          }
+        }
+        runDays(state, index, 1)
+        worst = Math.max(worst, teamStrain(state))
+      }
+      return { worst, morale: Object.values(state.team.functions).reduce((s, f) => s + f.morale, 0) / 6 }
+    }
+
+    const restrained = peak(false)
+    const overcommitted = peak(true)
+    expect(capacityBand(restrained.worst)).toBe('available')
+    expect(['overloaded', 'breaking']).toContain(capacityBand(overcommitted.worst))
+    // Sustained overload must cost morale, not merely register on a gauge.
+    expect(overcommitted.morale).toBeLessThan(restrained.morale)
   })
 })

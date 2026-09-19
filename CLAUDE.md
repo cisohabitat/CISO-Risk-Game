@@ -49,18 +49,25 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 Measured, not yet fixed. Ranked.
 
-1. **Team capacity is close to inert.** Commissioning everything legal every day
-   for a year peaks at 0.81 strain (never "overloaded") and morale *rises*,
-   because recovery outpaces decline. `dec-team-overload` and
-   `evt-org-morale-low` are unreachable as a result.
-2. **Control drift is uniform and severe.** Every control loses 0.11–0.25
+1. **Control drift is uniform and severe.** Every control loses 0.11–0.25
    coverage over an idle year; IR readiness falls to 0.05. Worth retuning per
    control rather than a flat rate.
-3. **The annual review headline ignores the dimensions.** Three very different
+2. **The annual review headline ignores the dimensions.** Three very different
    strategies produced the same closing line, though the dimensions underneath
    differed correctly.
 
 ### Fixed
+
+- **Team capacity was close to inert** because only investigations ever
+  committed capacity — programmes declared a demand but never occupied anyone,
+  so "delegated work competes with programme delivery" was untrue. Committed
+  capacity is now derived each tick from running assignments *and* live
+  programmes, strain reads from the most pressed function rather than an
+  average that hid it, and morale declines faster than it recovers. A player who
+  commits to everything reaches overload and loses morale; a restrained one
+  stays sustainable. `dec-team-overload` and `evt-org-morale-low` now fire, and
+  delegated work returning late or thin roughly doubled. See
+  `src/game/team/capacity.ts`.
 
 - **Assumptions recorded when already false** used to invalidate on the next
   tick, so the game announced "the world changed" about something it had always
