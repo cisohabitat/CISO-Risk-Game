@@ -74,6 +74,24 @@ effects and, where the point is delayed consequence, `delayedEffects`. Set
 in the annual review. Attach `assumptionIds` where the option only makes sense if
 something stays true — the assumption engine will tell the player when it stops.
 
+**Do not name a function the engine chooses.** A decision that fires on team
+strain fires on whichever function is closest to breaking, and it was once
+authored as if that were always the SOC: over 92 firings it never was. Where an
+option acts on "the team under pressure", target `most-pressed` rather than a
+function id — `capacity.change`, `team.morale` and `team.workload` accept it as
+`fn`, and `leader.morale` accepts it as `leaderId`, resolving to that function's
+leader — and write the function into the text as `{{pressedFunction}}`, which
+the interface renders as its screen name. `work.stop` with `fn: "most-pressed"`
+is how "stop something" stops something: it abandons the newest enquiry on that
+function, or pauses its newest programme when no enquiry draws on it, and tells
+the player which.
+
+**A message that claims a state must test for it.** "A programme has stalled"
+used to fire on `programme.anyActive` and was true in 27 of 93 arrivals; "ahead
+of plan" was true in none, because a programme never outruns its plan. Gate on
+`programme.anyBlocked` or `programme.anyOnPlan`, and if no condition kind
+describes the state the message claims, add one before writing the message.
+
 ## Adding an assumption
 
 Add it to `risks.json` with a `validationRuleId`, then implement that rule in
