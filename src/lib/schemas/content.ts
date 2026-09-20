@@ -380,6 +380,7 @@ export const decisionSchema = z.object({
   deadlineDays: z.number().int().positive().optional(),
   defaultOptionId: id,
   requiresRationale: z.boolean(),
+  rationaleTagIds: z.array(id).min(2).optional(),
   relatedNodeIds: z.array(id),
   teaches: z.string().optional(),
   options: z.array(

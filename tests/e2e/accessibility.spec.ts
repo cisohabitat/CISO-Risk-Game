@@ -64,7 +64,9 @@ test.describe('accessibility', () => {
           const dialog = page.getByRole('dialog')
           await dialog.getByRole('radio').first().check()
           const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+          // A decision that does not offer that reason offers others; take the first.
           if (await tag.isVisible().catch(() => false)) await tag.click()
+          else await dialog.locator('button[aria-pressed]').first().click()
           const commit = dialog.getByRole('button', { name: /Commit to this/ })
           if (await commit.isVisible().catch(() => false)) await commit.click()
           await expect(dialog).toBeHidden()

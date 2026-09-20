@@ -307,7 +307,7 @@ describe('reviews', () => {
             type: 'resolveDecision',
             decisionId,
             optionId: def.options[0]!.id,
-            rationaleTagIds: ['rat-within-tolerance'],
+            rationaleTagIds: [def.rationaleTagIds?.[0] ?? 'rat-within-tolerance'],
           })
         }
         if (style === 'aims' && started < 2 && day > 5) {

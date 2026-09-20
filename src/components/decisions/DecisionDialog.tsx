@@ -27,7 +27,12 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
 
   if (!state || !decision) return null
 
-  const rationaleTags = index.content.rationaleTags
+  // Only the reasons this decision can be taken for. Offering the whole
+  // vocabulary put "residual risk is within tolerance" under "stand up
+  // incident command now", and the annual review read it back.
+  const rationaleTags = index.content.rationaleTags.filter(
+    (tag) => !decision.rationaleTagIds || decision.rationaleTagIds.includes(tag.id),
+  )
   const selected = decision.options.find((option) => option.id === optionId)
   const needsRationale = decision.requiresRationale && tags.length === 0
 

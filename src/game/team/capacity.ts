@@ -194,19 +194,23 @@ export function qualityLabel(quality: number): string {
  * the engine cannot reach them, so the words a reviewer sentence needs live
  * here beside the other presentation helpers.
  */
+const FUNCTION_NAMES: Record<string, string> = {
+  soc: 'SOC',
+  engineering: 'engineering',
+  architecture: 'architecture',
+  grc: 'cyber risk',
+  iam: 'identity',
+  'incident-response': 'incident response',
+}
+
 export function functionName(fn: string): string {
-  switch (fn) {
-    case 'soc':
-      return 'SOC'
-    case 'grc':
-      return 'cyber risk'
-    case 'iam':
-      return 'identity'
-    case 'incident-response':
-      return 'incident response'
-    default:
-      return fn
-  }
+  return FUNCTION_NAMES[fn] ?? fn
+}
+
+/** The same name as a label: capitalised, for a card or a column. */
+export function functionTitle(fn: string): string {
+  const name = functionName(fn)
+  return name.charAt(0).toUpperCase() + name.slice(1)
 }
 
 export function moraleLabel(morale: number): string {

@@ -136,11 +136,13 @@ if (command === 'new') {
     return index.decision.get(runtime.defId)?.options.some((o) => o.id === args[0])
   })
   if (!decisionId) throw new Error(`no open decision offers ${args[0]}`)
+  const offered = index.decision.get(state.decisions.decisions[decisionId]!.defId)?.rationaleTagIds
+  const fallback = offered?.[0] ?? 'rat-within-tolerance'
   const result = applyAction(state, index, {
     type: 'resolveDecision',
     decisionId,
     optionId: args[0]!,
-    rationaleTagIds: args[1] ? [args[1]] : ['rat-within-tolerance'],
+    rationaleTagIds: args[1] ? [args[1]] : [fallback],
   })
   console.log(result.ok ? `chose ${args[0]}` : `REFUSED: ${result.message}`)
   save(state)

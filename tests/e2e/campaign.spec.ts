@@ -48,7 +48,9 @@ test.describe('a first year at Nexora', () => {
         const open = page.getByRole('dialog')
         await open.getByRole('radio').first().check()
         const tag = open.getByRole('button', { name: 'Residual risk is within tolerance' })
+        // A decision that does not offer that reason offers others; take the first.
         if (await tag.isVisible().catch(() => false)) await tag.click()
+        else await open.locator('button[aria-pressed]').first().click()
         await open.getByRole('button', { name: /Commit to this/ }).click()
         await expect(open).toBeHidden()
         await page.getByRole('tab', { name: /^Evidence/ }).click()
@@ -179,7 +181,9 @@ test.describe('a first year at Nexora', () => {
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('radio').first().check()
         const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        // A decision that does not offer that reason offers others; take the first.
         if (await tag.isVisible().catch(() => false)) await tag.click()
+        else await dialog.locator('button[aria-pressed]').first().click()
         await dialog.getByRole('button', { name: /Commit to this/ }).click()
         await expect(dialog).toBeHidden()
         continue
@@ -406,7 +410,9 @@ test.describe('a first year at Nexora', () => {
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('radio').first().check()
         const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        // A decision that does not offer that reason offers others; take the first.
         if (await tag.isVisible().catch(() => false)) await tag.click()
+        else await dialog.locator('button[aria-pressed]').first().click()
         const commit = dialog.getByRole('button', { name: /Commit to this/ })
         if (await commit.isVisible().catch(() => false)) await commit.click()
         await expect(dialog).toBeHidden()
@@ -469,7 +475,9 @@ test.describe('a first year at Nexora', () => {
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('radio').first().check()
         const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        // A decision that does not offer that reason offers others; take the first.
         if (await tag.isVisible().catch(() => false)) await tag.click()
+        else await dialog.locator('button[aria-pressed]').first().click()
         await dialog.getByRole('button', { name: /Commit to this/ }).click()
         await expect(dialog).toBeHidden()
         continue

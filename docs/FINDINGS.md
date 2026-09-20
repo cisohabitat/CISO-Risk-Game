@@ -18,6 +18,34 @@ fault.
 
 ### Fixed
 
+- **"Because: residual risk is within tolerance" under "stand up incident
+  command now".** Every decision offered the whole twelve-word rationale
+  vocabulary, so a reason that belongs to accepting a risk could be recorded
+  against running an incident, and the annual review read it back as
+  reasoning. First seen in the photographed playthrough, where the harness
+  clicked the first reason every time; a player can do the same. A decision
+  may now name the reasons it can be taken for (`rationaleTagIds`): the dialog
+  offers only those, the engine refuses the rest, and the validator checks
+  the ids. Seven decisions name theirs — the five incident decisions, the
+  post-incident one and the overload one — each keeping at least six, and
+  none offering "within tolerance" or "the system retires imminently". The
+  other nineteen are unrestricted, because for them most of the vocabulary
+  is arguable and a wrong argument is the player's to make.
+
+  Four offline harnesses recorded "within tolerance" for everything and would
+  have lapsed those seven decisions rather than take them — coverage fell to
+  119 of 123 before they were taught `rationaleFor`, which takes the first
+  reason on offer. The browser harnesses fall back to the first chip. Coverage
+  is back at 122 of 123 at 60 campaigns, the same as before. Mutation-checked
+  twice: removing the engine's refusal fails `tests/engine/rationale.test.ts`,
+  removing the dialog's filter fails `tests/ui/decision-rationale.test.tsx`.
+
+- **Two maps of function names.** The engine said "identity" and "cyber
+  risk" in messages while the screens said "Identity" and "Cyber risk" from a
+  second map in `src/lib/formatting`, which could drift. One map in the
+  engine now; the screen label is the prose name capitalised, and a test
+  holds the two forms to the same word.
+
 - **A teaching note on top of the annual review.** Frame 14 of the
   photographed playthrough, 31 December: "You are relying on something —
   carrying a risk means depending on something staying true. Record what,

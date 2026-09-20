@@ -138,15 +138,7 @@ export function dayLabel(day: number): string {
   return `Day ${day}`
 }
 
-const FUNCTION_SHORT_LABELS: Record<string, string> = {
-  soc: 'SOC',
-  engineering: 'Engineering',
-  architecture: 'Architecture',
-  grc: 'Cyber risk',
-  iam: 'Identity',
-  'incident-response': 'Incident response',
-}
-
-export function functionLabel(fn: string): string {
-  return FUNCTION_SHORT_LABELS[fn] ?? fn
-}
+// One map of function names, in the engine, because the engine's messages
+// need them too. The screen's label is the prose name capitalised, so a
+// message about "identity" and a card titled "Identity" are the same word.
+export { functionTitle as functionLabel } from '@/game/team/capacity'

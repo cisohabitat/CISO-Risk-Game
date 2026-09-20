@@ -197,6 +197,7 @@ export function validateCampaignContent(content: CampaignContent): ContentIssue[
       error('missing-default-option', `decisions/${decision.id}`, `defaultOptionId "${decision.defaultOptionId}" is not an option`)
     }
     for (const nodeId of decision.relatedNodeIds) ref(registry.node, nodeId, 'missing-node', `decisions/${decision.id}`)
+    for (const tagId of decision.rationaleTagIds ?? []) ref(registry.rationaleTag, tagId, 'missing-rationale-tag', `decisions/${decision.id}`)
     for (const option of decision.options) {
       const where = `decisions/${decision.id}/${option.id}`
       for (const effect of option.immediateEffects) checkEffect(effect, registry, where, error)

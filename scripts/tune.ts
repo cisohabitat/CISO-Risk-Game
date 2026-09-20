@@ -7,7 +7,7 @@ import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { nexoraContent } from '../src/content/nexora'
-import { completeQuarterIfDue, leastCommissioned } from './play-helpers'
+import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
 import type { GameState, ContentIndex, Difficulty } from '../src/game/types'
 
 type Policy = 'passive' | 'defensive' | 'business' | 'balanced'
@@ -41,7 +41,7 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
         type: 'resolveDecision',
         decisionId,
         optionId: option.id,
-        rationaleTagIds: ['rat-within-tolerance'],
+        rationaleTagIds: rationaleFor(index, state.decisions.decisions[decisionId]!.defId),
       })
     }
     // Start programmes when affordable.

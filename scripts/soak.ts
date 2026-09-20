@@ -4,6 +4,7 @@
  * The definition-of-done check: a large number of automated seeded campaigns
  * with no uncaught runtime error and no invariant violation (plan §53).
  */
+import { rationaleFor } from './play-helpers'
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
 import { checkInvariants } from '../src/game/engine/invariants'
@@ -39,7 +40,7 @@ function main(): void {
             type: 'resolveDecision',
             decisionId,
             optionId: option.id,
-            rationaleTagIds: ['rat-within-tolerance'],
+            rationaleTagIds: rationaleFor(index, state.decisions.decisions[decisionId]!.defId),
           })
           decisions += 1
         }

@@ -50,7 +50,8 @@ describe('incident command view', () => {
             type: 'resolveDecision',
             decisionId: target.decisionId,
             optionId: def.options[0]!.id,
-            rationaleTagIds: ['rat-within-tolerance'],
+            // A reason the decision offers: incident decisions do not offer tolerance.
+            rationaleTagIds: [def.rationaleTagIds?.[0] ?? 'rat-within-tolerance'],
           })
           // The field existed and nothing wrote to it, so the record was empty.
           const after = incidentCommand(state, index)

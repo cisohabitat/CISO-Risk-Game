@@ -7,7 +7,7 @@
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
-import { completeQuarterIfDue, leastCommissioned } from './play-helpers'
+import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
 import type { ContentIndex, Difficulty, GameState } from '../src/game/types'
 
 const DIFFICULTIES: Difficulty[] = ['guided', 'ciso', 'high-pressure']
@@ -52,7 +52,7 @@ function play(
         type: 'resolveDecision',
         decisionId,
         optionId: option.id,
-        rationaleTagIds: ['rat-within-tolerance'],
+        rationaleTagIds: rationaleFor(index, state.decisions.decisions[decisionId]!.defId),
       })
     }
 

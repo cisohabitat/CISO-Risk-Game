@@ -40,3 +40,15 @@ export function completeQuarterIfDue(state: GameState, index: ContentIndex): boo
     communicateUncertainty: true,
   }).ok
 }
+
+/**
+ * A reason the decision offers. Every offline harness used to record
+ * "residual risk is within tolerance" for everything; a decision that names
+ * its own reasons now refuses one it does not offer, and a harness that kept
+ * insisting would lapse the decision instead of taking it.
+ */
+export function rationaleFor(index: ContentIndex, defId: string, preferred = 'rat-within-tolerance'): string[] {
+  const offered = index.decision.get(defId)?.rationaleTagIds
+  if (!offered || offered.includes(preferred)) return [preferred]
+  return [offered[0]!]
+}

@@ -134,6 +134,8 @@ export interface OpenDecisionView {
   context: string
   teaches?: string
   requiresRationale: boolean
+  /** The reasons offered for this decision; undefined means the whole vocabulary. */
+  rationaleTagIds?: string[]
   daysRemaining?: number
   urgent: boolean
   options: {
@@ -164,6 +166,7 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
         context: renderDecisionText(def.context, state, index),
         teaches: DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching ? def.teaches : undefined,
         requiresRationale: def.requiresRationale,
+        rationaleTagIds: def.rationaleTagIds,
         daysRemaining,
         urgent: daysRemaining !== undefined && daysRemaining <= 2,
         options: def.options.map((option) => {

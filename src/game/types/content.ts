@@ -339,6 +339,13 @@ export interface DecisionDef {
   defaultOptionId: string
   options: DecisionOptionDef[]
   requiresRationale: boolean
+  /**
+   * The reasons this decision can be taken for. Absent, the whole vocabulary
+   * is offered. Present, the dialog offers only these and the engine refuses
+   * the rest: "residual risk is within tolerance" was being recorded under
+   * "stand up incident command now" and read back in the annual review.
+   */
+  rationaleTagIds?: string[]
   relatedNodeIds: string[]
   teaches?: string
 }

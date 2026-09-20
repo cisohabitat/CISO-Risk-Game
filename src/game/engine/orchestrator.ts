@@ -195,6 +195,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (def.requiresRationale && action.rationaleTagIds.length === 0) {
         return fail('Record why you are taking this decision.')
       }
+      if (def.rationaleTagIds && action.rationaleTagIds.some((tagId) => !def.rationaleTagIds!.includes(tagId))) {
+        return fail('That is not a reason this decision can be taken for.')
+      }
 
       if (requirements?.budget) spendBudget(state, requirements.budget)
       if (requirements?.focus) spendFocus(state, requirements.focus)

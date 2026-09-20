@@ -550,6 +550,7 @@
       "deadlineDays": 2,
       "defaultOptionId": "opt-inc-line",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-material", "rat-disproportionate", "rat-more-evidence", "rat-precedent", "rat-resources", "rat-reversible", "rat-exec-ownership"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-inc-command-yes", "label": "Stand up incident command now", "description": "Formal command, executive cadence, single decision path.", "visibleKnownEffects": ["Business-wide disruption", "Much faster containment"],
@@ -573,6 +574,7 @@
       "deadlineDays": 1,
       "defaultOptionId": "opt-inc-isolate-partial",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-material", "rat-disproportionate", "rat-more-evidence", "rat-compensating", "rat-enables-business", "rat-reversible", "rat-resources", "rat-precedent", "rat-exec-ownership"],
       "relatedNodeIds": ["node-net-remote", "node-sup-msp"],
       "options": [
         { "id": "opt-inc-isolate-yes", "label": "Cut all third-party access immediately", "description": "Everything external goes now.", "visibleKnownEffects": ["Operations will be affected", "Closes the route"],
@@ -598,6 +600,7 @@
       "deadlineDays": 2,
       "defaultOptionId": "opt-inc-ext-no",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-material", "rat-resources", "rat-disproportionate", "rat-more-evidence", "rat-precedent", "rat-exec-ownership"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-inc-ext-yes", "budgetTreatment": "emergency", "label": "Bring in external response support", "description": "Pay the emergency rate.", "visibleKnownEffects": ["Materially better forensics and containment", "Emergency rates, payable whether or not the budget can meet them"],
@@ -623,6 +626,7 @@
       "deadlineDays": 1,
       "defaultOptionId": "opt-inc-notify-wait",
       "requiresRationale": true,
+      "rationaleTagIds": ["rat-regulatory", "rat-material", "rat-more-evidence", "rat-precedent", "rat-disproportionate", "rat-exec-ownership"],
       "relatedNodeIds": ["node-data-pii"],
       "options": [
         { "id": "opt-inc-notify-early", "label": "Notify early, on incomplete facts", "description": "Notify the regulator now and update as you learn more.", "visibleKnownEffects": ["Demonstrates good faith", "You may be correcting yourself publicly"],
@@ -644,6 +648,7 @@
       "deadlineDays": 1,
       "defaultOptionId": "opt-inc-shutdown-no",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-material", "rat-disproportionate", "rat-enables-business", "rat-more-evidence", "rat-reversible", "rat-compensating", "rat-precedent", "rat-exec-ownership"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-inc-shutdown-yes", "label": "Take it offline", "description": "Stop it now.", "visibleKnownEffects": ["Immediate operational impact", "Limits the damage"],
@@ -664,6 +669,7 @@
       "deadlineDays": 14,
       "defaultOptionId": "opt-post-report",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-precedent", "rat-exec-ownership", "rat-more-evidence", "rat-enables-business", "rat-resources", "rat-material"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-post-honest", "label": "Present the reconstruction honestly, including what you chose not to do", "description": "Show the path, the controls that mattered, and the decisions, including yours.", "visibleKnownEffects": ["Uncomfortable", "Builds durable credibility"],
@@ -740,6 +746,7 @@
       "deadlineDays": 14,
       "defaultOptionId": "opt-overload-push",
       "requiresRationale": false,
+      "rationaleTagIds": ["rat-resources", "rat-disproportionate", "rat-material", "rat-precedent", "rat-exec-ownership", "rat-reversible", "rat-more-evidence"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-overload-stop", "label": "Stop something", "description": "Pull work back and accept the delay.", "visibleKnownEffects": ["The newest enquiry on that function is abandoned, or failing that its newest programme is paused", "The load comes off; what it would have delivered, it will not"],

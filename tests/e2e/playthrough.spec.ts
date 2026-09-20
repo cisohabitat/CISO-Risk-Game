@@ -102,7 +102,9 @@ test.describe('playthrough', () => {
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('radio').first().check()
         const rationale = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        // A decision that does not offer that reason offers others; take the first.
         if (await rationale.isVisible().catch(() => false)) await rationale.click()
+        else await dialog.locator('button[aria-pressed]').first().click()
         await dialog.getByRole('button', { name: /Commit to this/ }).click()
         continue
       }
