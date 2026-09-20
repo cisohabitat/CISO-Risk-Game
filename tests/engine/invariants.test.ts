@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { checkInvariants } from '@/game/engine/invariants'
+import { applyEffects } from '@/game/engine/effects'
+import { createRng } from '@/game/engine/rng'
 import { testIndex } from './helpers'
 
 describe('invariants', () => {
@@ -43,6 +45,28 @@ describe('invariants', () => {
     const state = newGame(index, { seed: 'inv-5' })
     state.resources.budgetRemaining = Number.NaN
     expect(checkInvariants(state, index).map((v) => v.rule)).toContain('budget-finite')
+  })
+
+  it('detects a negative budget', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'inv-6' })
+    state.resources.budgetRemaining = -70
+    expect(checkInvariants(state, index).map((v) => v.rule)).toContain('budget-non-negative')
+  })
+
+  it('will not let a consequence spend money the year does not have', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'inv-7' })
+    // Every player action refuses to overdraw; a consequence cannot be
+    // refused, and this one used to push the balance below zero in silence.
+    state.resources.budgetRemaining = 50
+    applyEffects(state, [{ type: 'budget.change', amount: -320 }], {
+      index,
+      rng: createRng('overdraft'),
+      source: 'test',
+    })
+    expect(state.resources.budgetRemaining).toBe(0)
+    expect(checkInvariants(state, index)).toEqual([])
   })
 
   it('keeps every invalidated assumption traceable', () => {

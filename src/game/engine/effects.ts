@@ -57,7 +57,14 @@ export function applyEffect(
   const { index } = context
   switch (effect.type) {
     case 'budget.change': {
-      state.resources.budgetRemaining = round2(state.resources.budgetRemaining + effect.amount)
+      // Floored, like `focus.change` and `capacity.change` below, and like
+      // `spendBudget`, which refuses any player action that would overdraw.
+      // This case was the one resource effect without a floor, so a costly
+      // consequence — external IR support is £320k, and fifteen authored
+      // options carry a negative amount — could push a player who had already
+      // committed to programmes below zero. Nothing reacted to it and the
+      // Briefing read "£-70k of £2.4m". You spend what the year actually has.
+      state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + effect.amount))
       if (effect.note) outcome.notes.push(effect.note)
       break
     }

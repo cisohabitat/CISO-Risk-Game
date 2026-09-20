@@ -28,6 +28,9 @@ export function checkInvariants(state: GameState, index: ContentIndex): Invarian
   if (state.resources.focusRemaining < 0) {
     add('focus-non-negative', `focusRemaining=${state.resources.focusRemaining}`)
   }
+  if (state.resources.budgetRemaining < 0) {
+    add('budget-non-negative', `budgetRemaining=${state.resources.budgetRemaining}`)
+  }
 
   for (const [id, control] of Object.entries(state.controls.controls)) {
     for (const [key, value] of Object.entries({

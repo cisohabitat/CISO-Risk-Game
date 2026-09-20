@@ -94,17 +94,6 @@ Measured, not yet fixed. Ranked.
   revisited alongside it. Two coupled numbers and a 74% swing in one mode is a
   playtest question, not a desk decision.
 
-- **A consequence can take the budget below zero.** `spendBudget` refuses any
-  player action that would overdraw, but `budget.change` in the effect reducer
-  adds its amount with no floor — while `focus.change`, the next case in the
-  same switch, clamps at zero. Fifteen authored options carry a negative
-  amount, the largest being external IR support at £320k. It cannot happen to
-  a player who only answers decisions (0 of 40 campaigns on every mode), but a
-  player who commits to programmes and then meets a costly consequence goes
-  overdrawn, and the Briefing reads "£-70k of £2.4m". Nothing reacts to it: no
-  event, no stakeholder, no note. Clamping loses the overspend; surfacing it is
-  a new mechanic. Recorded rather than guessed at.
-
 - **The noise dial cannot move.** A comparative review across the three modes
   worried that high pressure might get harder by filling the inbox rather than
   by being strategically harder, and graded the profile's `noiseMultiplier`
@@ -152,6 +141,23 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **A consequence could take the budget below zero.** `spendBudget` refuses
+  any player action that would overdraw, and `focus.change` and
+  `capacity.change` both clamp at zero — `budget.change` was the one resource
+  effect without a floor. Fifteen authored options carry a negative amount, the
+  largest being external IR support at £320k, so a player who had committed to
+  programmes and then met a costly consequence went overdrawn in silence and
+  the Briefing read "£-70k of £2.4m". It floors at zero now: you spend what the
+  year actually has. `budget-non-negative` joins `focus-non-negative` in the
+  invariants, so a soak catches it coming back.
+
+  Behaviourally neutral otherwise — over 40 seeds per mode the ladder is
+  unchanged (incidents 0.50 / 0.95 / 1.68, programmes 2.8 / 1.9 / 1.2) and only
+  the overdraft disappears. It never reached a player who merely answered
+  decisions; it took building as well, which is why three passes of hand-played
+  years missed it and the ambitious appetite in `pnpm ladder` found it.
+  Mutation-checked.
 
 - **"1 business objective were missed."** Found by playing the same year on all
   three difficulties: the closing screen builds that sentence from a count, and
