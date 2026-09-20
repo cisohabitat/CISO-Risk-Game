@@ -60,10 +60,30 @@ is a hypothesis; two players' identical confusion is a defect.
 ## Questions only people can settle
 
 Everything under this heading is on the list because measuring it has already
-been tried and could not answer it. Two of them — the fourth quarter and
-executive patience — are the only open items left in **Known weaknesses**, and
-a session is the thing standing between them and a decision. Put them in front
-of players rather than deciding from a desk.
+been tried and could not answer it. Three of them — the fourth quarter,
+executive patience and the risk bands — are open items in **Known
+weaknesses**, and a session is the thing standing between them and a decision.
+Put them in front of players rather than deciding from a desk.
+
+- **Do the risks all look the same?** Measured, 86% of the risk rows a player
+  ever sees read `moderate`, and `high` and `severe` never appear: the bands
+  are cut for a wider scale than Nexora's estate produces. The list is ordered
+  by assessment within a band, so the top of it is the biggest risk, but the
+  words beside the rows say almost nothing. Watch whether the player uses the
+  order or the words when they choose what to work on, and ask afterwards which
+  risk they thought was the biggest and why. If they say "they all looked the
+  same" unprompted, that is the signal to re-cut the thresholds — a tuning
+  pass that reaches the board pack, the collisions and the debrief together,
+  which is why it waits for a person.
+
+- **Does a pattern offer read as an insight or a menu?** Several propositions
+  can be offered on overlapping evidence, because the tag vocabulary is coarse
+  and two pairs of templates share most of their tags. The offer now leads
+  with the evidence that is actually about the proposition. Watch what the
+  player does when two or three are on screen at once: read the evidence and
+  choose, or form the top one and move on. If they say the list felt like a
+  backlog, the fix is finer tags on the evidence, which is a content pass on a
+  frozen campaign.
 
 - **Does the last quarter have anything to do?** This is the highest-value
   question a session can answer, because the route to fixing it is authored
