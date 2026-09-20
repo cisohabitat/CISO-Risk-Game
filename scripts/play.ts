@@ -23,6 +23,7 @@ import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, incidentCommand, collisions, briefing, teamView, programmeViews, visibleRisks } from '../src/store/selectors'
 import { evaluateCondition } from '../src/game/events/conditions'
 import { availableCapacity } from '../src/game/team/capacity'
+import { renderDecisionText } from '../src/game/decisions/describe'
 import type { Difficulty, GameState } from '../src/game/types'
 
 // Gitignored, and outside the session's temp dir so a year survives a restart.
@@ -95,8 +96,8 @@ function report(state: GameState, since: number): void {
     if (runtime.deadlineDay !== undefined && runtime.deadlineDay - state.currentDay <= 1) {
       console.log('    !! answer this before `go`: advancing past today decides it for you')
     }
-    console.log(`    ${def.description}`)
-    if (def.context) console.log(`    ${def.context}`)
+    console.log(`    ${renderDecisionText(def.description, state, index)}`)
+    if (def.context) console.log(`    ${renderDecisionText(def.context, state, index)}`)
     for (const o of def.options) {
       console.log(`    [${o.id}] ${o.label} — ${o.description}`)
       for (const e of o.visibleKnownEffects) console.log(`        · ${e}`)

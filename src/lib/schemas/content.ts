@@ -57,11 +57,12 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
 )
 
 const cyberFunction = z.enum(['soc', 'engineering', 'architecture', 'grc', 'iam', 'incident-response'])
+const functionTarget = cyberFunction.or(z.literal('most-pressed'))
 
 export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('budget.change'), amount: z.number(), note: z.string().optional() }),
   z.object({ type: z.literal('focus.change'), amount: z.number() }),
-  z.object({ type: z.literal('capacity.change'), fn: cyberFunction, delta: z.number() }),
+  z.object({ type: z.literal('capacity.change'), fn: functionTarget, delta: z.number() }),
   z.object({ type: z.literal('stakeholder.trust'), stakeholderId: id, delta: z.number(), reason: z.string().optional() }),
   z.object({ type: z.literal('stakeholder.concern'), stakeholderId: id, concern: z.string() }),
   z.object({ type: z.literal('stakeholder.understanding'), stakeholderId: id, delta: z.number() }),
@@ -94,8 +95,9 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('risk.open'), scenarioId: id }),
   z.object({ type: z.literal('risk.status'), scenarioId: id, status: z.enum(['emerging', 'open', 'accepted', 'treated', 'closed']) }),
   z.object({ type: z.literal('risk.review'), scenarioId: id, dayOffset: z.number().int() }),
-  z.object({ type: z.literal('team.morale'), fn: cyberFunction.optional(), delta: z.number() }),
-  z.object({ type: z.literal('team.workload'), fn: cyberFunction, delta: z.number() }),
+  z.object({ type: z.literal('team.morale'), fn: functionTarget.optional(), delta: z.number() }),
+  z.object({ type: z.literal('team.workload'), fn: functionTarget, delta: z.number() }),
+  z.object({ type: z.literal('work.stop'), fn: functionTarget.optional() }),
   z.object({ type: z.literal('leader.morale'), leaderId: id, delta: z.number() }),
   z.object({ type: z.literal('leader.confidence'), leaderId: id, delta: z.number() }),
   z.object({ type: z.literal('team.vacancyFilled'), fn: cyberFunction }),

@@ -23,6 +23,7 @@ import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/rela
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { statusLabel } from '@/lib/formatting/labels'
 import { unexaminedMaterial } from '@/game/knowledge/discovery'
+import { renderDecisionText } from '@/game/decisions/describe'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -176,8 +177,8 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
         id,
         defId: def.id,
         title: def.title,
-        description: def.description,
-        context: def.context,
+        description: renderDecisionText(def.description, state, index),
+        context: renderDecisionText(def.context, state, index),
         teaches: DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching ? def.teaches : undefined,
         requiresRationale: def.requiresRationale,
         daysRemaining,

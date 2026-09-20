@@ -20,6 +20,7 @@ import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, briefing, teamView } from '../src/store/selectors'
 import { evaluateCondition } from '../src/game/events/conditions'
+import { capacityBand, teamStrain } from '../src/game/team/capacity'
 import type { Difficulty, GameState } from '../src/game/types'
 
 const index = buildContentIndex(nexoraContent)
@@ -49,6 +50,9 @@ const CHOICE: [RegExp, RegExp, string][] = [
   [/Regulatory notification/i, /Notify early/i, 'rat-regulatory'],
   [/After the incident/i, /reconstruction honestly/i, 'rat-precedent'],
   [/Connecting the acquisition/i, /quarantined zone/i, 'rat-compensating'],
+  // One programme at a time means stopping when told the team cannot carry
+  // it, and resuming what was paused once there is room (below).
+  [/past sustainable load/i, /Stop something/i, 'rat-resources'],
 ]
 // What this CISO wants to build, in order of conviction, and what to examine.
 // Real ids. This list once held `prog-recovery`, which does not exist, so
@@ -101,6 +105,18 @@ function play(difficulty: Difficulty, appetite: Appetite) {
           break
         }
         refused.push(`d${state.currentDay} decide  ${def.title} → ${option.label}: ${r.message}`)
+      }
+    }
+
+    // "Stop something" pauses the programme loading the pressed function. A
+    // player who was told that resumes it when the team has room again; a
+    // harness that never did paused half its programmes for good and the
+    // objectives-missed row fell to 0.40 on high pressure for that reason.
+    if (capacityBand(teamStrain(state)) === 'available' || capacityBand(teamStrain(state)) === 'committed') {
+      for (const programme of Object.values(state.programmes.programmes)) {
+        if (programme.status !== 'paused') continue
+        const r = applyAction(state, index, { type: 'setProgrammeStatus', programmeId: programme.id, status: 'active' })
+        if (r.ok) log.push(`d${state.currentDay} resume  ${index.programme.get(programme.id)?.name}`)
       }
     }
 

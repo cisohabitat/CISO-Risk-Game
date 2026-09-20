@@ -5,10 +5,17 @@
  */
 import type { CyberFunction } from './primitives'
 
+/**
+ * A function named at authoring time, or resolved at apply time to whichever
+ * one is closest to breaking. An effect that reacts to overload cannot know in
+ * advance which function that is.
+ */
+export type FunctionTarget = CyberFunction | 'most-pressed'
+
 export type GameEffect =
   | { type: 'budget.change'; amount: number; note?: string }
   | { type: 'focus.change'; amount: number }
-  | { type: 'capacity.change'; fn: CyberFunction; delta: number }
+  | { type: 'capacity.change'; fn: FunctionTarget; delta: number }
   | { type: 'stakeholder.trust'; stakeholderId: string; delta: number; reason?: string }
   | { type: 'stakeholder.concern'; stakeholderId: string; concern: string }
   | { type: 'stakeholder.understanding'; stakeholderId: string; delta: number }
@@ -41,8 +48,11 @@ export type GameEffect =
   | { type: 'risk.open'; scenarioId: string }
   | { type: 'risk.status'; scenarioId: string; status: 'emerging' | 'open' | 'accepted' | 'treated' | 'closed' }
   | { type: 'risk.review'; scenarioId: string; dayOffset: number }
-  | { type: 'team.morale'; fn?: CyberFunction; delta: number }
-  | { type: 'team.workload'; fn: CyberFunction; delta: number }
+  | { type: 'team.morale'; fn?: FunctionTarget; delta: number }
+  | { type: 'team.workload'; fn: FunctionTarget; delta: number }
+  /** Abandons the latest running enquiry on the function, or the latest of all. */
+  | { type: 'work.stop'; fn?: FunctionTarget }
+  /** `leaderId` may be `most-pressed`: the leader who owns the function closest to breaking. */
   | { type: 'leader.morale'; leaderId: string; delta: number }
   | { type: 'leader.confidence'; leaderId: string; delta: number }
   | { type: 'team.vacancyFilled'; fn: CyberFunction }

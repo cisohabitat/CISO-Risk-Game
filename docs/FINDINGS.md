@@ -18,6 +18,65 @@ fault.
 
 ### Fixed
 
+- **"Stop something" stopped nothing, and the overload decision blamed the
+  SOC whatever was breaking.** Found on day 20 of a hand-played year: one
+  enquiry and one programme, both on identity, took identity to breaking point
+  in fifteen days. `dec-team-overload` fired, and its text said "The SOC lead
+  has told you plainly that the team cannot carry the current volume of work".
+  "Stop something" lifted morale and handed back an attention point while every
+  enquiry kept running and identity stayed broken; "Buy capacity" spent £200k
+  on **SOC** capacity; "Push through" cost the SOC an analyst 45 days later.
+  Strain reads from the most pressed function (`teamStrain` is 0.6 the worst
+  function), so the event fires on whichever part of the team is breaking, and
+  everything that reacted to it assumed it was the SOC.
+
+  Measured over 20 campaigns per mode of a player who builds everything they
+  can afford: the decision fired **92 times, and the SOC was the most pressed
+  function in 0 of them** — engineering in 42, incident response in 35,
+  identity in 12, architecture in 3 — and SOC strain was under 0.3 on all 92.
+  The decision was never once about the function it named.
+
+  Effects that act on a function can now target `most-pressed`, resolved in
+  the reducer at the moment the option is taken; `leader.morale` resolves it
+  to whoever leads that function. A new `work.stop` effect makes the option
+  true: it abandons the newest enquiry drawing on the pressed function, and if
+  no enquiry does — **62 of the 92 firings**, because the load is programmes —
+  it pauses the newest programme that does, which the player resumes from the
+  Programmes screen when there is room. A message says which, and that the
+  money already spent stays spent. Mean strain relieved on the pressed
+  function: **0.04-0.08 → 0.50-0.69**, and the decision refires about half as
+  often because the load actually comes off. The text carries
+  `{{pressedFunction}}`, rendered by `renderDecisionText` for the interface
+  and the harness alike; a content test fails the build if any option of this
+  decision names the SOC by id.
+
+  **The ladder moved, and the first reading was the harness.** The ladder takes
+  the first option of any decision it has no opinion on, which is "Stop
+  something", and it never resumed what was paused: objectives missed on high
+  pressure read **0.40** against 1.30, because half its programmes sat paused
+  all year imposing no friction. Given the philosophy it declares — one
+  programme at a time — it now resumes a paused programme once the team is
+  below `stretched`. Re-measured over 40 seeds against the pre-change build
+  run side by side:
+
+  | | Guided | CISO | High Pressure |
+  |---|---|---|---|
+  | Incidents a year | 0.50 → 0.50 | 0.95 → 1.02 | 1.70 → 1.57 |
+  | Objectives missed | 1.88 → 1.88 | 1.13 → 1.07 | 1.30 → 1.27 |
+  | Worst consequence | 0.17 → 0.17 | 0.31 → 0.30 | 0.48 → 0.44 |
+  | Programmes built | 2.8 → 2.8 | 1.9 → 1.8 | 1.2 → 1.2 |
+  | Resilience `developing` | 4 → 4 | 12 → 15 | 20 → 16 |
+
+  Guided is untouched because the decision rarely fires there. High pressure
+  eases slightly because the SOC no longer loses an analyst for a problem it
+  did not have. "Push through" run as the counterfactual lands within 0.03 of
+  "stop and resume" on incidents and 0.16 worse on objectives missed, so the
+  decision is a trade-off with no dominant answer, which is what the game says
+  a decision is. The ladder stays monotonic. Mutation-checked three ways: a
+  `work.stop` that stops nothing, the buy option pointed back at `soc`, and
+  the selector leaving the placeholder unrendered each fail
+  `tests/engine/overload.test.ts` by name.
+
 - **A fresh pass over the repository, not trusting the record — including
   this file.** Played a year by hand, sampled the file's own "mutation-checked"
   claims by re-running the mutations, and read the docs against the code.
@@ -630,17 +689,18 @@ fault.
   build one programme at a time, take every board paper — declared up front and
   run identically on all three modes over 40 seeds each. `pnpm ladder`.
 
-  Re-measured after the budget gate and the resilience rebuild, which moved
-  three of these rows; the figures below are current.
+  Re-measured after the overload decision was made to act on the function
+  that is overloaded, which moved four of these rows a little; the figures
+  below are current.
 
   | | Guided | CISO | High Pressure |
   |---|---|---|---|
-  | Programmes built | 2.8 | 1.9 | **1.2** |
-  | Days wanting to build, no money | 72 | 166 | **225** |
-  | Incidents a year | 0.50 | 0.95 | **1.70** |
-  | Worst consequence | 0.17 | 0.31 | **0.48** |
-  | Resilience `developing` | 4/40 | 12/40 | **20/40** |
-  | Objectives missed | 1.88 | 1.13 | 1.30 |
+  | Programmes built | 2.8 | 1.8 | **1.2** |
+  | Days wanting to build, no money | 69 | 159 | **219** |
+  | Incidents a year | 0.50 | 1.02 | **1.57** |
+  | Worst consequence | 0.17 | 0.30 | **0.44** |
+  | Resilience `developing` | 4/40 | 15/40 | **16/40** |
+  | Objectives missed | 1.88 | 1.07 | 1.27 |
   | Board confidence | 0.61 | 0.62 | 0.63 |
 
   Both halves of the ladder bind. The budget decides how much gets built —
@@ -653,7 +713,7 @@ fault.
   and the business paid for it in delivery" on high pressure. `Your team is
   past sustainable load` fires on CISO and high pressure and never on Guided.
 
-  Objectives missed does not track the ladder (1.88 / 1.13 / 1.30) and that is
+  Objectives missed does not track the ladder (1.88 / 1.07 / 1.27) and that is
   correct, for two reasons pulling against each other. Live programmes impose
   `businessFriction`, so the mode that builds most disrupts most — which is why
   guided misses the most. And incidents cost the business too, which is why

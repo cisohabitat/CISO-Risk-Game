@@ -8,6 +8,7 @@
 import type {
   AssignmentState,
   ContentIndex,
+  CyberFunction,
   GameEffect,
   GameState,
   InvestigationDef,
@@ -67,6 +68,48 @@ export function startInvestigation(
   void rng
   void index
   return assignment
+}
+
+/** What "stop something" stopped, so the caller can say so. */
+export type StoppedWork =
+  | { kind: 'investigation'; id: string; title: string }
+  | { kind: 'programme'; id: string; title: string }
+
+/**
+ * Pulls work back from a function under pressure.
+ *
+ * The most recently commissioned running enquiry that draws on `fn` is
+ * abandoned. If no enquiry does — and measured over 92 firings of the overload
+ * decision, none did in two thirds of them, because the load is programmes —
+ * the most recently started programme that draws on `fn` is paused instead,
+ * which frees its people until the player resumes it. Budget already spent
+ * stays spent — the delay is the cost, which is what "stop something" means.
+ */
+export function stopWork(state: GameState, index: ContentIndex, fn: CyberFunction): StoppedWork | undefined {
+  const running = state.team.assignments.filter(
+    (assignment) => assignment.status === 'running' && assignment.kind === 'investigation',
+  )
+  const onFunction = running.filter((assignment) => (assignment.capacityPerDay[fn] ?? 0) > 0)
+  const enquiry = onFunction.reduce<AssignmentState | undefined>(
+    (latest, assignment) => (!latest || assignment.startedDay > latest.startedDay ? assignment : latest),
+    undefined,
+  )
+  if (enquiry) {
+    enquiry.status = 'abandoned'
+    return { kind: 'investigation', id: enquiry.id, title: enquiry.title }
+  }
+
+  const live = Object.values(state.programmes.programmes).filter(
+    (programme) => (programme.status === 'active' || programme.status === 'at-risk')
+      && (index.programme.get(programme.id)?.capacityDemand[fn] ?? 0) > 0,
+  )
+  const programme = live.reduce<(typeof live)[number] | undefined>(
+    (latest, candidate) => (!latest || (candidate.startedDay ?? 0) > (latest.startedDay ?? 0) ? candidate : latest),
+    undefined,
+  )
+  if (!programme) return undefined
+  programme.status = 'paused'
+  return { kind: 'programme', id: programme.id, title: index.programme.get(programme.id)?.name ?? programme.id }
 }
 
 export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng): AssignmentTickResult {

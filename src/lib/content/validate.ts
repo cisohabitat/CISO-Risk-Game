@@ -487,6 +487,10 @@ function checkEffect(
       ref(registry.scenario, effect.scenarioId, 'missing-scenario')
       break
     case 'leader.morale':
+      // `most-pressed` resolves at run time to whoever leads the function
+      // closest to breaking; there is no leader to check it against.
+      if (effect.leaderId !== 'most-pressed') ref(registry.leader, effect.leaderId, 'missing-leader')
+      break
     case 'leader.confidence':
       ref(registry.leader, effect.leaderId, 'missing-leader')
       break

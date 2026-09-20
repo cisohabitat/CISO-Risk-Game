@@ -5,14 +5,21 @@
  * is the only place that knows *how* to change it. Anything that bypasses this
  * reducer is an architectural regression.
  */
-import type { ContentIndex, GameEffect, GameState } from '../types'
+import type { ContentIndex, CyberFunction, FunctionTarget, GameEffect, GameState } from '../types'
 import { CYBER_FUNCTIONS, clamp01, round2 } from '../types'
 import { revealEdge, revealEvidence, revealNode } from '../knowledge/discovery'
 import { openDecision } from '../decisions/open'
 import { createIncident } from '../incidents/create'
 import { pushMessage } from '../inbox/messages'
+import { functionName, leaderForFunction, mostPressedFunction, refreshCommittedCapacity } from '../team/capacity'
+import { stopWork } from '../team/assignments'
 import { evaluateAssumption } from '../assumptions/validation'
 import type { Rng } from './rng'
+
+/** A function named in content, or the one closest to breaking right now. */
+function resolveFunction(state: GameState, target: FunctionTarget): CyberFunction {
+  return target === 'most-pressed' ? mostPressedFunction(state) : target
+}
 
 export interface EffectContext {
   index: ContentIndex
@@ -73,8 +80,36 @@ export function applyEffect(
       break
     }
     case 'capacity.change': {
-      const fn = state.team.functions[effect.fn]
+      const fn = state.team.functions[resolveFunction(state, effect.fn)]
       if (fn) fn.capacity = Math.max(0, round2(fn.capacity + effect.delta))
+      break
+    }
+    case 'work.stop': {
+      // "Stop something" has to stop something. The overload decision's option
+      // used to lift morale and hand back an attention point while every
+      // enquiry kept running and the function that was breaking stayed broken.
+      const fn = resolveFunction(state, effect.fn ?? 'most-pressed')
+      const stopped = stopWork(state, index, fn)
+      if (!stopped) break
+      refreshCommittedCapacity(state, index)
+      const leaderId = leaderForFunction(index, fn)
+      const leader = leaderId ? index.leader.get(leaderId) : undefined
+      const verb = stopped.kind === 'programme' ? 'paused' : 'pulled back'
+      state.history.entries.push({
+        day: state.currentDay,
+        kind: 'work-stopped',
+        summary: `${stopped.title} was ${verb} to relieve ${functionName(fn)}.`,
+        refs: [stopped.id],
+      })
+      pushMessage(state, {
+        from: leader?.name ?? 'Cyber team',
+        subject: `${stopped.kind === 'programme' ? 'Paused' : 'Pulled back'}: ${stopped.title}`,
+        body: stopped.kind === 'programme'
+          ? `You paused it to take the load off ${functionName(fn)}. The money already spent stays spent and nothing moves until you resume it from the Programmes screen.`
+          : `You stopped it to take the load off ${functionName(fn)}. Whatever it would have found, it will not find now; the money already spent stays spent.`,
+        type: 'people',
+        priority: 'notable',
+      })
       break
     }
     case 'stakeholder.trust': {
@@ -311,7 +346,7 @@ export function applyEffect(
     }
     case 'team.morale': {
       if (effect.fn) {
-        const fn = state.team.functions[effect.fn]
+        const fn = state.team.functions[resolveFunction(state, effect.fn)]
         if (fn) fn.morale = clamp01(fn.morale + effect.delta)
       } else {
         for (const fn of CYBER_FUNCTIONS) {
@@ -324,12 +359,16 @@ export function applyEffect(
     case 'team.workload': {
       // Committed capacity is derived from real work, so unplanned load is
       // modelled as a surge that decays rather than a permanent commitment.
-      const fn = state.team.functions[effect.fn]
+      const fn = state.team.functions[resolveFunction(state, effect.fn)]
       if (fn) fn.surge = Math.max(0, (fn.surge ?? 0) + effect.delta)
       break
     }
     case 'leader.morale': {
-      const leader = state.team.leaders[effect.leaderId]
+      const leaderId =
+        effect.leaderId === 'most-pressed'
+          ? leaderForFunction(index, mostPressedFunction(state))
+          : effect.leaderId
+      const leader = leaderId ? state.team.leaders[leaderId] : undefined
       if (leader) leader.morale = clamp01(leader.morale + effect.delta)
       break
     }

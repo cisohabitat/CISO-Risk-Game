@@ -735,32 +735,31 @@
     {
       "id": "dec-team-overload",
       "title": "Your team is past sustainable load",
-      "description": "The SOC lead has told you plainly that the team cannot carry the current volume of work.",
-      "context": "Everything you have commissioned is being delivered by people who are already beyond capacity.",
+      "description": "Your leadership team has told you plainly that {{pressedFunction}} cannot carry the work it has been given.",
+      "context": "Whatever you stop comes off {{pressedFunction}}, because that is where the load is. Money already spent on it stays spent; the delay is the cost.",
       "deadlineDays": 14,
       "defaultOptionId": "opt-overload-push",
       "requiresRationale": false,
       "relatedNodeIds": [],
       "options": [
-        { "id": "opt-overload-stop", "label": "Stop something", "description": "Pull work back and accept the delay.", "visibleKnownEffects": ["Some things will not get done", "The team recovers"],
+        { "id": "opt-overload-stop", "label": "Stop something", "description": "Pull work back and accept the delay.", "visibleKnownEffects": ["The newest enquiry on that function is abandoned, or failing that its newest programme is paused", "The load comes off; what it would have delivered, it will not"],
           "immediateEffects": [
-            { "type": "team.morale", "delta": 0.12 },
-            { "type": "leader.morale", "leaderId": "lead-soc", "delta": 0.15 },
-            { "type": "focus.change", "amount": 1 }
+            { "type": "work.stop", "fn": "most-pressed" },
+            { "type": "team.morale", "fn": "most-pressed", "delta": 0.12 },
+            { "type": "leader.morale", "leaderId": "most-pressed", "delta": 0.15 }
           ] },
         { "id": "opt-overload-buy", "label": "Buy capacity", "description": "Spend budget to relieve the pressure.", "visibleKnownEffects": ["Immediate relief", "Expensive"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -200 },
-            { "type": "capacity.change", "fn": "soc", "delta": 1.5 },
+            { "type": "capacity.change", "fn": "most-pressed", "delta": 1.5 },
             { "type": "team.morale", "delta": 0.06 }
           ] },
         { "id": "opt-overload-push", "label": "Ask them to push through the quarter", "description": "It is only a few more weeks.", "visibleKnownEffects": ["Nothing stops", "It is never only a few more weeks"],
           "immediateEffects": [
-            { "type": "team.morale", "delta": -0.1 },
-            { "type": "leader.morale", "leaderId": "lead-soc", "delta": -0.15 },
-            { "type": "leader.confidence", "leaderId": "lead-soc", "delta": -0.05 }
+            { "type": "team.morale", "fn": "most-pressed", "delta": -0.1 },
+            { "type": "leader.morale", "leaderId": "most-pressed", "delta": -0.15 }
           ],
-          "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "capacity.change", "fn": "soc", "delta": -1 }, { "type": "team.morale", "fn": "soc", "delta": -0.08 } ], "note": "A senior SOC analyst has resigned." } ] }
+          "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "capacity.change", "fn": "most-pressed", "delta": -1 }, { "type": "team.morale", "fn": "most-pressed", "delta": -0.08 } ], "note": "Somebody senior on the part of the team you asked to push through has resigned." } ] }
       ]
     },
     {

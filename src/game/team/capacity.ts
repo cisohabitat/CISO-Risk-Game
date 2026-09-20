@@ -63,6 +63,34 @@ export const CAPACITY_BAND_LABEL: Record<CapacityBand, string> = {
   breaking: 'At breaking point',
 }
 
+/**
+ * The function closest to breaking, which is what an overload actually is.
+ *
+ * Whole-team strain leans on the worst function precisely because an average
+ * hid it; anything that reacts to overload has to act on that same function,
+ * or it reacts to the wrong one. The decision that fired on strain used to
+ * buy SOC capacity and lift the SOC lead's morale whatever was breaking —
+ * measured in a hand-played year with identity at breaking point and the SOC
+ * idle.
+ */
+export function mostPressedFunction(state: GameState): CyberFunction {
+  let worst: CyberFunction = CYBER_FUNCTIONS[0]!
+  let worstStrain = -1
+  for (const fn of CYBER_FUNCTIONS) {
+    const strain = functionStrain(state, fn)
+    if (strain > worstStrain) {
+      worstStrain = strain
+      worst = fn
+    }
+  }
+  return worst
+}
+
+/** The leader who owns a function, if the campaign gives it one. */
+export function leaderForFunction(index: ContentIndex, fn: CyberFunction): string | undefined {
+  return index.content.leaders.find((leader) => leader.functions.includes(fn))?.id
+}
+
 /** Free capacity in a function, in effort-days per week. */
 export function availableCapacity(state: GameState, fn: CyberFunction): number {
   const runtime = state.team.functions[fn]
