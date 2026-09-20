@@ -26,7 +26,8 @@
     "coverage": "tsx scripts/coverage.ts",
     "size": "tsx scripts/size-budget.ts",
     "playthrough": "playwright test --config playwright.playthrough.config.ts --project=desktop-chromium",
-    "play": "tsx scripts/play.ts"
+    "play": "tsx scripts/play.ts",
+    "ladder": "tsx scripts/ladder.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

@@ -73,6 +73,15 @@ players. Both are worth putting on the list rather than deciding from a desk.
   before they play, and whether the name matched what they got afterwards. Do
   not rename on one person's word.
 
+- **Is the budget difference felt, or only the incidents?** Playing one
+  philosophy across all three modes, the ladder landed entirely on the threat
+  side — incidents 0.47 / 0.93 / 1.47 a year, worst consequence 0.17 / 0.33 /
+  0.51 — while the budget difference never bound, because a player who builds
+  one programme at a time never runs out. Guided ended 41% of its budget
+  unspent. So ask what they did with the money, and whether they ever wanted
+  something they could not afford. If nobody ever hits the budget wall, the
+  25%/90% multipliers are doing less than the table suggests.
+
 - **Does High Pressure feel noisier or harder?** The worry was that the mode
   might buy difficulty with inbox volume rather than with strategy. The
   measurement says it does not — 150, 158 and 163 messages a year across the

@@ -51,6 +51,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm screenshots` | What do the screens currently look like? |
 | `pnpm playthrough` | One campaign played end to end, photographed as it goes |
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
+| `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
 None of them answer whether the game lands: that needs people, and
@@ -121,6 +122,11 @@ way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **"1 business objective were missed."** Found by playing the same year on all
+  three difficulties: the closing screen builds that sentence from a count, and
+  only the plural was written. The singular case is written out now, and
+  `tests/engine/presentation.test.ts` checks both. Mutation-checked.
 
 - **Five things found by playing a year in a browser rather than through the
   engine.** Three earlier passes drove the simulation directly; this one drove
@@ -358,6 +364,47 @@ simulated player actually did before concluding the game is at fault.
   and are never rendered as numbers.
 
 ### Checked and left alone
+
+- **The ladder, played rather than reasoned.** One CISO philosophy — understand
+  the business first, be candid about uncertainty, investigate selectively,
+  build one programme at a time, take every board paper — declared up front and
+  run identically on all three modes over 15 seeds each. The ladder is clean,
+  and it is entirely on the threat side:
+
+  | | Guided | CISO | High Pressure |
+  |---|---|---|---|
+  | Incidents a year | 0.47 | 0.93 | **1.47** |
+  | Worst consequence | 0.17 | 0.33 | **0.51** |
+  | Resilience `strong` | 9/15 | 6/15 | **2/15** |
+  | Resilience `developing` | 1/15 | 4/15 | **7/15** |
+  | Objectives missed | 1.20 | 1.00 | 1.53 |
+  | Board confidence | 0.60 | 0.62 | 0.63 |
+  | Budget left | £1.23m | £0.58m | £0.22m |
+
+  Incidents and consequence both roughly treble across the ladder and the
+  resilience band moves decisively, so the same play genuinely produces
+  different years. On one shared seed the identical policy closed on "You built
+  the capability on people who cannot do it again" on Guided and CISO, and on
+  "You built the capability, and the business paid for it in delivery" on high
+  pressure, where the same friction cost three objectives instead of one.
+  `Your team is past sustainable load` fired on CISO (d50) and high pressure
+  (d57) and never on Guided, which is the capacity multiplier doing its job.
+
+  Two things the run does **not** show, worth saying plainly. Objectives missed
+  does not order (1.20 / 1.00 / 1.53), so at 15 seeds the business side is
+  noise rather than a ladder. And board confidence is flat at 0.60-0.63: a
+  player who prepares every board paper ends at the same standing whatever the
+  mode, so `executiveTolerance` (0.62 / 0.50 / 0.38) does not reach a player
+  who never disappoints the board.
+
+  The budget ladder was never tested. "One programme at a time" only ever
+  started one, so the year ended with 41% of the budget unspent on Guided and
+  10% on high pressure without the difference ever binding — and programme
+  execution read `strong` in all three, because the dimension scores completion
+  as a share of what you started rather than of what there was to build. That
+  is consistent with how the game treats over-commissioning elsewhere, so
+  nothing changed; `docs/PLAYTEST.md` asks whether a player feels the budget
+  difference or only the incident difference.
 
 - **The pattern offer looked like a queue again.** Playing in the browser,
   forming one hypothesis immediately surfaced another, three times in a row on

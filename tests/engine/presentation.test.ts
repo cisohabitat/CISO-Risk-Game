@@ -132,6 +132,22 @@ describe('the annual review reads as prose', () => {
       }
     }
   })
+
+  it('makes its verbs agree with what it is counting', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'agreement' })
+    runDays(state, index, 364)
+    // "1 business objective were missed" reached the closing screen. Counted
+    // prose is generated, so the singular case has to be written, not derived.
+    const objectives = Object.values(state.business.objectives)
+    for (const [failed, expected] of [[1, /One business objective was missed/], [2, /2 business objectives were missed/]] as const) {
+      objectives.forEach((objective, i) => {
+        objective.status = i < failed ? 'failed' : 'achieved'
+      })
+      const line = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'business-enablement')!.narrative
+      expect(line, `with ${failed} missed it says: ${line}`).toMatch(expected)
+    }
+  })
 })
 
 describe('pattern suggestions', () => {

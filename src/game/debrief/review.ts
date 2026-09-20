@@ -416,7 +416,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative:
       failed === 0
         ? 'The business met its commitments with security alongside it rather than in the way.'
-        : `${failed} business objective${failed === 1 ? '' : 's'} were missed. Some of that was security friction you chose to impose.`,
+        : failed === 1
+          ? 'One business objective was missed. Some of that was security friction you chose to impose.'
+          : `${failed} business objectives were missed. Some of that was security friction you chose to impose.`,
     evidence: index.content.objectives.map((def) => {
       const runtime = state.business.objectives[def.id]
       return `${def.name}: ${runtime?.status ?? 'unknown'}`
