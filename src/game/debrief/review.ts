@@ -102,6 +102,14 @@ export function buildQuarterReview(
     // Surprising the board with a known material risk is the classic failure.
     effects.push({ type: 'board.confidence', delta: -0.06 * missed.length })
     reaction = `The board accepted the papers, but ${missed.length} material item${missed.length === 1 ? ' was' : 's were'} not on the agenda. They will find out another way.`
+  } else if (input.topics.length === 0 && materialIds.length === 0) {
+    // A paper with nothing in it. Nothing was missed, so it is not the failure
+    // above, but "coverage" of an empty agenda is not coverage: measured over
+    // 20 campaigns, a player who raised nothing all year took three empty
+    // papers to the board, was credited the full bump each time, and ended
+    // the year at 0.62 confidence against 0.64 for one who raised and covered
+    // everything. The board heard nothing and asks when it will.
+    reaction = 'The board notes that nothing has yet been assessed. The chair asks what the quarter found, and when they will hear what it means.'
   } else if (noise.length > 2) {
     effects.push({ type: 'board.confidence', delta: -0.02 })
     reaction = 'The board sat through a long list. The chair asks you to bring fewer, sharper items next time.'

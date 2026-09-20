@@ -31,6 +31,31 @@ describe('reviews', () => {
     expect(covered.effects.some((e) => e.type === 'board.confidence' && e.delta > 0)).toBe(true)
   })
 
+  it('does not credit an empty paper as full coverage', () => {
+    // A player who has raised nothing has nothing to report. That is not the
+    // failure of leaving something out, but it is not covering everything
+    // either, and it used to earn the same bump as a complete paper.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-empty' })
+    runDays(state, index, 91)
+    for (const scenario of Object.values(state.risks.scenarios)) {
+      if (scenario.status !== 'emerging') scenario.status = 'emerging'
+    }
+    state.incidents.incidents = {}
+    expect(materialTopics(state, index)).toHaveLength(0)
+
+    const empty = buildQuarterReview(state, index, { quarter: 1, topics: [], recommendations: [], communicateUncertainty: false })
+    expect(empty.effects.some((e) => e.type === 'board.confidence' && e.delta > 0)).toBe(false)
+    expect(empty.effects.some((e) => e.type === 'board.confidence' && e.delta < 0)).toBe(false)
+    expect(empty.boardReaction).toMatch(/nothing has yet been assessed/)
+
+    // Candour still counts for something, on its own.
+    const candid = buildQuarterReview(state, index, { quarter: 1, topics: [], recommendations: [], communicateUncertainty: true })
+    const total = candid.effects.reduce((sum, e) => sum + (e.type === 'board.confidence' ? e.delta : 0), 0)
+    expect(total).toBeGreaterThan(0)
+    expect(total).toBeLessThan(0.05)
+  })
+
   it('puts a risk the player raised on the board agenda, controlled or not', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'rev-board' })

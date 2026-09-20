@@ -18,6 +18,51 @@ fault.
 
 ### Fixed
 
+- **An empty board paper earned the full bump.** Found at the Q1 close of the
+  same hand-played year: "Q1 paper is due. Material items:" and nothing under
+  it. The player had answered every decision, commissioned two enquiries and
+  raised no risk — nine scenarios were *emerging* and none assessed — so the
+  pack had nothing on it at all. The Board screen says the right thing ("You
+  have nothing to report … that is itself something the board may ask
+  about"), and then the scoring gave the paper the maximum: coverage of an
+  empty agenda was 1, so an empty paper scored as a complete one.
+
+  Measured over 20 campaigns on CISO. A pack with nothing on it at all,
+  by quarter:
+
+  | | Q1 | Q2 | Q3 | year-end board confidence |
+  |---|---|---|---|---|
+  | Answers decisions, nothing else | 18/20 | 12/20 | 8/20 | 0.623 |
+  | Commissions enquiries, forms nothing | 17/20 | 13/20 | 7/20 | 0.641 |
+  | Forms patterns and raises risks | 0/20 | 0/20 | 0/20 | 0.640 |
+
+  A player who took three empty papers to the board finished the year with
+  the same board confidence as one who raised everything and covered it —
+  the same shape as the quiet year that was automatically resilient. The
+  earlier entry on materiality reported empty packs at 0% for "both play
+  styles"; both of those styles raised risks. A player who has not raised one
+  is the new player, and their first paper is the one that matters.
+
+  An empty paper now earns nothing from the board and a sentence: "the chair
+  asks what the quarter found, and when they will hear what it means".
+  Candour still counts on its own, so a candid empty paper is worth a little
+  and a full one a lot. Year-end confidence now reads 0.592 / 0.611 / 0.640
+  across the three styles, in the order of engagement, and the ladder is
+  unmoved (board 0.61 / 0.62 / 0.63) because its player raises risks before
+  the first paper is due. Mutation-checked: removing the branch fails
+  `tests/engine/debrief.test.ts` by name.
+
+  Not done: offering emerging scenarios as agenda items, so the new player
+  has something to choose between. It would put "we have not looked at this"
+  on the board agenda as if it were an assessment, and the plan's "choose
+  material topics" (§28.7) means assessed ones. The Board screen already
+  tells them why the pack is empty.
+
+- **"Costs GRC capacity."** One option in the HR provider decision named the
+  function by its content id, where every screen calls it "Cyber risk". The
+  annual-review test forbids the ids in the closing screen but not in
+  authored option text. Reads "cyber risk capacity" now.
+
 - **Four propositions, one list of evidence.** Found on day 82 of the same
   hand-played year: seven patterns on offer, and four of them — supplier
   privileged access, one identity platform, the deployment pipeline, a

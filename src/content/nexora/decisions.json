@@ -722,7 +722,7 @@
       "requiresRationale": false,
       "relatedNodeIds": ["node-sup-hr", "node-data-hr"],
       "options": [
-        { "id": "opt-hr-press", "label": "Press them for specifics", "description": "Formal request, contractual footing, named questions.", "visibleKnownEffects": ["Costs GRC capacity", "You will get an answer, eventually"],
+        { "id": "opt-hr-press", "label": "Press them for specifics", "description": "Formal request, contractual footing, named questions.", "visibleKnownEffects": ["Costs cyber risk capacity", "You will get an answer, eventually"],
           "immediateEffects": [
             { "type": "capacity.change", "fn": "grc", "delta": -0.5 },
             { "type": "stakeholder.trust", "stakeholderId": "stk-legal", "delta": 0.06, "reason": "You pursued the provider's disclosure properly." }
