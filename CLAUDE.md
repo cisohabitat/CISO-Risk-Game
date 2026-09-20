@@ -95,6 +95,12 @@ Measured, not yet fixed. Ranked.
   revisited alongside it. Two coupled numbers and a 74% swing in one mode is a
   playtest question, not a desk decision.
 
+  **Those two figures are now stale and the experiment needs re-running before
+  anyone acts on them.** They were taken before the budget gate, which moved
+  objectives missed on high pressure in the ladder from 1.50 to 1.30 — the
+  baseline the +74% was measured against has itself moved. The shape of the
+  finding stands; the size of it is unverified.
+
 - **The noise dial cannot move.** A comparative review across the three modes
   worried that high pressure might get harder by filling the inbox rather than
   by being strategically harder, and graded the profile's `noiseMultiplier`
@@ -587,14 +593,17 @@ simulated player actually did before concluding the game is at fault.
   build one programme at a time, take every board paper — declared up front and
   run identically on all three modes over 40 seeds each. `pnpm ladder`.
 
+  Re-measured after the budget gate and the resilience rebuild, which moved
+  three of these rows; the figures below are current.
+
   | | Guided | CISO | High Pressure |
   |---|---|---|---|
   | Programmes built | 2.8 | 1.9 | **1.2** |
   | Days wanting to build, no money | 72 | 166 | **225** |
-  | Incidents a year | 0.50 | 0.95 | **1.68** |
-  | Worst consequence | 0.17 | 0.31 | **0.47** |
-  | Resilience `developing` | 2/40 | 9/40 | **17/40** |
-  | Objectives missed | 1.88 | 1.65 | 1.50 |
+  | Incidents a year | 0.50 | 0.95 | **1.70** |
+  | Worst consequence | 0.17 | 0.31 | **0.48** |
+  | Resilience `developing` | 4/40 | 12/40 | **20/40** |
+  | Objectives missed | 1.88 | 1.13 | 1.30 |
   | Board confidence | 0.61 | 0.62 | 0.63 |
 
   Both halves of the ladder bind. The budget decides how much gets built —
@@ -607,11 +616,18 @@ simulated player actually did before concluding the game is at fault.
   and the business paid for it in delivery" on high pressure. `Your team is
   past sustainable load` fires on CISO and high pressure and never on Guided.
 
-  Objectives missed runs the other way (1.88 / 1.65 / 1.50) and that is
-  correct: live programmes impose `businessFriction`, so the mode that builds
-  most disrupts most. Business enablement measures the friction the player
-  chose to impose, not the mode. Board confidence is flat at 0.61-0.63 for a
-  player who prepares every board paper.
+  Objectives missed does not track the ladder (1.88 / 1.13 / 1.30) and that is
+  correct, for two reasons pulling against each other. Live programmes impose
+  `businessFriction`, so the mode that builds most disrupts most — which is why
+  guided misses the most. And incidents cost the business too, which is why
+  high pressure misses more than CISO despite building half as much. Business
+  enablement measures the friction the player chose to impose plus the damage
+  they failed to prevent, not the mode. Board confidence is flat at 0.61-0.63
+  for a player who prepares every board paper.
+
+  The CISO figure was 1.65 before the budget gate landed. The fall to 1.13 is
+  one substitution a campaign — the acquisition quarantine the player can no
+  longer afford — and is recorded under that entry.
 
   **An earlier version of this entry was wrong, and the harness was why.** The
   programme list held `prog-recovery`, which is not a real id, so

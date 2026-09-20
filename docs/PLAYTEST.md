@@ -16,11 +16,9 @@ Five questions, none of which a test can answer:
 1. **Where did they stop understanding?** Not "did they fail" — where did the
    game stop explaining itself. The moment someone reads a screen twice.
 2. **Where did they get bored?** Which stretch of the year did they click
-   through rather than play. There is a measured suspect: decisions arrive
-   11.7, 4.7, 2.5 and 1.3 times per quarter, and the second half of the year
-   sends half as much mail from a quarter as many distinct subjects. Do not
-   lead the witness — watch the clock and see whether they slow down where the
-   numbers say they should. A session that does not is the more interesting
+   through rather than play. There is a measured suspect and it has its own
+   entry below — the fourth quarter. Watch the clock rather than asking, and a
+   session that slows down somewhere else entirely is the more interesting
    result.
 3. **What did they not notice?** A collision, a pattern offer, an assumption
    failing. Anything the game surfaced and the player walked past.
@@ -59,11 +57,39 @@ acting on a single reading — a fifteen-seed balance run, a probe that counted 
 wrong thing, a pattern notice that turned into a backlog. One player's confusion
 is a hypothesis; two players' identical confusion is a defect.
 
-## Two questions a review raised that only people can settle
+## Questions only people can settle
 
-A comparative read of all three modes ranked them CISO, then High Pressure,
-then Guided, and left two things it explicitly would not act on without real
-players. Both are worth putting on the list rather than deciding from a desk.
+Everything under this heading is on the list because measuring it has already
+been tried and could not answer it. Two of them — the fourth quarter and
+executive patience — are the only open items left in **Known weaknesses**, and
+a session is the thing standing between them and a decision. Put them in front
+of players rather than deciding from a desk.
+
+- **Does the last quarter have anything to do?** This is the highest-value
+  question a session can answer, because the route to fixing it is authored
+  content on a campaign this project has frozen, and nobody should write that
+  content on a hunch. Measured: decisions arrive 11.7, 4.7, 2.5 and 1.3 times
+  per quarter, the longest stretch with nothing to decide averages 128 days and
+  reaches 164, and the second half sends 42 messages from 24 distinct subjects
+  against 104 from 88 in the first. Played by hand the back half is a loop of
+  four recycled threat-intel subjects.
+
+  Do not ask whether the ending dragged — nobody says no to that. Watch the
+  clock, and watch what they do between decisions: a player with nothing to do
+  starts pressing *Skip ahead* repeatedly, or stops opening screens they were
+  opening in Q1. Note the day they change gear.
+
+  Then the second half of the question, which is what a fix would have to get
+  right. A review proposed that the last quarter should stop asking *what
+  organisation have I inherited?* and start asking **what organisation have I
+  created, and what must I now change?** — a nearly finished programme facing
+  its adoption choice, a temporary acceptance falling due on assumptions that
+  have since moved, a service that has outgrown the resilience design it was
+  given, pressure to cut next year's budget after a quiet one. Those are late
+  decisions arising from the player's own position rather than from the draw.
+  After the review, ask what they thought was still unresolved on 31 December.
+  If they name something of their own making, the proposal is right and the
+  content is missing. If they name nothing, the problem is larger than pacing.
 
 - **Does "Guided" read as a tutorial?** The reviewer's point was that it is not
   one — it is the full simulation with more organisational capacity and clearer
@@ -77,11 +103,13 @@ players. Both are worth putting on the list rather than deciding from a desk.
   meant to make high pressure less patient, and measurably stops doing so after
   about week seven. Bounding it works, but only high pressure ends up paying,
   and over 40 seeds it went from missing 1.38 business objectives a year to
-  2.40. Ask a player who has finished a high-pressure year whether the
-  executives felt harder to work with than on CISO, and whether missing half
-  the business objectives would read as the mode being hard or as the mode
-  being unwinnable. That answer decides whether to bound the dial and move the
-  0.45 friction threshold with it.
+  2.40 — figures taken before a later change moved the baseline, so treat the
+  direction as established and the size as unverified. Ask a player who has
+  finished a high-pressure year whether the executives felt harder to work with
+  than on CISO, and whether missing half the business objectives would read as
+  the mode being hard or as the mode being unwinnable. That answer decides
+  whether to bound the dial and move the 0.45 friction threshold with it; the
+  experiment gets re-run either way before anything ships.
 
 - **Does High Pressure feel noisier or harder?** The worry was that the mode
   might buy difficulty with inbox volume rather than with strategy. The
