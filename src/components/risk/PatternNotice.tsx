@@ -19,6 +19,13 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
   const suggestions = patternSuggestions(state, index).slice(0, limit)
   if (suggestions.length === 0) return null
 
+  // Forming one costs a unit of attention. The Investigations panel disables an
+  // action the player cannot afford and says why in place; this card, the most
+  // prominent action on the Briefing, left the button live and only refused
+  // after the click, with the toast as the first hint that "0 of 5 left" in
+  // the panel beside it had anything to do with it.
+  const noAttention = state.resources.focusRemaining < 1
+
   return (
     <ul className="space-y-3">
       {suggestions.map((suggestion) => (
@@ -42,10 +49,15 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
                 </ul>
               </div>
 
+              {noAttention && (
+                <p className="text-xs text-band-elevated">No attention left this week.</p>
+              )}
+
               <div className="flex flex-wrap gap-2">
                 <Button
                   variant="primary"
                   size="sm"
+                  disabled={noAttention}
                   onClick={() =>
                     dispatch({
                       type: 'createHypothesis',

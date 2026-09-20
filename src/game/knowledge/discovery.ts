@@ -206,7 +206,21 @@ export function unexaminedMaterial(
     reachable += 1
     // Assurance ages. A test from ten months ago describes a control that has
     // drifted since, so it no longer counts as knowing.
-    if (control.believed && state.currentDay - control.believed.assessedOnDay < ASSURANCE_LIFE_DAYS) examined += 1
+    //
+    // And it has to be the player's own. The inherited picture is recorded at
+    // day -180, so for the first twenty days it still counted as knowing and
+    // the Briefing told a brand-new CISO they had checked "a start" of Nexora
+    // — 13 of 32 — before they had looked at anything, then took it away on
+    // day 21 without explaining why. Nodes and edges already draw this line
+    // with `verified`; a negative day is by definition before the player
+    // arrived.
+    if (
+      control.believed &&
+      control.believed.assessedOnDay >= 0 &&
+      state.currentDay - control.believed.assessedOnDay < ASSURANCE_LIFE_DAYS
+    ) {
+      examined += 1
+    }
     else names.push(`${def.name} was never independently assessed`)
   }
 

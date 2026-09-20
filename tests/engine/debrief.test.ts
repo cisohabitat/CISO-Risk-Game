@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview, buildQuarterReview, chooseHeadline, materialTopics } from '@/game/debrief/review'
 import { unexaminedMaterial } from '@/game/knowledge/discovery'
+import { applyEffects } from '@/game/engine/effects'
+import { createRng } from '@/game/engine/rng'
 import type { AnnualReviewDimension } from '@/game/types'
 import { testIndex } from './helpers'
 
@@ -114,8 +116,11 @@ describe('reviews', () => {
       }))
 
     const years = [
-      // Delivered for the business, built nothing.
+      // Delivered for the business, built nothing. A trade-off is something
+      // the player made, so these all decide rather than lapse.
       chooseHeadline(profile({ 'business-enablement': 'strong', 'programme-execution': 'weak' }), false),
+      // Let the year happen: not a trade-off, an absence.
+      chooseHeadline(profile({ prioritisation: 'weak', 'business-enablement': 'strong', 'programme-execution': 'weak' }), false),
       // Built everything, the business missed its year.
       chooseHeadline(profile({ 'programme-execution': 'strong', 'business-enablement': 'weak' }), false),
       // Built everything, on people who are finished.
@@ -141,6 +146,27 @@ describe('reviews', () => {
 
     expect(new Set(years).size).toBe(years.length)
     for (const line of years) expect(line.length).toBeGreaterThan(12)
+  })
+
+  it('credits no examination on the first morning, and credits the player\'s own', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'inherited-assurance' })
+    // The inherited assurance picture is recorded at day -180 and counted as
+    // knowing for its first twenty days, so the Briefing told a brand-new CISO
+    // they had checked "a start" of Nexora — 13 of 32 — before looking at
+    // anything, then took it away on day 21 with no explanation.
+    expect(unexaminedMaterial(state, index).examined).toBe(0)
+    runDays(state, index, 10)
+    expect(unexaminedMaterial(state, index).examined).toBe(0)
+
+    // Assurance the player commissions themselves does count.
+    const controlId = index.content.controls[0]!.id
+    applyEffects(state, [{ type: 'control.assess', controlId }], {
+      index,
+      rng: createRng('assess'),
+      source: 'test',
+    })
+    expect(unexaminedMaterial(state, index).examined).toBe(1)
   })
 
   it('separates what the player examined from what they were handed', () => {

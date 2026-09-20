@@ -83,6 +83,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                     {view.openDecisions}
                   </span>
                 )}
+                {/* The rail badges the Briefing and the Inbox when they want
+                    you. The board paper wanted you too and said nothing. */}
+                {destination.id === 'board' && state.reviews.pendingQuarter !== undefined && (
+                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-ink-inverse">
+                    Due
+                  </span>
+                )}
               </button>
             </li>
           ))}

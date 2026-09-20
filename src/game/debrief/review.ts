@@ -255,6 +255,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // read the same however hard the player looked.
   const examined = unexaminedMaterial(state, index)
   const examinedShare = examined.reachable > 0 ? examined.examined / examined.reachable : 0
+  let seenNodes = 0
+  let existingNodes = 0
+  for (const def of index.content.nodes) {
+    const node = state.organisation.nodes[def.id]
+    if (!node?.exists) continue
+    existingNodes += 1
+    if (node.discovered) seenNodes += 1
+  }
   const understandingScore = clamp01(0.3 * understanding + 0.2 * dependencies + 0.5 * examinedShare)
   dimensions.push({
     id: 'risk-understanding',
@@ -267,7 +275,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           ? 'You understood parts of the organisation well and left others to assumption.'
           : 'You spent the year acting on an inherited picture you never verified.',
     evidence: [
-      `${Math.round(understanding * 100)}% of the estate was brought into view`,
+      // A count, not a share of an internal aggregate. This line read "66% of
+      // the estate was brought into view" — the same 0..1 understanding value
+      // that was taken off the Briefing for being a rendered score — directly
+      // above "0 of 32 things you could have examined yourself, you did",
+      // which reads as a contradiction unless you already know the difference
+      // between having seen something and having checked it.
+      `${seenNodes} of ${existingNodes} systems were ever brought into view`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       `${assessedControls} of ${index.content.controls.length} controls were independently assessed`,
     ],
@@ -351,10 +365,24 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         : worstConsequence > 0.5
           ? 'When the organisation was tested, the consequences ran well beyond what the business could absorb comfortably.'
           : 'The organisation was tested and absorbed it without lasting damage.',
-    evidence: incidents.map((i) => {
-      const family = index.incidentFamily.get(i.familyId)
-      return `${family?.name ?? 'Incident'} on day ${i.startedDay}`
-    }),
+    // Grouped by family, because the same kind of incident twice is not two
+    // facts, it is one: the same door, still open. Listed flat it read as
+    // three identical rows — "Customer data exposure on day 88", "…on day
+    // 176", "…on day 300" — which looks like a duplicate rather than the
+    // point the year was making.
+    evidence: (() => {
+      const byFamily = new Map<string, number[]>()
+      for (const i of incidents) {
+        const name = index.incidentFamily.get(i.familyId)?.name ?? 'Incident'
+        byFamily.set(name, [...(byFamily.get(name) ?? []), i.startedDay].sort((a, b) => a - b))
+      }
+      return [...byFamily].map(([name, days]) => {
+        if (days.length === 1) return `${name} on day ${days[0]}`
+        const rest = days.slice(1)
+        const list = rest.length === 1 ? `day ${rest[0]}` : `days ${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}`
+        return `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
+      })
+    })(),
   })
 
   // 4. Programme execution.
@@ -571,9 +599,20 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   const understanding = score('risk-understanding')
   const team = score('team-sustainability')
 
+  const failing = (id: string) => dimensions.find((d) => d.id === id)?.band === 'weak'
+
   const weakest = dimensions.reduce((lowest, d) => (bandValue(d.band) < bandValue(lowest.band) ? d : lowest))
 
-  const failing = (id: string) => dimensions.find((d) => d.id === id)?.band === 'weak'
+  // A trade-off is something the player made. Somebody who let the decisions
+  // go by default did not choose the business over the programme; they were
+  // not there. Reading the tension first told a player who lapsed 16 of 18
+  // decisions that "the business got its year", crediting them with a
+  // judgement the prioritisation line directly contradicts.
+  // `weak()` here means "weak or developing", which is too broad for this:
+  // only the weak band requires having ignored a third of what was put to you.
+  if (failing('prioritisation')) {
+    return 'The year was decided largely without you.'
+  }
 
   // Trade-offs first. A tension between two dimensions says more about how
   // somebody played than any single score does, and it is what separates two

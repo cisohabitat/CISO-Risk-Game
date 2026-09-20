@@ -98,6 +98,57 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **Five things found by playing a year in a browser rather than through the
+  engine.** Three earlier passes drove the simulation directly; this one drove
+  the actual interface — clicking, reading what was on the screen and taking
+  what the game offered. The interface, not the simulation, is where every one
+  of these lived.
+
+  **A whole year could be played without ever being told the board paper was
+  due.** The quarterly review appeared only on the Board screen. Played from
+  the Briefing — where the game puts you, and where "Waiting on you" tells you
+  what needs an answer — 364 days and 23 decisions went by and the four board
+  papers were never mentioned; "Nothing is waiting on you. No decision needs an
+  answer right now" was shown with one outstanding. The annual review then
+  marked the year down: `Communication and escalation: developing — 0
+  quarterly reviews prepared`, for a mechanic the game never surfaced. The
+  Briefing now carries the due paper in "Waiting on you" with a way in, and the
+  rail badges Board the way it already badges the Inbox. Mutation-checked.
+
+  **The first three weeks told a new player they had already checked 41% of
+  Nexora.** "Checked for yourself: a start" on day one, dropping to "none of it
+  yet" on day 21 with no explanation. The wording was fixed before; the
+  quantity was not. The inherited assurance picture is recorded at day -180 and
+  `ASSURANCE_LIFE_DAYS` is 200, so for twenty days somebody else's assessment
+  counted as the player's own examination — the exact mistake the verification
+  model exists to teach, on the first screen of the game. Nodes and edges
+  already drew this line with `verified`; controls now do too, on the basis
+  that a negative day is before the player arrived.
+
+  **The annual review still rendered the internal understanding score.** `66%
+  of the estate was brought into view` — the same 0..1 aggregate taken off the
+  Briefing for being a number where a band belongs — sitting directly above `0
+  of 32 things you could have examined yourself, you did`, which reads as a
+  contradiction. It is a count now: `37 of 38 systems were ever brought into
+  view`.
+
+  **A player who did nothing was credited with a trade-off.** Sixteen of
+  eighteen decisions lapsed and the headline read "The business got its year.
+  The security programme did not." A trade-off is something you make; the
+  tension headlines now require that prioritisation did not fail, and an absent
+  year closes on "The year was decided largely without you."
+
+  **The main screen offered an action it would then refuse.** With the week
+  spent, "Form the hypothesis" stayed live and a click produced a toast. The
+  Investigations panel in the same codebase disables what you cannot afford and
+  says why in place; the pattern card does both now. Mutation-checked in the
+  end-to-end suite.
+
+  One text change came out of reading the close: three incidents from the same
+  family listed as three near-identical lines, which looks like a duplicate
+  rather than the point. Repeats are grouped — "Customer data exposure on day
+  88, and again on days 176 and 300 — the same weakness, still open".
+
 - **Four things found by playing a third year permissively, on high pressure,
   and then looking at the gallery.** Two earlier passes both played carefully;
   this one waved things through, accepted risks formally and recorded
@@ -283,6 +334,26 @@ simulated player actually did before concluding the game is at fault.
   and are never rendered as numbers.
 
 ### Checked and left alone
+
+- **The pattern offer looked like a queue again.** Playing in the browser,
+  forming one hypothesis immediately surfaced another, three times in a row on
+  the same day, which looked like the backlog the recency window was meant to
+  remove. Measured over 12 campaigns: an offer is on screen on **2% of days**,
+  and on those days the median number waiting is **1** (mean 1.5, max 5).
+  Forming one reveals another on about three days a campaign. The earlier
+  figure that suggested otherwise came from a probe that never formed anything,
+  so offers accumulated forever. Nothing changed.
+
+- **Two resume entries that looked identical.** The start screen showed two
+  autosaves of the same campaign, same day, same second, indistinguishable. It
+  was an artifact of advancing the clock as fast as a script can: in ordinary
+  play the rolling autosaves are seconds apart and legible. Nothing changed.
+
+- **The rail, twice.** A screenshot of the Board screen showed Team
+  highlighted, and the Organisation screen looked like its Inspector was
+  covering the filter tabs. Both were misreadings — the first was the pointer's
+  hover (since fixed), the second a tab strip that ends 12px before the
+  Inspector begins. Measure the DOM before believing a screenshot.
 
 - **The reasoning review read as congratulation.** Two hand-played years closed
   with six rationale lines and all six saying "nothing this year contradicted

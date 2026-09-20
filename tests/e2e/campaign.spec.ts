@@ -254,6 +254,79 @@ test.describe('a first year at Nexora', () => {
     }
   })
 
+  test('an offer the player cannot afford says so instead of refusing after the click', async ({ page }) => {
+    await startCampaign(page, 'e2e-attention')
+    // Find a day that offers a pattern.
+    for (let i = 0; i < 60; i += 1) {
+      const offer = page.getByRole('button', { name: 'Form the hypothesis' })
+      if (await offer.isVisible().catch(() => false)) break
+      const skip = page.getByRole('button', { name: 'Skip ahead' })
+      if (!(await skip.isVisible().catch(() => false))) break
+      await skip.click()
+      const got = page.getByRole('button', { name: 'Got it' })
+      if (await got.isVisible().catch(() => false)) await got.click()
+    }
+    const offer = page.getByRole('button', { name: 'Form the hypothesis' })
+    if (!(await offer.isVisible().catch(() => false))) test.skip(true, 'no pattern offered in this run')
+
+    // Form until the attention runs out, which is what a player does.
+    for (let i = 0; i < 6; i += 1) {
+      const live = page.getByRole('button', { name: 'Form the hypothesis' })
+      if (!(await live.isVisible().catch(() => false))) break
+      if (await live.isDisabled()) break
+      await live.click()
+      const got = page.getByRole('button', { name: 'Got it' })
+      if (await got.isVisible().catch(() => false)) await got.click()
+      await page.waitForTimeout(150)
+    }
+
+    const live = page.getByRole('button', { name: 'Form the hypothesis' })
+    if (await live.isVisible().catch(() => false)) {
+      const week = await page.getByText(/of 5 left/).first().innerText().catch(() => '')
+      if (week.startsWith('0')) {
+        await expect(live, 'the offer stays live with no attention to spend').toBeDisabled()
+        await expect(page.getByText('No attention left this week.')).toBeVisible()
+      }
+    }
+  })
+
+  test('a player who never leaves the Briefing is still told the board paper is due', async ({ page }) => {
+    await startCampaign(page, 'e2e-board-prompt')
+    // The quarterly review lived only on the Board screen. A player working
+    // from the Briefing could take every decision in good time and still be
+    // told at the close that they prepared none of the four.
+    let found = false
+    for (let i = 0; i < 160; i += 1) {
+      // A teaching note sits over everything until it is dismissed, as it does
+      // for a player.
+      const got = page.getByRole('button', { name: 'Got it' })
+      if (await got.isVisible().catch(() => false)) { await got.click(); continue }
+      if (await page.getByText(/board paper is due/i).isVisible().catch(() => false)) { found = true; break }
+      const decide = page.getByRole('button', { name: /^Decide$/ })
+      if (await decide.first().isVisible().catch(() => false)) {
+        await decide.first().click()
+        await page.getByRole('radio').first().check()
+        // Some decisions require a reason, and the button says so by renaming
+        // itself "Record why first" rather than sitting dead.
+        const why = page.getByRole('button', { name: /Record why first/ }).first()
+        if (await why.isVisible().catch(() => false)) {
+          await page.getByRole('button', { name: 'More evidence is required' }).first().click()
+        }
+        const commit = page.getByRole('button', { name: /Commit to this/ }).first()
+        if (await commit.isVisible().catch(() => false)) await commit.click()
+        else await page.keyboard.press('Escape')
+        await page.waitForTimeout(150)
+        continue
+      }
+      const skip = page.getByRole('button', { name: 'Skip ahead' })
+      if (!(await skip.isVisible().catch(() => false))) break
+      await skip.click()
+    }
+    expect(found, 'a whole quarter passed on the Briefing with no sign of the board paper').toBe(true)
+    await page.getByRole('button', { name: 'Prepare it' }).click()
+    await expect(page.getByRole('button', { name: /Prepare the Q\d board paper/ })).toBeVisible()
+  })
+
   test('a dialog can always be closed', async ({ page }) => {
     await startCampaign(page, 'e2e-dialog')
     await page.getByRole('button', { name: 'Decide' }).first().click()

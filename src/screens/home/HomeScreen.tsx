@@ -72,6 +72,30 @@ export function HomeScreen() {
             <SectionHeading>
               <span id="decisions">Waiting on you</span>
             </SectionHeading>
+            {/* The quarterly board paper only ever appeared on the Board
+                screen. A player working from the Briefing — where the game
+                puts them, and where this section tells them what needs an
+                answer — could play a whole year, take every decision in good
+                time, and still be told at the close that they prepared none of
+                the four. "Nothing is waiting on you" was being shown with a
+                board paper outstanding. */}
+            {state.reviews.pendingQuarter !== undefined && (
+              <Card className="mb-3 border-accent/40 bg-accent-soft/25">
+                <CardBody className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-balance">
+                      The Q{state.reviews.pendingQuarter} board paper is due
+                    </p>
+                    <p className="mt-0.5 text-sm text-ink-muted text-pretty">
+                      What the board hears about this quarter, and what they do not, is your call.
+                    </p>
+                  </div>
+                  <Button variant="primary" size="sm" onClick={() => setScreen('board')}>
+                    Prepare it
+                  </Button>
+                </CardBody>
+              </Card>
+            )}
             <DecisionList limit={4} />
           </section>
 
