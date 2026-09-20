@@ -18,6 +18,25 @@ fault.
 
 ### Fixed
 
+- **A teaching note on top of the annual review.** Frame 14 of the
+  photographed playthrough, 31 December: "You are relying on something —
+  carrying a risk means depending on something staying true. Record what,
+  because it will be checked" sitting above the closing headline. The lesson
+  had been triggered by accepting a risk and never dismissed, which is the
+  harness; but a lesson has no year-end gate, so a player who reaches its
+  trigger late meets the same thing. The notes now step aside once the year
+  is over. `tests/ui/onboarding.test.tsx` renders the note three weeks in
+  and again with the year finished, and fails if the gate goes.
+  Mutation-checked.
+
+  Seen and left alone in the same frames: every judgement in the review
+  reads "Because: Residual risk is within tolerance", under "Stand up
+  incident command now" as much as anything else. That is the playthrough
+  harness clicking the first rationale every time. The dialog offers the
+  whole rationale vocabulary to every decision, so a player can pick nonsense
+  too, and the reasoning review will read it back to them; whether the list
+  should be narrowed per decision is a content question and is left.
+
 - **The gallery showed a card that no longer existed.** `pnpm screenshots`
   and `pnpm playthrough` both looked for the heading "You may have found a
   pattern" to photograph a pattern offer. The visual pass renamed it "Pattern

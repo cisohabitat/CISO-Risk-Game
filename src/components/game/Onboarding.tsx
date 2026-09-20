@@ -10,7 +10,11 @@ import { LESSONS, lessonContext } from './lessons'
 export function Onboarding() {
   const state = useGameStore((store) => store.state)
   const dispatch = useGameStore((store) => store.dispatch)
-  if (!state) return null
+  // A lesson teaches a mechanic the player is about to use. On 31 December
+  // there is nothing left to use it on, and "record what you are relying on,
+  // because it will be checked" sat on top of the annual review in the
+  // photographed playthrough. The year over, the notes step aside.
+  if (!state || state.finished) return null
 
   const context = lessonContext(state)
   const lesson = LESSONS.find(
