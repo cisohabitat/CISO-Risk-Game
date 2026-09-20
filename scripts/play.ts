@@ -144,7 +144,12 @@ if (command === 'new') {
   })
   console.log(result.ok ? `chose ${args[0]}` : `REFUSED: ${result.message}`)
   save(state)
-  if (result.ok) advance(state)
+  // Advancing while another decision is still open is how the harness lapsed
+  // two incident decisions at one day left, in the same breath as warning
+  // "answer this before `go`": `decide` was a `go`. Show what is still
+  // waiting instead, and only advance once nothing is.
+  if (result.ok && state.decisions.openIds.length > 0) report(state, state.currentDay)
+  else if (result.ok) advance(state)
 } else if (command === 'commission') {
   const state = load()
   const result = applyAction(state, index, { type: 'startInvestigation', investigationId: args[0]!, leaderId: args[1]! })

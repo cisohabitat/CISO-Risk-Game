@@ -18,6 +18,55 @@ fault.
 
 ### Fixed
 
+- **Ten risks, one word, content order.** Found on day 128 of the same
+  hand-played year: nine risks on the list, every one "moderate residual /
+  moderate confidence". Measured over 20 campaigns per mode: **86% of the risk
+  rows a player ever sees read `moderate`** (462 of 535 for an idle player,
+  770 of 894 for an engaged one), the list shows 1.5-2.2 distinct bands among
+  five to ten rows, and the residuals across the whole estate span 0.13-0.20 —
+  about one band's width. Sorted by band alone, rows in the same band fell
+  into content order, so the Briefing's three "top concerns" were the first
+  three moderate risks the content file happened to list. The scenario the
+  annual review grades prioritisation against — the most material by the
+  day-one snapshot — was first in the list in **1 to 4 campaigns of 20**, for
+  an engaged player as much as an idle one.
+
+  Within a band the list is now ordered by the assessment itself. The bands
+  stay words and the order shows no number; it is the one thing that
+  separates ten moderate rows. For an engaged player the most material
+  scenario now leads the list in **12 of 20** campaigns by day 180 (11 of 20
+  on high pressure), from 2 and 5. The rest is not the sort: the yardstick is
+  the day-one snapshot and the list is today's assessment, and in the other
+  eight the scenario is not on the list at all, because the player never
+  raised it. An idle player is unchanged at 2 of 20 for the same reason —
+  the biggest risk in Nexora is one nobody tells them about, which is the
+  hidden-truth design working. Mutation-checked: ordering by band alone fails
+  `tests/engine/judgement.test.ts` by name.
+
+  **Two things measured on the way, both recorded rather than fixed.** Five
+  risk bands exist and two are ever used: across 1,429 rows over two play
+  styles and two modes, `elevated` appeared 58 times and `high` and `severe`
+  never. The band thresholds (0.16 / 0.34 / 0.55 / 0.75) are calibrated for
+  a wider scale than the simulation produces for a quiet estate — filed under
+  Known weaknesses, because re-cutting them moves materiality, collisions and
+  the debrief together and is a tuning question for a playtest. And the
+  prioritisation entry below claims "the biggest risks differ between
+  campaigns rather than being a fixed answer to learn"; measured over 40
+  seeds per mode, **the pipeline is the most material scenario in 36 of 40
+  on every mode** and the top three are one of two sets. The full ordering
+  differs (38-39 distinct of 40) but only in the middle. That is a property
+  of the authored estate, and a fair one — Nexora has a biggest risk — but
+  the claim was wrong and is corrected below.
+
+  **And one in the harness.** Day 168 of the same year: an incident, three
+  decisions open at one day left, and `pnpm play` printing its own warning —
+  "answer this before `go`: advancing past today decides it for you" — under
+  each. Answering the first advanced the clock, because `decide` always
+  advanced to the next stop, and the other two lapsed into "manage it through
+  the line" and "run it in-house". `decide` now shows what is still waiting
+  and only advances once nothing is. The hand-played year carries the two
+  defaults; they were the harness's choice, not the game's.
+
 - **An empty board paper earned the full bump.** Found at the Q1 close of the
   same hand-played year: "Q1 paper is due. Material items:" and nothing under
   it. The player had answered every decision, commissioned two enquiries and
@@ -377,8 +426,13 @@ fault.
   the end state reads success as having worked on something that did not
   matter — the same trap that once emptied the board pack for the player who
   had done the most. `risks.initialMateriality` snapshots the true residual of
-  every authored scenario on day one, per seed, so the biggest risks differ
-  between campaigns rather than being a fixed answer to learn. **Not judged
+  every authored scenario on day one, per seed. (It was claimed here that
+  this made the biggest risks differ between campaigns. Measured later over
+  40 seeds per mode, the most material scenario is the pipeline in 36 of 40
+  on every mode: the estate is authored, so its biggest risk is largely a
+  property of Nexora rather than of the seed. The snapshot still matters for
+  the reason above — it is taken before the player's own work moves the
+  residuals — but it is not a moving answer.) **Not judged
   against what nothing could reach.** And **not charged against work that was
   not about a risk** — a team review is real effort and addresses no scenario,
   so it is ignored rather than counted as a bad aim.

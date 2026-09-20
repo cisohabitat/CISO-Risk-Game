@@ -101,6 +101,18 @@ Measured, not yet fixed. Ranked.
   baseline the +74% was measured against has itself moved. The shape of the
   finding stands; the size of it is unverified.
 
+- **Five risk bands, two ever used.** `riskBand` cuts residual at 0.16 /
+  0.34 / 0.55 / 0.75, and the simulation's residuals for Nexora's estate sit
+  between 0.11 and 0.31 on day one and move by hundredths. Measured over 20
+  campaigns per mode and two play styles: **86% of the risk rows a player
+  ever sees read `moderate`**, `elevated` appears in 4%, and `high` and
+  `severe` never. The list is now ordered by assessment within a band, which
+  is what separates the rows; but the words themselves say almost nothing,
+  and the same thresholds feed materiality for the board pack, the collision
+  verdicts and the debrief, so re-cutting them is a tuning pass with reach
+  into all three. Not changed. A playtester who says the risks "all look the
+  same" is the signal.
+
 - **The noise dial cannot move.** A comparative review across the three modes
   worried that high pressure might get harder by filling the inbox rather than
   by being strategically harder, and graded the profile's `noiseMultiplier`

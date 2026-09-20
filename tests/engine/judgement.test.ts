@@ -14,6 +14,36 @@ import { testIndex } from './helpers'
  * that disappeared from the briefing because the player took responsibility
  * for it.
  */
+describe('what the risk list puts first', () => {
+  it('orders risks within a band by their assessment, so the biggest visible risk leads', () => {
+    // 86% of the rows a player ever sees read "moderate". Ordered by band
+    // alone, the list fell into content order, and the Briefing's top three
+    // concerns were the first three moderate risks the content file happened
+    // to list. The bands stay words; the order carries the rest.
+    const index = testIndex()
+    let checked = 0
+    for (const seed of ['order-1', 'order-2', 'order-3']) {
+      const state = newGame(index, { seed })
+      for (const def of index.content.riskScenarios) applyAction(state, index, { type: 'openRisk', scenarioId: def.id })
+      runDays(state, index, 40)
+      const risks = visibleRisks(state, index).filter((r) => r.assessed && r.status !== 'closed')
+      for (let i = 1; i < risks.length; i += 1) {
+        const a = risks[i - 1]!, b = risks[i]!
+        if (a.band !== b.band) continue
+        const ra = state.risks.scenarios[a.id]!.lastAssessed!.residual
+        const rb = state.risks.scenarios[b.id]!.lastAssessed!.residual
+        expect(ra, `${b.id} outranks ${a.id} but is listed after it`).toBeGreaterThanOrEqual(rb)
+        checked += 1
+      }
+      // And the Briefing's top concern is the most material visible risk.
+      const top = topConcerns(state, index, 1)[0]!
+      const best = Math.max(...risks.map((r) => state.risks.scenarios[r.id]!.lastAssessed!.residual))
+      expect(state.risks.scenarios[top.id]!.lastAssessed!.residual).toBeCloseTo(best, 5)
+    }
+    expect(checked, 'no two risks ever shared a band, so the order was never exercised').toBeGreaterThan(0)
+  })
+})
+
 describe('resilience is not awarded for a quiet year', () => {
   it('never reads strong when nothing tested the organisation', () => {
     const index = testIndex()
