@@ -65,7 +65,7 @@ test.describe('playthrough', () => {
     let stuck = 0
 
     for (let step = 0; step < 400; step += 1) {
-      if (!shotPattern && (await page.getByText('You may have found a pattern').isVisible().catch(() => false))) {
+      if (!shotPattern && (await page.getByText('Pattern emerging').isVisible().catch(() => false))) {
         shotPattern = true
         await shot('pattern-offered')
         await page.getByRole('button', { name: 'Form the hypothesis' }).first().click()

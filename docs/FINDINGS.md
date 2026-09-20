@@ -18,6 +18,18 @@ fault.
 
 ### Fixed
 
+- **The gallery showed a card that no longer existed.** `pnpm screenshots`
+  and `pnpm playthrough` both looked for the heading "You may have found a
+  pattern" to photograph a pattern offer. The visual pass renamed it "Pattern
+  emerging", so neither harness had photographed one since; the gallery kept
+  serving `11-pattern-offered.png` from before the rename, and said nothing,
+  because a capture the loop never reached was simply not written. Found by
+  regenerating the gallery after this session's changes and noticing the
+  pattern card looked nothing like the source. Both specs match the current
+  heading, and the gallery now deletes, and warns about, any of its three
+  conditional captures it could not refresh this run — stale is worse than
+  missing. The pattern offer is photographed again, on both viewports.
+
 - **A year with two ransomware incidents closed on a review that spoke of
   one.** The narrative picked the worst incident and narrated it — "tested
   the organisation on day 166" — and never mentioned the second, on day 217,

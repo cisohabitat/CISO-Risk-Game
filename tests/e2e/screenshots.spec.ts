@@ -1,3 +1,4 @@
+import { existsSync, unlinkSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { goTo, startCampaign } from './helpers'
 
@@ -46,7 +47,7 @@ test.describe('screenshots', () => {
     let sawCollision = false
     let stuck = 0
     for (let click = 0; click < 260 && !sawIncident; click += 1) {
-      if (!sawPattern && (await page.getByText('You may have found a pattern').isVisible().catch(() => false))) {
+      if (!sawPattern && (await page.getByText('Pattern emerging').isVisible().catch(() => false))) {
         sawPattern = true
         await shot('11-pattern-offered')
       }
@@ -107,6 +108,19 @@ test.describe('screenshots', () => {
       type: 'captured',
       description: `pattern=${sawPattern} collision=${sawCollision} incident=${sawIncident}`,
     })
+    // A capture this run could not make must not leave last time's picture in
+    // the gallery. The pattern offer was renamed "Pattern emerging" and this
+    // spec kept looking for the old heading, so for weeks the gallery showed
+    // a card that no longer existed, dated from before the rename, and said
+    // nothing. Stale is worse than missing: remove it and say so.
+    for (const [made, name] of [[sawPattern, '11-pattern-offered'], [sawCollision, '12-collision'], [sawIncident, '13-incident-command']] as const) {
+      if (made) continue
+      const stale = `screenshots/${testInfo.project.name}-${name}.png`
+      if (existsSync(stale)) {
+        unlinkSync(stale)
+        console.warn(`screenshots: ${name} not reached this run; removed the stale ${stale}`)
+      }
+    }
 
     // The dark theme is the primary visual treatment; capture it too.
     await goTo(page, 'Briefing')
