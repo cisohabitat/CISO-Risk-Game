@@ -395,6 +395,7 @@ export const decisionSchema = z.object({
         minTrust: unit.optional(),
         condition: conditionSchema.optional(),
       }).optional(),
+      budgetTreatment: z.enum(['discretionary', 'imposed', 'emergency']).optional(),
       rationaleTagIds: z.array(id).optional(),
       assumptionIds: z.array(id).optional(),
     }),

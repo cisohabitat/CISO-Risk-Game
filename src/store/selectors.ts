@@ -12,8 +12,10 @@ import type {
   InboxMessage,
   RiskBand,
 } from '@/game/types'
-import { CYBER_FUNCTIONS, DAYS_PER_QUARTER, clamp01 } from '@/game/types'
+import { CYBER_FUNCTIONS, DAYS_PER_QUARTER, clamp01, money } from '@/game/types'
 import { riskBand } from '@/game/risk/bands'
+import { optionBudgetCost } from '@/game/engine/orchestrator'
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
 import { capacityBand, functionStrain, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
@@ -72,6 +74,13 @@ export interface VisibleRisk {
   treatmentProgrammeIds: string[]
   assumptionIds: string[]
   hasInvalidatedAssumption: boolean
+  /**
+   * Whether the player has ever assessed this scenario. Missing assessments
+   * used to default to 0 and come out of `riskBand` as `low`, so "we have not
+   * looked at this" and "we looked, and it is fine" were the same row. The
+   * bands below are only meaningful when this is true.
+   */
+  assessed: boolean
 }
 
 export function visibleRisks(state: GameState, index: ContentIndex): VisibleRisk[] {
@@ -103,15 +112,32 @@ export function visibleRisks(state: GameState, index: ContentIndex): VisibleRisk
       treatmentProgrammeIds: def.treatmentProgrammeIds,
       assumptionIds: runtime.assumptionIds,
       hasInvalidatedAssumption,
+      assessed: Boolean(assessed),
     })
   }
   const order: Record<string, number> = { severe: 0, high: 1, elevated: 2, moderate: 3, low: 4 }
-  return out.sort((a, b) => (order[a.band] ?? 5) - (order[b.band] ?? 5))
+  // Unassessed last, but never folded in among the low ones: an absence of
+  // evidence is not a low rating, and sorting it as one buries the thing the
+  // player most needs to go and look at.
+  return out.sort((a, b) => {
+    if (a.assessed !== b.assessed) return a.assessed ? -1 : 1
+    return (order[a.band] ?? 5) - (order[b.band] ?? 5)
+  })
 }
 
+/**
+ * What belongs in front of the player.
+ *
+ * Accepting a risk changes the decision record; it does not reduce the
+ * exposure. Filtering `accepted` out meant a material risk vanished from "your
+ * top concerns" precisely because the player had taken responsibility for it —
+ * teaching that acceptance is a way to make something go away, which is the
+ * opposite of the lesson. Accepted risks stay, and the view marks them as
+ * carried rather than handled. Only closed ones drop off.
+ */
 export function topConcerns(state: GameState, index: ContentIndex, limit = 3): VisibleRisk[] {
   return visibleRisks(state, index)
-    .filter((risk) => risk.status === 'open' || risk.status === 'treated' || risk.status === 'emerging')
+    .filter((risk) => risk.status !== 'closed')
     .slice(0, limit)
 }
 
@@ -130,6 +156,8 @@ export interface OpenDecisionView {
     label: string
     description: string
     visibleKnownEffects: string[]
+    budgetCost?: number
+    exceedsBudget: boolean
     affordable: boolean
     blockedReason?: string
   }[]
@@ -149,14 +177,22 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
         title: def.title,
         description: def.description,
         context: def.context,
-        teaches: def.teaches,
+        teaches: DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching ? def.teaches : undefined,
         requiresRationale: def.requiresRationale,
         daysRemaining,
         urgent: daysRemaining !== undefined && daysRemaining <= 2,
         options: def.options.map((option) => {
           const requirements = option.requirements
+          // What it costs, derived from the option's own effects so the card
+          // cannot disagree with what gets spent. A known price belongs on the
+          // card: the uncertainty in this game is what an option will do, never
+          // what the organisation already knows it charges.
+          const budgetCost = optionBudgetCost(option)
+          const treatment = option.budgetTreatment ?? 'discretionary'
           let blockedReason: string | undefined
-          if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
+          if (treatment === 'discretionary' && budgetCost > 0 && state.resources.budgetRemaining < budgetCost) {
+            blockedReason = `Not enough budget remains this year (${money(budgetCost)})`
+          } else if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
             blockedReason = 'Not enough budget remains this year'
           } else if (requirements?.focus && state.resources.focusRemaining < requirements.focus) {
             blockedReason = 'No attention left this week'
@@ -171,6 +207,10 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             label: option.label,
             description: option.description,
             visibleKnownEffects: option.visibleKnownEffects,
+            budgetCost: budgetCost > 0 ? budgetCost : undefined,
+            // Emergency spend is the one thing the year will let you commit
+            // without the money, so the card says so before it is taken.
+            exceedsBudget: budgetCost > 0 && treatment === 'emergency' && state.resources.budgetRemaining < budgetCost,
             affordable: !blockedReason,
             blockedReason,
           }

@@ -28,6 +28,14 @@ export function checkInvariants(state: GameState, index: ContentIndex): Invarian
   if (state.resources.focusRemaining < 0) {
     add('focus-non-negative', `focusRemaining=${state.resources.focusRemaining}`)
   }
+  if (state.resources.unfundedCommitment < 0) {
+    add('unfunded-non-negative', `unfundedCommitment=${state.resources.unfundedCommitment}`)
+  }
+  // Only emergency spend may create a shortfall, and only up to what the option
+  // cost, so it can never exceed the year's whole allocation.
+  if (state.resources.unfundedCommitment > state.resources.budgetTotal) {
+    add('unfunded-bounded', `unfundedCommitment=${state.resources.unfundedCommitment} budgetTotal=${state.resources.budgetTotal}`)
+  }
   if (state.resources.budgetRemaining < 0) {
     add('budget-non-negative', `budgetRemaining=${state.resources.budgetRemaining}`)
   }

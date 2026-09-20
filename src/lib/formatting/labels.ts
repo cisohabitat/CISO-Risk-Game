@@ -126,10 +126,9 @@ export function evidenceSourceLabel(source: string): string {
   return map[source] ?? source
 }
 
-export function money(amount: number): string {
-  if (Math.abs(amount) >= 1000) return `£${(amount / 1000).toFixed(amount % 1000 === 0 ? 0 : 1)}m`
-  return `£${Math.round(amount)}k`
-}
+// One implementation, in the engine, because the engine needs it too and
+// cannot import this module.
+export { money } from '@/game/types'
 
 export function plural(count: number, singular: string, pluralForm?: string): string {
   return `${count} ${count === 1 ? singular : (pluralForm ?? `${singular}s`)}`

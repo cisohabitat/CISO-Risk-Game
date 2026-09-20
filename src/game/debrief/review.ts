@@ -13,8 +13,9 @@ import type {
   QuarterReviewState,
   ReasoningLine,
 } from '../types'
-import { clamp01 } from '../types'
+import { clamp01, money } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
+import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { compareBands, riskBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
@@ -167,11 +168,14 @@ export function reasoningReview(state: GameState, index: ContentIndex): Reasonin
     tally.set(tagId, row)
   }
 
-  const incidentPaths = new Set(
-    Object.values(state.incidents.incidents)
-      .map((incident) => incident.pathId)
-      .filter((pathId): pathId is string => Boolean(pathId)),
-  )
+  // Kept with their days. Matching on the path alone let an incident on day 40
+  // contradict an acceptance made on day 120 through the same path — which is
+  // backwards: the later acceptance may have been made *because* of that
+  // incident, after remediating it. Reasoning is judged against what happened
+  // after it was relied on, never before.
+  const incidentPathDays: { pathId: string; day: number }[] = Object.values(state.incidents.incidents)
+    .filter((incident): incident is typeof incident & { pathId: string } => Boolean(incident.pathId))
+    .map((incident) => ({ pathId: incident.pathId, day: incident.startedDay }))
   const assumptions = Object.values(state.assumptions.assumptions)
 
   // Choices the player took themselves. A lapsed decision carries no reasoning
@@ -194,7 +198,11 @@ export function reasoningReview(state: GameState, index: ContentIndex): Reasonin
     if (!scenarioId || tagIds.length === 0) continue
     const def = index.riskScenario.get(scenarioId)
     const scenario = state.risks.scenarios[scenarioId]
-    const realised = Boolean(def?.attackPathIds.some((pathId) => incidentPaths.has(pathId)))
+    const realised = Boolean(
+      def?.attackPathIds.some((pathId) =>
+        incidentPathDays.some((i) => i.pathId === pathId && i.day >= entry.day),
+      ),
+    )
     const failedHere = (scenario?.assumptionIds ?? []).filter(
       (id) => state.assumptions.assumptions[id]?.status === 'invalidated',
     ).length
@@ -352,19 +360,71 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   // 3. Resilience.
+  //
+  // Absence of an incident is an outcome, not evidence of capability. Scored
+  // purely from the worst consequence, a year with no incident took the default
+  // of zero and reached the maximum, so every quiet year read `strong` — while
+  // the sentence printed beside it said "whether that was capability or fortune
+  // is worth asking". The verdict answered the question the prose was still
+  // asking, and in the player's favour.
+  //
+  // So the dimension now separates what was demonstrated from what merely did
+  // not happen. A year that was tested is scored on how the organisation came
+  // through it. A quiet year is scored on whether recovery was ever exercised
+  // — a recovery test or an IR readiness exercise the player commissioned, and
+  // recovery controls they established assurance over themselves — and is
+  // capped below `strong` when it was not, because nothing demonstrated it.
   const incidents = Object.values(state.incidents.incidents)
   const worstConsequence = incidents.reduce((max, i) => Math.max(max, i.consequence), 0)
-  const resilience = clamp01(1 - worstConsequence * 0.8)
+
+  const RECOVERY_EXERCISES = ['inv-recovery-test', 'inv-ir-readiness']
+  const exercises = state.team.assignments.filter(
+    (a) => a.status === 'complete' && RECOVERY_EXERCISES.includes(a.refId),
+  )
+  const recoveryControls = index.content.controls
+    .filter((c) => c.category === 'recovery')
+    .map((c) => state.controls.controls[c.id])
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+  // The player's own assurance, on the same terms as everywhere else: an
+  // inherited assessment recorded before they arrived is not their examination.
+  const selfAssured = recoveryControls.filter(
+    (c) =>
+      c.believed &&
+      c.believed.assessedOnDay >= 0 &&
+      state.currentDay - c.believed.assessedOnDay < ASSURANCE_LIFE_DAYS,
+  )
+  const recoveryCapability =
+    recoveryControls.length === 0
+      ? 0
+      : recoveryControls.reduce(
+          (sum, c) => sum + calculateControlEffectiveness(c),
+          0,
+        ) / recoveryControls.length
+
+  const tested = incidents.length > 0
+  const exercised = exercises.length > 0 || selfAssured.length > 0
+  // The untested scale is capped below `strong`: a year nothing tested cannot
+  // demonstrate the top band, however much was built. Within that it separates
+  // four real years — nothing done, exercised but nothing to exercise, built but
+  // never tested, and built and exercised. The first version multiplied the two
+  // terms instead of adding them and put all four in `developing`, which is a
+  // dial with no room to move.
+  const UNTESTED_CEILING = 0.74
+  const resilience = tested
+    ? clamp01(1 - worstConsequence * 0.8)
+    : Math.min(UNTESTED_CEILING, clamp01(0.18 + 0.75 * recoveryCapability + (exercised ? 0.14 : 0)))
+
   dimensions.push({
     id: 'resilience',
     label: 'Resilience',
     band: band(resilience),
-    narrative:
-      incidents.length === 0
-        ? 'No material incident reached the business this year. Whether that was capability or fortune is worth asking.'
-        : worstConsequence > 0.5
-          ? 'When the organisation was tested, the consequences ran well beyond what the business could absorb comfortably.'
-          : 'The organisation was tested and absorbed it without lasting damage.',
+    narrative: tested
+      ? worstConsequence > 0.5
+        ? 'When the organisation was tested, the consequences ran well beyond what the business could absorb comfortably.'
+        : 'The organisation was tested and absorbed it without lasting damage.'
+      : exercised
+        ? 'No material incident reached the business this year. What recovery capability you did exercise is the only evidence you have that it would have held.'
+        : 'No material incident reached the business this year, and recovery was never exercised. That is an outcome, not a demonstrated capability.',
     // Grouped by family, because the same kind of incident twice is not two
     // facts, it is one: the same door, still open. Listed flat it read as
     // three identical rows — "Customer data exposure on day 88", "…on day
@@ -376,12 +436,21 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         const name = index.incidentFamily.get(i.familyId)?.name ?? 'Incident'
         byFamily.set(name, [...(byFamily.get(name) ?? []), i.startedDay].sort((a, b) => a - b))
       }
-      return [...byFamily].map(([name, days]) => {
+      const lines = [...byFamily].map(([name, days]) => {
         if (days.length === 1) return `${name} on day ${days[0]}`
         const rest = days.slice(1)
         const list = rest.length === 1 ? `day ${rest[0]}` : `days ${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}`
         return `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
       })
+      lines.push(
+        exercises.length > 0
+          ? `${exercises.length} recovery exercise${exercises.length === 1 ? '' : 's'} completed`
+          : 'Recovery was never exercised',
+      )
+      lines.push(
+        `${selfAssured.length} of ${recoveryControls.length} recovery controls carried assurance you established yourself`,
+      )
+      return lines
     })(),
   })
 
@@ -419,10 +488,22 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         : failed === 1
           ? 'One business objective was missed. Some of that was security friction you chose to impose.'
           : `${failed} business objectives were missed. Some of that was security friction you chose to impose.`,
-    evidence: index.content.objectives.map((def) => {
-      const runtime = state.business.objectives[def.id]
-      return `${def.name}: ${runtime?.status ?? 'unknown'}`
-    }),
+    evidence: (() => {
+      const lines = index.content.objectives.map((def) => {
+        const runtime = state.business.objectives[def.id]
+        return `${def.name}: ${runtime?.status ?? 'unknown'}`
+      })
+      // Money committed beyond the year. It used to disappear into the floor on
+      // `budget.change`, which left a player who spent their reserve and then
+      // took unfunded emergency support indistinguishable from one who had
+      // planned for it.
+      if (state.resources.unfundedCommitment > 0) {
+        lines.push(
+          `${money(state.resources.unfundedCommitment)} was committed beyond the cyber allocation and left for finance to fund`,
+        )
+      }
+      return lines
+    })(),
   })
 
   // 6. Communication and escalation.

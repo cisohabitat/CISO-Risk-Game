@@ -6,7 +6,7 @@
  * reducer is an architectural regression.
  */
 import type { ContentIndex, GameEffect, GameState } from '../types'
-import { CYBER_FUNCTIONS, clamp01 } from '../types'
+import { CYBER_FUNCTIONS, clamp01, round2 } from '../types'
 import { revealEdge, revealEvidence, revealNode } from '../knowledge/discovery'
 import { openDecision } from '../decisions/open'
 import { createIncident } from '../incidents/create'
@@ -464,6 +464,3 @@ export function recordAssumption(
   return id
 }
 
-function round2(value: number): number {
-  return Math.round(value * 100) / 100
-}

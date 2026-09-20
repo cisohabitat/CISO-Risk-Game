@@ -80,13 +80,28 @@ function play(difficulty: Difficulty, appetite: Appetite) {
       const runtime = state.decisions.decisions[id]!
       const def = index.decision.get(runtime.defId)!
       const rule = CHOICE.find(([t]) => t.test(def.title))
-      const option = rule ? def.options.find((o) => rule[1].test(o.label)) ?? def.options[0]! : def.options[0]!
-      const r = applyAction(state, index, {
-        type: 'resolveDecision', decisionId: id, optionId: option.id,
-        rationaleTagIds: [rule?.[2] ?? 'rat-more-evidence'],
-      })
-      if (r.ok) log.push(`d${state.currentDay} decide  ${def.title} → ${option.label}`)
-      else refused.push(`d${state.currentDay} decide  ${def.title}: ${r.message}`)
+      const preferred = rule ? def.options.find((o) => rule[1].test(o.label)) ?? def.options[0]! : def.options[0]!
+      // Preference first, then whatever else this year can pay for. Retrying
+      // only the preferred option leaves the decision open until it lapses into
+      // its default, which is not what a player does: the dialog disables what
+      // they cannot afford and they choose from what is left. Measured, the
+      // difference was real — objectives missed read 1.13 on CISO against 1.65
+      // — and all of it was the harness rather than the game.
+      const ordered = [preferred, ...def.options.filter((o) => o.id !== preferred.id)]
+      for (const option of ordered) {
+        const r = applyAction(state, index, {
+          type: 'resolveDecision', decisionId: id, optionId: option.id,
+          rationaleTagIds: [rule?.[2] ?? 'rat-more-evidence'],
+        })
+        if (r.ok) {
+          log.push(
+            `d${state.currentDay} decide  ${def.title} → ${option.label}` +
+            (option.id === preferred.id ? '' : ` (could not afford ${preferred.label})`),
+          )
+          break
+        }
+        refused.push(`d${state.currentDay} decide  ${def.title} → ${option.label}: ${r.message}`)
+      }
     }
 
     // The board, every quarter, with everything material on it.

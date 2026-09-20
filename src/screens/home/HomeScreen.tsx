@@ -126,7 +126,21 @@ export function HomeScreen() {
                     <Card>
                       <CardBody>
                         <div className="flex flex-wrap items-center gap-2">
-                          <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
+                          {/* An unassessed scenario has no residual to report.
+                              Rendering the 0 default as "Low residual" said the
+                              opposite of the truth about the one kind of risk
+                              the player most needs to go and look at. */}
+                          {risk.assessed ? (
+                            <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
+                          ) : (
+                            <Badge tone="neutral" glyph={false}>Not yet assessed</Badge>
+                          )}
+                          {/* Acceptance is a decision about a risk, not the
+                              removal of one, so it stays on the briefing and
+                              says what it is. */}
+                          {risk.status === 'accepted' && (
+                            <Badge tone="elevated" glyph={false}>Accepted — carried</Badge>
+                          )}
                           <Badge tone={confidenceTone(risk.confidence)} glyph={false}>
                             {risk.confidence} confidence
                           </Badge>

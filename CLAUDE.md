@@ -136,12 +136,137 @@ Measured, not yet fixed. Ranked.
   unless a playtest asks for it. A player who reports the second half dragging
   is the signal to act on; `docs/PLAYTEST.md` should ask about it.
 
+  **Independently re-raised by a source review**, which argued that a freeze
+  meant to prevent unnecessary expansion should not block a documented
+  weakness, and proposed the right shape for it: the last quarter should ask
+  *what organisation have I created, and what must I now change?* — a nearly
+  finished programme facing its adoption choice, a temporary acceptance due for
+  renewal on assumptions that have since moved, a service that outgrew the
+  resilience design it was given, pressure to cut next year's budget after a
+  quiet one. That is late-year decisions arising from the player's own
+  position rather than from the draw, and it is the most promising route
+  anybody has put forward. It is still authored content on a frozen campaign,
+  and the review that proposed it was explicit that it had not played the game.
+  The trigger remains a player, not a reading.
+
+- **Prioritisation measures decision discipline, not prioritisation.** Raised
+  by the same source review and left alone deliberately, because the honest fix
+  is not the cheap one. The dimension composes three things — whether the
+  player decided at all, whether they decided in time, and whether they
+  recorded why — none of which establish that scarce attention and money went to
+  the things that mattered. A player could answer every prompt promptly while
+  investing in the wrong problems and still read `strong`.
+
+  Renaming it to "decision discipline" would describe it accurately and is a
+  one-line change, but `docs/IMPLEMENTATION_PLAN.md` names *prioritisation* in
+  the review's eight dimensions, so the implementation is what diverges from the
+  spec, not the label. Making it measure the real thing means scoring spend
+  against materiality the hidden graph already knows — which is a new scoring
+  system on a frozen dimension, overlapping `unexaminedMaterial` in the
+  blind-spots dimension, and needs its distribution measured across play styles
+  before anyone trusts it. That is a decision to take deliberately rather than
+  in passing.
+
 Add measured findings here rather than suspicions —
 each entry below was found with one of the harnesses above and closed the same
 way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **Five things found by a source review of the assessment rules, and what
+  measuring them actually showed.** A reviewer read the repository rather than
+  playing it and raised five defects. All five were real in the source. Two of
+  the fixes then had to be rebuilt after measurement contradicted the first
+  attempt, and a third turned out to be broader than reported.
+
+  **The budget floor concealed a shortfall instead of resolving it.** The floor
+  on `budget.change` stopped the balance going negative, and that was all it
+  did. Affordability was checked against `requirements.budget` — and **not one
+  of the fifteen priced options declared it**, so the gate was dead for every
+  decision in the game, not just the reported one. £320k of emergency response
+  could be taken with £100k left: budget to zero, full containment and morale
+  benefit applied, and the missing £220k recorded nowhere. A player who kept a
+  contingency finished level with one who spent everything.
+
+  Options now state a price once, as the negative `budget.change` the reducer
+  applies, and the gate is derived from it — so it covers all fifteen and cannot
+  drift from what is actually spent. `budgetTreatment` says how it is funded:
+  `discretionary` (the default) is refused unless the year can pay, `imposed`
+  is money taken from you and floors without becoming a debt, and `emergency`
+  may exceed the allocation with the shortfall carried in
+  `resources.unfundedCommitment` and named in the annual review. The price is on
+  the card now instead of the word "Expensive". A content test fails the build
+  if any decision's every option is discretionary and priced, because a
+  decision nobody can afford would lapse into its default for the one reason the
+  player can do least about; **0 of 26 are, today**.
+
+  Measured over 40 seeds per mode: the simulation is unmoved (incidents
+  0.50 / 0.95 / 1.70, programmes 2.8 / 1.9 / 1.2, board 0.61 / 0.62 / 0.63,
+  soak 1.20 / 28% / 3% — all unchanged) and one row moves. Objectives missed
+  went 1.88 / 1.65 / 1.50 → 1.88 / 1.13 / 1.30, and the cause is a single
+  substitution a campaign: the player wants to quarantine the acquisition
+  (£120k), cannot afford it, connects on schedule instead, and the business
+  keeps its date while the exposure is carried. That is the trade-off the game
+  exists to teach, and it used to be free. **Checked it was not lapsing**: the
+  ladder retried one option daily until it timed out, which no player does —
+  the dialog disables what they cannot afford and they pick from the rest. The
+  harness falls back now, and the row did not move back, so the substitution is
+  real. Mutation-checked, six ways.
+
+  **A quiet year was automatically resilient.** `resilience` was
+  `1 - worstConsequence * 0.8`, and with no incident the worst consequence
+  defaults to zero, so every untested year reached the maximum — while the
+  sentence beside it read "whether that was capability or fortune is worth
+  asking". The verdict answered the prose's question, in the player's favour.
+  Absence of an incident is an outcome, not evidence of capability. A tested
+  year is still scored on how the organisation came through it; an untested one
+  is scored on whether recovery was ever exercised — `inv-recovery-test` or
+  `inv-ir-readiness` completed, and recovery controls the player established
+  assurance over themselves rather than inheriting — and is capped below
+  `strong`, because nothing demonstrated it.
+
+  **The first version of that fix was wrong and measurement caught it.**
+  Multiplying the exercise and capability terms put all three play styles in
+  `developing` — a dial with no room to move, the same failure as
+  `noiseMultiplier`. Adding them instead discriminates: over 20 quiet years on
+  guided, an idle player reads `weak`, one who exercises recovery
+  `developing`, and one who builds the ransomware programme *and* exercises it
+  `solid` (10 of 12, mean recovery capability 0.13 → 0.33). Across the ladder
+  `developing` went 2/9/17 → 4/12/20 of 40, still monotonic.
+
+  **The reasoning review ignored chronology.** It built one set of incident
+  paths for the whole year and asked whether an accepted risk shared one, with
+  no day comparison — so an incident on day 40 could be cited as evidence
+  against an acceptance made on day 120 through the same path, which may have
+  been made *because* of that incident, after remediating it. Incidents are kept
+  with their days now and only count against reasoning recorded before them.
+
+  **Accepting a risk removed it from the player's own top concerns.**
+  `topConcerns` filtered to `open`, `treated` and `emerging`, so a material risk
+  disappeared from the Briefing precisely because the player took
+  responsibility for it — teaching that acceptance is how you make something go
+  away. Accepted risks stay and are badged "Accepted — carried"; only `closed`
+  drops off. In the same selector, an unassessed scenario took
+  `riskBand(residual ?? 0)` and rendered as **Low residual**, so "we have not
+  looked at this" and "we looked, and it is fine" were the same row. It reads
+  "Not yet assessed" now and sorts after the assessed rather than among the low.
+  **Reachable in 12 of 12 campaigns** — a risk the player raises themselves is
+  unassessed until they assess it — though the first probe said zero because it
+  never raised one. Third harness fault this session.
+
+  **Some decisions printed the preferred answer above the options.** Seven
+  decisions carry a `teaches` note and it rendered in the dialog while the
+  player was choosing: the platform launch reads "Supporting with conditions is
+  usually more effective than opposing outright" above an option labelled
+  "Support, with conditions". The game says that decision has no mechanically
+  superior answer; the note gave it one. It is now the profile's
+  `showsDecisionCoaching` — guided keeps it, CISO and high pressure give the
+  same facts and let the debrief judge afterwards. One decision context named
+  its answer too ("saying yes with conditions… usually lands better") and now
+  states the trade-off without the verdict. The mechanics lessons in
+  `lessons.ts` are untouched: those explain what a mechanic *is*, which every
+  mode still needs.
 
 - **A consequence could take the budget below zero.** `spendBudget` refuses
   any player action that would overdraw, and `focus.change` and

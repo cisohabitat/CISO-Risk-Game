@@ -160,6 +160,23 @@ export function clamp(value: number, min: number, max: number): number {
 }
 
 /** Day 0 is the first day in post. The MVP campaign is one 364-day year. */
+/**
+ * Budget in the words the game uses. It lives here rather than in
+ * `src/lib/formatting` because the engine needs it — an option that is refused
+ * for cost has to say what the cost was — and that module reaches into
+ * `@/components`, which engine code may not import. `labels.ts` re-exports this
+ * one so there is still a single implementation.
+ */
+export function money(amount: number): string {
+  if (Math.abs(amount) >= 1000) return `£${(amount / 1000).toFixed(amount % 1000 === 0 ? 0 : 1)}m`
+  return `£${Math.round(amount)}k`
+}
+
+/** Rounds to pence, so repeated budget arithmetic cannot drift. */
+export function round2(value: number): number {
+  return Math.round(value * 100) / 100
+}
+
 export const CAMPAIGN_DAYS = 364
 export const DAYS_PER_WEEK = 7
 export const DAYS_PER_QUARTER = 91

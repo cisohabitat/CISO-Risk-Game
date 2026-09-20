@@ -310,6 +310,20 @@ export interface DecisionOptionDef {
     minTrust?: number
     condition?: Condition
   }
+  /**
+   * How the option's own cost is funded. The cost itself is the negative
+   * `budget.change` in `immediateEffects` — stated once, as data, so it cannot
+   * drift from what the reducer applies.
+   *
+   * - `discretionary` (the default): a purchase. Refused unless the year can
+   *   pay for it, so nobody receives the benefit of something they could not
+   *   afford.
+   * - `imposed`: money taken from you rather than spent by you. Never refused;
+   *   what is not there is simply not taken.
+   * - `emergency`: may exceed the allocation, and the shortfall is recorded
+   *   against the year as an unfunded commitment rather than vanishing.
+   */
+  budgetTreatment?: 'discretionary' | 'imposed' | 'emergency'
   rationaleTagIds?: string[]
   assumptionIds?: string[]
 }

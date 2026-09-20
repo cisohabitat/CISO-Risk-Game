@@ -52,6 +52,22 @@ export interface DifficultyProfile {
   noiseMultiplier: number
   executiveTolerance: number
   investigationSpeed: number
+  /**
+   * Whether a decision's `teaches` note is shown while the player is choosing.
+   *
+   * Seven decisions carry one, and several name the answer: the platform launch
+   * reads "Supporting with conditions is usually more effective than opposing
+   * outright" above an option labelled "Support, with conditions". That turns a
+   * judgement the game says has no mechanically superior answer into a question
+   * with a signposted one, and it was shown at every difficulty.
+   *
+   * Guided keeps it — learning the shape of the job is what that mode is for.
+   * The harder modes give the player the same facts and let the debrief say
+   * afterwards whether the call was any good. The mechanics lessons in
+   * `src/components/game/lessons.ts` are unaffected: those explain what a
+   * mechanic *is*, which every mode still needs on first encounter.
+   */
+  showsDecisionCoaching: boolean
 }
 
 export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
@@ -66,6 +82,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     noiseMultiplier: 0.7,
     executiveTolerance: 0.62,
     investigationSpeed: 0.85,
+    showsDecisionCoaching: true,
   },
   ciso: {
     budgetMultiplier: 1,
@@ -78,6 +95,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     noiseMultiplier: 1,
     executiveTolerance: 0.5,
     investigationSpeed: 1,
+    showsDecisionCoaching: false,
   },
   // High pressure makes the world harsher and leaves the player's levers close
   // to intact. Squeezing both — as this used to — cuts the very channels
@@ -94,6 +112,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     noiseMultiplier: 1.3,
     executiveTolerance: 0.38,
     investigationSpeed: 1.1,
+    showsDecisionCoaching: false,
   },
 }
 
@@ -305,6 +324,7 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
       budgetTotal: Math.round(content.meta.startingBudget * profile.budgetMultiplier),
       budgetRemaining: Math.round(content.meta.startingBudget * profile.budgetMultiplier),
       budgetCommitted: 0,
+      unfundedCommitment: 0,
       focusPerWeek: profile.focusPerWeek,
       focusRemaining: profile.focusPerWeek,
       weekIndex: 0,

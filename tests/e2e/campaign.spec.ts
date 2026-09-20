@@ -341,6 +341,56 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByRole('dialog')).toBeHidden()
   })
 
+  test('a priced option shows its price rather than calling itself expensive', async ({ page }) => {
+    await startCampaign(page, 'e2e-price')
+
+    // Walk the year until a decision with a priced option comes up. Fifteen of
+    // the eighty options carry one; the first few decisions may not.
+    let found = false
+    for (let i = 0; i < 40 && !found; i += 1) {
+      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      if (await decide.isVisible().catch(() => false)) {
+        await decide.click()
+        const dialog = page.getByRole('dialog')
+        await expect(dialog).toBeVisible()
+        // A price reads as £120k or £1.2m, beside the option it belongs to.
+        if (await dialog.getByText(/£\d+(\.\d+)?[km]/).first().isVisible().catch(() => false)) {
+          found = true
+          // Never an adjective standing in for a number the business knows.
+          await expect(dialog.getByText('Expensive', { exact: true })).toHaveCount(0)
+        }
+        await page.keyboard.press('Escape')
+        await expect(dialog).toBeHidden()
+      }
+      if (!found) {
+        await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+      }
+    }
+    expect(found, 'no priced decision option appeared in the first 40 stops').toBe(true)
+  })
+
+  test('the harder modes do not print the answer above the options', async ({ page }) => {
+    // Guided explains; CISO does not. The note is the profile's
+    // `showsDecisionCoaching`, so this is the dial seen from the outside.
+    await startCampaign(page, 'e2e-coach') // the start screen defaults to CISO
+    let sawNote = false
+    for (let i = 0; i < 25 && !sawNote; i += 1) {
+      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      if (await decide.isVisible().catch(() => false)) {
+        await decide.click()
+        const dialog = page.getByRole('dialog')
+        await expect(dialog).toBeVisible()
+        if (await dialog.getByText(/usually more effective than|can build more credibility/).first().isVisible().catch(() => false)) {
+          sawNote = true
+        }
+        await page.keyboard.press('Escape')
+        await expect(dialog).toBeHidden()
+      }
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+    }
+    expect(sawNote, 'CISO printed a teaching note naming the preferred answer').toBe(false)
+  })
+
   test('no uncaught errors during normal play', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))

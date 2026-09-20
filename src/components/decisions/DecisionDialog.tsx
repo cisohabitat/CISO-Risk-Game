@@ -10,6 +10,7 @@ import { Badge, Button, Dialog } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { openDecisions, type OpenDecisionView } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
+import { money } from '@/lib/formatting/labels'
 
 export function DecisionDialog({ decisionId, onClose }: { decisionId: string; onClose: () => void }) {
   const state = useGameStore((store) => store.state)
@@ -97,7 +98,15 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                 style={{ minHeight: 0 }}
               />
               <span className="min-w-0 flex-1">
-                <span className="block font-medium">{option.label}</span>
+                <span className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-medium">{option.label}</span>
+                  {/* A price the organisation already knows is not part of the
+                      uncertainty. "Expensive" told the player nothing they could
+                      weigh against the budget bar on the same screen. */}
+                  {option.budgetCost !== undefined && (
+                    <span className="text-sm tabular-nums text-ink-faint">{money(option.budgetCost)}</span>
+                  )}
+                </span>
                 <span className="mt-0.5 block text-sm text-ink-muted text-pretty">{option.description}</span>
                 {option.visibleKnownEffects.length > 0 && (
                   <ul className="mt-2 space-y-1">
@@ -108,6 +117,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                       </li>
                     ))}
                   </ul>
+                )}
+                {option.exceedsBudget && (
+                  <span className="mt-2 block text-sm text-band-elevated">
+                    This commits more than the year has left. The shortfall will be carried as unfunded.
+                  </span>
                 )}
                 {option.blockedReason && (
                   <span className="mt-2 block text-sm text-band-high">{option.blockedReason}</span>

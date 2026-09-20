@@ -8,12 +8,13 @@
 import type {
   ContentIndex,
   CyberFunction,
+  DecisionOptionDef,
   GameEffect,
   GameState,
   HypothesisRuntime,
   PauseReason,
 } from '../types'
-import { CAMPAIGN_DAYS, clamp01 } from '../types'
+import { CAMPAIGN_DAYS, clamp01, money, round2 } from '../types'
 import { createRng } from './rng'
 import { applyEffects, recordAssumption } from './effects'
 import { tickDay, type TickResult } from './tick'
@@ -103,6 +104,36 @@ function spendBudget(state: GameState, amount: number): boolean {
 }
 
 /**
+ * What an option costs, read from the option itself.
+ *
+ * The price is authored once, as the negative `budget.change` the reducer will
+ * apply, so a gate derived from it cannot drift from what actually gets spent.
+ * Deriving it also means every priced option is covered: none of the fifteen
+ * carrying a cost had ever declared `requirements.budget`, so the affordability
+ * gate was dead for decisions and the floor on `budget.change` silently ate the
+ * difference — you could take £320k of emergency response with £100k left, keep
+ * the whole benefit, and the missing £220k appeared nowhere.
+ */
+export function optionBudgetCost(option: DecisionOptionDef): number {
+  let cost = 0
+  for (const effect of option.immediateEffects) {
+    if (effect.type === 'budget.change' && effect.amount < 0) cost -= effect.amount
+  }
+  return round2(cost)
+}
+
+/** Why an option's cost may or may not be refused. See `budgetTreatment`. */
+export function budgetBlockReason(state: GameState, option: DecisionOptionDef): string | undefined {
+  const treatment = option.budgetTreatment ?? 'discretionary'
+  if (treatment !== 'discretionary') return undefined
+  const cost = optionBudgetCost(option)
+  if (cost > 0 && state.resources.budgetRemaining < cost) {
+    return `There is not enough budget left this year for that (it costs ${money(cost)}).`
+  }
+  return undefined
+}
+
+/**
  * Applies a player action in place. Callers own immutability (the store uses
  * Immer); the engine itself only needs determinism.
  */
@@ -149,6 +180,8 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
         return fail('There is not enough budget left this year for that option.')
       }
+      const budgetBlocked = budgetBlockReason(state, option)
+      if (budgetBlocked) return fail(budgetBlocked)
       if (requirements?.focus && state.resources.focusRemaining < requirements.focus) {
         return fail('You have no attention left this week for that.')
       }
@@ -165,6 +198,17 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
 
       if (requirements?.budget) spendBudget(state, requirements.budget)
       if (requirements?.focus) spendFocus(state, requirements.focus)
+
+      // Emergency spend is allowed to exceed the year's allocation — that is
+      // what makes it an emergency — but the shortfall is carried rather than
+      // absorbed by the floor on `budget.change`. Recorded before the effects
+      // apply, while the remaining balance still says what could be met.
+      if ((option.budgetTreatment ?? 'discretionary') === 'emergency') {
+        const shortfall = round2(Math.max(0, optionBudgetCost(option) - state.resources.budgetRemaining))
+        if (shortfall > 0) {
+          state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment + shortfall)
+        }
+      }
 
       decision.selectedOptionId = option.id
       decision.resolvedDay = state.currentDay

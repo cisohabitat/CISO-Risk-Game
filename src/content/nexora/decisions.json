@@ -335,13 +335,13 @@
       "id": "dec-budget-reallocation",
       "title": "Finance asks for the cyber budget back",
       "description": "The cost reduction programme needs a contribution. Finance has asked for 15% of the remaining cyber budget.",
-      "context": "Saying no costs credit. Saying yes costs capability. Saying yes with conditions is harder to argue but usually lands better.",
+      "context": "Saying no costs credit. Saying yes costs capability. A smaller contribution from a named line is harder to argue for, and requires you to know your own plan well enough to name one.",
       "deadlineDays": 10,
       "defaultOptionId": "opt-budget-give",
       "requiresRationale": true,
       "relatedNodeIds": [],
       "options": [
-        { "id": "opt-budget-give", "label": "Give it up", "description": "Take the cut and reprioritise.", "visibleKnownEffects": ["Programmes will move more slowly"],
+        { "id": "opt-budget-give", "budgetTreatment": "imposed", "label": "Give it up", "description": "Take the cut and reprioritise.", "visibleKnownEffects": ["Programmes will move more slowly"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -220, "note": "Budget returned to the cost programme." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.1, "reason": "You contributed to the cost programme without a fight." },
@@ -353,7 +353,7 @@
             { "type": "stakeholder.understanding", "stakeholderId": "stk-cfo", "delta": 0.06 },
             { "type": "objective.delay", "objectiveId": "obj-cost-programme", "days": 20 }
           ] },
-        { "id": "opt-budget-partial", "label": "Offer a smaller contribution from a specific line", "description": "Give back what you can name, and protect what you cannot.", "visibleKnownEffects": ["Half the cut", "Requires you to know your own plan well"],
+        { "id": "opt-budget-partial", "budgetTreatment": "imposed", "label": "Offer a smaller contribution from a specific line", "description": "Give back what you can name, and protect what you cannot.", "visibleKnownEffects": ["Half the cut", "Requires you to know your own plan well"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -110, "note": "Partial contribution to the cost programme." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.05, "reason": "You made a specific, defensible offer." },
@@ -600,7 +600,7 @@
       "requiresRationale": false,
       "relatedNodeIds": [],
       "options": [
-        { "id": "opt-inc-ext-yes", "label": "Bring in external response support", "description": "Pay the emergency rate.", "visibleKnownEffects": ["Expensive", "Materially better forensics and containment"],
+        { "id": "opt-inc-ext-yes", "budgetTreatment": "emergency", "label": "Bring in external response support", "description": "Pay the emergency rate.", "visibleKnownEffects": ["Materially better forensics and containment", "Emergency rates, payable whether or not the budget can meet them"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -320, "note": "Emergency incident response engagement." },
             { "type": "incident.containment", "delta": 0.2 },

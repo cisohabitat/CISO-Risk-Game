@@ -391,6 +391,14 @@ export interface ResourceState {
   focusPerWeek: number
   focusRemaining: number
   weekIndex: number
+  /**
+   * Spend committed beyond the year's allocation, in the same units as the
+   * budget. Only emergency options can create it. It exists so a shortfall is
+   * carried and answered for rather than absorbed by the floor on
+   * `budget.change`: a player who keeps a reserve should not finish level with
+   * one who spent everything and then took unfunded emergency support.
+   */
+  unfundedCommitment: number
 }
 
 export interface BusinessObjectiveRuntime {
