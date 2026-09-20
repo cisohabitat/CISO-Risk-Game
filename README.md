@@ -6,6 +6,13 @@ vulnerabilities, a risk register nobody trusts, four transformation programmes,
 a managed service provider with more privileged access than anyone documented,
 and a CEO who wants three answers in twenty-three minutes.
 
+**▶ Play it: [ciso-risk-game.vercel.app](https://ciso-risk-game.vercel.app)**
+
+No account, no sign-in, nothing to install. The whole simulation runs in your
+browser and your campaign saves to the device you played it on. New to it?
+[`docs/PLAYER_GUIDE.md`](docs/PLAYER_GUIDE.md) assumes you know nothing about
+the game or the subject.
+
 The design test applied to every feature is the one from the specification:
 
 > **Am I managing cyber risk, or merely answering cybersecurity questions?**
@@ -95,7 +102,7 @@ schemas and a referential integrity pass:
 | Hypothesis templates / risk scenarios | 14 / 14 |
 | Lines of enquiry | 18 |
 | Decisions / decision options | 26 / 80 |
-| Events | 97 |
+| Events | 123 |
 
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.
@@ -103,13 +110,13 @@ conditions, unreachable decisions, invalid effect targets and dependency cycles.
 ## How it behaves
 
 1,000 automated campaigns across all three difficulties (`pnpm soak 1000`, about
-50 seconds):
+half a minute):
 
 ```
   crashes            0
   invariant failures 0
-  incidents per run  1.32
-  years with none    26%
+  incidents per run  1.20
+  years with none    28%
   years with 4+      3%
 ```
 
@@ -134,6 +141,15 @@ The production build is a static application: no server rendering, no API
 routes, no cron, no database, no runtime secret. It deploys to Vercel Hobby (or
 any static host) and the whole campaign runs in the browser with saves in
 IndexedDB. See [`docs/HOSTING.md`](docs/HOSTING.md), including the release gate.
+
+Live at **<https://ciso-risk-game.vercel.app>**. The release gate's last step
+runs the end-to-end suite against that deployment rather than a local build,
+because SPA rewrites, headers, caching and asset paths are only exercised by the
+real thing:
+
+```bash
+BASE_URL=https://ciso-risk-game.vercel.app pnpm test:e2e:live
+```
 
 Vercel Hobby is for personal, non-commercial use. A commercial or organisational
 deployment needs an appropriate paid plan.

@@ -12,7 +12,7 @@ const chromiumLaunch = existsSync(LOCAL_CHROMIUM)
  * Runs the end-to-end and accessibility suites against an already-deployed
  * build instead of a local preview server.
  *
- *   BASE_URL=https://your-deployment.vercel.app pnpm test:e2e:live
+ *   BASE_URL=https://ciso-risk-game.vercel.app pnpm test:e2e:live
  *
  * This is the last item on the release gate in docs/HOSTING.md: everything else
  * is verified against `dist/` locally, but only a run against the real

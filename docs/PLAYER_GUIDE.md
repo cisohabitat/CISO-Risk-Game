@@ -9,6 +9,9 @@ and nothing to click quickly. The whole game is **deciding what deserves your
 attention when you cannot possibly cover everything**, and then living with what
 you chose.
 
+Play it at **<https://ciso-risk-game.vercel.app>** — no account, nothing to
+install.
+
 This guide assumes you have never played and know nothing about the subject. It
 takes about ten minutes to read, and you do not need it to start — the game
 teaches itself as you go — but it will save you the first hour of confusion.
