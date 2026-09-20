@@ -50,6 +50,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm tsx scripts/tune.ts 25` | Do different play styles produce different outcomes? |
 | `pnpm screenshots` | What do the screens currently look like? |
 | `pnpm playthrough` | One campaign played end to end, photographed as it goes |
+| `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
 None of them answer whether the game lands: that needs people, and
@@ -73,12 +74,69 @@ what not to change on one player's word.
 
 Measured, not yet fixed. Ranked.
 
-Nothing ranked at present. Add measured findings here rather than suspicions —
+- **The year fades instead of building.** Measured over 12 campaigns of engaged
+  play: decisions arrive 11.7, 4.7, 2.5 and 1.3 times per quarter, so Q4 carries
+  roughly an eighth of Q1. The longest stretch with nothing to decide averages
+  128 days and reaches 164 — nearly half the year. The inbox thins the same way:
+  104 messages from 88 distinct subjects in the first half against 42 from 24 in
+  the second, so H2 both says less and repeats itself twice as often. Played by
+  hand, the back half of a campaign is a loop of four recycled threat-intel
+  subjects. Confirmed not to be the harness: a player who varies their choices
+  gets the same shape (11.7 / 4.7 / 2.5 / 1.3) as one who always takes the first
+  option.
+
+  Not fixed, deliberately. Every route to it is a system this project has
+  frozen — authoring more late-year content, or reweighting the event draw —
+  and the file's own rule is that further simulation now makes the game worse
+  unless a playtest asks for it. A player who reports the second half dragging
+  is the signal to act on; `docs/PLAYTEST.md` should ask about it.
+
+Add measured findings here rather than suspicions —
 each entry below was found with one of the harnesses above and closed the same
 way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **Two things found by playing a second year, investigating this time.** The
+  first pass answered decisions and never commissioned anything; this one
+  commissioned work, formed patterns and raised risks, and the different route
+  found different faults.
+
+  A pattern was offered on the strength of a **misconfigured print server**.
+  `ev-soc-noise-printers` is marked `noise: true` in the content and reads
+  "Benign. Worth fixing, not worth a programme", and `patternSuggestions`
+  counted it toward the two pieces an offer needs. Measured over 20 campaigns:
+  308 offer-days cited a red herring, and in 160 of them — at least one in
+  **every campaign** — the offer existed only because of it. Noise is now
+  excluded from what supports a proposition, which is the same rule already
+  applied to contradicting evidence. The template stays reachable: offers fell
+  0.8% and offer-days 0.6%. Mutation-checked — putting the red herring back
+  fails `tests/engine/presentation.test.ts` by name.
+
+  **The board pack was empty for the player who had done the most.** A
+  scenario counted as material only at residual >= 0.45, a number from the
+  middle of the `elevated` band, so a player's own mitigation pushed the risks
+  they had raised off their own agenda. Measured over 12 campaigns with 7 live
+  scenarios each: **78% of board packs had nothing material and Q1 was empty in
+  12 of 12** — worse than an idle player's 47%, and an empty pack scored full
+  coverage and full board confidence. Plan §28.7 asks the player to "choose
+  material topics", which needs something to choose between. Materiality is now
+  read in bands: residual `elevated` or worse, **or** consequence `elevated` or
+  worse (a severe-consequence risk you believe you control is exactly what a
+  board needs to know you are relying on), **or** accepted (carried on the
+  organisation's behalf). Empty packs went to 0% for both play styles, 2.0-2.5
+  material items per pack for an engaged player against 1.3-2.3 for an idle
+  one, and year-end board confidence was unmoved (0.55 idle, 0.64 to 0.65
+  engaged).
+
+  A third thing turned up while wiring the harness: `convertHypothesis` would
+  **raise the same hypothesis twice**. The workspace hides the button once a
+  hypothesis is raised, so the rule lived only in the component; called again it
+  charged attention, wrote a duplicate note and a second history entry, and set
+  `scenario.status = 'open'` over a risk the player had since **accepted**,
+  discarding a recorded rationale in silence. The action refuses now, like every
+  other branch of `applyAction`.
 
 - **The annual review graded a player well and told them they had failed.**
   Found by playing a whole year one decision at a time and reading the closing
@@ -175,6 +233,20 @@ simulated player actually did before concluding the game is at fault.
   and are never rendered as numbers.
 
 ### Checked and left alone
+
+- **The reasoning review read as congratulation.** Two hand-played years closed
+  with six rationale lines and all six saying "nothing this year contradicted
+  it", which looked like a section that never reckons with anything. It was the
+  play, not the game. Contradiction reaches a rationale two ways — a risk the
+  player formally **accepted** whose attack path later carried an incident, and
+  an assumption recorded beside a choice that stopped holding — and only 7 of
+  80 decision options record an assumption, all of them the permissive one
+  (wave the launch through, leave the supplier alone, note the anomaly and
+  watch). Measured over 12 campaigns per style: a permissive player is
+  contradicted in 11 of 12 campaigns and 18 of 47 lines, a player who formally
+  accepts what they raise in 12 of 12 and 26 of 48, and a careful player in 0
+  of 12 — correctly, because nothing they relied on failed. Both playthroughs
+  were careful. Nothing changed.
 
 - **Message pacing.** Worth recording because the worry was reasonable and the
   measurement did not support acting on it. Over 20 campaigns and 1,040

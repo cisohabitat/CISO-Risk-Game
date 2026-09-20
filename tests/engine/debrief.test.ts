@@ -29,6 +29,27 @@ describe('reviews', () => {
     expect(covered.effects.some((e) => e.type === 'board.confidence' && e.delta > 0)).toBe(true)
   })
 
+  it('puts a risk the player raised on the board agenda, controlled or not', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-board' })
+    applyAction(state, index, { type: 'openRisk', scenarioId: 'risk-supplier-ransomware' })
+    runDays(state, index, 91)
+
+    // The player's own work has brought the likelihood down; the consequence
+    // to the business is unchanged. Judging materiality on residual alone
+    // dropped exactly these off the agenda — the better the player did, the
+    // less the board heard, which is backwards.
+    const scenario = state.risks.scenarios['risk-supplier-ransomware']!
+    scenario.lastAssessed = { day: state.currentDay, exposure: 0.1, consequence: 0.6, residual: 0.2 }
+    expect(materialTopics(state, index).some((t) => t.id.endsWith('risk-supplier-ransomware') && t.material)).toBe(true)
+
+    // And a risk carried on the organisation's behalf is theirs to know about.
+    scenario.lastAssessed = { day: state.currentDay, exposure: 0.05, consequence: 0.1, residual: 0.05 }
+    expect(materialTopics(state, index).some((t) => t.id.endsWith('risk-supplier-ransomware') && t.material)).toBe(false)
+    scenario.status = 'accepted'
+    expect(materialTopics(state, index).some((t) => t.id.endsWith('risk-supplier-ransomware') && t.material)).toBe(true)
+  })
+
   it('produces a multi-dimensional narrative review rather than a single score', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'rev-2' })

@@ -327,6 +327,13 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (!hypothesis) return fail('That hypothesis no longer exists.')
       const template = index.hypothesisTemplate.get(hypothesis.templateId)
       if (!template) return fail('That hypothesis template is missing.')
+      // The workspace hides the button once a hypothesis is raised, but the
+      // rule belongs where it is decided: a second conversion charged
+      // attention again, wrote a duplicate "raised from a hypothesis" note and
+      // a second history entry, and reopened a scenario the player had since
+      // accepted — discarding a recorded rationale without saying so.
+      if (hypothesis.status === 'converted') return fail('That hypothesis has already been raised as a risk scenario.')
+      if (hypothesis.status === 'rejected') return fail('You set that hypothesis aside.')
       if (hypothesis.supportingEvidenceIds.length === 0) {
         return fail('A risk scenario needs at least one piece of supporting evidence behind it.')
       }

@@ -866,8 +866,15 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
     // supporting tag alone listed "Supplier assurance questionnaire returned
     // clean" under "what suggests it", which cites reassurance as grounds for
     // alarm. What argues against a proposition is not evidence for it.
+    // Evidence the content marks as noise is a red herring by design — the
+    // printer alerts read "Benign. Worth fixing, not worth a programme." —
+    // and counting it made the game offer "a material intrusion could
+    // progress unnoticed" on the strength of a misconfigured print server.
+    // Discriminating signal from noise is what the player is here to learn;
+    // the game cannot do it for them and then get it wrong itself.
     const supporting = known.filter(
       (def) =>
+        def.noise !== true &&
         def.tags.some((tag) => template.supportingTags.includes(tag)) &&
         !def.tags.some((tag) => template.contradictingTags.includes(tag)),
     )

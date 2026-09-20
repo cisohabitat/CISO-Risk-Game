@@ -9,9 +9,10 @@
  *   pnpm play commission <investigationId> <leaderId>
  *   pnpm play programme <programmeId>
  *   pnpm play pattern <form|dismiss>
+ *   pnpm play raise                     # work a formed hypothesis up into a scenario
  *   pnpm play board                     # take the material items
  *   pnpm play risk <open|accept> <scenarioId> [rationaleTag]
- *   pnpm play look <risk|team|programmes|org>
+ *   pnpm play look <risk|team|programmes|work|org>
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
@@ -20,6 +21,8 @@ import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, incidentCommand, collisions, briefing, teamView, programmeViews, visibleRisks } from '../src/store/selectors'
+import { evaluateCondition } from '../src/game/events/conditions'
+import { availableCapacity } from '../src/game/team/capacity'
 import type { Difficulty, GameState } from '../src/game/types'
 
 // Gitignored, and outside the session's temp dir so a year survives a restart.
@@ -153,6 +156,19 @@ if (command === 'new') {
     console.log(`dismissed: ${pat.title}`)
   }
   save(state)
+} else if (command === 'raise') {
+  // Forming costs attention and converting costs more, so a hypothesis can sit
+  // formed but unraised for a week. The Hypothesis workspace has the same
+  // button; without it here the harness strands them.
+  const state = load()
+  const pending = Object.values(state.risks.hypotheses).filter((h) => h.status !== 'converted' && h.status !== 'rejected')
+  for (const h of pending) {
+    const r = applyAction(state, index, { type: 'convertHypothesis', hypothesisId: h.id })
+    console.log(r.ok ? `raised ${h.templateId}` : `${h.templateId}: ${r.message}`)
+    if (!r.ok) break
+  }
+  if (pending.length === 0) console.log('nothing formed and waiting')
+  save(state)
 } else if (command === 'board') {
   const state = load()
   const quarter = state.reviews.pendingQuarter!
@@ -178,6 +194,20 @@ if (command === 'new') {
     const t = teamView(state, index)
     for (const f of t.functions) console.log(`  ${f.fn.padEnd(18)} ${f.band} · morale ${f.moraleLabel} · ${f.vacancies} vacancies`)
     for (const a of t.assignments) console.log(`  running: ${a.title} (${a.daysRemaining}d)`)
+  } else if (what === 'work') {
+    // The same availability filter the Investigations screen applies, so the
+    // harness sees the list a player would see rather than the whole content
+    // file.
+    for (const inv of index.content.investigations) {
+      if (inv.requiresCondition && !evaluateCondition(state, index, inv.requiresCondition)) continue
+      if (!inv.repeatable && state.team.assignments.some((a) => a.refId === inv.id)) continue
+      const short = Object.entries(inv.capacityPerDay).some(([fn, d]) => (d ?? 0) > availableCapacity(state, fn as never))
+      console.log(`  [${inv.id}] ${inv.name}${short ? ' (capacity short)' : ''}`)
+    }
+    console.log('  leaders: ' + index.content.leaders.map((l) => l.id).join(', '))
+    for (const p of programmeViews(state, index).filter((p) => p.status === 'proposed')) {
+      console.log(`  [${p.id}] ${p.name} — not started`)
+    }
   } else if (what === 'programmes') {
     for (const p of programmeViews(state, index)) console.log(`  ${p.status.padEnd(9)} ${p.progressPercent}% ${p.name} — ${p.confidenceLabel}, staffing ${p.staffingLabel}`)
   } else {

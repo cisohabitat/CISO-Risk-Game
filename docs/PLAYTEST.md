@@ -16,7 +16,12 @@ Five questions, none of which a test can answer:
 1. **Where did they stop understanding?** Not "did they fail" — where did the
    game stop explaining itself. The moment someone reads a screen twice.
 2. **Where did they get bored?** Which stretch of the year did they click
-   through rather than play.
+   through rather than play. There is a measured suspect: decisions arrive
+   11.7, 4.7, 2.5 and 1.3 times per quarter, and the second half of the year
+   sends half as much mail from a quarter as many distinct subjects. Do not
+   lead the witness — watch the clock and see whether they slow down where the
+   numbers say they should. A session that does not is the more interesting
+   result.
 3. **What did they not notice?** A collision, a pattern offer, an assumption
    failing. Anything the game surfaced and the player walked past.
 4. **Which decision made them stop and think?** If none did, the game is a

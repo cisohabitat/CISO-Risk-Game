@@ -16,7 +16,7 @@ import type {
 import { clamp01 } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { unexaminedAssumptions } from '../assumptions/validation'
-import { riskBand } from '../risk/bands'
+import { compareBands, riskBand } from '../risk/bands'
 import { moraleLabel, teamStrain } from '../team/capacity'
 
 export interface QuarterReviewInput {
@@ -37,8 +37,23 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
     if (scenario.status === 'closed' || scenario.status === 'emerging') continue
     const def = index.riskScenario.get(scenario.id)
     if (!def) continue
-    const residual = scenario.lastAssessed?.residual ?? 0
-    out.push({ id: `risk:${scenario.id}`, label: def.title, material: residual >= 0.45 })
+    // Materiality read in bands rather than against a number picked out of the
+    // middle of one. Residual alone said nothing was material in 78% of board
+    // packs for a player who investigated, decided and raised — more often
+    // than for one who did nothing, because their own work pushed residual
+    // under the bar and took the risk off the agenda. "Choose material
+    // topics" (plan §28.7) needs something to choose between.
+    const residual = riskBand(scenario.lastAssessed?.residual ?? 0)
+    const consequence = riskBand(scenario.lastAssessed?.consequence ?? 0)
+    const material =
+      compareBands(residual, 'elevated') >= 0 ||
+      // A severe-consequence risk you believe you have controlled is exactly
+      // what a board needs to know you are relying on.
+      compareBands(consequence, 'elevated') >= 0 ||
+      // Accepting risk is done on the organisation's behalf, so the
+      // organisation hears about it.
+      scenario.status === 'accepted'
+    out.push({ id: `risk:${scenario.id}`, label: def.title, material })
   }
   for (const incident of Object.values(state.incidents.incidents)) {
     const family = index.incidentFamily.get(incident.familyId)

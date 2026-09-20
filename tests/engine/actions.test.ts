@@ -93,6 +93,45 @@ describe('player actions', () => {
     expect(state.risks.scenarios['risk-supplier-ransomware']?.status).toBe('open')
   })
 
+  it('will not raise the same hypothesis twice over a risk the player has accepted', () => {
+    const { state, index } = gameOn('act-5b')
+    state.evidence.items['ev-msp-standing-access'] = {
+      id: 'ev-msp-standing-access',
+      discoveredDay: 0,
+      sourceLabel: 'test',
+      read: true,
+      archived: false,
+      linkedHypothesisIds: [],
+    }
+    state.evidence.order.push('ev-msp-standing-access')
+    applyAction(state, index, {
+      type: 'createHypothesis',
+      templateId: 'hyp-supplier-privilege',
+      evidenceIds: ['ev-msp-standing-access'],
+    })
+    const hypothesisId = Object.keys(state.risks.hypotheses)[0]!
+    state.resources.focusRemaining = 5
+    expect(applyAction(state, index, { type: 'convertHypothesis', hypothesisId }).ok).toBe(true)
+
+    // The player then decides to carry it, with a reason on the record.
+    applyAction(state, index, {
+      type: 'acceptRisk',
+      scenarioId: 'risk-supplier-ransomware',
+      rationaleTagIds: ['rat-compensating'],
+      assumptionDefIds: [],
+      days: 90,
+    })
+    const notesBefore = state.risks.scenarios['risk-supplier-ransomware']!.notes.length
+    state.resources.focusRemaining = 5
+
+    const again = applyAction(state, index, { type: 'convertHypothesis', hypothesisId })
+    expect(again.ok).toBe(false)
+    // The decision the player recorded stands, and nothing was charged for it.
+    expect(state.risks.scenarios['risk-supplier-ransomware']?.status).toBe('accepted')
+    expect(state.risks.scenarios['risk-supplier-ransomware']!.notes.length).toBe(notesBefore)
+    expect(state.resources.focusRemaining).toBe(5)
+  })
+
   it('requires a recorded rationale to accept a risk', () => {
     const { state, index } = gameOn('act-6')
     applyAction(state, index, { type: 'openRisk', scenarioId: 'risk-legacy-outage' })

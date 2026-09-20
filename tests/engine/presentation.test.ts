@@ -124,6 +124,14 @@ describe('pattern suggestions', () => {
           expect(suggestion.evidence.length).toBeGreaterThanOrEqual(2)
           for (const item of suggestion.evidence) {
             expect(state.evidence.items[item.id], `${item.id} was suggested but never received`).toBeDefined()
+            // A red herring is not grounds for alarm. The printer alerts are
+            // marked benign in the content's own words, and citing them under
+            // "what suggests it" asks the player to reason from something the
+            // game already knows to be nothing.
+            expect(
+              index.evidence.get(item.id)?.noise,
+              `${item.id} is noise but was cited as support for ${suggestion.templateId}`,
+            ).not.toBe(true)
           }
         }
       }
