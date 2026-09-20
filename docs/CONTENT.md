@@ -81,6 +81,22 @@ set it on decisions where some plainly are not — the incident decisions do not
 offer "residual risk is within tolerance". Keep at least two, and prefer six or
 more: the point is to remove nonsense, not to hand the player the answer.
 
+**A decision the engine opens.** `dec-acceptance-renewal` is opened by the
+tick when a temporary acceptance runs out, linked to whichever scenario it
+was; no event names it, and the validator knows. Its text carries
+`{{scenario}}` and its options say `"scenarioId": "linked"`, which the reducer
+resolves to the decision's scenario. Author a decision this way when it is
+about *whichever one it was* rather than a fixed thing.
+
+**The fourth quarter asks what organisation you have created.** Late-year
+decisions gate on the player's own position — a programme past 80%, an
+objective the business achieved while recovery was never built, a year with
+no incident — rather than on the calendar alone, so an idle player meets few
+of them and an engaged one meets the ones they earned. Measured before they
+were written, Q4 carried 1.4 decisions to Q1's 12.4 and every one was an
+incident. Keep that rule for anything added there: a Q4 decision should be
+impossible to receive without having done something in Q1–Q3.
+
 **Do not name a function the engine chooses.** A decision that fires on team
 strain fires on whichever function is closest to breaking, and it was once
 authored as if that were always the SOC: over 92 firings it never was. Where an

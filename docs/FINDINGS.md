@@ -18,6 +18,72 @@ fault.
 
 ### Fixed
 
+- **The fourth quarter, authored from the player's position.** The
+  longest-standing open weakness, acted on from a desk at the owner's
+  decision rather than waiting for a playtest. Measured before anything was
+  written, over 20 campaigns of engaged play on CISO: decisions arrived
+  **12.4 / 6.5 / 2.8 / 1.4** per quarter, the longest stretch with nothing
+  to decide averaged **114 days** and reached 164, and every fourth-quarter
+  decision was an incident. Nothing in the back half arose from what the
+  player had done.
+
+  Five decisions now do, in the shape a source review proposed — *what
+  organisation have I created, and what must I now change?* — each gated on
+  the player's own position rather than the calendar:
+
+  | decision | arises when | who meets it |
+  |---|---|---|
+  | Make the identity controls mandatory | the identity programme passes 80% | only a player who built it |
+  | The restore test needs an outage window | the recovery programme passes 80% | only a player who built it |
+  | An acceptance has run out | a temporary acceptance the player gave expires | only a player who accepted |
+  | The platform has outgrown its recovery design | the launch succeeded and recovery was never built | a player who left recovery alone |
+  | Next year's budget after a quiet year | day 300 with no incident all year | a quiet year, whoever had it |
+
+  The renewal is opened by the engine when the acceptance runs out, linked
+  to whichever scenario it was; its text carries `{{scenario}}` and its
+  options act on `scenarioId: "linked"`, so it is authored once. It used to
+  flip back to open in silence. The restore window counts as a recovery
+  exercise in the resilience dimension, and the budget answer is narrated
+  in the annual review.
+
+  Measured after, same probe: **12.4 / 6.5 / 4.5 / 1.9**, longest stretch
+  **80 days** (max 124), and the fourth-quarter list now carries the restore
+  window, the identity enforcement and the budget question beside the
+  incidents. An idle player who answers decisions and does nothing else
+  reads 11.0 / 6.2 / 2.5 / 1.4 and meets two of the five: the platform
+  question, because they never built recovery, and the budget question in a
+  quiet year. That is the rule holding — the back half now depends on the
+  front half — and it is why Q4 rises less than Q3: the programme questions
+  land where the programmes finish, from day 220.
+
+  The ladder, with its philosophy given an answer for each (enforce, take the
+  window, look again, fund the redesign, make the case), over 40 seeds:
+
+  | | Guided | CISO | High Pressure |
+  |---|---|---|---|
+  | Incidents a year | 0.50 → 0.38 | 1.02 → 0.93 | 1.57 → 1.57 |
+  | Objectives missed | 1.88 → 1.95 | 1.07 → 1.20 | 1.27 → 1.32 |
+  | Worst consequence | 0.17 → 0.13 | 0.30 → 0.29 | 0.44 → 0.39 |
+  | Programmes built | 2.8 → 2.5 | 1.8 → 1.8 | 1.2 → 1.2 |
+
+  Guided pays £180k for the platform redesign and four hours of payments
+  for the restore, and buys fewer incidents and a smaller worst case with
+  it; the other modes have no spare money and are unmoved except by the
+  friction of enforcing identity in peak trading. Soak unchanged (0 / 0 /
+  1.21). Every choice in the five has a callback the organisation remembers
+  it by — the COO on the restore that came back in three and a half hours,
+  the SOC on the third alert from an unenrolled account — because a content
+  test fails on a flag that is set and never read, which is the plan's "the
+  organisation remembers" held by a test. Coverage reaches all 134 events
+  and 31 decisions except the one sampled callback already recorded. Mutation-checked three ways: the
+  engine never opening the renewal, the identity event firing for anyone,
+  and the budget event ignoring incidents each fail
+  `tests/engine/fourth-quarter.test.ts` by name.
+
+  **What this does not settle.** Whether the back half now feels like the
+  year building or like more of the same is the playtest question it always
+  was, and `docs/PLAYTEST.md` still asks it. The event draw is untouched.
+
 - **The glossary defined the game's words and none of the subject's.** The
   player guide is written for somebody who knows nothing about the subject,
   and the glossary held nineteen entries, all of them mechanics — evidence,
@@ -995,18 +1061,17 @@ fault.
   build one programme at a time, take every board paper — declared up front and
   run identically on all three modes over 40 seeds each. `pnpm ladder`.
 
-  Re-measured after the overload decision was made to act on the function
-  that is overloaded, which moved four of these rows a little; the figures
-  below are current.
+  Re-measured after the fourth-quarter content, with the philosophy given an
+  answer for each of its five decisions; the figures below are current.
 
   | | Guided | CISO | High Pressure |
   |---|---|---|---|
-  | Programmes built | 2.8 | 1.8 | **1.2** |
-  | Days wanting to build, no money | 69 | 159 | **219** |
-  | Incidents a year | 0.50 | 1.02 | **1.57** |
-  | Worst consequence | 0.17 | 0.30 | **0.44** |
-  | Resilience `developing` | 4/40 | 15/40 | **16/40** |
-  | Objectives missed | 1.88 | 1.07 | 1.27 |
+  | Programmes built | 2.5 | 1.8 | **1.2** |
+  | Days wanting to build, no money | 110 | 170 | **218** |
+  | Incidents a year | 0.38 | 0.93 | **1.57** |
+  | Worst consequence | 0.13 | 0.29 | **0.39** |
+  | Resilience `developing` | 6/40 | 11/40 | **11/40** |
+  | Objectives missed | 1.95 | 1.20 | 1.32 |
   | Board confidence | 0.61 | 0.62 | 0.63 |
 
   Both halves of the ladder bind. The budget decides how much gets built —

@@ -9,10 +9,12 @@ import { confidenceFromUncertainty } from './bands'
 export interface RiskReviewResult {
   dueForReview: string[]
   materiallyWorse: { scenarioId: string; previous: number; current: number }[]
+  /** Acceptances whose period ran out today. The tick turns each into a decision. */
+  expiredAcceptances: string[]
 }
 
 export function refreshScenarioAssessments(state: GameState, index: ContentIndex): RiskReviewResult {
-  const result: RiskReviewResult = { dueForReview: [], materiallyWorse: [] }
+  const result: RiskReviewResult = { dueForReview: [], materiallyWorse: [], expiredAcceptances: [] }
 
   for (const scenario of Object.values(state.risks.scenarios)) {
     const def = index.riskScenario.get(scenario.id)
@@ -33,8 +35,13 @@ export function refreshScenarioAssessments(state: GameState, index: ContentIndex
     }
     if (scenario.status === 'accepted' && scenario.acceptedUntilDay !== undefined) {
       if (state.currentDay >= scenario.acceptedUntilDay) {
+        // It used to flip back to open in silence. An acceptance was a
+        // decision the player made on stated assumptions; its running out is
+        // one they should make again, not one that happens to them.
         scenario.status = 'open'
+        scenario.acceptedUntilDay = undefined
         scenario.nextReviewDay = state.currentDay
+        result.expiredAcceptances.push(scenario.id)
       }
     }
     if (state.currentDay >= scenario.nextReviewDay && scenario.status !== 'closed') {

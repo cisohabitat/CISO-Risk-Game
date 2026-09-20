@@ -1,0 +1,371 @@
+{
+  "events": [
+    {
+      "id": "evt-q4-identity-enforce",
+      "type": "programme",
+      "title": "Identity uplift: enforce before the freeze?",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The identity uplift is weeks from done and the question nobody has answered is whether it is mandatory. I can switch enforcement on before the peak-trading change freeze, which means locking out anyone who has not enrolled, or we go into peak with the second factor optional and the exception list growing. Helen's people want it after. I would rather you decided than the calendar.",
+      "priority": "urgent",
+      "availableFromDay": 220,
+      "conditions": [
+        {
+          "kind": "programme.progressAtLeast",
+          "programmeId": "prog-identity",
+          "value": 0.8
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-identity-enforce",
+      "relatedNodeIds": [
+        "node-idp"
+      ],
+      "tags": [
+        "programme",
+        "identity",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-recovery-window",
+      "type": "programme",
+      "title": "The restore test needs a window",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Recovery is built. It has not been run against production, and the only honest test is a full restore of Nexora Pay, which means four hours down. Operations will not give me that window before peak. I can test into the non-production tenancy, which proves the backups and not the runbook, or we carry it to January. Your call, and I would like it on record.",
+      "priority": "urgent",
+      "availableFromDay": 220,
+      "conditions": [
+        {
+          "kind": "programme.progressAtLeast",
+          "programmeId": "prog-ransomware",
+          "value": 0.8
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-recovery-window",
+      "relatedNodeIds": [
+        "node-backup"
+      ],
+      "tags": [
+        "programme",
+        "recovery",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-platform-outgrown",
+      "type": "business",
+      "title": "The platform has outgrown its recovery design",
+      "from": "Priya Nandakumar, Digital MD",
+      "body": "Good news first: the platform is carrying three times the volume we designed for at launch. The other news is that the recovery plan was written for the old estate and nothing since has changed it: my engineers tell me a restore would now take longer than we could survive in peak. I need to know whether you want to fix that now, hold growth, or carry it.",
+      "priority": "urgent",
+      "availableFromDay": 240,
+      "conditions": [
+        {
+          "kind": "objective.status",
+          "objectiveId": "obj-platform-launch",
+          "status": "achieved"
+        },
+        {
+          "kind": "control.effectivenessBelow",
+          "controlId": "ctl-backup",
+          "value": 0.3
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-platform-resilience",
+      "relatedNodeIds": [
+        "node-svc-platform"
+      ],
+      "tags": [
+        "business",
+        "recovery",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-next-year-budget",
+      "type": "executive",
+      "title": "Next year's plan: a fifth less for cyber",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "A quiet year, and I am glad of it. Finance is building next year's plan on 20% less for cyber. I know the argument you will make; I am asking you to make it to me first, or to tell me which line you would give back.",
+      "priority": "urgent",
+      "availableFromDay": 300,
+      "conditions": [
+        {
+          "kind": "incident.none"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "incident.resolvedCountAtLeast",
+            "value": 1
+          }
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-next-year-budget",
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "budget",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-con-identity-enforced",
+      "type": "programme",
+      "title": "Enforcement, three weeks on",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Lockouts in week one, then quiet. The exception list is a tenth of what it was and nobody has asked to go back. For the record: it was the right call and I would not have made it without you.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "identity.enforced"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "control.exceptions",
+          "controlId": "ctl-mfa",
+          "delta": -0.05
+        },
+        {
+          "type": "leader.morale",
+          "leaderId": "lead-eng",
+          "delta": 0.08
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "programme",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-identity-deferred",
+      "type": "executive",
+      "title": "Peak went cleanly",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Thank you for holding enforcement to January. Peak went cleanly and my teams noticed. Engineering tells me the exception list grew by forty in the meantime; I assume you knew that when you agreed.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "identity.enforcement-deferred"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-coo",
+          "delta": 0.04,
+          "reason": "You held the identity controls back through peak trading."
+        },
+        {
+          "type": "control.exceptions",
+          "controlId": "ctl-mfa",
+          "delta": 0.06
+        },
+        {
+          "type": "control.coverage",
+          "controlId": "ctl-mfa",
+          "delta": 0.04
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-identity-optional",
+      "type": "threat",
+      "title": "Third alert this month from an unenrolled account",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Third alert this month traced to an account that never enrolled in the second factor. Voluntary meant the people who mattered least did it and the people who mattered most did not. The exception list is now the estate.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "identity.enforcement-optional"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "node.exposure",
+          "nodeId": "node-idp",
+          "delta": 0.06
+        },
+        {
+          "type": "control.exceptions",
+          "controlId": "ctl-mfa",
+          "delta": 0.05
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "threat",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-recovery-tested",
+      "type": "executive",
+      "title": "The restore came back in three and a half",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Four hours of payments was more than I wanted to give you. The restore came back in three and a half, the runbook held, and I have said so to Marianne. Next time you ask for a window I will find it faster.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "recovery.tested"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-coo",
+          "delta": 0.08,
+          "reason": "The restore test you took the window for came back inside it."
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-ceo",
+          "delta": 0.03,
+          "reason": "The COO told her the restore test held."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-recovery-deferred",
+      "type": "programme",
+      "title": "Into peak on paper",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "We are into peak with recovery built and never run. I have the runbook on my desk and I know what is in it. If we need it before January, the first real run will be the one that counts.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "recovery.deferred"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-coo",
+          "concern": "Recovery has never been run against production"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "programme",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-platform-carried",
+      "type": "business",
+      "title": "Biggest weekend yet, nothing broke",
+      "from": "Priya Nandakumar, Digital MD",
+      "body": "Peak weekend was our biggest ever and nothing broke. I am aware that means we still do not know what happens when something does. I have put the recovery redesign in my ask for next year; I would like your name beside it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "platform.resilience-carried"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-digital",
+          "delta": 0.02,
+          "reason": "You carried the platform's recovery gap through peak and it held."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-next-year-plan",
+      "type": "executive",
+      "title": "Next year's plan has gone to the board",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Next year's plan has gone to the board with the cyber line as we agreed. I recorded the reasons you gave, in your words. If the year had been different, so would the conversation, and we both know it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "next-year.budget"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    }
+  ]
+}

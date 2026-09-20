@@ -17,6 +17,12 @@ import { evaluateAssumption } from '../assumptions/validation'
 import type { Rng } from './rng'
 
 /** A function named in content, or the one closest to breaking right now. */
+/** `linked` is the scenario the decision was opened about; anything else is an id. */
+function resolveScenario(target: string, context: EffectContext): string {
+  if (target !== 'linked') return target
+  return context.linkedScenarioId ?? target
+}
+
 function resolveFunction(state: GameState, target: FunctionTarget): CyberFunction {
   return target === 'most-pressed' ? mostPressedFunction(state) : target
 }
@@ -28,6 +34,12 @@ export interface EffectContext {
   source: string
   /** Set when effects are applied as part of resolving a decision. */
   decisionId?: string
+  /**
+   * The scenario a decision was opened about, so an option can say
+   * `scenarioId: "linked"` and act on whichever one it was. The acceptance
+   * renewal is authored once and fires for any scenario.
+   */
+  linkedScenarioId?: string
 }
 
 export interface EffectOutcome {
@@ -335,12 +347,20 @@ export function applyEffect(
       break
     }
     case 'risk.status': {
-      const scenario = state.risks.scenarios[effect.scenarioId]
-      if (scenario) scenario.status = effect.status
+      const scenario = state.risks.scenarios[resolveScenario(effect.scenarioId, context)]
+      if (!scenario) break
+      scenario.status = effect.status
+      // Accepting through an effect is a renewal: a quarter, reviewed at the end of it.
+      if (effect.status === 'accepted') {
+        scenario.acceptedUntilDay = state.currentDay + 90
+        scenario.nextReviewDay = scenario.acceptedUntilDay
+      } else {
+        scenario.acceptedUntilDay = undefined
+      }
       break
     }
     case 'risk.review': {
-      const scenario = state.risks.scenarios[effect.scenarioId]
+      const scenario = state.risks.scenarios[resolveScenario(effect.scenarioId, context)]
       if (scenario) scenario.nextReviewDay = state.currentDay + effect.dayOffset
       break
     }

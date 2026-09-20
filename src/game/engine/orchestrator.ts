@@ -245,6 +245,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         rng,
         source: `decision:${def.id}`,
         decisionId: action.decisionId,
+        linkedScenarioId: decision.scenarioId,
       })
       for (const delayed of option.delayedEffects ?? []) {
         state.pendingEffects.push({

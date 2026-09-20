@@ -248,7 +248,9 @@ export function validateCampaignContent(content: CampaignContent): ContentIssue[
     }
   }
   // Every decision should be reachable from an event, an incident family or another decision.
-  const reachableDecisions = new Set<string>()
+  // The engine itself opens a few: an acceptance running out opens the
+  // renewal decision, linked to whichever scenario it was.
+  const reachableDecisions = new Set<string>(['dec-acceptance-renewal'])
   for (const event of content.events) if (event.decisionId) reachableDecisions.add(event.decisionId)
   for (const family of content.incidentFamilies) for (const d of family.responseDecisionIds) reachableDecisions.add(d)
   for (const decision of content.decisions) {
@@ -483,9 +485,12 @@ function checkEffect(
       ref(registry.objective, effect.objectiveId, 'missing-objective')
       break
     case 'risk.open':
+      ref(registry.scenario, effect.scenarioId, 'missing-scenario')
+      break
     case 'risk.status':
     case 'risk.review':
-      ref(registry.scenario, effect.scenarioId, 'missing-scenario')
+      // `linked` is the scenario the decision was opened about, resolved at run time.
+      if (effect.scenarioId !== 'linked') ref(registry.scenario, effect.scenarioId, 'missing-scenario')
       break
     case 'leader.morale':
       // `most-pressed` resolves at run time to whoever leads the function

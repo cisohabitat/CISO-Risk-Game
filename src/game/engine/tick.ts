@@ -295,6 +295,34 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     const def = index.riskScenario.get(worse.scenarioId)
     if (def) highlights.push(`${def.title} has moved materially.`)
   }
+  // A temporary acceptance that has run out is a decision arising from the
+  // player's own position: renew it on the same assumptions, look again, or
+  // let it sit. Opened here rather than by an event so it lands when the
+  // period the player chose ends, which for a Q1 acceptance is the back half
+  // of the year. One at a time: a second expiry while one is open waits for
+  // its own review day rather than stacking.
+  for (const scenarioId of reviewResult.expiredAcceptances) {
+    const def = index.riskScenario.get(scenarioId)
+    if (!def) continue
+    const alreadyOpen = state.decisions.openIds.some((id) => state.decisions.decisions[id]?.defId === 'dec-acceptance-renewal')
+    if (!alreadyOpen && index.decision.get('dec-acceptance-renewal')) {
+      openDecision(state, index, 'dec-acceptance-renewal', { scenarioId, deadlineDays: 14 })
+      pauseReasons.add('decision-deadline')
+    }
+    pushMessage(state, {
+      from: 'Nexora Group',
+      subject: `Your acceptance of ${def.title} has run out`,
+      body: `You accepted it on a stated rationale and a set of assumptions. The period you gave it has ended; it is back on the register as open until you decide again.`,
+      type: 'assumption',
+      priority: 'urgent',
+    })
+    state.history.entries.push({
+      day: state.currentDay,
+      kind: 'acceptance-expired',
+      summary: `The acceptance of ${def.title} ran out.`,
+      refs: [scenarioId],
+    })
+  }
 
   // Decision deadlines: an unanswered decision resolves itself, badly.
   for (const decisionId of [...state.decisions.openIds]) {

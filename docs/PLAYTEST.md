@@ -85,32 +85,20 @@ Put them in front of players rather than deciding from a desk.
   backlog, the fix is finer tags on the evidence, which is a content pass on a
   frozen campaign.
 
-- **Does the last quarter have anything to do?** This is the highest-value
-  question a session can answer, because the route to fixing it is authored
-  content on a campaign this project has frozen, and nobody should write that
-  content on a hunch. Measured: decisions arrive 11.7, 4.7, 2.5 and 1.3 times
-  per quarter, the longest stretch with nothing to decide averages 128 days and
-  reaches 164, and the second half sends 42 messages from 24 distinct subjects
-  against 104 from 88 in the first. Played by hand the back half is a loop of
-  four recycled threat-intel subjects.
-
-  Do not ask whether the ending dragged — nobody says no to that. Watch the
-  clock, and watch what they do between decisions: a player with nothing to do
-  starts pressing *Skip ahead* repeatedly, or stops opening screens they were
-  opening in Q1. Note the day they change gear.
-
-  Then the second half of the question, which is what a fix would have to get
-  right. A review proposed that the last quarter should stop asking *what
-  organisation have I inherited?* and start asking **what organisation have I
-  created, and what must I now change?** — a nearly finished programme facing
-  its adoption choice, a temporary acceptance falling due on assumptions that
-  have since moved, a service that has outgrown the resilience design it was
-  given, pressure to cut next year's budget after a quiet one. Those are late
-  decisions arising from the player's own position rather than from the draw.
-  After the review, ask what they thought was still unresolved on 31 December.
-  If they name something of their own making, the proposal is right and the
-  content is missing. If they name nothing, the problem is larger than pacing.
-
+- **Does the last quarter have anything to do?** This was the highest-value
+  open item, and it has now been acted on from a desk: five late-year
+  decisions arising from the player's own position — the identity programme's
+  enforcement, the recovery programme's restore window, an acceptance running
+  out, a platform that outgrew its recovery design, next year's budget after
+  a quiet year. Measured, the longest stretch with nothing to decide fell
+  from 114 days to 80 for an engaged player, and Q3/Q4 decisions went from
+  2.8 / 1.4 to 4.5 / 1.9. What the numbers cannot say is whether the back
+  half now *feels* like the year building to something or like more of the
+  same. Ask where they stopped reading, whether the identity or restore
+  question felt like their own programme coming back to them, and whether the
+  budget conversation landed as a consequence of the year or as a random
+  event. If the answer is "more of the same", the next lever is the event
+  draw, which is frozen.
 - **Does "Guided" read as a tutorial?** The reviewer's point was that it is not
   one — it is the full simulation with more organisational capacity and clearer
   signals — and that the name may undersell it to the experienced players most

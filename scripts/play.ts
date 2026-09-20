@@ -96,8 +96,8 @@ function report(state: GameState, since: number): void {
     if (runtime.deadlineDay !== undefined && runtime.deadlineDay - state.currentDay <= 1) {
       console.log('    !! answer this before `go`: advancing past today decides it for you')
     }
-    console.log(`    ${renderDecisionText(def.description, state, index)}`)
-    if (def.context) console.log(`    ${renderDecisionText(def.context, state, index)}`)
+    console.log(`    ${renderDecisionText(def.description, state, index, runtime)}`)
+    if (def.context) console.log(`    ${renderDecisionText(def.context, state, index, runtime)}`)
     for (const o of def.options) {
       console.log(`    [${o.id}] ${o.label} — ${o.description}`)
       for (const e of o.visibleKnownEffects) console.log(`        · ${e}`)

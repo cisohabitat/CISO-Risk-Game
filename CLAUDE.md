@@ -141,35 +141,24 @@ Measured, not yet fixed. Ranked.
   difficulty dial touches. Recorded so nobody tunes or grades a dial with no
   room to move; `setup.ts` and `events/engine.ts` carry the same note.
 
-- **The year fades instead of building.** Measured over 12 campaigns of engaged
-  play: decisions arrive 11.7, 4.7, 2.5 and 1.3 times per quarter, so Q4 carries
-  roughly an eighth of Q1. The longest stretch with nothing to decide averages
-  128 days and reaches 164 — nearly half the year. The inbox thins the same way:
-  104 messages from 88 distinct subjects in the first half against 42 from 24 in
-  the second, so H2 both says less and repeats itself twice as often. Played by
-  hand, the back half of a campaign is a loop of four recycled threat-intel
-  subjects. Confirmed not to be the harness: a player who varies their choices
-  gets the same shape (11.7 / 4.7 / 2.5 / 1.3) as one who always takes the first
-  option.
+- **The year still thins, though it no longer fades to nothing.** Measured
+  before the fourth-quarter content: decisions arrived 12.4 / 6.5 / 2.8 / 1.4
+  per quarter for an engaged player and every fourth-quarter one was an
+  incident. Five late-year decisions now arise from the player's own
+  position — the identity programme's enforcement, the recovery programme's
+  restore window, an acceptance running out, a platform that outgrew a
+  recovery design nobody built, next year's budget after a quiet year — and
+  the same probe reads **12.4 / 6.5 / 4.5 / 1.9**, with the longest stretch
+  with nothing to decide down from 114 days to 80. An idle player meets two
+  of the five, which is the rule: the back half depends on the front half.
 
-  Not fixed, deliberately. Every route to it is a system this project has
-  frozen — authoring more late-year content, or reweighting the event draw —
-  and the file's own rule is that further simulation now makes the game worse
-  unless a playtest asks for it. A player who reports the second half dragging
-  is the signal to act on; `docs/PLAYTEST.md` should ask about it.
-
-  **Independently re-raised by a source review**, which argued that a freeze
-  meant to prevent unnecessary expansion should not block a documented
-  weakness, and proposed the right shape for it: the last quarter should ask
-  *what organisation have I created, and what must I now change?* — a nearly
-  finished programme facing its adoption choice, a temporary acceptance due for
-  renewal on assumptions that have since moved, a service that outgrew the
-  resilience design it was given, pressure to cut next year's budget after a
-  quiet one. That is late-year decisions arising from the player's own
-  position rather than from the draw, and it is the most promising route
-  anybody has put forward. It is still authored content on a frozen campaign,
-  and the review that proposed it was explicit that it had not played the game.
-  The trigger remains a player, not a reading.
+  What remains is real and is not the content's to fix. The inbox still
+  thins (115 messages from 133 subjects in H1 against 49 from 66 in H2), the
+  fourth quarter still carries a seventh of the first, and the programme
+  questions land where programmes finish, from day 220, so Q3 gains more
+  than Q4. The remaining lever is the event draw, which is frozen; and
+  whether the back half now *feels* like the year building is the playtest
+  question in `docs/PLAYTEST.md`. `docs/FINDINGS.md` has the measurements.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every

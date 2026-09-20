@@ -53,6 +53,14 @@ const CHOICE: [RegExp, RegExp, string][] = [
   // One programme at a time means stopping when told the team cannot carry
   // it, and resuming what was paused once there is room (below).
   [/past sustainable load/i, /Stop something/i, 'rat-resources'],
+  // The fourth quarter, in the same voice: finish what you built and make it
+  // mean something, look again before carrying anything, argue the quiet
+  // year was capability, and pay for resilience when the platform outgrows it.
+  [/identity controls mandatory/i, /Enforce now/i, 'rat-material'],
+  [/restore test needs an outage window/i, /Take the window now/i, 'rat-more-evidence'],
+  [/acceptance has run out/i, /Look at it again/i, 'rat-more-evidence'],
+  [/outgrown its recovery design/i, /Fund a resilience redesign/i, 'rat-material'],
+  [/budget after a quiet year/i, /Make the case/i, 'rat-material'],
 ]
 // What this CISO wants to build, in order of conviction, and what to examine.
 // Real ids. This list once held `prog-recovery`, which does not exist, so

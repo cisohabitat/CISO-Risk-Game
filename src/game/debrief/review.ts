@@ -441,7 +441,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ) / recoveryControls.length
 
   const tested = incidents.length > 0
-  const exercised = exercises.length > 0 || selfAssured.length > 0
+  // A production restore taken in the fourth quarter is an exercise as much
+  // as a commissioned test is; it is recorded as a flag by the decision.
+  const restoreTaken = state.flags['recovery.tested'] === true
+  const exercised = exercises.length > 0 || selfAssured.length > 0 || restoreTaken
   // The untested scale is capped below `strong`: a year nothing tested cannot
   // demonstrate the top band, however much was built. Within that it separates
   // four real years — nothing done, exercised but nothing to exercise, built but
@@ -695,6 +698,19 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
   if (spots.length > 0) {
     narrative.push(`What you never looked at: ${spots.slice(0, 2).join('; ')}.`)
+  }
+  // The fourth quarter's own question: what organisation have you created,
+  // and what did you decide to carry into next year?
+  const nextYear = state.flags['next-year.budget']
+  if (nextYear === 'cut') {
+    narrative.push('Nothing happened this year, so you agreed to start next year with a fifth less. Whether the quiet was capability or fortune is the question the cut assumes an answer to.')
+  } else if (nextYear === 'held') {
+    narrative.push('When finance read a quiet year as a case for less, you argued it was capability rather than fortune, and kept the line. Next year will test the argument.')
+  } else if (nextYear === 'trimmed') {
+    narrative.push('You gave finance a named line back and kept the rest: a smaller cut, on terms you could explain.')
+  }
+  if (state.flags['recovery.deferred'] === true) {
+    narrative.push('The recovery capability you built went into peak trading untested, on the assumption it would hold. It was not asked to.')
   }
 
   const businessOutcome =
