@@ -4,7 +4,10 @@
  */
 import { describe, expect, it } from 'vitest'
 import { migrateSave, SaveMigrationError } from '@/store/migrations'
-import { newGame, runDays } from '@/game/engine/orchestrator'
+import { readFileSync } from 'node:fs'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
+import { buildAnnualReview } from '@/game/debrief/review'
+import type { GameState } from '@/game/types'
 import { checkInvariants } from '@/game/engine/invariants'
 import { SAVE_SCHEMA_VERSION } from '@/game/types'
 import { testIndex } from './helpers'
@@ -20,6 +23,38 @@ function record(state: unknown, schemaVersion: number) {
 }
 
 describe('save migration', () => {
+  it('loads a save written by an earlier build and plays it to the end of the year', () => {
+    // A real save, not a synthesised one: written by the build at 309fc5c on
+    // 2026-09-20, before the overload fix, paused programmes, per-decision
+    // rationale lists and the calendar move. Day 121 of a CISO campaign with
+    // a programme running, an enquiry commissioned and a risk raised. If a
+    // later change makes such a save unloadable or unplayable, this fails.
+    const index = testIndex()
+    const raw = JSON.parse(readFileSync(new URL('../fixtures/save-before-2026-09-20.json', import.meta.url), 'utf8'))
+    const migrated = migrateSave(raw)
+    const state = migrated.state as GameState
+    expect(state.currentDay).toBe(121)
+    expect(checkInvariants(state, index)).toEqual([])
+
+    for (let day = state.currentDay; day < 364; day += 1) {
+      runDays(state, index, 1)
+      for (const id of [...state.decisions.openIds]) {
+        const def = index.decision.get(state.decisions.decisions[id]!.defId)!
+        for (const option of def.options) {
+          const reason = def.rationaleTagIds?.[0] ?? 'rat-more-evidence'
+          if (applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: option.id, rationaleTagIds: [reason] }).ok) break
+        }
+      }
+      if (state.reviews.pendingQuarter !== undefined) {
+        applyAction(state, index, { type: 'completeQuarterReview', quarter: state.reviews.pendingQuarter, topics: [], recommendations: [], communicateUncertainty: true })
+      }
+    }
+    expect(checkInvariants(state, index)).toEqual([])
+    const review = buildAnnualReview(state, index)
+    expect(review.headline.length).toBeGreaterThan(0)
+    expect(review.dimensions.length).toBe(8)
+  })
+
   it('accepts a current save unchanged', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'save-1' })

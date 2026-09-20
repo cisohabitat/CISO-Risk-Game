@@ -18,6 +18,34 @@ fault.
 
 ### Fixed
 
+- **The glossary defined the game's words and none of the subject's.** The
+  player guide is written for somebody who knows nothing about the subject,
+  and the glossary held nineteen entries, all of them mechanics — evidence,
+  hypothesis, residual exposure, dwell time. Counted across every authored
+  string: "privileged" appears 82 times, "credential" 78, "segmentation" 52,
+  "pipeline" 45, "MFA" 35, "telemetry" 17, "peering" 14, "tenancy" 12, "jump
+  server" 8, "break-glass" 4, "egress" 3, and none of them was defined
+  anywhere a player could reach. The first decision of the game asks about
+  "standing privileged access"; the first risk on the list is about a
+  "managed service provider identity".
+
+  Twenty-eight subject terms now have entries in a second section of the
+  glossary, "The subject's words", each two sentences: what it is, and why
+  it matters in this game. `tests/content/glossary.test.ts` holds a table of
+  the terms the content leans on against the entries that define them, and
+  fails on a term of art that arrives without one — or an entry whose term
+  the content no longer uses. This is authored text, not a mechanic, which
+  is the kind of change the working notes still allow.
+
+- **The migration test had no save from an earlier build.** It synthesised
+  older saves by deleting fields from a fresh one, which cannot catch a
+  change that makes a real old save unplayable rather than unloadable.
+  `tests/fixtures/save-before-2026-09-20.json` is a real save written by the
+  build at `309fc5c`, day 121 of a CISO campaign with a programme running, an
+  enquiry commissioned and a risk raised. The test migrates it, checks the
+  invariants, plays it to 31 December through every change this session
+  made, and builds its annual review. It passes.
+
 - **"Because: residual risk is within tolerance" under "stand up incident
   command now".** Every decision offered the whole twelve-word rationale
   vocabulary, so a reason that belongs to accepting a risk could be recorded

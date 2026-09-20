@@ -351,9 +351,12 @@ If you want a plan for your first playthrough:
 | `G` | Glossary |
 | `Esc` | Close a dialog |
 
-The **Glossary** (bottom left, or `G`) defines every term the game uses, in
-plain language. It is worth a look the first time a phrase like *residual
-exposure* or *dwell time* appears.
+The **Glossary** (bottom left, or `G`) has two halves. The first defines the
+words the game uses in its own way, such as *residual exposure* or *dwell
+time*. The second defines the words the field uses that the game borrows,
+such as *privileged access*, *segmentation*, *MFA* or *break-glass* — two
+sentences each, what it is and why it matters here. Nobody is expected to
+know them beforehand.
 
 ---
 

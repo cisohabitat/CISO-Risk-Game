@@ -24,23 +24,39 @@ export function Glossary() {
       onClose={() => setUi({ glossaryOpen: false, glossaryTerm: undefined })}
       size="lg"
       title="Glossary"
-      description="What this game means by the words it uses."
+      description="What this game means by the words it uses, and what the field means by the ones it borrows."
     >
-      <dl className="space-y-4">
-        {index.content.glossary.map((entry) => (
-          <div
-            key={entry.id}
-            ref={entry.id === term ? target : undefined}
-            className={entry.id === term ? 'rounded-lg border border-accent bg-accent-soft/30 p-3' : undefined}
-          >
-            <dt className="font-medium">{entry.term}</dt>
-            <dd className="mt-0.5 text-sm text-ink-muted text-pretty">{entry.definition}</dd>
-            {guided && entry.guidedNote && (
-              <dd className="mt-1 text-sm text-accent-ink text-pretty">{entry.guidedNote}</dd>
-            )}
-          </div>
-        ))}
-      </dl>
+      {(
+        [
+          ['game', 'How this game uses its words'],
+          ['subject', "The subject's words"],
+        ] as const
+      ).map(([section, heading]) => {
+        const entries = index.content.glossary.filter((entry) => (entry.section ?? 'game') === section)
+        if (entries.length === 0) return null
+        return (
+          <section key={section} aria-labelledby={`glossary-${section}`} className="mb-6 last:mb-0">
+            <h3 id={`glossary-${section}`} className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+              {heading}
+            </h3>
+            <dl className="space-y-4">
+              {entries.map((entry) => (
+                <div
+                  key={entry.id}
+                  ref={entry.id === term ? target : undefined}
+                  className={entry.id === term ? 'rounded-lg border border-accent bg-accent-soft/30 p-3' : undefined}
+                >
+                  <dt className="font-medium">{entry.term}</dt>
+                  <dd className="mt-0.5 text-sm text-ink-muted text-pretty">{entry.definition}</dd>
+                  {guided && entry.guidedNote && (
+                    <dd className="mt-1 text-sm text-accent-ink text-pretty">{entry.guidedNote}</dd>
+                  )}
+                </div>
+              ))}
+            </dl>
+          </section>
+        )
+      })}
     </Dialog>
   )
 }

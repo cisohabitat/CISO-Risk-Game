@@ -402,6 +402,13 @@ export interface GlossaryEntryDef {
   term: string
   definition: string
   guidedNote?: string
+  /**
+   * `game` (the default) is a word this game uses in its own way; `subject`
+   * is a word the field uses that a player new to it will meet in the text.
+   * Measured across the authored content: "privileged" 82 times, "credential"
+   * 78, "segmentation" 52, "MFA" 35 — none of them defined anywhere.
+   */
+  section?: 'game' | 'subject'
 }
 
 export interface CampaignMeta {

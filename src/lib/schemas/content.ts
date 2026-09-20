@@ -438,7 +438,13 @@ export const assumptionSchema = z.object({
   linkedNodeIds: z.array(id),
 })
 
-export const glossarySchema = z.object({ id, term: z.string(), definition: z.string(), guidedNote: z.string().optional() })
+export const glossarySchema = z.object({
+  id,
+  term: z.string(),
+  definition: z.string(),
+  guidedNote: z.string().optional(),
+  section: z.enum(['game', 'subject']).optional(),
+})
 
 export const campaignMetaSchema = z.object({
   id,
