@@ -8,7 +8,9 @@
 import type {
   AssignmentState,
   ContentIndex,
+  EvidenceDef,
   GameState,
+  HypothesisTemplateDef,
   InboxMessage,
   RiskBand,
 } from '@/game/types'
@@ -921,6 +923,19 @@ function argues(tag: string, supportingTags: string[]): boolean {
   return supportingTags.includes(tag.slice('contradicts-'.length))
 }
 
+/**
+ * How much a piece of evidence actually speaks to a proposition: the number
+ * of the template's supporting tags it carries, plus one if it carries the
+ * tag the template is about. One shared tag is a passing mention — "backup
+ * shares administrative credentials" is tagged `privileged`, and `privileged`
+ * supports five templates, so it was cited for the deployment pipeline and
+ * for a supplier integration, which it says nothing about.
+ */
+function evidenceFit(def: EvidenceDef, template: HypothesisTemplateDef): number {
+  const shared = def.tags.filter((tag) => template.supportingTags.includes(tag)).length
+  return shared + (def.tags.some((tag) => template.requiresTags.includes(tag)) ? 1 : 0)
+}
+
 export function patternSuggestions(state: GameState, index: ContentIndex, freshDays = 12): PatternSuggestion[] {
   const dismissed = new Set(state.risks.dismissedPatternIds ?? [])
   const known = state.evidence.order
@@ -955,6 +970,12 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
         !def.tags.some((tag) => argues(tag, template.supportingTags)),
     )
     if (supporting.length < 2) continue
+    // Something in hand has to speak to the proposition itself, not merely
+    // share a word with it. Measured over 20 campaigns per play style: this
+    // costs 1.5% of offers and no template its reach, and it is what stopped
+    // "the deployment pipeline is a privileged path" being offered on four
+    // pieces none of which mention the pipeline.
+    if (!supporting.some((def) => evidenceFit(def, template) >= 2)) continue
 
     const newestDay = supporting.reduce(
       (latest, def) => Math.max(latest, state.evidence.items[def.id]?.discoveredDay ?? 0),
@@ -968,10 +989,15 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
       statement: template.statement,
       newestEvidenceDay: newestDay,
       evidence: supporting
-        // Newest first: the thing that just arrived is why this is on screen.
+        // Best fit first, then newest. Four propositions once listed the same
+        // four pieces in the same order, because the list was ordered by
+        // arrival and the newest piece was a generic one. What led here should
+        // lead with what is actually about the proposition; the freshness gate
+        // above already guarantees something recent is in the list.
         .slice()
         .sort(
           (a, b) =>
+            evidenceFit(b, template) - evidenceFit(a, template) ||
             (state.evidence.items[b.id]?.discoveredDay ?? 0) - (state.evidence.items[a.id]?.discoveredDay ?? 0),
         )
         .slice(0, 4)

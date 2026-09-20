@@ -18,6 +18,59 @@ fault.
 
 ### Fixed
 
+- **Four propositions, one list of evidence.** Found on day 82 of the same
+  hand-played year: seven patterns on offer, and four of them — supplier
+  privileged access, one identity platform, the deployment pipeline, a
+  supplier integration — cited the identical four pieces in the identical
+  order. "Backup platform shares administrative credentials with production"
+  was listed as what led to *the deployment pipeline is a privileged path into
+  production*, which it says nothing about. A player reads that as a menu, not
+  as something clicking.
+
+  The cause is a coarse tag. `privileged` is a supporting tag on five
+  templates, one shared tag was enough to count a piece as support, and the
+  list was ordered newest first — so when one generic piece arrived, every
+  template resting on the tag was re-offered with the same list, the generic
+  piece at the top. Measured over 20 campaigns on CISO, with a fit score of
+  the supporting tags a piece shares with a proposition plus one for the tag
+  the proposition is about:
+
+  | | passive player | engaged player |
+  |---|---|---|
+  | offers whose evidence list is identical to another's that day | 24% | 29% |
+  | cited pieces sharing one tag or fewer with the proposition | 42% | 42% |
+
+  Two blunt rules were measured first and rejected. Requiring two shared tags
+  makes `hyp-recovery` unreachable in 20 of 20 campaigns; requiring the
+  proposition's own tag or two shared ones loses `hyp-acquisition` and
+  *raises* duplication to 60%, because two pairs of templates are
+  near-duplicates in tag space (`hyp-supplier-privilege` / `hyp-logistics`,
+  `hyp-identity-concentration` / `hyp-partner-portal`) and the pieces that
+  survive are the ones they share. The tag vocabulary will not carry a
+  stricter threshold.
+
+  What was done is presentation and a gate. The cited list leads with the
+  best-fitting piece and only then the newest, so the four lists differ where
+  the evidence does; and an offer needs at least one piece that fits at 2 or
+  better, because something in hand has to speak to the proposition itself.
+  Identical lists fell **24% → 7%** for a passive player and **29% → 13%** for
+  an engaged one; one-tag citations **42% → 15%** passive and **42% → 36%**
+  engaged; the gate costs 1.5% of offers and no template its reach (13 of 14
+  in 20 of 20 campaigns, `hyp-team-capacity` unreached by this probe under
+  every rule, as before). The engaged figure moves least because a player who
+  forms patterns as they come holds only two or three pieces at a time, and
+  the list already shows all of them. Mutation-checked: removing the gate and
+  removing the ordering each fail `tests/engine/presentation.test.ts` by name.
+
+  **What remains is content-shaped, and is left.** An engaged player still
+  sees a one-tag citation a third of the time, and two pairs of templates
+  will keep sharing lists while they share tags. Finer tags — `pipeline`,
+  `logistics`, `partner` on the pieces that are about those things — would
+  fix it at the source and would touch most of the 48 pieces of evidence;
+  that is a content pass on a frozen campaign and a playtest should ask for it
+  before it happens. Recorded so the next reading of "the patterns look like a
+  menu" starts from here.
+
 - **"Stop something" stopped nothing, and the overload decision blamed the
   SOC whatever was breaking.** Found on day 20 of a hand-played year: one
   enquiry and one programme, both on identity, took identity to breaking point

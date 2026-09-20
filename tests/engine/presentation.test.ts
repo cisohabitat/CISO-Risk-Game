@@ -319,6 +319,37 @@ describe('what a pattern cites', () => {
       }
     }
   })
+
+  it('cites something that is actually about the proposition, and leads with it', () => {
+    // A shared tag is a passing mention. "Backup shares administrative
+    // credentials" is tagged `privileged`, which supports five templates, so
+    // it was cited for the deployment pipeline. An offer has to rest on at
+    // least one piece that carries two of the proposition's tags or the tag it
+    // is about, and the list leads with the best fit rather than the newest.
+    const index = testIndex()
+    const fit = (evidenceId: string, templateId: string): number => {
+      const evidence = index.evidence.get(evidenceId)!
+      const template = index.hypothesisTemplate.get(templateId)!
+      const shared = evidence.tags.filter((tag) => template.supportingTags.includes(tag)).length
+      return shared + (evidence.tags.some((tag) => template.requiresTags.includes(tag)) ? 1 : 0)
+    }
+    let offers = 0
+    for (const seed of ['cite-3', 'cite-4']) {
+      const state = newGame(index, { seed })
+      for (let day = 0; day < 364; day += 1) {
+        for (const suggestion of patternSuggestions(state, index)) {
+          offers += 1
+          const fits = suggestion.evidence.map((item) => fit(item.id, suggestion.templateId))
+          expect(Math.max(...fits), `${suggestion.templateId} was offered on ${suggestion.evidence.map((e) => e.id).join(', ')}, none of which is about it`).toBeGreaterThanOrEqual(2)
+          for (let i = 1; i < fits.length; i += 1) {
+            expect(fits[i]!, `${suggestion.templateId} lists a weaker fit before a stronger one`).toBeLessThanOrEqual(fits[i - 1]!)
+          }
+        }
+        runDays(state, index, 1)
+      }
+    }
+    expect(offers, 'two idle years produced no offer to check').toBeGreaterThan(0)
+  })
 })
 
 describe('what you never looked at', () => {
