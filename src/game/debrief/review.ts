@@ -369,7 +369,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           return `What you committed to was what mattered${biggest ? `, ${biggest} among it` : ''}.${lapses}`
         case 'solid':
           return effort.missed
-            ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it.${lapses}`
+            ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it${state.risks.scenarios[effort.missed.id] ? '' : ' — it was never on your list, because nothing brought it into view'}.${lapses}`
             : `Most of your effort went where it counted.${lapses}`
         case 'developing':
           return effort.commitments.length === 0
@@ -652,7 +652,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   narrative.push(
     understandingScore > 0.55
       ? 'You spent your first months finding out how Nexora actually works rather than reacting to the inherited backlog.'
-      : 'You inherited a backlog and largely worked it, which left the shape of the organisation itself unexamined.',
+      : 'You worked what was in front of you, and the shape of the organisation itself went unexamined.',
   )
   if (started.length > 0) {
     const lead = started.slice().sort((a, b) => b.progress - a.progress)[0]

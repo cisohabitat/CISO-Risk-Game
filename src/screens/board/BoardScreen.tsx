@@ -8,7 +8,7 @@ import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } fro
 import { useGameStore } from '@/store/game-store'
 import { stakeholderViews } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/review'
-import { relationshipTone } from '@/lib/formatting/labels'
+import { plural, relationshipTone } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
 export function BoardScreen() {
@@ -22,6 +22,8 @@ export function BoardScreen() {
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
   const availableTopics = useMemo(() => (state ? materialTopics(state, index) : []), [state, index])
+  // Why a risk the player can see is not on the agenda: it has not been raised.
+  const emergingCount = state ? Object.values(state.risks.scenarios).filter((s) => s.status === 'emerging').length : 0
   if (!state) return null
 
   const pendingQuarter = state.reviews.pendingQuarter
@@ -181,6 +183,12 @@ export function BoardScreen() {
           ) : (
             <fieldset>
               <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Agenda</legend>
+              {emergingCount > 0 && (
+                <p className="mb-3 text-sm text-ink-muted">
+                  {plural(emergingCount, 'risk is', 'risks are')} emerging and not on the agenda: the board hears about
+                  risks you have raised, and an emerging one is raised from the Risk screen.
+                </p>
+              )}
               <div className="space-y-2">
                 {availableTopics.map((topic) => {
                   const active = topics.includes(topic.id)

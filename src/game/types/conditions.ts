@@ -25,6 +25,10 @@ export type Condition =
   | { kind: 'programme.anyBlocked' }
   /** A live programme is where the time elapsed says it should be, with nothing blocking it. */
   | { kind: 'programme.anyOnPlan' }
+  /** The player has recorded at least one assumption that has not been invalidated. */
+  | { kind: 'assumption.anyRecorded' }
+  /** A function still has a vacancy nobody is recruiting for. */
+  | { kind: 'team.vacancyOpen' }
   | { kind: 'stakeholder.trustBelow'; stakeholderId: string; value: number }
   | { kind: 'stakeholder.trustAtLeast'; stakeholderId: string; value: number }
   | { kind: 'threat.pressureAtLeast'; actorId: string; value: number }

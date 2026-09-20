@@ -66,7 +66,7 @@
       "id": "dec-ceo-three-risks",
       "title": "The CEO wants your three risks",
       "description": "Twenty-three minutes is up. Marianne Okafor wants to know what she should be worried about.",
-      "context": "You have had one morning. What you say now sets expectations for the year, and she will remember whether you pretended to know more than you did.",
+      "context": "You have had a morning's notice and whatever days you took since. What you say now sets expectations for the year, and she will remember whether you pretended to know more than you did.",
       "deadlineDays": 1,
       "defaultOptionId": "opt-ceo-vague",
       "requiresRationale": false,
@@ -334,7 +334,7 @@
     {
       "id": "dec-budget-reallocation",
       "title": "Finance asks for the cyber budget back",
-      "description": "The cost reduction programme needs a contribution. Finance has asked for 15% of the remaining cyber budget.",
+      "description": "The cost reduction programme needs a contribution. Finance has asked for £220k from the cyber budget, or a named line worth half of it. If the money is not there, they will take what is.",
       "context": "Saying no costs credit. Saying yes costs capability. A smaller contribution from a named line is harder to argue for, and requires you to know your own plan well enough to name one.",
       "deadlineDays": 10,
       "defaultOptionId": "opt-budget-give",

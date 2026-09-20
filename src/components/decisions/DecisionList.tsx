@@ -14,8 +14,8 @@ export function DecisionList({ limit }: { limit?: number }) {
   if (shown.length === 0) {
     return (
       <EmptyState
-        title="Nothing is waiting on you"
-        description="No decision needs an answer right now. Advance time, or go and find out something you do not yet know."
+        title="No decision is open"
+        description="Nothing needs an answer from you right now. Advance time, or go and find out something you do not yet know."
       />
     )
   }

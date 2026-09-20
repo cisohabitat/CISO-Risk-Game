@@ -83,6 +83,7 @@ export function HomeScreen() {
             label="Team capacity"
             value={view.teamCapacity}
             tone={capacityTone(view.teamCapacity)}
+            note={view.teamHealthNote}
             onInfo={() => openGlossary('gls-capacity')}
           />
           <Standing
@@ -371,11 +372,14 @@ function Standing({
   label,
   value,
   tone,
+  note,
   onInfo,
 }: {
   label: string
   value: string
   tone: Parameters<typeof Badge>[0]['tone']
+  /** A qualifier under the reading, for the case the word alone would mislead. */
+  note?: string
   onInfo?: () => void
 }) {
   return (
@@ -395,6 +399,7 @@ function Standing({
       </dt>
       <dd className="mt-1">
         <Badge tone={tone}>{value}</Badge>
+        {note && <p className="mt-1 text-xs text-band-elevated">{note}</p>}
       </dd>
     </div>
   )

@@ -161,6 +161,18 @@ Measured, not yet fixed. Ranked.
   patience land where objectives fall due, which is the executive patience
   weakness above wearing a new coat.
 
+- **Decision-led play misses what its decisions caused.** From the first
+  observed playtest (`docs/playtests/2026-09-20-ai-browser-session.md`, an
+  AI-driven browser session, not a human): a player who followed the
+  briefing and Skip ahead missed a thin enquiry result for a month, left a
+  formed hypothesis unraised for two, and found the identity enforcement's
+  successful follow-up only on a deliberate inbox review. Every one of those
+  was in the inbox; none was in the briefing. Not changed on one session's
+  word: the fix would be surfacing commissioned-work results and decision
+  follow-ups on the briefing, which is a screen the visual pass deliberately
+  kept to what needs an answer. A human who misses the same things is the
+  signal.
+
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every
 suspicion that turned out to be the harness — lives in `docs/FINDINGS.md`, and a

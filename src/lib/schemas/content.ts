@@ -29,6 +29,8 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('programme.anyActive') }),
     z.object({ kind: z.literal('programme.anyBlocked') }),
     z.object({ kind: z.literal('programme.anyOnPlan') }),
+    z.object({ kind: z.literal('assumption.anyRecorded') }),
+    z.object({ kind: z.literal('team.vacancyOpen') }),
     z.object({ kind: z.literal('stakeholder.trustBelow'), stakeholderId: id, value: unit }),
     z.object({ kind: z.literal('stakeholder.trustAtLeast'), stakeholderId: id, value: unit }),
     z.object({ kind: z.literal('threat.pressureAtLeast'), actorId: id, value: unit }),

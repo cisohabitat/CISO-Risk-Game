@@ -20,7 +20,7 @@ import type { IconName } from '@/components/ui/icons'
 import { optionBudgetCost } from '@/game/engine/orchestrator'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
-import { capacityBand, functionStrain, teamStrain } from '@/game/team/capacity'
+import { capacityBand, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { statusLabel } from '@/lib/formatting/labels'
@@ -516,6 +516,13 @@ export interface BriefingView {
   reviewsDue: number
   activeIncident?: { id: string; name: string; phase: string; servicesAffected: string[] }
   runningWork: number
+  /**
+   * The function whose morale is lowest, in words, when it is below holding
+   * up. Capacity says what the team can carry this week; this says what it
+   * is costing them. A playtest read available capacity as recovered health
+   * and met "burning out" for the first time in the annual review.
+   */
+  teamHealthNote?: string
   understandingPercent: number
   /** How much of what the player could have checked themselves, they have. */
   examinedShare: number
@@ -565,6 +572,11 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
         }
       : undefined,
     runningWork: state.team.assignments.filter((assignment) => assignment.status === 'running').length,
+    teamHealthNote: (() => {
+      const worst = CYBER_FUNCTIONS.map((fn) => ({ fn, morale: state.team.functions[fn]?.morale ?? 1 })).sort((a, b) => a.morale - b.morale)[0]
+      if (!worst || worst.morale >= 0.45) return undefined
+      return `${functionTitle(worst.fn)} ${moraleLabel(worst.morale).toLowerCase()}`
+    })(),
     understandingPercent: Math.round(clamp01(state.organisation.understanding['overall'] ?? 0) * 100),
     examinedShare: (() => {
       const examined = unexaminedMaterial(state, index)

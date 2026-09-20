@@ -8,7 +8,11 @@
       "body": "Both identity engineering roles are still open. We have been covering with the people we have, and it is starting to show in what we can commit to.",
       "priority": "notable",
       "availableFromDay": 18,
-      "conditions": [],
+      "conditions": [
+        {
+          "kind": "team.vacancyOpen"
+        }
+      ],
       "weight": 13,
       "pinned": false,
       "oncePerCampaign": true,
@@ -913,10 +917,14 @@
       "type": "assumption",
       "title": "An assumption is due for review",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "Several of the assumptions behind decisions taken earlier this year are now past their review date. They may still hold. Somebody should check rather than hope.",
+      "body": "The assumptions you recorded behind decisions earlier this year are ageing. They may still hold. Somebody should check rather than hope.",
       "priority": "notable",
       "availableFromDay": 120,
-      "conditions": [],
+      "conditions": [
+        {
+          "kind": "assumption.anyRecorded"
+        }
+      ],
       "weight": 9,
       "pinned": false,
       "oncePerCampaign": false,

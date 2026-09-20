@@ -130,6 +130,13 @@ Put them in front of players rather than deciding from a desk.
   inbox, and whether the last third of the year felt like more to handle or
   less to go on.
 
+## Sessions so far
+
+- `playtests/2026-09-20-ai-browser-session.md`: an AI-driven browser session
+  on the live site, following this protocol. Not a human, and it says so; its
+  concrete findings were verified in the source and are closed in
+  `FINDINGS.md`, its tuning questions were left where they were.
+
 ## What not to change on playtest feedback alone
 
 - **The bands.** "I want to see the actual number" is the most common request a

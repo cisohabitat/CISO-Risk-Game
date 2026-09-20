@@ -18,6 +18,62 @@ fault.
 
 ### Fixed
 
+- **The first observed playtest, and what it found.** An AI-driven browser
+  session on the live site, 20 September 2026, seed `quarry-5813`, following
+  `docs/PLAYTEST.md`; the report is kept verbatim at
+  `docs/playtests/2026-09-20-ai-browser-session.md`. It is not a human
+  session and says so, and it separates concrete message inconsistencies
+  from tuning, which is the split this entry keeps. Each concrete finding was
+  checked in the source before anything moved; six held, and the report's
+  own recommendation — verify the inconsistencies separately from the
+  subjective tuning — is followed.
+
+  **Held, and fixed.**
+  - *Finance asked for 15% of the remaining budget and the options said
+    £220k and £110k.* The amounts are fixed and imposed; the copy named a
+    percentage authored against the opening allocation. Both the CFO's
+    message and the decision now name the sum, and say the money is taken if
+    it is there.
+  - *"Several assumptions are past their review date" with none recorded.*
+    The reminder had no condition. It gates on `assumption.anyRecorded` now.
+  - *A £140k recruitment decision after a £120k recruitment.* "Both identity
+    roles are still open" fired on day 18 regardless. It gates on
+    `team.vacancyOpen` — a vacancy nobody is hiring for.
+  - *"Nothing is waiting on you" beside the board paper that was.* The
+    decision list's empty state made a claim about the whole briefing. It
+    says "No decision is open" now.
+  - *"You inherited a backlog and largely worked it"* for a player who
+    started with business services. The sentence asserted what the player
+    did; it now says what went unexamined.
+  - *Prioritisation named the build pipeline as never having had any
+    effort.* It is the most material risk in Nexora and it was never on the
+    player's list. The sentence now says so when that is why.
+
+  **Held, and made visible rather than changed.**
+  - *Capacity relief read as team recovery; the review led with burnout.*
+    The briefing's team reading said "available" while two functions were
+    burning out, because capacity is what the team can carry this week and
+    morale is what it costs them. The reading now carries the worst
+    function's morale beneath it when it is below holding up —
+    "Engineering burning out" — so the year's people cost is on the main
+    screen before the review counts it.
+  - *Only one risk was offered to the board and nothing said why.* The
+    agenda now says how many risks are emerging and that the board hears
+    about the ones you raise, from the Risk screen.
+  - *"You have had one morning" on day five.* The CEO's decision can be
+    answered days after it opened; the context says so.
+
+  **Checked and left.** Budget rising from £20k to £80k to £170k: two
+  events return money, a cancelled licence and a cancelled duplicate tool,
+  and each says so in the inbox the player was not reading. The
+  completion-versus-assurance distinction the report noticed is the design:
+  100% delivered and "recovery confidence limited" are two facts, and the
+  reading already says it rests on what was verified. The report's
+  recommended next step — the same protocol with human participants,
+  comparing their Q3 reading of team health against the review — stands.
+  Mutation-checked three ways: ungating either event and blanking the team
+  note each fail `tests/engine/playtest-2026-09-20.test.ts` by name.
+
 - **The second half of the inbox was repeatables only.** What the
   fourth-quarter content did not settle, measured: 60 / 55 / 27 / 23
   messages a quarter from 92 / 93 / 54 / 55 distinct subjects, and only 33

@@ -77,6 +77,13 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
         const expected = elapsed / Math.max(1, def.durationDays)
         return p.progress >= expected - 0.02 && p.blockers.every((b) => b.resolved)
       })
+    // "Several assumptions are past their review date" fired with none
+    // recorded, and "both identity roles are still open" fired after the
+    // player had recruited. A message that claims a state tests for it.
+    case 'assumption.anyRecorded':
+      return Object.values(state.assumptions.assumptions).some((a) => a.status !== 'invalidated')
+    case 'team.vacancyOpen':
+      return Object.values(state.team.functions).some((fn) => fn.vacancies > 0 && (fn.hiringDaysRemaining ?? 0) <= 0)
     case 'stakeholder.trustBelow': {
       const stakeholder = state.stakeholders.stakeholders[condition.stakeholderId]
       return stakeholder ? stakeholder.trust < condition.value : false
