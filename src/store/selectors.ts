@@ -1161,3 +1161,37 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
     },
   ]
 }
+
+export interface CameBackItem {
+  id: string
+  day: number
+  from: string
+  subject: string
+  kind: 'result' | 'consequence' | 'lapse' | 'acceptance' | 'stopped'
+}
+
+/**
+ * What the player's own actions sent back, unread: an enquiry that
+ * returned, a callback to a choice, a decision the organisation took for
+ * them, an acceptance that ran out, work that was pulled back. The first
+ * observed playtest followed the briefing and Skip ahead and missed all of
+ * these for weeks, because every one lived in an inbox it was not reading.
+ * The briefing shows what needs an answer; this is what its answers did.
+ */
+export function cameBack(state: GameState, index: ContentIndex, limit = 4): CameBackItem[] {
+  const out: CameBackItem[] = []
+  for (const message of state.inbox.messages) {
+    if (message.read) continue
+    const tags = message.eventId ? (index.event.get(message.eventId)?.tags ?? []) : []
+    let kind: CameBackItem['kind'] | undefined
+    if (message.subject.startsWith('Completed: ')) kind = 'result'
+    else if (message.subject.startsWith('Decided without you: ')) kind = 'lapse'
+    else if (message.subject.startsWith('Your acceptance of ')) kind = 'acceptance'
+    else if (message.subject.startsWith('Pulled back: ') || message.subject.startsWith('Paused: ')) kind = 'stopped'
+    else if (tags.includes('consequence')) kind = 'consequence'
+    if (!kind) continue
+    out.push({ id: message.id, day: message.day, from: message.from, subject: message.subject, kind })
+  }
+  // Inbox messages are prepended, so this is already newest first.
+  return out.slice(0, limit)
+}

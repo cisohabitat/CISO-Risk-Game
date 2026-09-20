@@ -5,6 +5,7 @@
 import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
+import { CameBack } from '@/components/game/CameBack'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
@@ -126,6 +127,12 @@ export function HomeScreen() {
             )}
             <DecisionList limit={4} />
           </section>
+
+          {/* What the player's own actions sent back. The first observed
+              playtest followed this screen and Skip ahead, and missed a thin
+              enquiry result, an unraised hypothesis and a successful follow-up
+              for weeks, because each was in an inbox it was not reading. */}
+          <CameBack />
 
           <section aria-labelledby="concerns">
             <SectionHeading

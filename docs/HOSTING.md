@@ -86,7 +86,11 @@ A build is not release-ready unless all of the following hold:
     ```
 
     This is the only check that exercises the hosting configuration itself —
-    SPA rewrites, headers, caching and asset paths.
+    SPA rewrites, headers, caching and asset paths. It has to run from a
+    machine that can reach the deployment: the remote development environment
+    this project is worked on from has a network policy that rejects the
+    connection to `vercel.app`, so the step is a person's, at a terminal of
+    their own, and its result is recorded in `FINDINGS.md` like anything else.
 14. Vercel usage after a scripted full playthrough shows no unexpected compute.
     The Functions tab should show no invocations at all: normal gameplay makes
     no request after the app shell and content have loaded.

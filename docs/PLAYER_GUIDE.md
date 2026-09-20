@@ -81,6 +81,11 @@ to optimise it. They are deliberately quieter than the things above them,
 because they are the state of the organisation rather than a list of things to
 do. The `?` opens a plain-language explanation.
 
+**Came back to you.** What your own actions sent back and you have not read
+yet: an enquiry that returned, a follow-up to a choice, a decision the
+organisation took for you because you did not. It is the part of the inbox
+that is about you; the rest of the inbox is about Nexora.
+
 **Your top concerns.** The risks you have actually assessed, worst first. Each
 one leads with the risk itself and carries its rating underneath — read the
 sentence, not the colour.

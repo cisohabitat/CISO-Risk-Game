@@ -28,6 +28,15 @@ Five questions, none of which a test can answer:
    annual review, then compare. A gap between their account and the debrief's is
    the most useful thing a session produces.
 
+
+The one comparison the first observed session could not make, and a human
+can: at the end of Q3, before the annual review, ask them **how their team
+is doing**, in their own words. The briefing says what the team can carry
+this week; the review scores what the year cost them, and the AI session
+read "available" as "recovered" and met "burning out" for the first time on
+31 December. If a human does the same, the note beneath the team reading is
+not enough. If they say "engineering is worn out" unprompted, it is.
+
 ## Running one
 
 Half an hour is enough. A first year takes twenty minutes at a normal pace.

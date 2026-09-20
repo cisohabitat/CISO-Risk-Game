@@ -18,6 +18,29 @@ fault.
 
 ### Fixed
 
+- **The briefing said what needed an answer and never what the answers
+  did.** From the first observed playtest: a player who followed the
+  briefing and Skip ahead missed a thin enquiry result for a month, left a
+  formed hypothesis unraised for two, and found the identity enforcement's
+  successful follow-up only on a deliberate inbox review. Every one of those
+  was in the inbox; none was on the screen the game puts you on. Filed as a
+  weakness for a human to confirm; the owner chose to act on it.
+
+  The briefing carries a ruled block under "Waiting on you": **Came back to
+  you**, the unread messages the player's own actions produced — an enquiry
+  that returned, a callback to a choice, a decision the organisation took
+  for them, an acceptance that ran out, work pulled back — newest first,
+  four at most, each with a way into the message. Routine and threat
+  messages are not in it; those are the inbox's. It stays a ruled list
+  rather than cards, because the visual pass reserved cards for what can
+  be acted on, and this is what to know. Mutation-checked: listing results
+  only once read fails `tests/ui/came-back.test.tsx` by name.
+
+  Not done from here: the live suite against the deployment, release-gate
+  step 13. The environment this is worked on from rejects the connection to
+  `vercel.app` at its proxy, so the step is the owner's, at a terminal of
+  their own; `docs/HOSTING.md` says so and gives the command.
+
 - **The first observed playtest, and what it found.** An AI-driven browser
   session on the live site, 20 September 2026, seed `quarry-5813`, following
   `docs/PLAYTEST.md`; the report is kept verbatim at
