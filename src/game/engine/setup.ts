@@ -36,6 +36,19 @@ export interface DifficultyProfile {
   /** Where sector-wide pressure settles over the year. */
   sectorPressurePull: number
   startingDiscovery: number
+  /**
+   * Weights `noise`-tagged events up in the daily draw (plan §44: harder modes
+   * bury the material signal in more noise).
+   *
+   * It currently has almost nothing to act on. Two of the 123 authored events
+   * carry the tag and both are one-shot, so over 40 campaigns per mode exactly
+   * 2.00 of them fire in every campaign at every difficulty — 2.3% of the ~85
+   * events a year — and the multiplier only shifts which day they land on.
+   * Raising it will not make a mode noisier; that needs authored events, and
+   * the discrimination the plan is after is currently carried by evidence
+   * instead (4 of 48 marked `noise`, 2 more tagged `contradicts-`), which no
+   * difficulty dial touches.
+   */
   noiseMultiplier: number
   executiveTolerance: number
   investigationSpeed: number

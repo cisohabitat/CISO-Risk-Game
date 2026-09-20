@@ -59,6 +59,29 @@ acting on a single reading — a fifteen-seed balance run, a probe that counted 
 wrong thing, a pattern notice that turned into a backlog. One player's confusion
 is a hypothesis; two players' identical confusion is a defect.
 
+## Two questions a review raised that only people can settle
+
+A comparative read of all three modes ranked them CISO, then High Pressure,
+then Guided, and left two things it explicitly would not act on without real
+players. Both are worth putting on the list rather than deciding from a desk.
+
+- **Does "Guided" read as a tutorial?** The reviewer's point was that it is not
+  one — it is the full simulation with more organisational capacity and clearer
+  signals — and that the name may undersell it to the experienced players most
+  likely to pick it up. They suggested "Supported" and then declined to change
+  it without testing. So test it: ask which mode a new player picks and why,
+  before they play, and whether the name matched what they got afterwards. Do
+  not rename on one person's word.
+
+- **Does High Pressure feel noisier or harder?** The worry was that the mode
+  might buy difficulty with inbox volume rather than with strategy. The
+  measurement says it does not — 150, 158 and 163 messages a year across the
+  ladder, a flat routine share, and the growth all in critical messages,
+  decisions and incidents — but what the numbers cannot settle is whether it
+  *feels* that way at 11pm on a Tuesday. Ask where they stopped reading their
+  inbox, and whether the last third of the year felt like more to handle or
+  less to go on.
+
 ## What not to change on playtest feedback alone
 
 - **The bands.** "I want to see the actual number" is the most common request a

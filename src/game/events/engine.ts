@@ -92,6 +92,9 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
       const remaining = pool.filter((def) => !firedThisDay.has(def.id))
       if (remaining.length === 0) break
       // Harder difficulties bury the material signal in more noise (plan §44).
+      // Measured as near-inert: only two authored events carry the tag and
+      // both fire in every campaign whatever the multiplier. See the note on
+      // `noiseMultiplier` in setup.ts before tuning this.
       const noiseMultiplier = DIFFICULTY_PROFILES[state.difficulty].noiseMultiplier
       const chosen = rng.weighted(remaining, (def) =>
         def.tags.includes('noise') ? def.weight * noiseMultiplier : def.weight,

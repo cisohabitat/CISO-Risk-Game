@@ -74,6 +74,30 @@ what not to change on one player's word.
 
 Measured, not yet fixed. Ranked.
 
+- **The noise dial cannot move.** A comparative review across the three modes
+  worried that high pressure might get harder by filling the inbox rather than
+  by being strategically harder, and graded the profile's `noiseMultiplier`
+  (0.7 / 1.0 / 1.3) as part of the ladder. Measured over 40 campaigns per mode:
+  **exactly 2.00 noise events fire in every campaign at every difficulty**,
+  2.3% of the ~85 events a year, because two of the 123 authored events carry
+  the tag and both are one-shot. Everything eligible fires anyway; the
+  multiplier only shifts which day they land on. The row in the difficulty
+  table describes something that does not happen.
+
+  The worry it was raised against is answered, and the other way round. Over 20
+  campaigns per mode an engaged player sees 150, 158 and 163 messages a year
+  across the ladder — 9% end to end — with an identical repetition ratio
+  (1.42 / 1.40 / 1.42) and a flat routine share (28% / 27% / 27%). What rises
+  is material: critical messages 3% → 6% → 8%, decisions 18.5 → 20.5 → 21.5,
+  incidents 0.5 → 1.2 → 1.6. High pressure is harder, not noisier.
+
+  Not fixed, deliberately. The only route is authoring noise events, which
+  would make the mode harder in exactly the cognitive way the review asked us
+  not to, and the discrimination plan §44 is after is already carried by
+  evidence — 4 of 48 marked `noise`, 2 more tagged `contradicts-` — which no
+  difficulty dial touches. Recorded so nobody tunes or grades a dial with no
+  room to move; `setup.ts` and `events/engine.ts` carry the same note.
+
 - **The year fades instead of building.** Measured over 12 campaigns of engaged
   play: decisions arrive 11.7, 4.7, 2.5 and 1.3 times per quarter, so Q4 carries
   roughly an eighth of Q1. The longest stretch with nothing to decide averages
