@@ -1,0 +1,64 @@
+import { describe, expect, it } from 'vitest'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
+import { testIndex } from './helpers'
+import type { GameState } from '@/game/types'
+
+/**
+ * Two programme messages used to fire on "any programme active" and claim a
+ * state nobody checked. Measured over 20 campaigns: "A programme has stalled"
+ * was true in 27 of 93 arrivals, "A programme is ahead of plan" in 0 of 54 — and could not be, so it now says "on plan".
+ * A message that claims a state has to test for it.
+ */
+const PROGRAMMES = ['prog-identity', 'prog-ransomware', 'prog-thirdparty', 'prog-detection']
+
+function buildOneAtATime(state: GameState, index: ReturnType<typeof testIndex>, wanted: { n: number }): void {
+  if (wanted.n >= PROGRAMMES.length || state.currentDay <= 20) return
+  const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active')
+  if (live.length === 0 || (live.length === 1 && live[0]!.progress > 0.55)) {
+    const pid = PROGRAMMES[wanted.n]!
+    if (applyAction(state, index, { type: 'startProgramme', programmeId: pid, budget: index.programme.get(pid)!.budgetCost }).ok) wanted.n += 1
+  }
+}
+
+describe('programme messages claim only what is true', () => {
+  it('"stalled" arrives only with a live blocker, and "on plan" only when one is', () => {
+    const index = testIndex()
+    let stalled = 0, ahead = 0
+    for (const seed of ['pm-1', 'pm-2', 'pm-3', 'pm-4', 'pm-5', 'pm-6', 'pm-7', 'pm-8']) {
+      const state = newGame(index, { seed })
+      const wanted = { n: 0 }
+      const seen = new Set<string>()
+      for (let day = 0; day < 364; day += 1) {
+        runDays(state, index, 1)
+        for (const id of [...state.decisions.openIds]) {
+          const def = index.decision.get(state.decisions.decisions[id]!.defId)!
+          for (const o of def.options) {
+            if (applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: o.id, rationaleTagIds: ['rat-more-evidence'] }).ok) break
+          }
+        }
+        buildOneAtATime(state, index, wanted)
+        const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active' || p.status === 'at-risk')
+        for (const message of state.inbox.messages) {
+          if (seen.has(message.id)) continue
+          seen.add(message.id)
+          if (message.subject === 'A programme has stalled') {
+            stalled += 1
+            expect(live.some((p) => p.blockers.some((b) => !b.resolved)), `${seed} day ${state.currentDay}: stalled with no blocker`).toBe(true)
+          }
+          if (message.subject === 'A programme is on plan') {
+            ahead += 1
+            const onPlan = live.some((p) => {
+              const def = index.programme.get(p.id)!
+              return p.startedDay !== undefined && p.status === 'active' && p.blockers.every((b) => b.resolved)
+                && p.progress >= (state.currentDay - p.startedDay) / def.durationDays - 0.02
+            })
+            expect(onPlan, `${seed} day ${state.currentDay}: "on plan" with nothing on plan`).toBe(true)
+          }
+        }
+      }
+    }
+    // Both must still be reachable, or the fix has silenced them rather than made them honest.
+    expect(stalled, '"A programme has stalled" never arrived in eight building campaigns').toBeGreaterThan(0)
+    expect(ahead, '"A programme is on plan" never arrived in eight building campaigns').toBeGreaterThan(0)
+  })
+})

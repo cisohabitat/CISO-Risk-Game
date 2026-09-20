@@ -21,6 +21,10 @@ export type Condition =
   | { kind: 'programme.status'; programmeId: string; status: string }
   | { kind: 'programme.progressAtLeast'; programmeId: string; value: number }
   | { kind: 'programme.anyActive' }
+  /** A live programme has a blocker nobody has resolved. */
+  | { kind: 'programme.anyBlocked' }
+  /** A live programme is where the time elapsed says it should be, with nothing blocking it. */
+  | { kind: 'programme.anyOnPlan' }
   | { kind: 'stakeholder.trustBelow'; stakeholderId: string; value: number }
   | { kind: 'stakeholder.trustAtLeast'; stakeholderId: string; value: number }
   | { kind: 'threat.pressureAtLeast'; actorId: string; value: number }

@@ -56,6 +56,36 @@ describe('reviews', () => {
     expect(total).toBeLessThan(0.05)
   })
 
+  it('tells two incidents of one family apart on the agenda', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-twice' })
+    runDays(state, index, 30)
+    const family = index.content.incidentFamilies[0]!
+    const rng = createRng(state.seed, 7)
+    applyEffects(state, [{ type: 'incident.start', familyId: family.id }], { index, rng, source: 'test' })
+    runDays(state, index, 60)
+    applyEffects(state, [{ type: 'incident.start', familyId: family.id }], { index, rng, source: 'test' })
+    const labels = materialTopics(state, index).filter((t) => t.id.startsWith('incident:')).map((t) => t.label)
+    expect(labels.length).toBeGreaterThanOrEqual(2)
+    expect(new Set(labels).size, `identical agenda lines: ${labels.join(' | ')}`).toBe(labels.length)
+  })
+
+  it('narrates every incident, not only the worst', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-narrate' })
+    runDays(state, index, 30)
+    const family = index.content.incidentFamilies[0]!
+    const rng = createRng(state.seed, 9)
+    applyEffects(state, [{ type: 'incident.start', familyId: family.id }], { index, rng, source: 'test' })
+    runDays(state, index, 80)
+    applyEffects(state, [{ type: 'incident.start', familyId: family.id }], { index, rng, source: 'test' })
+    runDays(state, index, 364 - state.currentDay)
+    const text = buildAnnualReview(state, index).narrative.join(' ')
+    for (const incident of Object.values(state.incidents.incidents)) {
+      expect(text, `the review never mentions the incident that began on day ${incident.startedDay}`).toContain(`day ${incident.startedDay}`)
+    }
+  })
+
   it('puts a risk the player raised on the board agenda, controlled or not', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'rev-board' })

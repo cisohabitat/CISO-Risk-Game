@@ -801,7 +801,7 @@
       "availableFromDay": 60,
       "conditions": [
         {
-          "kind": "programme.anyActive"
+          "kind": "programme.anyBlocked"
         }
       ],
       "weight": 10,
@@ -816,14 +816,14 @@
     {
       "id": "evt-org-programme-win",
       "type": "programme",
-      "title": "A programme is ahead of plan",
+      "title": "A programme is on plan",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "We are ahead on delivery for once. The team would like that noticed before it is quietly absorbed into the next set of expectations.",
+      "body": "We are on plan for once, and nothing is blocking us. The team would like that noticed before it is quietly absorbed into the next set of expectations.",
       "priority": "routine",
       "availableFromDay": 120,
       "conditions": [
         {
-          "kind": "programme.anyActive"
+          "kind": "programme.anyOnPlan"
         }
       ],
       "weight": 8,

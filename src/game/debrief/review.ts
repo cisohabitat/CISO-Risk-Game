@@ -4,6 +4,7 @@
  * The output is narrative and multi-dimensional. A single score would teach the
  * wrong lesson, so the performance band is deliberately secondary.
  */
+import { formatGameDate } from '../time'
 import type {
   AnnualReview,
   AnnualReviewDimension,
@@ -64,7 +65,13 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
   for (const incident of Object.values(state.incidents.incidents)) {
     const family = index.incidentFamily.get(incident.familyId)
     if (!family) continue
-    out.push({ id: `incident:${incident.id}`, label: `${family.name} (incident)`, material: true })
+    // Two incidents of one family made two identical lines, which reads as a
+    // duplicate rather than as the point. The date tells them apart.
+    out.push({
+      id: `incident:${incident.id}`,
+      label: `${family.name} (incident, from ${formatGameDate(incident.startedDay).label})`,
+      material: true,
+    })
   }
   for (const assumption of Object.values(state.assumptions.assumptions)) {
     if (assumption.status !== 'invalidated') continue
@@ -662,6 +669,23 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       narrative.push(
         `${family.name} tested the organisation on day ${worst.startedDay}. ${worst.reconstruction?.narrative ?? ''}`.trim(),
       )
+      // The worst incident is narrated; the others were not mentioned at all.
+      // A hand-played year with two ransomware incidents closed on a review
+      // that spoke of one. The resilience evidence already groups repeats;
+      // the story has to as well.
+      const others = incidents.filter((i) => i.id !== worst.id).sort((a, b) => a.startedDay - b.startedDay)
+      if (others.length > 0) {
+        const described = others.map((i) => {
+          const name = index.incidentFamily.get(i.familyId)?.name ?? 'an incident'
+          if (i.familyId !== worst.familyId) return `${name} on day ${i.startedDay}`
+          // Same kind again: the route says whether it was the same door.
+          const sameRoute = !i.pathId || !worst.pathId || i.pathId === worst.pathId
+          return sameRoute
+            ? `the same kind of incident again on day ${i.startedDay}, through the same route — the same weakness, still open`
+            : `the same kind of incident again on day ${i.startedDay}, by a different route`
+        })
+        narrative.push(`It was not the only one: ${described.join('; ')}.`)
+      }
     }
   }
   if (worstRiskDef && worstRisk) {

@@ -54,6 +54,25 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     }
     case 'programme.anyActive':
       return Object.values(state.programmes.programmes).some((p) => p.status === 'active' || p.status === 'at-risk')
+    // "A programme has stalled" and "a programme is ahead of plan" both fired
+    // on anyActive and claimed a state nobody checked: measured over 20
+    // campaigns, the stall was real in 27 of 93 arrivals and the win in 0 of
+    // 54. A message that claims a state has to test for it.
+    case 'programme.anyBlocked':
+      return Object.values(state.programmes.programmes).some(
+        (p) => (p.status === 'active' || p.status === 'at-risk') && p.blockers.some((b) => !b.resolved),
+      )
+    // "Ahead of plan" was the first wording, and a programme is never ahead:
+    // over 6,291 live-programme days the largest lead over the linear plan
+    // was 0.000. On plan, with nothing blocking, is a state that happens.
+    case 'programme.anyOnPlan':
+      return Object.values(state.programmes.programmes).some((p) => {
+        if (p.status !== 'active' || p.startedDay === undefined) return false
+        const def = index.programme.get(p.id)
+        if (!def) return false
+        const expected = (state.currentDay - p.startedDay) / Math.max(1, def.durationDays)
+        return p.progress >= expected - 0.02 && p.blockers.every((b) => b.resolved)
+      })
     case 'stakeholder.trustBelow': {
       const stakeholder = state.stakeholders.stakeholders[condition.stakeholderId]
       return stakeholder ? stakeholder.trust < condition.value : false

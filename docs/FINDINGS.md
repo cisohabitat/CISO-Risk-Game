@@ -18,6 +18,52 @@ fault.
 
 ### Fixed
 
+- **A year with two ransomware incidents closed on a review that spoke of
+  one.** The narrative picked the worst incident and narrated it — "tested
+  the organisation on day 166" — and never mentioned the second, on day 217,
+  though the resilience evidence under it already grouped the pair. The
+  narrative now follows the worst with the rest: "It was not the only one:
+  the same kind of incident again on day 217, by a different route", or
+  "through the same route — the same weakness, still open" when the path
+  matches, or the family and day when it is a different kind. A test starts
+  two incidents of one family and fails if the review omits either day.
+  Mutation-checked.
+
+  The same hand-played year, for the record: no decision at all between day
+  273 and day 364, which is the fourth-quarter fade already filed under
+  Known weaknesses, seen again by hand.
+
+- **Two programme messages that claimed a state nobody checked.** Day 266
+  of the same hand-played year: "A programme has stalled … it needs somebody
+  senior to make a decision", from the Head of Security Architecture, with
+  the only programme at 100% and nothing blocked. Both `evt-org-programme-
+  blocked` and `evt-org-programme-win` fired on `programme.anyActive` and
+  nothing else. Measured over 20 campaigns that build four programmes one at
+  a time: "A programme has stalled" arrived **93 times and a live programme
+  had an unresolved blocker in 27**; "A programme is ahead of plan" arrived
+  **54 times and was true in 0**.
+
+  The second could not be made true. Over 6,291 live-programme days the
+  largest lead any programme held over its linear plan was **0.000** —
+  progression cannot outrun the expectation, only fall behind it — and
+  delivery confidence never reached `Good`. A message that can never be true
+  is not a message; it now says "A programme is on plan", on a condition that
+  happens: progress within 0.02 of the plan with nothing blocking. Two
+  condition kinds, `programme.anyBlocked` and `programme.anyOnPlan`, carry
+  both. After: stalled 45 of 45 true, on plan 17 of 17. A test walks eight
+  building campaigns, fails on either message arriving untrue, and fails if
+  either never arrives, so the fix cannot have silenced them instead.
+  Mutation-checked.
+
+- **Two incidents, one line, twice.** The Q3 board pack on day 273 listed
+  "Ransomware and service encryption (incident)" and, under it, "Ransomware
+  and service encryption (incident)": two incidents of one family, which
+  reads as a duplicate rather than as the point the annual review already
+  makes ("the same weakness, still open"). The agenda line carries the date
+  the incident began. The calendar moved from the store into
+  `src/game/time.ts` so engine text can date things; the store re-exports it.
+  Mutation-checked.
+
 - **"Recovery, Contained, Not yet recovering."** Day 183 of the same
   hand-played year, on one line of the incident command view, above a
   timeline entry from two days earlier saying restoration of affected services
