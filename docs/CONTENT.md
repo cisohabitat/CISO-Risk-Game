@@ -74,6 +74,13 @@ effects and, where the point is delayed consequence, `delayedEffects`. Set
 in the annual review. Attach `assumptionIds` where the option only makes sense if
 something stays true — the assumption engine will tell the player when it stops.
 
+**Name the reasons a decision can be taken for** when the whole vocabulary
+would mislead. `rationaleTagIds` on a decision limits what the dialog offers
+and what the engine accepts; leave it off where most reasons are arguable, and
+set it on decisions where some plainly are not — the incident decisions do not
+offer "residual risk is within tolerance". Keep at least two, and prefer six or
+more: the point is to remove nonsense, not to hand the player the answer.
+
 **Do not name a function the engine chooses.** A decision that fires on team
 strain fires on whichever function is closest to breaking, and it was once
 authored as if that were always the SOC: over 92 firings it never was. Where an
