@@ -905,6 +905,16 @@ fault.
 
 ### Checked and left alone
 
+- **Coverage read 122 of 123 after this session's condition changes.** The
+  one unreached event was `evt-con-priority-segmentation-felt`, the callback
+  scheduled 45 days after choosing to prioritise segmentation. Run on the
+  build from before the session it was the same 122 of 123 with the same
+  event missing, and on the current build at 120 campaigns instead of 60 it
+  is 123 of 123. It is sampling: the harness varies its choice per campaign
+  and the tradeoff decision opens late enough that the callback sometimes
+  falls past day 364. Nothing changed. Check the pre-change build before
+  reading a harness number as a regression.
+
 - **The ladder, played rather than reasoned.** One CISO philosophy — understand
   the business first, be candid about uncertainty, investigate selectively,
   build one programme at a time, take every board paper — declared up front and
