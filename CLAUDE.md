@@ -75,6 +75,36 @@ what not to change on one player's word.
 
 Measured, not yet fixed. Ranked.
 
+- **Executive patience stops describing the mode after about week seven.**
+  `executiveTolerance` seeds `operationalTolerance` at 0.62 / 0.50 / 0.38, and
+  then `relationships.ts` drifts it up 0.0015 a day with no ceiling — +0.55
+  over a year against a 0.24 spread between the modes. Measured: the objectives
+  friction term, which bites below 0.45, fires on **0 days of 364 on guided and
+  on CISO**, and on **46 on high pressure**; all three finish the year at or
+  near maximum patience. "Less executive patience" is one of the four things
+  high pressure is meant to keep, and it keeps it until about week seven.
+
+  Bounding it was tried and reverted. Drifting toward the profile value instead
+  of past it makes the dial real all year — high pressure then sits under the
+  threshold on 358 days of 364 — but because 0.45 falls between CISO's 0.50 and
+  high pressure's 0.38, only high pressure pays, permanently: over 40 seeds
+  objectives missed went 1.38 → 2.40 (+74%) while incidents fell 1.65 → 1.43.
+  That buys difficulty by punishing the business rather than the security
+  posture, which is not what the dial is for, and it needs the 0.45 threshold
+  revisited alongside it. Two coupled numbers and a 74% swing in one mode is a
+  playtest question, not a desk decision.
+
+- **A consequence can take the budget below zero.** `spendBudget` refuses any
+  player action that would overdraw, but `budget.change` in the effect reducer
+  adds its amount with no floor — while `focus.change`, the next case in the
+  same switch, clamps at zero. Fifteen authored options carry a negative
+  amount, the largest being external IR support at £320k. It cannot happen to
+  a player who only answers decisions (0 of 40 campaigns on every mode), but a
+  player who commits to programmes and then meets a costly consequence goes
+  overdrawn, and the Briefing reads "£-70k of £2.4m". Nothing reacts to it: no
+  event, no stakeholder, no note. Clamping loses the overspend; surfacing it is
+  a new mechanic. Recorded rather than guessed at.
+
 - **The noise dial cannot move.** A comparative review across the three modes
   worried that high pressure might get harder by filling the inbox rather than
   by being strategically harder, and graded the profile's `noiseMultiplier`
@@ -368,43 +398,41 @@ simulated player actually did before concluding the game is at fault.
 - **The ladder, played rather than reasoned.** One CISO philosophy — understand
   the business first, be candid about uncertainty, investigate selectively,
   build one programme at a time, take every board paper — declared up front and
-  run identically on all three modes over 15 seeds each. The ladder is clean,
-  and it is entirely on the threat side:
+  run identically on all three modes over 40 seeds each. `pnpm ladder`.
 
   | | Guided | CISO | High Pressure |
   |---|---|---|---|
-  | Incidents a year | 0.47 | 0.93 | **1.47** |
-  | Worst consequence | 0.17 | 0.33 | **0.51** |
-  | Resilience `strong` | 9/15 | 6/15 | **2/15** |
-  | Resilience `developing` | 1/15 | 4/15 | **7/15** |
-  | Objectives missed | 1.20 | 1.00 | 1.53 |
-  | Board confidence | 0.60 | 0.62 | 0.63 |
-  | Budget left | £1.23m | £0.58m | £0.22m |
+  | Programmes built | 2.8 | 1.9 | **1.2** |
+  | Days wanting to build, no money | 72 | 166 | **225** |
+  | Incidents a year | 0.50 | 0.95 | **1.68** |
+  | Worst consequence | 0.17 | 0.31 | **0.47** |
+  | Resilience `developing` | 2/40 | 9/40 | **17/40** |
+  | Objectives missed | 1.88 | 1.65 | 1.50 |
+  | Board confidence | 0.61 | 0.62 | 0.63 |
 
-  Incidents and consequence both roughly treble across the ladder and the
-  resilience band moves decisively, so the same play genuinely produces
-  different years. On one shared seed the identical policy closed on "You built
-  the capability on people who cannot do it again" on Guided and CISO, and on
-  "You built the capability, and the business paid for it in delivery" on high
-  pressure, where the same friction cost three objectives instead of one.
-  `Your team is past sustainable load` fired on CISO (d50) and high pressure
-  (d57) and never on Guided, which is the capacity multiplier doing its job.
+  Both halves of the ladder bind. The budget decides how much gets built —
+  2.8 programmes against 1.2 for the same intent — and every mode ends the year
+  spent to roughly zero, so the multiplier is the constraint rather than a
+  number in a table. The threat side moves with it: incidents and worst
+  consequence each roughly treble, and the resilience band inverts. On a shared
+  seed the identical policy closed on "You built the capability on people who
+  cannot do it again" on the first two modes and on "You built the capability,
+  and the business paid for it in delivery" on high pressure. `Your team is
+  past sustainable load` fires on CISO and high pressure and never on Guided.
 
-  Two things the run does **not** show, worth saying plainly. Objectives missed
-  does not order (1.20 / 1.00 / 1.53), so at 15 seeds the business side is
-  noise rather than a ladder. And board confidence is flat at 0.60-0.63: a
-  player who prepares every board paper ends at the same standing whatever the
-  mode, so `executiveTolerance` (0.62 / 0.50 / 0.38) does not reach a player
-  who never disappoints the board.
+  Objectives missed runs the other way (1.88 / 1.65 / 1.50) and that is
+  correct: live programmes impose `businessFriction`, so the mode that builds
+  most disrupts most. Business enablement measures the friction the player
+  chose to impose, not the mode. Board confidence is flat at 0.61-0.63 for a
+  player who prepares every board paper.
 
-  The budget ladder was never tested. "One programme at a time" only ever
-  started one, so the year ended with 41% of the budget unspent on Guided and
-  10% on high pressure without the difference ever binding — and programme
-  execution read `strong` in all three, because the dimension scores completion
-  as a share of what you started rather than of what there was to build. That
-  is consistent with how the game treats over-commissioning elsewhere, so
-  nothing changed; `docs/PLAYTEST.md` asks whether a player feels the budget
-  difference or only the incident difference.
+  **An earlier version of this entry was wrong, and the harness was why.** The
+  programme list held `prog-recovery`, which is not a real id, so
+  `index.programme.get` returned undefined, the loop stopped advancing and
+  every mode silently built exactly one programme. That produced "41% of the
+  budget unspent on Guided" and the conclusion that the budget multipliers
+  never bind — the opposite of what happens. The script throws on an unknown
+  id now. Check what the simulated player actually did.
 
 - **The pattern offer looked like a queue again.** Playing in the browser,
   forming one hypothesis immediately surfaced another, three times in a row on

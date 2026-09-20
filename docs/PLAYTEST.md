@@ -73,14 +73,15 @@ players. Both are worth putting on the list rather than deciding from a desk.
   before they play, and whether the name matched what they got afterwards. Do
   not rename on one person's word.
 
-- **Is the budget difference felt, or only the incidents?** Playing one
-  philosophy across all three modes, the ladder landed entirely on the threat
-  side — incidents 0.47 / 0.93 / 1.47 a year, worst consequence 0.17 / 0.33 /
-  0.51 — while the budget difference never bound, because a player who builds
-  one programme at a time never runs out. Guided ended 41% of its budget
-  unspent. So ask what they did with the money, and whether they ever wanted
-  something they could not afford. If nobody ever hits the budget wall, the
-  25%/90% multipliers are doing less than the table suggests.
+- **Should hard mode cost the business its year?** `executiveTolerance` is
+  meant to make high pressure less patient, and measurably stops doing so after
+  about week seven. Bounding it works, but only high pressure ends up paying,
+  and over 40 seeds it went from missing 1.38 business objectives a year to
+  2.40. Ask a player who has finished a high-pressure year whether the
+  executives felt harder to work with than on CISO, and whether missing half
+  the business objectives would read as the mode being hard or as the mode
+  being unwinnable. That answer decides whether to bound the dial and move the
+  0.45 friction threshold with it.
 
 - **Does High Pressure feel noisier or harder?** The worry was that the mode
   might buy difficulty with inbox volume rather than with strategy. The

@@ -4,6 +4,15 @@
  * One philosophy, declared up front and applied identically on every
  * difficulty against the same seed, so the only variable is the mode. It logs
  * what it chose, and — more useful — every time the world refused it.
+ *
+ * Two appetites, because one was not enough to test the ladder. `measured`
+ * builds one programme at a time and never runs out of money, which left 41%
+ * of the budget unspent on guided and told us nothing about what the budget
+ * multipliers do. `ambitious` starts everything it can afford as soon as it
+ * can afford it, which is what finds the wall.
+ *
+ *   pnpm ladder <mode> [seed] [measured|ambitious]
+ *   pnpm ladder sweep <runs> [measured|ambitious]
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
@@ -42,14 +51,20 @@ const CHOICE: [RegExp, RegExp, string][] = [
   [/Connecting the acquisition/i, /quarantined zone/i, 'rat-compensating'],
 ]
 // What this CISO wants to build, in order of conviction, and what to examine.
-const PROGRAMMES = ['prog-identity', 'prog-recovery', 'prog-thirdparty']
+// Real ids. This list once held `prog-recovery`, which does not exist, so
+// `index.programme.get` returned undefined, the loop stopped advancing and
+// every mode silently built exactly one programme — which is why the budget
+// multipliers never bound and looked untested.
+const PROGRAMMES = ['prog-identity', 'prog-ransomware', 'prog-thirdparty', 'prog-detection']
 const ENQUIRIES = ['inv-service-review', 'inv-access-review', 'inv-supplier-review', 'inv-architecture-review', 'inv-recovery-test']
 const LEADERS: Record<string, string> = {
   'inv-service-review': 'lead-grc', 'inv-access-review': 'lead-eng', 'inv-supplier-review': 'lead-grc',
   'inv-architecture-review': 'lead-arch', 'inv-recovery-test': 'lead-soc',
 }
 
-function play(difficulty: Difficulty) {
+type Appetite = 'measured' | 'ambitious'
+
+function play(difficulty: Difficulty, appetite: Appetite) {
   const state: GameState = newGame(index, { seed: SEED, difficulty })
   const log: string[] = []
   const refused: string[] = []
@@ -115,13 +130,15 @@ function play(difficulty: Difficulty) {
     // last is properly under way.
     if (wantedProgramme < PROGRAMMES.length && day > 20) {
       const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active')
-      if (live.length === 0 || (live.length === 1 && live[0]!.progress > 0.55)) {
+      const ready = appetite === 'ambitious' ? true : live.length === 0 || (live.length === 1 && live[0]!.progress > 0.55)
+      if (ready) {
         const pid = PROGRAMMES[wantedProgramme]!
         const def = index.programme.get(pid)
-        if (def) {
+        if (!def) throw new Error(`no such programme: ${pid}`)
+        {
           const r = applyAction(state, index, { type: 'startProgramme', programmeId: pid, budget: def.budgetCost })
           if (r.ok) { wantedProgramme += 1; log.push(`d${state.currentDay} build   ${def.name} (£${(def.budgetCost / 1000).toFixed(2)}m)`) }
-          else if (day % 45 === 0) refused.push(`d${state.currentDay} build   ${def.name}: ${r.message}`)
+          else refused.push(`d${state.currentDay} build   ${def.name}: ${r.message}`)
         }
       }
     }
@@ -137,31 +154,36 @@ function play(difficulty: Difficulty) {
 // reports only what the ladder did, which is the part one seed cannot say.
 if (process.argv[2] === 'sweep') {
   const n = Number(process.argv[3] ?? 12)
+  const appetite = (process.argv[4] as Appetite) ?? 'measured'
+  console.log(`${n} seeds per mode, appetite: ${appetite}`)
   for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
-    let incidents = 0, missed = 0, budgetLeft = 0, worst = 0, boardSum = 0
+    let incidents = 0, missed = 0, budgetLeft = 0, worst = 0, boardSum = 0, programmesStarted = 0, brokeCount = 0
     const bands: Record<string, number> = {}
     for (let i = 0; i < n; i += 1) {
       SEED = `sweep-${i}`
-      const out = play(difficulty)
+      const out = play(difficulty, appetite)
       incidents += Object.keys(out.state.incidents.incidents).length
       missed += Object.values(out.state.business.objectives).filter((o) => o.status === 'failed').length
       budgetLeft += out.state.resources.budgetRemaining
       worst += Object.values(out.state.incidents.incidents).reduce((m, inc) => Math.max(m, inc.consequence), 0)
       boardSum += out.state.stakeholders.boardConfidence
+      programmesStarted += out.wantedProgramme
+      brokeCount += out.refused.filter((r) => /not enough budget/i.test(r)).length
       const band = out.review.dimensions.find((d) => d.id === 'resilience')!.band
       bands[band] = (bands[band] ?? 0) + 1
     }
     console.log(
       `${difficulty.padEnd(14)} incidents/yr ${(incidents / n).toFixed(2)} · objectives missed ${(missed / n).toFixed(2)}` +
       ` · worst consequence ${(worst / n).toFixed(2)} · board ${(boardSum / n).toFixed(2)}` +
-      ` · budget left £${(budgetLeft / n / 1000).toFixed(2)}m · resilience ${Object.entries(bands).map(([b, c]) => `${b} ${c}`).join(', ')}`,
+      ` · budget left £${(budgetLeft / n / 1000).toFixed(2)}m · programmes started ${(programmesStarted / n).toFixed(1)}` +
+      ` · refused for money ${(brokeCount / n).toFixed(1)}x · resilience ${Object.entries(bands).map(([b, c]) => `${b} ${c}`).join(', ')}`,
     )
   }
   process.exit(0)
 }
 
 const mode = process.argv[2] as Difficulty
-const r = play(mode)
+const r = play(mode, (process.argv[4] as Appetite) ?? 'measured')
 console.log(`\n================ ${mode.toUpperCase()} · seed ${SEED} ================`)
 console.log(r.log.join('\n'))
 console.log(`\n--- where the world said no (${r.refused.length}) ---`)
