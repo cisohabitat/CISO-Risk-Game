@@ -56,12 +56,21 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-current={screen === destination.id ? 'page' : undefined}
                 aria-label={destination.label}
                 className={cn(
-                  'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
+                  'relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
                   screen === destination.id
                     ? 'bg-surface-3 font-medium text-ink'
                     : 'text-ink-muted hover:bg-surface-2 hover:text-ink',
                 )}
               >
+                {/* Hover and selected were a 3.5% difference in lightness and
+                    one font weight apart, so resting the pointer on any item
+                    made it read as the page you were on — convincingly enough
+                    that a screenshot of the Board screen looked like a
+                    navigation bug. A bar is categorical: hover cannot make one
+                    appear. */}
+                {screen === destination.id && (
+                  <span aria-hidden="true" className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-accent" />
+                )}
                 <span aria-hidden="true" className="w-4 text-center text-base text-ink-faint">{destination.icon}</span>
                 <span className="flex-1">{destination.label}</span>
                 {destination.id === 'inbox' && view.unreadMessages > 0 && (

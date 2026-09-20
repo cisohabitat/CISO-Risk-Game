@@ -98,6 +98,56 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **Four things found by playing a third year permissively, on high pressure,
+  and then looking at the gallery.** Two earlier passes both played carefully;
+  this one waved things through, accepted risks formally and recorded
+  assumptions against them, which reached parts of the game the careful route
+  never touches.
+
+  **"Supplier assurance questionnaire returned clean" was cited as grounds for
+  alarm again.** The same sentence this file already records as fixed. The
+  earlier fix was real but closed one instance: it relied on each template
+  naming the contradicting tag in its own `contradictingTags`, and only 2 of
+  14 templates name any, so the clean questionnaire still supported
+  `hyp-logistics` and the claim that legacy is isolated still supported
+  `hyp-detection-gap` — 817 offer-days across **20 of 20 campaigns**. The rule
+  is structural now: a `contradicts-x` tag argues against `x` for every
+  template that rests on `x`, whatever that template lists. One piece was also
+  under-tagged and gained `contradicts-legacy`. Down to zero, with no offers
+  lost. Mutation-checked.
+
+  **The closing screen printed raw enum ids.** "Your architecture and grc
+  functions are spent", "soc: burning out" — internal names in the last
+  paragraph a player reads. `src/lib/formatting` holds two maps of these words
+  and the engine cannot reach either, so `functionName` now lives beside
+  `moraleLabel` in `src/game/team/capacity.ts`. A test walks three whole
+  campaigns and fails if any line of the annual review contains `grc`, `soc`,
+  `iam` or `incident-response`.
+
+  **Hovering the rail made an item look like the page you were on.** Selected
+  and hover were 3.5% of lightness and one font weight apart, with identical
+  text colour — convincingly enough that the gallery's Board screenshot read as
+  a navigation bug, and the bug was chased through three probes before the rail
+  turned out to be right. The selected item now carries an accent bar, which
+  hover cannot produce. The gallery was at fault too: Playwright leaves the
+  pointer where it last clicked, so `pnpm screenshots` was photographing a
+  hover state. It parks the pointer before every shot now.
+
+  **A toast swallowed clicks meant for the page.** Three stack above the fold,
+  over the Decide button, for 5.2 seconds; the body was `pointer-events-auto`,
+  so a click aimed at the page hit the toast and did nothing. Only the dismiss
+  control needs the pointer. Mutation-checked in the end-to-end suite.
+
+- **The accessibility audit was racing a 220ms animation.** Screens and dialogs
+  fade in from opacity 0, and both `toBeVisible()` and a click resolve on the
+  first frame, so axe measured contrast against a half-transparent panel. The
+  same commit gave 75 green tests on one run and a `color-contrast` violation
+  on the next, reporting `#71767d on #eff2f5` for text that settles at 7.8:1 on
+  white. A test that fails at random gets dismissed as flake, and would hide a
+  real violation just as easily. The audit waits for `document.getAnimations()`
+  to finish now, and is green three runs in a row at two viewports. The
+  violation was a phantom: the settled colours were checked directly.
+
 - **Two things found by playing a second year, investigating this time.** The
   first pass answered decisions and never commissioned anything; this one
   commissioned work, formed patterns and raised risks, and the different route

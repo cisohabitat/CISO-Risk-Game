@@ -846,6 +846,21 @@ export interface PatternSuggestion {
  * insight; tying the offer to the arrival of the evidence makes it a moment,
  * and one the player can miss.
  */
+/**
+ * A "contradicts-x" tag says what the evidence argues against, so the rule can
+ * hold by construction rather than by an author remembering to repeat it.
+ *
+ * Listing it in each template's contradictingTags closed one case and left the
+ * others open: only 2 of 14 templates name any, so the clean supplier
+ * questionnaire was still cited under "what suggests it" by hyp-logistics, and
+ * the claim that legacy is isolated by hyp-detection-gap — 817 offer-days
+ * across 20 of 20 campaigns.
+ */
+function argues(tag: string, supportingTags: string[]): boolean {
+  if (!tag.startsWith('contradicts-')) return false
+  return supportingTags.includes(tag.slice('contradicts-'.length))
+}
+
 export function patternSuggestions(state: GameState, index: ContentIndex, freshDays = 12): PatternSuggestion[] {
   const dismissed = new Set(state.risks.dismissedPatternIds ?? [])
   const known = state.evidence.order
@@ -876,7 +891,8 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
       (def) =>
         def.noise !== true &&
         def.tags.some((tag) => template.supportingTags.includes(tag)) &&
-        !def.tags.some((tag) => template.contradictingTags.includes(tag)),
+        !def.tags.some((tag) => template.contradictingTags.includes(tag)) &&
+        !def.tags.some((tag) => argues(tag, template.supportingTags)),
     )
     if (supporting.length < 2) continue
 

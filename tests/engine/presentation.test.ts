@@ -106,6 +106,34 @@ describe('collisions', () => {
   })
 })
 
+describe('the annual review reads as prose', () => {
+  it('never prints a raw function or enum id into a sentence', () => {
+    const index = testIndex()
+    // Raw ids that used to reach the closing screen: "Your architecture and grc
+    // functions are spent", "soc: burning out". They are internal names, and the
+    // last thing a player reads should not contain one.
+    const rawIds = /\b(grc|soc|iam|incident-response)\b/
+    for (const seed of ['prose-1', 'prose-2', 'prose-3']) {
+      const state = newGame(index, { seed })
+      // Grind the team down so the spent-function sentence is reachable.
+      for (const fn of Object.values(state.team.functions)) fn.morale = 0.1
+      runDays(state, index, 364)
+      const review = buildAnnualReview(state, index)
+      const prose = [
+        review.headline,
+        review.performanceBand,
+        ...review.narrative,
+        ...review.blindSpots,
+        ...review.dimensions.flatMap((d) => [d.label, d.narrative, ...d.evidence]),
+        ...(review.reasoning ?? []).map((line) => line.verdict),
+      ]
+      for (const line of prose) {
+        expect(rawIds.test(line), `annual review says: ${line}`).toBe(false)
+      }
+    }
+  })
+})
+
 describe('pattern suggestions', () => {
   it('offers a pattern when the evidence for it arrives, and not forever', () => {
     const index = testIndex()
@@ -128,6 +156,20 @@ describe('pattern suggestions', () => {
             // marked benign in the content's own words, and citing them under
             // "what suggests it" asks the player to reason from something the
             // game already knows to be nothing.
+            // Nor is somebody's reassurance. A "contradicts-x" tag says what a
+            // piece argues against, and naming it in each template's own
+            // contradictingTags closed one case and left the rest: only 2 of 14
+            // templates list any. The rule is structural now, so this holds for
+            // every template without the author repeating it.
+            const tags = index.evidence.get(item.id)?.tags ?? []
+            const template = index.hypothesisTemplate.get(suggestion.templateId)!
+            for (const tag of tags) {
+              if (!tag.startsWith('contradicts-')) continue
+              expect(
+                template.supportingTags,
+                `${item.id} argues against ${tag.slice('contradicts-'.length)}, which ${suggestion.templateId} rests on`,
+              ).not.toContain(tag.slice('contradicts-'.length))
+            }
             expect(
               index.evidence.get(item.id)?.noise,
               `${item.id} is noise but was cited as support for ${suggestion.templateId}`,

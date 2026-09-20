@@ -17,7 +17,7 @@ import { clamp01 } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { compareBands, riskBand } from '../risk/bands'
-import { moraleLabel, teamStrain } from '../team/capacity'
+import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export interface QuarterReviewInput {
   quarter: number
@@ -28,6 +28,10 @@ export interface QuarterReviewInput {
 
 export interface QuarterReviewOutput extends QuarterReviewState {
   effects: GameEffect[]
+}
+
+function sentenceCase(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 /** Material topics the board should have heard about this quarter. */
@@ -442,7 +446,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     band: band(sustainability),
     narrative:
       spent.length > 0
-        ? `Your ${spent.map((fn) => fn.fn).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
+        ? `Your ${spent.map((fn) => functionName(fn.fn)).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
         : morale > 0.6
           ? 'Your team ends the year in a state where they could do this again next year.'
           : 'Your team carried the year on goodwill that has now run out.',
@@ -450,7 +454,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // does not render internal numbers.
     evidence: functions.map(
       (fn) =>
-        `${fn.fn}: ${moraleLabel(fn.morale).toLowerCase()}${
+        `${sentenceCase(functionName(fn.fn))}: ${moraleLabel(fn.morale).toLowerCase()}${
           fn.vacancies > 0 ? `, ${fn.vacancies} ${fn.vacancies === 1 ? 'vacancy' : 'vacancies'}` : ', fully staffed'
         }`,
     ),

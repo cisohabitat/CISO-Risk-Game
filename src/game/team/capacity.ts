@@ -159,6 +159,28 @@ export function qualityLabel(quality: number): string {
   return 'Exceptional'
 }
 
+/**
+ * A cyber function named in prose. The annual review printed the raw enum into
+ * its closing paragraph — "Your architecture and grc functions are spent" — on
+ * the last screen of the game. `src/lib/formatting` has two maps of these, but
+ * the engine cannot reach them, so the words a reviewer sentence needs live
+ * here beside the other presentation helpers.
+ */
+export function functionName(fn: string): string {
+  switch (fn) {
+    case 'soc':
+      return 'SOC'
+    case 'grc':
+      return 'cyber risk'
+    case 'iam':
+      return 'identity'
+    case 'incident-response':
+      return 'incident response'
+    default:
+      return fn
+  }
+}
+
 export function moraleLabel(morale: number): string {
   if (morale < 0.25) return 'Burning out'
   if (morale < 0.45) return 'Strained'

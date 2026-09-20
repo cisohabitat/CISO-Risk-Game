@@ -212,6 +212,48 @@ test.describe('a first year at Nexora', () => {
     }
   })
 
+  test('the rail marks where you are with something hover cannot imitate', async ({ page }) => {
+    // The rail is a desktop affordance; narrow widths get the bottom bar, which
+    // distinguishes the current page by colour and has no hover to confuse it.
+    test.skip((page.viewportSize()?.width ?? 0) < 1024, 'no rail at this width')
+    await startCampaign(page, 'e2e-rail')
+    // Hover and selected were 3.5% of lightness and one font weight apart, so
+    // resting the pointer anywhere in the rail read as the current page.
+    await goTo(page, 'Board')
+    const nav = page.getByRole('navigation', { name: 'Primary' })
+    await nav.getByRole('button', { name: 'Team', exact: true }).first().hover()
+    const marks = async (label: string) =>
+      nav
+        .getByRole('button', { name: label, exact: true })
+        .first()
+        .locator('span[aria-hidden="true"].absolute')
+        .count()
+    expect(await marks('Board'), 'the page you are on carries no marker').toBe(1)
+    expect(await marks('Team'), 'hovering an item marks it as current').toBe(0)
+  })
+
+  test('a toast is dismissable without swallowing the page under it', async ({ page }) => {
+    await startCampaign(page, 'e2e-toast')
+    await page.getByRole('button', { name: 'Decide' }).first().click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('radio').first().check()
+    await dialog.getByRole('button', { name: /Commit to this/ }).click()
+    await expect(dialog).toBeHidden()
+
+    const status = page.locator('[role="status"]')
+    const box = await status.locator('div').first().boundingBox()
+    if (box) {
+      // Three of these stack above the fold, over the Decide button.
+      const hit = await page.evaluate(
+        ({ x, y }) => (document.elementFromPoint(x, y)?.closest('[role="status"]') ? 'toast' : 'page'),
+        { x: box.x + 20, y: box.y + box.height / 2 },
+      )
+      expect(hit, 'the toast body intercepts clicks meant for the page').toBe('page')
+      await status.getByRole('button', { name: 'Dismiss' }).first().click()
+      await expect(status.getByRole('button', { name: 'Dismiss' }).first()).toBeHidden()
+    }
+  })
+
   test('a dialog can always be closed', async ({ page }) => {
     await startCampaign(page, 'e2e-dialog')
     await page.getByRole('button', { name: 'Decide' }).first().click()

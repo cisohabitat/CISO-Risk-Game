@@ -25,7 +25,11 @@ export function Toasts() {
         <div
           key={toast.id}
           className={cn(
-            'pointer-events-auto flex max-w-lg items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-[var(--shadow-lift)] animate-rise',
+            // The body stays transparent to the pointer: three of these stack
+            // above the fold and sat over the Decide button, where a click
+            // meant for the page hit the toast and did nothing. Only the
+            // dismiss control needs to be clickable.
+            'flex max-w-lg items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-[var(--shadow-lift)] animate-rise',
             toast.tone === 'warning'
               ? 'border-band-elevated/50 bg-band-elevated-soft text-ink'
               : toast.tone === 'success'
@@ -38,7 +42,7 @@ export function Toasts() {
             type="button"
             onClick={() => dismissToast(toast.id)}
             aria-label="Dismiss"
-            className="compact -mr-1 -mt-1 shrink-0 rounded px-2 py-1 text-ink-faint hover:text-ink"
+            className="pointer-events-auto compact -mr-1 -mt-1 shrink-0 rounded px-2 py-1 text-ink-faint hover:text-ink"
           >
             ✕
           </button>

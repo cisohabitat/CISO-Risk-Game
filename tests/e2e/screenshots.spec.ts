@@ -15,6 +15,12 @@ test.describe('screenshots', () => {
     // the default seed was one of them.
     await startCampaign(page, 'gallery-incident')
     const shot = async (name: string) => {
+      // Park the pointer off every control first. Playwright leaves it where it
+      // last clicked, so the gallery was photographing a hover state: the Board
+      // screen was captured with the rail item above it lit, which reads as a
+      // navigation bug that is not there.
+      await page.mouse.move(0, 0)
+      await page.waitForTimeout(120)
       await page.screenshot({ path: `screenshots/${testInfo.project.name}-${name}.png`, fullPage: false })
     }
     await shot('01-briefing')

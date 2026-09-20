@@ -10,8 +10,8 @@
  *   pnpm play programme <programmeId>
  *   pnpm play pattern <form|dismiss>
  *   pnpm play raise                     # work a formed hypothesis up into a scenario
- *   pnpm play board                     # take the material items
- *   pnpm play risk <open|accept> <scenarioId> [rationaleTag]
+ *   pnpm play board [none|<id,…>]       # default: take every material item
+ *   pnpm play risk <open|accept> <scenarioId> [rationaleTag] [assumptionIds,…]
  *   pnpm play look <risk|team|programmes|work|org>
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
@@ -172,17 +172,24 @@ if (command === 'new') {
 } else if (command === 'board') {
   const state = load()
   const quarter = state.reviews.pendingQuarter!
-  const topics = materialTopics(state, index).filter((t) => t.material).map((t) => t.id)
+  const all = materialTopics(state, index).filter((t) => t.material).map((t) => t.id)
+  const topics = args[0] === 'none' ? [] : args[0] ? args[0].split(',') : all
   const r = applyAction(state, index, { type: 'completeQuarterReview', quarter, topics, recommendations: [], communicateUncertainty: true })
   console.log(r.ok ? `board Q${quarter}: ${r.message}` : `REFUSED: ${r.message}`)
   save(state)
   if (r.ok) advance(state)
 } else if (command === 'risk') {
   const state = load()
-  const [verb, scenarioId, tag] = args
+  const [verb, scenarioId, tag, assumptions] = args
   const r = verb === 'open'
     ? applyAction(state, index, { type: 'openRisk', scenarioId: scenarioId! })
-    : applyAction(state, index, { type: 'acceptRisk', scenarioId: scenarioId!, rationaleTagIds: [tag ?? 'rat-within-tolerance'], assumptionDefIds: [], days: 90 })
+    : applyAction(state, index, {
+        type: 'acceptRisk',
+        scenarioId: scenarioId!,
+        rationaleTagIds: [tag ?? 'rat-within-tolerance'],
+        assumptionDefIds: assumptions ? assumptions.split(',') : [],
+        days: 90,
+      })
   console.log(r.ok ? `${verb} ${scenarioId}` : `REFUSED: ${r.message}`)
   save(state)
 } else if (command === 'look') {
