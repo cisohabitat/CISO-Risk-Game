@@ -62,11 +62,22 @@ function report(state: GameState, since: number): void {
     console.log(`\n>> COLLISION: ${c.objectiveName} in ${c.daysUntilTarget}d — ${c.verdict} (${c.programmeName ?? 'nothing'})`)
   }
 
-  const pat = patternSuggestions(state, index)[0]
-  if (pat) {
-    console.log(`\n?? PATTERN: ${pat.title}`)
-    console.log(`   ${pat.statement}`)
-    for (const e of pat.evidence) console.log(`   - ${e.title}`)
+  // What was decided for you while the clock ran. The harness advanced past a
+  // deadline once and the next stop simply no longer listed the decision; the
+  // game had recorded a lapse and this printed nothing about it.
+  const lapses = state.history.entries.filter((e) => e.kind === 'decision-lapsed' && e.day > since)
+  for (const lapse of lapses) console.log(`\n!! LAPSED d${lapse.day}: ${lapse.summary}`)
+
+  // All of them, not the first: on a day 44 of a hand-played year six were on
+  // offer and this printed one, which is not reading what the game says.
+  const pats = patternSuggestions(state, index)
+  if (pats.length > 0) {
+    console.log(`\n?? ${pats.length} PATTERN${pats.length === 1 ? '' : 'S'} ON OFFER`)
+    for (const pat of pats) {
+      console.log(`   ${pat.title}`)
+      console.log(`     ${pat.statement}`)
+      for (const e of pat.evidence) console.log(`     - ${e.title}`)
+    }
   }
 
   if (state.reviews.pendingQuarter !== undefined) {
@@ -79,6 +90,11 @@ function report(state: GameState, since: number): void {
     const def = index.decision.get(runtime.defId)!
     const left = runtime.deadlineDay === undefined ? '' : ` (${runtime.deadlineDay - state.currentDay}d left)`
     console.log(`\n>>> DECISION${left}: ${def.title}`)
+    // `go` at "1d left" advances past the deadline, and the organisation
+    // answers. It happened on the second stop of a hand-played year.
+    if (runtime.deadlineDay !== undefined && runtime.deadlineDay - state.currentDay <= 1) {
+      console.log('    !! answer this before `go`: advancing past today decides it for you')
+    }
     console.log(`    ${def.description}`)
     if (def.context) console.log(`    ${def.context}`)
     for (const o of def.options) {

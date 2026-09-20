@@ -155,12 +155,70 @@ Measured, not yet fixed. Ranked.
   and the review that proposed it was explicit that it had not played the game.
   The trigger remains a player, not a reading.
 
+- **This file is 1,061 lines, and every session reads all of it.** Measured
+  by a fresh pass over the repository: the working notes are 40% the length of
+  the implementation plan and longer than every other document combined. Each
+  entry below was justified when it was written and none has been retired, so
+  the file has become a monument rather than a briefing — the pattern it warns
+  the game itself against. The rules, the harnesses and the open weaknesses are
+  the part a session needs; the ledger of what was fixed and how is the part a
+  session almost never needs. Not restructured here, because moving it is the
+  owner's call: the recommended shape is a short `CLAUDE.md` (agreements, rules,
+  harnesses, open weaknesses, pointers) with the fixed ledger under
+  `docs/FINDINGS.md`, linked once.
+
 Add measured findings here rather than suspicions —
 each entry below was found with one of the harnesses above and closed the same
 way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **A fresh pass over the repository, not trusting the record — including
+  this file.** Played a year by hand, sampled the file's own "mutation-checked"
+  claims by re-running the mutations, and read the docs against the code.
+  Four things, in order of weight.
+
+  **A decision that lapsed was never told to the player.** Found on the second
+  stop of a hand-played year: the CEO's "three risks" was at one day left, the
+  clock advanced, and at the next stop it had simply gone. The engine had
+  recorded a lapse — `resolveByDefault` wrote a history line and applied the
+  default's effects — and sent nothing to the inbox, the channel every other
+  consequence arrives through. Between day 6 and day 18 the inbox carried seven
+  messages and not one of them said the organisation had answered the CEO with
+  "talk in general terms" on the player's behalf. The only trace was in the
+  Briefing's four-item "Recently" list, which had rolled off. The player learned
+  what was chosen for them on 31 December, when the review counted it against
+  them. A lapse now sends an urgent message from Nexora Group naming the option
+  taken, linked to the decision. `tests/engine/lapse.test.ts`; mutation-checked
+  by removing the message.
+
+  **One of the file's "mutation-checked" claims was false.** Sampled four:
+  toast pointer-events, the board-paper card on the Briefing and the
+  red-herring exclusion each failed their named test when re-mutated, as
+  claimed. The unaffordable pattern offer did not: with `disabled={noAttention}`
+  changed to `disabled={false}` — the exact defect it exists to catch — the
+  end-to-end test stayed green, because its only assertion sat inside
+  `if (week.startsWith('0'))`, which on its seed never ran. A test that passes
+  with the defect present guards nothing. The contract is now held by
+  `tests/ui/pattern-notice.test.tsx`, which arranges zero attention directly and
+  asserts both branches every run (mutation-checked); the end-to-end test skips
+  loudly, naming why, rather than passing quietly — which is why the suite's
+  skip count rose from 3 to 8 across the five local viewports.
+
+  **`pnpm play` read a sixth of what the game was saying.** On day 44 of the
+  hand-played year nine patterns were on offer and the harness printed one;
+  it printed no history at all, so the lapse above was invisible to the one
+  harness whose job is to read what the game says. It now prints every
+  pattern with a count, every lapse since the last stop, and a warning under
+  any decision at one day left — the trap the first lapse fell into.
+
+  **`docs/ARCHITECTURE.md` said "ten dials".** There are eleven since
+  `showsDecisionCoaching`, and it is neither a world dial nor a player dial —
+  it is a presentation dial, which the document now says.
+
+  The measured weakness about this file's own length is filed above, ranked
+  last, as a recommendation rather than a change.
 
 - **The player guide described a screen that no longer existed, and the release
   gate was a list nobody checked.** Two pieces of debt, both created by the

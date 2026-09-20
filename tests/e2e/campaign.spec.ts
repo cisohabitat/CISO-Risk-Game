@@ -280,14 +280,19 @@ test.describe('a first year at Nexora', () => {
       await page.waitForTimeout(150)
     }
 
+    // Whatever happened above, the contract is asserted here unconditionally.
+    // This used to sit inside `if (week.startsWith('0'))`, which on this seed
+    // never ran, so the test was green with the `disabled` prop removed. The
+    // deterministic guard is tests/ui/pattern-notice.test.tsx; this one
+    // confirms the same contract survives the real screen, or says clearly
+    // that it could not be reached rather than passing quietly.
     const live = page.getByRole('button', { name: 'Form the hypothesis' })
-    if (await live.isVisible().catch(() => false)) {
-      const week = await page.getByText(/of 5 left/).first().innerText().catch(() => '')
-      if (week.startsWith('0')) {
-        await expect(live, 'the offer stays live with no attention to spend').toBeDisabled()
-        await expect(page.getByText('No attention left this week.')).toBeVisible()
-      }
+    const week = await page.getByText(/of 5 left/).first().innerText().catch(() => '')
+    if (!(await live.isVisible().catch(() => false)) || !week.startsWith('0')) {
+      test.skip(true, `could not reach an unaffordable offer on this seed (week reads "${week}")`)
     }
+    await expect(live, 'the offer stays live with no attention to spend').toBeDisabled()
+    await expect(page.getByText('No attention left this week.')).toBeVisible()
   })
 
   test('a player who never leaves the Briefing is still told the board paper is due', async ({ page }) => {

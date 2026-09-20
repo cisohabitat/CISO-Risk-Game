@@ -399,6 +399,21 @@ function resolveByDefault(
     summary: `${def.title} lapsed; the organisation defaulted to "${option.label}".`,
     refs: [decisionId],
   })
+
+  // Tell the player, in the channel everything else arrives through. This was
+  // a history line and nothing more: it appeared in the Briefing's four-item
+  // "Recently" list and rolled off within days, so a player who missed a
+  // deadline learned what the organisation had chosen for them on 31 December,
+  // when the review counted it against them. A consequential thing with your
+  // name on it is a message, not a footnote.
+  pushMessage(state, {
+    from: 'Nexora Group',
+    subject: `Decided without you: ${def.title}`,
+    body: `The deadline passed with no answer from you, so the organisation went with "${option.label}". ${option.description} It is recorded as your decision by default, and the annual review will read it that way.`,
+    type: 'executive',
+    priority: 'urgent',
+    decisionId,
+  })
 }
 
 function averageResidual(state: GameState): number {
