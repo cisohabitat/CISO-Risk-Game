@@ -141,24 +141,25 @@ Measured, not yet fixed. Ranked.
   difficulty dial touches. Recorded so nobody tunes or grades a dial with no
   room to move; `setup.ts` and `events/engine.ts` carry the same note.
 
-- **The year still thins, though it no longer fades to nothing.** Measured
-  before the fourth-quarter content: decisions arrived 12.4 / 6.5 / 2.8 / 1.4
-  per quarter for an engaged player and every fourth-quarter one was an
-  incident. Five late-year decisions now arise from the player's own
-  position — the identity programme's enforcement, the recovery programme's
-  restore window, an acceptance running out, a platform that outgrew a
-  recovery design nobody built, next year's budget after a quiet year — and
-  the same probe reads **12.4 / 6.5 / 4.5 / 1.9**, with the longest stretch
-  with nothing to decide down from 114 days to 80. An idle player meets two
-  of the five, which is the rule: the back half depends on the front half.
+- **The year no longer fades, and the last quarter is still the lightest.**
+  Measured before any of it: decisions arrived 12.4 / 6.5 / 2.8 / 1.4 per
+  quarter for an engaged player, the longest stretch with nothing to decide
+  averaged 114 days, and the second half of the inbox was fourteen
+  repeatables because the one-shot pool was spent by July. Two changes, at
+  the owner's decision and against the freeze: five late-year decisions that
+  arise from the player's own position, and a draw that paces calendar-only
+  texture across the year in two tiers (signal early, colour spread). The
+  same probes now read **12.3 / 7.2 / 3.9 / 2.8**, a longest stretch of
+  **67 days**, and 49 / 53 / 33 / 34 messages a quarter from 77 / 123 / 94 /
+  94 subjects. `docs/FINDINGS.md` has both entries and the ladder before and
+  after.
 
-  What remains is real and is not the content's to fix. The inbox still
-  thins (115 messages from 133 subjects in H1 against 49 from 66 in H2), the
-  fourth quarter still carries a seventh of the first, and the programme
-  questions land where programmes finish, from day 220, so Q3 gains more
-  than Q4. The remaining lever is the event draw, which is frozen; and
-  whether the back half now *feels* like the year building is the playtest
-  question in `docs/PLAYTEST.md`. `docs/FINDINGS.md` has the measurements.
+  What remains: the fourth quarter carries just under a quarter of the
+  first, and whether the back half now *feels* like the year building is the
+  playtest question in `docs/PLAYTEST.md`. High pressure now misses more
+  objectives (1.32 → 1.60) because colour events that carry executive
+  patience land where objectives fall due, which is the executive patience
+  weakness above wearing a new coat.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every

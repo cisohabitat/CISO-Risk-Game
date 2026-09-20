@@ -68,9 +68,13 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     case 'programme.anyOnPlan':
       return Object.values(state.programmes.programmes).some((p) => {
         if (p.status !== 'active' || p.startedDay === undefined) return false
+        // A programme a day old is trivially on plan; "on plan for once" is
+        // a claim about a track record, so a month of it is the least it means.
+        const elapsed = state.currentDay - p.startedDay
+        if (elapsed < 30) return false
         const def = index.programme.get(p.id)
         if (!def) return false
-        const expected = (state.currentDay - p.startedDay) / Math.max(1, def.durationDays)
+        const expected = elapsed / Math.max(1, def.durationDays)
         return p.progress >= expected - 0.02 && p.blockers.every((b) => b.resolved)
       })
     case 'stakeholder.trustBelow': {

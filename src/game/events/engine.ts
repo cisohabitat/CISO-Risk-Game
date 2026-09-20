@@ -4,6 +4,7 @@
  * pinned events carry the campaign's narrative spine.
  */
 import type { ContentIndex, GameEffect, GameEventDef, GameState } from '../types'
+import { CAMPAIGN_DAYS } from '../types'
 import type { Rng } from '../engine/rng'
 import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { evaluateAll } from './conditions'
@@ -36,6 +37,40 @@ function isEligible(state: GameState, index: ContentIndex, def: GameEventDef): b
   }
   return evaluateAll(state, index, def.conditions)
 }
+
+/**
+ * A one-shot pool event gated on nothing but the calendar: colour, not
+ * consequence. These are what the draw paces across the year.
+ */
+function isTexture(def: GameEventDef): boolean {
+  return (
+    def.oncePerCampaign &&
+    !def.pinned &&
+    !def.scheduledOnly &&
+    !def.decisionId &&
+    def.conditions.every((c) => c.kind === 'always' || c.kind === 'day.after' || c.kind === 'day.before')
+  )
+}
+
+/**
+ * Texture that reveals something — evidence, a node — is signal the player
+ * forms patterns from, and holding it back costs them: paced like colour, an
+ * engaged player's incidents on CISO rose from 0.93 to 1.20 a year. Signal is
+ * spent faster than colour, so most of it still arrives early.
+ */
+function isSignal(def: GameEventDef): boolean {
+  return (def.effectsOnReveal ?? []).some((e) => e.type === 'evidence.reveal' || e.type === 'node.reveal' || e.type === 'edge.reveal')
+}
+
+/**
+ * How fast a reservoir is spent relative to the days left. 1 would spend it
+ * exactly evenly if the draw ran every day; the draw runs on about 58% of
+ * days. Colour at 1.5 lands the last of it in the fourth quarter rather than
+ * leaving it unfired; signal at 3 is mostly gone by the end of the second
+ * quarter, which is close to how it fell before anything was paced.
+ */
+const COLOUR_PACE = 1.5
+const SIGNAL_PACE = 3
 
 /** How many unpinned events the player should receive on a given day. */
 function dailyBudget(state: GameState, rng: Rng): number {
@@ -88,8 +123,26 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
     const pool = index.content.events.filter(
       (def) => !def.pinned && !def.scheduledOnly && !firedThisDay.has(def.id) && isEligible(state, index, def),
     )
+    // Texture is spent across the year, not in the first half. Measured over
+    // 20 campaigns, the 68 one-shot pool events fired 30.6 / 25.5 / 2.4 / 0.3
+    // per quarter, so by July the inbox had nothing left but the repeatables:
+    // 60 / 55 / 27 / 23 messages a quarter from 92 / 93 / 54 / 55 subjects.
+    // A one-shot that gates on nothing but the calendar is drawn with a
+    // probability that keeps the unfired reservoir in step with the days
+    // left, so it lasts the year; anything gated on state still fires when
+    // the state arises, and a decision-opening event is never held back.
+    const unfired = index.content.events.filter((def) => isTexture(def) && !state.events.firedEventIds.includes(def.id))
+    const daysLeft = Math.max(1, CAMPAIGN_DAYS - state.currentDay)
+    const signalChance = Math.min(1, (SIGNAL_PACE * unfired.filter(isSignal).length) / daysLeft)
+    const colourChance = Math.min(1, (COLOUR_PACE * unfired.filter((def) => !isSignal(def)).length) / daysLeft)
     for (let i = 0; i < budget; i += 1) {
-      const remaining = pool.filter((def) => !firedThisDay.has(def.id))
+      let remaining = pool.filter((def) => !firedThisDay.has(def.id))
+      if (remaining.some((def) => isTexture(def) && isSignal(def)) && !rng.chance(signalChance)) {
+        remaining = remaining.filter((def) => !(isTexture(def) && isSignal(def)))
+      }
+      if (remaining.some((def) => isTexture(def) && !isSignal(def)) && !rng.chance(colourChance)) {
+        remaining = remaining.filter((def) => !(isTexture(def) && !isSignal(def)))
+      }
       if (remaining.length === 0) break
       // Harder difficulties bury the material signal in more noise (plan §44).
       // Measured as near-inert: only two authored events carry the tag and

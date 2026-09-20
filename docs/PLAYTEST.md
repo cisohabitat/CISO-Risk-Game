@@ -90,9 +90,11 @@ Put them in front of players rather than deciding from a desk.
   decisions arising from the player's own position — the identity programme's
   enforcement, the recovery programme's restore window, an acceptance running
   out, a platform that outgrew its recovery design, next year's budget after
-  a quiet year. Measured, the longest stretch with nothing to decide fell
-  from 114 days to 80 for an engaged player, and Q3/Q4 decisions went from
-  2.8 / 1.4 to 4.5 / 1.9. What the numbers cannot say is whether the back
+  a quiet year — and the draw now spreads the calendar-only texture across
+  the year instead of spending it by July. Measured, the longest stretch with
+  nothing to decide fell from 114 days to 67 for an engaged player, Q3/Q4
+  decisions went from 2.8 / 1.4 to 3.9 / 2.8, and the second half of the
+  inbox went from 54 / 55 distinct subjects a quarter to 94 / 94. What the numbers cannot say is whether the back
   half now *feels* like the year building to something or like more of the
   same. Ask where they stopped reading, whether the identity or restore
   question felt like their own programme coming back to them, and whether the

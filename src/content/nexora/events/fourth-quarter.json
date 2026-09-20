@@ -5,9 +5,9 @@
       "type": "programme",
       "title": "Identity uplift: enforce before the freeze?",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "The identity uplift is weeks from done and the question nobody has answered is whether it is mandatory. I can switch enforcement on before the peak-trading change freeze, which means locking out anyone who has not enrolled, or we go into peak with the second factor optional and the exception list growing. Helen's people want it after. I would rather you decided than the calendar.",
+      "body": "The identity uplift is done, or as near as makes no difference, and the question nobody has answered is whether it is mandatory. I can switch enforcement on before the peak-trading change freeze, which means locking out anyone who has not enrolled, or we go into peak with the second factor optional and the exception list growing. Helen's people want it after. I would rather you decided than the calendar.",
       "priority": "urgent",
-      "availableFromDay": 220,
+      "availableFromDay": 240,
       "conditions": [
         {
           "kind": "programme.progressAtLeast",
@@ -33,9 +33,9 @@
       "type": "programme",
       "title": "The restore test needs a window",
       "from": "Jo Mbeki, Head of Security Operations",
-      "body": "Recovery is built. It has not been run against production, and the only honest test is a full restore of Nexora Pay, which means four hours down. Operations will not give me that window before peak. I can test into the non-production tenancy, which proves the backups and not the runbook, or we carry it to January. Your call, and I would like it on record.",
+      "body": "Recovery is built. It has never been run against production, and the only honest test is a full restore of Nexora Pay, which means four hours down. Operations will not give me that window in peak. I can test into the non-production tenancy, which proves the backups and not the runbook, or we carry it to January. Your call, and I would like it on record.",
       "priority": "urgent",
-      "availableFromDay": 220,
+      "availableFromDay": 275,
       "conditions": [
         {
           "kind": "programme.progressAtLeast",
@@ -63,7 +63,7 @@
       "from": "Priya Nandakumar, Digital MD",
       "body": "Good news first: the platform is carrying three times the volume we designed for at launch. The other news is that the recovery plan was written for the old estate and nothing since has changed it: my engineers tell me a restore would now take longer than we could survive in peak. I need to know whether you want to fix that now, hold growth, or carry it.",
       "priority": "urgent",
-      "availableFromDay": 240,
+      "availableFromDay": 275,
       "conditions": [
         {
           "kind": "objective.status",

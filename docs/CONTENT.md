@@ -97,6 +97,15 @@ were written, Q4 carried 1.4 decisions to Q1's 12.4 and every one was an
 incident. Keep that rule for anything added there: a Q4 decision should be
 impossible to receive without having done something in Q1–Q3.
 
+**An event gated only on the calendar is spread across the year.** The draw
+paces one-shot pool events whose conditions are nothing but `always` or a
+day, so that the reservoir lasts until December rather than being spent by
+July; those that reveal evidence or a node are spent faster than those that
+only colour. If an event's timing matters — it must land in a particular
+month, or before something — say so with a condition, or pin it. A pinned
+event, a decision-opening event and anything gated on state fire when they
+become eligible and are never held back.
+
 **Do not name a function the engine chooses.** A decision that fires on team
 strain fires on whichever function is closest to breaking, and it was once
 authored as if that were always the SOC: over 92 firings it never was. Where an

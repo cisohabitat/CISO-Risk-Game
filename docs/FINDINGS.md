@@ -18,6 +18,73 @@ fault.
 
 ### Fixed
 
+- **The second half of the inbox was repeatables only.** What the
+  fourth-quarter content did not settle, measured: 60 / 55 / 27 / 23
+  messages a quarter from 92 / 93 / 54 / 55 distinct subjects, and only 33
+  distinct events ever firing in the second half against 94 in the first.
+  The cause was the draw, not the authoring. Of 134 events, 92 open in the
+  first quarter's window and 68 are one-shot pool events; those fired
+  **30.6 / 25.5 / 2.4 / 0.3** per quarter, so by July the pool was spent and
+  the inbox had nothing left but the fourteen repeatables — the loop of
+  recycled threat-intelligence subjects a hand-played year had already
+  noticed.
+
+  The draw now paces the one-shots that gate on nothing but the calendar:
+  each is drawn with a probability that keeps the unfired reservoir in step
+  with the days left, so it lasts the year. Anything gated on state still
+  fires when the state arises, pinned beats and decision-opening events are
+  never held back, and the daily budget is unchanged.
+
+  **The first version cost the player their information.** Paced as one
+  reservoir, an engaged player's CISO incidents rose from 0.93 to 1.20 a
+  year: 19 of the 35 paced events reveal evidence, and holding evidence back
+  held back the patterns formed from it. Texture is paced in two tiers now —
+  signal (anything that reveals evidence, a node or an edge) at a rate that
+  spends most of it by the end of the second quarter, colour at a rate that
+  lands the last of it in the fourth. Measured over 20 campaigns of engaged
+  play on CISO:
+
+  | | before | one tier | two tiers |
+  |---|---|---|---|
+  | messages a quarter | 60 / 55 / 27 / 23 | 49 / 51 / 28 / 36 | 49 / 53 / 33 / 34 |
+  | distinct subjects a quarter | 92 / 93 / 54 / 55 | 91 / 113 / 83 / 92 | 77 / 123 / 94 / 94 |
+  | one-shots fired a quarter | 30.6 / 25.5 / 2.4 / 0.3 | 16.4 / 19.6 / 10.4 / 11.1 | 18.1 / 20.6 / 10.9 / 8.4 |
+  | distinct events firing in H2 | 33 | 67 | 67 |
+  | ladder incidents, CISO | 0.93 | **1.20** | 0.97 |
+
+  With the three peak-trading decisions of the fourth-quarter arc moved to
+  the quarter they are about (the identity enforcement to late Q3, before
+  the freeze), decisions now arrive **12.3 / 7.2 / 3.9 / 2.8** a quarter
+  against the original 12.4 / 6.5 / 2.8 / 1.4, and the longest stretch with
+  nothing to decide is **67 days, max 89**, against 114 and 164. An idle
+  player reads 10.8 / 5.6 / 1.6 / 2.9. The ladder over 40 seeds:
+
+  | | Guided | CISO | High Pressure |
+  |---|---|---|---|
+  | Incidents a year | 0.38 → 0.42 | 0.93 → 0.97 | 1.57 → 1.38 |
+  | Objectives missed | 1.95 → 1.60 | 1.20 → 1.15 | 1.32 → 1.60 |
+  | Worst consequence | 0.13 → 0.12 | 0.29 → 0.32 | 0.39 → 0.37 |
+
+  Incidents stay monotonic across the ladder and within hundredths of
+  before on the two easier modes; high pressure trades incidents for
+  objectives, because three colour events carry executive patience and now
+  land in the half of the year where objectives fall due. Soak unchanged.
+  `tests/engine/pacing.test.ts` walks six campaigns and fails if the second
+  half gets less than half the first half's texture, if the fourth quarter
+  gets none, or if a quarter of the reservoir is never spent; turning the
+  pacing off by mutation fails it with 20.5 / 13.2 / 1.3 / 0.0.
+
+  One thing the reshuffled draw turned up: "A programme is on plan" fired
+  about a programme started the day before, which is trivially on plan, and
+  was paused by "stop something" later the same day. The condition now
+  needs a month of track record, which is the least "on plan for once"
+  means.
+
+  This is the event draw, which the working notes had frozen, changed at
+  the owner's decision. The rule for authors follows from it: an event
+  gated only on the calendar will be spread across the year, so an event
+  whose timing matters must say so with a condition or be pinned.
+
 - **The fourth quarter, authored from the player's position.** The
   longest-standing open weakness, acted on from a desk at the owner's
   decision rather than waiting for a playtest. Measured before anything was

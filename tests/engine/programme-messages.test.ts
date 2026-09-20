@@ -47,10 +47,17 @@ describe('programme messages claim only what is true', () => {
           }
           if (message.subject === 'A programme is on plan') {
             ahead += 1
+            // The event saw the state at its step of the tick; the check runs
+            // at the end of the day, after progression moved by up to a day's
+            // worth (about 0.005). One day of slack keeps the claim honest
+            // without failing on the boundary.
             const onPlan = live.some((p) => {
               const def = index.programme.get(p.id)!
-              return p.startedDay !== undefined && p.status === 'active' && p.blockers.every((b) => b.resolved)
-                && p.progress >= (state.currentDay - p.startedDay) / def.durationDays - 0.02
+              // A blocker that appeared later the same day is not one the event lied about.
+              return p.startedDay !== undefined && state.currentDay - p.startedDay >= 30
+                && (p.status === 'active' || p.status === 'at-risk' || p.status === 'paused')
+                && p.blockers.every((b) => b.resolved || b.startedDay === state.currentDay)
+                && p.progress >= (state.currentDay - p.startedDay) / def.durationDays - 0.02 - 1 / def.durationDays
             })
             expect(onPlan, `${seed} day ${state.currentDay}: "on plan" with nothing on plan`).toBe(true)
           }
