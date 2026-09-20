@@ -24,6 +24,13 @@ export const DESTINATIONS: Destination[] = [
   { id: 'programmes', label: 'Programmes', shortLabel: 'Programmes', description: 'Capability you are building', icon: '▤', primary: false, shortcut: 'p' },
   { id: 'team', label: 'Team', shortLabel: 'Team', description: 'Your people and their capacity', icon: '◍', primary: false, shortcut: 't' },
   { id: 'board', label: 'Board', shortLabel: 'Board', description: 'Executives, and what they believe', icon: '❖', primary: false, shortcut: 'b' },
+  // The debrief had no route into it at all: the only way to reach it was the
+  // banner shown once the year was over, which left the screen's own "your year
+  // is not finished yet" branch unreachable — a player could never close the
+  // year early, though the screen offers to. It is also the wrong time to see
+  // the year for the first time. The timeline on it is most useful while there
+  // is still year left to change.
+  { id: 'debrief', label: 'Your year', shortLabel: 'Year', description: 'The year so far, day by day', icon: '◷', primary: false, shortcut: 'y' },
 ]
 
 export function destinationFor(screen: Screen): Destination | undefined {
@@ -40,6 +47,7 @@ export const KEYBOARD_HELP: { keys: string; action: string }[] = [
   { keys: 'P', action: 'Programmes' },
   { keys: 'T', action: 'Team' },
   { keys: 'B', action: 'Board' },
+  { keys: 'Y', action: 'Your year' },
   { keys: 'G', action: 'Glossary' },
   { keys: 'Esc', action: 'Close a dialog or inspector' },
 ]

@@ -51,6 +51,18 @@
   --warning: oklch(0.465 0.11 68);
   --danger: oklch(0.47 0.18 24);
 
+  /* Chart marks for the year timeline. A separate set from the band ramp
+     because that ramp means severity: reusing it for "which kind of thing
+     happened" would say an enquiry is safer than a board paper.
+     Three hues only, and validated rather than chosen by eye — green 150,
+     accent 250 and magenta 340 pass the lightness band, chroma floor,
+     colour-vision separation and contrast checks in both themes. Violet 300
+     was the first choice and failed against the accent at ΔE 2.3 for deutan
+     vision, which is why programmes are magenta. */
+  --chart-enquiry: oklch(0.47 0.11 150);
+  --chart-board: oklch(0.52 0.12 250);
+  --chart-programme: oklch(0.5 0.15 340);
+
   --shadow-soft: 0 1px 2px oklch(0.2 0.03 260 / 0.06), 0 8px 24px oklch(0.2 0.03 260 / 0.06);
   --shadow-lift: 0 2px 4px oklch(0.2 0.03 260 / 0.08), 0 16px 40px oklch(0.2 0.03 260 / 0.1);
 }
@@ -94,6 +106,13 @@
   --warning: oklch(0.79 0.11 72);
   --danger: oklch(0.68 0.16 24);
 
+  /* Chosen for dark, not flipped: chart marks want L 0.48-0.67 against this
+     surface, where the band tokens above sit at 0.72-0.79 because they are
+     also label text. */
+  --chart-enquiry: oklch(0.64 0.12 155);
+  --chart-board: oklch(0.62 0.12 248);
+  --chart-programme: oklch(0.64 0.15 340);
+
   --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
   --shadow-lift: 0 2px 6px oklch(0 0 0 / 0.4), 0 18px 48px oklch(0 0 0 / 0.45);
 }
@@ -119,6 +138,9 @@
   --color-brass: var(--brass);
   --color-brass-soft: var(--brass-soft);
 
+  --color-chart-enquiry: var(--chart-enquiry);
+  --color-chart-board: var(--chart-board);
+  --color-chart-programme: var(--chart-programme);
   --color-band-low: var(--band-low);
   --color-band-low-soft: var(--band-low-soft);
   --color-band-moderate: var(--band-moderate);

@@ -6,10 +6,12 @@
 import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
-import { incidentViews } from '@/store/selectors'
+import { incidentViews, yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
+import { CAMPAIGN_DAYS } from '@/game/types'
 import { objectiveStatusLabel } from '@/game/business/objectives'
 import { statusLabel } from '@/lib/formatting/labels'
+import { YearTimeline } from '@/components/debrief/YearTimeline'
 
 const BAND_TONE: Record<string, 'severe' | 'elevated' | 'moderate' | 'low'> = {
   weak: 'severe',
@@ -23,6 +25,7 @@ export function DebriefScreen() {
   const index = useGameStore((store) => store.index)
   const finishCampaign = useGameStore((store) => store.finishCampaign)
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
+  const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
   if (!state) return null
   const review = state.reviews.annual
@@ -37,14 +40,29 @@ export function DebriefScreen() {
     URL.revokeObjectURL(url)
   }
 
+  // Mid-campaign the review does not exist yet, but the year does. Showing the
+  // timeline here is the point of it: a player can see the shape of what they
+  // have done while there is still time to change it, rather than meeting it
+  // for the first time on 31 December when nothing can be done about it.
   if (!review) {
     return (
-      <div className="space-y-4">
-        <h1 className="font-display text-2xl leading-tight">Your year</h1>
+      <div className="space-y-6">
+        <header>
+          <p className="text-xs uppercase tracking-[0.24em] text-ink-faint">The year so far</p>
+          <h1 className="mt-1 font-display text-3xl leading-tight text-balance">Your year, day by day</h1>
+          <p className="mt-2 text-ink-muted">Day {state.currentDay} of {CAMPAIGN_DAYS} · seed {state.seed}</p>
+        </header>
+
+        <Card>
+          <CardBody>
+            <YearTimeline lanes={timeline} />
+          </CardBody>
+        </Card>
+
         <Card>
           <CardBody className="space-y-3">
             <p className="text-pretty">
-              Your first year is not finished yet. You can close it out early if you want to see how it reads.
+              The annual review is written on the last day. You can close the year out early if you would rather read it now.
             </p>
             <Button variant="primary" onClick={finishCampaign}>
               Write up the year now
@@ -73,6 +91,15 @@ export function DebriefScreen() {
           <p className="border-t border-line pt-3 text-pretty">{review.businessOutcome}</p>
         </CardBody>
       </Card>
+
+      <section aria-labelledby="the-year">
+        <SectionHeading><span id="the-year">Your year, day by day</span></SectionHeading>
+        <Card>
+          <CardBody>
+            <YearTimeline lanes={timeline} />
+          </CardBody>
+        </Card>
+      </section>
 
       <section aria-labelledby="dimensions">
         <SectionHeading><span id="dimensions">How the year is read</span></SectionHeading>

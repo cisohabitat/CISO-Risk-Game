@@ -391,6 +391,43 @@ test.describe('a first year at Nexora', () => {
     expect(sawNote, 'CISO printed a teaching note naming the preferred answer').toBe(false)
   })
 
+  test('the year is visible while there is still year left to change', async ({ page }) => {
+    await startCampaign(page, 'e2e-year')
+
+    for (let i = 0; i < 6; i += 1) {
+      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      if (await decide.isVisible().catch(() => false)) {
+        await decide.click()
+        const dialog = page.getByRole('dialog')
+        await dialog.getByRole('radio').first().check()
+        const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        if (await tag.isVisible().catch(() => false)) await tag.click()
+        const commit = dialog.getByRole('button', { name: /Commit to this/ })
+        if (await commit.isVisible().catch(() => false)) await commit.click()
+        await expect(dialog).toBeHidden()
+        continue
+      }
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+    }
+
+    await goTo(page, 'Your year')
+    await expect(page.getByText('Your year, day by day')).toBeVisible()
+
+    // Six lanes, each named in words — identity is never the colour alone.
+    // Scoped to the figure: several of these words are also navigation items,
+    // and on a narrow viewport those sit in the closed "More" sheet, where an
+    // unscoped match finds a hidden copy instead of the lane.
+    const figure = page.getByRole('figure', { name: /Your year at Nexora/ })
+    await expect(figure).toBeVisible()
+    for (const lane of ['Decisions', 'Programmes', 'Enquiries', 'Board papers', 'Assumptions', 'Incidents']) {
+      await expect(figure.getByText(lane, { exact: true }).first()).toBeVisible()
+    }
+
+    // And every mark is also a sentence with its day on it.
+    await page.getByText('Read the year as a list').click()
+    await expect(page.getByText(/Day \d+/).first()).toBeVisible()
+  })
+
   test('no uncaught errors during normal play', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))

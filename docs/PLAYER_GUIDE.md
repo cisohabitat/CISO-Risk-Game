@@ -320,6 +320,7 @@ If you want a plan for your first playthrough:
 | `Space` | Pause or resume time |
 | `→` | Advance to the next meaningful event |
 | `H` `I` `R` `O` `P` `T` `B` | Briefing, Inbox, Risk, Organisation, Programmes, Team, Board |
+| `Y` | Your year — the timeline of what you have done so far |
 | `G` | Glossary |
 | `Esc` | Close a dialog |
 

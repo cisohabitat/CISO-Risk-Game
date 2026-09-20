@@ -14,6 +14,7 @@ import type {
 } from '@/game/types'
 import { CYBER_FUNCTIONS, DAYS_PER_QUARTER, clamp01, money } from '@/game/types'
 import { riskBand } from '@/game/risk/bands'
+import type { IconName } from '@/components/ui/icons'
 import { optionBudgetCost } from '@/game/engine/orchestrator'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
@@ -960,4 +961,152 @@ export function patternSuggestions(state: GameState, index: ContentIndex, freshD
   }
   // Freshest first, so what the player is shown is what just clicked.
   return out.sort((a, b) => b.newestEvidenceDay - a.newestEvidenceDay)
+}
+
+/* ------------------------------------------------------- the year timeline -- */
+
+export interface TimelineMark {
+  day: number
+  /** What it was, in the words the player already saw. */
+  label: string
+  /** Absent means the thing did not happen — a decision taken by default. */
+  present: boolean
+}
+
+export interface TimelineSpan {
+  fromDay: number
+  toDay: number
+  label: string
+  complete: boolean
+}
+
+export interface TimelineLane {
+  id: string
+  label: string
+  /** The count, read as a sentence rather than printed as a score. */
+  summary: string
+  icon: IconName
+  /** A CSS custom property name, so light and dark are the same code path. */
+  tone: string
+  marks: TimelineMark[]
+  spans: TimelineSpan[]
+}
+
+/**
+ * A whole campaign as six lanes across 364 days (plan §26).
+ *
+ * Derived entirely from what the player already saw: their own decisions, the
+ * work they commissioned, the papers they wrote, and what arrived anyway. It
+ * reads no hidden state, so nothing here can leak the graph the simulation
+ * reasons about — the attack path behind an incident is not in it, only the
+ * day the incident reached the business.
+ *
+ * Identity is carried by the lane a mark sits in and by the icon on that lane's
+ * label, never by its colour: six rows, six labels, six icons. Colour is the
+ * second channel, which is what lets the whole figure survive being printed or
+ * read by somebody who cannot separate the hues.
+ */
+export function yearTimeline(state: GameState, index: ContentIndex): TimelineLane[] {
+  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`
+
+  const decisions = Object.values(state.decisions.decisions).filter((d) => d.resolvedDay !== undefined)
+  const taken = decisions.filter((d) => !d.resolvedByDefault)
+  const lapsed = decisions.filter((d) => d.resolvedByDefault)
+  const decisionMarks: TimelineMark[] = decisions.map((d) => ({
+    day: d.resolvedDay ?? 0,
+    label: index.decision.get(d.defId)?.title ?? 'A decision',
+    present: !d.resolvedByDefault,
+  }))
+
+  const spans: TimelineSpan[] = []
+  for (const runtime of Object.values(state.programmes.programmes)) {
+    if (runtime.startedDay === undefined) continue
+    const def = index.programme.get(runtime.id)
+    spans.push({
+      fromDay: runtime.startedDay,
+      toDay: runtime.completedDay ?? state.currentDay,
+      label: def?.shortName ?? runtime.id,
+      complete: runtime.status === 'complete',
+    })
+  }
+  const completed = spans.filter((s) => s.complete).length
+
+  const enquiries = state.team.assignments.filter((a) => a.kind === 'investigation')
+  const incidents = Object.values(state.incidents.incidents)
+  const failedAssumptions = Object.values(state.assumptions.assumptions).filter(
+    (a) => a.status === 'invalidated' && a.invalidatedDay !== undefined,
+  )
+
+  return [
+    {
+      id: 'decisions',
+      label: 'Decisions',
+      summary:
+        lapsed.length === 0
+          ? `${plural(taken.length, 'decision', 'decisions')}, all your own`
+          : `${plural(taken.length, 'taken', 'taken')}, ${lapsed.length} decided for you`,
+      icon: 'decision',
+      tone: '--ink',
+      marks: decisionMarks,
+      spans: [],
+    },
+    {
+      id: 'programmes',
+      label: 'Programmes',
+      summary:
+        spans.length === 0
+          ? 'none started'
+          : `${plural(spans.length, 'started', 'started')}, ${completed} finished`,
+      icon: 'programme',
+      tone: '--chart-programme',
+      marks: [],
+      spans,
+    },
+    {
+      id: 'enquiries',
+      label: 'Enquiries',
+      summary: enquiries.length === 0 ? 'none commissioned' : plural(enquiries.length, 'commissioned', 'commissioned'),
+      icon: 'enquiry',
+      tone: '--chart-enquiry',
+      marks: enquiries.map((a) => ({ day: a.startedDay, label: a.title, present: true })),
+      spans: [],
+    },
+    {
+      id: 'board',
+      label: 'Board papers',
+      summary: `${state.reviews.quarters.length} of 3 prepared`,
+      icon: 'board',
+      tone: '--chart-board',
+      marks: state.reviews.quarters.map((q) => ({ day: q.day, label: `Q${q.quarter} board paper`, present: true })),
+      spans: [],
+    },
+    {
+      id: 'assumptions',
+      label: 'Assumptions',
+      summary:
+        failedAssumptions.length === 0
+          ? 'none stopped holding'
+          : `${plural(failedAssumptions.length, 'stopped', 'stopped')} holding`,
+      icon: 'assumption',
+      tone: '--band-high',
+      marks: failedAssumptions.map((a) => ({ day: a.invalidatedDay ?? 0, label: a.statement, present: true })),
+      spans: [],
+    },
+    {
+      id: 'incidents',
+      label: 'Incidents',
+      summary:
+        incidents.length === 0
+          ? 'none reached the business'
+          : `${plural(incidents.length, 'reached', 'reached')} the business`,
+      icon: 'incident',
+      tone: '--band-severe',
+      marks: incidents.map((i) => ({
+        day: i.startedDay,
+        label: index.incidentFamily.get(i.familyId)?.name ?? 'Incident',
+        present: true,
+      })),
+      spans: [],
+    },
+  ]
 }

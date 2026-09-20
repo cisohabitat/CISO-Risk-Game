@@ -162,6 +162,52 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **The year was eight paragraphs of prose and no picture.** The annual review
+  described a campaign the player had just spent a year in without ever showing
+  it to them, and it only existed on 31 December. `Your year, day by day` is the
+  same year as one 364-day strip — decisions taken and lapsed, programmes
+  running and finished, enquiries, board papers, assumptions that stopped
+  holding, incidents — in `src/components/debrief/YearTimeline.tsx`, derived by
+  `yearTimeline` from state the player already saw. It reads no hidden state: an
+  incident contributes its family name and its day, never its attack path.
+
+  **Identity is the lane, not the colour.** Six rows, six labels, six icons.
+  Take the colour away entirely — print it, or read it with any colour-vision
+  deficiency — and the figure still works, which is the rule the rest of the app
+  already holds to. Marks are 3px ticks rather than icon bubbles, because an
+  icon at 11px repeated twenty-one times is not an icon; it lives once on the
+  lane label where it can be read. Every mark is also a sentence with its day in
+  "Read the year as a list", which is what a screen reader gets and what anybody
+  gets on a phone where 364 days will not fit.
+
+  **The palette was computed, not chosen.** Three chart hues, validated rather
+  than eyeballed: green 150, accent 250, magenta 340 pass the lightness band,
+  chroma floor, colour-vision separation and contrast checks in both themes.
+  Violet 300 was the first choice and **failed against the accent at ΔE 2.3 for
+  deutan vision**, which is why programmes are magenta. Ink was in the first set
+  too and does not belong in a categorical palette at all — it is a text colour.
+  Dark is chosen, not flipped: chart marks want L 0.48-0.67 against that
+  surface, where the band tokens sit at 0.72-0.79 because they are also label
+  text. Both themes pass axe with the list open; the audit did not cover this
+  screen before, because nothing navigated to it.
+
+  **Two things turned up while building it.** The debrief had no route into it:
+  the only way in was a banner shown once the year was over, so the screen's own
+  "your year is not finished yet — write it up now" branch was unreachable, and
+  a player could never close the year early though the screen offered to. It is
+  a destination now (`Y`), and the timeline renders mid-campaign, which is the
+  point of it — you can see the shape of your year while there is still year
+  left to change. And drawn honestly it shows the fourth quarter thinning out,
+  which is a measured weakness this file already carries: that is a reason to
+  have built it, not to soften it.
+
+  The whole feature costs **2.6 kB gzip** (225.5 → 228.1 kB of a 240 kB critical
+  path), which is why the icons are seven hand-drawn inline SVGs and not a
+  library. Checked by rendering it and looking: two layout faults no test would
+  have caught — lane summaries truncating to "11 decisions, all yo…" and the
+  quarter axis vanishing at 320px, leaving a mark three-quarters along a row
+  saying nothing about when it happened.
+
 - **Prioritisation measured decision discipline, not prioritisation.** The
   dimension scored whether the player decided at all, decided in time, and
   recorded why — none of which establish that scarce attention and money went
