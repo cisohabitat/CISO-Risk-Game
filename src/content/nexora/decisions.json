@@ -73,7 +73,7 @@
       "relatedNodeIds": [],
       "teaches": "Communicating uncertainty well can build more credibility than false confidence.",
       "options": [
-        { "id": "opt-ceo-honest", "label": "Give her your three, and say how confident you are in each", "description": "Name what you have seen, and be explicit that you have had one morning.", "visibleKnownEffects": ["She may find this less reassuring than she wanted"],
+        { "id": "opt-ceo-honest", "label": "Give her your three, and say how confident you are in each", "description": "Name what you have seen, and be explicit about how little time you have had.", "visibleKnownEffects": ["She may find this less reassuring than she wanted"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": 0.08, "reason": "You told her what you did not yet know." },
             { "type": "stakeholder.understanding", "stakeholderId": "stk-ceo", "delta": 0.06 },
@@ -556,6 +556,7 @@
         { "id": "opt-inc-command-yes", "label": "Stand up incident command now", "description": "Formal command, executive cadence, single decision path.", "visibleKnownEffects": ["Business-wide disruption", "Much faster containment"],
           "immediateEffects": [
             { "type": "incident.containment", "delta": 0.18 },
+            { "type": "incident.command" },
             { "type": "flag.set", "flag": "incident.command" },
             { "type": "event.schedule", "eventId": "evt-con-incident-command-recalled", "dayOffset": 18 },
             { "type": "team.morale", "delta": -0.03 },

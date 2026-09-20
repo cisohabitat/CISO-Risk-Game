@@ -60,7 +60,16 @@ export function IncidentCommand() {
             </p>
           </div>
           {incident.awaiting.length === 0 && (
-            <Button variant="secondary" size="sm" onClick={() => setScreen('inbox')}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                // Land on the incident, not on whatever was selected last time.
+                const latest = state.inbox.messages.find((m) => m.type === 'incident')
+                setUi({ selectedMessageId: latest?.id })
+                setScreen('inbox')
+              }}
+            >
               Open the response log
             </Button>
           )}

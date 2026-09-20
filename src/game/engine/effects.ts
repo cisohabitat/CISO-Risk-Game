@@ -419,6 +419,15 @@ export function applyEffect(
       if (incident) incident.containment = clamp01(incident.containment + effect.delta)
       break
     }
+    case 'incident.command': {
+      // The option set a flag and the incident never heard: `commandActivated`
+      // was initialised false and nothing wrote it, so the reconstruction told
+      // a player who had stood up command on day 307 that it was never
+      // formally stood up. Found by the second observed playtest.
+      const incident = currentIncident(state)
+      if (incident) incident.commandActivated = true
+      break
+    }
     case 'incident.recovery': {
       const incident = currentIncident(state)
       if (incident) incident.recovery = clamp01(incident.recovery + effect.delta)

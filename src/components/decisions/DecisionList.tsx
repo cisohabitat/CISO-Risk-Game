@@ -2,7 +2,7 @@ import { Badge, Button, Card, CardBody, EmptyState } from '@/components/ui/primi
 import { useGameStore } from '@/store/game-store'
 import { openDecisions } from '@/store/selectors'
 
-export function DecisionList({ limit }: { limit?: number }) {
+export function DecisionList({ limit, quiet = false }: { limit?: number; quiet?: boolean }) {
   const state = useGameStore((store) => store.state)
   const index = useGameStore((store) => store.index)
   const setUi = useGameStore((store) => store.setUi)
@@ -12,6 +12,8 @@ export function DecisionList({ limit }: { limit?: number }) {
   const shown = limit ? decisions.slice(0, limit) : decisions
 
   if (shown.length === 0) {
+    // Beside a board paper that is due, "nothing needs an answer" is untrue.
+    if (quiet) return null
     return (
       <EmptyState
         title="No decision is open"

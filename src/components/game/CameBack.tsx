@@ -13,6 +13,7 @@ const KIND_LABEL: Record<ReturnType<typeof cameBack>[number]['kind'], string> = 
   lapse: 'Decided for you',
   acceptance: 'Acceptance ran out',
   stopped: 'Work pulled back',
+  incident: 'Incident update',
 }
 
 export function CameBack() {

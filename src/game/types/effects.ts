@@ -58,6 +58,8 @@ export type GameEffect =
   | { type: 'team.vacancyFilled'; fn: CyberFunction }
   | { type: 'incident.start'; familyId: string; pathId?: string; actorId?: string }
   | { type: 'incident.containment'; delta: number }
+  /** Formal incident command is stood up on the live incident; the reconstruction reads it. */
+  | { type: 'incident.command' }
   | { type: 'incident.recovery'; delta: number }
   | { type: 'incident.consequence'; delta: number }
   | { type: 'flag.set'; flag: string; value?: number | string | boolean }

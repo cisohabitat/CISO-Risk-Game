@@ -18,6 +18,61 @@ fault.
 
 ### Fixed
 
+- **The annual review contradicted the decision record three times.** The
+  second observed playtest (`docs/playtests/2026-09-21-ai-browser-repeat.md`,
+  same seed, an AI session again) found the previous fixes working — the
+  team note, the came-back block, the agenda explanation, the finance copy —
+  and then found the review telling the player three things the same review's
+  own judgement list contradicted. All three were real in the source.
+
+  - *"Incident command was never formally stood up"*, under a judgement
+    list recording "Day 307: Stand up incident command now". The option set
+    a flag and the incident never heard: `commandActivated` was initialised
+    false and nothing in the engine wrote it, so the reconstruction said
+    "never" to every player who had. A new `incident.command` effect sets it
+    on the live incident, and the option carries it.
+  - *"Recovery was never exercised"*, beside "2 of 2 recovery controls
+    carried assurance you established yourself", after a production restore
+    that came back in three and a half hours. The dimension's score already
+    counted the restore; the evidence line beneath it did not. It reads "2
+    recovery exercises completed, one of them a production restore".
+  - *"Recovery fails when it is needed was among the largest risks you
+    inherited, and nothing you did went near it"*, for a player who funded
+    the recovery programme on day one. A programme is scored against the
+    most material scenario it treats — the right rule for the score — and
+    "missed" read only that one, so a programme treating three scenarios
+    was told it went nowhere near the other two. Missed now reads every
+    scenario a commitment was aimed at.
+
+  A test starts an incident and stands up command, sets the restore flag,
+  and funds identity and recovery together, and fails on any of the three
+  sentences; each mutation — an inert command effect, an evidence line that
+  ignores the restore, a missed list that reads only the scored scenario —
+  fails it by name.
+
+  **Five smaller findings, also fixed.** "Nothing needs an answer" still
+  sat beside a due board paper; the decision list now says nothing at all
+  when a paper is waiting above it. The briefing headline said nothing was
+  waiting while an incident was running; it says an incident is running and
+  response decisions follow. "Open the response log" landed on whatever
+  message was selected last; it lands on the incident's newest. Skip ahead
+  could carry a player from containment to closure in one click and leave
+  the consequence, recovery and debrief in the inbox; incident updates are
+  in "Came back to you" now. The recovery programme's milestone read
+  "Restore tested end to end" while the fourth-quarter decision said
+  recovery had never been run against production; the milestone reads
+  "Restore tested outside production", which is what it was. And the CEO
+  option that still said "one morning" no longer does.
+
+  **Left, and why.** Generic enquiry results — "answered part of the
+  question and raised others" — are the quality summary; what an enquiry
+  found is on the Evidence screen, where the result's evidence lands, and a
+  link from the message to it is the next thing to test rather than a
+  rewrite. The £140k recruitment decision after a £120k hire fires only
+  while a vacancy nobody is hiring for remains, which was true of the other
+  roles; the decision could say so. Both are recorded as questions for a
+  human session, not changed on an AI's word.
+
 - **The briefing said what needed an answer and never what the answers
   did.** From the first observed playtest: a player who followed the
   briefing and Skip ahead missed a thin enquiry result for a month, left a

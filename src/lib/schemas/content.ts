@@ -107,6 +107,7 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('team.vacancyFilled'), fn: cyberFunction }),
   z.object({ type: z.literal('incident.start'), familyId: id, pathId: id.optional(), actorId: id.optional() }),
   z.object({ type: z.literal('incident.containment'), delta: z.number() }),
+  z.object({ type: z.literal('incident.command') }),
   z.object({ type: z.literal('incident.recovery'), delta: z.number() }),
   z.object({ type: z.literal('incident.consequence'), delta: z.number() }),
   z.object({ type: z.literal('flag.set'), flag: z.string(), value: z.union([z.number(), z.string(), z.boolean()]).optional() }),

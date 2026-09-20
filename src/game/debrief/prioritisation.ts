@@ -124,7 +124,14 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
   const biggest = ranked[0]
 
   const commitments: Commitment[] = []
+  // Every scenario a commitment was aimed at. The score reads the biggest of
+  // them; "missed" must read all of them, or a programme that treats three
+  // scenarios is told it went nowhere near the two it was not scored on. The
+  // second observed playtest funded recovery on day one and was told that
+  // nothing it did went near the recovery risk.
+  const addressed = new Set<string>()
   const pick = (kind: Commitment['kind'], label: string, scenarioIds: string[]) => {
+    for (const id of scenarioIds) addressed.add(id)
     // Work that was not about any authored risk — a team review, threat intel —
     // is not counted either way. It is effort, but it is not a choice about
     // which risk to pursue, and charging it here would mark a player down for
@@ -173,7 +180,6 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
   const floor = ceiling > 0 ? worst / ceiling : 0
   const allocation = commitments.length === 0 || floor >= 1 ? 0 : Math.max(0, Math.min(1, (raw - floor) / (1 - floor)))
 
-  const addressed = new Set(commitments.map((c) => c.scenarioId))
   const missed = ranked.find((s) => !addressed.has(s.id) && s.materiality > 0)
 
   return { allocation, raw, floor, commitments, biggest, missed }

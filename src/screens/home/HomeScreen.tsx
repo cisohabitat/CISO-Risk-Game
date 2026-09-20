@@ -58,7 +58,9 @@ export function HomeScreen() {
         </div>
         <h1 id="standing" className="mt-2 font-display text-2xl leading-tight text-balance sm:text-[1.75rem]">
           {wantsYou === 0
-            ? 'Nothing is waiting on you today.'
+            ? view.activeIncident
+              ? 'An incident is running. Response decisions follow as it develops.'
+              : 'Nothing is waiting on you today.'
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
@@ -125,7 +127,7 @@ export function HomeScreen() {
                 </CardBody>
               </Card>
             )}
-            <DecisionList limit={4} />
+            <DecisionList limit={4} quiet={state.reviews.pendingQuarter !== undefined} />
           </section>
 
           {/* What the player's own actions sent back. The first observed

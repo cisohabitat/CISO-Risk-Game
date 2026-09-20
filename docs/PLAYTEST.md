@@ -145,6 +145,13 @@ Put them in front of players rather than deciding from a desk.
   on the live site, following this protocol. Not a human, and it says so; its
   concrete findings were verified in the source and are closed in
   `FINDINGS.md`, its tuning questions were left where they were.
+- `playtests/2026-09-21-ai-browser-repeat.md`: the same AI, same seed, after
+  the fixes. It confirmed the team note, the came-back block and the agenda
+  explanation did what they were for, and found three contradictions in the
+  annual review, all real and all closed in `FINDINGS.md`. Its open
+  questions — whether generic enquiry results need a link to their evidence,
+  and whether a human can tell current capacity from sustainable health
+  from the note alone — are the ones to put to a person.
 
 ## What not to change on playtest feedback alone
 

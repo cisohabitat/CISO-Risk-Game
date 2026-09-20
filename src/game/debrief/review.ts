@@ -484,9 +484,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         const list = rest.length === 1 ? `day ${rest[0]}` : `days ${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}`
         return `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
       })
+      // The dimension counted a production restore as an exercise; this line
+      // did not, and said "never exercised" under a restore that came back in
+      // three and a half hours. Found by the second observed playtest.
+      const exerciseCount = exercises.length + (restoreTaken ? 1 : 0)
       lines.push(
-        exercises.length > 0
-          ? `${exercises.length} recovery exercise${exercises.length === 1 ? '' : 's'} completed`
+        exerciseCount > 0
+          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? ', one of them a production restore' : ''}`
           : 'Recovery was never exercised',
       )
       lines.push(

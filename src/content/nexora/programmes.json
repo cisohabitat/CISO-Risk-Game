@@ -45,7 +45,7 @@
       "milestones": [
         { "id": "ms-ransom-1", "name": "Immutable backup tier", "atProgress": 0.3, "description": "Critical workloads are backed up to storage an attacker with domain rights cannot delete.",
           "controlEffects": [{ "controlId": "ctl-backup", "configurationQuality": 0.22, "coverage": 0.12 }] },
-        { "id": "ms-ransom-2", "name": "Restore tested end to end", "atProgress": 0.6, "description": "A full restore of a critical service has been performed and timed.",
+        { "id": "ms-ransom-2", "name": "Restore tested outside production", "atProgress": 0.6, "description": "A full restore of a critical service has been performed and timed.",
           "controlEffects": [{ "controlId": "ctl-backup", "operationalEffectiveness": 0.3, "monitoringQuality": 0.15 }] },
         { "id": "ms-ransom-3", "name": "Response exercised with the executive", "atProgress": 0.85, "description": "The executive team has been through a ransomware exercise and knows who decides what.",
           "controlEffects": [{ "controlId": "ctl-ir", "coverage": 0.25, "operationalEffectiveness": 0.25 }],

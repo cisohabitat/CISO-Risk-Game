@@ -1167,7 +1167,7 @@ export interface CameBackItem {
   day: number
   from: string
   subject: string
-  kind: 'result' | 'consequence' | 'lapse' | 'acceptance' | 'stopped'
+  kind: 'result' | 'consequence' | 'lapse' | 'acceptance' | 'stopped' | 'incident'
 }
 
 /**
@@ -1189,6 +1189,9 @@ export function cameBack(state: GameState, index: ContentIndex, limit = 4): Came
     else if (message.subject.startsWith('Your acceptance of ')) kind = 'acceptance'
     else if (message.subject.startsWith('Pulled back: ') || message.subject.startsWith('Paused: ')) kind = 'stopped'
     else if (tags.includes('consequence')) kind = 'consequence'
+    // Skip ahead can carry a player from containment to closure in one
+    // click, leaving the consequence, recovery and debrief in the inbox.
+    else if (message.type === 'incident') kind = 'incident'
     if (!kind) continue
     out.push({ id: message.id, day: message.day, from: message.from, subject: message.subject, kind })
   }
