@@ -299,6 +299,26 @@ describe('team sustainability', () => {
   })
 })
 
+describe('incident words agree with the phase', () => {
+  it('never says "not yet recovering" once the phase is recovery', () => {
+    // Day 183 of a hand-played year: "Recovery, Contained, Not yet recovering"
+    // on one line, over a timeline entry saying restoration had begun.
+    const index = testIndex()
+    let seen = 0
+    for (const seed of ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6']) {
+      const state = newGame(index, { seed, difficulty: 'high-pressure' })
+      for (let day = 0; day < 364; day += 1) {
+        runDays(state, index, 1)
+        const view = incidentCommand(state, index)
+        if (!view || view.phase !== 'recovery') continue
+        seen += 1
+        expect(view.recoveryLabel, `day ${state.currentDay} of ${seed}`).not.toBe('Not yet recovering')
+      }
+    }
+    expect(seen, 'no campaign reached a recovery phase, so nothing was checked').toBeGreaterThan(0)
+  })
+})
+
 describe('what a pattern cites', () => {
   it('never cites evidence that argues against the proposition', () => {
     const index = testIndex()

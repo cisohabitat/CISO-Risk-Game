@@ -18,6 +18,17 @@ fault.
 
 ### Fixed
 
+- **"Recovery, Contained, Not yet recovering."** Day 183 of the same
+  hand-played year, on one line of the incident command view, above a
+  timeline entry from two days earlier saying restoration of affected services
+  had begun. The phase was `recovery`, recovery stood at 0.18, and the bottom
+  word of the four-step scale was chosen without reference to the phase. Once
+  the phase is recovery it has started, however little there is to show; the
+  word reads "Recovery just starting" there and "Not yet recovering" before
+  it. Six high-pressure campaigns walked day by day fail
+  `tests/engine/presentation.test.ts` by name if the contradiction returns.
+  Mutation-checked.
+
 - **Ten risks, one word, content order.** Found on day 128 of the same
   hand-played year: nine risks on the list, every one "moderate residual /
   moderate confidence". Measured over 20 campaigns per mode: **86% of the risk

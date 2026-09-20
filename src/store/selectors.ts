@@ -725,7 +725,17 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
       'Partly contained',
       'Not yet contained',
     ),
-    recoveryLabel: progressLabel(incident.recovery, 'Recovered', 'Mostly recovered', 'Recovering', 'Not yet recovering'),
+    // "Not yet recovering" sat on the same line as a phase of "Recovery" and a
+    // timeline entry saying restoration had begun, because recovery was 0.18
+    // and the bottom word did not know the phase. Once the phase is recovery,
+    // it has started, however little of it there is to show.
+    recoveryLabel: progressLabel(
+      incident.recovery,
+      'Recovered',
+      'Mostly recovered',
+      'Recovering',
+      incident.phase === 'recovery' ? 'Recovery just starting' : 'Not yet recovering',
+    ),
     servicesAffected: incident.affectedServiceIds
       .map((serviceId) => index.service.get(serviceId)?.name)
       .filter((name): name is string => Boolean(name)),
