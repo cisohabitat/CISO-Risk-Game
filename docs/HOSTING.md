@@ -91,7 +91,22 @@ A build is not release-ready unless all of the following hold:
     The Functions tab should show no invocations at all: normal gameplay makes
     no request after the app shell and content have loaded.
 
-CI covers 1–3, 6 and 11 on every push; the remainder are checked before release.
+**Who checks what.** CI covers 1–3, 6 and 11 on every push. Steps 4, 5, 7, 8, 9
+and 14 are asserted by `tests/content/release-gate.test.ts`, which reads them
+off the source rather than trusting that somebody remembered: it fails the build
+if any application file gains a network primitive, an account, a remote store or
+an environment variable that is not one of Vite's build-time booleans. Step 10
+is `pnpm size` against the budget below.
+
+That leaves **12, 13 and 14's confirmation** — the three that genuinely need a
+deployment to exist. Nothing in the repository can check those, and no test
+should pretend to. They are done by a person, against the live URL, before a
+release is called done.
+
+Step 14 deserves a note: the reason the Functions tab shows nothing is not
+restraint, it is that the application has no way to make a request at all. The
+test above holds it that way, so an accidental analytics call fails `pnpm check`
+rather than appearing on a bill.
 
 Treat any accidental server dependency in the MVP as an architectural
 regression, not a convenience.

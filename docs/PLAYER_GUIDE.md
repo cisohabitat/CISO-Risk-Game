@@ -62,19 +62,28 @@ is sent anywhere.
 
 ![The Briefing](images/02-briefing.png)
 
-This is where every day starts. Five things are worth finding:
+This is where every day starts, and it is written as a brief rather than a
+dashboard. Six things are worth finding:
 
-**The four bands across the top.** Residual exposure, board confidence, team
-capacity and recovery confidence. They are words — *Moderate*, *Neutral*,
-*Limited* — never numbers. That is deliberate: a real CISO argues from judgement,
-not from a score, and a number would invite you to optimise it. The `?` opens a
-plain-language explanation.
+**The masthead and the headline.** `CISO BRIEF · WEEK 1` at the top, and under
+it a single line counting what wants you today — *"Two things need your
+attention."* If it says nothing is waiting, nothing is: you can run the clock.
 
-**Waiting on you.** Anything that needs an answer. Ignore it long enough and the
-organisation decides without you, which is recorded and counts against you at
-the end of the year.
+**Waiting on you.** Anything that needs an answer, immediately under the
+headline. Ignore it long enough and the organisation decides without you, which
+is recorded and counts against you at the end of the year.
 
-**Your top concerns.** The risks you have actually assessed, worst first.
+**The four standing readings**, in a strip below the headline: residual
+exposure, board confidence, team capacity and recovery confidence. They are
+words — *Moderate*, *Neutral*, *Limited* — never numbers. That is deliberate: a
+real CISO argues from judgement, not from a score, and a number would invite you
+to optimise it. They are deliberately quieter than the things above them,
+because they are the state of the organisation rather than a list of things to
+do. The `?` opens a plain-language explanation.
+
+**Your top concerns.** The risks you have actually assessed, worst first. Each
+one leads with the risk itself and carries its rating underneath — read the
+sentence, not the colour.
 
 **Your resources** (right). Three bars:
 - **Cyber budget** — money for the year. It does not refill.
@@ -181,8 +190,11 @@ new players most often skip. Do not skip it.
 Every system, supplier, network and data set, and what depends on what. Use
 **List** rather than **Graph** at first — it is far easier to read.
 
-Notice the **Taken on trust** badges. Those are things you know exist because
-you were told, not because anyone checked. The difference between *seen* and
+Notice which rows are **drawn with a dashed outline and set back**: those are
+things you know exist because you were told, not because anyone checked. They
+are badged **Taken on trust** as well. On day one nearly the whole estate looks
+like that, and it resolves into solid rows as you verify things — the picture
+visibly sharpens as the year goes on, which is the point. The difference between *seen* and
 *verified* is the game's central idea, and the annual review scores it.
 
 ---
@@ -192,8 +204,9 @@ you were told, not because anyone checked. The difference between *seen* and
 ![A pattern offer](images/07-pattern.png)
 
 Sometimes the evidence you are holding adds up to something. When it does, the
-game says so: **"You may have found a pattern"**, with the proposition and the
-evidence behind it.
+game says so. **Pattern emerging** is ruled off from everything around it, with
+the proposition set large and the evidence that led there listed underneath —
+it is meant to read like an analyst's inference, not a notification.
 
 It stops there deliberately. Forming the hypothesis costs attention, and **"Not
 this"** is a real answer that sticks. The game will point out what it noticed; it
@@ -246,6 +259,20 @@ safe answer. Both have consequences, and both are remembered.
 Note what the bar shows — *containment*, *recovery*, *affected services* — and
 what it does not: the attack path. You only ever see what your own people have
 actually told you.
+
+---
+
+## Watching your own year
+
+Press `Y`, or pick **Your year** in the menu, for the whole campaign as one
+364-day strip: the decisions you took and the ones that lapsed, programmes
+running and finished, enquiries, board papers, assumptions that stopped holding,
+and any incidents.
+
+It is worth opening well before December. It is the quickest way to see whether
+you have actually been doing anything — a year with one busy lane and five empty
+ones is telling you something while there is still time to change it. **Read the
+year as a list** underneath gives every mark with its date.
 
 ---
 

@@ -162,6 +162,39 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **The player guide described a screen that no longer existed, and the release
+  gate was a list nobody checked.** Two pieces of debt, both created by the
+  three passes above rather than found in them.
+
+  **The guide had gone wrong, not just stale.** It told a new player to look for
+  "the four bands across the top", which the visual pass had moved into a strip
+  under a masthead; it quoted "You may have found a pattern", which is now
+  `Pattern emerging`; it described unverified systems as carrying a badge, when
+  they are drawn dashed and resolve as you check them; and it had no section at
+  all for `Your year`, a screen with its own destination and keyboard shortcut.
+  Nine of its ten screenshots predated the changes. The text is corrected and
+  the pictures regenerated with `pnpm guide:shots`. **The board-paper capture
+  failed again** — it is the one the spec's own comment says does not reliably
+  reach its screen — and that image is left as it was, which is honest here
+  because nothing in this pass touched the Board screen.
+
+  **Six of the fourteen release-gate conditions are now asserted rather than
+  remembered.** `docs/HOSTING.md` said CI covered five and "the remainder are
+  checked before release", which in practice meant nobody checked them: they all
+  hold by construction and would only break by accident. `tests/content/release-gate.test.ts`
+  reads them off the source — no network primitive anywhere in `src/` (steps 7,
+  8 and 14), no account (4), no store outside the browser (5), and no
+  environment variable beyond Vite's build-time booleans (9). Mutation-checked
+  three ways: adding an analytics `fetch`, a `VITE_API_KEY` read and a `signIn`
+  each fail a named test.
+
+  Worth stating plainly: the reason the Vercel Functions tab shows no
+  invocations is not restraint, it is that the application has no way to make a
+  request. That property is now held by a test, so an accidental analytics call
+  fails `pnpm check` rather than turning up on a bill. Steps 12, 13 and 14's
+  confirmation still need a deployment and a person; nothing in the repository
+  can check those and no test pretends to.
+
 - **The interface read as an enterprise dashboard rather than a command
   centre.** A visual review graded the game 8.5/10 — structure strong, identity
   and tension weak — and named five changes worth more than the other ten. All
