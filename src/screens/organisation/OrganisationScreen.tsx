@@ -128,6 +128,14 @@ export function OrganisationScreen() {
                       className={cn(
                         'w-full rounded-lg border bg-surface p-3 text-left transition-colors',
                         selectedNodeId === node.id ? 'border-accent' : 'border-line hover:border-line-strong',
+                        // Something you were told about and never checked is
+                        // drawn as what it is: an outline, not a fact. The
+                        // badge said so already, but a badge is a label on a
+                        // solid row — it reads the same as everything else.
+                        // Dashed and set back, the estate visibly resolves as
+                        // the player verifies it, which is the one thing the
+                        // whole verification model is asking them to feel.
+                        !node.verified && selectedNodeId !== node.id && 'border-dashed bg-surface-2/40',
                       )}
                     >
                       <div className="flex flex-wrap items-center gap-2">
@@ -143,8 +151,10 @@ export function OrganisationScreen() {
                           node.confidence < 0.6 && <Badge tone="warning" glyph={false}>Partly understood</Badge>
                         )}
                       </div>
-                      <p className="mt-1.5 font-medium">{node.name}</p>
-                      <p className="mt-0.5 line-clamp-2 text-sm text-ink-muted text-pretty">{node.description}</p>
+                      <p className={cn('mt-1.5 font-medium', !node.verified && 'text-ink-muted')}>{node.name}</p>
+                      <p className={cn('mt-0.5 line-clamp-2 text-sm text-pretty', node.verified ? 'text-ink-muted' : 'text-ink-faint')}>
+                        {node.description}
+                      </p>
                       {node.dependencies.length > 0 && (
                         <p className="mt-1.5 text-xs text-ink-faint">
                           Depends on {node.dependencies.slice(0, 3).map((dependency) => dependency.name).join(', ')}

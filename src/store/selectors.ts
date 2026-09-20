@@ -735,6 +735,17 @@ export interface CollisionView {
   milestoneName?: string
   /** Where the cover lands relative to the business date, in plain words. */
   verdict: 'covered' | 'close' | 'too-late' | 'not-started' | 'nothing-relevant'
+  /**
+   * Days to the next covering milestone, extrapolated from the rate the
+   * programme has actually managed so far.
+   *
+   * Deliberately not presented as a date. The business date is a commitment and
+   * can be stated; this is a projection off a rate that changes with staffing,
+   * blockers and whatever else the player does next, so the interface draws it
+   * as a band rather than a point. Absent when nothing is running to project
+   * from.
+   */
+  daysToMilestone?: number
   /** Risks the player has already raised on the same dependencies. */
   exposedRisks: { id: string; title: string }[]
 }
@@ -779,7 +790,7 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
     )
 
     let best:
-      | { programmeId: string; programmeName: string; milestoneName: string; verdict: CollisionView['verdict'] }
+      | { programmeId: string; programmeName: string; milestoneName: string; verdict: CollisionView['verdict']; daysToMilestone?: number }
       | undefined
 
     for (const programme of index.content.programmes) {
@@ -829,7 +840,13 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
             : 'too-late'
       const rank = { covered: 0, close: 1, 'too-late': 2, 'not-started': 3, 'nothing-relevant': 4 }
       if (!best || rank[verdict] < rank[best.verdict]) {
-        best = { programmeId: programme.id, programmeName: programme.name, milestoneName: next.name, verdict }
+        best = {
+          programmeId: programme.id,
+          programmeName: programme.name,
+          milestoneName: next.name,
+          verdict,
+          daysToMilestone: Number.isFinite(daysToMilestone) ? Math.round(daysToMilestone) : undefined,
+        }
       }
     }
 
@@ -853,6 +870,7 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
       programmeName: best?.programmeName,
       milestoneName: best?.milestoneName,
       verdict: best?.verdict ?? 'nothing-relevant',
+      daysToMilestone: best?.daysToMilestone,
       exposedRisks,
     })
   }

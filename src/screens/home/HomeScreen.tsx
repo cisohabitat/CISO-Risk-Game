@@ -7,7 +7,7 @@ import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useGameStore } from '@/store/game-store'
-import { briefing, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
+import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
 import { bandTone, capacityTone, confidenceTone, money, plural } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
@@ -26,45 +26,72 @@ export function HomeScreen() {
   const team = teamView(state, index)
   const reviewsDue = visibleRisks(state, index).filter((risk) => risk.reviewDue && risk.status !== 'closed')
   const lastHighlights = state.history.entries.slice(-4).reverse()
+  // Counted here as well as inside the two components, so the masthead can say
+  // how many things want the player before they scroll to find out.
+  const pressing = collisions(state, index).filter((collision) => collision.verdict !== 'covered')
+  const patterns = patternSuggestions(state, index)
+
+  // What actually wants the player today. The four standing bands used to open
+  // the screen in four bordered cards of equal weight, alongside eleven other
+  // cards — so nothing looked more important than anything else and the whole
+  // thing read as a dashboard. The brief leads with what needs an answer; the
+  // standing picture is below it, unboxed, where it belongs.
+  const wantsYou =
+    view.openDecisions +
+    (state.reviews.pendingQuarter !== undefined ? 1 : 0) +
+    pressing.length +
+    patterns.length
 
   return (
     <div className="space-y-6">
-      <section aria-labelledby="standing">
-        <h1 id="standing" className="sr-only">Today's briefing</h1>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            label="Residual exposure"
-            value={RISK_BAND_LABEL[view.residualExposure]}
-            tone={bandTone(view.residualExposure)}
-            hint="Across the risks you have actually assessed"
-            onInfo={() => openGlossary('gls-residual')}
-          />
-          <StatCard
-            label="Board confidence"
-            value={view.boardConfidence}
-            tone="accent"
-            hint="How the board currently reads your judgement"
-          />
-          <StatCard
-            label="Team capacity"
-            value={view.teamCapacity}
-            tone={capacityTone(view.teamCapacity)}
-            hint={`${plural(view.runningWork, 'piece')} of delegated work running`}
-            onInfo={() => openGlossary('gls-capacity')}
-          />
-          <StatCard
-            label="Recovery confidence"
-            value={view.recoveryConfidence}
-            tone={view.recoveryConfidence === 'Limited' ? 'high' : view.recoveryConfidence === 'Partial' ? 'elevated' : 'low'}
-            hint="Based on what you have verified, not what you were told"
-          />
+      {/* A brief has a masthead. It costs nothing and it tells the player what
+          kind of document they are reading. */}
+      <header className="border-b border-line pb-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-faint">
+            CISO brief · {view.weekLabel}
+          </p>
+          <p className="text-xs uppercase tracking-[0.18em] text-ink-faint">
+            {index.content.meta.organisation} · Internal
+          </p>
         </div>
-      </section>
+        <h1 id="standing" className="mt-2 font-display text-2xl leading-tight text-balance sm:text-[1.75rem]">
+          {wantsYou === 0
+            ? 'Nothing is waiting on you today.'
+            : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
+      </header>
 
       <Collisions />
 
       {/* The moment something clicks should find the player, not wait on a tab. */}
       <PatternNotice />
+
+      {/* The standing picture. One strip, four readings, no borders: these are
+          the state of the organisation, not four things to do. */}
+      <section aria-label="Where the organisation stands" className="border-y border-line py-3">
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
+          <Standing
+            label="Residual exposure"
+            value={RISK_BAND_LABEL[view.residualExposure]}
+            tone={bandTone(view.residualExposure)}
+            onInfo={() => openGlossary('gls-residual')}
+          />
+          <Standing label="Board confidence" value={view.boardConfidence} tone="accent" />
+          <Standing
+            label="Team capacity"
+            value={view.teamCapacity}
+            tone={capacityTone(view.teamCapacity)}
+            onInfo={() => openGlossary('gls-capacity')}
+          />
+          <Standing
+            label="Recovery confidence"
+            value={view.recoveryConfidence}
+            tone={view.recoveryConfidence === 'Limited' ? 'high' : view.recoveryConfidence === 'Partial' ? 'elevated' : 'low'}
+          />
+        </dl>
+      </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
@@ -125,7 +152,8 @@ export function HomeScreen() {
                   <li key={risk.id}>
                     <Card>
                       <CardBody>
-                        <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-medium text-balance">{risk.title}</h3>
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           {/* An unassessed scenario has no residual to report.
                               Rendering the 0 default as "Low residual" said the
                               opposite of the truth about the one kind of risk
@@ -146,8 +174,7 @@ export function HomeScreen() {
                           </Badge>
                           {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
                         </div>
-                        <h3 className="mt-2 font-medium text-balance">{risk.title}</h3>
-                        <p className="mt-1 text-sm text-ink-muted text-pretty">{risk.statement}</p>
+                        <p className="mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
                         <Button
                           variant="quiet"
                           size="sm"
@@ -340,41 +367,39 @@ export function HomeScreen() {
   )
 }
 
-function StatCard({
+function Standing({
   label,
   value,
   tone,
-  hint,
   onInfo,
 }: {
   label: string
   value: string
   tone: Parameters<typeof Badge>[0]['tone']
-  hint: string
   onInfo?: () => void
 }) {
   return (
-    <Card>
-      <CardBody className="space-y-2">
-        <div className="flex items-start justify-between gap-2">
-          <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">{label}</p>
-          {onInfo && (
-            <button
-              type="button"
-              onClick={onInfo}
-              aria-label={`What does ${label} mean?`}
-              className="compact -mr-1 -mt-1 rounded-full px-2 py-1 text-xs text-ink-faint hover:text-ink"
-            >
-              ?
-            </button>
-          )}
-        </div>
+    <div className="min-w-0">
+      <dt className="flex h-4 items-center gap-1 text-xs font-medium uppercase leading-none tracking-wider text-ink-faint">
+        <span className="truncate">{label}</span>
+        {onInfo && (
+          <button
+            type="button"
+            onClick={onInfo}
+            aria-label={`What does ${label} mean?`}
+            className="shrink-0 rounded-full px-1 leading-none text-ink-faint transition-colors hover:text-ink"
+          >
+            ?
+          </button>
+        )}
+      </dt>
+      <dd className="mt-1">
         <Badge tone={tone}>{value}</Badge>
-        <p className="text-xs text-ink-faint text-pretty">{hint}</p>
-      </CardBody>
-    </Card>
+      </dd>
+    </div>
   )
 }
+
 
 /**
  * Words rather than a percentage, and about verification rather than sight:

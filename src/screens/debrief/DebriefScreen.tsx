@@ -75,10 +75,18 @@ export function DebriefScreen() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <p className="text-xs uppercase tracking-[0.24em] text-ink-faint">Annual review</p>
-        <h1 className="mt-1 font-display text-3xl leading-tight text-balance">{review.headline}</h1>
-        <p className="mt-2 text-ink-muted">{review.performanceBand} · seed {state.seed}</p>
+      {/* The payoff for a whole year should not look like another screen. It
+          is set as the report it is: a masthead, a rule, and the verdict in
+          the display face with room around it. */}
+      <header className="border-y-2 border-ink py-6 text-center sm:py-8">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
+          {index.content.meta.organisation} · Annual review
+        </p>
+        <h1 className="mx-auto mt-4 max-w-[26ch] font-display text-3xl leading-tight text-balance sm:text-4xl">
+          {review.headline}
+        </h1>
+        <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
+        <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
       </header>
 
       <Card>
@@ -103,15 +111,20 @@ export function DebriefScreen() {
 
       <section aria-labelledby="dimensions">
         <SectionHeading><span id="dimensions">How the year is read</span></SectionHeading>
-        <ul className="grid gap-3 lg:grid-cols-2">
+        {/* A strip you read down, not eight boxes competing for the eye. The
+            verdict sits in a fixed column so the shape of the year is legible
+            before a single sentence is read. */}
+        <ul className="divide-y divide-line border-y border-line">
           {review.dimensions.map((dimension) => (
             <li key={dimension.id}>
-              <Card className="h-full">
-                <CardBody className="space-y-2">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="font-medium">{dimension.label}</h3>
+              <div className="grid gap-x-4 gap-y-1.5 py-4 sm:grid-cols-[minmax(0,14rem)_1fr]">
+                <div className="flex flex-wrap items-center gap-2 sm:block">
+                  <h3 className="font-medium leading-tight">{dimension.label}</h3>
+                  <span className="sm:mt-1.5 sm:block">
                     <Badge tone={BAND_TONE[dimension.band] ?? 'neutral'} glyph={false}>{dimension.band}</Badge>
-                  </div>
+                  </span>
+                </div>
+                <div className="space-y-2">
                   <p className="text-sm text-ink-muted text-pretty">{dimension.narrative}</p>
                   {dimension.evidence.length > 0 && (
                     <ul className="space-y-0.5 text-xs text-ink-faint">
@@ -120,8 +133,8 @@ export function DebriefScreen() {
                       ))}
                     </ul>
                   )}
-                </CardBody>
-              </Card>
+                </div>
+              </div>
             </li>
           ))}
         </ul>

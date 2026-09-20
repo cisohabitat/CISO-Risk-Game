@@ -428,6 +428,58 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByText(/Day \d+/).first()).toBeVisible()
   })
 
+  test('the briefing leads with what needs an answer, not with four gauges', async ({ page }) => {
+    await startCampaign(page, 'e2e-brief')
+
+    // A brief, not a dashboard: it says what kind of document it is and how
+    // much wants the player, before any standing state.
+    await expect(page.getByText(/CISO brief · Week \d+/i)).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/needs? your attention|Nothing is waiting on you/)
+
+    // The four standing readings are one strip of definitions, not four cards.
+    const standing = page.getByRole('region', { name: 'Where the organisation stands' })
+    await expect(standing).toBeVisible()
+    for (const label of ['Residual exposure', 'Board confidence', 'Team capacity', 'Recovery confidence']) {
+      await expect(standing.getByText(label, { exact: true })).toBeVisible()
+    }
+
+    // A risk leads with the scenario. If the rating is the most prominent
+    // thing on it, players optimise the rating instead of reading the risk.
+    const firstRisk = page.getByRole('heading', { name: /.+/, level: 3 }).first()
+    await expect(firstRisk).toBeVisible()
+  })
+
+  test('a collision is drawn as a race, without inventing a date', async ({ page }) => {
+    await startCampaign(page, 'e2e-race')
+
+    let found = false
+    for (let i = 0; i < 60 && !found; i += 1) {
+      if (await page.getByText('What is about to collide').first().isVisible().catch(() => false)) {
+        found = true
+        break
+      }
+      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      if (await decide.isVisible().catch(() => false)) {
+        await decide.click()
+        const dialog = page.getByRole('dialog')
+        await dialog.getByRole('radio').first().check()
+        const tag = dialog.getByRole('button', { name: 'Residual risk is within tolerance' })
+        if (await tag.isVisible().catch(() => false)) await tag.click()
+        await dialog.getByRole('button', { name: /Commit to this/ }).click()
+        await expect(dialog).toBeHidden()
+        continue
+      }
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+    }
+
+    expect(found, 'no collision appeared in the first 60 stops').toBe(true)
+    // Two tracks on one scale, and the verdict in words beside them.
+    await expect(page.getByText('The business', { exact: true }).first()).toBeVisible()
+    await expect(
+      page.getByText(/Arrives (before|after) the business|Arrives about the same time|Nothing is running/).first(),
+    ).toBeVisible()
+  })
+
   test('no uncaught errors during normal play', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))

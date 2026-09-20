@@ -6,7 +6,7 @@
  * what made it think that, and stops there: forming the hypothesis costs
  * attention, dismissing it is a real answer, and neither is done for them.
  */
-import { Button, Card, CardBody } from '@/components/ui/primitives'
+import { Button } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { patternSuggestions } from '@/store/selectors'
 
@@ -30,21 +30,30 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
     <ul className="space-y-3">
       {suggestions.map((suggestion) => (
         <li key={suggestion.templateId}>
-          <Card className="border-accent/40 bg-accent-soft/25">
-            <CardBody className="space-y-3">
+          {/* Not another card.
+              This is the most interesting moment the game has — the one where
+              something clicks — and it was arriving in the same bordered box as
+              everything else on the screen. It reads as an analyst's inference
+              now: ruled off top and bottom, the proposition set in the display
+              face, and the evidence listed underneath as what led there. */}
+          <div className="border-y-2 border-accent/60 bg-accent-soft/20 px-4 py-4 sm:px-5">
+            <div className="space-y-3">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-                  You may have found a pattern
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-accent-ink">
+                  Pattern emerging
                 </p>
-                <p className="mt-1.5 font-medium text-balance">{suggestion.title}</p>
-                <p className="mt-1 text-sm text-ink-muted text-pretty">{suggestion.statement}</p>
+                <p className="mt-2 font-display text-lg leading-snug text-balance">{suggestion.title}</p>
+                <p className="mt-1.5 text-sm text-ink-muted text-pretty">{suggestion.statement}</p>
               </div>
 
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">What suggests it</p>
+              <div className="border-t border-accent/25 pt-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">What led here</p>
                 <ul className="mt-1.5 space-y-1 text-sm text-ink-muted">
                   {suggestion.evidence.map((item) => (
-                    <li key={item.id} className="text-pretty">{item.title}</li>
+                    <li key={item.id} className="flex gap-2 text-pretty">
+                      <span aria-hidden="true" className="text-ink-faint">—</span>
+                      <span>{item.title}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -76,8 +85,8 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
                   Not this
                 </Button>
               </div>
-            </CardBody>
-          </Card>
+            </div>
+          </div>
         </li>
       ))}
     </ul>

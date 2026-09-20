@@ -37,6 +37,8 @@ type OrgNodeData = {
   criticality: string
   onPath: boolean
   confidence: number
+  /** Established by the player's own work, rather than inherited or overheard. */
+  verified: boolean
 }
 
 function OrgNodeCard({ data }: NodeProps) {
@@ -48,14 +50,25 @@ function OrgNodeCard({ data }: NodeProps) {
       style={{
         borderColor: node.onPath ? 'var(--band-high)' : critical ? 'var(--line-strong)' : 'var(--line)',
         borderWidth: node.onPath ? 2 : 1,
-        opacity: 0.55 + node.confidence * 0.45,
+        // Solid once the player has checked it themselves, dashed while it is
+        // still somebody else's word. Confidence was already dimming the card,
+        // but confidence and having checked are different things — an
+        // inherited entry can arrive confident and wrong — and only one of
+        // them is the thing this game is about. The estate resolves from
+        // outlines into architecture as the year goes on.
+        borderStyle: node.verified ? 'solid' : 'dashed',
+        opacity: (node.verified ? 0.72 : 0.5) + node.confidence * 0.28,
       }}
     >
       <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
       <p className="text-[0.7rem] uppercase tracking-wider text-ink-faint">{nodeTypeLabel(node.type)}</p>
       <p className="text-sm font-medium leading-snug">{node.label}</p>
       {node.onPath && <p className="mt-1 text-[0.7rem] text-band-high">on a known attack path</p>}
-      {node.confidence < 0.6 && <p className="mt-1 text-[0.7rem] text-ink-faint">partly understood</p>}
+      {!node.verified ? (
+        <p className="mt-1 text-[0.7rem] text-ink-faint">taken on trust</p>
+      ) : (
+        node.confidence < 0.6 && <p className="mt-1 text-[0.7rem] text-ink-faint">partly understood</p>
+      )}
       <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
     </div>
   )
@@ -87,6 +100,7 @@ export default function OrgGraph({
           criticality: node.criticality,
           onPath: node.onKnownAttackPath,
           confidence: node.confidence,
+          verified: node.verified,
         } satisfies OrgNodeData,
         selected: node.id === selectedId,
       }

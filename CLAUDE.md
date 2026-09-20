@@ -162,6 +162,62 @@ simulated player actually did before concluding the game is at fault.
 
 ### Fixed
 
+- **The interface read as an enterprise dashboard rather than a command
+  centre.** A visual review graded the game 8.5/10 — structure strong, identity
+  and tension weak — and named five changes worth more than the other ten. All
+  five were real when checked against the source, and one was worse than
+  reported: the Briefing carried **16 bordered cards**, four of them the
+  standing bands, so nothing on the screen looked more important than anything
+  else.
+
+  **The Briefing leads with what wants you.** A masthead (`CISO BRIEF · WEEK 14`
+  / `NEXORA GROUP · INTERNAL`), then a headline counting what needs an answer,
+  then the four standing readings as one unboxed strip rather than four cards of
+  equal weight. Cards are now reserved for things that can be acted on. 16 → 14
+  and the four that went were the ones competing hardest.
+
+  **A collision is drawn as a race.** Two tracks on one scale: the business date
+  as a tick, because a commitment can be stated, and the covering milestone as a
+  **band**, because it is a projection off the rate the programme has actually
+  managed. The review asked for "41 days" on the second track; the file's own
+  rule is that a collision is "never a date the game cannot stand behind", and
+  that rule is right — staffing, blockers and the player's next move all shift
+  it. The band says *about here, and we are not sure*, the gap is shown as
+  distance, and the verdict is written in words beside it.
+
+  **Pattern emerging is no longer a card.** The moment something clicks was
+  arriving in the same bordered box as everything else. It is ruled off top and
+  bottom now, the proposition set in the display face, the evidence listed
+  under "what led here" — an analyst's inference rather than a notification.
+
+  **"Taken on trust" is visible, not just labelled.** An unverified system was a
+  solid row with a badge on it, which reads like every other row. Unverified
+  nodes are dashed and set back, in the list and in the graph, and resolve to
+  solid as the player checks them. The graph was already dimming by
+  *confidence*, which is a different thing — an inherited entry can arrive
+  confident and wrong — so it now draws `verified` as well. On day one the whole
+  estate is dashed, which is the truth and the point.
+
+  **The annual review is a report.** Rules top and bottom, the organisation and
+  "annual review" as a kicker, the headline centred in the display face with
+  room around it, and the eight dimensions as a strip you read down rather than
+  eight boxes competing for the eye.
+
+  A sixth, from further down the same list: **a risk leads with the scenario,
+  not the rating.** The badges sat above the title, so the most prominent thing
+  on a risk was its colour — which is how players learn to optimise the colour
+  instead of reading the risk.
+
+  Cost 1.2 kB gzip (228.1 → 229.3 of a 240 kB critical path). Both themes pass
+  axe on every screen. Rendering and looking caught two faults no test would
+  have: the `?` buttons made two of the four standing labels taller, so their
+  badges sat lower than the others, and the risk cards needed the order flipped
+  to make the point above. The other nine recommendations — screen-by-screen
+  visual dialects, milestone tracks on programmes, evidence-source headers,
+  incident-mode subordination — are not done and are not recorded as weaknesses:
+  they are a design direction, and the next one should start from a playtest
+  rather than from another reading.
+
 - **The year was eight paragraphs of prose and no picture.** The annual review
   described a campaign the player had just spent a year in without ever showing
   it to them, and it only existed on 31 December. `Your year, day by day` is the
