@@ -17,10 +17,12 @@ const chromiumLaunch = existsSync(LOCAL_CHROMIUM)
  */
 export default defineConfig({
   testDir: './tests/e2e',
-  // The gallery and the narrated playthrough are review aids, not checks: they
-  // assert nothing and add four minutes to a run. On demand only, with
-  // `pnpm screenshots` and `pnpm playthrough`.
-  testIgnore: ['**/screenshots.spec.ts', '**/playthrough.spec.ts'],
+  // The gallery, the narrated playthrough and the player guide's pictures are
+  // review aids rather than checks: they photograph the game instead of
+  // asserting anything about it, and each plays far enough into a year to add
+  // minutes to a run. On demand only, with `pnpm screenshots`,
+  // `pnpm playthrough` and `pnpm guide:shots`.
+  testIgnore: ['**/screenshots.spec.ts', '**/playthrough.spec.ts', '**/guide-shots.spec.ts'],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
