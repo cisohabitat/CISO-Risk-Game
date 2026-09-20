@@ -85,21 +85,25 @@ Measured, not yet fixed. Ranked.
   near maximum patience. "Less executive patience" is one of the four things
   high pressure is meant to keep, and it keeps it until about week seven.
 
-  Bounding it was tried and reverted. Drifting toward the profile value instead
-  of past it makes the dial real all year — high pressure then sits under the
-  threshold on 358 days of 364 — but because 0.45 falls between CISO's 0.50 and
-  high pressure's 0.38, only high pressure pays, permanently: over 40 seeds
-  objectives missed went 1.38 → 2.40 (+74%) while incidents fell 1.65 → 1.43.
+  Bounding it was tried and reverted, and the experiment was re-run against
+  the current build once the budget gate and the overload fix had moved the
+  baseline. Drifting toward the profile value instead of past it makes the
+  dial real all year — for an idle player the friction term then bites on
+  0 / 57 / 350 days of 364 across the ladder, against 0 / 0 / 84 today — but
+  because 0.45 falls between CISO's 0.50 and high pressure's 0.38, high
+  pressure pays almost permanently. Over 40 seeds of the ladder policy:
+
+  | | Guided | CISO | High Pressure |
+  |---|---|---|---|
+  | Objectives missed | 1.88 → 1.95 | 1.07 → 1.20 | 1.27 → **2.23 (+76%)** |
+  | Incidents a year | 0.50 → 0.42 | 1.02 → 0.93 | 1.57 → 1.60 |
+
   That buys difficulty by punishing the business rather than the security
   posture, which is not what the dial is for, and it needs the 0.45 threshold
-  revisited alongside it. Two coupled numbers and a 74% swing in one mode is a
-  playtest question, not a desk decision.
-
-  **Those two figures are now stale and the experiment needs re-running before
-  anyone acts on them.** They were taken before the budget gate, which moved
-  objectives missed on high pressure in the ladder from 1.50 to 1.30 — the
-  baseline the +74% was measured against has itself moved. The shape of the
-  finding stands; the size of it is unverified.
+  revisited alongside it. The first measurement said +74% against an older
+  baseline; the re-run says +76%, so the shape and the size both stand. Two
+  coupled numbers and a 76% swing in one mode is a playtest question, not a
+  desk decision.
 
 - **Five risk bands, two ever used.** `riskBand` cuts residual at 0.16 /
   0.34 / 0.55 / 0.75, and the simulation's residuals for Nexora's estate sit
