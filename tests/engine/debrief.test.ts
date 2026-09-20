@@ -212,14 +212,34 @@ describe('reviews', () => {
     expect(['developing', 'solid', 'strong']).toContain(band)
   })
 
-  it('tells apart deciding late, deciding some, and deciding nothing', () => {
-    // The defect this guards: prioritisation scored `weak` or `strong` and
-    // nothing between, because only letting more than half a year's decisions
-    // lapse could fail it, and the rationale half was constant.
+  it('does not call answering everything promptly a prioritised year', () => {
+    // What this used to assert: answering every decision promptly read
+    // `strong`. That is decision discipline, and the plan names the dimension
+    // prioritisation — whether scarce attention and money went to what
+    // mattered, which answering promptly does not establish. A player could
+    // respond to everything and invest the year in the wrong problems.
+    //
+    // It still has to tell the old styles apart, which is what the version
+    // before this one was written to guard.
     const index = testIndex()
 
-    const playStyle = (style: 'ignore' | 'lastMinute' | 'someLapse' | 'prompt') => {
+    const playStyle = (style: 'ignore' | 'someLapse' | 'prompt' | 'aims') => {
       const state = newGame(index, { seed: 'prio-1' })
+      const materiality = state.risks.initialMateriality!
+      // The programmes that treat the largest risks this seed produced.
+      const ranked = index.content.programmes
+        .map((programme) => ({
+          id: programme.id,
+          weight: Math.max(
+            0,
+            ...index.content.riskScenarios
+              .filter((scenario) => scenario.treatmentProgrammeIds.includes(programme.id))
+              .map((scenario) => materiality[scenario.id] ?? 0),
+          ),
+        }))
+        .sort((a, b) => b.weight - a.weight)
+      let started = 0
+
       for (let day = 0; day < 364; day += 1) {
         for (const decisionId of [...state.decisions.openIds]) {
           const runtime = state.decisions.decisions[decisionId]
@@ -228,13 +248,6 @@ describe('reviews', () => {
           if (style === 'ignore') continue
           // Ignores a third of the topics outright, so they genuinely lapse.
           if (style === 'someLapse' && def.id.length % 3 === 0) continue
-          if (
-            style === 'lastMinute' &&
-            runtime.deadlineDay !== undefined &&
-            state.currentDay < runtime.deadlineDay - 1
-          ) {
-            continue
-          }
           applyAction(state, index, {
             type: 'resolveDecision',
             decisionId,
@@ -242,15 +255,24 @@ describe('reviews', () => {
             rationaleTagIds: ['rat-within-tolerance'],
           })
         }
+        if (style === 'aims' && started < 2 && day > 5) {
+          const def = index.programme.get(ranked[started]!.id)
+          if (!def) throw new Error(`${ranked[started]!.id} is not a real programme id`)
+          if (applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok) {
+            started += 1
+          }
+        }
         runDays(state, index, 1)
       }
       return buildAnnualReview(state, index).dimensions.find((d) => d.id === 'prioritisation')!.band
     }
 
     expect(playStyle('ignore')).toBe('weak')
-    expect(playStyle('someLapse')).toBe('developing')
-    expect(playStyle('lastMinute')).toBe('solid')
-    expect(playStyle('prompt')).toBe('strong')
+    expect(playStyle('someLapse')).toBe('weak')
+    // Answered everything, committed to nothing: the year set the agenda.
+    expect(playStyle('prompt')).toBe('developing')
+    // Same decisions, plus building against the largest risks in this world.
+    expect(playStyle('aims')).toBe('strong')
   })
 
   it('reckons with the reasons the player gave, not just that they gave one', () => {

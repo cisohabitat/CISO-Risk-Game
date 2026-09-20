@@ -16,6 +16,7 @@ import type {
 import { clamp01, money } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
+import { effortAllocation } from './prioritisation'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { compareBands, riskBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
@@ -309,22 +310,34 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // lapses too, and they carry no rationale by definition, so counting against
   // it charged a player twice for the same lapse.
   const withRationale = resolved.filter((d) => d.rationaleTagIds.length > 0).length
-  const inGoodTime = resolved.filter((d) => {
-    if (d.deadlineDay === undefined) return true
-    const window = d.deadlineDay - d.createdDay
-    if (window <= 0) return false
-    // Room to spare means a third of the window still left when it was taken.
-    return (d.deadlineDay - (d.resolvedDay ?? d.deadlineDay)) / window >= 0.33
-  }).length
+  // How much of the window a player used is deliberately not scored.
+  //
+  // The old rule wanted a third of it still unspent and charged everything
+  // else as "late", which marks a player down for the thing the game keeps
+  // asking them to do: find something out before committing. Softening it to
+  // catch only the wire then made the term dead — measured over 20 campaigns
+  // of a player who waits for the deadline every time, a decision resolved on
+  // or after its deadline day happened **0.0 times a campaign in 0 of 20**,
+  // because the deadline lapses the decision before it can be answered. There
+  // is no "late" in this game: you answer, or the organisation answers for
+  // you, and `decidedTerm` below already says which.
   const put = resolved.length + lapsed
   // Composed rather than averaged, because these compound: a weighted sum lets
   // a perfect rationale record carry a player who let four decisions in ten go
   // by default. Letting the organisation choose for you is the failure this
   // dimension exists to name, so it scales everything else.
   const decidedTerm = Math.max(0, 1 - 1.6 * (put > 0 ? lapsed / put : 1))
-  const timelyTerm = resolved.length > 0 ? inGoodTime / resolved.length : 0
   const recordedTerm = resolved.length > 0 ? withRationale / resolved.length : 0
-  const prioritisation = clamp01(decidedTerm * (0.5 + 0.5 * timelyTerm) * (0.8 + 0.2 * recordedTerm))
+  // The dimension the plan actually names. Whether attention and money went to
+  // what mattered, which none of the terms above establish.
+  const effort = effortAllocation(state, index)
+  // Bent so the middle of the range does not read as excellence. Passed
+  // through flat, a player who commissioned all eighteen enquiries without
+  // choosing between them landed on the `strong` boundary and fell either side
+  // of it by seed — an undirected year reading as an exemplary one on half the
+  // runs, and unreadably on the rest. The top band is for having aimed.
+  const aim = Math.pow(effort.allocation, 1.4)
+  const prioritisation = clamp01(decidedTerm * (0.32 + 0.68 * aim) * (0.9 + 0.1 * recordedTerm))
   dimensions.push({
     id: 'prioritisation',
     label: 'Prioritisation',
@@ -335,28 +348,39 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // and the player reads the sentence.
     narrative: (() => {
       const lapses = lapsed === 0 ? '' : ` ${lapsed} lapsed and the organisation chose ${lapsed === 1 ? 'that one' : 'those'} for you.`
-      const late = resolved.length - inGoodTime
+      const biggest = effort.biggest?.title
       switch (band(prioritisation)) {
         case 'strong':
-          return lapsed === 0 && late === 0
-            ? 'You made your choices deliberately and with room to spare, and recorded why.'
-            : `You answered what was put to you in good time and recorded why.${lapses}`
+          return `What you committed to was what mattered${biggest ? `, ${biggest} among it` : ''}.${lapses}`
         case 'solid':
-          return late > 0
-            ? `You answered what was put to you, though ${late} of ${resolved.length} went to the wire.${lapses}`
-            : `You answered what was put to you and recorded why.${lapses}`
+          return effort.missed
+            ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it.${lapses}`
+            : `Most of your effort went where it counted.${lapses}`
         case 'developing':
-          return `Too much went to the wire, and${lapsed === 0 ? ' some of it was decided in a hurry.' : lapses}`
+          return effort.commitments.length === 0
+            ? `You answered what was put in front of you and started nothing of your own, so the year set your agenda.${lapses}`
+            : `You committed to real work, but not to the largest things in front of you${effort.missed ? ` — ${effort.missed.title} went untouched` : ''}.${lapses}`
         default:
-          return lapsed === 0
-            ? 'You left your choices until the last moment all year.'
-            : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`
+          return lapsed > 0
+            ? `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and the organisation chose for you.`
+            : 'The year was spent on what arrived rather than on what mattered most.'
       }
     })(),
-    evidence: [
-      `${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`,
-      `${inGoodTime} of ${resolved.length} were taken while there was still time to act on them`,
-    ],
+    evidence: (() => {
+      const lines = [
+        effort.commitments.length === 0
+          ? 'You started no programme and commissioned no enquiry aimed at a risk'
+          : `${effort.commitments.length} commitment${effort.commitments.length === 1 ? '' : 's'} of budget and attention, aimed at ${new Set(effort.commitments.map((c) => c.scenarioId)).size} of the risks in front of you`,
+        `${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`,
+        lapsed === 0
+          ? `you answered all ${resolved.length} of the decisions put to you`
+          : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and were taken by default`,
+      ]
+      // Named, because "you prioritised badly" is not a finding a player can do
+      // anything with. The biggest thing nobody went near is.
+      if (effort.missed) lines.push(`${effort.missed.title} was among the largest risks you inherited, and nothing you did went near it`)
+      return lines
+    })(),
   })
 
   // 3. Resilience.

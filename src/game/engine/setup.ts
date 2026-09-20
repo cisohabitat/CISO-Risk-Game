@@ -13,6 +13,7 @@ import type {
 import { CYBER_FUNCTIONS, SAVE_SCHEMA_VERSION, clamp01 } from '../types'
 import { deriveRng } from './rng'
 import { recomputeUnderstanding } from '../knowledge/discovery'
+import { assessScenario } from '../risk/calculations'
 
 /**
  * Everything a difficulty mode changes, in one place (plan §44).
@@ -354,6 +355,16 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
       escalatedToBoard: false,
       notes: ['Inherited from the previous risk register. Unverified.'],
     }
+  }
+
+  // Snapshot the world as handed over, for the prioritisation dimension. Taken
+  // after everything else is built, because it reads the real node exposure,
+  // control effectiveness and threat pressure this seed produced — so the
+  // biggest risks differ between campaigns rather than being a fixed answer a
+  // player could learn once.
+  state.risks.initialMateriality = {}
+  for (const def of content.riskScenarios) {
+    state.risks.initialMateriality[def.id] = assessScenario(state, index, def).residual
   }
 
   recomputeUnderstanding(state, index)

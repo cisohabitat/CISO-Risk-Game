@@ -259,7 +259,7 @@ dimensions, each with a band and a sentence explaining it:
 | Dimension | What it asks |
 |---|---|
 | Risk understanding | Did you build a picture, or work someone else's? |
-| Prioritisation | Did you decide, in time, and say why? |
+| Prioritisation | Did your budget and attention go to what mattered most? |
 | Resilience | When tested, what did it cost? |
 | Cyber programme execution | Did you finish what you started? |
 | Business enablement | Did the business get its year? |
@@ -288,6 +288,9 @@ If you want a plan for your first playthrough:
    is.
 4. **Pick one programme and finish it.** Two if the budget stretches. Starting
    four and finishing none is a worse year than starting one and completing it.
+   Which one you pick is scored: the review asks whether your budget and
+   attention went to the largest risks you inherited, and answering every
+   decision promptly is not a substitute for having aimed at something.
 5. **Do all three board papers.** They cost 2 attention each and they are how
    the board comes to trust you. Skipping them is the most common way an
    otherwise good year scores badly.

@@ -149,30 +149,85 @@ Measured, not yet fixed. Ranked.
   and the review that proposed it was explicit that it had not played the game.
   The trigger remains a player, not a reading.
 
-- **Prioritisation measures decision discipline, not prioritisation.** Raised
-  by the same source review and left alone deliberately, because the honest fix
-  is not the cheap one. The dimension composes three things — whether the
-  player decided at all, whether they decided in time, and whether they
-  recorded why — none of which establish that scarce attention and money went to
-  the things that mattered. A player could answer every prompt promptly while
-  investing in the wrong problems and still read `strong`.
-
-  Renaming it to "decision discipline" would describe it accurately and is a
-  one-line change, but `docs/IMPLEMENTATION_PLAN.md` names *prioritisation* in
-  the review's eight dimensions, so the implementation is what diverges from the
-  spec, not the label. Making it measure the real thing means scoring spend
-  against materiality the hidden graph already knows — which is a new scoring
-  system on a frozen dimension, overlapping `unexaminedMaterial` in the
-  blind-spots dimension, and needs its distribution measured across play styles
-  before anyone trusts it. That is a decision to take deliberately rather than
-  in passing.
-
 Add measured findings here rather than suspicions —
 each entry below was found with one of the harnesses above and closed the same
 way. Note how often the finding turned out to be in the harness: check what the
 simulated player actually did before concluding the game is at fault.
 
 ### Fixed
+
+- **Prioritisation measured decision discipline, not prioritisation.** The
+  dimension scored whether the player decided at all, decided in time, and
+  recorded why — none of which establish that scarce attention and money went
+  to what mattered. Measured: a player who answered every decision promptly and
+  committed to **nothing of their own read `strong` on 20 of 20 seeds**. That
+  is the gap the whole review was pointed at — succeed by judgement, or by
+  learning the assessment rules — and it was the last one open.
+
+  It now reads where the effort went. `src/game/debrief/prioritisation.ts`
+  takes the commitments that cost budget, attention and the team's capacity —
+  programmes started, enquiries commissioned — and scores how close to the
+  biggest risk in the organisation the average one was.
+
+  Four things it deliberately is not. **Not coverage**, which is the
+  blind-spots dimension: a player who commits to one thing and picks the right
+  one scores full marks, because "pick one programme and finish it" is what the
+  player guide tells them to do. **Not judged against the year-end picture**,
+  because a programme that worked lowers its scenario's residual and scoring
+  the end state reads success as having worked on something that did not
+  matter — the same trap that once emptied the board pack for the player who
+  had done the most. `risks.initialMateriality` snapshots the true residual of
+  every authored scenario on day one, per seed, so the biggest risks differ
+  between campaigns rather than being a fixed answer to learn. **Not judged
+  against what nothing could reach.** And **not charged against work that was
+  not about a risk** — a team review is real effort and addresses no scenario,
+  so it is ignored rather than counted as a bad aim.
+
+  Measured over 20 campaigns per style on CISO:
+
+  | | allocation | band |
+  |---|---|---|
+  | Did nothing | 0.00 | weak 20/20 |
+  | Answered everything, built nothing | 0.00 | **developing 20/20** |
+  | Built the two least material programmes | 0.54 | solid 19/20 |
+  | Commissioned all eighteen enquiries | 0.64 | solid 20/20 |
+  | Built the two most material programmes | 1.00 | strong 20/20 |
+
+  The declared philosophy from `pnpm ladder` — investigate selectively, build
+  one programme at a time, answer everything, take every board paper — reads
+  `strong` on 19-20 of 20 across all three modes, so the dimension is winnable
+  by playing well rather than by playing to it. The simulation is untouched:
+  soak 1.20 / 28% / 3% and the ladder identical, because this reads state at
+  year end plus one snapshot at setup.
+
+  **Three attempts were wrong before this one, and measuring caught each.**
+  Matching an enquiry to a scenario through whole attack paths counts a mean of
+  **6.0 of the 14 scenarios per enquiry, and up to all 14** — the paths cross
+  the estate — so three enquiries scored a perfect year. The raw ratio never
+  approaches zero even for the worst available choices, so passing it through
+  unshaped put a player who deliberately chased the smallest risks in the top
+  band on **19 of 20 seeds**; it is normalised against the worst set of choices
+  the campaign itself offered. And passed through flat, an undirected year sat
+  exactly on the `strong` boundary and fell either side of it by seed, which
+  reads as noise to a player.
+
+  **The timeliness term was dead and is gone.** The old rule wanted a third of
+  the decision window still unspent and charged everything else as late, which
+  marks a player down for the thing the game keeps asking them to do — find
+  something out before committing. Softening it to catch only the wire made it
+  inert: measured over 20 campaigns of a player who waits for the deadline every
+  time, a decision resolved on or after its deadline day happened **0.0 times a
+  campaign in 0 of 20**, because the deadline lapses the decision before it can
+  be answered. There is no "late" in this game — you answer or the organisation
+  answers for you — and `decidedTerm` already says which. Removed rather than
+  shipped as a row that describes nothing, which is the `noiseMultiplier`
+  lesson.
+
+  A save written before the snapshot existed cannot have its first day
+  recovered, so it is assessed from where it stands — approximate, and much
+  closer than scoring a year of good choices at zero for a missing yardstick.
+  Mutation-checked three ways; the test that pinned the old contract
+  (`prompt` → `strong`) was rewritten rather than made to pass.
 
 - **Five things found by a source review of the assessment rules, and what
   measuring them actually showed.** A reviewer read the repository rather than

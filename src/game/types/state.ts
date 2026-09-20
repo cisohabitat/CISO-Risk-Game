@@ -200,6 +200,21 @@ export interface RiskState {
   scenarios: Record<string, RiskScenarioRuntime>
   hypothesisCounter: number
   /**
+   * True residual of every authored scenario on day one, before the player
+   * touched anything — the world as it was handed over.
+   *
+   * Prioritisation is judged against this rather than against the year-end
+   * picture, because a programme that worked pushes its scenario's residual
+   * down, and scoring the end state would read that success as having spent
+   * the year on something immaterial. It is the same trap that once emptied
+   * the board pack for the player who had done the most.
+   *
+   * Covers all authored scenarios, not the ~45% the inherited register
+   * happens to mention: finding the material ones nobody wrote down is the
+   * job. Optional so saves written before it existed load without migration.
+   */
+  initialMateriality?: Record<string, number>
+  /**
    * Patterns the game offered and the player judged not worth pursuing. Kept so
    * a dismissed suggestion stays dismissed; optional so saves written before it
    * existed load without migration.
