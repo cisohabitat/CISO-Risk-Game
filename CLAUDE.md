@@ -52,6 +52,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm playthrough` | One campaign played end to end, photographed as it goes |
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
 | `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
+| `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
 None of them answer whether the game lands: that needs people, and
@@ -715,6 +716,14 @@ product principles, the core loop, the content budget, the difficulty design,
 the release gate and the definition of done. Section numbers referenced in code
 comments (plan §13, plan §39, and so on) point into it. Read it before changing
 a system, and update it if the architecture genuinely moves.
+
+`docs/PLAYER_GUIDE.md` is written for somebody who has never played and knows
+nothing about the subject: what the screens are, what the two scarce resources
+are, and what a sane first year looks like. Its screenshots come from the
+running game via `pnpm guide:shots`, so a screen that changes can be
+re-photographed rather than left to go quietly stale. Hand it to a playtester
+only *after* their session — whether the game teaches itself is one of the
+things under test.
 
 Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring),
 `docs/HOSTING.md` (the release gate) and `docs/PLAYTEST.md` (the question the

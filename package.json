@@ -27,7 +27,8 @@
     "size": "tsx scripts/size-budget.ts",
     "playthrough": "playwright test --config playwright.playthrough.config.ts --project=desktop-chromium",
     "play": "tsx scripts/play.ts",
-    "ladder": "tsx scripts/ladder.ts"
+    "ladder": "tsx scripts/ladder.ts",
+    "guide:shots": "playwright test --config playwright.guide.config.ts --project=desktop-chromium"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",
