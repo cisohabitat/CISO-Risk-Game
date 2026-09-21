@@ -1,5 +1,33 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign } from './helpers'
+
+/**
+ * What is actually in the save store, rather than what the start screen shows.
+ * The list groups by campaign defensively, so it stays right even when storage
+ * is not; only reading the records pins the storage rule itself.
+ */
+async function savedRecords(page: Page): Promise<{ key: string; gameId: string; day: number }[]> {
+  return page.evaluate(async () => {
+    const db: IDBDatabase = await new Promise((resolve, reject) => {
+      const open = indexedDB.open('ciso-first-year')
+      open.onsuccess = () => resolve(open.result)
+      open.onerror = () => reject(open.error)
+    })
+    const all: { slot: string; state?: { gameId?: string; currentDay?: number } }[] = await new Promise(
+      (resolve, reject) => {
+        const request = db.transaction('saves', 'readonly').objectStore('saves').getAll()
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      },
+    )
+    db.close()
+    return all.map((record) => ({
+      key: record.slot,
+      gameId: record.state?.gameId ?? '',
+      day: record.state?.currentDay ?? -1,
+    }))
+  })
+}
 
 test.describe('a first year at Nexora', () => {
   test('a new player reaches a real decision within the first minute', async ({ page }) => {
@@ -98,16 +126,109 @@ test.describe('a first year at Nexora', () => {
 
     await page.reload()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    // Resume the manual save specifically. The game also autosaves on every
-    // action, so resuming "whatever is newest" passed even when the Save
-    // campaign button wrote nothing at all — the autosave answered for it.
-    const resume = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'manual' }).first()
-    await expect(resume, 'no manual save appeared to resume from').toBeVisible()
+    // A campaign is one save, so the badge is what proves the Save campaign
+    // button wrote anything: without it the autosave would answer for a button
+    // that did nothing at all.
+    const resume = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-save' }).first()
+    await expect(resume, 'no save appeared to resume from').toBeVisible()
+    await expect(resume, 'the save was not marked as one the player asked for').toContainText('Saved by you')
     await resume.click()
 
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
     const dayAfter = (await page.getByRole('banner').innerText()).split('·')[0]?.trim()
     expect(dayAfter).toBe(dayBefore)
+  })
+
+  test('a campaign is one save, however long it is played', async ({ page }) => {
+    // Rolling autosave slots put one campaign on the start screen three times,
+    // a row per recent day, and interleaved a second campaign with the first.
+    // Nothing said those rows were the same year, so they read as several games.
+    const rows = page.getByRole('button', { name: /Day \d+/ })
+    const play = async (turns: number) => {
+      for (let i = 0; i < turns; i += 1) {
+        const got = page.getByRole('button', { name: 'Got it' }).first()
+        if (await got.isVisible().catch(() => false)) await got.click()
+        await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+      }
+    }
+
+    await startCampaign(page, 'e2e-one')
+    await play(4)
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await expect(rows, 'one campaign is listed more than once').toHaveCount(1)
+    await expect(rows.first()).toContainText('e2e-one')
+    const afterOne = await savedRecords(page)
+    expect(afterOne.length, `one campaign wrote ${afterOne.length} saves: ${afterOne.map((r) => r.key).join(', ')}`).toBe(1)
+
+    // A second campaign is a second row, and does not disturb the first.
+    await startCampaign(page, 'e2e-two')
+    await play(2)
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await expect(rows).toHaveCount(2)
+    await expect(rows.filter({ hasText: 'e2e-one' })).toHaveCount(1)
+    await expect(rows.filter({ hasText: 'e2e-two' })).toHaveCount(1)
+    const afterTwo = await savedRecords(page)
+    expect(afterTwo.length, 'two campaigns are not two saves').toBe(2)
+    expect(new Set(afterTwo.map((record) => record.gameId)).size, 'the two saves are of the same campaign').toBe(2)
+  })
+
+  test('saves from the rolling-slot era collapse to one per campaign', async ({ page }) => {
+    // The upgrade path for a player who already has three autosaves of the
+    // same year. Their campaign is rewritten as it was stored then, and the
+    // newest of the three has to survive as the one save.
+    await startCampaign(page, 'e2e-legacy')
+    await page.getByRole('button', { name: 'Save campaign' }).click()
+    await expect(page.getByText('Campaign saved.')).toBeVisible()
+
+    const days = await page.evaluate(async () => {
+      const db: IDBDatabase = await new Promise((resolve, reject) => {
+        const open = indexedDB.open('ciso-first-year')
+        open.onsuccess = () => resolve(open.result)
+        open.onerror = () => reject(open.error)
+      })
+      const read = db.transaction('saves', 'readonly').objectStore('saves')
+      const all: { slot: string; savedAtIso: string; state: { currentDay: number } }[] = await new Promise(
+        (resolve, reject) => {
+          const request = read.getAll()
+          request.onsuccess = () => resolve(request.result)
+          request.onerror = () => reject(request.error)
+        },
+      )
+      const record = all[0]!
+      const store = db.transaction('saves', 'readwrite').objectStore('saves')
+      store.delete(record.slot)
+      // Oldest first, as the rolling slots held them: auto-0 was the newest.
+      const written = [30, 20, 10].map((day, index) => {
+        const copy = {
+          ...record,
+          slot: `auto-${index}`,
+          savedAtIso: new Date(Date.parse(record.savedAtIso) - index * 60_000).toISOString(),
+          state: { ...record.state, currentDay: day },
+        }
+        store.put(copy)
+        return day
+      })
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      db.close()
+      return written
+    })
+    expect(days).toEqual([30, 20, 10])
+
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    const rows = page.getByRole('button', { name: /Day \d+/ })
+    await expect(rows, 'the three rolling autosaves are still three rows').toHaveCount(1)
+    await expect(rows.first(), 'the newest of the three did not survive').toContainText('Day 30')
+    const collapsed = await savedRecords(page)
+    expect(collapsed.length, 'the duplicate rolling saves are still in storage').toBe(1)
+    expect(collapsed[0]!.day, 'the surviving save is not the newest of the three').toBe(30)
+    expect(collapsed[0]!.key, 'the surviving save is not keyed by its campaign').toMatch(/^campaign:/)
+
+    // And the survivor still loads.
+    await rows.first().click()
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
   })
 
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {

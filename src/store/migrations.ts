@@ -10,9 +10,12 @@ import type { GameState } from '@/game/types'
 import { SAVE_SCHEMA_VERSION } from '@/game/types'
 
 export interface StoredSave {
-  slot: 'auto-0' | 'auto-1' | 'auto-2' | 'manual' | 'import'
+  /** The object store's key: one per campaign. See `campaignKey`. */
+  slot: string
   schemaVersion: number
   savedAtIso: string
+  /** True where the player asked for this save rather than the game taking it. */
+  savedByPlayer: boolean
   campaignTitle: string
   state: GameState
 }
@@ -21,9 +24,12 @@ export class SaveMigrationError extends Error {}
 
 /** Deliberately loose: the shape of GameState is checked by the engine's own invariants. */
 const storedSaveSchema = z.object({
-  slot: z.enum(['auto-0', 'auto-1', 'auto-2', 'manual', 'import']).default('import'),
+  // A file written before campaign keys carries a slot name here; it is
+  // rewritten under the campaign's own key when the save is imported.
+  slot: z.string().default('import'),
   schemaVersion: z.number().int().positive(),
   savedAtIso: z.string().default(() => new Date().toISOString()),
+  savedByPlayer: z.boolean().default(false),
   campaignTitle: z.string().default('CISO: First Year'),
   state: z.looseObject({
     gameId: z.string(),
@@ -101,6 +107,7 @@ export function migrateSave(raw: unknown): StoredSave {
     slot: record.slot,
     schemaVersion: SAVE_SCHEMA_VERSION,
     savedAtIso: record.savedAtIso,
+    savedByPlayer: record.savedByPlayer,
     campaignTitle: record.campaignTitle,
     state: state as unknown as GameState,
   }

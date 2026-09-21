@@ -10,7 +10,7 @@ import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orche
 import { applyAction, newGame } from '@/game/engine/orchestrator'
 import { loadCampaign } from '@/lib/content/loader'
 import { buildAnnualReview } from '@/game/debrief/review'
-import { clearSaves, deleteCampaign, listSaves, readSave, type SaveSlot, type SaveSummary, writeAutosave, writeSave } from './persistence'
+import { clearSaves, deleteCampaign, listSaves, readSave, type SaveKey, type SaveSummary, writeCampaign } from './persistence'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -43,7 +43,7 @@ interface GameStore {
   busy: boolean
 
   startNewGame: (seed: string, difficulty: Difficulty) => Promise<void>
-  loadGame: (slot: SaveSlot) => Promise<boolean>
+  loadGame: (key: SaveKey) => Promise<boolean>
   loadImported: (state: GameState) => void
   refreshSaves: () => Promise<void>
   saveManual: () => Promise<void>
@@ -102,16 +102,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
     })
     set({ state, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined } })
     try {
-      await writeAutosave(state, index.content.meta.title)
+      await writeCampaign(state, index.content.meta.title)
       await get().refreshSaves()
     } catch {
       set((store) => ({ ui: { ...store.ui, storageWarning: 'Progress cannot be saved on this device.' } }))
     }
   },
 
-  async loadGame(slot) {
+  async loadGame(key) {
     try {
-      const state = await readSave(slot)
+      const state = await readSave(key)
       if (!state) return false
       set({ state, ui: { ...get().ui, screen: 'home' } })
       return true
@@ -123,7 +123,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   loadImported(state) {
     set({ state, ui: { ...get().ui, screen: 'home' } })
-    void writeSave('import', state, get().index.content.meta.title)
+    void writeCampaign(state, get().index.content.meta.title, { savedByPlayer: true })
     void get().refreshSaves()
   },
 
@@ -159,7 +159,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   async saveManual() {
     const { state, index } = get()
     if (!state) return
-    await writeSave('manual', state, index.content.meta.title)
+    await writeCampaign(state, index.content.meta.title, { savedByPlayer: true })
     await get().refreshSaves()
     get().pushToast('Campaign saved.', 'success')
   },
@@ -182,7 +182,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (result.message) get().pushToast(result.message, 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
-      void writeAutosave(next, index.content.meta.title).then(() => get().refreshSaves())
+      void writeCampaign(next, index.content.meta.title).then(() => get().refreshSaves())
     }
     return result
   },
@@ -222,6 +222,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       draft.reviews.annual = buildAnnualReview(draft, index)
     })
     set({ state: next, ui: { ...get().ui, screen: 'debrief' } })
-    void writeAutosave(next, index.content.meta.title)
+    void writeCampaign(next, index.content.meta.title)
   },
 }))

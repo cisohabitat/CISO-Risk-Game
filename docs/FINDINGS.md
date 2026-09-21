@@ -18,6 +18,45 @@ fault.
 
 ### Fixed
 
+- **One campaign appeared on the start screen as three or four saves.**
+  Reported by the owner: "why i get multiple saves". Measured on a fresh
+  browser profile before changing anything. Playing one campaign for four
+  actions listed three rows, days 28, 22 and 18, all the same seed and all
+  badged `Autosave`. Starting a second campaign and taking one action listed
+  the new campaign twice and the old one once, because the rolling slots
+  shifted rather than cleared.
+
+  The cause was the save layout: three rolling autosave slots plus a manual
+  and an import slot, each listed as its own row. Nothing in the interface
+  said three of those rows were the same year, so they read as separate
+  games. The history was only reachable by picking an older row out of that
+  same list, which is the thing that was confusing.
+
+  A campaign is now the storage key, so every write replaces that campaign's
+  one save. Existing players are not left with the old duplicates: the first
+  time the database opens, pre-campaign-key records are folded to the newest
+  per campaign and the rest are deleted, which is idempotent and swallows its
+  own failure so a bad collapse cannot stop the game opening. The listing
+  also groups by campaign rather than trusting the key, so an interrupted
+  collapse still shows one row. Because the manual save and the autosave are
+  now the same write, the record carries whether the player asked for it, and
+  the row is badged `Saved by you` when they did.
+
+  Tests: a campaign played for four actions is one row and one record, and a
+  second campaign makes two rows with two distinct campaign ids; three
+  rolling-slot saves seeded into the database as the old build stored them
+  collapse on reload to the newest one, keyed by campaign, and it still
+  loads; the resume test asserts the badge, which is what now proves the
+  Save campaign button writes anything at all.
+
+  **The first mutation check failed to fail, and that was the finding.**
+  Disabling the collapse and keying saves per day both left the start screen
+  showing one row, because the listing groups by campaign defensively. The
+  tests were asserting the list and could not see storage. They now read the
+  records out of IndexedDB directly, and the same two mutations fail on the
+  stored count. Defence in depth in the code is a reason to test both layers,
+  not a reason to test the outer one.
+
 - **Dialogs ran off the bottom of a phone screen with no way to scroll
   them.** Reported by the owner from a phone. Every pop-up in the game is
   the one `Dialog` primitive, whose panel was capped at `92dvh` with a

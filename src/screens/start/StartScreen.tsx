@@ -86,10 +86,10 @@ export function StartScreen() {
               <h2 className="font-medium">Continue</h2>
               <ul className="mt-3 space-y-2">
                 {saves.slice(0, 4).map((save) => (
-                  <li key={save.slot} className="flex items-stretch gap-2">
+                  <li key={save.key} className="flex items-stretch gap-2">
                     <button
                       type="button"
-                      onClick={() => void loadGame(save.slot)}
+                      onClick={() => void loadGame(save.key)}
                       className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left hover:border-line-strong"
                     >
                       <span>
@@ -100,7 +100,7 @@ export function StartScreen() {
                           seed {save.seed} · saved {new Date(save.savedAtIso).toLocaleString()}
                         </span>
                       </span>
-                      <Badge tone="neutral" glyph={false}>{save.slot.startsWith('auto') ? 'Autosave' : save.slot}</Badge>
+                      {save.savedByPlayer && <Badge tone="neutral" glyph={false}>Saved by you</Badge>}
                     </button>
                     <Button
                       variant="quiet"
