@@ -6,6 +6,7 @@
 import { Button } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { LESSONS, lessonContext } from './lessons'
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 
 export function Onboarding() {
   const state = useGameStore((store) => store.state)
@@ -17,8 +18,10 @@ export function Onboarding() {
   if (!state || state.finished) return null
 
   const context = lessonContext(state)
+  const coached = DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching
   const lesson = LESSONS.find(
-    (candidate) => !state.tutorial.dismissed.includes(candidate.id) && candidate.when(context),
+    (candidate) =>
+      !state.tutorial.dismissed.includes(candidate.id) && (coached || !candidate.coachedOnly) && candidate.when(context),
   )
   if (!lesson) return null
 

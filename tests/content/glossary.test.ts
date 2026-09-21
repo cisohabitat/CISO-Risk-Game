@@ -38,6 +38,7 @@ const TERMS: [RegExp, string][] = [
   [/cardholder|\bPCI\b|acquirer/i, 'gls-cardholder'],
   [/extranet|partner portal/i, 'gls-extranet'],
   [/managed service provider|\bMSP\b/i, 'gls-msp'],
+  [/identity platform|identity provider/i, 'gls-identity-platform'],
 ]
 
 function everyString(value: unknown, out: string[] = []): string[] {

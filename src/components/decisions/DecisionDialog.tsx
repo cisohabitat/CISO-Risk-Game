@@ -141,7 +141,8 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
             Why? {decision.requiresRationale ? '' : '(optional)'}
           </p>
           <p className="mb-2 text-sm text-ink-muted">
-            Your reasoning is recorded and will be read back to you in the annual review.
+            Pick the reasons that actually apply. They are the governance basis of the decision, not a score, and the
+            annual review reads them back against what happened.
           </p>
           <div className="flex flex-wrap gap-2">
             {rationaleTags.map((tag) => {

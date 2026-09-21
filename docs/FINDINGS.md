@@ -18,6 +18,60 @@ fault.
 
 ### Fixed
 
+- **Guided mode stopped guiding at the enquiry list.** An opening playtest
+  across three personas (`docs/playtests/2026-09-21-ai-three-personas-opening.md`,
+  an AI playing an experienced CISO, a newcomer and someone with no
+  security knowledge, three fresh seeds) agreed on the premise and the
+  opening decisions and disagreed with the Investigate screen: seventeen
+  enquiries in one unprioritised list, with nothing connecting a risk card
+  to an enquiry, so the newcomer's next action was word-matching. Verified
+  in the source: `InvestigationPanel` rendered `content.investigations` in
+  file order and no selector related an enquiry to a scenario.
+
+  Every enquiry now carries a `theme` from a five-entry union — what the
+  business cannot lose, how an attacker would get in, identity and supplier
+  access, recovery and response, team and governance — and the list is
+  grouped under those questions; the schema refuses an enquiry without
+  one. A selector, `enquirySpeaksTo`, names the player's own open risks an
+  enquiry bears on: those whose trigger systems it would reveal, or whose
+  attack path steps use a control it would assess. Only risks on the
+  player's list are named, so nothing hidden is handed over; the card names
+  three in the order the player's list ranks them and counts the rest, so
+  a broad review does not become a catalogue of its own. Where the profile
+  coaches decisions, the enquiry that speaks to the top concern is badged.
+
+  **The point of confusion now opens the glossary.** The newcomer called
+  the glossary comprehensive and unusually good, and long, passive and not
+  surfaced where the confusion was. A `Terms` component finds the
+  subject's words in a risk's title and statement and renders them as chips
+  that open the glossary at the entry, on the briefing's top concerns and
+  in the risk inspector. "Identity platform", on the first risk card every
+  campaign opens with, had no entry; it has one, and the glossary test
+  holds it to being used.
+
+  **Guided mode sustains its guidance.** A first-quarter aim opens a coached
+  year: check one service the business cannot lose, one route an attacker
+  would take, one assumption about recovery, before the Q1 board paper. It
+  is advice, not a mechanic, so lessons can now be `coachedOnly` and the
+  CISO and high pressure modes never see it. And the rationale list says
+  what it is for: the governance basis of the decision, read back at the
+  annual review, not a score.
+
+  Tests: every enquiry has a theme; `enquirySpeaksTo` names only listed
+  risks, names the recovery risk to the recovery test once it is open, and
+  names them in the list's order; the chips find "Privileged access",
+  "Managed service provider" and "Identity platform" in a sentence and open
+  the glossary at the entry; the aim opens a guided year and not a CISO
+  one. Each was checked by removing the behaviour and watching the test
+  fail.
+
+  **Left.** A one-line "what this will reveal" preview after the opening
+  choice would state the reveal before it happens, which is the hidden
+  truth rule; the undiscovered count on the briefing already changes. A
+  post-choice recap is the came-back block, which arrives when the result
+  does. Hiding rationale reasons behind "More reasons" is a layout question
+  for a person.
+
 - **The reconstruction asserted what the player's choices had changed.** The
   third observed playthrough (`docs/playtests/2026-09-21-ai-fresh-seed.md`,
   a fresh seed, an AI again) enforced the retention policy on day 103 and

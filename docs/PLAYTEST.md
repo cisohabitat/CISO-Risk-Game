@@ -152,6 +152,13 @@ Put them in front of players rather than deciding from a desk.
   questions — whether generic enquiry results need a link to their evidence,
   and whether a human can tell current capacity from sustainable health
   from the note alone — are the ones to put to a person.
+- `playtests/2026-09-21-ai-three-personas-opening.md`: the same AI playing
+  three people — an experienced CISO, a newcomer, and someone with no
+  security knowledge — through the opening on three fresh seeds. Its finding
+  was that guided mode stopped guiding at the enquiry list; the grouping,
+  the "speaks to" line, the word chips and the first-quarter aim came from
+  it and are closed in `FINDINGS.md`. Whether a *person* with no background
+  can now get from a risk card to an enquiry is the question it leaves.
 - `playtests/2026-09-21-ai-fresh-seed.md`: the same AI on a fresh seed,
   `nexora-30756`. The Q3 account matched the review this time; what it found
   was the reconstruction asserting things the player's choices had changed,

@@ -29,6 +29,8 @@ export interface Lesson {
   title: string
   body: string
   when: (context: LessonContext) => boolean
+  /** Shown only where the profile coaches decisions: an aim, not a mechanic. */
+  coachedOnly?: boolean
 }
 
 export function lessonContext(state: GameState): LessonContext {
@@ -50,6 +52,14 @@ export function lessonContext(state: GameState): LessonContext {
  * the one shown, so what is happening right now comes before standing advice.
  */
 export const LESSONS: Lesson[] = [
+  {
+    id: 'lesson-first-quarter',
+    teaches: 'investigation',
+    title: 'A first quarter, in three questions',
+    body: 'Before the Q1 board paper, try to check three things yourself: one service the business cannot lose, one route an attacker would take, and one assumption about recovery. The enquiries are grouped by those questions, and each says which of your risks it speaks to.',
+    when: (context) => context.day < 91 && context.investigations === 0,
+    coachedOnly: true,
+  },
   {
     id: 'lesson-incident',
     teaches: 'incident',

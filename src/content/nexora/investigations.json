@@ -1,7 +1,7 @@
 {
   "investigations": [
     {
-      "id": "inv-service-review", "name": "Critical business service review", "description": "Sit with the service owners and establish what the business actually cannot lose, and what each service depends on.",
+      "id": "inv-service-review", "theme": "business-impact", "name": "Critical business service review", "description": "Sit with the service owners and establish what the business actually cannot lose, and what each service depends on.",
       "workingNarrative": "Your architecture lead is working through the service owners one by one.",
       "functions": ["architecture", "grc"], "capacityPerDay": { "architecture": 1, "grc": 0.5 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-launch-pressure"], "possibleEvidenceIds": ["ev-cardholder-scope", "ev-shadow-integration"],
@@ -9,7 +9,7 @@
       "tags": ["discovery", "business"], "repeatable": false
     },
     {
-      "id": "inv-architecture-review", "name": "Architecture and dependency review", "description": "Map what actually connects to what, rather than what the diagrams say.",
+      "id": "inv-architecture-review", "theme": "attack-paths", "name": "Architecture and dependency review", "description": "Map what actually connects to what, rather than what the diagrams say.",
       "workingNarrative": "The architecture team is reconciling three different network diagrams against reality.",
       "functions": ["architecture"], "capacityPerDay": { "architecture": 1.5 }, "durationDays": 21, "focusCost": 2, "budgetCost": 40,
       "guaranteedEvidenceIds": ["ev-legacy-routable"], "possibleEvidenceIds": ["ev-cloud-peering", "ev-pipeline-credentials", "ev-legacy-inventory", "ev-shadow-integration"],
@@ -17,7 +17,7 @@
       "tags": ["discovery", "architecture"], "repeatable": false
     },
     {
-      "id": "inv-access-review", "name": "Privileged access review", "description": "Establish who actually holds administrative rights, including accounts that do not belong to employees.",
+      "id": "inv-access-review", "theme": "identity-supplier", "name": "Privileged access review", "description": "Establish who actually holds administrative rights, including accounts that do not belong to employees.",
       "workingNarrative": "The IAM team is pulling every privileged group membership and matching it against HR records.",
       "functions": ["iam", "grc"], "capacityPerDay": { "iam": 1.5, "grc": 0.5 }, "durationDays": 14, "focusCost": 1, "budgetCost": 20,
       "guaranteedEvidenceIds": ["ev-priv-recert-overdue", "ev-mfa-exceptions"], "possibleEvidenceIds": ["ev-msp-standing-access", "ev-service-accounts", "ev-failed-access-review", "ev-pam-adoption"],
@@ -25,7 +25,7 @@
       "tags": ["identity", "discovery"], "repeatable": false
     },
     {
-      "id": "inv-supplier-review", "name": "Supplier access review", "description": "Establish what each major supplier can reach, with which accounts, and who watches them.",
+      "id": "inv-supplier-review", "theme": "identity-supplier", "name": "Supplier access review", "description": "Establish what each major supplier can reach, with which accounts, and who watches them.",
       "workingNarrative": "Cyber risk is working through supplier contracts and the access they actually rely on.",
       "functions": ["grc", "iam"], "capacityPerDay": { "grc": 1.5, "iam": 0.5 }, "durationDays": 18, "focusCost": 1, "budgetCost": 30,
       "guaranteedEvidenceIds": ["ev-msp-standing-access"], "possibleEvidenceIds": ["ev-msp-no-mfa", "ev-logistics-integration", "ev-supplier-questionnaire-clean", "ev-portal-shared-directory"],
@@ -33,7 +33,7 @@
       "tags": ["supplier", "third-party"], "repeatable": false
     },
     {
-      "id": "inv-threat-hunt", "name": "Targeted threat hunt", "description": "Hunt for signs that someone is already inside, focused on privileged identity and remote access.",
+      "id": "inv-threat-hunt", "theme": "attack-paths", "name": "Targeted threat hunt", "description": "Hunt for signs that someone is already inside, focused on privileged identity and remote access.",
       "workingNarrative": "The SOC team is hunting through what telemetry exists for evidence of activity nobody has explained.",
       "functions": ["soc"], "capacityPerDay": { "soc": 2 }, "durationDays": 12, "focusCost": 2, "budgetCost": 60,
       "guaranteedEvidenceIds": [], "possibleEvidenceIds": ["ev-soc-anomaly-remote", "ev-soc-coverage-gap", "ev-soc-noise-printers"],
@@ -41,7 +41,7 @@
       "tags": ["detection", "threat"], "repeatable": true
     },
     {
-      "id": "inv-recovery-test", "name": "Recovery test for a critical service", "description": "Attempt a full restore of a critical service and time it honestly.",
+      "id": "inv-recovery-test", "theme": "recovery-response", "name": "Recovery test for a critical service", "description": "Attempt a full restore of a critical service and time it honestly.",
       "workingNarrative": "Engineering is running a restore in a clean environment. Operations is watching nervously.",
       "functions": ["engineering", "incident-response"], "capacityPerDay": { "engineering": 1.5, "incident-response": 0.5 }, "durationDays": 16, "focusCost": 2, "budgetCost": 80,
       "guaranteedEvidenceIds": ["ev-backup-test-failed"], "possibleEvidenceIds": ["ev-backup-same-credentials", "ev-backup-coverage-gap"],
@@ -49,7 +49,7 @@
       "tags": ["recovery"], "repeatable": true
     },
     {
-      "id": "inv-control-testing", "name": "Control effectiveness testing", "description": "Test whether the controls the organisation believes it has are actually operating.",
+      "id": "inv-control-testing", "theme": "attack-paths", "name": "Control effectiveness testing", "description": "Test whether the controls the organisation believes it has are actually operating.",
       "workingNarrative": "Cyber risk is testing controls rather than reading control descriptions.",
       "functions": ["grc", "engineering"], "capacityPerDay": { "grc": 1, "engineering": 0.5 }, "durationDays": 14, "focusCost": 1, "budgetCost": 40,
       "guaranteedEvidenceIds": [], "possibleEvidenceIds": ["ev-pam-adoption", "ev-patch-slow", "ev-soc-coverage-gap", "ev-ir-untested"],
@@ -57,7 +57,7 @@
       "tags": ["assurance"], "repeatable": true
     },
     {
-      "id": "inv-vuln-triage", "name": "Vulnerability triage by exposure", "description": "Re-cut the vulnerability backlog by what is actually reachable and what it would reach.",
+      "id": "inv-vuln-triage", "theme": "attack-paths", "name": "Vulnerability triage by exposure", "description": "Re-cut the vulnerability backlog by what is actually reachable and what it would reach.",
       "workingNarrative": "Security engineering is cross-referencing findings against exposure rather than severity.",
       "functions": ["engineering"], "capacityPerDay": { "engineering": 1 }, "durationDays": 9, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-vuln-internet-facing", "ev-vuln-dev-cluster"], "possibleEvidenceIds": ["ev-patch-slow", "ev-exploit-available"],
@@ -65,7 +65,7 @@
       "tags": ["vulnerability"], "repeatable": true
     },
     {
-      "id": "inv-cloud-review", "name": "Cloud configuration review", "description": "Review the production and non-production tenancies against a baseline worth having.",
+      "id": "inv-cloud-review", "theme": "attack-paths", "name": "Cloud configuration review", "description": "Review the production and non-production tenancies against a baseline worth having.",
       "workingNarrative": "The architecture team is working through cloud configuration with the platform engineers.",
       "functions": ["architecture", "engineering"], "capacityPerDay": { "architecture": 1, "engineering": 1 }, "durationDays": 15, "focusCost": 1, "budgetCost": 50,
       "guaranteedEvidenceIds": ["ev-cloud-public-storage"], "possibleEvidenceIds": ["ev-cloud-peering", "ev-k8s-permissions", "ev-pipeline-credentials"],
@@ -73,7 +73,7 @@
       "tags": ["cloud"], "repeatable": false
     },
     {
-      "id": "inv-data-review", "name": "Data holdings and access review", "description": "Establish what data Nexora holds, where, and who can read it.",
+      "id": "inv-data-review", "theme": "business-impact", "name": "Data holdings and access review", "description": "Establish what data Nexora holds, where, and who can read it.",
       "workingNarrative": "Cyber risk and Legal are working through data holdings together.",
       "functions": ["grc", "architecture"], "capacityPerDay": { "grc": 1.5, "architecture": 0.5 }, "durationDays": 20, "focusCost": 2, "budgetCost": 40,
       "guaranteedEvidenceIds": ["ev-data-lake-access"], "possibleEvidenceIds": ["ev-data-retention", "ev-cardholder-scope", "ev-shadow-integration"],
@@ -81,7 +81,7 @@
       "tags": ["data", "privacy"], "repeatable": false
     },
     {
-      "id": "inv-legacy-inventory", "name": "Legacy estate inventory", "description": "Find out what is actually still running in the legacy data centre.",
+      "id": "inv-legacy-inventory", "theme": "attack-paths", "name": "Legacy estate inventory", "description": "Find out what is actually still running in the legacy data centre.",
       "workingNarrative": "Two engineers are physically walking the legacy estate with a clipboard and a scanner.",
       "functions": ["architecture", "engineering"], "capacityPerDay": { "architecture": 0.5, "engineering": 1 }, "durationDays": 24, "focusCost": 1, "budgetCost": 60,
       "guaranteedEvidenceIds": ["ev-legacy-inventory", "ev-legacy-unsupported"], "possibleEvidenceIds": ["ev-backup-coverage-gap", "ev-legacy-routable"],
@@ -89,7 +89,7 @@
       "tags": ["legacy", "discovery"], "repeatable": false
     },
     {
-      "id": "inv-pen-test", "name": "Commission a penetration test", "description": "Pay someone to walk the paths you suspect exist.",
+      "id": "inv-pen-test", "theme": "attack-paths", "name": "Commission a penetration test", "description": "Pay someone to walk the paths you suspect exist.",
       "workingNarrative": "The testers are in. Nobody in infrastructure is enjoying it.",
       "functions": ["engineering", "architecture"], "capacityPerDay": { "engineering": 0.5, "architecture": 0.5 }, "durationDays": 22, "focusCost": 1, "budgetCost": 140,
       "guaranteedEvidenceIds": ["ev-pen-test-segmentation"], "possibleEvidenceIds": ["ev-pen-test-scope-limited", "ev-legacy-routable", "ev-k8s-permissions", "ev-msp-no-mfa"],
@@ -97,7 +97,7 @@
       "tags": ["assurance"], "repeatable": true
     },
     {
-      "id": "inv-ir-readiness", "name": "Incident response readiness review", "description": "Establish whether the organisation could actually run an incident.",
+      "id": "inv-ir-readiness", "theme": "recovery-response", "name": "Incident response readiness review", "description": "Establish whether the organisation could actually run an incident.",
       "workingNarrative": "Your SOC lead is walking the response plan against a realistic scenario.",
       "functions": ["incident-response", "grc"], "capacityPerDay": { "incident-response": 1, "grc": 0.5 }, "durationDays": 12, "focusCost": 1, "budgetCost": 30,
       "guaranteedEvidenceIds": ["ev-ir-untested"], "possibleEvidenceIds": ["ev-no-retainer", "ev-team-burnout"],
@@ -105,7 +105,7 @@
       "tags": ["recovery", "incident"], "repeatable": false
     },
     {
-      "id": "inv-team-review", "name": "Cyber team capability review", "description": "Understand what your own team can actually sustain.",
+      "id": "inv-team-review", "theme": "team-governance", "name": "Cyber team capability review", "description": "Understand what your own team can actually sustain.",
       "workingNarrative": "You are spending time with each function lead rather than reading their reports.",
       "functions": ["grc"], "capacityPerDay": { "grc": 0.5 }, "durationDays": 8, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-team-vacancies"], "possibleEvidenceIds": ["ev-team-burnout"],
@@ -113,7 +113,7 @@
       "tags": ["team"], "repeatable": false
     },
     {
-      "id": "inv-threat-intel", "name": "Sector threat intelligence review", "description": "Find out what is actually happening to organisations like this one.",
+      "id": "inv-threat-intel", "theme": "attack-paths", "name": "Sector threat intelligence review", "description": "Find out what is actually happening to organisations like this one.",
       "workingNarrative": "Cyber risk is reading sector reporting rather than generic threat feeds.",
       "functions": ["grc", "soc"], "capacityPerDay": { "grc": 0.5, "soc": 0.5 }, "durationDays": 7, "focusCost": 1, "budgetCost": 25,
       "guaranteedEvidenceIds": ["ev-ransomware-sector"], "possibleEvidenceIds": ["ev-credential-campaign", "ev-espionage-interest", "ev-exploit-available"],
@@ -121,7 +121,7 @@
       "tags": ["threat"], "repeatable": true
     },
     {
-      "id": "inv-acquisition-dd", "name": "Technical due diligence on the acquisition", "description": "Examine Kestrel Digital's estate before it is connected to Nexora's.",
+      "id": "inv-acquisition-dd", "theme": "identity-supplier", "name": "Technical due diligence on the acquisition", "description": "Examine Kestrel Digital's estate before it is connected to Nexora's.",
       "workingNarrative": "Two of your people are on site at Kestrel with a very short list of questions.",
       "functions": ["architecture", "grc"], "capacityPerDay": { "architecture": 1, "grc": 1 }, "durationDays": 18, "focusCost": 2, "budgetCost": 90,
       "guaranteedEvidenceIds": ["ev-kestrel-unknown"], "possibleEvidenceIds": ["ev-shadow-integration"],
@@ -130,7 +130,7 @@
       "requiresCondition": { "kind": "day.after", "day": 60 }
     },
     {
-      "id": "inv-risk-register-review", "name": "Review the inherited risk register", "description": "Work out which of the 23 inherited entries describe anything that is still true.",
+      "id": "inv-risk-register-review", "theme": "team-governance", "name": "Review the inherited risk register", "description": "Work out which of the 23 inherited entries describe anything that is still true.",
       "workingNarrative": "Cyber risk is testing each inherited entry against current evidence.",
       "functions": ["grc"], "capacityPerDay": { "grc": 1 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-audit-stale-register"], "possibleEvidenceIds": ["ev-audit-repeat-finding", "ev-priv-recert-overdue"],
@@ -138,7 +138,7 @@
       "tags": ["governance"], "repeatable": false
     },
     {
-      "id": "inv-hr-supplier-check", "name": "Check exposure to the HR provider incident", "description": "Establish whether People Cloud's incident touched Nexora's employee data.",
+      "id": "inv-hr-supplier-check", "theme": "identity-supplier", "name": "Check exposure to the HR provider incident", "description": "Establish whether People Cloud's incident touched Nexora's employee data.",
       "workingNarrative": "Cyber risk is pressing the provider for specifics rather than reassurance.",
       "functions": ["grc"], "capacityPerDay": { "grc": 1 }, "durationDays": 8, "focusCost": 1, "budgetCost": 15,
       "guaranteedEvidenceIds": ["ev-hr-saas-breach-notice"], "possibleEvidenceIds": [],
@@ -194,6 +194,7 @@
     {"id": "gls-assurance", "term": "Assurance", "definition": "Evidence that a control works, as opposed to a statement that it exists. A supplier questionnaire returned clean is a statement; a test is assurance.", "section": "subject"},
     {"id": "gls-cardholder", "term": "Cardholder data, PCI DSS, acquirer", "definition": "Payment card details, the industry standard that governs how they are handled, and the bank that processes Nexora's card payments and can stop doing so. Card data found outside the defined payment environment is both a compliance question and a risk question.", "section": "subject"},
     {"id": "gls-extranet", "term": "Extranet, partner portal", "definition": "Systems Nexora's partners log into from outside. If partner accounts live in the same directory as staff accounts, a partner's stolen password starts inside the staff boundary.", "section": "subject"},
+    {"id": "gls-identity-platform", "term": "Identity platform, identity provider, directory", "definition": "The system that holds every account and decides who can log in to what. Staff, partners and services all authenticate through it, so an actor who controls it can be anyone; a dependency that many services share is worth more to an attacker than any one of them.", "section": "subject"},
     {"id": "gls-msp", "term": "Managed service provider", "definition": "A supplier that runs part of Nexora's technology on its behalf, and holds the access to do so. Its engineers' standing administrative accounts are Nexora's exposure, not the supplier's.", "section": "subject"}
   ]
 }

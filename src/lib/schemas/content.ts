@@ -373,6 +373,7 @@ export const investigationSchema = z.object({
   tags: z.array(z.string()),
   repeatable: z.boolean(),
   requiresCondition: conditionSchema.optional(),
+  theme: z.enum(['business-impact', 'attack-paths', 'identity-supplier', 'recovery-response', 'team-governance']),
 })
 
 export const decisionSchema = z.object({

@@ -25,3 +25,21 @@ describe('teaching notes', () => {
     expect(screen.queryByRole('button', { name: 'Got it' })).toBeNull()
   })
 })
+
+/**
+ * The opening playtest's newcomers said guided mode "stops guiding just when
+ * selection complexity rises". A first-quarter aim now opens the year where
+ * the profile coaches decisions, and only there: it is advice, not a mechanic.
+ */
+describe('the first-quarter aim', () => {
+  it('opens a guided year and stays out of a CISO one', async () => {
+    await useGameStore.getState().startNewGame('ui-aim', 'guided')
+    const guided = render(<Onboarding />)
+    expect(screen.getByText('A first quarter, in three questions')).toBeInTheDocument()
+    guided.unmount()
+
+    await useGameStore.getState().startNewGame('ui-aim', 'ciso')
+    render(<Onboarding />)
+    expect(screen.queryByText('A first quarter, in three questions')).toBeNull()
+  })
+})

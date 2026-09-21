@@ -6,6 +6,9 @@
 import { useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
+import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
+import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
 import { availableCapacity } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
@@ -22,6 +25,10 @@ export function InvestigationPanel() {
   if (!state) return null
 
   const running = state.team.assignments.filter((assignment) => assignment.status === 'running')
+  // Coached modes point at the enquiries that speak to the biggest thing on
+  // the player's list; the others get the same connection without the badge.
+  const coached = DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching
+  const topConcern = topConcerns(state, index, 1)[0]?.id
   const available = index.content.investigations.filter((investigation) => {
     if (investigation.requiresCondition && !evaluateCondition(state, index, investigation.requiresCondition)) return false
     if (!investigation.repeatable && state.team.assignments.some((a) => a.refId === investigation.id)) return false
@@ -84,8 +91,16 @@ export function InvestigationPanel() {
             description="You have already asked for everything that is available to you right now."
           />
         ) : (
+          ENQUIRY_THEMES.map((theme) => {
+            const inTheme = available.filter((investigation) => investigation.theme === theme.id)
+            if (inTheme.length === 0) return null
+            return (
+          <section key={theme.id} aria-labelledby={`theme-${theme.id}`} className="mb-6 last:mb-0">
+            <h3 id={`theme-${theme.id}`} className="mb-2 text-sm font-semibold text-ink-muted">{theme.label}</h3>
           <ul className="grid gap-3 md:grid-cols-2">
-            {available.map((investigation) => {
+            {inTheme.map((investigation) => {
+              const speaksTo = enquirySpeaksTo(state, index, investigation.id)
+              const onTopConcern = coached && topConcern !== undefined && speaksTo.some((r) => r.id === topConcern)
               const short = capacityShort(investigation)
               const noFocus = state.resources.focusRemaining < investigation.focusCost
               const noBudget = state.resources.budgetRemaining < investigation.budgetCost
@@ -93,8 +108,17 @@ export function InvestigationPanel() {
                 <li key={investigation.id}>
                   <Card className={cn('h-full', (short || noFocus || noBudget) && 'opacity-70')}>
                     <CardBody className="flex h-full flex-col">
-                      <h3 className="font-medium text-balance">{investigation.name}</h3>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="font-medium text-balance">{investigation.name}</h4>
+                        {onTopConcern && <Badge tone="accent" glyph={false}>Speaks to your top concern</Badge>}
+                      </div>
                       <p className="mt-1 flex-1 text-sm text-ink-muted text-pretty">{investigation.description}</p>
+                      {speaksTo.length > 0 && (
+                        <p className="mt-2 text-xs text-ink-faint">
+                          Speaks to: {speaksTo.slice(0, 3).map((r) => r.title).join('; ')}
+                          {speaksTo.length > 3 && ` and ${speaksTo.length - 3} more`}
+                        </p>
+                      )}
                       <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-faint">
                         <div className="flex gap-1">
                           <dt>Takes</dt>
@@ -141,6 +165,9 @@ export function InvestigationPanel() {
               )
             })}
           </ul>
+          </section>
+            )
+          })
         )}
       </section>
 

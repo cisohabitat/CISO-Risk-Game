@@ -1204,3 +1204,32 @@ export function cameBack(state: GameState, index: ContentIndex, limit = 4): Came
   // Inbox messages are prepended, so this is already newest first.
   return out.slice(0, limit)
 }
+
+/**
+ * The risks on the player's own list that an enquiry would speak to: those
+ * whose trigger nodes it would reveal, or whose attack paths run through a
+ * control it would assess. Only risks the player has, never the catalogue —
+ * naming a scenario they have not met would hand them the hidden truth.
+ * The opening playtest's newcomers could not connect a risk card to an
+ * enquiry; this is the connection, on the card.
+ */
+export function enquirySpeaksTo(state: GameState, index: ContentIndex, investigationId: string): { id: string; title: string }[] {
+  const def = index.investigation.get(investigationId)
+  if (!def) return []
+  const nodeIds = new Set(def.revealsNodeIds)
+  const controlIds = new Set(def.assessesControlIds)
+  // In the order the player's own list ranks them, so a card that names a
+  // few of many names the ones that matter most.
+  const out: { id: string; title: string }[] = []
+  for (const risk of visibleRisks(state, index)) {
+    if (risk.status === 'closed') continue
+    const scenario = index.riskScenario.get(risk.id)
+    if (!scenario) continue
+    const byNode = scenario.triggerNodeIds.some((id) => nodeIds.has(id))
+    const byControl = scenario.attackPathIds.some((pathId) =>
+      index.attackPath.get(pathId)?.steps.some((step) => step.controlIds.some((id) => controlIds.has(id))),
+    )
+    if (byNode || byControl) out.push({ id: scenario.id, title: scenario.title })
+  }
+  return out
+}

@@ -6,6 +6,7 @@ import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
 import { CameBack } from '@/components/game/CameBack'
+import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
@@ -185,6 +186,7 @@ export function HomeScreen() {
                           {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
                         </div>
                         <p className="mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
+                        <Terms text={`${risk.title} ${risk.statement}`} className="mt-2" />
                         <Button
                           variant="quiet"
                           size="sm"

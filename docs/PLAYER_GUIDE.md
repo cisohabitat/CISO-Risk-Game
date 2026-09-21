@@ -175,12 +175,18 @@ The **Risk** screen is where understanding gets built, across five tabs:
 - **Investigate** — commissioning work.
 - **Assumptions** — things your past decisions depend on being true.
 
+If a risk uses a word you do not know, the **Words** line under it lists the
+terms it leans on; tap one and the glossary opens at the definition.
+
 ### Commissioning work
 
 ![Commissioning an investigation](images/05-investigate.png)
 
-Each line of enquiry shows how long it takes, what it costs and which of your
-four leaders you are giving it to. **Who you choose matters**: their expertise,
+The enquiries are grouped by the question they answer — what the business
+cannot lose, how an attacker would get in, identity and supplier access,
+recovery and response, team and governance — and each says which of the risks
+on your list it speaks to. Each line of enquiry shows how long it takes, what
+it costs and which of your four leaders you are giving it to. **Who you choose matters**: their expertise,
 their current workload and their morale all shape what comes back. Overload
 someone and you get a thin answer, late — and a thin answer is not a clean bill
 of health.

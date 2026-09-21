@@ -300,7 +300,23 @@ export interface InvestigationDef {
   tags: string[]
   repeatable: boolean
   requiresCondition?: Condition
+  /**
+   * The question the enquiry answers. Seventeen enquiries in one flat list
+   * read as a catalogue to every persona in the opening playtest; grouped by
+   * the question, they read as choices.
+   */
+  theme: EnquiryTheme
 }
+
+export type EnquiryTheme = 'business-impact' | 'attack-paths' | 'identity-supplier' | 'recovery-response' | 'team-governance'
+
+export const ENQUIRY_THEMES: { id: EnquiryTheme; label: string }[] = [
+  { id: 'business-impact', label: 'What the business cannot lose' },
+  { id: 'attack-paths', label: 'How an attacker would get in' },
+  { id: 'identity-supplier', label: 'Identity and supplier access' },
+  { id: 'recovery-response', label: 'Recovery and response' },
+  { id: 'team-governance', label: 'Team and governance' },
+]
 
 export interface DecisionOptionDef {
   id: string

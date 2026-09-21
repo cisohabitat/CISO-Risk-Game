@@ -5,6 +5,7 @@
 import { useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, SectionHeading } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
+import { Terms } from '@/components/game/Terms'
 import type { VisibleRisk } from '@/store/selectors'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { bandTone, confidenceTone, statusLabel } from '@/lib/formatting/labels'
@@ -59,6 +60,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
         <div>
           <h2 className="text-lg font-semibold text-balance">{risk.title}</h2>
           <p className="mt-1 text-sm text-ink-muted text-pretty">{risk.statement}</p>
+          <Terms text={`${risk.title} ${risk.statement}`} className="mt-2" />
         </div>
 
         <dl className="grid grid-cols-2 gap-3">
