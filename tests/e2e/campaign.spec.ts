@@ -137,6 +137,42 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByText('seed e2e-delete')).toHaveCount(0)
   })
 
+  test('a dialog taller than the screen scrolls, and its buttons stay reachable', async ({ page }) => {
+    // A phone player reported the pop-ups ran off the bottom of the screen
+    // with no way to scroll them. The first decision is the tallest dialog
+    // most players meet, so it is the one measured.
+    await startCampaign(page, 'e2e-dialog')
+    const got = page.getByRole('button', { name: 'Got it' }).first()
+    if (await got.isVisible().catch(() => false)) await got.click()
+    await page.getByRole('button', { name: /^Decide$/ }).first().click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    // The panel rises into place; measure it once it has arrived.
+    await dialog.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)))
+    const viewport = page.viewportSize()!
+    const commit = dialog.getByRole('button', { name: /Commit to this|Record why first/ })
+
+    // Capped: the panel fits the screen and the footer is on it without scrolling.
+    const panel = (await dialog.boundingBox())!
+    expect(panel.y + panel.height, 'the dialog runs off the bottom of the screen').toBeLessThanOrEqual(viewport.height + 1)
+    const footer = (await commit.boundingBox())!
+    expect(footer.y + footer.height).toBeLessThanOrEqual(viewport.height + 1)
+    // ...and the body scrolls to the last option.
+    const last = dialog.getByRole('radio').last()
+    await last.scrollIntoViewIfNeeded()
+    const lastBox = (await last.boundingBox())!
+    expect(lastBox.y + lastBox.height).toBeLessThanOrEqual(viewport.height + 1)
+
+    // Uncapped, standing in for a browser that does not know `dvh` and drops
+    // the height cap: the overlay itself scrolls, so the footer is still
+    // reachable rather than stranded below the bottom edge.
+    await page.addStyleTag({ content: '[role=dialog]{max-height:none!important}' })
+    await commit.scrollIntoViewIfNeeded()
+    const reached = (await commit.boundingBox())!
+    expect(reached.y + reached.height, 'the footer cannot be scrolled to').toBeLessThanOrEqual(viewport.height + 1)
+    expect(reached.y).toBeGreaterThanOrEqual(0)
+  })
+
   test('the organisation view only shows what has been discovered', async ({ page }) => {
     await startCampaign(page, 'e2e-org')
     await goTo(page, 'Organisation')

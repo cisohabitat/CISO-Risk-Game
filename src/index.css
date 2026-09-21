@@ -237,6 +237,18 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* A dialog never outgrows the screen. `dvh` tracks the browser chrome on a
+     phone; the `vh` line before it is for browsers that do not know `dvh`,
+     which would otherwise drop the cap and push the footer off the bottom. */
+  .dialog-panel {
+    max-height: 92dvh;
+  }
+  @supports not (height: 1dvh) {
+    .dialog-panel {
+      max-height: 92vh;
+    }
+  }
+
   /* Subtle motion only, and none at all when the player asks for none. */
   .animate-rise {
     animation: rise 220ms cubic-bezier(0.22, 1, 0.36, 1);

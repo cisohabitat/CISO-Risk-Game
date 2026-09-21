@@ -18,6 +18,36 @@ fault.
 
 ### Fixed
 
+- **Dialogs ran off the bottom of a phone screen with no way to scroll
+  them.** Reported by the owner from a phone. Every pop-up in the game is
+  the one `Dialog` primitive, whose panel was capped at `92dvh` with a
+  scrolling body inside a non-scrolling overlay. Measured in Chromium at
+  320×568 and as a Pixel 7, capped, the first decision's panel fits and its
+  body scrolls 1,949 px inside 566, by touch drag and by wheel, so the
+  layout is right where `dvh` is understood. On a browser that does not
+  know `dvh` (Samsung Internet before 21, iOS before 15.4, older Android
+  WebViews) the cap is dropped at parse time, the panel grows to its
+  content — 2,527 px for that decision at 320 wide — and the buttons sit
+  2,500 px below the bottom edge of an overlay that cannot scroll. That is
+  the report.
+
+  Two changes. The cap now has a `vh` fallback behind a `@supports not
+  (height: 1dvh)` query, because the minifier folds two `max-height`
+  declarations into the last one and drops the fallback. And the overlay
+  scrolls: a dialog taller than the screen for any reason at all scrolls
+  as a whole, so the footer is always reachable. Measured with the cap
+  forced off as a stand-in for the browser without `dvh`: the footer was
+  at 2,508 px and is reached by scrolling to 551 of 568.
+
+  Tests: at every viewport the first decision's panel fits the screen, its
+  footer is on it without scrolling, its last option can be scrolled to,
+  and with the cap forced off the footer can still be scrolled to. Checked
+  by removing the overlay scroll and watching the last assertion fail. A
+  first run of that check failed on the *first* assertion instead: the
+  panel's rise animation was still six pixels short of home when it was
+  measured, so the test now waits for the animation to finish — the
+  harness, not the game.
+
 - **Guided mode stopped guiding at the enquiry list.** An opening playtest
   across three personas (`docs/playtests/2026-09-21-ai-three-personas-opening.md`,
   an AI playing an experienced CISO, a newcomer and someone with no

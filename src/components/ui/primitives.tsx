@@ -255,13 +255,19 @@ export function Dialog({
 
   if (!open) return null
 
+  // The overlay scrolls and the panel is capped at most of the viewport, so a
+  // dialog taller than a phone screen scrolls inside its body, and on a
+  // browser that ignores the cap (no `dvh`) the overlay itself scrolls to the
+  // footer rather than leaving the buttons below the bottom edge.
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-6 animate-fade"
+      className="fixed inset-0 z-50 overflow-y-auto bg-overlay animate-fade"
+      data-backdrop
       onPointerDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
+        if ((event.target as HTMLElement).dataset.backdrop !== undefined) onClose()
       }}
     >
+      <div className="flex min-h-full items-end justify-center p-0 sm:items-center sm:p-6" data-backdrop>
       <div
         ref={panelRef}
         tabIndex={-1}
@@ -270,7 +276,7 @@ export function Dialog({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'flex max-h-[92dvh] w-full flex-col rounded-t-2xl border border-line bg-surface shadow-[var(--shadow-lift)] outline-none animate-rise',
+          'dialog-panel flex w-full flex-col rounded-t-2xl border border-line bg-surface shadow-[var(--shadow-lift)] outline-none animate-rise',
           'sm:rounded-2xl',
           size === 'lg' ? 'sm:max-w-3xl' : 'sm:max-w-xl',
         )}
@@ -286,8 +292,9 @@ export function Dialog({
             <span aria-hidden="true">✕</span>
           </Button>
         </div>
-        <div className="scroll-area flex-1 p-4 sm:p-5">{children}</div>
+        <div className="scroll-area min-h-0 flex-1 p-4 sm:p-5">{children}</div>
         {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line p-4 sm:p-5">{footer}</div>}
+      </div>
       </div>
     </div>
   )
