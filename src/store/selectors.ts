@@ -435,6 +435,8 @@ export interface TeamView {
   }[]
   assignments: (AssignmentState & { leaderName: string; daysRemaining: number })[]
   strainBand: string
+  /** The worst function's morale in words, when it is below holding up. */
+  healthNote?: string
 }
 
 const FUNCTION_LABELS: Record<string, string> = {
@@ -495,6 +497,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         daysRemaining: assignment.dueDay - state.currentDay,
       })),
     strainBand: capacityBand(teamStrain(state)),
+    healthNote: teamHealthNote(state),
   }
 }
 
@@ -526,6 +529,13 @@ export interface BriefingView {
   understandingPercent: number
   /** How much of what the player could have checked themselves, they have. */
   examinedShare: number
+}
+
+/** The function whose morale is lowest, in words, when it is below holding up. */
+function teamHealthNote(state: GameState): string | undefined {
+  const worst = CYBER_FUNCTIONS.map((fn) => ({ fn, morale: state.team.functions[fn]?.morale ?? 1 })).sort((a, b) => a.morale - b.morale)[0]
+  if (!worst || worst.morale >= 0.45) return undefined
+  return `${functionTitle(worst.fn)} ${moraleLabel(worst.morale).toLowerCase()}`
 }
 
 export function briefing(state: GameState, index: ContentIndex): BriefingView {
@@ -572,11 +582,7 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
         }
       : undefined,
     runningWork: state.team.assignments.filter((assignment) => assignment.status === 'running').length,
-    teamHealthNote: (() => {
-      const worst = CYBER_FUNCTIONS.map((fn) => ({ fn, morale: state.team.functions[fn]?.morale ?? 1 })).sort((a, b) => a.morale - b.morale)[0]
-      if (!worst || worst.morale >= 0.45) return undefined
-      return `${functionTitle(worst.fn)} ${moraleLabel(worst.morale).toLowerCase()}`
-    })(),
+    teamHealthNote: teamHealthNote(state),
     understandingPercent: Math.round(clamp01(state.organisation.understanding['overall'] ?? 0) * 100),
     examinedShare: (() => {
       const examined = unexaminedMaterial(state, index)

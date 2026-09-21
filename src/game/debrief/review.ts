@@ -108,7 +108,11 @@ export function buildQuarterReview(
   if (missed.length > 0) {
     // Surprising the board with a known material risk is the classic failure.
     effects.push({ type: 'board.confidence', delta: -0.06 * missed.length })
-    reaction = `The board accepted the papers, but ${missed.length} material item${missed.length === 1 ? ' was' : 's were'} not on the agenda. They will find out another way.`
+    // "One material item was not on the agenda" without saying which was
+    // feedback nobody could act on; the third observed playthrough asked
+    // twice. Name them.
+    const names = missed.map((id) => topics.find((t) => t.id === id)?.label ?? id)
+    reaction = `The board accepted the papers, but ${names.length === 1 ? 'one material item was' : `${names.length} material items were`} not on the agenda: ${names.join('; ')}. They will find out another way.`
   } else if (input.topics.length === 0 && materialIds.length === 0) {
     // A paper with nothing in it. Nothing was missed, so it is not the failure
     // above, but "coverage" of an empty agenda is not coverage: measured over
@@ -264,6 +268,29 @@ function band(value: number): AnnualReviewDimension['band'] {
   return 'strong'
 }
 
+/**
+ * How close a risk the player never worked on came to their attention. "It
+ * was never on your list, because nothing brought it into view" was said of
+ * a risk whose pattern the briefing had offered three months running; the
+ * third observed playthrough saw it, and did not pursue it. Surfaced, formed,
+ * dismissed and raised are different things and the review says which.
+ */
+function missedStanding(state: GameState, index: ContentIndex, scenarioId: string): string {
+  if (state.risks.scenarios[scenarioId]) return ''
+  const templates = index.content.hypothesisTemplates.filter((t) => t.linkedScenarioId === scenarioId)
+  if (templates.some((t) => Object.values(state.risks.hypotheses).some((h) => h.templateId === t.id))) {
+    return ' — you formed the hypothesis and never raised it as a risk'
+  }
+  if (templates.some((t) => (state.risks.dismissedPatternIds ?? []).includes(t.id))) {
+    return ' — the game offered the pattern and you set it aside'
+  }
+  const knownTags = new Set(state.evidence.order.flatMap((id) => index.evidence.get(id)?.tags ?? []))
+  if (templates.some((t) => t.requiresTags.every((tag) => knownTags.has(tag)))) {
+    return ' — the evidence for it was in your hands and never became a pattern'
+  }
+  return ' — it was never on your list, because nothing brought it into view'
+}
+
 export function buildAnnualReview(state: GameState, index: ContentIndex): AnnualReview {
   const dimensions: AnnualReviewDimension[] = []
 
@@ -369,7 +396,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           return `What you committed to was what mattered${biggest ? `, ${biggest} among it` : ''}.${lapses}`
         case 'solid':
           return effort.missed
-            ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it${state.risks.scenarios[effort.missed.id] ? '' : ' — it was never on your list, because nothing brought it into view'}.${lapses}`
+            ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it${missedStanding(state, index, effort.missed.id)}.${lapses}`
             : `Most of your effort went where it counted.${lapses}`
         case 'developing':
           return effort.commitments.length === 0
@@ -656,7 +683,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   narrative.push(
     understandingScore > 0.55
       ? 'You spent your first months finding out how Nexora actually works rather than reacting to the inherited backlog.'
-      : 'You worked what was in front of you, and the shape of the organisation itself went unexamined.',
+      : 'You worked what was in front of you, and much of how the organisation fits together was never verified.',
   )
   if (started.length > 0) {
     const lead = started.slice().sort((a, b) => b.progress - a.progress)[0]

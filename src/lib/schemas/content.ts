@@ -314,8 +314,8 @@ export const incidentFamilySchema = z.object({
   baseDurationDays: z.number().int().positive(),
   regulatoryInterest: unit,
   responseDecisionIds: z.array(id),
-  whatHelped: z.array(z.string()),
-  whatHurt: z.array(z.string()),
+  whatHelped: z.array(z.string().or(z.object({ text: z.string(), when: conditionSchema }))),
+  whatHurt: z.array(z.string().or(z.object({ text: z.string(), when: conditionSchema }))),
 })
 
 export const evidenceSchema = z.object({

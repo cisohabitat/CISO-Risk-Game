@@ -21,7 +21,7 @@ export function TeamScreen() {
       <div>
         <h1 className="font-display text-2xl leading-tight">Team</h1>
         <p className="text-sm text-ink-muted text-pretty">
-          Your functions are at <strong>{view.strainBand}</strong>. Delegated work competes with programme delivery for
+          Your functions are at <strong>{view.strainBand}</strong>{view.healthNote ? <> — and {view.healthNote}</> : null}. Delegated work competes with programme delivery for
           the same people.
         </p>
       </div>

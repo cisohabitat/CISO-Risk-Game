@@ -38,14 +38,17 @@ export function IncidentCommand() {
       // A solid bar rather than a tint. The severe "soft" token is nearly white
       // in light mode, so a tinted card read quieter than the teaching note
       // under it — the wrong way round when the organisation is in crisis.
-      className="sticky top-0 z-10 mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
+      className="mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
       role="region"
       aria-labelledby="incident-command"
     >
-      <p className="bg-[var(--band-severe)] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--surface)]">
-        Incident active
+      {/* The band stays pinned while the panel scrolls with the page. The
+          whole panel was sticky, and twice a player mid-incident found it
+          covering the Decide control they were trying to reach. */}
+      <p className="sticky top-0 z-10 bg-[var(--band-severe)] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--surface)]">
+        Incident active · {incident.name} · {incident.phaseLabel}
       </p>
       <CardBody className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">

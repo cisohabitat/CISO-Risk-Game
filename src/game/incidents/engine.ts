@@ -3,6 +3,9 @@
  * simulation resolves containment, consequence and recovery from the controls,
  * people and choices that were actually in place.
  */
+import { evaluateCondition } from '../events/conditions'
+import { RISK_BAND_LABEL, riskBand } from '../risk/bands'
+import type { Condition } from '../types'
 import type { ContentIndex, GameEffect, GameState, IncidentRuntime } from '../types'
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
@@ -41,6 +44,23 @@ function recoveryStrength(state: GameState, index: ContentIndex): number {
     best = Math.max(best, calculateControlRecovery(runtime, def))
   }
   return clamp01(0.08 + best)
+}
+
+/**
+ * The family's authored lines, minus the ones the state says are not true.
+ * They were appended unconditionally: a player who enforced the retention
+ * policy on day 103 was told on day 216 that data held beyond policy had
+ * hurt, and backups "that could not be reached" were credited beside a step
+ * that encrypted them. Found by the third observed playthrough.
+ */
+function authoredLines(
+  state: GameState,
+  index: ContentIndex,
+  lines: (string | { text: string; when: Condition })[] | undefined,
+): string[] {
+  return (lines ?? [])
+    .filter((line) => typeof line === 'string' || evaluateCondition(state, index, line.when))
+    .map((line) => (typeof line === 'string' ? line : line.text))
 }
 
 export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): IncidentTickResult {
@@ -109,7 +129,25 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
       case 'debrief': {
         incident.reconstruction = buildReconstruction(state, index, incident)
         incident.resolvedDay = state.currentDay
-        enter('closed', 'Post-incident review complete.')
+        // "Post-incident review complete" was the whole account a player got
+        // of an incident a Skip ahead had carried them through. The facts the
+        // player was entitled to — how long, which services, how bad, what
+        // they decided — are in the message now; the route stays for the
+        // annual review, which is where hidden truth is revealed.
+        const services = incident.affectedServiceIds
+          .map((id) => index.service.get(id)?.name)
+          .filter((name): name is string => Boolean(name))
+        const decided = incident.decisionsTaken.length
+        enter(
+          'closed',
+          `Post-incident review complete. ${family.name} ran ${state.currentDay - incident.startedDay} days` +
+            (services.length > 0 ? ` and touched ${services.join(', ')}` : '') +
+            `; the consequence to the business was ${RISK_BAND_LABEL[riskBand(incident.consequence)].toLowerCase()}. ` +
+            (decided > 0
+              ? `You took ${decided} response decision${decided === 1 ? '' : 's'} while it ran. `
+              : 'No response decision was taken while it ran. ') +
+            'How the actor got in is for the year-end reconstruction.',
+        )
         if (state.incidents.activeId === incidentId) state.incidents.activeId = undefined
         result.interrupts = true
         break
@@ -235,8 +273,8 @@ export function buildReconstruction(
 
   return {
     pathSummary,
-    helped: helped.concat(family?.whatHelped ?? []).slice(0, 6),
-    hurt: hurt.concat(family?.whatHurt ?? []).slice(0, 6),
+    helped: helped.concat(authoredLines(state, index, family?.whatHelped)).slice(0, 6),
+    hurt: hurt.concat(authoredLines(state, index, family?.whatHurt)).slice(0, 6),
     relatedDecisionIds: relatedDecisions,
     relatedAssumptionIds: relatedAssumptions,
     narrative,

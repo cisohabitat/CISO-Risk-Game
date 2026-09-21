@@ -519,7 +519,7 @@
     {
       "id": "dec-board-material-risk",
       "title": "A material risk the board has not heard about",
-      "description": "You are holding a risk assessment the board has never seen. The next scheduled meeting is in six weeks.",
+      "description": "You are holding a risk assessment the board has never seen: {{unseenRisk}}. The next scheduled meeting is in six weeks.",
       "context": "Sir Alan Whitcombe's stated concern is whether management knows what it does not know. He is more forgiving of bad news than of late news.",
       "deadlineDays": 10,
       "defaultOptionId": "opt-board-wait",

@@ -18,6 +18,55 @@ fault.
 
 ### Fixed
 
+- **The reconstruction asserted what the player's choices had changed.** The
+  third observed playthrough (`docs/playtests/2026-09-21-ai-fresh-seed.md`,
+  a fresh seed, an AI again) enforced the retention policy on day 103 and
+  was told on day 216 that "data held longer than the retention policy
+  allowed" had hurt; it was credited "backups that could not be reached from
+  the compromised accounts" beside a step that encrypted them. Every incident
+  family carried two or three authored helped-and-hurt lines, appended
+  whatever the state. Each line now carries a condition from the same
+  `Condition` union events use — the retention line is not said to a player
+  who took the delete option, the backup line is said only when backup
+  coverage is there, "recovery that had never been timed" is not said after
+  a restore — and the reconstruction filters on it. A test starts a data
+  breach in two campaigns, one that enforced retention and one that did
+  not, and expects the line in only one of them.
+
+  **Four more from the same run, fixed.** "One material item was not on the
+  agenda" now names the item. "You are holding a risk assessment the board
+  has never seen" now names the risk, by `{{unseenRisk}}`: the most material
+  open risk on no quarter's agenda. "It was never on your list, because
+  nothing brought it into view" was said of a risk whose pattern the
+  briefing had offered three months running; the sentence now distinguishes
+  a hypothesis formed and never raised, a pattern set aside, evidence in
+  hand that never became a pattern, and nothing having brought it into view.
+  And "the shape of the organisation itself went unexamined", to a player
+  who began with the architecture review, now says that much of how the
+  organisation fits together was never verified, which is what the score
+  measures.
+
+  **Three interface findings, fixed.** The whole incident panel was sticky
+  and, for the second session running, covered the control a player was
+  reaching for mid-incident; the band stays pinned and the panel scrolls.
+  The team screen's "your functions are at available" now carries the same
+  health note as the briefing. The team sustainability list showed five of
+  six functions because the debrief capped evidence at five; incident
+  response was the one dropped, in the sentence that said it was spent.
+
+  **The incident's closing message says what happened.** "Post-incident
+  review complete" was the whole account a Skip ahead left a player with.
+  The message now says how long the incident ran, which services it touched,
+  how bad the consequence was in the band's words, and how many response
+  decisions were taken. How the actor got in stays for the annual review,
+  which is where hidden truth is revealed and the report agreed it should
+  stay.
+
+  **Left.** The report's ask for the attack route and impact scope during
+  the incident is the hidden-truth rule, and stays. The recruitment label
+  reading "Recruiting" after capacity rose is the sixty-day hire running its
+  course while capacity was bought another way; not changed.
+
 - **The annual review contradicted the decision record three times.** The
   second observed playtest (`docs/playtests/2026-09-21-ai-browser-repeat.md`,
   same seed, an AI session again) found the previous fixes working — the

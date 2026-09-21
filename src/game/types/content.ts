@@ -228,8 +228,15 @@ export interface IncidentFamilyDef {
   baseDurationDays: number
   regulatoryInterest: number
   responseDecisionIds: string[]
-  whatHelped: string[]
-  whatHurt: string[]
+  /**
+   * Authored lines for the reconstruction. A bare string is always true of
+   * this family; a conditioned one is said only when the state agrees, so
+   * "data held longer than the retention policy allowed" is not said to a
+   * player who enforced the policy, and "backups that could not be reached"
+   * is not said of backups that could.
+   */
+  whatHelped: (string | { text: string; when: Condition })[]
+  whatHurt: (string | { text: string; when: Condition })[]
 }
 
 export interface EvidenceDef {

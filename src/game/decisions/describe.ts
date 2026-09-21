@@ -26,4 +26,20 @@ export function renderDecisionText(
   return text
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
+    .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
+}
+
+/**
+ * The most material open risk the board has not heard about: raised by the
+ * player and on no quarter's agenda. "You are holding a risk assessment the
+ * board has never seen" did not say which, and the third observed
+ * playthrough could not work out what it had left off.
+ */
+function unseenRisk(state: GameState, index: ContentIndex): string | undefined {
+  const reported = new Set(state.reviews.quarters.filter((review) => review.completed).flatMap((review) => review.topicsChosen))
+  const candidates = Object.values(state.risks.scenarios)
+    .filter((s) => s.status !== 'emerging' && s.status !== 'closed' && !reported.has(`risk:${s.id}`))
+    .sort((a, b) => (b.lastAssessed?.residual ?? 0) - (a.lastAssessed?.residual ?? 0))
+  const top = candidates[0]
+  return top ? index.riskScenario.get(top.id)?.title : undefined
 }

@@ -128,7 +128,7 @@ export function DebriefScreen() {
                   <p className="text-sm text-ink-muted text-pretty">{dimension.narrative}</p>
                   {dimension.evidence.length > 0 && (
                     <ul className="space-y-0.5 text-xs text-ink-faint">
-                      {dimension.evidence.slice(0, 5).map((evidence, position) => (
+                      {dimension.evidence.slice(0, 6).map((evidence, position) => (
                         <li key={position}>{evidence}</li>
                       ))}
                     </ul>

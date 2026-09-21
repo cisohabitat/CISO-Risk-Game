@@ -54,8 +54,8 @@
       "baseDurationDays": 12,
       "regulatoryInterest": 0.6,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate", "dec-inc-external"],
-      "whatHelped": ["Backups that could not be reached from the compromised accounts", "A rehearsed decision path"],
-      "whatHurt": ["Administrative accounts shared between environments", "Recovery that had never been timed"]
+      "whatHelped": [{"text": "Backups that could not be reached from the compromised accounts", "when": {"kind": "control.coverageAtLeast", "controlId": "ctl-backup", "value": 0.6}}, {"text": "A rehearsed decision path", "when": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "control.coverageAtLeast", "controlId": "ctl-ir", "value": 0.6}]}}],
+      "whatHurt": [{"text": "Administrative accounts shared between environments", "when": {"kind": "control.coverageBelow", "controlId": "ctl-pam", "value": 0.6}}, {"text": "Recovery that had never been timed", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "evidence.known", "evidenceId": "ev-backup-test-failed"}]}}}]
     },
     {
       "id": "fam-data-breach",
@@ -67,8 +67,8 @@
       "baseDurationDays": 9,
       "regulatoryInterest": 0.9,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-notify"],
-      "whatHelped": ["Egress monitoring that flagged the volume", "Legal engaged from the first hour"],
-      "whatHurt": ["Data held longer than the retention policy allowed", "Weak control over who could query the data"]
+      "whatHelped": [{"text": "Egress monitoring that flagged the volume", "when": {"kind": "control.coverageAtLeast", "controlId": "ctl-dlp", "value": 0.6}}, {"text": "Legal engaged from the first hour", "when": {"kind": "stakeholder.trustAtLeast", "stakeholderId": "stk-legal", "value": 0.55}}],
+      "whatHurt": [{"text": "Data held longer than the retention policy allowed", "when": {"kind": "not", "condition": {"kind": "decision.optionTaken", "decisionId": "dec-data-retention", "optionId": "opt-retention-delete"}}}, {"text": "Weak control over who could query the data", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "decision.optionTaken", "decisionId": "dec-data-retention", "optionId": "opt-retention-restrict"}, {"kind": "control.coverageAtLeast", "controlId": "ctl-dlp", "value": 0.6}]}}}]
     },
     {
       "id": "fam-data-theft",
@@ -80,8 +80,8 @@
       "baseDurationDays": 14,
       "regulatoryInterest": 0.5,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-external"],
-      "whatHelped": ["Telemetry retained long enough to reconstruct the intrusion"],
-      "whatHurt": ["Detection tuned for noise rather than patience", "Standing access that never expired"]
+      "whatHelped": [{"text": "Telemetry retained long enough to reconstruct the intrusion", "when": {"kind": "control.coverageAtLeast", "controlId": "ctl-logging", "value": 0.6}}],
+      "whatHurt": [{"text": "Detection tuned for noise rather than patience", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "decision.optionTaken", "decisionId": "dec-soc-contract", "optionId": "opt-soc-renegotiate"}, {"kind": "decision.optionTaken", "decisionId": "dec-soc-contract", "optionId": "opt-soc-replace"}]}}}, {"text": "Standing access that never expired", "when": {"kind": "control.coverageBelow", "controlId": "ctl-pam", "value": 0.6}}]
     },
     {
       "id": "fam-legacy-outage",
@@ -93,8 +93,8 @@
       "baseDurationDays": 10,
       "regulatoryInterest": 0.2,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-shutdown"],
-      "whatHelped": ["A manual fulfilment fallback that had been documented"],
-      "whatHurt": ["An unsupported operating system with no patch path", "No current inventory of the legacy estate"]
+      "whatHelped": [{"text": "A manual fulfilment fallback that had been documented", "when": {"kind": "decision.optionTaken", "decisionId": "dec-legacy-retirement", "optionId": "opt-legacy-manual"}}],
+      "whatHurt": ["An unsupported operating system with no patch path", {"text": "No current inventory of the legacy estate", "when": {"kind": "not", "condition": {"kind": "evidence.known", "evidenceId": "ev-legacy-inventory"}}}]
     },
     {
       "id": "fam-supplier-disruption",
@@ -106,8 +106,8 @@
       "baseDurationDays": 8,
       "regulatoryInterest": 0.4,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate"],
-      "whatHelped": ["The ability to cut supplier access without cutting the business"],
-      "whatHurt": ["Integration accounts with more rights than the integration needed"]
+      "whatHelped": [{"text": "The ability to cut supplier access without cutting the business", "when": {"kind": "decision.optionTaken", "decisionId": "dec-msp-access", "optionId": "opt-msp-breakglass"}}],
+      "whatHurt": [{"text": "Integration accounts with more rights than the integration needed", "when": {"kind": "control.coverageBelow", "controlId": "ctl-3p-access", "value": 0.6}}]
     }
   ],
   "attackPaths": [
