@@ -18,6 +18,122 @@ fault.
 
 ### Fixed
 
+- **Open: the guide's board-paper picture cannot be regenerated.** The
+  screenshot harness drives a quarter of play through the interface at 4x to
+  reach the first board paper, and it no longer gets there: measured, neither
+  raising its poll cap to 2,200 nor its timeout to fifteen minutes reaches it,
+  and the loop ends on "never reached a board paper". The mechanic itself is
+  healthy — the engine reaches board papers on days 91, 182 and 273 of every
+  campaign, with two to four material items on each — so this is the loop, not
+  the game. `docs/images/08-board.png` therefore predates the materiality
+  change described below and may show one item more than a board pack would
+  now. Every other picture in the guide is current. Left open because the fix
+  is a better way to drive the clock from a browser, not a change to the game.
+
+- **Five risk bands were authored and two were ever used.** One cut list at
+  0.16 / 0.34 / 0.55 / 0.75 served three different quantities, and it was cut
+  for a 0..1 range none of them reach. Measured with a new probe,
+  `pnpm ladder bands`, which samples every visible risk row weekly across the
+  ladder: 13,385 rows over 24 campaigns.
+
+  | | Before | After |
+  |---|---|---|
+  | low | 12.0% | 8.0% |
+  | moderate | 87.1% | 42.7% |
+  | elevated | 0.9% | 31.1% |
+  | high | 0% | 17.8% |
+  | severe | 0% | 0.3% |
+
+  The underlying numbers span 0.08 to 0.38 for residual, 0.10 to 0.28 for
+  exposure and 0.06 to 0.58 for consequence, so exposure could never read
+  above `moderate` whatever happened, and an incident that had actually
+  damaged the business was described as moderate. Each quantity now has cuts
+  fitted to the range it can reach, with headroom above the worst observed.
+  They stay absolute rather than percentiles, so a risk the player genuinely
+  reduced comes down a band instead of a moving scale hiding it. A row moves
+  0.001 in a median week and 0.004 at the ninetieth percentile, so cuts this
+  close together still read as change rather than flicker.
+
+  The same flatness was in the change language: "materially worse" needed a
+  0.14 swing on a scale whose whole range is 0.29, which the simulation cannot
+  produce, so it was a phrase the game could not say. It is 0.05 now, and the
+  risk review's own materially-worse trigger reads the same constant.
+
+  **Reach checked, not assumed.** The cuts also feed board materiality, and a
+  bar of "elevated or worse" on the new scale would have made half the register
+  material. Moved to "high or worse", the board pack calls 21% of open risks
+  material against 26% before, so it still has something to choose between.
+  The ladder is unchanged on every other row, which is what a presentation
+  boundary should do. Tests: every band must be reachable inside each
+  quantity's measured maximum, and a played year must read more than two
+  words for its risks. Mutation-checked by putting one cut list back.
+
+- **Executive patience stopped describing the mode after about week seven.**
+  It seeded from the profile at 0.62 / 0.50 / 0.38 and then drifted up 0.0015
+  a day with no ceiling: +0.55 over a year against a 0.24 spread, so every
+  mode finished at or near maximum patience. It now recovers towards the
+  profile's own value and no further. Measured at the close, 12 seeds a mode:
+  0.59 / 0.47 / 0.32, against baselines of 0.62 / 0.50 / 0.38.
+
+  The friction term this feeds was the other half. It bit only below 0.45,
+  which sits between the three profiles' starting values, so it fired on 0
+  days of 364 on two of the three modes. Bounding the drift alone was tried
+  before and reverted because it made high pressure miss 76% more objectives:
+  an absolute cliff below a mode's own baseline punishes the business rather
+  than the security posture. The term now reads the shortfall from full
+  patience as a standing drag, weighted at 0.02, which is monotone across the
+  ladder and small. Objectives missed went 1.60 / 1.10 / 1.80 before to
+  1.92 / 1.58 / 1.92 after, rather than the 2.80 / 2.30 / 3.00 that a heavier
+  weight produced. A test fails if a mode ends the year far from its profile's
+  patience, or if two modes converge at day 60, 200 or 364.
+
+  That test first asserted a strict ordering on one seed and failed, because a
+  briefing that goes well can leave an executive more patient than the mode's
+  baseline. That is the dial working, so the test averages five seeds a mode.
+
+- **The noise dial could not move, and the measurement behind that was
+  wrong.** The recorded figure was exactly 2.00 noise events per campaign at
+  every difficulty. It came from counting `firedEventIds`, which records an
+  event's first fire and not its repeats, and both noise-tagged events are
+  repeatable on a cooldown. Counted from the inbox instead, over 30 campaigns
+  a mode: 10.73 / 10.80 / 10.67 noise messages a year, out of 153 / 159 / 170.
+  Ten times what the note said, and still flat across the ladder, because both
+  events are cooldown-bound and the weight only chooses which day they land on.
+
+  `noiseMultiplier` is deleted rather than tuned. Scaling their cooldown by
+  mode would make it bite, and was declined on the reasoning already recorded
+  here: high pressure is meant to be strategically harder, not to cost more
+  attention to read, and the evidence already carries the signal-from-noise
+  discrimination plan §44 asks for. The profile, the draw and the architecture
+  note no longer describe a dial that does nothing.
+
+- **"A programme is on plan" was a message the game could not send.** The
+  condition asked for progress within 0.02 of the nominal rate. Measured, a
+  programme with no blockers and nothing competing for its team holds about
+  92% of nominal, so the absolute gap passes 0.02 within about two months and
+  never comes back. The event was also gated to day 120, by which time any
+  programme started early was outside the window. It is a tenth of plan now,
+  and opens on day 60. The condition first reads true on day 52 of a clean
+  programme, and the message arrives.
+
+- **Two of the three "never fired" events were the probe, and one was a door
+  it never opened.** Coverage listed three events as unreachable. One was the
+  programme-win message above. The other two are scheduled by particular
+  decision options, and the report had no way to say so. Coverage now names
+  the gate: "behind dec-q4-recovery-window → Take the window now". The
+  remaining pair sit behind the two options of one Q4 decision, which needs
+  the ransomware programme at four fifths by day 275. A test now proves that
+  chain: a player who funds recovery early and clears its blockers is offered
+  the restore window on day 275, and the programme completes.
+
+- **"Programmes finished 0.42" was a probe that never pressed the button.**
+  A blocker is shown to the player and can be cleared for budget or attention,
+  and neither the ladder nor the coverage harness ever cleared one, so every
+  programme sat at-risk for the rest of the year. With blockers cleared, a
+  focused player finishes what they start: started against finished reads
+  2.7 / 1.4 on guided, 1.8 / 1.8 on CISO and 1.3 / 1.0 on high pressure. The
+  player guide's advice to pick one programme and finish it stands.
+
 - **The budget said a first-time player downloaded 241 kB; they downloaded
   301 kB.** CI had been red for four commits on the job named "Typecheck,
   lint, content and unit tests", which also builds and runs `pnpm size`.

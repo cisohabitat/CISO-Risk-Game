@@ -4,6 +4,7 @@
  */
 import type { ContentIndex, GameState, RelationshipBand, StakeholderRuntime } from '../types'
 import { clamp01 } from '../types'
+import { DIFFICULTY_PROFILES } from '../engine/setup'
 
 export function relationshipBand(trust: number): RelationshipBand {
   if (trust < 0.2) return 'resistant'
@@ -38,7 +39,16 @@ export function tickRelationships(state: GameState): void {
       state.stakeholders.boardConfidence + (avg - state.stakeholders.boardConfidence) * 0.01,
     )
   }
-  state.stakeholders.operationalTolerance = clamp01(state.stakeholders.operationalTolerance + 0.0015)
+  // Patience recovers towards the level this organisation actually has, and
+  // no further. It used to climb 0.0015 a day with no ceiling, which is +0.55
+  // over a year against a 0.24 spread between the modes: every mode finished
+  // the year at or near maximum patience, and "less executive patience" stopped
+  // describing high pressure after about week seven. Recovering towards the
+  // profile's own value keeps the dial true all year, and spending patience
+  // still costs something until the organisation forgives it.
+  const baseline = DIFFICULTY_PROFILES[state.difficulty].executiveTolerance
+  const tolerance = state.stakeholders.operationalTolerance
+  state.stakeholders.operationalTolerance = clamp01(tolerance + (baseline - tolerance) * 0.01)
 }
 
 export function boardConfidenceLabel(value: number): string {

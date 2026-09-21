@@ -7,6 +7,10 @@ import type { GameState } from '@/game/types'
  * Two programme messages used to fire on "any programme active" and claim a
  * state nobody checked. Measured over 20 campaigns: "A programme has stalled"
  * was true in 27 of 93 arrivals, "A programme is ahead of plan" in 0 of 54 — and could not be, so it now says "on plan".
+ * "On plan" then meant within two points of the nominal rate, which a clean
+ * programme holding 92% of that rate leaves behind within about two months, so
+ * the message went unsendable in any campaign that built early. It is a tenth
+ * of plan now, and the event opens on day 60 rather than 120.
  * A message that claims a state has to test for it.
  */
 const PROGRAMMES = ['prog-identity', 'prog-ransomware', 'prog-thirdparty', 'prog-detection']
@@ -57,7 +61,10 @@ describe('programme messages claim only what is true', () => {
               return p.startedDay !== undefined && state.currentDay - p.startedDay >= 30
                 && (p.status === 'active' || p.status === 'at-risk' || p.status === 'paused')
                 && p.blockers.every((b) => b.resolved || b.startedDay === state.currentDay)
-                && p.progress >= (state.currentDay - p.startedDay) / def.durationDays - 0.02 - 1 / def.durationDays
+                // Within a tenth of plan, matching the condition: an absolute
+                // two points is narrower than the rate a clean programme can
+                // actually hold, which is what made the message unsendable.
+                && p.progress >= ((state.currentDay - p.startedDay) / def.durationDays) * 0.9 - 1 / def.durationDays
             })
             expect(onPlan, `${seed} day ${state.currentDay}: "on plan" with nothing on plan`).toBe(true)
           }

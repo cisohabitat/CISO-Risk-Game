@@ -4,7 +4,7 @@
  */
 import type { ContentIndex, GameState } from '../types'
 import { assessScenario } from './calculations'
-import { confidenceFromUncertainty } from './bands'
+import { confidenceFromUncertainty, MATERIAL_MOVE } from './bands'
 
 export interface RiskReviewResult {
   dueForReview: string[]
@@ -29,7 +29,7 @@ export function refreshScenarioAssessments(state: GameState, index: ContentIndex
     }
     scenario.confidence = confidenceFromUncertainty(assessment.uncertainty)
 
-    if (previous !== undefined && assessment.residual - previous > 0.12) {
+    if (previous !== undefined && assessment.residual - previous > MATERIAL_MOVE) {
       result.materiallyWorse.push({ scenarioId: scenario.id, previous, current: assessment.residual })
       scenario.nextReviewDay = Math.min(scenario.nextReviewDay, state.currentDay + 7)
     }

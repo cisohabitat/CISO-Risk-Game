@@ -75,7 +75,11 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
         const def = index.programme.get(p.id)
         if (!def) return false
         const expected = elapsed / Math.max(1, def.durationDays)
-        return p.progress >= expected - 0.02 && p.blockers.every((b) => b.resolved)
+        // Within a tenth of plan, not within two points of it. A programme
+        // with no blockers and nothing competing for its team still runs at
+        // about 92% of the nominal rate, measured, so an absolute 0.02 made
+        // "a programme is on plan" a message the game could never send.
+        return p.progress >= expected * 0.9 && p.blockers.every((b) => b.resolved)
       })
     // "Several assumptions are past their review date" fired with none
     // recorded, and "both identity roles are still open" fired after the

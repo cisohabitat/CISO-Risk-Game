@@ -19,7 +19,7 @@ import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledg
 import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { effortAllocation } from './prioritisation'
 import { unexaminedAssumptions } from '../assumptions/validation'
-import { compareBands, riskBand } from '../risk/bands'
+import { compareBands, consequenceBand, residualBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export interface QuarterReviewInput {
@@ -50,13 +50,13 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
     // than for one who did nothing, because their own work pushed residual
     // under the bar and took the risk off the agenda. "Choose material
     // topics" (plan §28.7) needs something to choose between.
-    const residual = riskBand(scenario.lastAssessed?.residual ?? 0)
-    const consequence = riskBand(scenario.lastAssessed?.consequence ?? 0)
+    const residual = residualBand(scenario.lastAssessed?.residual ?? 0)
+    const consequence = consequenceBand(scenario.lastAssessed?.consequence ?? 0)
     const material =
-      compareBands(residual, 'elevated') >= 0 ||
+      compareBands(residual, 'high') >= 0 ||
       // A severe-consequence risk you believe you have controlled is exactly
       // what a board needs to know you are relying on.
-      compareBands(consequence, 'elevated') >= 0 ||
+      compareBands(consequence, 'high') >= 0 ||
       // Accepting risk is done on the organisation's behalf, so the
       // organisation hears about it.
       scenario.status === 'accepted'
@@ -724,7 +724,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
   if (worstRiskDef && worstRisk) {
     narrative.push(
-      `You end the year with ${worstRiskDef.title} at ${riskBand(worstRisk.lastAssessed?.residual ?? 0)} residual exposure and ${worstRisk.confidence} confidence.`,
+      `You end the year with ${worstRiskDef.title} at ${residualBand(worstRisk.lastAssessed?.residual ?? 0)} residual exposure and ${worstRisk.confidence} confidence.`,
     )
   }
   if (spots.length > 0) {

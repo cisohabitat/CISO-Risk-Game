@@ -18,7 +18,8 @@ import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
-import { patternSuggestions, briefing, teamView } from '../src/store/selectors'
+import { patternSuggestions, briefing, teamView, visibleRisks } from '../src/store/selectors'
+import { residualBand, RISK_BAND_ORDER } from '../src/game/risk/bands'
 import { evaluateCondition } from '../src/game/events/conditions'
 import { capacityBand, teamStrain } from '../src/game/team/capacity'
 import type { Difficulty, GameState } from '../src/game/types'
@@ -83,9 +84,26 @@ function play(difficulty: Difficulty, appetite: Appetite) {
   let wantedProgramme = 0
   let wantedEnquiry = 0
   let boards = 0, patternsFormed = 0, patternsUnaffordable = 0
+  // What the player's own list reads, sampled weekly, for `bands` below.
+  const samples: { residual: number; exposure: number; consequence: number }[] = []
+  // Week-on-week movement of the same row, which is what decides whether a
+  // tighter set of cuts would read as change or as flicker.
+  const deltas: number[] = []
+  const lastSeen = new Map<string, number>()
 
   for (let day = 0; day < 364; day += 1) {
     runDays(state, index, 1)
+    if (day % 7 === 0) {
+      for (const risk of visibleRisks(state, index)) {
+        if (risk.status === 'closed') continue
+        const assessed = state.risks.scenarios[risk.id]?.lastAssessed
+        if (!assessed) continue
+        samples.push({ residual: assessed.residual, exposure: assessed.exposure, consequence: assessed.consequence })
+        const previous = lastSeen.get(risk.id)
+        if (previous !== undefined) deltas.push(Math.abs(assessed.residual - previous))
+        lastSeen.set(risk.id, assessed.residual)
+      }
+    }
 
     // Decisions, in the voice of the policy above.
     for (const id of [...state.decisions.openIds]) {
@@ -183,10 +201,15 @@ function play(difficulty: Difficulty, appetite: Appetite) {
     }
   }
 
+  // What the board pack was offered, and how much of it counted as material:
+  // the cuts feed materiality, so a change to them has to be read here too.
+  const incidentConsequences = Object.values(state.incidents.incidents).map((incident) => incident.consequence)
+  const topics = materialTopics(state, index).filter((t) => t.id.startsWith('risk:'))
+  const materialShare = topics.length ? topics.filter((t) => t.material).length / topics.length : 0
   const review = buildAnnualReview(state, index)
   const view = briefing(state, index)
   const team = teamView(state, index)
-  return { state, log, refused, review, view, team, boards, patternsFormed, patternsUnaffordable, wantedProgramme, wantedEnquiry }
+  return { state, log, refused, review, view, team, boards, patternsFormed, patternsUnaffordable, wantedProgramme, wantedEnquiry, samples, deltas, incidentConsequences, materialShare }
 }
 
 // `sweep N` runs the same philosophy over N seeds on all three modes and
@@ -196,7 +219,11 @@ if (process.argv[2] === 'sweep') {
   const appetite = (process.argv[4] as Appetite) ?? 'measured'
   console.log(`${n} seeds per mode, appetite: ${appetite}`)
   for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
-    let incidents = 0, missed = 0, budgetLeft = 0, worst = 0, boardSum = 0, programmesStarted = 0, brokeCount = 0
+    let incidents = 0, missed = 0, budgetLeft = 0, worst = 0, boardSum = 0, programmesStarted = 0
+    // Executive patience at the close: the dial used to end the year at or
+    // near maximum whatever the mode, so it described nothing after week seven.
+    let toleranceEnd = 0
+    let finished = 0
     const bands: Record<string, number> = {}
     for (let i = 0; i < n; i += 1) {
       SEED = `sweep-${i}`
@@ -207,17 +234,73 @@ if (process.argv[2] === 'sweep') {
       worst += Object.values(out.state.incidents.incidents).reduce((m, inc) => Math.max(m, inc.consequence), 0)
       boardSum += out.state.stakeholders.boardConfidence
       programmesStarted += out.wantedProgramme
-      brokeCount += out.refused.filter((r) => /not enough budget/i.test(r)).length
+      toleranceEnd += out.state.stakeholders.operationalTolerance
+      finished += Object.values(out.state.programmes.programmes).filter((p) => p.status === 'complete').length
       const band = out.review.dimensions.find((d) => d.id === 'resilience')!.band
       bands[band] = (bands[band] ?? 0) + 1
     }
     console.log(
       `${difficulty.padEnd(14)} incidents/yr ${(incidents / n).toFixed(2)} · objectives missed ${(missed / n).toFixed(2)}` +
       ` · worst consequence ${(worst / n).toFixed(2)} · board ${(boardSum / n).toFixed(2)}` +
-      ` · budget left £${(budgetLeft / n / 1000).toFixed(2)}m · programmes started ${(programmesStarted / n).toFixed(1)}` +
-      ` · refused for money ${(brokeCount / n).toFixed(1)}x · resilience ${Object.entries(bands).map(([b, c]) => `${b} ${c}`).join(', ')}`,
+      ` · budget left £${(budgetLeft / n / 1000).toFixed(2)}m · programmes started ${(programmesStarted / n).toFixed(1)} finished ${(finished / n).toFixed(1)}` +
+      ` · missed per programme ${(missed / Math.max(1, programmesStarted)).toFixed(2)}` +
+      ` · patience left ${(toleranceEnd / n).toFixed(2)} · resilience ${Object.entries(bands).map(([b, c]) => `${b} ${c}`).join(', ')}`,
     )
   }
+  process.exit(0)
+}
+
+/**
+ * `bands N` samples what the player's risk list actually reads, weekly,
+ * across the ladder. Five bands were authored and two were ever used: the cuts
+ * are only as good as the distribution they sit in, so measure it before
+ * moving them.
+ */
+if (process.argv[2] === 'bands') {
+  const n = Number(process.argv[3] ?? 8)
+  const all: { residual: number; exposure: number; consequence: number }[] = []
+  const moves: number[] = []
+  const incidentHits: number[] = []
+  let materialSum = 0
+  let runs = 0
+  const counted: Record<string, number> = {}
+  for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
+    for (let i = 0; i < n; i += 1) {
+      SEED = `bands-${i}`
+      const out = play(difficulty, 'measured')
+      moves.push(...out.deltas)
+      incidentHits.push(...out.incidentConsequences)
+      materialSum += out.materialShare
+      runs += 1
+      for (const sample of out.samples) {
+        all.push(sample)
+        const band = residualBand(sample.residual)
+        counted[band] = (counted[band] ?? 0) + 1
+      }
+    }
+  }
+  const pick = (values: number[], q: number) => values.slice().sort((a, b) => a - b)[Math.floor((values.length - 1) * q)]!
+  const residuals = all.map((s) => s.residual)
+  const total = Object.values(counted).reduce((a, b) => a + b, 0)
+  console.log(`${all.length} risk rows sampled weekly over ${n} seeds x 3 modes\n`)
+  console.log('  what a row reads today:')
+  for (const band of RISK_BAND_ORDER) {
+    const count = counted[band] ?? 0
+    console.log(`    ${band.padEnd(9)} ${String(count).padStart(6)}  ${((count / total) * 100).toFixed(1)}%`)
+  }
+  const show = (label: string, values: number[]) =>
+    console.log(
+      `    ${label.padEnd(12)} min ${pick(values, 0).toFixed(3)} · p10 ${pick(values, 0.1).toFixed(3)}` +
+      ` · p25 ${pick(values, 0.25).toFixed(3)} · median ${pick(values, 0.5).toFixed(3)}` +
+      ` · p75 ${pick(values, 0.75).toFixed(3)} · p90 ${pick(values, 0.9).toFixed(3)} · max ${pick(values, 1).toFixed(3)}`,
+    )
+  console.log(`\n  risks the board pack calls material: ${((materialSum / runs) * 100).toFixed(0)}% of those open`)
+  console.log('\n  the numbers underneath:')
+  show('residual', residuals)
+  show('week move', moves)
+  if (incidentHits.length > 0) show('incident', incidentHits)
+  show('exposure', all.map((s) => s.exposure))
+  show('consequence', all.map((s) => s.consequence))
   process.exit(0)
 }
 

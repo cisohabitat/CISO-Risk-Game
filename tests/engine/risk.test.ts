@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { newGame } from '@/game/engine/orchestrator'
+import { newGame, runDays } from '@/game/engine/orchestrator'
 import {
   assessPathSteps,
   assessScenario,
@@ -10,7 +10,7 @@ import {
   calculateUncertainty,
 } from '@/game/risk/calculations'
 import { applyDrift, calculateControlEffectiveness, resistanceToTechnique } from '@/game/controls/effectiveness'
-import { riskBand, confidenceFromUncertainty, describeChange } from '@/game/risk/bands'
+import { consequenceBand, exposureBand, residualBand, confidenceFromUncertainty, describeChange, RISK_BAND_ORDER } from '@/game/risk/bands'
 import { testIndex } from './helpers'
 
 describe('risk calculations', () => {
@@ -109,14 +109,53 @@ describe('risk calculations', () => {
   })
 
   it('never exposes a raw number through the band vocabulary', () => {
-    expect(riskBand(0)).toBe('low')
-    expect(riskBand(0.45)).toBe('elevated')
-    expect(riskBand(0.99)).toBe('severe')
+    expect(residualBand(0)).toBe('low')
+    expect(residualBand(0.24)).toBe('elevated')
+    expect(residualBand(0.99)).toBe('severe')
     expect(confidenceFromUncertainty(0.1)).toBe('strong')
     expect(confidenceFromUncertainty(0.9)).toBe('limited')
     expect(describeChange(undefined, 0.5)).toBe('newly assessed')
-    expect(describeChange(0.2, 0.5)).toBe('materially worse')
-    expect(describeChange(0.5, 0.2)).toBe('materially improved')
+    expect(describeChange(0.2, 0.28)).toBe('materially worse')
+    expect(describeChange(0.28, 0.2)).toBe('materially improved')
+    expect(describeChange(0.2, 0.205)).toBe('broadly unchanged')
+  })
+
+  /**
+   * Five bands were authored and two were ever used, because one cut list
+   * served three quantities and was cut for a range none of them reach. Each
+   * scale's top cut has to sit inside what its own quantity can actually
+   * produce, or the bands above it are decoration. The maxima are measured:
+   * `pnpm ladder bands 8` samples every visible row weekly across the ladder.
+   */
+  it('cuts each quantity inside the range that quantity can reach', () => {
+    const reach: [string, (value: number) => string, number][] = [
+      ['residual', residualBand, 0.376],
+      ['exposure', exposureBand, 0.278],
+      ['consequence', consequenceBand, 0.576],
+    ]
+    for (const [name, band, measuredMax] of reach) {
+      const seen = new Set<string>()
+      for (let value = 0; value <= measuredMax; value += 0.001) seen.add(band(value))
+      expect([...seen].sort(), `${name} cannot reach every band inside ${measuredMax}`).toEqual(
+        [...RISK_BAND_ORDER].sort(),
+      )
+    }
+  })
+
+  /** And the same, against what the authored estate actually produces. */
+  it('gives a played year more than one word for its risks', () => {
+    const index = testIndex()
+    const bands = new Set<string>()
+    for (const seed of ['band-a', 'band-b']) {
+      const state = newGame(index, { seed })
+      for (let week = 0; week < 20; week += 1) {
+        runDays(state, index, 7)
+        for (const scenario of Object.values(state.risks.scenarios)) {
+          if (scenario.lastAssessed) bands.add(residualBand(scenario.lastAssessed.residual))
+        }
+      }
+    }
+    expect(bands.size, `a played year read only: ${[...bands].join(', ')}`).toBeGreaterThanOrEqual(3)
   })
 })
 

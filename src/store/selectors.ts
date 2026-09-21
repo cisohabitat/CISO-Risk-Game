@@ -15,7 +15,7 @@ import type {
   RiskBand,
 } from '@/game/types'
 import { CYBER_FUNCTIONS, DAYS_PER_QUARTER, clamp01, money } from '@/game/types'
-import { riskBand } from '@/game/risk/bands'
+import { consequenceBand, exposureBand, residualBand } from '@/game/risk/bands'
 import type { IconName } from '@/components/ui/icons'
 import { optionBudgetCost } from '@/game/engine/orchestrator'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
@@ -53,7 +53,7 @@ export interface VisibleRisk {
   hasInvalidatedAssumption: boolean
   /**
    * Whether the player has ever assessed this scenario. Missing assessments
-   * used to default to 0 and come out of `riskBand` as `low`, so "we have not
+   * used to default to 0 and come out of `residualBand` as `low`, so "we have not
    * looked at this" and "we looked, and it is fine" were the same row. The
    * bands below are only meaningful when this is true.
    */
@@ -75,9 +75,9 @@ export function visibleRisks(state: GameState, index: ContentIndex): VisibleRisk
       title: def.title,
       statement: def.statement,
       status: runtime.status,
-      band: riskBand(assessed?.residual ?? 0),
-      exposureBand: riskBand(assessed?.exposure ?? 0),
-      consequenceBand: riskBand(assessed?.consequence ?? 0),
+      band: residualBand(assessed?.residual ?? 0),
+      exposureBand: exposureBand(assessed?.exposure ?? 0),
+      consequenceBand: consequenceBand(assessed?.consequence ?? 0),
       confidence: runtime.confidence,
       ownerName: owner?.name ?? 'Unassigned',
       ownerRole: owner?.shortRole ?? '',
@@ -563,7 +563,7 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
     focusPerWeek: state.resources.focusPerWeek,
     boardConfidence: boardConfidenceLabel(state.stakeholders.boardConfidence),
     teamCapacity: capacityBand(teamStrain(state)),
-    residualExposure: riskBand(residual),
+    residualExposure: residualBand(residual),
     recoveryConfidence: recovery < 0.3 ? 'Limited' : recovery < 0.55 ? 'Partial' : recovery < 0.78 ? 'Reasonable' : 'Strong',
     openDecisions: state.decisions.openIds.length,
     unreadMessages: state.inbox.messages.filter((message) => !message.read).length,
@@ -641,7 +641,7 @@ export function incidentViews(state: GameState, index: ContentIndex) {
           .map((serviceId) => index.service.get(serviceId)?.name)
           .filter((name): name is string => Boolean(name)),
         reconstruction: incident.reconstruction,
-        severity: riskBand(incident.consequence),
+        severity: consequenceBand(incident.consequence),
       }
     })
     .filter((view): view is NonNullable<typeof view> => Boolean(view))

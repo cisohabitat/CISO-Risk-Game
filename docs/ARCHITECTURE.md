@@ -128,8 +128,7 @@ three times over while its profile claimed one multiplier.
 
 The dials split in two, and the split is the design rule. The world dials
 (`threatMultiplier` at setup, `threatTempo` daily, `sectorPressurePull`,
-`noiseMultiplier`, `startingDiscovery`, `executiveTolerance`) get harsher as the
-mode does. The player's dials (`budgetMultiplier`, `capacityMultiplier`,
+`startingDiscovery`, `executiveTolerance`) get harsher as the mode does. The player's dials (`budgetMultiplier`, `capacityMultiplier`,
 `focusPerWeek`, `investigationSpeed`) stay close to normal, because they are the
 channels through which skill pays: cutting them alongside a harsher world makes
 a mode flatter rather than harder, which is measurably what happened before.

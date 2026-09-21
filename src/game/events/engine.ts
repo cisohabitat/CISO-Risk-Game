@@ -6,7 +6,6 @@
 import type { ContentIndex, GameEffect, GameEventDef, GameState } from '../types'
 import { CAMPAIGN_DAYS } from '../types'
 import type { Rng } from '../engine/rng'
-import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { evaluateAll } from './conditions'
 
 export interface FiredEvent {
@@ -144,14 +143,13 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
         remaining = remaining.filter((def) => !(isTexture(def) && !isSignal(def)))
       }
       if (remaining.length === 0) break
-      // Harder difficulties bury the material signal in more noise (plan §44).
-      // Measured as near-inert: only two authored events carry the tag and
-      // both fire in every campaign whatever the multiplier. See the note on
-      // `noiseMultiplier` in setup.ts before tuning this.
-      const noiseMultiplier = DIFFICULTY_PROFILES[state.difficulty].noiseMultiplier
-      const chosen = rng.weighted(remaining, (def) =>
-        def.tags.includes('noise') ? def.weight * noiseMultiplier : def.weight,
-      )
+      // The draw used to weight `noise`-tagged events by a per-mode multiplier.
+      // Both such events are repeatable on a cooldown, so they fired as often
+      // as the cooldown allowed whatever the weight, and the three modes read
+      // 10.73 / 10.80 / 10.67 noise messages a year. The dial is gone rather
+      // than tuned: see the note in setup.ts for why noise is not the axis
+      // this ladder discriminates on.
+      const chosen = rng.weighted(remaining, (def) => def.weight)
       if (!chosen) break
       fire(chosen)
     }

@@ -25,6 +25,16 @@ import { assessScenario } from '../risk/calculations'
  * engine, and a third in sector pressure — while `noiseMultiplier` sat here
  * unread because the event engine had its own copy of the numbers. A test
  * fails the build on a difficulty branch outside this file.
+ *
+ * `noiseMultiplier` itself is gone. It weighted the daily draw towards the two
+ * events tagged `noise`, and both are repeatable on a cooldown, so they fire
+ * as often as their cooldown allows whatever the weight: measured over 30
+ * campaigns a mode, 10.73 / 10.80 / 10.67 noise messages a year across the
+ * ladder, out of 153 / 159 / 170. The dial changed which day they landed on
+ * and nothing else. Scaling their cooldown by mode would make it bite, and
+ * was declined: high pressure is meant to be strategically harder, not to
+ * cost more attention to read, and the evidence already carries the
+ * signal-from-noise discrimination that plan §44 asks for.
  */
 export interface DifficultyProfile {
   budgetMultiplier: number
@@ -50,7 +60,6 @@ export interface DifficultyProfile {
    * instead (4 of 48 marked `noise`, 2 more tagged `contradicts-`), which no
    * difficulty dial touches.
    */
-  noiseMultiplier: number
   executiveTolerance: number
   investigationSpeed: number
   /**
@@ -80,7 +89,6 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     threatTempo: 0.72,
     sectorPressurePull: 0.34,
     startingDiscovery: 0.45,
-    noiseMultiplier: 0.7,
     executiveTolerance: 0.62,
     investigationSpeed: 0.85,
     showsDecisionCoaching: true,
@@ -93,7 +101,6 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     threatTempo: 1,
     sectorPressurePull: 0.48,
     startingDiscovery: 0.3,
-    noiseMultiplier: 1,
     executiveTolerance: 0.5,
     investigationSpeed: 1,
     showsDecisionCoaching: false,
@@ -110,7 +117,6 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     threatTempo: 1.1,
     sectorPressurePull: 0.62,
     startingDiscovery: 0.2,
-    noiseMultiplier: 1.3,
     executiveTolerance: 0.38,
     investigationSpeed: 1.1,
     showsDecisionCoaching: false,

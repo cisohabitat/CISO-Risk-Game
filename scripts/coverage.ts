@@ -110,6 +110,14 @@ function play(
           })
         }
       }
+      // A blocker is shown to the player and can be cleared; a probe that
+      // never clears one measures a player who watched their programmes stall.
+      for (const programme of Object.values(state.programmes.programmes)) {
+        for (const blocker of programme.blockers) {
+          if (blocker.resolved) continue
+          applyAction(state, index, { type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id })
+        }
+      }
       // Concurrent runs start the contending pair back to back so they are
       // genuinely live together; the rest keep the spaced-out order.
       const interval = concurrentProgrammes && programmeIndex < 2 ? 10 : 40
@@ -198,7 +206,28 @@ function main(): void {
   const unfired = index.content.events.filter((event) => !firedEvents.has(event.id)).map((e) => e.id)
   const unopened = index.content.decisions.filter((d) => !openedDecisions.has(d.id)).map((d) => d.id)
   const unseen = index.content.evidence.filter((e) => !seenEvidence.has(e.id)).map((e) => e.id)
-  if (unfired.length) console.log('\nNEVER FIRED (events):\n ', unfired.join('\n  '))
+  // An event scheduled by one option of one decision is not dead content: it
+  // is content behind a door the probe did not open. Saying which door turns a
+  // misleading list into a question somebody can answer.
+  const gate = new Map<string, string>()
+  for (const decision of index.content.decisions) {
+    for (const option of decision.options) {
+      for (const effect of option.immediateEffects ?? []) {
+        if (effect.type === 'event.schedule') gate.set(effect.eventId, `${decision.id} → ${option.label}`)
+      }
+    }
+  }
+  if (unfired.length) {
+    console.log('\nNEVER FIRED (events):')
+    for (const id of unfired) {
+      const behind = gate.get(id)
+      console.log(`  ${id}${behind ? `   behind ${behind}` : ''}`)
+    }
+    const gated = unfired.filter((id) => gate.has(id)).length
+    if (gated > 0) {
+      console.log(`  ${gated} of these are scheduled by a decision option this run never took.`)
+    }
+  }
   if (unopened.length) console.log('\nNEVER OPENED (decisions):\n ', unopened.join('\n  '))
   if (unseen.length) console.log('\nNEVER SEEN (evidence):\n ', unseen.join('\n  '))
 }

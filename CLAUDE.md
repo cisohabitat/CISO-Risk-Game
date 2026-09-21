@@ -52,6 +52,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm playthrough` | One campaign played end to end, photographed as it goes |
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
 | `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
+| `pnpm ladder bands 8` | What do the risk rows actually read, and how often? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
@@ -74,92 +75,34 @@ what not to change on one player's word.
 
 ## Known weaknesses
 
-Measured, not yet fixed. Ranked.
+Measured, not yet fixed. Ranked. Everything that used to sit here about the
+risk bands, executive patience and the noise dial has been fixed and moved to
+`docs/FINDINGS.md`.
 
-- **Executive patience stops describing the mode after about week seven.**
-  `executiveTolerance` seeds `operationalTolerance` at 0.62 / 0.50 / 0.38, and
-  then `relationships.ts` drifts it up 0.0015 a day with no ceiling — +0.55
-  over a year against a 0.24 spread between the modes. Measured: the objectives
-  friction term, which bites below 0.45, fires on **0 days of 364 on guided and
-  on CISO**, and on **46 on high pressure**; all three finish the year at or
-  near maximum patience. "Less executive patience" is one of the four things
-  high pressure is meant to keep, and it keeps it until about week seven.
+- **Nobody has played this.** Four playtest reports sit in `docs/playtests/`
+  and every one of them is an AI driving a browser, which each says of itself.
+  They are good at contradictions, stale copy and screens that do not explain
+  themselves, and they found plenty. They cannot say whether the year builds,
+  whether the annual review lands as uncomfortable rather than arbitrary, or
+  whether somebody who does not know the subject finishes feeling they learned
+  something. No harness answers this and no amount of further simulation will.
+  `docs/PLAYTEST.md` is how to ask a person.
 
-  Bounding it was tried and reverted, and the experiment was re-run against
-  the current build once the budget gate and the overload fix had moved the
-  baseline. Drifting toward the profile value instead of past it makes the
-  dial real all year — for an idle player the friction term then bites on
-  0 / 57 / 350 days of 364 across the ladder, against 0 / 0 / 84 today — but
-  because 0.45 falls between CISO's 0.50 and high pressure's 0.38, high
-  pressure pays almost permanently. Over 40 seeds of the ladder policy:
+- **The last quarter is still the lightest.** Decisions arrived 12.4 / 6.5 /
+  2.8 / 1.4 per quarter for an engaged player before the late-year work; they
+  now read 12.3 / 7.2 / 3.9 / 2.8, the longest stretch with nothing to decide
+  fell from 114 days to 67, and the inbox carries 49 / 53 / 33 / 34 messages a
+  quarter. The fourth quarter still carries just under a quarter of the first.
+  Whether the back half now *feels* like the year building is the playtest
+  question in `docs/PLAYTEST.md`, not a number to tune further.
 
-  | | Guided | CISO | High Pressure |
-  |---|---|---|---|
-  | Objectives missed | 1.88 → 1.95 | 1.07 → 1.20 | 1.27 → **2.23 (+76%)** |
-  | Incidents a year | 0.50 → 0.42 | 1.02 → 0.93 | 1.57 → 1.60 |
-
-  That buys difficulty by punishing the business rather than the security
-  posture, which is not what the dial is for, and it needs the 0.45 threshold
-  revisited alongside it. The first measurement said +74% against an older
-  baseline; the re-run says +76%, so the shape and the size both stand. Two
-  coupled numbers and a 76% swing in one mode is a playtest question, not a
-  desk decision.
-
-- **Five risk bands, two ever used.** `riskBand` cuts residual at 0.16 /
-  0.34 / 0.55 / 0.75, and the simulation's residuals for Nexora's estate sit
-  between 0.11 and 0.31 on day one and move by hundredths. Measured over 20
-  campaigns per mode and two play styles: **86% of the risk rows a player
-  ever sees read `moderate`**, `elevated` appears in 4%, and `high` and
-  `severe` never. The list is now ordered by assessment within a band, which
-  is what separates the rows; but the words themselves say almost nothing,
-  and the same thresholds feed materiality for the board pack, the collision
-  verdicts and the debrief, so re-cutting them is a tuning pass with reach
-  into all three. Not changed. A playtester who says the risks "all look the
-  same" is the signal.
-
-- **The noise dial cannot move.** A comparative review across the three modes
-  worried that high pressure might get harder by filling the inbox rather than
-  by being strategically harder, and graded the profile's `noiseMultiplier`
-  (0.7 / 1.0 / 1.3) as part of the ladder. Measured over 40 campaigns per mode:
-  **exactly 2.00 noise events fire in every campaign at every difficulty**,
-  2.3% of the ~85 events a year, because two of the 123 authored events carry
-  the tag and both are one-shot. Everything eligible fires anyway; the
-  multiplier only shifts which day they land on. The row in the difficulty
-  table describes something that does not happen.
-
-  The worry it was raised against is answered, and the other way round. Over 20
-  campaigns per mode an engaged player sees 150, 158 and 163 messages a year
-  across the ladder — 9% end to end — with an identical repetition ratio
-  (1.42 / 1.40 / 1.42) and a flat routine share (28% / 27% / 27%). What rises
-  is material: critical messages 3% → 6% → 8%, decisions 18.5 → 20.5 → 21.5,
-  incidents 0.5 → 1.2 → 1.6. High pressure is harder, not noisier.
-
-  Not fixed, deliberately. The only route is authoring noise events, which
-  would make the mode harder in exactly the cognitive way the review asked us
-  not to, and the discrimination plan §44 is after is already carried by
-  evidence — 4 of 48 marked `noise`, 2 more tagged `contradicts-` — which no
-  difficulty dial touches. Recorded so nobody tunes or grades a dial with no
-  room to move; `setup.ts` and `events/engine.ts` carry the same note.
-
-- **The year no longer fades, and the last quarter is still the lightest.**
-  Measured before any of it: decisions arrived 12.4 / 6.5 / 2.8 / 1.4 per
-  quarter for an engaged player, the longest stretch with nothing to decide
-  averaged 114 days, and the second half of the inbox was fourteen
-  repeatables because the one-shot pool was spent by July. Two changes, at
-  the owner's decision and against the freeze: five late-year decisions that
-  arise from the player's own position, and a draw that paces calendar-only
-  texture across the year in two tiers (signal early, colour spread). The
-  same probes now read **12.3 / 7.2 / 3.9 / 2.8**, a longest stretch of
-  **67 days**, and 49 / 53 / 33 / 34 messages a quarter from 77 / 123 / 94 /
-  94 subjects. `docs/FINDINGS.md` has both entries and the ladder before and
-  after.
-
-  What remains: the fourth quarter carries just under a quarter of the
-  first, and whether the back half now *feels* like the year building is the
-  playtest question in `docs/PLAYTEST.md`. High pressure now misses more
-  objectives (1.32 → 1.60) because colour events that carry executive
-  patience land where objectives fall due, which is the executive patience
-  weakness above wearing a new coat.
+- **Objectives missed does not read as difficulty, and should not be read
+  that way.** The ladder's business row is confounded by how much the player
+  builds: guided affords 2.7 programmes against high pressure's 1.3, and a
+  programme costs delivery, so guided misses about as many objectives as high
+  pressure does. Per programme started the ladder is monotone — 0.78 / 0.82 /
+  1.67 across the modes — and `pnpm ladder sweep` prints both. Read the per
+  programme figure, or compare modes at equal build.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every
@@ -167,6 +110,7 @@ suspicion that turned out to be the harness — lives in `docs/FINDINGS.md`, and
 new finding goes there once it is closed. Read it before deciding something is
 broken: a good share of past findings turned out to be in the probe, not the
 game, so check what the simulated player actually did first.
+
 
 ## Further reading
 

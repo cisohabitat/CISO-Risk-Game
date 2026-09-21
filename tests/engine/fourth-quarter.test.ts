@@ -102,4 +102,39 @@ describe('the fourth quarter arises from the player\'s position', () => {
     const review = buildAnnualReview(quiet!, index)
     expect(review.narrative.join(' ')).toContain('kept the line')
   })
+
+  /**
+   * The restore-window decision, and the two consequence callbacks behind its
+   * options, are the deepest chain in the content: a programme funded early,
+   * carried to four fifths, and still standing in the fourth quarter. A
+   * coverage run that builds in content order never reaches it, and the
+   * report reads it as dead content. It is not, and this says so.
+   */
+  it('offers the restore window to a player who funded recovery and saw it through', () => {
+    const index = testIndex()
+    const def = index.programme.get('prog-ransomware')!
+    const state = newGame(index, { seed: 'q4-recovery', difficulty: 'ciso' })
+    runDays(state, index, 5)
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+
+    let openedOnDay: number | undefined
+    for (let day = 0; day < 340 && openedOnDay === undefined; day += 1) {
+      runDays(state, index, 1)
+      const programme = state.programmes.programmes[def.id]!
+      // A blocker is something the player is shown and can clear.
+      for (const blocker of programme.blockers) {
+        if (!blocker.resolved) {
+          applyAction(state, index, { type: 'resolveProgrammeBlocker', programmeId: def.id, blockerId: blocker.id })
+        }
+      }
+      if (openDecisions(state, index).some((decision) => decision.defId === 'dec-q4-recovery-window')) {
+        openedOnDay = state.currentDay
+      }
+    }
+    expect(openedOnDay, 'the restore window never came to a player who built recovery').toBeDefined()
+    expect(openedOnDay!).toBeGreaterThan(270)
+    // And the programme it rests on actually finished, which is the other
+    // thing a probe that never cleared a blocker made look impossible.
+    expect(state.programmes.programmes[def.id]!.status).toBe('complete')
+  })
 })

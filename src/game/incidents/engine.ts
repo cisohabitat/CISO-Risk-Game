@@ -4,7 +4,7 @@
  * people and choices that were actually in place.
  */
 import { evaluateCondition } from '../events/conditions'
-import { RISK_BAND_LABEL, riskBand } from '../risk/bands'
+import { RISK_BAND_LABEL, consequenceBand } from '../risk/bands'
 import type { Condition } from '../types'
 import type { ContentIndex, GameEffect, GameState, IncidentRuntime } from '../types'
 import { clamp01 } from '../types'
@@ -142,7 +142,7 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
           'closed',
           `Post-incident review complete. ${family.name} ran ${state.currentDay - incident.startedDay} days` +
             (services.length > 0 ? ` and touched ${services.join(', ')}` : '') +
-            `; the consequence to the business was ${RISK_BAND_LABEL[riskBand(incident.consequence)].toLowerCase()}. ` +
+            `; the consequence to the business was ${RISK_BAND_LABEL[consequenceBand(incident.consequence)].toLowerCase()}. ` +
             (decided > 0
               ? `You took ${decided} response decision${decided === 1 ? '' : 's'} while it ran. `
               : 'No response decision was taken while it ran. ') +

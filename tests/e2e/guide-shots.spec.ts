@@ -194,11 +194,16 @@ test.describe('player guide', () => {
         await page.getByRole('button', { name: '4×' }).first().click().catch(() => undefined)
       }
     }
+    // Measured: raising the cap to 2,200 polls and the timeout to fifteen
+    // minutes did not reach it either, while the engine reaches board papers
+    // on days 91, 182 and 273 of every campaign. The mechanic is fine and
+    // this loop is not; 08-board goes stale until somebody drives the clock
+    // a better way. See docs/FINDINGS.md.
     throw new Error('never reached a board paper')
   })
 
   test('an incident, and the closing review', async ({ page }) => {
-    test.setTimeout(900_000)
+    test.setTimeout(600_000)
     await startCampaign(page, SEED)
     let sawIncident = false
 

@@ -6,6 +6,9 @@
 import type { ContentIndex, GameState } from '../types'
 import { clamp01 } from '../types'
 
+/** Weight of the patience shortfall in delivery friction. Tuned on the ladder. */
+const TOLERANCE_DRAG = 0.02
+
 export interface ObjectiveTickResult {
   achieved: string[]
   failed: string[]
@@ -45,7 +48,14 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
       if (!programmeDef) continue
       friction += programmeDef.businessFriction * 0.25
     }
-    friction += Math.max(0, 0.45 - state.stakeholders.operationalTolerance) * 0.5
+    // How much patience the organisation has left for security work, as a
+    // standing drag rather than a cliff. The old term bit only below 0.45,
+    // which sits between the three profiles' starting values, so it fired on
+    // 0 days of 364 on two of the three modes and made the dial describe
+    // nothing. Reading the shortfall from full patience makes it monotone
+    // across the ladder, and small enough that difficulty is not bought by
+    // punishing the business.
+    friction += (1 - state.stakeholders.operationalTolerance) * TOLERANCE_DRAG
     const support = runtime.securitySupported ? 1.1 : 1
     // The nominal rate is set against the ORIGINAL target, so a delay pushes the
     // delivery date out rather than quietly making the objective easier.

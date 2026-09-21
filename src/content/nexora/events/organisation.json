@@ -824,7 +824,7 @@
       "from": "Callum Reid, Head of Security Engineering",
       "body": "We are on plan for once, and nothing is blocking us. The team would like that noticed before it is quietly absorbed into the next set of expectations.",
       "priority": "routine",
-      "availableFromDay": 120,
+      "availableFromDay": 60,
       "conditions": [
         {
           "kind": "programme.anyOnPlan"
