@@ -114,6 +114,20 @@ test.describe('player guide', () => {
     await page.getByRole('button', { name: 'List', exact: true }).first().click().catch(() => undefined)
     await page.waitForTimeout(400)
     await shot(page, '06-organisation')
+
+    // The Continue list, which a player only sees on their second visit: one
+    // row per campaign, each with its own Delete. Two campaigns, because the
+    // delete-everything control appears only where there is more than one.
+    for (let i = 0; i < 3; i += 1) {
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+      await dismissNote(page)
+    }
+    await page.getByRole('button', { name: 'Save campaign' }).click()
+    await startCampaign(page, `${SEED}-b`)
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await expect(page.getByText('Continue')).toBeVisible()
+    await shot(page, '01b-continue')
   })
 
   /**

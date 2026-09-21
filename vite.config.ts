@@ -17,8 +17,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Keep the heavy graph library out of the initial shell bundle.
-          if (id.includes('@xyflow')) return 'graph'
           // The campaign is data, not code: it changes on a different cadence
           // from the app, it is fetched in parallel rather than after it, and
           // its size is the thing most likely to creep as content is authored.

@@ -4,7 +4,16 @@
 
 `pnpm build && pnpm size` prints the transfer size of every chunk against a
 budget and fails if one is exceeded. CI runs it on every push, next to the
-check that the output is still static.
+check that the output is still static. It is part of the job named after the
+typecheck and the tests, so a red run there is not always a failing test.
+
+The critical path is read out of `dist/index.html`: the module script, every
+chunk it preloads and every blocking stylesheet. It is not a hand-kept list,
+because a hand-kept list was wrong. Naming the graph library as a manual chunk
+turned it into a shared chunk that the entry preloaded, so the budget reported
+241 kB while a first-time player fetched 301 kB. A chunk that is meant to load
+on demand is named in `MUST_STAY_LAZY` and the build fails if the entry asks
+for it.
 
 The campaign ships inside the client bundle — that is the point of a static
 build, and it is why no request is made per tick — so every authored event adds
@@ -122,11 +131,15 @@ The dependency graph library is lazy-loaded into its own chunk and is only
 fetched when a player opens the graph view. Check after changes:
 
 ```bash
-pnpm build   # review the emitted chunk sizes
+pnpm build && pnpm size   # every chunk, and what the entry HTML fetches first
 ```
 
 Keep the graph library, and anything of comparable weight, out of the initial
-chunk.
+chunk — and note that a dynamic import is not enough on its own. Do not give
+such a library a `manualChunks` name: that makes it a shared chunk the entry
+preloads, which is how it spent a while being fetched by every first-time
+player despite the `lazy()` around it. `pnpm size` now prints `first load` or
+`on demand` beside each chunk, which is the thing to read.
 
 ## Commercial use
 

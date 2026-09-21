@@ -54,10 +54,16 @@ settings* holds a campaign seed; ignore it. It exists so two people can play the
 same world.
 
 The game saves constantly to your own browser. There is no account and nothing
-is sent anywhere. Each campaign is one save, kept at the day you last reached,
-so the start screen lists one row per year you have played. Each has a
-**Delete** beside it, and there is a way to delete them all. It asks first,
-because there is no undo.
+is sent anywhere.
+
+![Returning: one row per campaign](images/01b-continue.png)
+
+Come back later and a **Continue** list sits above that. Each campaign is one
+save, kept at the day you last reached, so there is one row per year you have
+played, newest first. Pick one to carry on. Each has a **Delete** beside it,
+and once you have more than one campaign there is a control to delete them all.
+Both ask before they do it, because there is no undo: a campaign can only be
+exported to a file once its year is over, from the annual review.
 
 ---
 

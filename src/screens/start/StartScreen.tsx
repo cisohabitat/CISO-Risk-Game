@@ -130,8 +130,8 @@ export function StartScreen() {
             title={pendingDelete === 'all' ? 'Delete every saved campaign?' : 'Delete this campaign?'}
             description={
               pendingDelete === 'all'
-                ? 'Every campaign saved on this device goes, including autosaves. There is no undo.'
-                : `Every save of the campaign with seed ${pendingDelete.seed} goes, including its autosaves. There is no undo; export it first if you might want it back.`
+                ? 'Every campaign saved on this device goes. There is no undo, and a campaign cannot be exported until its year is over.'
+                : `The campaign with seed ${pendingDelete.seed} goes, at day ${pendingDelete.day}. There is no undo, and a campaign cannot be exported until its year is over.`
             }
             footer={
               <>
@@ -149,13 +149,11 @@ export function StartScreen() {
               </>
             }
           >
-            {pendingDelete !== 'all' && (
-              <p className="text-sm text-ink-muted">
-                {saves.filter((save) => save.gameId === pendingDelete.gameId).length === 1
-                  ? 'One save.'
-                  : `${saves.filter((save) => save.gameId === pendingDelete.gameId).length} saves of this campaign.`}
-              </p>
-            )}
+            <p className="text-sm text-ink-muted">
+              {pendingDelete === 'all'
+                ? `${saves.length} campaigns, and everything each of them reached.`
+                : 'Everything this campaign reached: what you found, what you decided and what it cost.'}
+            </p>
           </Dialog>
         )}
 

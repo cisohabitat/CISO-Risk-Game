@@ -18,6 +18,39 @@ fault.
 
 ### Fixed
 
+- **The budget said a first-time player downloaded 241 kB; they downloaded
+  301 kB.** CI had been red for four commits on the job named "Typecheck,
+  lint, content and unit tests", which also builds and runs `pnpm size`.
+  Nothing was wrong with the typecheck, the lint, the content or the tests:
+  the critical-path budget was exceeded by 1.6 kB. `pnpm check`, which is
+  what gets run before a push, does not include `pnpm size`, so four pushes
+  went out green locally and red on CI.
+
+  The budget was a hand-kept sum that added the app, the campaign, the
+  framework and every stylesheet, and deliberately left out the graph
+  library "because it is behind a dynamic import". It was not. `lazy()`
+  around the organisation view is real, but naming `@xyflow` in
+  `manualChunks` made it a shared chunk, and the built `index.html` carried
+  a `modulepreload` for its 59 kB and a render-blocking `<link>` for its
+  stylesheet. Every first-time player fetched the graph library before the
+  first screen, which is the exact thing the code split exists to prevent.
+
+  Dropping the manual chunk leaves the library reachable only through the
+  dynamic import. Measured, gzip, from the entry HTML:
+
+  | | Fetched before the first screen |
+  |---|---|
+  | Before | 301.0 kB |
+  | After | 242.8 kB |
+
+  The budget script no longer keeps its own list: it reads the module
+  script, the preloads and the blocking stylesheets out of `dist/index.html`
+  and sums those, prints `first load` or `on demand` beside every chunk,
+  and fails if a chunk named in `MUST_STAY_LAZY` appears in the first load.
+  Restoring the manual chunk fails it by name, on both the script and the
+  stylesheet. The limit is raised from 240 to 255 kB against the corrected
+  measurement, which is a tightening: the real figure it replaces was 301.
+
 - **One campaign appeared on the start screen as three or four saves.**
   Reported by the owner: "why i get multiple saves". Measured on a fresh
   browser profile before changing anything. Playing one campaign for four
@@ -48,6 +81,16 @@ fault.
   collapse on reload to the newest one, keyed by campaign, and it still
   loads; the resume test asserts the badge, which is what now proves the
   Save campaign button writes anything at all.
+
+  **Two lines of copy had gone stale with it, and the guide had no picture.**
+  The delete confirmation still said "including its autosaves", which is no
+  longer a thing a campaign has, and told the player to "export it first",
+  which they cannot: export is offered only on the annual review, at the end
+  of a year. Both are rewritten, and the player guide's claim about exporting
+  is corrected to say where it lives. The guide described the Continue list in
+  words but showed no picture of it, because the start-screen shot is taken on
+  a fresh profile where the list does not exist. `pnpm guide:shots` now plays
+  two campaigns and photographs the list as a returning player meets it.
 
   **The first mutation check failed to fail, and that was the finding.**
   Disabling the collapse and keying saves per day both left the start screen
@@ -86,6 +129,20 @@ fault.
   panel's rise animation was still six pixels short of home when it was
   measured, so the test now waits for the animation to finish — the
   harness, not the game.
+
+  **Making the overlay scroll introduced a bug of its own, caught by a
+  screenshot.** The regenerated picture of the opening decision came out
+  with the dialog shoved up and its title off the top. Measured: with the
+  panel at 828 px inside a 900 px viewport, so plainly fitting, the overlay
+  still reported 1,389 px of scrollable content and one flick of a wheel
+  over the dimmed backdrop moved the panel to -264. The scrolling body's
+  full content was counting towards the overlay's scrollable area even
+  though the body clips it. `contain: paint` on the panel, which only
+  states what the rounded, clipping panel already does, takes the overlay's
+  scroll height to exactly its client height. The dialog test now asserts
+  that a dialog which fits leaves its overlay unscrollable, and fails
+  without the containment. The overlay still scrolls when the cap is
+  forced off, so the fallback above is untouched.
 
 - **Guided mode stopped guiding at the enquiry list.** An opening playtest
   across three personas (`docs/playtests/2026-09-21-ai-three-personas-opening.md`,

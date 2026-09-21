@@ -242,6 +242,11 @@
      which would otherwise drop the cap and push the footer off the bottom. */
   .dialog-panel {
     max-height: 92dvh;
+    /* Without containment the scrolling body's full content counts towards the
+       overlay's scrollable area, so the overlay is scrollable even when the
+       dialog fits: one flick over the dimmed backdrop then drags the dialog up
+       off its own title. Painting is already clipped to this box. */
+    contain: paint;
   }
   @supports not (height: 1dvh) {
     .dialog-panel {

@@ -284,6 +284,19 @@ test.describe('a first year at Nexora', () => {
     const lastBox = (await last.boundingBox())!
     expect(lastBox.y + lastBox.height).toBeLessThanOrEqual(viewport.height + 1)
 
+    // ...and because it fits, the overlay must not be scrollable at all: a
+    // flick over the dimmed backdrop otherwise drags the whole dialog up and
+    // its title off the top of the screen.
+    const overlay = await dialog.evaluate((el) => {
+      const node = el.parentElement!.parentElement as HTMLElement
+      return { scrollHeight: node.scrollHeight, clientHeight: node.clientHeight }
+    })
+    // A pixel of tolerance for sub-pixel rounding across engines; the bug this
+    // catches was 489 of them.
+    expect(overlay.scrollHeight, 'the overlay scrolls although the dialog fits it').toBeLessThanOrEqual(
+      overlay.clientHeight + 1,
+    )
+
     // Uncapped, standing in for a browser that does not know `dvh` and drops
     // the height cap: the overlay itself scrolls, so the footer is still
     // reachable rather than stranded below the bottom edge.
