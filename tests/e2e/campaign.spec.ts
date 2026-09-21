@@ -110,6 +110,33 @@ test.describe('a first year at Nexora', () => {
     expect(dayAfter).toBe(dayBefore)
   })
 
+  test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
+    await startCampaign(page, 'e2e-delete')
+    await page.getByRole('button', { name: 'Save campaign' }).click()
+    await expect(page.getByText('Campaign saved.')).toBeVisible()
+
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    const row = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-delete' })
+    await expect(row.first(), 'the saved campaign did not appear to resume from').toBeVisible()
+
+    // Deleting asks first, and keeping it changes nothing.
+    await page.getByRole('button', { name: 'Delete the campaign with seed e2e-delete' }).first().click()
+    await expect(page.getByRole('dialog', { name: 'Delete this campaign?' })).toBeVisible()
+    await page.getByRole('button', { name: 'Keep it' }).click()
+    await expect(row.first()).toBeVisible()
+
+    // Confirming removes every save of it: the manual save and the autosaves.
+    await page.getByRole('button', { name: 'Delete the campaign with seed e2e-delete' }).first().click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Delete the campaign', exact: true }).click()
+    await expect(page.getByText(/Campaign deleted/)).toBeVisible()
+    await expect(row).toHaveCount(0)
+
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await expect(page.getByText('seed e2e-delete')).toHaveCount(0)
+  })
+
   test('the organisation view only shows what has been discovered', async ({ page }) => {
     await startCampaign(page, 'e2e-org')
     await goTo(page, 'Organisation')

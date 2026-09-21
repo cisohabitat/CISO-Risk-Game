@@ -115,6 +115,27 @@ export async function deleteSave(slot: SaveSlot): Promise<void> {
   await db.delete(STORE, slot)
 }
 
+/**
+ * A campaign is the thing a player means when they say "delete that game";
+ * the rolling autosaves and a manual save of it are one campaign to them.
+ * Returns how many saves went.
+ */
+export async function deleteCampaign(gameId: string): Promise<number> {
+  if (!storageAvailable()) return 0
+  const db = await getDb()
+  const tx = db.transaction(STORE, 'readwrite')
+  const store = tx.objectStore(STORE)
+  const records = (await store.getAll()) as StoredSave[]
+  let removed = 0
+  for (const record of records) {
+    if (record.state?.gameId !== gameId) continue
+    await store.delete(record.slot)
+    removed += 1
+  }
+  await tx.done
+  return removed
+}
+
 export async function clearSaves(): Promise<void> {
   if (!storageAvailable()) return
   const db = await getDb()

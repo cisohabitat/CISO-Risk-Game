@@ -10,7 +10,7 @@ import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orche
 import { applyAction, newGame } from '@/game/engine/orchestrator'
 import { loadCampaign } from '@/lib/content/loader'
 import { buildAnnualReview } from '@/game/debrief/review'
-import { listSaves, readSave, writeAutosave, writeSave, type SaveSlot, type SaveSummary } from './persistence'
+import { clearSaves, deleteCampaign, listSaves, readSave, type SaveSlot, type SaveSummary, writeAutosave, writeSave } from './persistence'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -47,6 +47,8 @@ interface GameStore {
   loadImported: (state: GameState) => void
   refreshSaves: () => Promise<void>
   saveManual: () => Promise<void>
+  deleteCampaign: (gameId: string) => Promise<void>
+  deleteAllSaves: () => Promise<void>
 
   dispatch: (action: PlayerAction) => ActionResult
   advanceDays: (days: number) => TickResult[]
@@ -131,6 +133,26 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set((store) => ({ ui: { ...store.ui, saves } }))
     } catch {
       /* storage unavailable: the game still plays, it just cannot resume. */
+    }
+  },
+
+  async deleteCampaign(gameId) {
+    try {
+      const removed = await deleteCampaign(gameId)
+      await get().refreshSaves()
+      get().pushToast(removed === 1 ? 'Campaign deleted.' : `Campaign deleted (${removed} saves).`, 'success')
+    } catch {
+      get().pushToast('That campaign could not be deleted.', 'warning')
+    }
+  },
+
+  async deleteAllSaves() {
+    try {
+      await clearSaves()
+      await get().refreshSaves()
+      get().pushToast('All saved campaigns deleted.', 'success')
+    } catch {
+      get().pushToast('The saved campaigns could not be deleted.', 'warning')
     }
   },
 

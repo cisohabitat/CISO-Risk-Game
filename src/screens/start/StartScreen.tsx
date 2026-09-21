@@ -3,9 +3,9 @@
  * reading anything, and be making a real decision inside a minute (plan §6, §53).
  */
 import { useEffect, useRef, useState } from 'react'
-import { Badge, Button, Card, CardBody, Disclosure } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Dialog, Disclosure } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
-import { parseImportedSave, storageAvailable } from '@/store/persistence'
+import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 
@@ -37,11 +37,15 @@ export function StartScreen() {
   const startNewGame = useGameStore((store) => store.startNewGame)
   const loadGame = useGameStore((store) => store.loadGame)
   const loadImported = useGameStore((store) => store.loadImported)
+  const deleteCampaign = useGameStore((store) => store.deleteCampaign)
+  const deleteAllSaves = useGameStore((store) => store.deleteAllSaves)
   const refreshSaves = useGameStore((store) => store.refreshSaves)
   const pushToast = useGameStore((store) => store.pushToast)
   const saves = useGameStore((store) => store.ui.saves)
   const [seed, setSeed] = useState(randomSeed)
   const [difficulty, setDifficulty] = useState<Difficulty>('ciso')
+  // What the player has asked to delete: one campaign, or everything.
+  const [pendingDelete, setPendingDelete] = useState<SaveSummary | 'all' | undefined>()
   const fileInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -82,11 +86,11 @@ export function StartScreen() {
               <h2 className="font-medium">Continue</h2>
               <ul className="mt-3 space-y-2">
                 {saves.slice(0, 4).map((save) => (
-                  <li key={save.slot}>
+                  <li key={save.slot} className="flex items-stretch gap-2">
                     <button
                       type="button"
                       onClick={() => void loadGame(save.slot)}
-                      className="flex w-full flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left hover:border-line-strong"
+                      className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left hover:border-line-strong"
                     >
                       <span>
                         <span className="block font-medium">
@@ -98,11 +102,61 @@ export function StartScreen() {
                       </span>
                       <Badge tone="neutral" glyph={false}>{save.slot.startsWith('auto') ? 'Autosave' : save.slot}</Badge>
                     </button>
+                    <Button
+                      variant="quiet"
+                      size="sm"
+                      className="shrink-0 self-center"
+                      aria-label={`Delete the campaign with seed ${save.seed}`}
+                      onClick={() => setPendingDelete(save)}
+                    >
+                      Delete
+                    </Button>
                   </li>
                 ))}
               </ul>
+              {saves.length > 1 && (
+                <Button variant="quiet" size="sm" className="mt-3" onClick={() => setPendingDelete('all')}>
+                  Delete all saved campaigns
+                </Button>
+              )}
             </CardBody>
           </Card>
+        )}
+
+        {pendingDelete && (
+          <Dialog
+            open
+            onClose={() => setPendingDelete(undefined)}
+            title={pendingDelete === 'all' ? 'Delete every saved campaign?' : 'Delete this campaign?'}
+            description={
+              pendingDelete === 'all'
+                ? 'Every campaign saved on this device goes, including autosaves. There is no undo.'
+                : `Every save of the campaign with seed ${pendingDelete.seed} goes, including its autosaves. There is no undo; export it first if you might want it back.`
+            }
+            footer={
+              <>
+                <Button variant="quiet" onClick={() => setPendingDelete(undefined)}>Keep it</Button>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    const target = pendingDelete
+                    setPendingDelete(undefined)
+                    void (target === 'all' ? deleteAllSaves() : deleteCampaign(target.gameId))
+                  }}
+                >
+                  {pendingDelete === 'all' ? 'Delete everything' : 'Delete the campaign'}
+                </Button>
+              </>
+            }
+          >
+            {pendingDelete !== 'all' && (
+              <p className="text-sm text-ink-muted">
+                {saves.filter((save) => save.gameId === pendingDelete.gameId).length === 1
+                  ? 'One save.'
+                  : `${saves.filter((save) => save.gameId === pendingDelete.gameId).length} saves of this campaign.`}
+              </p>
+            )}
+          </Dialog>
         )}
 
         <Card>

@@ -54,7 +54,9 @@ settings* holds a campaign seed; ignore it. It exists so two people can play the
 same world.
 
 The game saves constantly to your own browser. There is no account and nothing
-is sent anywhere.
+is sent anywhere. The start screen lists what is saved on this device; each
+campaign has a **Delete** beside it, and there is a way to delete them all. It
+asks first, because there is no undo.
 
 ---
 
