@@ -27,6 +27,8 @@ import type { Difficulty, GameState } from '../src/game/types'
 
 const index = buildContentIndex(nexoraContent)
 let SEED = process.argv[3] ?? 'ladder'
+/** A starting situation for `transcript`, or none for the usual opening. */
+let SITUATION: string | undefined
 
 // Understand the business first; be candid about uncertainty; investigate
 // selectively; do not start every programme; enable the business with
@@ -79,7 +81,7 @@ const LEADERS: Record<string, string> = {
 type Appetite = 'measured' | 'ambitious'
 
 function play(difficulty: Difficulty, appetite: Appetite) {
-  const state: GameState = newGame(index, { seed: SEED, difficulty })
+  const state: GameState = newGame(index, { seed: SEED, difficulty, situation: SITUATION })
   const log: string[] = []
   const refused: string[] = []
   let wantedProgramme = 0
@@ -315,7 +317,7 @@ if (process.argv[2] === 'bands') {
 }
 
 /**
- * `transcript <mode> [seed]` prints everything one year says, in order: every
+ * `transcript <mode> [seed] [situation]` prints everything one year says, in order: every
  * message in full, every decision as it was shown, and the whole close. The
  * other modes answer "what happened"; this answers "what did it say", which is
  * where every playtest so far found its defects.
@@ -323,8 +325,9 @@ if (process.argv[2] === 'bands') {
 if (process.argv[2] === 'transcript') {
   const mode = (process.argv[3] as Difficulty) ?? 'ciso'
   SEED = process.argv[4] ?? 'transcript'
+  SITUATION = process.argv[5]
   const out = play(mode, 'measured')
-  console.log(`# ${mode} · seed ${SEED}\n`)
+  console.log(`# ${mode} · seed ${SEED}${SITUATION ? ` · ${SITUATION}` : ''}\n`)
   console.log('## Messages\n')
   for (const m of out.state.inbox.messages) {
     console.log(`d${m.day} [${m.priority}] ${m.from} — ${m.subject}${m.eventId ? `  {${m.eventId}}` : ''}`)

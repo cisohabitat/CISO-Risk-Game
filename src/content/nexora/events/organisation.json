@@ -391,7 +391,7 @@
       "body": "I went looking for the last recovery test report. The test was abandoned after eleven hours and the report was never reissued. Fourteen months ago.",
       "priority": "urgent",
       "availableFromDay": 35,
-      "conditions": [{"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-ransomware", "status": "complete"}}, {"kind": "flag.notSet", "flag": "recovery.tested"}, {"kind": "not", "condition": {"kind": "situation.is", "situationId": "sit-tidy"}}],
+      "conditions": [{"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-ransomware", "status": "complete"}}, {"kind": "flag.notSet", "flag": "recovery.tested"}, {"kind": "not", "condition": {"kind": "situation.is", "situationId": "sit-tidy"}}, {"kind": "not", "condition": {"kind": "situation.is", "situationId": "sit-after-breach"}}],
       "weight": 14,
       "pinned": false,
       "oncePerCampaign": true,

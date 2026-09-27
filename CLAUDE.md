@@ -53,7 +53,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
 | `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
 | `pnpm ladder bands 8` | What do the risk rows actually read, and how often? |
-| `pnpm ladder transcript ciso [seed]` | Everything one year says, in full — messages, decisions, the close |
+| `pnpm ladder transcript ciso [seed] [situation]` | Everything one year says, in full — messages, decisions, the close |
 | `pnpm tsx scripts/efficacy.ts 150` | Does each programme reduce what it is meant to? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |

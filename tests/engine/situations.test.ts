@@ -68,7 +68,9 @@ describe('starting situations', () => {
   it('does not send a message the situation contradicts', () => {
     const contradicted: Record<string, string[]> = {
       'sit-tidy': ['evt-org-backup-test', 'evt-org-pam-adoption'],
-      'sit-after-breach': ['evt-org-ir-plan', 'evt-biz-competitor-breach'],
+      // A real restore happened last quarter: "the last restore test was
+      // abandoned fourteen months ago" read on day 136 of an after-breach year.
+      'sit-after-breach': ['evt-org-ir-plan', 'evt-biz-competitor-breach', 'evt-org-backup-test'],
     }
     for (const [situationId, eventIds] of Object.entries(contradicted)) {
       for (const seed of ['contra-1', 'contra-2', 'contra-3']) {

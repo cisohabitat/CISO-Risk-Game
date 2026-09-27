@@ -245,7 +245,11 @@ fault.
   closing guards so they stay paced. Tests in `tests/engine/situations.test.ts`
   (mutation-checked on the seed draw and a guard) and a browser test of the
   picker. Soak 1,000 and coverage now draw a situation per campaign: clean,
-  and all six situation messages reached.
+  and all six situation messages reached. Reading a year in each situation
+  afterwards (`pnpm ladder transcript ciso <seed> <situation>`) found one
+  more: an after-breach year was told on day 136 that "the last restore test
+  was abandoned fourteen months ago", after a real restore last quarter. It is
+  guarded for that situation too.
 
 - **Detection stopped paying off once steps could hold.** Measured over 150
   seeds: 79% of campaigns are seen eventually whether or not anything is
