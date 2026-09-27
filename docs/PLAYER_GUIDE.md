@@ -70,7 +70,8 @@ settings* holds a campaign seed; ignore it. It exists so two people can play the
 same world.
 
 The game saves constantly to your own browser. There is no account and nothing
-is sent anywhere.
+is sent anywhere. The **⏏** beside the save button at the top saves and closes
+the campaign you are in, back to this screen.
 
 ![Returning: one row per campaign](images/01b-continue.png)
 

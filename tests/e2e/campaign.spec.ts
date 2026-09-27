@@ -140,6 +140,19 @@ test.describe('a first year at Nexora', () => {
     expect(dayAfter).toBe(dayBefore)
   })
 
+  test('a campaign can be closed mid-year and another opened without reloading', async ({ page }) => {
+    await startCampaign(page, 'e2e-close')
+    for (let i = 0; i < 3; i += 1) {
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+    }
+    const dayBefore = (await page.getByRole('banner').innerText()).split('·')[0]?.trim()
+    await page.getByRole('button', { name: 'Save and close this campaign' }).click()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-close' }).first().click()
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
+    expect((await page.getByRole('banner').innerText()).split('·')[0]?.trim()).toBe(dayBefore)
+  })
+
   test('a campaign is one save, however long it is played', async ({ page }) => {
     // Rolling autosave slots put one campaign on the start screen three times,
     // a row per recent day, and interleaved a second campaign with the first.

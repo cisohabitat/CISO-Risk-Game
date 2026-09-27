@@ -29,6 +29,11 @@ fault.
   test that plays a whole year now presses it and checks the start screen and
   the saved year.
 
+  The same was true mid-year: switching to another saved campaign needed a
+  reload. The header now has a save-and-close control beside Save, with a
+  browser test that closes a campaign a few days in and reopens it at the same
+  day from the start screen.
+
 - **Three small things found reading whole years after the board change.**
   - *The Board screen never said when the paper was due.* An unwritten paper
     now costs something when the next quarter closes, so the screen says the

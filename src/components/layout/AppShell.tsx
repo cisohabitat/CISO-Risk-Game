@@ -222,6 +222,7 @@ function ShellHeader() {
   const state = useGameStore((store) => store.state)
   const index = useGameStore((store) => store.index)
   const saveManual = useGameStore((store) => store.saveManual)
+  const leaveCampaign = useGameStore((store) => store.leaveCampaign)
   const [theme, setTheme] = useState<'dark' | 'light'>(() =>
     (document.documentElement.dataset.theme as 'dark' | 'light') ?? 'dark',
   )
@@ -262,6 +263,17 @@ function ShellHeader() {
           >
             <span aria-hidden="true">💾</span>
             <span className="sr-only">Save campaign</span>
+          </Button>
+          {/* Switching to another saved year used to need a page reload. */}
+          <Button
+            size="sm"
+            variant="ghost"
+            className="compact min-h-9 px-2.5"
+            onClick={() => void leaveCampaign()}
+            title="Save and close this campaign"
+          >
+            <span aria-hidden="true">⏏</span>
+            <span className="sr-only">Save and close this campaign</span>
           </Button>
           <Button
             size="sm"

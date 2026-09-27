@@ -80,8 +80,8 @@ what not to change on one player's word.
 ## Known weaknesses
 
 Measured, not yet fixed. Ranked. Everything that used to sit here about the
-risk bands, executive patience and the noise dial has been fixed and moved to
-`docs/FINDINGS.md`.
+risk bands, executive patience, the noise dial and the board's standing has
+been fixed and moved to `docs/FINDINGS.md`.
 
 - **Almost nobody has played this.** Four playtest reports in
   `docs/playtests/` are an AI driving a browser. The owner has played one year
@@ -131,6 +131,22 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   pressure does. Per programme started the ladder is monotone — 0.78 / 0.82 /
   1.67 across the modes — and `pnpm ladder sweep` prints both. Read the per
   programme figure, or compare modes at equal build.
+
+- **Recovery confidence rarely leaves *Partial*, even for a player who builds
+  recovery.** Over 12 CISO years that started the ransomware resilience
+  programme on day five, 11 completed it and backup effectiveness roughly
+  doubled (about 0.19 to 0.44), yet the Briefing ended *Partial* in 9 and
+  *Limited* in 2, never *Reasonable*: that band starts at 0.55, which almost
+  no year reaches. An earlier finding kept delivery and assurance as two
+  facts on purpose; this is the ceiling, not the lag. Whether a completed
+  programme should read *Reasonable* is a design call for the owner.
+
+- **Incidents do not move the board.** Board confidence changes through the
+  papers, a missed paper and authored decisions; an incident, however bad,
+  does not touch it directly. The ladder reads board 0.79 in every mode while
+  incidents run 0.60 / 0.80 / 1.13. That keeps the board judging what it is
+  told rather than luck, which may be the lesson; whether it feels right after
+  a first ransomware year is in `docs/PLAYTEST.md`.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every
