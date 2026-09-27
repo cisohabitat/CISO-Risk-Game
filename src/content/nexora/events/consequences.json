@@ -93,7 +93,7 @@
       "type": "business",
       "title": "Your conditions on the launch",
       "from": "Priya Nandakumar, Managing Director, Digital",
-      "body": "We took the launch with your conditions attached. My team met them, mostly, and the ones we did not meet we wrote down. I want you to see the list before somebody else shows it to you.",
+      "body": "We are taking the launch forward with your conditions attached. My team is meeting them, mostly, and the ones we cannot meet we have written down. I want you to see the list before somebody else shows it to you.",
       "priority": "notable",
       "availableFromDay": 0,
       "conditions": [
@@ -493,7 +493,7 @@
       "type": "incident",
       "title": "What standing up command changed",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "You stood up formal command during the incident. Reading it back, the decisions have times against them and the handovers are written down. Whatever else the year does to us, that record is the difference between explaining ourselves and guessing.",
+      "body": "You stood up formal command during the incident. Reading the log so far, the decisions have times against them and the handovers are written down. Whatever else the year does to us, that record is the difference between explaining ourselves and guessing.",
       "priority": "routine",
       "availableFromDay": 0,
       "conditions": [
@@ -515,7 +515,7 @@
     {
       "id": "evt-con-incident-external-invoiced",
       "type": "incident",
-      "title": "The incident response retainer, invoiced",
+      "title": "The external responders, invoiced",
       "from": "Tomas Lindqvist, Chief Financial Officer",
       "body": "The external responders you called in have invoiced. It is a large number for a small number of days, and I am not questioning the decision — I am asking you to tell me, before the next one, what we are buying that we cannot do ourselves.",
       "priority": "notable",
@@ -541,7 +541,7 @@
       "type": "discovery",
       "title": "Where you started",
       "from": "Helen Brandt, Chief Operating Officer",
-      "body": "You came to the service owners first, before anything else. Six months on they still bring things to you directly rather than through the change process, which is either a compliment or a problem depending on the week.",
+      "body": "You came to the service owners first, before anything else. Three months on they still bring things to you directly rather than through the change process, which is either a compliment or a problem depending on the week.",
       "priority": "routine",
       "availableFromDay": 0,
       "conditions": [

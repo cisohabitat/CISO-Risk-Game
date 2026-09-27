@@ -137,7 +137,12 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
         const services = incident.affectedServiceIds
           .map((id) => index.service.get(id)?.name)
           .filter((name): name is string => Boolean(name))
-        const decided = incident.decisionsTaken.length
+        // Response decisions only. Every choice made while an incident runs is
+        // on its record, so answering the card data question mid-incident made
+        // "4 response decisions" of the incident's three.
+        const decided = incident.decisionsTaken.filter((taken) =>
+          family.responseDecisionIds.includes(state.decisions.decisions[taken.decisionId]?.defId ?? ''),
+        ).length
         enter(
           'closed',
           `Post-incident review complete. ${family.name} ran ${state.currentDay - incident.startedDay} days` +

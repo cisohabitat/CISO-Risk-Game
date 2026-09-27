@@ -234,7 +234,7 @@
       "type": "supplier",
       "title": "What do we do about standing supplier access?",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "We now have it documented: fourteen permanent privileged accounts belonging to Corvus, no expiry, no second factor. Procurement will help if we give them something specific. Operations will resist anything that touches night cover.",
+      "body": "We now have it documented: fourteen permanent privileged accounts belonging to Corvus, no expiry, and nobody has reviewed them in years. Procurement will help if we give them something specific. Operations will resist anything that touches night cover.",
       "priority": "urgent",
       "availableFromDay": 58,
       "conditions": [
@@ -460,7 +460,7 @@
       "body": "The plan names an incident commander who left in March. It has not been exercised in two years. If something happens tomorrow, we will be inventing the process while using it.",
       "priority": "notable",
       "availableFromDay": 42,
-      "conditions": [],
+      "conditions": [{ "kind": "incident.none" }, { "kind": "not", "condition": { "kind": "incident.resolvedCountAtLeast", "value": 1 } }],
       "weight": 12,
       "pinned": false,
       "oncePerCampaign": true,
@@ -744,7 +744,7 @@
       "body": "A discovery scan found unencrypted card data in two application log stores outside the defined payment environment. The regulated boundary is wider than the one we have been describing.",
       "priority": "urgent",
       "availableFromDay": 92,
-      "conditions": [],
+      "conditions": [{ "kind": "event.notFired", "eventId": "evt-biz-merchant-complaint" }],
       "weight": 11,
       "pinned": false,
       "oncePerCampaign": true,
@@ -800,7 +800,7 @@
       "type": "programme",
       "title": "A programme has stalled",
       "from": "Stefan Alvarez, Head of Security Architecture",
-      "body": "One of your programmes has not moved in three weeks. The blocker is not technical and it is not money. It needs somebody senior to make a decision.",
+      "body": "One of your programmes is blocked and will not move until somebody clears it. The Programmes screen says what that takes.",
       "priority": "notable",
       "availableFromDay": 60,
       "conditions": [
@@ -850,7 +850,7 @@
       "type": "programme",
       "title": "Coverage has quietly gone backwards",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "Endpoint coverage has slipped four points this quarter. Nothing broke. The estate simply grew faster than deployment did.",
+      "body": "Endpoint coverage has slipped this quarter. Nothing broke. The estate simply grew faster than deployment did.",
       "priority": "routine",
       "availableFromDay": 150,
       "conditions": [],
@@ -902,10 +902,10 @@
       "body": "Our new identity engineer starts on Monday. They will take about two months to be useful, which is worth remembering before we commit them to anything.",
       "priority": "routine",
       "availableFromDay": 90,
-      "conditions": [],
+      "conditions": [{ "kind": "decision.optionTaken", "decisionId": "dec-hire-or-outsource", "optionId": "opt-hire-recruit" }],
       "weight": 7,
       "pinned": false,
-      "oncePerCampaign": false,
+      "oncePerCampaign": true,
       "cooldownDays": 120,
       "relatedNodeIds": [],
       "tags": [
@@ -939,7 +939,7 @@
       "type": "incident",
       "title": "What do we do with what we learned?",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "The incident is closed and the reconstruction is written. How we present it will decide whether anything actually changes.",
+      "body": "The incident is closed and our internal review is written. How we present it will decide whether anything actually changes.",
       "priority": "urgent",
       "availableFromDay": 30,
       "conditions": [
@@ -991,7 +991,7 @@
       "type": "board",
       "title": "A material risk the board has not seen",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "We are holding an assessment at severe residual exposure that the board has never been shown. The next scheduled committee is six weeks away.",
+      "body": "We are holding a material risk assessment the board has never been shown. Unless you take it there sooner, they will first hear of it in the next quarterly paper.",
       "priority": "urgent",
       "availableFromDay": 70,
       "conditions": [
@@ -1176,12 +1176,12 @@
       "type": "people",
       "title": "A quiet week",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "Nothing to escalate this week. Worth noting, because it does not happen often and because it is the right time to do something you have been putting off.",
+      "body": "Nothing to escalate this week. It is the right time to do something you have been putting off.",
       "priority": "routine",
       "availableFromDay": 30,
       "conditions": [
         {
-          "kind": "incident.none"
+          "kind": "incident.none" }, { "kind": "inbox.noUrgentWithin", "days": 7
         }
       ],
       "weight": 10,

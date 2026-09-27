@@ -30,9 +30,16 @@ function isEligible(state: GameState, index: ContentIndex, def: GameEventDef): b
     // Repeatable events without an explicit cooldown still need breathing room.
     if (state.currentDay - lastFired < 21) return false
   }
-  for (const tag of def.tags) {
-    const tagDay = state.events.lastFiredDayByTag[tag]
-    if (tagDay !== undefined && state.currentDay - tagDay < 4) return false
+  // Same-tag spacing keeps the draw from clustering. It does not apply to
+  // pinned beats, which carry authored days: every beat on the opening spine
+  // shares the `spine` tag, so the rule queued them four days apart — the
+  // CEO's "you have had one morning" landed on day 5 after a meeting that
+  // "starts in 23 minutes" on day 1, and the team introduced itself on day 9.
+  if (!def.pinned) {
+    for (const tag of def.tags) {
+      const tagDay = state.events.lastFiredDayByTag[tag]
+      if (tagDay !== undefined && state.currentDay - tagDay < 4) return false
+    }
   }
   return evaluateAll(state, index, def.conditions)
 }
@@ -105,6 +112,13 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
       const def = index.event.get(entry.eventId)
       if (!def) continue
       if (state.events.suppressedEventIds.includes(def.id)) continue
+      // A scheduled message is timed by whatever scheduled it, but it still
+      // says what it says. Skipping every other check let a second incident
+      // resend the first one's "once" callbacks — the invoice that asks what we
+      // are buying "before the next one", after the next one — and delivered
+      // messages whose conditions had stopped being true.
+      if (def.oncePerCampaign && state.events.firedEventIds.includes(def.id)) continue
+      if (!evaluateAll(state, index, def.conditions)) continue
       fire(def)
     }
   }

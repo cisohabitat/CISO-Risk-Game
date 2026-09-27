@@ -18,6 +18,74 @@ fault.
 
 ### Fixed
 
+- **The messages said things nobody had checked, on days that did not fit.**
+  From the same three transcripts. Every claim was checked against the
+  event's conditions and the engine before anything changed; the ones that
+  held are fixed, the ones that did not are listed at the end.
+
+  **Two engine defects behind several of them.**
+  - *The opening spine ran four days apart.* Every scripted beat carries the
+    `spine` tag, and same-tag events must be four days apart, so the beats
+    queued: the CEO's "you have had one morning" arrived on day 5 after a
+    meeting that "starts in 23 minutes" on day 1, and the team introduced
+    itself on day 9. Pinned beats carry authored days and are now exempt from
+    the spacing; the CEO asks on day 2.
+  - *A scheduled message skipped every check.* Once-per-campaign and its own
+    conditions were both ignored, so a second incident resent the first one's
+    callbacks — an invoice asking what we are buying "before the next one",
+    after the next one. Scheduled messages honour both now.
+
+  **Recurring messages said the same number every time.** "A third
+  comparable business has been extorted this quarter", from day 13 and five
+  times more; the same eleven finance staff seven times; the same printer
+  eight times; sixty-two leaked addresses four times; "six days" of scanning;
+  "four points" of drift; a four-hour outage that always lasted four hours,
+  still calling the player "the new person" in October. Each now describes a
+  pattern, and a content test fails any repeatable message that states a
+  count; it caught all three threat texts when the old file was put back.
+
+  **Messages that claimed a state.** A new identity engineer "starts on
+  Monday" three times a year, for a team that may have hired nobody: it is
+  the hire "Recruit properly" pays for, told once, only to a year that
+  recruited. "Nothing to escalate this week" landed between urgent messages;
+  a new condition, `inbox.noUrgentWithin`, holds it to a week with none. "If
+  something happens tomorrow, we will be inventing the process" arrived
+  after an incident run under formal command. The card data discovery
+  arrived months after the decision about it. Corvus's missing second factor
+  was told twice as news. "A material risk at severe residual exposure"
+  checked nothing about severity, which the new bands make rare. A closing
+  message counted every decision taken while an incident ran as a "response
+  decision", including an unrelated card data fix.
+
+  **The calendar.** A launch "taken with your conditions attached" before it
+  happened; "we have moved the launch" for a launch that went live six days
+  later; "six months on" at three months; a committee "six weeks away" three
+  weeks before it sat; a diligence window "closing in six weeks" nine days
+  before completion; the peak trading freeze announced after peak weekend,
+  and an identity decision offering to act "before the freeze" a fortnight
+  into it; a recovery blocker citing a peak that had not begun.
+
+  **Decisions.** "Isolate the route in" said the route ran through
+  third-party access whatever it was — one year's ran through the build
+  pipeline. Cutting access contains the actor in the model regardless of
+  route, so the decision is now about cutting external access, which is true
+  of every family that uses it. The legacy option accepted exposure "on the
+  basis that the platform retires this year" beside "migration is at least a
+  year away". A quiet-year budget said "nothing happened" to a year of
+  phishing and leaked credentials. The post-incident option offered to "show
+  the path" that the incident's own closing message reserves for the year end.
+
+  Tests: the spine lands on authored days; a scheduled once-message is sent
+  once and not at all when its condition fails; a quiet week never follows an
+  urgent message; no new starter for held vacancies; response decisions
+  counted as such. Each mutation-checked. Coverage unchanged at 132 of 134,
+  the same two gated behind one Q4 decision; soak of 400 clean.
+
+  **Checked and left.** "Restoration of affected services" after a data
+  theft: the model does disrupt a service, and the closing message names it.
+  Executive assistants and privileged access: reworded to the delegated mail
+  and file access such a flow plausibly covers, rather than removed.
+
 - **The annual review contradicted the year's own record, in all three modes.**
   Graded by reading three whole years end to end — `pnpm ladder transcript`,
   one per mode, every message, decision and line of the close — with three

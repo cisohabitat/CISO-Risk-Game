@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { newGame, runDays } from '@/game/engine/orchestrator'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 
 /**
@@ -37,8 +37,24 @@ describe('a lapsed decision', () => {
   it('sends nothing when the player answered in time', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'lapse-2' })
-    runDays(state, index, 3)
-    // Nothing has had time to lapse; no notice should exist.
+    // It used to rest on nothing having had time to lapse in three idle days,
+    // which stopped being true when the CEO's question moved from day 5 to the
+    // day after her meeting. It answers everything now, which is the claim.
+    let answered = 0
+    for (let day = 0; day < 30; day += 1) {
+      for (const id of [...state.decisions.openIds]) {
+        const def = index.decision.get(state.decisions.decisions[id]!.defId)!
+        for (const option of def.options) {
+          const tags = def.rationaleTagIds?.slice(0, 1) ?? ['rat-more-evidence']
+          if (applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: option.id, rationaleTagIds: tags }).ok) {
+            answered += 1
+            break
+          }
+        }
+      }
+      runDays(state, index, 1)
+    }
+    expect(answered, 'nothing was put to the player to answer').toBeGreaterThan(0)
     expect(state.inbox.messages.some((m) => /decided without you/i.test(m.subject))).toBe(false)
   })
 })

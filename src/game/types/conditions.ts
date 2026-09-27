@@ -36,6 +36,8 @@ export type Condition =
   | { kind: 'threat.campaignStageAtLeast'; stage: string }
   | { kind: 'incident.active' }
   | { kind: 'incident.none' }
+  /** No urgent message in the inbox from the last `days` days: a quiet spell a message can honestly call quiet. */
+  | { kind: 'inbox.noUrgentWithin'; days: number }
   | { kind: 'incident.resolvedCountAtLeast'; value: number }
   | { kind: 'evidence.known'; evidenceId: string }
   | { kind: 'evidence.tagKnown'; tag: string }

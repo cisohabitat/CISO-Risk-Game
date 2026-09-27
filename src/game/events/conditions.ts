@@ -115,6 +115,12 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       return Object.values(state.incidents.incidents).some((i) => i.phase !== 'closed')
     case 'incident.none':
       return !Object.values(state.incidents.incidents).some((i) => i.phase !== 'closed')
+    // "Nothing to escalate this week" arrived between urgent messages on
+    // either side, because the only check was that no incident was running.
+    case 'inbox.noUrgentWithin':
+      return !state.inbox.messages.some(
+        (m) => (m.priority === 'urgent' || m.priority === 'critical') && state.currentDay - m.day < condition.days,
+      )
     case 'incident.resolvedCountAtLeast':
       return Object.values(state.incidents.incidents).filter((i) => i.phase === 'closed').length >= condition.value
     case 'evidence.known':

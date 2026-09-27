@@ -54,7 +54,7 @@
           "controlEffects": [{ "controlId": "ctl-backup", "operationalEffectiveness": 0.12 }, { "controlId": "ctl-ir", "operationalEffectiveness": 0.15 }] }
       ],
       "blockers": [
-        { "id": "blk-ransom-window", "name": "No maintenance window for restore testing", "description": "Operations will not release a window to test restores during the peak trading period.", "chancePerDay": 0.004, "progressMultiplier": 0.5,
+        { "id": "blk-ransom-window", "name": "No maintenance window for restore testing", "description": "Operations will not release a window to test restores during trading hours.", "chancePerDay": 0.004, "progressMultiplier": 0.5,
           "resolution": { "label": "Negotiate a window with the COO", "focus": 1, "stakeholderId": "stk-coo", "description": "You get a weekend window, on the condition that it does not become a habit." } },
         { "id": "blk-ransom-cost", "name": "Storage cost challenged", "description": "Finance has flagged the immutable storage cost as unbudgeted.", "chancePerDay": 0.003, "progressMultiplier": 0.6,
           "resolution": { "label": "Fund it from the cyber budget", "budget": 150, "description": "You absorb the cost rather than reopen the argument." } }
