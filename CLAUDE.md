@@ -100,18 +100,17 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   days, max 75 (was 73, max 89). Whether the back half now *feels* like the
   year building is the playtest question in `docs/PLAYTEST.md`.
 
-- **Preventive programmes slow attackers; they rarely stop them.** On the
-  supplier routes about 70% of campaigns become incidents whether or not the
-  third-party programme runs (0.43 incidents a year through those routes idle,
-  0.455 with it, 200 seeds), although it cuts the entry steps' daily pass
-  chance from 0.41 to 0.20. A campaign waits 70+ days before giving up, so a
-  harder step delays a breach rather than preventing it, and actors that are
-  slowed on one route choose another. Cloud does pay off (second-half
-  incidents 0.69 against 0.86 idle over 150 seeds) and so does detection;
-  identity and third-party do not move totals. Changing it means changing how
-  the threat engine lets a step hold, for every programme and mode, which is
-  a decision for the owner, not a tuning pass. `scripts/efficacy.ts` measures
-  it.
+- **Third-party is still the weakest programme.** Steps now hold (see
+  `docs/FINDINGS.md`), and over 150 seeds every building programme except
+  detection and recovery now cuts second-half incidents: identity 0.56,
+  segmentation 0.65, cloud 0.67, third-party 0.69, against 0.75 idle.
+  Third-party's effect on the routes it targets is larger — 0.36 to 0.28
+  second-half incidents through the supplier routes, 200 seeds — but attackers
+  it turns away try elsewhere, so the total moves about one standard error.
+  Detection no longer shows in totals (its effect was also near noise before)
+  and recovery acts on consequence (worst 0.33 to 0.24), not on count. Whether
+  a smaller, honest effect reads as worth £520k is the playtest question in
+  `docs/PLAYTEST.md`.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player

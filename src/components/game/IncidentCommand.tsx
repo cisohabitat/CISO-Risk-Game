@@ -20,7 +20,10 @@ export function IncidentCommand() {
   const index = useGameStore((store) => store.index)
   const setUi = useGameStore((store) => store.setUi)
   const setScreen = useGameStore((store) => store.setScreen)
-  if (!state) return null
+  // Once the year is over nothing can be decided, and the panel sat above the
+  // annual review offering a response log. The review says the incident was
+  // still running when the year was written up.
+  if (!state || state.finished) return null
 
   const incident = incidentCommand(state, index)
   if (!incident) return null

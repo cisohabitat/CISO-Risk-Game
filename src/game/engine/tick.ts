@@ -207,7 +207,21 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   }
   for (const campaignId of threatResult.disrupted) {
     const campaign = state.threats.campaigns.find((c) => c.id === campaignId)
-    if (campaign?.detected) {
+    // An actor that gave up against a control was not pushed out by anyone,
+    // and a control that holds should not pass unremarked: the player saw the
+    // activity start, so they hear that it stopped and why.
+    if (campaign?.detected && campaign.heldAt) {
+      const node = state.organisation.nodes[campaign.heldAt]?.discovered ? index.node.get(campaign.heldAt) : undefined
+      pushMessage(state, {
+        from: 'Sentinel SOC',
+        subject: 'The attempt did not get through',
+        body: `The activity we raised around ${node?.name ?? 'an internal system'} has stopped. Nobody pushed them out: whatever they were trying there did not get through, and they appear to have given up on it.`,
+        type: 'threat',
+        priority: 'notable',
+        relatedNodeIds: node ? [campaign.heldAt] : [],
+      })
+      highlights.push('Suspicious activity has stopped.')
+    } else if (campaign?.detected) {
       highlights.push('Suspicious activity has stopped after intervention.')
     }
   }

@@ -49,7 +49,7 @@ async function dismissNote(page: Page): Promise<boolean> {
 
 // A seed whose year has something on every board paper and more than one
 // incident, so the pictures show the screens doing their job rather than empty.
-const SEED = 'guide-2'
+const SEED = 'guide-3'
 
 test.describe('player guide', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'chromium only')

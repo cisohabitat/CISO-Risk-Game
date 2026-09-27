@@ -252,3 +252,20 @@ describe('what the close says about two incidents', () => {
     }
   })
 })
+
+describe('the budget cut agreed in a quiet autumn', () => {
+  it('does not call the year quiet when an incident came afterwards', () => {
+    const state = newGame(index, { seed: 'quiet-cut' })
+    state.flags['next-year.budget'] = 'cut'
+    expect(buildAnnualReview(state, index).narrative.join(' ')).toContain('Nothing happened this year')
+    const family = index.content.incidentFamilies[0]!
+    state.incidents.incidents['inc-late'] = {
+      ...({} as GameState['incidents']['incidents'][string]),
+      id: 'inc-late', familyId: family.id, startedDay: 347, consequence: 0.1, phase: 'recovery', phaseEnteredDay: 358,
+      affectedServiceIds: [], decisionsTaken: [],
+    }
+    const story = buildAnnualReview(state, index).narrative.join(' ')
+    expect(story).not.toContain('Nothing happened this year')
+    expect(story).toContain('The year did not stay quiet')
+  })
+})

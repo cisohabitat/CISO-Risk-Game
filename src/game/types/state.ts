@@ -125,6 +125,8 @@ export interface ThreatCampaignState {
   detectedStage?: CampaignStage
   disrupted: boolean
   disruptedDay?: number
+  /** The node where the actor gave up because the step held, if that is why it ended. */
+  heldAt?: string
   incidentId?: string
   evidenceRaisedIds: string[]
 }

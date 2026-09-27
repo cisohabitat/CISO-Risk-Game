@@ -102,9 +102,12 @@ describe('incidents', () => {
       for (const incident of Object.values(state.incidents.incidents)) {
         const family = index.incidentFamily.get(incident.familyId)!
         // Phase notes reach the player as inbox messages under the family's name.
+        // Two incidents of one family can run at once, so a date window read
+        // the other one's count: take this incident's own closing message, the
+        // one posted the day it closed.
         const text = state.inbox.messages
-          .filter((m) => m.type === 'incident' && m.subject.startsWith(`${family.name}:`))
-          .filter((m) => m.day >= incident.startedDay && m.day <= (incident.resolvedDay ?? 364))
+          .filter((m) => m.type === 'incident' && m.subject === `${family.name}: closed`)
+          .filter((m) => m.day === incident.phaseEnteredDay)
           .map((m) => m.body)
           .join(' ')
         // The count is in the closing message, which an incident still running

@@ -556,6 +556,22 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
       // three and a half hours. Found by the second observed playtest.
+      // Attacks that gave up because a step held. Without this a control that
+      // worked left no trace at all: the year it prevented read the same as a
+      // year nobody tried. Only places the player has mapped are named.
+      const held = state.threats.campaigns.filter((c) => c.heldAt)
+      if (held.length > 0) {
+        const places = [...new Set(held.map((c) => c.heldAt!))]
+        const named = places.filter((id) => state.organisation.nodes[id]?.discovered).map((id) => index.node.get(id)?.name ?? id)
+        const unmapped = places.length - named.length
+        const where = [
+          ...named,
+          ...(unmapped > 0 ? [unmapped === 1 ? 'one place you had not mapped' : `${unmapped} places you had not mapped`] : []),
+        ]
+        lines.push(
+          `${held.length} attack${held.length === 1 ? '' : 's'} gave up at a control that held, at ${where.length > 1 ? `${where.slice(0, -1).join(', ')} and ${where.at(-1)}` : where[0]}`,
+        )
+      }
       const exerciseCount = exercises.length + (restoreTaken ? 1 : 0)
       lines.push(
         exerciseCount > 0
@@ -828,7 +844,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // and what did you decide to carry into next year?
   const nextYear = state.flags['next-year.budget']
   if (nextYear === 'cut') {
-    narrative.push('Nothing happened this year, so you agreed to start next year with a fifth less. Whether the quiet was capability or fortune is the question the cut assumes an answer to.')
+    // The cut is only offered while no incident has happened, so one at the
+    // close came afterwards: "nothing happened this year" beside "tested the
+    // organisation on day 347" was the review contradicting itself.
+    narrative.push(
+      incidents.length > 0
+        ? 'In the autumn, with nothing yet having happened, you agreed to start next year with a fifth less. The year did not stay quiet.'
+        : 'Nothing happened this year, so you agreed to start next year with a fifth less. Whether the quiet was capability or fortune is the question the cut assumes an answer to.',
+    )
   } else if (nextYear === 'held') {
     narrative.push('When finance read a quiet year as a case for less, you argued it was capability rather than fortune, and kept the line. Next year will test the argument.')
   } else if (nextYear === 'trimmed') {

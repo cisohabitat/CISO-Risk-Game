@@ -44,6 +44,9 @@ function stageForStep(stepIndex: number, stepCount: number): CampaignStage {
 }
 
 /** How attractive an organisation looks to an actor right now. */
+/** Daily chance of abandoning a step, per unit of squared resistance. */
+const HOLD_RATE = 0.2
+
 export function pathAttractiveness(
   state: GameState,
   index: ContentIndex,
@@ -101,7 +104,7 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
       .filter((entry) => entry.weight > 0.02)
     if (candidates.length === 0) continue
 
-    const startChance = clamp01(actor.pressure * def.persistence * 0.006 * difficultyFactor)
+    const startChance = clamp01(actor.pressure * def.persistence * 0.008 * difficultyFactor)
     if (!rng.chance(startChance)) continue
 
     const chosen = rng.weighted(candidates, (entry) => entry.weight)
@@ -172,6 +175,19 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
     }
 
     if (!advanced) {
+      // A step that holds is abandoned. An actor used to keep trying until it
+      // passed, giving up only after 70+ days without progress, so a stronger
+      // control delayed a breach and almost never prevented one: on the
+      // supplier routes 70% of campaigns became incidents whether or not the
+      // supplier programme had halved the entry step's pass chance. Squared,
+      // so an unhardened step barely changes and a well-controlled one bites.
+      if (rng.chance(clamp01(HOLD_RATE * assessment.resistance * assessment.resistance))) {
+        campaign.disrupted = true
+        campaign.disruptedDay = state.currentDay
+        campaign.heldAt = step.nodeId
+        result.disrupted.push(campaign.id)
+        continue
+      }
       // Actors give up on stubborn paths eventually.
       if (state.currentDay - campaign.lastAdvanceDay > 70 + actorDef.persistence * 60) {
         campaign.disrupted = true

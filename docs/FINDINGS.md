@@ -233,6 +233,45 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **A control could delay a breach but almost never prevent one.** An actor
+  kept trying a step until it passed and gave up only after 70+ days without
+  progress, so on the supplier routes about 70% of campaigns became incidents
+  whether or not the third-party programme had halved the entry step's pass
+  chance (0.43 incidents a year through those routes idle, 0.455 with it, 200
+  seeds). That is why identity and third-party moved no totals. At the owner's
+  choice, a step that resists is now abandoned: each day an attempt fails the
+  actor gives up with chance 0.2 × resistance², so an unhardened step (0.1 to
+  0.17) barely changes and a well-controlled one (0.35 and up) holds. Holding
+  also made the game easier for everyone — the engaged ladder fell to 0.38 /
+  0.50 / 1.00 — so campaigns start a third more often (0.006 to 0.008), which
+  puts an idle year back where it was: 0.63 / 1.26 / 1.73 incidents against
+  0.72 / 1.25 / 1.74, 150 seeds each. What building earns is now visible: the
+  engaged ladder reads 0.45 / 0.75 / 1.15 over 40 seeds (0.40 / 0.85 / 1.68
+  before), so on high pressure a player who builds sees a third fewer
+  incidents where before they saw almost none. Over 150 seeds second-half
+  incidents read identity 0.56, segmentation 0.65, cloud 0.67, third-party
+  0.69 against 0.75 idle; third-party cuts its own routes from 0.36 to 0.28.
+  A hold used to leave no trace, so a control that worked read the same as a
+  year nobody tried. The campaign now records where it held; if the SOC had
+  seen the attempt it reports that it did not get through (0.22 times a year
+  idle, 0.60 with identity), and the annual review counts the attacks that gave
+  up, naming only systems the player has mapped. Tests in
+  `tests/engine/holding.test.ts`, which fail with holding switched off. Soak
+  1,000 clean. One incident test read messages by family and date and, with two
+  incidents of one family running at once, counted the other one's decisions;
+  it reads the incident's own closing message now.
+
+  Re-photographing the guide from the new year found two more. An incident
+  still running when the year ended kept its "Incident active" panel above the
+  annual review, offering a response log for decisions that could no longer be
+  taken; it is hidden once the year is over, and the review already says the
+  incident was still running. And a year that agreed a budget cut in a quiet
+  autumn and was then breached on day 347 read "Nothing happened this year"
+  beside "tested the organisation on day 347"; the cut is only offered while
+  nothing has happened, so a later incident now reads "The year did not stay
+  quiet". Tested, mutation-checked. The guide's seed is now guide-3, whose
+  prepared year still has an incident with the identity programme working.
+
 - **Two programmes' controls did not count on the steps they claim to fix.**
   Asked to make third-party and cloud pay off, the attack paths showed both
   controls on real steps but not against the techniques there: cloud posture
