@@ -217,6 +217,7 @@ export const controlSchema = z.object({
   mitigates: z.record(z.string(), unit),
   detectionStrength: unit,
   recoveryStrength: unit,
+  responseStrength: unit.optional(),
   driftPerDay: z.number().min(0).max(0.01),
   driftKind: z.enum(['coverage-erosion', 'operational-decay', 'exception-accumulation']),
   driftFloor: z.number().min(0).max(1),

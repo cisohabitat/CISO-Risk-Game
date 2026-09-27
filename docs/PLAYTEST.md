@@ -200,6 +200,11 @@ Put them in front of players rather than deciding from a desk.
   was the reconstruction asserting things the player's choices had changed,
   and three unnamed things — a board omission, an unseen risk, a missed risk
   the briefing had in fact offered. All closed in `FINDINGS.md`.
+- 2026-09-27, the owner, one year, reported in conversation rather than
+  written up: it felt right, with no complaints to act on. The first human
+  year; the designer, so it cannot say whether the game teaches itself. The
+  question of whether a newcomer finishes having learned something is still
+  open.
 
 ## What not to change on playtest feedback alone
 

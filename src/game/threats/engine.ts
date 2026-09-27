@@ -18,6 +18,7 @@ import { CAMPAIGN_STAGES, clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
 import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { assessPathSteps, calculatePathViability, calculateThreatPressure } from '../risk/calculations'
+import { responseCapability } from '../controls/effectiveness'
 
 export interface ThreatTickResult {
   effects: GameEffect[]
@@ -44,6 +45,9 @@ function stageForStep(stepIndex: number, stepCount: number): CampaignStage {
 }
 
 /** How attractive an organisation looks to an actor right now. */
+/** Chance a sighting becomes an eviction, per unit of detection and response. */
+const RESPONSE_RATE = 1
+
 /** Daily chance of abandoning a step, per unit of squared resistance. */
 const HOLD_RATE = 0.2
 
@@ -129,6 +133,12 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
   }
 
   // 3. Progress live campaigns one step at a time.
+  const response = responseCapability(
+    index.content.controls.flatMap((def) => {
+      const runtime = state.controls.controls[def.id]
+      return runtime ? [{ runtime, def }] : []
+    }),
+  )
   for (const campaign of state.threats.campaigns) {
     if (campaign.disrupted || campaign.incidentId) continue
     const path = index.attackPath.get(campaign.pathId)
@@ -163,8 +173,10 @@ export function tickThreats(state: GameState, index: ContentIndex, rng: Rng): Th
         strength: assessment.detectionChance > 0.45 ? 'clear' : 'faint',
       })
 
-      // A capable SOC that sees it can also push the actor back out.
-      const disruptChance = clamp01(assessment.detectionChance * assessment.resistance * 0.5)
+      // A capable SOC that sees it can also push the actor back out. How well
+      // it can act is the organisation's response capability, not how hard the
+      // step was to pass.
+      const disruptChance = clamp01(assessment.detectionChance * response * RESPONSE_RATE)
       if (rng.chance(disruptChance)) {
         campaign.disrupted = true
         campaign.disruptedDay = state.currentDay

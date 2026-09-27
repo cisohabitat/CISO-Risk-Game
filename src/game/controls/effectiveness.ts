@@ -33,6 +33,23 @@ export function calculateControlRecovery(control: ControlRuntime, def: SecurityC
 }
 
 /**
+ * How well the organisation can act on activity it has seen: the best of its
+ * response controls. The SOC's ability to push an actor out used to be read
+ * from the attacked step's preventive resistance, so a better SOC changed
+ * almost nothing: evictions went from 0.06 to 0.08 a year with the detection
+ * programme finished.
+ */
+export function responseCapability(controls: { runtime: ControlRuntime; def: SecurityControlDef }[]): number {
+  let best = 0
+  for (const { runtime, def } of controls) {
+    const strength = def.responseStrength ?? 0
+    if (strength <= 0) continue
+    best = Math.max(best, calculateControlEffectiveness(runtime) * strength)
+  }
+  return clamp01(best)
+}
+
+/**
  * Combined resistance of a set of controls to one technique.
  * Controls compose multiplicatively (defence in depth) rather than additively,
  * so a second control of the same kind adds less than the first.

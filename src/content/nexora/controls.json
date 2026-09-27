@@ -30,7 +30,7 @@
       "baseCoverage": 0.58, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.6, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-endpoints", "node-dev-workstations", "node-mgmt-server", "node-dc-legacy"],
       "mitigates": { "phishing": 0.5, "lateral-movement": 0.45, "encryption-impact": 0.55, "persistence": 0.5 },
-      "detectionStrength": 0.6, "recoveryStrength": 0.1, "driftPerDay": 0.0003, "driftKind": "coverage-erosion", "driftFloor": 0.8
+      "detectionStrength": 0.6, "recoveryStrength": 0.1, "responseStrength": 0.5, "driftPerDay": 0.0003, "driftKind": "coverage-erosion", "driftFloor": 0.8
     },
     {
       "id": "ctl-logging", "name": "Logging and telemetry", "shortName": "Telemetry", "category": "detection",
@@ -46,7 +46,7 @@
       "baseCoverage": 0.55, "baseConfigurationQuality": 0.5, "baseOperationalEffectiveness": 0.55, "baseMonitoringQuality": 0.55, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-sup-soc", "node-net-prod", "node-net-corp"],
       "mitigates": { "persistence": 0.25 },
-      "detectionStrength": 0.65, "recoveryStrength": 0.05, "driftPerDay": 0.0004, "driftKind": "operational-decay", "driftFloor": 0.75
+      "detectionStrength": 0.65, "recoveryStrength": 0.05, "responseStrength": 0.8, "driftPerDay": 0.0004, "driftKind": "operational-decay", "driftFloor": 0.75
     },
     {
       "id": "ctl-backup", "name": "Backup and recovery", "shortName": "Backup", "category": "recovery",
@@ -62,7 +62,7 @@
       "baseCoverage": 0.4, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.35, "baseExceptionRate": 0.2, "variance": 0.12,
       "targetNodeIds": ["node-sup-soc"],
       "mitigates": {},
-      "detectionStrength": 0.1, "recoveryStrength": 0.55, "driftPerDay": 0.0007, "driftKind": "operational-decay", "driftFloor": 0.65
+      "detectionStrength": 0.1, "recoveryStrength": 0.55, "responseStrength": 0.3, "driftPerDay": 0.0007, "driftKind": "operational-decay", "driftFloor": 0.65
     },
     {
       "id": "ctl-3p-access", "name": "Supplier access governance", "shortName": "Supplier access", "category": "third-party",

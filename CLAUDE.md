@@ -82,14 +82,11 @@ Measured, not yet fixed. Ranked. Everything that used to sit here about the
 risk bands, executive patience and the noise dial has been fixed and moved to
 `docs/FINDINGS.md`.
 
-- **Nobody has played this.** Four playtest reports sit in `docs/playtests/`
-  and every one of them is an AI driving a browser, which each says of itself.
-  They are good at contradictions, stale copy and screens that do not explain
-  themselves, and they found plenty. They cannot say whether the year builds,
-  whether the annual review lands as uncomfortable rather than arbitrary, or
-  whether somebody who does not know the subject finishes feeling they learned
-  something. No harness answers this and no amount of further simulation will.
-  `docs/PLAYTEST.md` is how to ask a person.
+- **Almost nobody has played this.** Four playtest reports in
+  `docs/playtests/` are an AI driving a browser. The owner has played one year
+  and it felt right, but a designer cannot say whether the game teaches itself.
+  Whether somebody who does not know the subject finishes feeling they learned
+  something is still open; `docs/PLAYTEST.md` is how to ask a person.
 
 - **The last quarter is still the lightest, but less so.** Four late-year
   decisions now follow up choices made earlier in the year — the Corvus
@@ -100,17 +97,12 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   days, max 75 (was 73, max 89). Whether the back half now *feels* like the
   year building is the playtest question in `docs/PLAYTEST.md`.
 
-- **Third-party is still the weakest programme.** Steps now hold (see
-  `docs/FINDINGS.md`), and over 150 seeds every building programme except
-  detection and recovery now cuts second-half incidents: identity 0.56,
-  segmentation 0.65, cloud 0.67, third-party 0.69, against 0.75 idle.
-  Third-party's effect on the routes it targets is larger — 0.36 to 0.28
-  second-half incidents through the supplier routes, 200 seeds — but attackers
-  it turns away try elsewhere, so the total moves about one standard error.
-  Detection no longer shows in totals (its effect was also near noise before)
-  and recovery acts on consequence (worst 0.33 to 0.24), not on count. Whether
-  a smaller, honest effect reads as worth £520k is the playtest question in
-  `docs/PLAYTEST.md`.
+- **Third-party is still the weakest programme, by the owner's choice.** Over
+  150 seeds second-half incidents read identity 0.51, detection 0.54,
+  segmentation 0.60, cloud 0.65, third-party 0.65 against 0.73 idle; recovery
+  acts on consequence (worst 0.33 to 0.23), not on count. Third-party's effect
+  on its own routes is larger, but attackers it turns away try elsewhere. The
+  owner chose to leave that as the lesson rather than strengthen it.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player

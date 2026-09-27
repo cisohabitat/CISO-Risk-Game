@@ -233,6 +233,21 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **Detection stopped paying off once steps could hold.** Measured over 150
+  seeds: 79% of campaigns are seen eventually whether or not anything is
+  invested, because detection is rolled on every active day, so the detection
+  programme could not add sightings; and the chance of pushing a seen actor out
+  was read from the attacked step's preventive resistance, so a better SOC
+  barely acted on what it saw — 0.06 evictions a year idle, 0.08 with the
+  programme. Controls now carry a `responseStrength` (SOC 0.8, endpoint
+  response 0.5, incident readiness 0.3), and eviction on a sighting is the
+  step's detection times the best response capability. Evictions go from 0.13
+  a year idle to 0.29 with the programme, and second-half incidents to 0.54
+  against 0.73 idle, second only to identity. An idle year barely moves (0.59 /
+  1.23 / 1.68 against 0.63 / 1.26 / 1.73), so nothing was compensated. The
+  engaged ladder reads 0.45 / 0.65 / 1.05. Test in
+  `tests/engine/response.test.ts`, which fails with the old formula.
+
 - **A control could delay a breach but almost never prevent one.** An actor
   kept trying a step until it passed and gave up only after 70+ days without
   progress, so on the supplier routes about 70% of campaigns became incidents

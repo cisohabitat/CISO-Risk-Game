@@ -118,6 +118,8 @@ export interface SecurityControlDef {
   detectionStrength: number
   /** Contribution to recovery/consequence reduction. */
   recoveryStrength: number
+  /** How well this control lets defenders act on what they see: push an actor out once noticed. */
+  responseStrength?: number
   /** Ongoing degradation per day when no programme maintains it. */
   driftPerDay: number
   /** Which dimension erodes, and why. See applyDrift. */

@@ -107,7 +107,9 @@ Outputs are 0..1 internally and become bands at the presentation boundary
 Three actors evaluate a small set of precomputed candidate attack paths rather
 than searching the graph. Each day an active campaign attempts its current step;
 controls change the odds, monitoring decides whether anyone notices, and a
-capable SOC that sees activity can push the actor back out. A step that resists
+capable SOC that sees activity can push the actor back out; how likely that is
+depends on detection at the step and on the organisation's response capability
+(the best of the controls with a `responseStrength`), not on the step itself. A step that resists
 is also abandoned: each day an attempt fails, the actor may give up with a
 chance that grows with the square of the step's resistance, so an unhardened
 step barely changes and a well-controlled one holds. Where it held is recorded
