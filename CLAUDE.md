@@ -120,9 +120,9 @@ been fixed and moved to `docs/FINDINGS.md`.
   because the papers outweigh the start, so the difference lives in the
   budget, the threat, two messages and a decision of its own each (an
   extortion demand, a flagship purchase, a predecessor's figure that counted
-  less than it seemed) and the review's answer to the situation's question.
-  Whether that is enough to make a second year feel
-  different is a playtest question.
+  less than it seemed), the review's answer to the situation's question and a
+  closing line on how its decision was answered. Whether that is enough to
+  make a second year feel different is a playtest question.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player
@@ -147,6 +147,12 @@ been fixed and moved to `docs/FINDINGS.md`.
   incidents run 0.60 / 0.80 / 1.13. That keeps the board judging what it is
   told rather than luck, which may be the lesson; whether it feels right after
   a first ransomware year is in `docs/PLAYTEST.md`.
+
+- **There is about 4 kB of first-load headroom left for content.** The first
+  screen waits on 256.1 of the 260 kB budget, of which the campaign is 74.4 of
+  its 77. The year view is already split out; the next few messages or
+  decisions of any length will need either another split or a deliberate rise
+  in `scripts/size-budget.ts`, which `pnpm check` now enforces.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every
