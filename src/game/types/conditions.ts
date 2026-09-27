@@ -22,7 +22,8 @@ export type Condition =
   | { kind: 'programme.progressAtLeast'; programmeId: string; value: number }
   | { kind: 'programme.anyActive' }
   /** A live programme has a blocker nobody has resolved. */
-  | { kind: 'programme.anyBlocked' }
+  /** A live programme has an unresolved blocker, at least `forDays` old when given. */
+  | { kind: 'programme.anyBlocked'; forDays?: number }
   /** A live programme is where the time elapsed says it should be, with nothing blocking it. */
   | { kind: 'programme.anyOnPlan' }
   /** The player has recorded at least one assumption that has not been invalidated. */

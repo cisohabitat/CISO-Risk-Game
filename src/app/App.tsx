@@ -94,7 +94,7 @@ export function App() {
         {screen === 'team' && <TeamScreen />}
         {screen === 'board' && <BoardScreen />}
         {screen === 'debrief' && (
-          <Suspense fallback={<p className="text-sm text-ink-muted">Opening your year…</p>}>
+          <Suspense fallback={<p role="status" className="text-sm text-ink-muted">Opening your year…</p>}>
             <DebriefScreen />
           </Suspense>
         )}

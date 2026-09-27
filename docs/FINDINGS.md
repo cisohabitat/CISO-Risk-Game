@@ -18,6 +18,15 @@ fault.
 
 ### Fixed
 
+- **"A programme has stalled" arrived on the same day as the blocker it
+  reminded about.** The reminder fired on any unresolved blocker, so it often
+  landed beside the programme's own "Blocker: …" message and said the same
+  thing less exactly. `programme.anyBlocked` takes an optional `forDays`, and
+  the reminder waits for a blocker a week old. The existing test that checks
+  the reminder is honest now also checks the wait, still sees it arrive, and
+  fails with the wait at zero. The year view's loading line is announced as a
+  status to screen readers.
+
 - **The last day of the year was "Week 53".** 364 days is 52 weeks and a day,
   so 31 December opened a week 53 in the header and the Briefing masthead,
   seen by every player reading the review. The label stops at 52; a test holds

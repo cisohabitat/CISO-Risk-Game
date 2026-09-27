@@ -58,9 +58,13 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     // on anyActive and claimed a state nobody checked: measured over 20
     // campaigns, the stall was real in 27 of 93 arrivals and the win in 0 of
     // 54. A message that claims a state has to test for it.
+    // The reminder waits a week: it arrived on the same day as the
+    // programme's own blocker message and said the same thing less exactly.
     case 'programme.anyBlocked':
       return Object.values(state.programmes.programmes).some(
-        (p) => (p.status === 'active' || p.status === 'at-risk') && p.blockers.some((b) => !b.resolved),
+        (p) =>
+          (p.status === 'active' || p.status === 'at-risk') &&
+          p.blockers.some((b) => !b.resolved && state.currentDay - b.startedDay >= (condition.forDays ?? 0)),
       )
     // "Ahead of plan" was the first wording, and a programme is never ahead:
     // over 6,291 live-programme days the largest lead over the linear plan

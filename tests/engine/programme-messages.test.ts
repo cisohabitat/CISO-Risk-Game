@@ -48,6 +48,11 @@ describe('programme messages claim only what is true', () => {
           if (message.subject === 'A programme has stalled') {
             stalled += 1
             expect(live.some((p) => p.blockers.some((b) => !b.resolved)), `${seed} day ${state.currentDay}: stalled with no blocker`).toBe(true)
+            // A reminder, not a second announcement: it waits until a blocker has held for a week.
+            expect(
+              live.some((p) => p.blockers.some((b) => !b.resolved && state.currentDay - b.startedDay >= 7)),
+              `${seed} day ${state.currentDay}: stalled on the day the blocker arrived`,
+            ).toBe(true)
           }
           if (message.subject === 'A programme is on plan') {
             ahead += 1

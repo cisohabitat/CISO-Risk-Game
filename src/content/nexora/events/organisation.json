@@ -803,7 +803,8 @@
       "availableFromDay": 60,
       "conditions": [
         {
-          "kind": "programme.anyBlocked"
+          "kind": "programme.anyBlocked",
+          "forDays": 7
         }
       ],
       "weight": 10,
