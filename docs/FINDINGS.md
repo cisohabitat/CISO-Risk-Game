@@ -220,6 +220,14 @@ fault.
   enablement band gives each half credit rather than none. Test in
   `tests/engine/review-agrees.test.ts`, mutation-checked.
 
+- **The rail's "Due" badge failed the contrast floor in light mode.** Near-white
+  text on the brass fill measures about 3:1; the open-decision count used the
+  same pair. The accessibility audit only ever saw day one, when no board paper
+  is due, so it never met the badge. The audit now also runs on a campaign the
+  engine played to day 200 and on the close written up from it, in both themes,
+  and a new `--on-brass` token puts dark ink on brass. Failed before, 28 of 28
+  audit tests pass after across desktop, tablet and both phones.
+
 - **The risk list read "Moderate moderate".** Its two leading badges were a
   bare residual band and a bare confidence word, which on most rows are the
   same word; the briefing and the detail already said "residual" and

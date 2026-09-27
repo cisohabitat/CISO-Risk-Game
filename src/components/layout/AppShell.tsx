@@ -79,14 +79,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </span>
                 )}
                 {destination.id === 'home' && view.openDecisions > 0 && (
-                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums">
+                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass tabular-nums">
                     {view.openDecisions}
                   </span>
                 )}
                 {/* The rail badges the Briefing and the Inbox when they want
                     you. The board paper wanted you too and said nothing. */}
                 {destination.id === 'board' && state.reviews.pendingQuarter !== undefined && (
-                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-ink-inverse">
+                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass">
                     Due
                   </span>
                 )}

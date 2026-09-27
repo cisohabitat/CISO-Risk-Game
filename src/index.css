@@ -33,6 +33,9 @@
 
   --brass: oklch(0.66 0.11 75);
   --brass-soft: oklch(0.95 0.04 80);
+  /* Text on a brass fill. Near-white on this brass is about 3:1; the rail's
+     "Due" and decision-count badges used it and failed the contrast floor. */
+  --on-brass: oklch(0.22 0.02 260);
 
   /* Band colours double as label text on their own soft backgrounds, so they
      are held at or above the 4.5:1 contrast floor rather than tuned by eye. */
@@ -90,6 +93,7 @@
 
   --brass: oklch(0.78 0.1 78);
   --brass-soft: oklch(0.32 0.05 75);
+  --on-brass: oklch(0.18 0.02 265);
 
   --band-low: oklch(0.72 0.09 175);
   --band-low-soft: oklch(0.29 0.04 175);
@@ -137,6 +141,7 @@
   --color-accent-ink: var(--accent-ink);
   --color-brass: var(--brass);
   --color-brass-soft: var(--brass-soft);
+  --color-on-brass: var(--on-brass);
 
   --color-chart-enquiry: var(--chart-enquiry);
   --color-chart-board: var(--chart-board);

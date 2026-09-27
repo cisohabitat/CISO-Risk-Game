@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import { goTo, startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 /**
  * Automated accessibility audit (plan §31). Not a substitute for manual review,
@@ -42,6 +43,37 @@ test.describe('accessibility', () => {
           JSON.stringify(results.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.html).slice(0, 3) })), null, 2),
         ).toEqual([])
       }
+    })
+  }
+
+  /**
+   * Day one is the emptiest the screens are: no raised risks, no trend or
+   * status badges, no incident, no board history, no close. Mid-year carries
+   * every tone the badges have, so audit a campaign the engine played to day
+   * 200, and the close written up from it.
+   */
+  for (const theme of ['light', 'dark'] as const) {
+    test(`has no WCAG A/AA violations mid-year and at the close in ${theme} mode`, async ({ page }) => {
+      test.setTimeout(120_000)
+      await page.emulateMedia({ colorScheme: theme })
+      await openPreparedCampaign(page, prepareCampaign(`a11y-mid-${theme}`, 'day:200'))
+      const audit = async (screen: string) => {
+        await settle(page)
+        const results = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+          .analyze()
+        expect(
+          results.violations.map((violation) => `${screen}: ${violation.id} — ${violation.description}`),
+          JSON.stringify(results.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.html).slice(0, 3) })), null, 2),
+        ).toEqual([])
+      }
+      for (const screen of [...SCREENS, 'Your year']) {
+        await goTo(page, screen)
+        await audit(screen)
+      }
+      await page.getByRole('button', { name: 'Write up the year now' }).click()
+      await expect(page.getByText('How the year is read')).toBeVisible()
+      await audit('Annual review')
     })
   }
 
