@@ -300,7 +300,7 @@ export function DebriefScreen() {
             <CardBody>
               <ul className="space-y-1 text-sm text-ink-muted">
                 {review.blindSpots.map((spot, position) => (
-                  <li key={position} className="text-pretty">{spot}</li>
+                  <li key={position} className="text-pretty">{spot.charAt(0).toUpperCase() + spot.slice(1)}</li>
                 ))}
               </ul>
             </CardBody>

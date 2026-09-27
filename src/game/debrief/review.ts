@@ -435,7 +435,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         // same thing twice, the first time as arithmetic.
         ...(resolved.length > 0 ? [`${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`] : []),
         lapsed === 0
-          ? `you answered all ${resolved.length} of the decisions put to you`
+          ? `You answered all ${resolved.length} of the decisions put to you`
           : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and were taken by default`,
       ]
       // Named, because "you prioritised badly" is not a finding a player can do
@@ -599,7 +599,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative:
       started.length === 0
         ? 'You started no capability programme. Nexora ends the year with the controls it had when you arrived, minus drift.'
-        : `${completed.length} of ${started.length} programmes you started reached completion.`,
+        : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion.`,
     evidence: started.map((p) => {
       const def = index.programme.get(p.id)
       return `${def?.shortName ?? p.id}: ${Math.round(p.progress * 100)}% delivered`
