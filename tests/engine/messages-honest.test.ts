@@ -274,3 +274,18 @@ describe('messages about a weakness the player has since fixed', () => {
     expect(days.at(-1)!, `days ${days.join(', ')}`).toBeGreaterThan(100)
   })
 })
+
+describe('an enquiry coming back', () => {
+  it('says what it found, not only how well it went', () => {
+    const state = newGame(index, { seed: 'enquiry-back' })
+    applyAction(state, index, { type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id })
+    for (let day = 0; day < 40; day += 1) {
+      answerAll(state)
+      runDays(state, index, 1)
+    }
+    const back = state.inbox.messages.find((m) => m.subject === 'Completed: Recovery test for a critical service')
+    expect(back, 'the enquiry never came back').toBeDefined()
+    const guaranteed = index.evidence.get('ev-backup-test-failed')!.title
+    expect(back!.body).toMatch(new RegExp(`What came back: .*${guaranteed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|confirmed what you already had`))
+  })
+})

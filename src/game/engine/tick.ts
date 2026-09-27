@@ -124,10 +124,24 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   queued.push(...assignmentResult.effects)
   for (const completed of assignmentResult.completed) {
     const leader = index.leader.get(completed.leaderId)
+    // Say what came back, not only how well. Every enquiry in a year read end
+    // to end reported "answered part of the question and raised others" and
+    // nothing else; the findings were on another screen.
+    const found = completed.evidenceIds
+      .filter((id) => !state.evidence.items[id])
+      .map((id) => index.evidence.get(id)?.title)
+      .filter((title): title is string => Boolean(title))
+    const already = completed.evidenceIds.length - found.length
+    const findings =
+      found.length > 0
+        ? ` What came back: ${found.join('; ')}.${already > 0 ? ` It also confirmed ${already === 1 ? 'one thing' : `${already} things`} you already had.` : ''}`
+        : completed.evidenceIds.length > 0
+          ? ' It confirmed what you already had, and found nothing new.'
+          : ''
     pushMessage(state, {
       from: leader?.name ?? 'Cyber team',
       subject: `Completed: ${completed.title}`,
-      body: completed.summary,
+      body: `${completed.summary}${findings}`,
       type: 'discovery',
       priority: 'notable',
     })

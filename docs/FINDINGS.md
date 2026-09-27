@@ -209,6 +209,15 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **An enquiry came back without saying what it found.** Every completion
+  message in a year read end to end was the quality line alone — "answered
+  part of the question and raised others" four times — and the findings were
+  on another screen. The message now names what came back ("What came back:
+  Privileged access recertification is 11 months overdue; MFA exception
+  register holds 214 accounts; …"), counts what it only confirmed, and says so
+  when it found nothing new. Presentation only; test in
+  `tests/engine/messages-honest.test.ts`.
+
 - **The close told two incidents backwards, and called a running one over.**
   From a high-pressure year read end to end: the story narrates the worst
   incident first whatever its date, then listed the others as "again", so it
