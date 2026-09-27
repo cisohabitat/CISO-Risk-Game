@@ -575,7 +575,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const objectives = Object.values(state.business.objectives)
   const achieved = objectives.filter((o) => o.status === 'achieved').length
   const failed = objectives.filter((o) => o.status === 'failed').length
-  const enablement = clamp01(objectives.length === 0 ? 0.5 : achieved / objectives.length)
+  // Neither achieved nor failed: a year closed early, or a delay that carried
+  // a target past the last day. "Met all five" used to count these as met.
+  const pending = objectives.length - achieved - failed
+  // An objective still in delivery is neither credit nor failure: half of each.
+  const enablement = clamp01(objectives.length === 0 ? 0.5 : (achieved + pending * 0.5) / objectives.length)
   dimensions.push({
     id: 'business-enablement',
     label: 'Business enablement',
@@ -585,7 +589,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // whatever the player did, including a year that built nothing, and read
     // "Some of that" against a single missed objective.
     narrative: (() => {
-      if (failed === 0) return 'The business met its commitments with security alongside it rather than in the way.'
+      if (failed === 0 && pending === 0) return 'The business met its commitments with security alongside it rather than in the way.'
+      if (failed === 0) {
+        return `No business objective was missed, and ${pending === 1 ? 'one was' : `${pending} were`} still in delivery when the year was written up.`
+      }
       const missed = failed === 1 ? 'One business objective was missed.' : `${failed} business objectives were missed.`
       const built = Object.values(state.programmes.programmes).some((p) => p.status !== 'proposed')
       return built
@@ -798,9 +805,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
 
   const businessOutcome =
-    failed === 0
+    achieved === objectives.length
       ? `Nexora met all ${objectives.length} of its stated objectives.`
-      : `Nexora met ${achieved} of ${objectives.length} objectives; ${failed} ${failed === 1 ? 'was' : 'were'} missed.`
+      : [
+          `Nexora met ${achieved} of ${objectives.length} objectives`,
+          failed > 0 ? `${failed} ${failed === 1 ? 'was' : 'were'} missed` : undefined,
+          pending > 0 ? `${pending} ${pending === 1 ? 'was' : 'were'} still in delivery` : undefined,
+        ]
+          .filter(Boolean)
+          .join('; ') + '.'
 
   return {
     day: state.currentDay,

@@ -166,4 +166,22 @@ describe('the annual review, in the situations a played year rarely reaches', ()
     const built = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'business-enablement')!
     expect(built.narrative).toContain('Security programmes you chose to run were part of the pressure on it')
   })
+
+  it('does not count an objective still in delivery as met', () => {
+    // A year written up early, or a delay that carried a target past the last
+    // day, leaves objectives neither achieved nor failed. "Met all five" was
+    // written beside a list reading one achieved and four in delivery.
+    const state = newGame(index, { seed: 'early-close' })
+    const [first, ...rest] = Object.values(state.business.objectives)
+    first!.status = 'achieved'
+    for (const objective of rest) objective.status = 'active'
+    const review = buildAnnualReview(state, index)
+    expect(review.businessOutcome).toBe(`Nexora met 1 of 5 objectives; 4 were still in delivery.`)
+    const enablement = review.dimensions.find((d) => d.id === 'business-enablement')!
+    expect(enablement.narrative).toContain('4 were still in delivery')
+    expect(enablement.narrative).not.toContain('met its commitments')
+
+    for (const objective of rest) objective.status = 'achieved'
+    expect(buildAnnualReview(state, index).businessOutcome).toBe('Nexora met all 5 of its stated objectives.')
+  })
 })

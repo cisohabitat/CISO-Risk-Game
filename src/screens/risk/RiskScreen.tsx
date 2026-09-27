@@ -65,8 +65,10 @@ export function RiskScreen() {
                       )}
                     >
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]}</Badge>
-                        <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence}</Badge>
+                        {/* Worded as the briefing and the detail word them: two bare
+                            badges read "Moderate moderate" on most of the list. */}
+                        <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
+                        <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge>
                         <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
                         {risk.reviewDue && <Badge tone="warning" glyph={false}>Review due</Badge>}
                         {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}

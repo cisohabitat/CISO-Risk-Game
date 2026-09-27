@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 /**
  * What is actually in the save store, rather than what the start screen shows.
@@ -448,6 +449,27 @@ test.describe('a first year at Nexora', () => {
       const offscreen = await offscreenControls(page)
       expect(offscreen, `controls off-screen on ${screen}: ${offscreen.join(', ')}`).toEqual([])
     }
+  })
+
+  // Day one is the emptiest the screens ever are. Mid-year they carry running
+  // programmes, raised risks with trend badges, incidents and a full timeline,
+  // and the close carries the longest text in the game.
+  test('screens hold together mid-year and at the close', async ({ page }, info) => {
+    test.setTimeout(120_000)
+    await openPreparedCampaign(page, prepareCampaign('e2e-midyear', 'day:200'))
+    for (const screen of ['Briefing', 'Inbox', 'Risk', 'Organisation', 'Programmes', 'Team', 'Board', 'Your year']) {
+      await goTo(page, screen)
+      await expectNoHorizontalScroll(page)
+      const offscreen = await offscreenControls(page)
+      expect(offscreen, `controls off-screen on ${screen}: ${offscreen.join(', ')}`).toEqual([])
+      if (process.env.PHONE_SHOTS) await page.screenshot({ path: `test-results/mid-${info.project.name}-${screen}.png`, fullPage: true })
+    }
+    await page.getByRole('button', { name: 'Write up the year now' }).click()
+    await expect(page.getByText('How the year is read')).toBeVisible()
+    await expectNoHorizontalScroll(page)
+    const offscreen = await offscreenControls(page)
+    expect(offscreen, `controls off-screen on the review: ${offscreen.join(', ')}`).toEqual([])
+    if (process.env.PHONE_SHOTS) await page.screenshot({ path: `test-results/mid-${info.project.name}-review.png`, fullPage: true })
   })
 
   test('the rail marks where you are with something hover cannot imitate', async ({ page }) => {

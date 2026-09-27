@@ -209,6 +209,22 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **A year written up early said the business met every objective.** Found by
+  a new layout test that closes a prepared campaign on day 200: the close read
+  "Nexora met all 5 of its stated objectives" beside a list of one achieved and
+  four in delivery, and business enablement said the business "met its
+  commitments". Both counted anything not failed as met. Measured, no full year
+  leaves an objective unresolved (0 of 60, idle and building), so only "Write
+  up the year now" reaches it — but any player can press that. The outcome now
+  counts objectives still in delivery separately, the sentence says so, and the
+  enablement band gives each half credit rather than none. Test in
+  `tests/engine/review-agrees.test.ts`, mutation-checked.
+
+- **The risk list read "Moderate moderate".** Its two leading badges were a
+  bare residual band and a bare confidence word, which on most rows are the
+  same word; the briefing and the detail already said "residual" and
+  "confidence". The list says so too.
+
 - **The guide's board-paper picture could not be regenerated.** The
   screenshot harness drove a quarter of play through the interface at 4x to
   reach the first board paper, and it no longer got there: neither raising its
