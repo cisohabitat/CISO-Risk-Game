@@ -32,9 +32,19 @@ export async function goTo(page: Page, label: string): Promise<void> {
 export async function expectNoHorizontalScroll(page: Page): Promise<void> {
   const overflow = await page.evaluate(() => {
     const doc = document.documentElement
-    return doc.scrollWidth - doc.clientWidth
+    // The main region is a scroller of its own, so content wider than the
+    // screen scrolled sideways inside it while the page reported nothing: at
+    // 320px the inbox ran to 456px and the organisation list to 840px, cut
+    // off at the edge, and this check passed. Deliberate strips (tabs,
+    // filters) contain their own overflow and do not count.
+    const main = document.getElementById('main')
+    return {
+      page: doc.scrollWidth - doc.clientWidth,
+      main: main ? main.scrollWidth - main.clientWidth : 0,
+    }
   })
-  expect(overflow, 'page-level horizontal scrolling appeared').toBeLessThanOrEqual(1)
+  expect(overflow.page, 'page-level horizontal scrolling appeared').toBeLessThanOrEqual(1)
+  expect(overflow.main, 'the main region scrolls sideways: something is wider than the screen').toBeLessThanOrEqual(1)
 }
 
 /**

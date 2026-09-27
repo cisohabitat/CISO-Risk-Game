@@ -209,6 +209,21 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **On a phone, the inbox and the organisation list ran off the right edge,
+  and the layout test could not see it.** Seen in screenshots of a campaign
+  played to day 200, not caught by any test: at 320px the inbox list measured
+  456px and the organisation list 840px, so every sender, subject, badge and
+  description was cut off at the edge, and the inbox's day column was never
+  on screen at all; the briefing ran 28px wide. Fifteen grids set a column
+  template only from a breakpoint up, so below it the single implicit column
+  sized itself to the widest line that will not wrap — a truncated subject —
+  and two desktop templates used bare `fr` tracks with the same property.
+  Every grid now has a base `grid-cols-1` and `minmax(0, …)` tracks. The
+  layout check measured only the page, but the main region is a scroller of
+  its own and absorbed the overflow; `expectNoHorizontalScroll` now measures
+  it too. With the old layout both layout tests fail at 320px, including the
+  day-one test, so this was broken from the first screen.
+
 - **An enquiry came back without saying what it found.** Every completion
   message in a year read end to end was the quality line alone — "answered
   part of the question and raised others" four times — and the findings were

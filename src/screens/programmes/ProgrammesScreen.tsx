@@ -47,7 +47,7 @@ export function ProgrammesScreen() {
       {live.length > 0 && (
         <section aria-labelledby="live">
           <SectionHeading><span id="live">Under way</span></SectionHeading>
-          <ul className="grid gap-3 lg:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {live.map((programme) => (
               <li key={programme.id}>
                 <Card className={programme.status === 'at-risk' ? 'border-band-elevated/50' : undefined}>
@@ -158,7 +158,7 @@ export function ProgrammesScreen() {
       {proposed.length > 0 && (
         <section aria-labelledby="proposed">
           <SectionHeading><span id="proposed">On the table</span></SectionHeading>
-          <ul className="grid gap-3 lg:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {proposed.map((programme) => (
               <li key={programme.id}>
                 <Card className="h-full">

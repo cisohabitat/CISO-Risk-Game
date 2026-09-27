@@ -98,7 +98,7 @@ export function HomeScreen() {
         </dl>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
         <div className="space-y-6">
           <section aria-labelledby="decisions">
             <SectionHeading>

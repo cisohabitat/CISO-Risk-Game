@@ -52,7 +52,7 @@ export function RiskScreen() {
               action={<Button variant="primary" size="sm" onClick={() => setTab('investigate')}>Go and find something out</Button>}
             />
           ) : (
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
               <ul className="space-y-3">
                 {risks.map((risk) => (
                   <li key={risk.id}>
@@ -111,7 +111,7 @@ export function RiskScreen() {
               action={<Button variant="primary" size="sm" onClick={() => setTab('investigate')}>Commission some work</Button>}
             />
           ) : (
-            <ul className="grid gap-3 md:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {evidence.map((item) => (
                 <li key={item.id}>
                   <Card className={cn('h-full', !item.read && 'border-accent/50')}>

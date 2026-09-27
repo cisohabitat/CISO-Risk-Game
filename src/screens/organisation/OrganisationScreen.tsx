@@ -73,7 +73,7 @@ export function OrganisationScreen() {
           description="Nexora's architecture is not documented anywhere you can trust. Commission an architecture review, or talk to the people who run the services."
         />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
           <div className="space-y-3">
             <div className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1" role="group" aria-label="Filter by type">
               <Button

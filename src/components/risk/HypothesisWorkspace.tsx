@@ -91,7 +91,7 @@ export function HypothesisWorkspace() {
                       <h3 className="mt-2 font-medium text-balance">{hypothesis.title}</h3>
                       <p className="mt-1 text-sm text-ink-muted text-pretty">{hypothesis.statement}</p>
 
-                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Supports</p>
                           {supporting.length === 0 ? (

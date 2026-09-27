@@ -35,7 +35,7 @@ function Lane({ lane }: { lane: TimelineLane }) {
   const empty = lane.marks.length === 0 && lane.spans.length === 0
 
   return (
-    <div className="flex flex-col gap-1 sm:grid sm:grid-cols-[1.25rem_minmax(0,10rem)_1fr] sm:items-center sm:gap-x-3">
+    <div className="flex flex-col gap-1 sm:grid sm:grid-cols-[1.25rem_minmax(0,10rem)_minmax(0,1fr)] sm:items-center sm:gap-x-3">
       <span className="hidden sm:block sm:justify-self-end" style={{ color: colour }}>
         <Icon name={lane.icon} size={17} />
       </span>
@@ -117,7 +117,7 @@ export function YearTimeline({ lanes }: { lanes: TimelineLane[] }) {
             </span>
           ))}
         </div>
-        <div className="hidden sm:grid sm:grid-cols-[1.25rem_minmax(0,10rem)_1fr] sm:gap-x-3">
+        <div className="hidden sm:grid sm:grid-cols-[1.25rem_minmax(0,10rem)_minmax(0,1fr)] sm:gap-x-3">
           <span />
           <span />
           <div className="grid grid-cols-4" aria-hidden="true">

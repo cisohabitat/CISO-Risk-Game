@@ -28,7 +28,7 @@ export function TeamScreen() {
 
       <section aria-labelledby="functions">
         <SectionHeading><span id="functions">Capacity</span></SectionHeading>
-        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {view.functions.map((fn) => (
             <li key={fn.fn}>
               <Card className="h-full">
@@ -70,7 +70,7 @@ export function TeamScreen() {
 
       <section aria-labelledby="leaders">
         <SectionHeading><span id="leaders">Cyber leadership</span></SectionHeading>
-        <ul className="grid gap-3 lg:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {view.leaders.map((leader) => (
             <li key={leader.id}>
               <Card className="h-full">
@@ -84,7 +84,7 @@ export function TeamScreen() {
                     <Fact label="Morale" value={leader.moraleLabel} />
                     <Fact label="Track record" value={leader.reliabilityLabel} />
                   </dl>
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Strong on</p>
                       <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">

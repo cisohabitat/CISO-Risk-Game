@@ -97,7 +97,7 @@ export function InvestigationPanel() {
             return (
           <section key={theme.id} aria-labelledby={`theme-${theme.id}`} className="mb-6 last:mb-0">
             <h3 id={`theme-${theme.id}`} className="mb-2 text-sm font-semibold text-ink-muted">{theme.label}</h3>
-          <ul className="grid gap-3 md:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {inTheme.map((investigation) => {
               const speaksTo = enquirySpeaksTo(state, index, investigation.id)
               const onTopConcern = coached && topConcern !== undefined && speaksTo.some((r) => r.id === topConcern)

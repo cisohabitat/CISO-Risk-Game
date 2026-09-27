@@ -68,7 +68,7 @@ export function BoardScreen() {
 
       <section aria-labelledby="people">
         <SectionHeading><span id="people">Where you stand</span></SectionHeading>
-        <ul className="grid gap-3 lg:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {people.map((person) => (
             <li key={person.id}>
               <Card className="h-full">

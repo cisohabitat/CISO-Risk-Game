@@ -69,7 +69,7 @@ export function InboxScreen() {
       {messages.length === 0 ? (
         <EmptyState title="Nothing here" description="No messages match this filter yet." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
           <ul className="space-y-2" aria-label="Messages">
             {messages.slice(0, 60).map((message) => (
               <li key={message.id}>
