@@ -3,6 +3,7 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
 import { effortAllocation } from '@/game/debrief/prioritisation'
 import { unexaminedAssumptions } from '@/game/assumptions/validation'
+import { unexaminedMaterial } from '@/game/knowledge/discovery'
 import { testIndex } from './helpers'
 import type { Difficulty, GameState } from '@/game/types'
 
@@ -183,5 +184,27 @@ describe('the annual review, in the situations a played year rarely reaches', ()
 
     for (const objective of rest) objective.status = 'achieved'
     expect(buildAnnualReview(state, index).businessOutcome).toBe('Nexora met all 5 of its stated objectives.')
+  })
+})
+
+describe('what the close says about a system an incident ran through', () => {
+  it('does not call it taken on trust beside a reconstruction that names it', () => {
+    const state = newGame(index, { seed: 'incident-path' })
+    const lake = state.organisation.nodes['node-data-analytics']!
+    lake.discovered = true
+    lake.verified = false
+    const name = index.node.get('node-data-analytics')!.name
+    const before = unexaminedMaterial(state, index).names.filter((s) => s.startsWith(name))
+    expect(before).toEqual([`${name} was taken on trust and never examined`])
+
+    state.incidents.incidents['inc-arranged'] = {
+      ...({} as GameState['incidents']['incidents'][string]),
+      id: 'inc-arranged', familyId: 'arranged', startedDay: 200, phase: 'closed', phaseEnteredDay: 220, resolvedDay: 220,
+      reconstruction: {
+        pathSummary: [{ stepId: 's1', nodeName: name, narrative: '', controlNames: [], wasBlocked: false }],
+      } as unknown as NonNullable<GameState['incidents']['incidents'][string]['reconstruction']>,
+    }
+    const after = unexaminedMaterial(state, index).names.filter((s) => s.startsWith(name))
+    expect(after).toEqual([`${name} was never examined, except by the incident that ran through it`])
   })
 })

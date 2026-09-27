@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
+import { evaluateAll } from '@/game/events/conditions'
 import type { GameState } from '@/game/types'
 
 /**
@@ -172,5 +173,31 @@ describe('reports the player has already overtaken', () => {
       return state.inbox.messages.some((m) => m.eventId === 'evt-org-backup-test')
     })
     expect(sent.length).toBeGreaterThan(0)
+  })
+})
+
+describe('messages about the calendar', () => {
+  it('does not call three months quiet a fortnight after an incident closed', () => {
+    const quiet = index.event.get('evt-biz-good-quarter')!
+    const state = newGame(index, { seed: 'quiet-quarter' })
+    state.currentDay = 240
+    state.incidents.incidents['inc-arranged'] = {
+      ...({} as GameState['incidents']['incidents'][string]),
+      id: 'inc-arranged', familyId: 'arranged', startedDay: 200, phase: 'closed', phaseEnteredDay: 226, resolvedDay: 226,
+    }
+    const holds = () => evaluateAll(state, index, quiet.conditions.filter((c) => c.kind.startsWith('incident')))
+    expect(holds(), 'fourteen days after an incident closed').toBe(false)
+    state.currentDay = 226 + 91
+    expect(holds(), 'ninety-one days after').toBe(true)
+    state.incidents.incidents['inc-arranged']!.phase = 'containment'
+    expect(holds(), 'while one is running').toBe(false)
+  })
+
+  it('announces the Nordic partner while there is still time to integrate before entry', () => {
+    const def = index.event.get('evt-biz-nordic-partner')!
+    const target = index.content.objectives.find((o) => o.id === 'obj-new-market')!.targetDay
+    // "Integration work starts next month."
+    expect(def.availableUntilDay).toBeDefined()
+    expect(def.availableUntilDay! + 30).toBeLessThan(target - 45)
   })
 })

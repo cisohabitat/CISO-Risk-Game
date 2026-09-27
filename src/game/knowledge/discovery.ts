@@ -175,6 +175,9 @@ export function unexaminedMaterial(
   let examined = 0
   let reachable = 0
   const names: string[] = []
+  const incidentPath = new Set(
+    Object.values(state.incidents.incidents).flatMap((i) => i.reconstruction?.pathSummary.map((step) => step.nodeName) ?? []),
+  )
 
   for (const def of index.content.nodes) {
     if (!reachableNodes.has(def.id)) continue
@@ -187,7 +190,16 @@ export function unexaminedMaterial(
     // Something never discovered is named by blindSpots as never seen, and the
     // review listed both, so one system appeared twice in the same list under
     // two descriptions that contradict each other.
-    else if (node.discovered) names.push(`${def.name} was taken on trust and never examined`)
+    else if (node.discovered) {
+      // A system an incident ran through was examined, in the worst way, and
+      // "taken on trust" beside a reconstruction naming it read as a review
+      // that had not noticed its own incident. Both halves are true; say both.
+      names.push(
+        incidentPath.has(def.name)
+          ? `${def.name} was never examined, except by the incident that ran through it`
+          : `${def.name} was taken on trust and never examined`,
+      )
+    }
   }
 
   for (const def of index.content.edges) {

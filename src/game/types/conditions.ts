@@ -38,6 +38,8 @@ export type Condition =
   | { kind: 'incident.none' }
   /** No urgent message in the inbox from the last `days` days: a quiet spell a message can honestly call quiet. */
   | { kind: 'inbox.noUrgentWithin'; days: number }
+  /** No incident running, and none closed, in the last N days. */
+  | { kind: 'incident.noneWithin'; days: number }
   | { kind: 'incident.resolvedCountAtLeast'; value: number }
   | { kind: 'evidence.known'; evidenceId: string }
   | { kind: 'evidence.tagKnown'; tag: string }

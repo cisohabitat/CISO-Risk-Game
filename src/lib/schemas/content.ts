@@ -39,6 +39,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('incident.active') }),
     z.object({ kind: z.literal('incident.none') }),
     z.object({ kind: z.literal('inbox.noUrgentWithin'), days: z.number().int().positive() }),
+    z.object({ kind: z.literal('incident.noneWithin'), days: z.number().int().positive() }),
     z.object({ kind: z.literal('incident.resolvedCountAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('evidence.known'), evidenceId: id }),
     z.object({ kind: z.literal('evidence.tagKnown'), tag: z.string() }),

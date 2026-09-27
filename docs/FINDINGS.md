@@ -209,6 +209,19 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **Three more messages and one close line from a fourth year read end to
+  end** (guided, building). "A quiet quarter — nothing has gone wrong for three
+  months" checked only that no incident was running, so it could arrive a
+  fortnight after one closed; a new condition, `incident.noneWithin`, holds it
+  to ninety days with none running or closed. "Nordic market: local payments
+  partner selected — integration work starts next month" is colour, and once
+  colour was paced across the year it arrived on day 253 against a market entry
+  due on day 280; it now closes on day 190. And the close listed "Behavioural
+  Data Lake was taken on trust and never examined" in a year whose incident
+  reconstruction ran through it. Both halves are true, so it now says both:
+  "was never examined, except by the incident that ran through it". Each has a
+  test, and each was mutation-checked.
+
 - **Colleagues reported findings the player already had.** Forty-five
   messages reveal evidence that an enquiry can also reach, and none checked
   whether it had: a player who ran the recovery test was then told by Jo that

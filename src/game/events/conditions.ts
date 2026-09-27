@@ -121,6 +121,10 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       return !state.inbox.messages.some(
         (m) => (m.priority === 'urgent' || m.priority === 'critical') && state.currentDay - m.day < condition.days,
       )
+    case 'incident.noneWithin':
+      return !Object.values(state.incidents.incidents).some(
+        (i) => i.phase !== 'closed' || state.currentDay - (i.resolvedDay ?? i.phaseEnteredDay) < condition.days,
+      )
     case 'incident.resolvedCountAtLeast':
       return Object.values(state.incidents.incidents).filter((i) => i.phase === 'closed').length >= condition.value
     case 'evidence.known':
