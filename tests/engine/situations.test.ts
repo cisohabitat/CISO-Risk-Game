@@ -118,3 +118,70 @@ describe('the close answers the question the situation asked', () => {
     expect(review(state)).not.toMatch(/You arrived after a breach|You were given|You inherited better controls/)
   })
 })
+
+describe('each situation brings a decision of its own', () => {
+  const asked: Record<string, string> = {
+    'sit-after-breach': 'dec-sit-breach-extortion',
+    'sit-new-money': 'dec-sit-money-flagship',
+    'sit-tidy': 'dec-sit-tidy-numbers',
+  }
+
+  /** Plays to the situation's decision, answers it, and returns what came after. */
+  function answer(situationId: string, optionId: string, before?: (state: GameState) => void): string[] {
+    const state = newGame(index, { seed: `own-${optionId}`, situation: situationId })
+    before?.(state)
+    const defId = asked[situationId]!
+    let decisionId: string | undefined
+    for (let day = 0; day < 120 && !decisionId; day += 1) {
+      runDays(state, index, 1)
+      decisionId = state.decisions.openIds.find((id) => state.decisions.decisions[id]!.defId === defId)
+    }
+    expect(decisionId, `${defId} never arrived`).toBeDefined()
+    const result = applyAction(state, index, {
+      type: 'resolveDecision',
+      decisionId: decisionId!,
+      optionId,
+      rationaleTagIds: (index.decision.get(defId)!.rationaleTagIds ?? []).slice(0, 1),
+    })
+    expect(result.ok, optionId).toBe(true)
+    runDays(state, index, 100)
+    return state.inbox.messages.flatMap((m) => (m.eventId ? [m.eventId] : []))
+  }
+
+  it('arrives only in its own year', () => {
+    for (const def of situations) {
+      const state = newGame(index, { seed: 'own-only', situation: def.id })
+      runDays(state, index, 120)
+      const got = Object.values(state.decisions.decisions).map((d) => d.defId)
+      for (const [situationId, defId] of Object.entries(asked)) {
+        expect(got.includes(defId), `${def.id} / ${defId}`).toBe(situationId === def.id)
+      }
+    }
+  })
+
+  it('answers every option with a reply of its own', () => {
+    const replies: [string, string, string][] = [
+      ['sit-after-breach', 'opt-extortion-notify', 'evt-con-extortion-notified'],
+      ['sit-after-breach', 'opt-extortion-silent', 'evt-con-extortion-published'],
+      ['sit-after-breach', 'opt-extortion-pay', 'evt-con-extortion-paid'],
+      ['sit-new-money', 'opt-flagship-buy', 'evt-con-flagship-shelfware'],
+      ['sit-new-money', 'opt-flagship-programmes', 'evt-con-flagship-delivery'],
+      ['sit-new-money', 'opt-flagship-plan', 'evt-con-flagship-plan'],
+      ['sit-tidy', 'opt-tidy-restate', 'evt-con-tidy-restated'],
+      ['sit-tidy', 'opt-tidy-quiet', 'evt-con-tidy-noticed'],
+      ['sit-tidy', 'opt-tidy-leave', 'evt-con-tidy-insurers'],
+    ]
+    for (const [situationId, optionId, eventId] of replies) {
+      expect(answer(situationId, optionId), optionId).toContain(eventId)
+    }
+  })
+
+  it('tells a bought platform apart from a used one', () => {
+    const used = answer('sit-new-money', 'opt-flagship-buy', (state) => {
+      const def = index.programme.get('prog-detection')!
+      applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost })
+    })
+    expect(used).toContain('evt-con-flagship-used')
+    expect(used).not.toContain('evt-con-flagship-shelfware')
+  })
+})

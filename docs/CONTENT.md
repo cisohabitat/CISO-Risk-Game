@@ -149,7 +149,10 @@ situation is the usual opening and must have no effects.
 
 A situation is felt through messages, not numbers alone. Gate them on
 `situation.is`, and give each situation an opening on day one and at least one
-beat later in the year (`events/situations.json`). Then read the existing
+beat later in the year (`events/situations.json`), and a decision of its own
+whose every option is answered by a consequence message gated the same way —
+`tests/engine/situations.test.ts` checks both that it arrives only in its own
+year and that each option's reply is reachable. Then read the existing
 content for anything the situation makes untrue — a tidy inheritance cannot
 receive "the last restore test was abandoned" — and guard it with
 `{ "kind": "not", "condition": { "kind": "situation.is", ... } }`, which is a

@@ -144,6 +144,368 @@
       "tags": [
         "situation"
       ]
+    },
+    {
+      "id": "evt-sit-breach-extortion",
+      "type": "threat",
+      "title": "The attackers are back in touch",
+      "from": "Ruth Ahmadi, General Counsel",
+      "body": "Last quarter's attackers have written to us. They say they still hold customer records taken before the encryption, and they want paying to delete them. They sent forty rows as proof; I have checked them and they are real. I need your view before anyone else sees this.",
+      "priority": "urgent",
+      "availableFromDay": 34,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-after-breach"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-sit-breach-extortion",
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-money-flagship",
+      "type": "board",
+      "title": "Something the committee can point at",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "One of my colleagues has seen a detection platform demonstrated and would like the new money to buy it. I am not going to tell you how to spend it. I am going to tell you the committee would like to see something by the autumn, and at the moment there is nothing to see.",
+      "priority": "notable",
+      "availableFromDay": 50,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-new-money"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-sit-money-flagship",
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-tidy-numbers",
+      "type": "programme",
+      "title": "The coverage figure only counted staff",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "I went back through last year's board papers. The multi-factor coverage figure was right, and it counted staff accounts only: no service accounts, no partner accounts, none of the supplier's engineers. The board has been reading it as the whole estate for a year.",
+      "priority": "notable",
+      "availableFromDay": 55,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-tidy"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-sit-tidy-numbers",
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-con-extortion-notified",
+      "type": "executive",
+      "title": "The regulator has acknowledged it",
+      "from": "Ruth Ahmadi, General Counsel",
+      "body": "The regulator has acknowledged our notification and asked for an update in thirty days. It was an uncomfortable letter to write. It is a better position than explaining later why we did not.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-extortion-published",
+      "type": "threat",
+      "title": "They published a sample",
+      "from": "Ruth Ahmadi, General Counsel",
+      "body": "They published four hundred rows on their leak site this morning. The regulator will ask when we first knew, and the honest answer is thirty-five days ago. I am drafting the notification now; it will say so.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-legal",
+          "delta": -0.08,
+          "reason": "The leak came out before the notification did."
+        },
+        {
+          "type": "board.confidence",
+          "delta": -0.05
+        },
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-board",
+          "concern": "Why the extortion was not reported sooner"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-extortion-paid",
+      "type": "threat",
+      "title": "They came back",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "The same group has been probing the partner portal for a fortnight. We cannot prove it is because we paid. We can say that people who pay are the people they come back to.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "threat.pressure",
+          "actorId": "actor-ransom",
+          "delta": 0.05
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-flagship-shelfware",
+      "type": "programme",
+      "title": "The platform is half deployed",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The detection platform is on about half the estate and nobody is watching its console, because the people who would are busy with everything else. It is a good product. It is currently a dashboard.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "any",
+            "conditions": [
+              {
+                "kind": "programme.status",
+                "programmeId": "prog-detection",
+                "status": "active"
+              },
+              {
+                "kind": "programme.status",
+                "programmeId": "prog-detection",
+                "status": "complete"
+              },
+              {
+                "kind": "programme.status",
+                "programmeId": "prog-detection",
+                "status": "at-risk"
+              }
+            ]
+          }
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-cfo",
+          "delta": -0.04,
+          "reason": "The flagship purchase is half deployed and unwatched."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-flagship-used",
+      "type": "programme",
+      "title": "The platform found something",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Now that the detection work is feeding it, the platform caught a misconfigured admin tool talking to the internet that nothing else had seen. That is the first thing it has done that the board did not already know about.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "programme.status",
+              "programmeId": "prog-detection",
+              "status": "active"
+            },
+            {
+              "kind": "programme.status",
+              "programmeId": "prog-detection",
+              "status": "complete"
+            },
+            {
+              "kind": "programme.status",
+              "programmeId": "prog-detection",
+              "status": "at-risk"
+            }
+          ]
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "control.monitoring",
+          "controlId": "ctl-soc",
+          "delta": 0.05
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-flagship-delivery",
+      "type": "board",
+      "title": "Show me delivery in October",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "I was told the new money went into delivery. That is a perfectly good answer, and in October I will ask you to show me the delivery.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-flagship-plan",
+      "type": "board",
+      "title": "The committee read the plan",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The committee read the plan and understood it better than I expected. They would still like something to point at by the autumn, and they now know when to expect it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-tidy-restated",
+      "type": "board",
+      "title": "The corrected figure",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "Thank you for the corrected coverage figure. It is a worse number, and the first one I have been given that I can check. I would rather have that.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-tidy-noticed",
+      "type": "board",
+      "title": "The number moved",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The multi-factor figure in your last paper is twenty points lower than last year's. Nobody told the committee why. I assume there is a good reason; I would have preferred to hear it before I found it.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": -0.05,
+          "reason": "The board found the coverage figure had changed without a word."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-tidy-insurers",
+      "type": "business",
+      "title": "The insurers asked for the coverage figure",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The insurers asked for our multi-factor coverage for the renewal, and we gave them the figure from last year's board papers. Legal tells me that figure only counted staff. If we ever claim, they will read it very carefully.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-cfo",
+          "concern": "The coverage figure given to the insurers"
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
     }
   ]
 }

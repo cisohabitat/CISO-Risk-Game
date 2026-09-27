@@ -18,6 +18,19 @@ fault.
 
 ### Fixed
 
+- **A starting situation was felt in two messages and then forgotten.** Each
+  non-default situation now asks one decision the others never see — after the
+  breach, the attackers return with an extortion demand (notify, stay silent,
+  or pay); with new money, the board wants a flagship purchase (buy it, fold
+  the money into programmes, or show them the plan); in a tidy inheritance, the
+  predecessor's coverage figure turns out to have counted staff only (restate,
+  correct quietly, or leave it). Every option has a reply of its own later in
+  the year, and a bought platform reads differently depending on whether the
+  detection programme is feeding it. Tests check each decision arrives only in
+  its own year and each reply is reachable; mutating one gate and one reply's
+  condition failed both. Defaults are the free options, because a decision
+  left to expire does not check its budget.
+
 - **Four smaller things the transcripts found, and a dialog bug the fix for
   one of them exposed.**
   - *"Never independently assessed"* named controls the player had assessed,

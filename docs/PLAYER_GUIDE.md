@@ -59,7 +59,8 @@ year it has had before you arrive is not:
 | **A tidy inheritance** | Better controls than most, a smaller budget, and a board that thinks the job is done. |
 | **Surprise me** | One of the four, drawn from the seed. You find out on your first morning. |
 
-The annual review answers the question your situation started with: whether
+Each situation also brings one decision the others never see, and the replies
+to it arrive later in the year. The annual review answers the question your situation started with: whether
 the breach happened again, what the money bought, or how much of your
 predecessor's good work you actually checked.
 
