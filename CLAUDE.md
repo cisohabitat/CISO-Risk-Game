@@ -56,6 +56,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm ladder transcript ciso [seed]` | Everything one year says, in full — messages, decisions, the close |
 | `pnpm tsx scripts/efficacy.ts 150` | Does each programme reduce what it is meant to? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
+| `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
 None of them answer whether the game lands: that needs people, and
