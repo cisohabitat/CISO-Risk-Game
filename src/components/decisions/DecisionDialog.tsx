@@ -115,6 +115,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                   {option.budgetCost !== undefined && (
                     <span className="text-sm tabular-nums text-ink-faint">{money(option.budgetCost)}</span>
                   )}
+                  {/* Attention is spent when the option is taken; two options
+                      spent it without their text saying so. */}
+                  {option.focusCost !== undefined && (
+                    <span className="text-sm tabular-nums text-ink-faint">{option.focusCost} attention</span>
+                  )}
                 </span>
                 <span className="mt-0.5 block text-sm text-ink-muted text-pretty">{option.description}</span>
                 {option.visibleKnownEffects.length > 0 && (

@@ -38,7 +38,49 @@ describe('decision affordability', () => {
             option.requirements?.budget,
             `${option.id} states its cost twice — as an effect and as a requirement`,
           ).toBeUndefined()
+          // The dialog prints the price beside the option; "Costs £250k" in
+          // the option's own words said it a second time.
+          const words = [option.label, option.description, ...(option.visibleKnownEffects ?? [])].join(' ')
+          expect(words, `${option.id} repeats its price in its text`).not.toMatch(/£\s?\d/)
         }
+        if (option.requirements?.focus) {
+          // The card prints the attention an option spends, as it prints money.
+          const words = [option.label, option.description, ...(option.visibleKnownEffects ?? [])].join(' ')
+          expect(words, `${option.id} repeats its attention cost in its text`).not.toMatch(/costs attention/i)
+        }
+      }
+    }
+  })
+
+  it('does not promise that nothing changes when something does', () => {
+    // "Defer until after the launch" read "Nothing changes" and cost Legal's
+    // trust and a standing concern the player was never told about.
+    const felt = new Set(['stakeholder.trust', 'stakeholder.concern', 'board.confidence', 'team.morale', 'leader.morale', 'budget.change'])
+    for (const decision of content.decisions) {
+      for (const option of decision.options) {
+        const claim = (option.visibleKnownEffects ?? []).find((v) => /^(nothing (changes|happens)|no change|costs nothing|no cost)\b/i.test(v))
+        if (!claim) continue
+        const said = (option.visibleKnownEffects ?? []).join(' ')
+        for (const effect of option.immediateEffects) {
+          if (!felt.has(effect.type)) continue
+          // A cost named in the same breath is not a hidden one.
+          const named = /trust|remember|escalate|exhausted|morale|concern|notice/i.test(said)
+          expect(named, `${option.id} says "${claim}" and applies ${effect.type}`).toBe(true)
+        }
+      }
+    }
+  })
+
+  it('takes the capacity it warns about', () => {
+    // "Engineering time in peak season" was printed on an option that took
+    // none: the warning was true of the story and false of the game.
+    for (const decision of content.decisions) {
+      for (const option of decision.options) {
+        const said = (option.visibleKnownEffects ?? []).join(' ')
+        if (!/capacity|engineering time|team's attention|workload/i.test(said)) continue
+        const effects = [...option.immediateEffects, ...(option.delayedEffects ?? []).flatMap((d) => d.effects)]
+        const takes = effects.some((e) => e.type === 'capacity.change' || e.type === 'team.workload')
+        expect(takes, `${option.id} warns "${said}" and takes no capacity`).toBe(true)
       }
     }
   })

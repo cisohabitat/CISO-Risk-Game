@@ -81,6 +81,13 @@ effects and, where the point is delayed consequence, `delayedEffects`. Set
 in the annual review. Attach `assumptionIds` where the option only makes sense if
 something stays true — the assumption engine will tell the player when it stops.
 
+**Let the card state the costs.** An option's money comes from its
+`budget.change` effect and its attention from `requirements.focus`, and the
+dialog prints both beside the label. Do not write them into the option's words
+as well ("Costs £250k", "Costs attention"): `tests/content/decisions.test.ts`
+fails it. And an option that says *Nothing changes* must not move trust,
+confidence, morale or money without naming who notices.
+
 **Name the reasons a decision can be taken for** when the whole vocabulary
 would mislead. `rationaleTagIds` on a decision limits what the dialog offers
 and what the engine accepts; leave it off where most reasons are arguable, and

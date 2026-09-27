@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
-import { collisions, formatGameDate, incidentCommand, patternSuggestions } from '@/store/selectors'
+import { collisions, formatGameDate, incidentCommand, openDecisions, patternSuggestions } from '@/store/selectors'
 import { testIndex } from './helpers'
 
 describe('incident command view', () => {
@@ -422,5 +422,25 @@ describe('a dimension and its explanation', () => {
         ).toBe(false)
       }
     }
+  })
+})
+
+describe('what a decision card says it costs', () => {
+  it('shows attention beside the option that spends it, as it shows money', () => {
+    // Two options spent attention with nothing on the card to say so.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'card-costs', situation: 'sit-new-money' })
+    let view
+    for (let day = 0; day < 120 && !view; day += 1) {
+      runDays(state, index, 1)
+      view = openDecisions(state, index).find((d) => d.options.some((o) => o.id === 'opt-flagship-plan'))
+    }
+    expect(view).toBeDefined()
+    const plan = view!.options.find((o) => o.id === 'opt-flagship-plan')!
+    const buy = view!.options.find((o) => o.id === 'opt-flagship-buy')!
+    expect(plan.focusCost).toBe(1)
+    expect(plan.budgetCost).toBeUndefined()
+    expect(buy.budgetCost).toBe(300)
+    expect(buy.focusCost).toBeUndefined()
   })
 })

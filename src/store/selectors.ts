@@ -161,6 +161,8 @@ export interface OpenDecisionView {
     description: string
     visibleKnownEffects: string[]
     budgetCost?: number
+    /** Attention the option spends this week, from its requirements. */
+    focusCost?: number
     exceedsBudget: boolean
     affordable: boolean
     blockedReason?: string
@@ -213,6 +215,7 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             description: option.description,
             visibleKnownEffects: option.visibleKnownEffects,
             budgetCost: budgetCost > 0 ? budgetCost : undefined,
+            focusCost: requirements?.focus || undefined,
             // Emergency spend is the one thing the year will let you commit
             // without the money, so the card says so before it is taken.
             exceedsBudget: budgetCost > 0 && treatment === 'emergency' && state.resources.budgetRemaining < budgetCost,

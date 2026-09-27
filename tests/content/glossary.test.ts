@@ -29,6 +29,8 @@ const TERMS: [RegExp, string][] = [
   [/exploit/i, 'gls-patch-exploit'],
   [/phishing/i, 'gls-phishing'],
   [/ransomware/i, 'gls-ransomware'],
+  [/extortion|leak site/i, 'gls-extortion'],
+  [/threat hunt/i, 'gls-threat-hunt'],
   [/immutable/i, 'gls-immutable-backup'],
   [/containment/i, 'gls-containment'],
   [/retainer/i, 'gls-retainer'],
