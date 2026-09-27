@@ -262,7 +262,13 @@ fault.
   day 65 to 168), and so does the cardholder-scope message, which an earlier
   fix this session had taken out of the pacing the same way. Tests for each
   gate and for the spread, mutation-checked (unpaced, the storage message
-  arrived by day 43 in every year).
+  arrived by day 43 in every year). A high-pressure year read afterwards met
+  a sixth — "412 service accounts, nobody owns them" on day 329, after the
+  identity programme that puts them under ownership had finished — and a check
+  of every remaining weakness report against the programme descriptions found
+  three more: the MFA exception register (identity), the pipeline's shared
+  production credential (cloud) and Corvus's missing MFA (third-party). All
+  four are withheld once their programme completes.
 
   A service-recovery test sampled health once, at day 132, and on the new draw
   a separate breach reached order management on day 129; it now reads the

@@ -181,8 +181,7 @@
       "body": "Corvus told us their privileged access enforces multi-factor authentication. I checked the remote access configuration this morning. It does not, and it never has.",
       "priority": "urgent",
       "availableFromDay": 55,
-      "conditions": [
-        {
+      "conditions": [{
           "kind": "evidence.known",
           "evidenceId": "ev-supplier-questionnaire-clean"
         },
@@ -199,8 +198,7 @@
               "value": 0.45
             }
           ]
-        }
-      ],
+        }, {"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-thirdparty", "status": "complete"}}],
       "weight": 16,
       "pinned": false,
       "oncePerCampaign": true,
@@ -587,7 +585,7 @@
       "body": "412 non-human accounts. 78 have passwords older than five years. 31 hold privileged rights. Nobody owns them, which means nobody can safely remove them.",
       "priority": "notable",
       "availableFromDay": 48,
-      "conditions": [],
+      "conditions": [{"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-identity", "status": "complete"}}],
       "weight": 13,
       "pinned": false,
       "oncePerCampaign": true,
@@ -619,7 +617,7 @@
       "body": "214 accounts sit on the multi-factor exception register. Most were granted as temporary. The oldest is three years old. Nineteen of them are administrative.",
       "priority": "urgent",
       "availableFromDay": 26,
-      "conditions": [],
+      "conditions": [{"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-identity", "status": "complete"}}],
       "weight": 15,
       "pinned": false,
       "oncePerCampaign": true,
@@ -1079,12 +1077,10 @@
       "body": "The build pipeline authenticates to production with a single long-lived credential shared across forty repositories. Anyone who can influence a build can reach production.",
       "priority": "urgent",
       "availableFromDay": 110,
-      "conditions": [
-        {
+      "conditions": [{
           "kind": "node.discovered",
           "nodeId": "node-ci-pipeline"
-        }
-      ],
+        }, {"kind": "not", "condition": {"kind": "programme.status", "programmeId": "prog-cloud", "status": "complete"}}],
       "weight": 12,
       "pinned": false,
       "oncePerCampaign": true,

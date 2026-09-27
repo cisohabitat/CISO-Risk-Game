@@ -232,6 +232,8 @@ describe('messages about a weakness the player has since fixed', () => {
     ['evt-org-backup-test', 'prog-ransomware', 'complete'],
     ['evt-thr-escalation-quality', 'prog-detection', 'complete'],
     ['evt-org-pam-adoption', 'prog-identity', 'active'],
+    ['evt-org-service-accounts', 'prog-identity', 'complete'],
+    ['evt-org-mfa-exceptions', 'prog-identity', 'complete'],
   ]
   for (const [eventId, programmeId, status] of cases) {
     it(`${eventId} is not sent once ${programmeId} is ${status}`, () => {
@@ -245,6 +247,16 @@ describe('messages about a weakness the player has since fixed', () => {
       expect(evaluateAll(state, index, def.conditions)).toBe(false)
     })
   }
+
+  it('holds reports with conditions of their own to the same guard', () => {
+    for (const [eventId, programmeId] of [
+      ['evt-org-pipeline-credentials', 'prog-cloud'],
+      ['evt-org-supplier-contradiction', 'prog-thirdparty'],
+    ] as const) {
+      const guard = JSON.stringify(index.event.get(eventId)!.conditions)
+      expect(guard, eventId).toContain(`"kind":"not","condition":{"kind":"programme.status","programmeId":"${programmeId}","status":"complete"}`)
+    }
+  })
 
   it('still spreads them across the year rather than sending each the day it becomes possible', () => {
     // A guard that only closes a message used to take it out of the pacing.
