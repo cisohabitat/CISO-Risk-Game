@@ -104,6 +104,16 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   on its own routes is larger, but attackers it turns away try elsewhere. The
   owner chose to leave that as the lesson rather than strengthen it.
 
+- **Starting situations are new and light.** Four exist (the usual opening,
+  after the breach, new money, a tidy inheritance). Over 100 CISO seeds each,
+  a player building what the budget allows sees 0.83 / 0.90 / 0.69 / 0.68
+  incidents and starts 2.0 / 2.3 / 2.6 / 1.7 programmes; ransomware is
+  commonest after the breach (0.22 against 0.15–0.18). Board confidence
+  converges to about 0.55 by December in all four, so the difference lives in
+  the budget, the threat, two messages each and the review's answer to the
+  situation's question. Whether that is enough to make a second year feel
+  different is a playtest question.
+
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player
   builds: guided affords 2.7 programmes against high pressure's 1.3, and a

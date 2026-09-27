@@ -56,6 +56,7 @@ export function buildContentIndex(content: CampaignContent): ContentIndex {
     rationaleTag: toMap(content.rationaleTags),
     assumption: toMap(content.assumptions),
     glossary: toMap(content.glossary),
+    situation: toMap(content.situations ?? []),
     outgoing,
     incoming,
     controlSteps,

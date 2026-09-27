@@ -20,6 +20,8 @@ import threatEvents from './events/threat.json'
 import organisationEvents from './events/organisation.json'
 import consequenceEvents from './events/consequences.json'
 import fourthQuarterEvents from './events/fourth-quarter.json'
+import situationEvents from './events/situations.json'
+import situations from './situations.json'
 import type { CampaignContent } from '@/game/types'
 
 /** Assembled, unvalidated campaign content. Validation happens in the loader. */
@@ -48,10 +50,12 @@ export const nexoraContentRaw: unknown = {
     ...organisationEvents.events,
     ...consequenceEvents.events,
     ...fourthQuarterEvents.events,
+    ...situationEvents.events,
   ],
   rationaleTags: risks.rationaleTags,
   assumptions: risks.assumptions,
   glossary: investigations.glossary,
+  situations: situations.situations,
 }
 
 /** Typed view for callers that have already validated (or trust) the bundle. */

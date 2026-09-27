@@ -1,0 +1,118 @@
+{
+  "situations": [
+    {
+      "id": "sit-inherited-mess",
+      "name": "The inherited mess",
+      "summary": "A backlog nobody has worked, a register nobody believes, and an organisation that has not been badly hurt yet. The year as it usually begins.",
+      "setupEffects": []
+    },
+    {
+      "id": "sit-after-breach",
+      "name": "After the breach",
+      "summary": "Your predecessor left after ransomware encrypted fulfilment last quarter. There is emergency money and a board that no longer trusts reassurance, and the people who got in know the way back.",
+      "budgetDelta": 400,
+      "setupEffects": [
+        {
+          "type": "board.confidence",
+          "delta": -0.1
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": -0.06,
+          "reason": "Last quarter's breach surprised the board, and it has not forgotten."
+        },
+        {
+          "type": "operationalTolerance",
+          "delta": 0.1
+        },
+        {
+          "type": "threat.interest",
+          "actorId": "actor-ransom",
+          "delta": 0.2
+        },
+        {
+          "type": "control.operational",
+          "controlId": "ctl-ir",
+          "delta": 0.1
+        },
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-ceo",
+          "concern": "Whether it could happen again"
+        }
+      ]
+    },
+    {
+      "id": "sit-new-money",
+      "name": "New money, short patience",
+      "summary": "The board has doubled down on cyber after a peer's bad year. The money is real, and so is the expectation that it shows by the autumn.",
+      "budgetDelta": 600,
+      "setupEffects": [
+        {
+          "type": "operationalTolerance",
+          "delta": -0.1
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-cfo",
+          "delta": -0.05,
+          "reason": "He argued against the budget increase and lost."
+        },
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-cfo",
+          "concern": "Whether the extra cyber budget shows a return"
+        },
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-board",
+          "concern": "Visible progress for the new money"
+        }
+      ]
+    },
+    {
+      "id": "sit-tidy",
+      "name": "A tidy inheritance",
+      "summary": "Your predecessor was good. The controls are better than most, the board is comfortable, and the budget has been trimmed because it all seems fine.",
+      "budgetDelta": -400,
+      "setupEffects": [
+        {
+          "type": "control.coverage",
+          "controlId": "ctl-mfa",
+          "delta": 0.12
+        },
+        {
+          "type": "control.exceptions",
+          "controlId": "ctl-mfa",
+          "delta": -0.1
+        },
+        {
+          "type": "control.coverage",
+          "controlId": "ctl-pam",
+          "delta": 0.12
+        },
+        {
+          "type": "control.operational",
+          "controlId": "ctl-backup",
+          "delta": 0.1
+        },
+        {
+          "type": "control.coverage",
+          "controlId": "ctl-logging",
+          "delta": 0.08
+        },
+        {
+          "type": "board.confidence",
+          "delta": 0.08
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": 0.05,
+          "reason": "Your predecessor's reports were trusted, and some of that passed to you."
+        }
+      ]
+    }
+  ]
+}

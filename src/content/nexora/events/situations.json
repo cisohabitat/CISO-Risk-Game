@@ -1,0 +1,149 @@
+{
+  "events": [
+    {
+      "id": "evt-sit-breach-opening",
+      "type": "executive",
+      "title": "You know why the job was open",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "Before the meeting: you know why the job was open. The encryption last quarter cost us eleven days of fulfilment and a good deal of goodwill. The board has found money and has very little patience left for reassurance. They will ask whether it could happen again, and I would rather they heard the answer from you.",
+      "priority": "urgent",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-after-breach"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-breach-six-months",
+      "type": "executive",
+      "title": "Six months since the encryption",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "Six months since the encryption. The committee wants one page on what is different now and what is not. Not what is planned: what is different.",
+      "priority": "notable",
+      "availableFromDay": 170,
+      "availableUntilDay": 230,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-after-breach"
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-money-opening",
+      "type": "executive",
+      "title": "About the budget",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Congratulations on the budget. I argued against it and lost, so you may as well hear that from me. The board will want to see where it went by the autumn, and 'we are building capability' will not be enough on its own.",
+      "priority": "notable",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-new-money"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-money-halfway",
+      "type": "executive",
+      "title": "Half the year, and the new money",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Half the year is gone, and so is a good part of the new money. The board asks in October what it bought. I will be asked first, and I would like to be able to answer.",
+      "priority": "notable",
+      "availableFromDay": 170,
+      "availableUntilDay": 230,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-new-money"
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-tidy-opening",
+      "type": "executive",
+      "title": "What your predecessor left",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Your predecessor left things in better order than most: a second factor on most of the estate, and backups that have actually been restored. The board has taken that as a reason to trim the budget. I would take it as a reason to find out which parts of the tidiness are real.",
+      "priority": "notable",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-tidy"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    },
+    {
+      "id": "evt-sit-tidy-comfortable",
+      "type": "executive",
+      "title": "Why more, if it is fine?",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The committee has asked why cyber needs anything beyond running costs next year, given how quiet it has been. I said I would ask you. They would like the answer to include what you think they cannot see.",
+      "priority": "notable",
+      "availableFromDay": 150,
+      "availableUntilDay": 230,
+      "conditions": [
+        {
+          "kind": "situation.is",
+          "situationId": "sit-tidy"
+        },
+        {
+          "kind": "incident.none"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "incident.resolvedCountAtLeast",
+            "value": 1
+          }
+        }
+      ],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "situation"
+      ]
+    }
+  ]
+}

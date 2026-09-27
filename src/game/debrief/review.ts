@@ -842,6 +842,36 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
   // The fourth quarter's own question: what organisation have you created,
   // and what did you decide to carry into next year?
+  // The situation the year began in asked a question; the close answers it
+  // from what happened, rather than naming the situation and moving on.
+  const situation = state.situationId ? index.situation.get(state.situationId) : undefined
+  if (situation?.id === 'sit-after-breach') {
+    const again = incidents.filter((i) => i.familyId === 'fam-ransomware').sort((a, b) => a.startedDay - b.startedDay)
+    narrative.push(
+      again.length > 0
+        ? `You arrived after a breach, to a board asking whether it could happen again. It did: ransomware again on day ${again[0]!.startedDay}.`
+        : incidents.length > 0
+          ? 'You arrived after a breach, to a board asking whether it could happen again. Not the same way: this year\'s incidents were of other kinds.'
+          : 'You arrived after a breach, to a board asking whether it could happen again. This year, it did not.',
+    )
+  } else if (situation?.id === 'sit-new-money') {
+    const started = Object.values(state.programmes.programmes).filter((p) => p.status !== 'proposed')
+    const finished = started.filter((p) => p.status === 'complete').length
+    narrative.push(
+      started.length === 0
+        ? `You were given ${money(situation.budgetDelta ?? 0)} more than your predecessor had, and started no programme with it.`
+        : `You were given ${money(situation.budgetDelta ?? 0)} more than your predecessor had. ${started.length} programme${started.length === 1 ? ' was' : 's were'} started with it and ${finished} finished.`,
+    )
+  } else if (situation?.id === 'sit-tidy') {
+    const improved = [...new Set(situation.setupEffects.flatMap((e) => ('controlId' in e ? [e.controlId] : [])))]
+    const checked = improved.filter((id) => (state.controls.controls[id]?.believed?.assessedOnDay ?? -1) >= 0).length
+    narrative.push(
+      checked === 0
+        ? `You inherited better controls than most, and took all ${improved.length} your predecessor had improved on trust.`
+        : `You inherited better controls than most. Of the ${improved.length} your predecessor had improved, you checked ${checked} for yourself.`,
+    )
+  }
+
   const nextYear = state.flags['next-year.budget']
   if (nextYear === 'cut') {
     // The cut is only offered while no incident has happened, so one at the

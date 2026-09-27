@@ -40,6 +40,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('incident.none') }),
     z.object({ kind: z.literal('inbox.noUrgentWithin'), days: z.number().int().positive() }),
     z.object({ kind: z.literal('incident.noneWithin'), days: z.number().int().positive() }),
+    z.object({ kind: z.literal('situation.is'), situationId: z.string() }),
     z.object({ kind: z.literal('incident.resolvedCountAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('evidence.known'), evidenceId: id }),
     z.object({ kind: z.literal('evidence.tagKnown'), tag: z.string() }),
@@ -487,4 +488,15 @@ export const campaignContentSchema = z.object({
   rationaleTags: z.array(rationaleTagSchema).min(1),
   assumptions: z.array(assumptionSchema).min(1),
   glossary: z.array(glossarySchema).min(1),
+  situations: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        summary: z.string(),
+        budgetDelta: z.number().optional(),
+        setupEffects: z.array(effectSchema),
+      }),
+    )
+    .optional(),
 })

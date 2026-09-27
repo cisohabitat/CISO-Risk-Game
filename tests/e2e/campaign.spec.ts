@@ -307,6 +307,20 @@ test.describe('a first year at Nexora', () => {
     expect((await focused()).tag, 'focus fell to the page body').not.toBe('BODY')
   })
 
+  test('the year can begin in a different situation', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    // The usual opening is chosen unless the player picks another.
+    await expect(page.getByRole('radio', { name: /The inherited mess/ })).toBeChecked()
+    await page.getByRole('radio', { name: /After the breach/ }).check()
+    await page.getByRole('button', { name: 'Begin your first day' }).click()
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible({ timeout: 20_000 })
+    // Emergency money on top of the usual £2.4m, and the CEO says why.
+    await expect(page.getByText('£2.8m of £2.8m')).toBeVisible()
+    await goTo(page, 'Inbox')
+    await expect(page.getByText('You know why the job was open').first()).toBeVisible()
+  })
+
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
     await startCampaign(page, 'e2e-delete')
     await page.getByRole('button', { name: 'Save campaign' }).click()

@@ -42,8 +42,11 @@ export function StartScreen() {
   const refreshSaves = useGameStore((store) => store.refreshSaves)
   const pushToast = useGameStore((store) => store.pushToast)
   const saves = useGameStore((store) => store.ui.saves)
+  const index = useGameStore((store) => store.index)
   const [seed, setSeed] = useState(randomSeed)
   const [difficulty, setDifficulty] = useState<Difficulty>('ciso')
+  const situations = index.content.situations ?? []
+  const [situation, setSituation] = useState<string>(situations[0]?.id ?? 'surprise')
   // What the player has asked to delete: one campaign, or everything.
   const [pendingDelete, setPendingDelete] = useState<SaveSummary | 'all' | undefined>()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -197,6 +200,40 @@ export function StartScreen() {
               </div>
             </fieldset>
 
+            {situations.length > 0 && (
+              <fieldset>
+                <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+                  What are you walking into?
+                </legend>
+                <div className="space-y-2">
+                  {[...situations.map((s) => ({ id: s.id, label: s.name, description: s.summary })),
+                    { id: 'surprise', label: 'Surprise me', description: 'Find out on your first morning, as a new CISO usually does.' }].map((option) => (
+                    <label
+                      key={option.id}
+                      className={cn(
+                        'flex cursor-pointer gap-3 rounded-lg border p-3',
+                        situation === option.id ? 'border-accent bg-accent-soft/40' : 'border-line bg-surface-2',
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name="situation"
+                        value={option.id}
+                        checked={situation === option.id}
+                        onChange={() => setSituation(option.id)}
+                        className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
+                        style={{ minHeight: 0 }}
+                      />
+                      <span>
+                        <span className="block font-medium">{option.label}</span>
+                        <span className="mt-0.5 block text-sm text-ink-muted text-pretty">{option.description}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
+
             {/*
               Folded away by default. The seed is a replay tool, not part of
               arriving as the new CISO, and a first-time player asked to choose
@@ -228,7 +265,7 @@ export function StartScreen() {
               variant="primary"
               size="lg"
               block
-              onClick={() => void startNewGame(seed.trim() || randomSeed(), difficulty)}
+              onClick={() => void startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined)}
             >
               Begin your first day
             </Button>

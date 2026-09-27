@@ -139,6 +139,23 @@ of plan" was true in none, because a programme never outruns its plan. Gate on
 `programme.anyBlocked` or `programme.anyOnPlan`, and if no condition kind
 describes the state the message claims, add one before writing the message.
 
+## Adding a starting situation
+
+A situation is the year Nexora has had before the CISO arrives, in
+`situations.json`: a name, a one-line summary for the start screen, an optional
+`budgetDelta` (added to the year's allocation, total and remaining alike) and
+`setupEffects`, which the one reducer applies before the first day. The first
+situation is the usual opening and must have no effects.
+
+A situation is felt through messages, not numbers alone. Gate them on
+`situation.is`, and give each situation an opening on day one and at least one
+beat later in the year (`events/situations.json`). Then read the existing
+content for anything the situation makes untrue — a tidy inheritance cannot
+receive "the last restore test was abandoned" — and guard it with
+`{ "kind": "not", "condition": { "kind": "situation.is", ... } }`, which is a
+closing guard and leaves the message paced. If the situation poses a question,
+answer it in the annual review from state.
+
 ## Adding an assumption
 
 Add it to `risks.json` with a `validationRuleId`, then implement that rule in

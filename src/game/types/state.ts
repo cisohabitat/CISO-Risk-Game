@@ -536,6 +536,8 @@ export interface GameState {
   contentId: string
   contentVersion: string
   difficulty: Difficulty
+  /** The starting situation the year began in, if the content offers any. */
+  situationId?: string
   createdAtIso: string
   currentDay: number
   speed: GameSpeed

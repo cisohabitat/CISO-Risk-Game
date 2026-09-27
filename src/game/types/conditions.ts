@@ -40,6 +40,8 @@ export type Condition =
   | { kind: 'inbox.noUrgentWithin'; days: number }
   /** No incident running, and none closed, in the last N days. */
   | { kind: 'incident.noneWithin'; days: number }
+  /** The year began in this starting situation. */
+  | { kind: 'situation.is'; situationId: string }
   | { kind: 'incident.resolvedCountAtLeast'; value: number }
   | { kind: 'evidence.known'; evidenceId: string }
   | { kind: 'evidence.tagKnown'; tag: string }

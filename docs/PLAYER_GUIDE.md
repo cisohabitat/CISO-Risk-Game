@@ -48,6 +48,21 @@ differences that matter are:
 | **CISO** | The intended experience. Scarce attention, an incomplete picture, executives with their own priorities. |
 | **High pressure** | A harsher world more than a weaker you. Noticeably more threat activity, far less of the organisation documented before you arrived, and executives with less patience. Your budget and team are only slightly tighter. |
 
+Then pick **what you are walking into**. The company is always Nexora; the
+year it has had before you arrive is not:
+
+| | The year begins with |
+|---|---|
+| **The inherited mess** | The usual opening, and the one to start with. |
+| **After the breach** | Emergency money, a board that has stopped trusting reassurance, and attackers who know the way back in. |
+| **New money, short patience** | A much bigger budget, and a finance director and an operation that want to see it land quickly. |
+| **A tidy inheritance** | Better controls than most, a smaller budget, and a board that thinks the job is done. |
+| **Surprise me** | One of the four, drawn from the seed. You find out on your first morning. |
+
+The annual review answers the question your situation started with: whether
+the breach happened again, what the money bought, or how much of your
+predecessor's good work you actually checked.
+
 Start on **CISO** unless you would rather learn the systems first — the modes
 differ in how the year turns out, not in what you are allowed to do. *Replay
 settings* holds a campaign seed; ignore it. It exists so two people can play the

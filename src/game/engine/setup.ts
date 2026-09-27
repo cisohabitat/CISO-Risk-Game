@@ -9,6 +9,7 @@ import type {
   GameState,
   OrgEdgeState,
   OrgNodeState,
+  SituationDef,
 } from '../types'
 import { CYBER_FUNCTIONS, SAVE_SCHEMA_VERSION, clamp01 } from '../types'
 import { deriveRng } from './rng'
@@ -128,6 +129,17 @@ export interface NewGameOptions {
   difficulty?: Difficulty
   gameId?: string
   createdAtIso?: string
+  /** A situation id, or 'surprise' to draw one from the seed. Omitted: none. */
+  situation?: string
+}
+
+/** The situation a new campaign begins in: named, drawn from the seed, or none. */
+export function resolveSituation(index: ContentIndex, seed: string, requested?: string): SituationDef | undefined {
+  const situations = index.content.situations ?? []
+  if (!requested || situations.length === 0) return undefined
+  if (requested !== 'surprise') return index.situation.get(requested)
+  const draw = deriveRng(seed, 'situation')
+  return situations[Math.floor(draw.next() * situations.length)]
 }
 
 export function createInitialState(index: ContentIndex, options: NewGameOptions): GameState {
@@ -135,6 +147,8 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
   const difficulty = options.difficulty ?? 'ciso'
   const profile = DIFFICULTY_PROFILES[difficulty]
   const seed = options.seed
+  const situation = resolveSituation(index, seed, options.situation)
+  const budget = Math.round(content.meta.startingBudget * profile.budgetMultiplier) + (situation?.budgetDelta ?? 0)
 
   // Independent streams so adding a draw in one area cannot reshuffle another.
   const worldRng = deriveRng(seed, 'world')
@@ -299,6 +313,7 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
     contentId: content.meta.id,
     contentVersion: content.meta.version,
     difficulty,
+    ...(situation ? { situationId: situation.id } : {}),
     createdAtIso: options.createdAtIso ?? '1970-01-01T00:00:00.000Z',
     currentDay: 0,
     speed: 'paused',
@@ -328,8 +343,8 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
     assumptions: { assumptions: {}, counter: 0 },
     incidents: { incidents: {}, order: [], counter: 0 },
     resources: {
-      budgetTotal: Math.round(content.meta.startingBudget * profile.budgetMultiplier),
-      budgetRemaining: Math.round(content.meta.startingBudget * profile.budgetMultiplier),
+      budgetTotal: budget,
+      budgetRemaining: budget,
       budgetCommitted: 0,
       unfundedCommitment: 0,
       focusPerWeek: profile.focusPerWeek,

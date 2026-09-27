@@ -102,6 +102,15 @@ independently testable functions:
 Outputs are 0..1 internally and become bands at the presentation boundary
 (`src/game/risk/bands.ts`). The UI never renders a raw simulation number.
 
+## Starting situations
+
+A campaign may begin in one of the content's situations, chosen on the start
+screen or drawn from the seed for "Surprise me" (`resolveSituation` in
+`setup.ts`). A situation sets the year's budget at construction and applies its
+setup effects through the effect reducer before the first tick; content reacts
+to it through the `situation.is` condition. It is recorded as
+`GameState.situationId`, so a save replays its own situation.
+
 ## Threats and incidents
 
 Three actors evaluate a small set of precomputed candidate attack paths rather

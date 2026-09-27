@@ -62,6 +62,13 @@ export interface ActionResult {
 
 export function newGame(index: ContentIndex, options: NewGameOptions): GameState {
   const state = createInitialState(index, options)
+  // The situation's own starting conditions, through the one reducer.
+  const situation = state.situationId ? index.situation.get(state.situationId) : undefined
+  if (situation && situation.setupEffects.length > 0) {
+    const rng = createRng(state.seed, state.rngCursor)
+    applyEffects(state, situation.setupEffects, { index, rng, source: `situation:${situation.id}` })
+    state.rngCursor = rng.cursor
+  }
   // The opening briefing lands before day 1 so the player starts with context.
   pushMessage(state, {
     from: 'Nexora Group',

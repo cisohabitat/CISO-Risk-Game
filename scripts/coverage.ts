@@ -34,7 +34,7 @@ function play(
   concurrentProgrammes: boolean,
   optionOffset: number,
 ): GameState {
-  const state = newGame(index, { seed, difficulty })
+  const state = newGame(index, { seed, difficulty, situation: 'surprise' })
   const commissioned: Record<string, number> = {}
   const order = programmeOrder(index, concurrentProgrammes)
   let programmeIndex = 0

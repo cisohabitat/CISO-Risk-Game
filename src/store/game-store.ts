@@ -42,7 +42,7 @@ interface GameStore {
   lastTicks: TickResult[]
   busy: boolean
 
-  startNewGame: (seed: string, difficulty: Difficulty) => Promise<void>
+  startNewGame: (seed: string, difficulty: Difficulty, situation?: string) => Promise<void>
   loadGame: (key: SaveKey) => Promise<boolean>
   loadImported: (state: GameState) => void
   refreshSaves: () => Promise<void>
@@ -92,11 +92,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     saves: [],
   },
 
-  async startNewGame(seed, difficulty) {
+  async startNewGame(seed, difficulty, situation) {
     const { index } = get()
     const state = newGame(index, {
       seed,
       difficulty,
+      situation,
       gameId: `game-${seed}-${Date.now().toString(36)}`,
       createdAtIso: new Date().toISOString(),
     })

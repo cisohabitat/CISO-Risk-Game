@@ -448,6 +448,21 @@ export interface CampaignMeta {
   version: string
 }
 
+/**
+ * A starting situation: the predicament the CISO arrives into. The same
+ * organisation, a different year. Chosen at the start or drawn from the seed.
+ */
+export interface SituationDef {
+  id: string
+  name: string
+  /** One or two sentences for the start screen. */
+  summary: string
+  /** Added to the year's cyber budget, total and remaining alike, in £k. */
+  budgetDelta?: number
+  /** Applied through the effect reducer before the first day. */
+  setupEffects: GameEffect[]
+}
+
 export interface CampaignContent {
   meta: CampaignMeta
   nodes: OrgNodeDef[]
@@ -470,6 +485,7 @@ export interface CampaignContent {
   rationaleTags: RationaleTagDef[]
   assumptions: AssumptionDef[]
   glossary: GlossaryEntryDef[]
+  situations?: SituationDef[]
 }
 
 /** Indexed view built once at load so the engine never scans arrays per tick. */
@@ -495,6 +511,7 @@ export interface ContentIndex {
   rationaleTag: Map<string, RationaleTagDef>
   assumption: Map<string, AssumptionDef>
   glossary: Map<string, GlossaryEntryDef>
+  situation: Map<string, SituationDef>
   /** node id -> outgoing edges */
   outgoing: Map<string, OrgEdgeDef[]>
   incoming: Map<string, OrgEdgeDef[]>

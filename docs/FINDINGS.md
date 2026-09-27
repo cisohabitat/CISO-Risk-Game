@@ -233,6 +233,20 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **Every year began the same way.** At the owner's request for replay value,
+  a year can now begin in one of four situations: the usual opening, after a
+  breach, with new money and short patience, or with a tidy inheritance, or
+  one drawn from the seed. Each is data — a budget and setup effects through
+  the one reducer — with an opening message, a mid-year beat and an answer in
+  the annual review to the question it started with. Reading the new openings
+  against existing content found four messages each situation made untrue (an
+  abandoned restore test and a stalled vault in a tidy year; an unexercised
+  incident plan and "could it happen to us?" after a breach), now guarded with
+  closing guards so they stay paced. Tests in `tests/engine/situations.test.ts`
+  (mutation-checked on the seed draw and a guard) and a browser test of the
+  picker. Soak 1,000 and coverage now draw a situation per campaign: clean,
+  and all six situation messages reached.
+
 - **Detection stopped paying off once steps could hold.** Measured over 150
   seeds: 79% of campaigns are seen eventually whether or not anything is
   invested, because detection is rolled on every active day, so the detection

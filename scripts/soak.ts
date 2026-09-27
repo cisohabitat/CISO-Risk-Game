@@ -28,7 +28,7 @@ function main(): void {
   for (let i = 0; i < runs; i += 1) {
     const difficulty = DIFFICULTIES[i % DIFFICULTIES.length]!
     try {
-      const state = newGame(index, { seed: `soak-${i}`, difficulty })
+      const state = newGame(index, { seed: `soak-${i}`, difficulty, situation: 'surprise' })
       // A light policy: answer whatever is open, then keep the clock moving.
       for (let day = 0; day < 364; day += 1) {
         for (const decisionId of [...state.decisions.openIds]) {

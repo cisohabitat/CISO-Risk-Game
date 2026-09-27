@@ -36,6 +36,7 @@ interface Registry {
   rationaleTag: Set<string>
   assumption: Set<string>
   evidenceTag: Set<string>
+  situation: Set<string>
 }
 
 function buildRegistry(content: CampaignContent): Registry {
@@ -61,6 +62,7 @@ function buildRegistry(content: CampaignContent): Registry {
     rationaleTag: new Set(content.rationaleTags.map((r) => r.id)),
     assumption: new Set(content.assumptions.map((a) => a.id)),
     evidenceTag,
+    situation: new Set((content.situations ?? []).map((s) => s.id)),
   }
 }
 
@@ -211,6 +213,9 @@ export function validateCampaignContent(content: CampaignContent): ContentIssue[
       }
       if (option.requirements?.condition) checkCondition(option.requirements.condition, registry, where, error)
     }
+  }
+  for (const situation of content.situations ?? []) {
+    for (const effect of situation.setupEffects) checkEffect(effect, registry, `situations/${situation.id}`, error)
   }
   for (const event of content.events) {
     const where = `events/${event.id}`
@@ -409,6 +414,9 @@ function checkCondition(
     case 'event.fired':
     case 'event.notFired':
       ref(registry.event, condition.eventId, 'missing-event')
+      break
+    case 'situation.is':
+      ref(registry.situation, condition.situationId, 'missing-situation')
       break
     case 'not':
       checkCondition(condition.condition, registry, where, error)

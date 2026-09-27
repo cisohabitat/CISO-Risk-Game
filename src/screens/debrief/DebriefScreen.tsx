@@ -81,6 +81,7 @@ export function DebriefScreen() {
       <header className="border-y-2 border-ink py-6 text-center sm:py-8">
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
           {index.content.meta.organisation} · Annual review
+          {state.situationId && index.situation.get(state.situationId) && ` · ${index.situation.get(state.situationId)!.name}`}
         </p>
         <h1 className="mx-auto mt-4 max-w-[26ch] font-display text-3xl leading-tight text-balance sm:text-4xl">
           {review.headline}
