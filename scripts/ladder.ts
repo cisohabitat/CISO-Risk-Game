@@ -20,6 +20,7 @@ import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, briefing, teamView, visibleRisks } from '../src/store/selectors'
 import { residualBand, RISK_BAND_ORDER } from '../src/game/risk/bands'
+import { renderDecisionText } from '../src/game/decisions/describe'
 import { evaluateCondition } from '../src/game/events/conditions'
 import { capacityBand, teamStrain } from '../src/game/team/capacity'
 import type { Difficulty, GameState } from '../src/game/types'
@@ -86,6 +87,8 @@ function play(difficulty: Difficulty, appetite: Appetite) {
   let boards = 0, patternsFormed = 0, patternsUnaffordable = 0
   // What the player's own list reads, sampled weekly, for `bands` below.
   const samples: { residual: number; exposure: number; consequence: number }[] = []
+  // Every decision as the player was shown it, for `transcript` below.
+  const decisionText: string[] = []
   // Week-on-week movement of the same row, which is what decides whether a
   // tighter set of cuts would read as change or as flicker.
   const deltas: number[] = []
@@ -118,6 +121,13 @@ function play(difficulty: Difficulty, appetite: Appetite) {
       // difference was real — objectives missed read 1.13 on CISO against 1.65
       // — and all of it was the harness rather than the game.
       const ordered = [preferred, ...def.options.filter((o) => o.id !== preferred.id)]
+      const shown = [
+        `d${state.currentDay} DECISION: ${renderDecisionText(def.title, state, index, runtime)}`,
+        `  ${renderDecisionText(def.description, state, index, runtime)}`,
+        def.context ? `  ${renderDecisionText(def.context, state, index, runtime)}` : '',
+        ...def.options.map((o) => `  [${o.label}] ${o.description}${o.visibleKnownEffects.length ? ` (${o.visibleKnownEffects.join('; ')})` : ''}`),
+      ].filter(Boolean)
+      decisionText.push(shown.join('\n'))
       for (const option of ordered) {
         const r = applyAction(state, index, {
           type: 'resolveDecision', decisionId: id, optionId: option.id,
@@ -209,7 +219,7 @@ function play(difficulty: Difficulty, appetite: Appetite) {
   const review = buildAnnualReview(state, index)
   const view = briefing(state, index)
   const team = teamView(state, index)
-  return { state, log, refused, review, view, team, boards, patternsFormed, patternsUnaffordable, wantedProgramme, wantedEnquiry, samples, deltas, incidentConsequences, materialShare }
+  return { state, log, refused, review, view, team, boards, patternsFormed, patternsUnaffordable, wantedProgramme, wantedEnquiry, samples, deltas, incidentConsequences, materialShare, decisionText }
 }
 
 // `sweep N` runs the same philosophy over N seeds on all three modes and
@@ -301,6 +311,38 @@ if (process.argv[2] === 'bands') {
   if (incidentHits.length > 0) show('incident', incidentHits)
   show('exposure', all.map((s) => s.exposure))
   show('consequence', all.map((s) => s.consequence))
+  process.exit(0)
+}
+
+/**
+ * `transcript <mode> [seed]` prints everything one year says, in order: every
+ * message in full, every decision as it was shown, and the whole close. The
+ * other modes answer "what happened"; this answers "what did it say", which is
+ * where every playtest so far found its defects.
+ */
+if (process.argv[2] === 'transcript') {
+  const mode = (process.argv[3] as Difficulty) ?? 'ciso'
+  SEED = process.argv[4] ?? 'transcript'
+  const out = play(mode, 'measured')
+  console.log(`# ${mode} · seed ${SEED}\n`)
+  console.log('## Messages\n')
+  for (const m of out.state.inbox.messages) {
+    console.log(`d${m.day} [${m.priority}] ${m.from} — ${m.subject}${m.eventId ? `  {${m.eventId}}` : ''}`)
+    console.log(`  ${m.body.replace(/\n+/g, ' / ')}\n`)
+  }
+  console.log('## Decisions\n')
+  for (const block of out.decisionText) console.log(`${block}\n`)
+  console.log('## Decided\n')
+  console.log(out.log.join('\n'))
+  const r = out.review
+  console.log(`\n## The close\n\n${r.headline}\n${r.performanceBand}\n${r.businessOutcome}\n`)
+  for (const line of r.narrative) console.log(`  ${line}`)
+  for (const d of r.dimensions) {
+    console.log(`\n  ${d.band.toUpperCase()} ${d.label}: ${d.narrative}`)
+    for (const e of d.evidence) console.log(`    - ${e}`)
+  }
+  if (r.blindSpots.length) console.log(`\n  Blind spots:\n${r.blindSpots.map((b) => `    - ${b}`).join('\n')}`)
+  for (const line of r.reasoning ?? []) console.log(`\n  WHY "${line.label}" x${line.uses}: ${line.verdict}`)
   process.exit(0)
 }
 

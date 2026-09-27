@@ -191,6 +191,12 @@ export interface RiskScenarioRuntime {
     consequence: number
     residual: number
   } | null
+  /**
+   * The residual when this scenario was first assessed, kept so the player can
+   * be told which way it has moved since. Optional because a save written
+   * before it existed takes its baseline from the next assessment after loading.
+   */
+  firstAssessed?: { day: number; residual: number }
   escalatedToBoard: boolean
   notes: string[]
 }

@@ -184,6 +184,13 @@ The **Risk** screen is where understanding gets built, across five tabs:
 - **Investigate** — commissioning work.
 - **Assumptions** — things your past decisions depend on being true.
 
+After a risk has been watched for a fortnight it says which way it has moved
+since it was first assessed. A green **Improving** means something you did is
+landing; an amber **Worsening** means the world has moved and you have not. A
+risk that has not moved says nothing, so the badges that do appear are the ones
+worth reading. Expect most of an untended register to drift towards worsening:
+controls decay on their own and the threat grows through the year.
+
 If a risk uses a word you do not know, the **Words** line under it lists the
 terms it leans on; tap one and the glossary opens at the definition.
 

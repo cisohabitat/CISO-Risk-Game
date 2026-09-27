@@ -10,7 +10,7 @@ import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
-import { bandTone, capacityTone, confidenceTone, money, plural } from '@/lib/formatting/labels'
+import { bandTone, capacityTone, confidenceTone, money, plural, trendBadge } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
@@ -184,6 +184,9 @@ export function HomeScreen() {
                             {risk.confidence} confidence
                           </Badge>
                           {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
+                          {trendBadge(risk.trend) && (
+                            <Badge tone={trendBadge(risk.trend)!.tone} glyph={false}>{trendBadge(risk.trend)!.label}</Badge>
+                          )}
                         </div>
                         <p className="mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
                         <Terms text={`${risk.title} ${risk.statement}`} className="mt-2" />

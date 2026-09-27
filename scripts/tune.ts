@@ -80,11 +80,17 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
 
 function main(): void {
   const index = buildContentIndex(nexoraContent)
+  console.log('± is one standard error; differences smaller than about two of them are noise.\n')
   const policies: Policy[] = ['passive', 'defensive', 'business', 'balanced']
   const runs = Number(process.argv[2] ?? 25)
   const difficulty = (process.argv[3] as Difficulty) ?? 'ciso'
   for (const policy of policies) {
     let incidents = 0
+    // Per-campaign counts, so the spread can be printed beside the mean. At 25
+    // campaigns a style, one standard error on incidents is about 0.2 against a
+    // mean near 1.2, and this table once showed the passive player with the
+    // fewest incidents of the four. At 150 a style the ordering dissolved.
+    const perRun: number[] = []
     let worstConsequence = 0
     let violations = 0
     let objectivesAchieved = 0
@@ -96,6 +102,7 @@ function main(): void {
       const state = play(index, `tune-${i}`, policy, difficulty)
       const incidentList = Object.values(state.incidents.incidents)
       incidents += incidentList.length
+      perRun.push(incidentList.length)
       if (incidentList.length === 0) noIncidentRuns += 1
       worstConsequence += incidentList.reduce((max, inc) => Math.max(max, inc.consequence), 0)
       violations += checkInvariants(state, index).length
@@ -104,8 +111,10 @@ function main(): void {
       evidence += state.evidence.order.length
       programmesComplete += Object.values(state.programmes.programmes).filter((p) => p.status === 'complete').length
     }
+    const m = incidents / runs
+    const se = Math.sqrt(perRun.reduce((a, b) => a + (b - m) ** 2, 0) / Math.max(1, runs - 1) / runs)
     console.log(
-      `${policy.padEnd(10)} incidents/run ${(incidents / runs).toFixed(2)}  clean-years ${((noIncidentRuns / runs) * 100).toFixed(0)}%  worst-consequence ${(worstConsequence / runs).toFixed(2)}  objectives ${(objectivesAchieved / runs).toFixed(1)}/5  board ${(boardConfidence / runs).toFixed(2)}  evidence ${(evidence / runs).toFixed(0)}  programmes-done ${(programmesComplete / runs).toFixed(1)}  violations ${violations}`,
+      `${policy.padEnd(10)} incidents/run ${m.toFixed(2)} ±${se.toFixed(2)}  clean-years ${((noIncidentRuns / runs) * 100).toFixed(0)}%  worst-consequence ${(worstConsequence / runs).toFixed(2)}  objectives ${(objectivesAchieved / runs).toFixed(1)}/5  board ${(boardConfidence / runs).toFixed(2)}  evidence ${(evidence / runs).toFixed(0)}  programmes-done ${(programmesComplete / runs).toFixed(1)}  violations ${violations}`,
     )
   }
 }

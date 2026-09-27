@@ -53,6 +53,8 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
 | `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
 | `pnpm ladder bands 8` | What do the risk rows actually read, and how often? |
+| `pnpm ladder transcript ciso [seed]` | Everything one year says, in full — messages, decisions, the close |
+| `pnpm tsx scripts/efficacy.ts 150` | Does each programme reduce what it is meant to? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 
@@ -95,6 +97,15 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   quarter. The fourth quarter still carries just under a quarter of the first.
   Whether the back half now *feels* like the year building is the playtest
   question in `docs/PLAYTEST.md`, not a number to tune further.
+
+- **Two programmes buy nothing measurable inside a year.** Over 150 seeds,
+  third-party assurance and the cloud programme each finish every time and move
+  no incident family by more than noise; their best residual reduction is about
+  0.01. Identity, detection and recovery each show a clear effect. It may be
+  honest — the risks they treat rarely materialise in twelve months — but a
+  player spending £520k or £680k on either will see the register say so, and
+  whether that teaches "choose on evidence" or just reads as a trap is a
+  playtest question. `pnpm tsx scripts/efficacy.ts` measures it.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player

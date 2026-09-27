@@ -27,6 +27,7 @@ export function refreshScenarioAssessments(state: GameState, index: ContentIndex
       consequence: assessment.consequence,
       residual: assessment.residual,
     }
+    scenario.firstAssessed ??= { day: state.currentDay, residual: assessment.residual }
     scenario.confidence = confidenceFromUncertainty(assessment.uncertainty)
 
     if (previous !== undefined && assessment.residual - previous > MATERIAL_MOVE) {

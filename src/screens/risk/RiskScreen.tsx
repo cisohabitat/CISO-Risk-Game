@@ -11,7 +11,7 @@ import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { RiskDetail } from '@/components/risk/RiskDetail'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
-import { bandTone, confidenceTone, evidenceSourceLabel, statusLabel } from '@/lib/formatting/labels'
+import { bandTone, confidenceTone, evidenceSourceLabel, statusLabel, trendBadge } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
 export function RiskScreen() {
@@ -70,6 +70,9 @@ export function RiskScreen() {
                         <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
                         {risk.reviewDue && <Badge tone="warning" glyph={false}>Review due</Badge>}
                         {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
+                        {trendBadge(risk.trend) && (
+                          <Badge tone={trendBadge(risk.trend)!.tone} glyph={false}>{trendBadge(risk.trend)!.label}</Badge>
+                        )}
                       </div>
                       <h3 className="mt-2 font-medium text-balance">{risk.title}</h3>
                       <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>

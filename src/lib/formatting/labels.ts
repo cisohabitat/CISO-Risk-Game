@@ -39,6 +39,26 @@ export function relationshipTone(band: string): BandTone {
   }
 }
 
+/**
+ * A risk's movement since it was first assessed, as a badge. Unchanged gets no
+ * badge at all: a register that has not moved should stay quiet, so the badges
+ * that do appear are the ones worth reading.
+ */
+export function trendBadge(trend: string | undefined): { label: string; tone: BandTone } | undefined {
+  switch (trend) {
+    case 'improving':
+      return { label: 'Improving', tone: 'positive' }
+    case 'materially improved':
+      return { label: 'Materially improved', tone: 'positive' }
+    case 'worsening':
+      return { label: 'Worsening', tone: 'warning' }
+    case 'materially worse':
+      return { label: 'Materially worse', tone: 'high' }
+    default:
+      return undefined
+  }
+}
+
 export function confidenceTone(confidence: string): BandTone {
   return confidence === 'strong' ? 'low' : confidence === 'moderate' ? 'moderate' : 'elevated'
 }

@@ -18,6 +18,48 @@ fault.
 
 ### Fixed
 
+- **A player's investment had a visible cost and an invisible benefit.**
+  Grading with `tune.ts` at its default of 25 campaigns a style put the passive
+  player, who builds nothing, on the fewest incidents, the most clean years and
+  the lowest worst consequence of the four. At 150 a style that ordering
+  dissolved: incidents read 1.08 to 1.27 across every style, within noise of
+  each other, while objectives achieved fell from 4.9 of 5 for the passive
+  player to 2.3 for the balanced one. The cost of security work was plain and
+  the benefit was not, so doing nothing looked like the strongest play.
+  `tune.ts` now prints a standard error beside every mean, because the first
+  reading was noise and nothing on the line said so.
+
+  **Programmes do work; the register could not show it.** A new harness,
+  `scripts/efficacy.ts`, plays the same seeds idle and with one programme
+  started on day 5 and its blockers cleared, 150 seeds a programme. Identity
+  and detection cut incidents after day 180 by about a fifth (0.83 idle
+  against 0.66 and 0.67, two standard errors). Recovery leaves frequency alone
+  and cuts the worst late consequence by about a quarter (0.29 against 0.21),
+  which is what recovery is for. Third-party and cloud move no incident family
+  measurably in one year. But the largest residual reduction any finished
+  programme produced on any risk was 0.02, about a third of one band, so a
+  player who funded and finished a programme saw no risk change band, and the
+  function that describes movement in words, `describeChange`, was never
+  called by anything.
+
+  Each risk now keeps its first assessment and, after a fortnight, says which
+  way it has moved since: a green Improving or an amber Worsening on the list
+  and the briefing, a sentence in the detail, and nothing at all when it has
+  not moved. Measured at the close against the first assessment, an idle
+  year's register reads worsening 69% of the time, unchanged 23%, improved 6%;
+  a year with the recovery programme finished reads unchanged 51%, improving
+  48%, worsening 2%. On the recovery risk itself, on seeds that deal it, an
+  idle year was told it was worsening 10 times in 10 and a funded year that it
+  was holding 7 in 10. That is the feedback the core loop was missing, and it
+  is read off the simulation rather than added to it. Tests pin the baseline,
+  the fortnight's silence and the two readings; both mutations were checked.
+
+  **Left.** The third-party and cloud programmes are real spend with no
+  measurable effect on incidents inside a year. Whether that is honest (their
+  risks rarely materialise in twelve months) or a weakness the player should
+  not have to discover is a question about what the game is teaching, so it is
+  recorded under Known weaknesses rather than tuned.
+
 - **Open: the guide's board-paper picture cannot be regenerated.** The
   screenshot harness drives a quarter of play through the interface at 4x to
   reach the first board paper, and it no longer gets there: measured, neither
