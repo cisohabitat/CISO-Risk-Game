@@ -54,6 +54,42 @@ Half an hour is enough. A first year takes twenty minutes at a normal pace.
 Five sessions is enough to find the things everyone hits. Three is enough to
 find the worst one.
 
+## Playing it yourself
+
+You know the game, so you cannot tell whether it teaches itself; leave that for
+someone who does not. What you can judge is whether it *feels* right, and you
+are the best-placed person to judge that. One year on CISO difficulty, a new
+seed, at the speed you would really play. Keep a note open and write the day
+number beside everything.
+
+While you play, note:
+
+- **The day you first click "Skip ahead" without reading.** That is where the
+  year stopped holding you. Note it every time it happens, not just the first.
+- **Every decision where you hesitated.** Which one, and what made it hard. A
+  year with none is a quiz.
+- **Every message you did not believe.** Something that contradicted what you
+  had done, arrived on the wrong day, or said what nobody could know. These are
+  the cheapest thing to fix and the most corrosive to leave.
+- **The fourth quarter.** It now carries four decisions that follow up things
+  you chose earlier — the Corvus renewal, the Kestrel quarantine, the audit
+  follow-up and next year's priorities. Did they feel like consequences of
+  your year, or like chores arriving because the calendar said so?
+- **What you bought and whether you felt it.** If you fund the third-party
+  programme, watch whether you ever feel it helped. It currently slows supplier
+  attacks without stopping them (see Known weaknesses). Decide whether that
+  reads as a lesson — "closing one door sends them to another" — or as money
+  thrown away. That decides whether the threat engine should change.
+
+At the end of Q3, before the review, write three sentences: what your year was
+about, how your team is, and which risk worries you most. Then read the annual
+review and mark every sentence in it you disagree with. Each disagreement is
+either a defect in the review or a surprise it earned; say which.
+
+Afterwards, the three most useful things to send back are: the days you
+skipped, the messages you did not believe, and the review sentences you
+disagreed with.
+
 ## Turning a session into a change
 
 Write findings into the **Known weaknesses** list in `CLAUDE.md` the same way a
