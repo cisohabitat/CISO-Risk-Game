@@ -91,29 +91,27 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   something. No harness answers this and no amount of further simulation will.
   `docs/PLAYTEST.md` is how to ask a person.
 
-- **The last quarter is still the lightest.** Decisions arrived 12.4 / 6.5 /
-  2.8 / 1.4 per quarter for an engaged player before the late-year work; they
-  now read 12.3 / 7.2 / 3.9 / 2.8, the longest stretch with nothing to decide
-  fell from 114 days to 67, and the inbox carries 49 / 53 / 33 / 34 messages a
-  quarter. The fourth quarter still carries just under a quarter of the first.
-  Removing messages that were untrue when they arrived — reports of findings
-  the player already had, weaknesses already fixed, quiet spells that were not
-  — thinned the back half further: on one fixed policy over 30 CISO years the
-  inbox went from 48 / 49 / 33 / 32 to 48 / 42 / 28 / 28 a quarter, with
-  decisions in Q3 and Q4 unchanged (3.2 / 2.7) and the longest stretch with
-  nothing to decide at 73 days. That was the right trade; padding the quarter
-  back out with text that is not true would not be. Whether the back half
-  *feels* like the year building is the playtest question in
-  `docs/PLAYTEST.md`, not a number to tune further.
+- **The last quarter is still the lightest, but less so.** Four late-year
+  decisions now follow up choices made earlier in the year — the Corvus
+  renewal, the Kestrel quarantine, the audit follow-up and next year's
+  priorities — each with its own replies. On one fixed policy over 30 CISO
+  years, decisions read 12.6 / 4.8 / 3.2 / 4.8 a quarter (Q4 was 2.7), the
+  inbox 48 / 42 / 28 / 32, and the longest stretch with nothing to decide 63
+  days, max 75 (was 73, max 89). Whether the back half now *feels* like the
+  year building is the playtest question in `docs/PLAYTEST.md`.
 
-- **Two programmes buy nothing measurable inside a year.** Over 150 seeds,
-  third-party assurance and the cloud programme each finish every time and move
-  no incident family by more than noise; their best residual reduction is about
-  0.01. Identity, detection and recovery each show a clear effect. It may be
-  honest — the risks they treat rarely materialise in twelve months — but a
-  player spending £520k or £680k on either will see the register say so, and
-  whether that teaches "choose on evidence" or just reads as a trap is a
-  playtest question. `pnpm tsx scripts/efficacy.ts` measures it.
+- **Preventive programmes slow attackers; they rarely stop them.** On the
+  supplier routes about 70% of campaigns become incidents whether or not the
+  third-party programme runs (0.43 incidents a year through those routes idle,
+  0.455 with it, 200 seeds), although it cuts the entry steps' daily pass
+  chance from 0.41 to 0.20. A campaign waits 70+ days before giving up, so a
+  harder step delays a breach rather than preventing it, and actors that are
+  slowed on one route choose another. Cloud does pay off (second-half
+  incidents 0.69 against 0.86 idle over 150 seeds) and so does detection;
+  identity and third-party do not move totals. Changing it means changing how
+  the threat engine lets a step hold, for every programme and mode, which is
+  a decision for the owner, not a tuning pass. `scripts/efficacy.ts` measures
+  it.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player

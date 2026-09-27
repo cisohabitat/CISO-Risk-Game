@@ -3,6 +3,7 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 import { evaluateAll } from '@/game/events/conditions'
 import { nextBoard, renderDecisionText } from '@/game/decisions/describe'
+import { patternSuggestions } from '@/store/selectors'
 import type { GameState } from '@/game/types'
 
 /**
@@ -290,5 +291,58 @@ describe('an enquiry coming back', () => {
     expect(back, 'the enquiry never came back').toBeDefined()
     const guaranteed = index.evidence.get('ev-backup-test-failed')!.title
     expect(back!.body).toMatch(new RegExp(`What came back: .*${guaranteed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|confirmed what you already had`))
+  })
+})
+
+describe('the fourth-quarter follow-ups', () => {
+  // Each new late-year choice answers back, and each answer is reachable. A
+  // year is played preferring the earlier choices that open these decisions.
+  const earlier = { 'dec-acquisition-integration': 'opt-acq-quarantine', 'dec-audit-finding': 'opt-audit-programme' }
+  const cases: [string, string, string[]][] = [
+    ['dec-q4-corvus-terms', 'opt-q4-corvus-terms', ['evt-con-corvus-terms-written']],
+    ['dec-q4-corvus-terms', 'opt-q4-corvus-renew', ['evt-con-corvus-old-paper']],
+    ['dec-q4-corvus-terms', 'opt-q4-corvus-tender', ['evt-con-corvus-tender']],
+    ['dec-q4-kestrel-release', 'opt-q4-kestrel-lift', ['evt-con-kestrel-lifted']],
+    ['dec-q4-kestrel-release', 'opt-q4-kestrel-review', ['evt-con-kestrel-reviewed']],
+    ['dec-q4-kestrel-release', 'opt-q4-kestrel-hold', ['evt-con-kestrel-held']],
+    ['dec-q4-audit-followup', 'opt-q4-audit-show', ['evt-con-audit-shown']],
+    ['dec-q4-audit-followup', 'opt-q4-audit-ontrack', ['evt-con-audit-overstated', 'evt-con-audit-borne-out']],
+    ['dec-q4-audit-followup', 'opt-q4-audit-rescope', ['evt-con-audit-rescoped']],
+    ['dec-q4-priorities', 'opt-q4-priorities-risks', ['evt-con-priorities-risks']],
+    ['dec-q4-priorities', 'opt-q4-priorities-unknowns', ['evt-con-priorities-unknowns']],
+  ]
+  for (const [decisionId, optionId, replies] of cases) {
+    it(`${optionId} is answered`, () => {
+      const state = newGame(index, { seed: `q4-${optionId}` })
+      for (let day = 0; day < 364; day += 1) {
+        answerAll(state, { ...earlier, [decisionId]: optionId })
+        // Raise what the game notices: the priorities decision is only put to
+        // a player who has raised a risk.
+        const offered = patternSuggestions(state, index)[0]
+        if (offered && applyAction(state, index, { type: 'createHypothesis', templateId: offered.templateId, evidenceIds: offered.evidence.map((e) => e.id) }).ok) {
+          applyAction(state, index, { type: 'convertHypothesis', hypothesisId: Object.keys(state.risks.hypotheses).at(-1)! })
+        }
+        runDays(state, index, 1)
+      }
+      const taken = Object.values(state.decisions.decisions).find((d) => d.defId === decisionId)
+      expect(taken, `${decisionId} never opened`).toBeDefined()
+      expect(taken!.selectedOptionId, `${optionId} could not be taken`).toBe(optionId)
+      const arrived = state.inbox.messages.filter((m) => replies.includes(m.eventId ?? ''))
+      expect(arrived.length, `no reply to ${optionId}`).toBe(1)
+    })
+  }
+
+  it('does not say the audit found the programme on track unless it was', () => {
+    const overstated = index.event.get('evt-con-audit-overstated')!
+    const borne = index.event.get('evt-con-audit-borne-out')!
+    const state = newGame(index, { seed: 'audit-truth' })
+    state.flags['audit.on-track'] = true
+    expect(evaluateAll(state, index, overstated.conditions)).toBe(true)
+    expect(evaluateAll(state, index, borne.conditions)).toBe(false)
+    const def = index.programme.get('prog-identity')!
+    applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost })
+    state.programmes.programmes['prog-identity']!.status = 'complete'
+    expect(evaluateAll(state, index, overstated.conditions)).toBe(false)
+    expect(evaluateAll(state, index, borne.conditions)).toBe(true)
   })
 })

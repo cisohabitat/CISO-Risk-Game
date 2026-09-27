@@ -233,6 +233,34 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **Two programmes' controls did not count on the steps they claim to fix.**
+  Asked to make third-party and cloud pay off, the attack paths showed both
+  controls on real steps but not against the techniques there: cloud posture
+  did not count against persistence, though the programme's own milestone
+  makes pipeline credentials short-lived and scoped, nor against lateral
+  movement between tenancies; supplier access governance did not count against
+  credential stuffing on the partner portal. Both now do, and "Standing access
+  removed" shrinks the supplier entry points (exposure and weakness on Corvus,
+  Lattice and remote access), as the cloud programme already does for the
+  pipeline. Over 150 seeds cloud's second-half incidents read 0.69 against
+  0.86 idle (0.73 before). Third-party cuts its entry steps' pass chance from
+  0.41 to 0.20 but still does not reduce incidents through the routes it
+  targets, for the reason now in CLAUDE.md's known weaknesses: in this threat
+  model a harder step delays a breach and rarely prevents it. The ladder over
+  40 seeds reads 0.40 / 0.85 / 1.68 incidents (0.40 / 0.88 / 1.63 before);
+  soak 1,000 clean.
+
+- **The fourth quarter had least to decide.** Four decisions now follow up
+  earlier choices, each earned in Q1–Q3 as `docs/CONTENT.md` requires: the
+  Corvus renewal (anyone whose supplier-access decision was made or lapsed),
+  the Kestrel quarantine (only after quarantining it), the audit follow-up
+  (only after committing to a funded programme with dates) and next year's
+  priorities (only with a risk raised). Presenting the audit programme as on
+  track is answered by the auditors finding it so only if the identity
+  programme is in fact complete, and by their finding production behind the
+  account otherwise. Q4 decisions went from 2.7 to 4.8 a year on a fixed
+  policy, and every choice is tested to reach its reply.
+
 - **The close told two incidents backwards, and called a running one over.**
   From a high-pressure year read end to end: the story narrates the worst
   incident first whatever its date, then listed the others as "again", so it

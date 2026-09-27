@@ -366,6 +366,479 @@
         "fourth-quarter"
       ],
       "scheduledOnly": true
+    },
+    {
+      "id": "evt-q4-corvus-renewal",
+      "type": "business",
+      "title": "Corvus renews in January",
+      "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+      "body": "Corvus's contract goes to signature in December. I have read it again: it says nothing about how their engineers connect, only that they will. Whatever we agreed this year about their access is in emails. I can write it in, renew it as it stands, or take it to market, and I need a direction this month.",
+      "priority": "urgent",
+      "availableFromDay": 280,
+      "conditions": [
+        {
+          "kind": "decision.resolved",
+          "decisionId": "dec-msp-access"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-corvus-terms",
+      "relatedNodeIds": [
+        "node-sup-msp"
+      ],
+      "tags": [
+        "third-party",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-kestrel-release",
+      "type": "executive",
+      "title": "Kestrel: the boundary and the synergy number",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Integration tell me the Kestrel boundary is the last thing between us and this year's synergy number. I am not asking you to take a risk you think is wrong. I am asking you to tell me, this month, whether it comes down.",
+      "priority": "urgent",
+      "availableFromDay": 285,
+      "conditions": [
+        {
+          "kind": "decision.optionTaken",
+          "decisionId": "dec-acquisition-integration",
+          "optionId": "opt-acq-quarantine"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-kestrel-release",
+      "relatedNodeIds": [
+        "node-acq-kestrel"
+      ],
+      "tags": [
+        "acquisition",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-audit-followup",
+      "type": "executive",
+      "title": "The auditors are back in December",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The auditors are back in December for the follow-up on privileged access. In the spring we committed to a funded programme with dates. They will compare those dates with what is running in production, not with what is in the plan.",
+      "priority": "urgent",
+      "availableFromDay": 295,
+      "conditions": [
+        {
+          "kind": "decision.optionTaken",
+          "decisionId": "dec-audit-finding",
+          "optionId": "opt-audit-programme"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-audit-followup",
+      "relatedNodeIds": [
+        "node-pam"
+      ],
+      "tags": [
+        "assurance",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-board-priorities",
+      "type": "board",
+      "title": "Your priorities for next year, in writing",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The January committee sets next year's cyber priorities. I would like yours in writing before Christmas: three things, and what you have decided not to do. I have read your papers this year, and I will notice if they do not match.",
+      "priority": "notable",
+      "availableFromDay": 318,
+      "conditions": [
+        {
+          "kind": "risk.openCountAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-priorities",
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-con-corvus-terms-written",
+      "type": "business",
+      "title": "Corvus signed, with the terms in",
+      "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+      "body": "Corvus signed, with the access terms in schedule four. Their account manager called it unusual; their engineers called it fine. We now have the right to audit how they connect, which is more than we had in January.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "corvus.terms-written"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "third-party",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-corvus-old-paper",
+      "type": "programme",
+      "title": "Corvus renewed on the old contract",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Corvus renewed on last year's contract. It still permits the standing access it always did; whatever we changed this year sits outside it, and their next account manager will not know it exists.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "corvus.old-paper"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "third-party",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-corvus-tender",
+      "type": "executive",
+      "title": "Who answers at three in the morning?",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Procurement tells me Corvus is out to tender. Before anyone signs anything, I would like to know who answers the phone at three in the morning while that happens.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "corvus.tender"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "third-party",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-kestrel-lifted",
+      "type": "executive",
+      "title": "The Kestrel savings are in",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The Kestrel savings are in this year's numbers, and thank you. Stefan has asked that the boundary rules be kept on file in case we ever need to put them back. I have agreed; it costs nothing.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "kestrel.released"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "acquisition",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-kestrel-reviewed",
+      "type": "programme",
+      "title": "The Kestrel boundary is down, and written up",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "The Kestrel review is done and the boundary is down. What crossed it is written up, including the parts nobody at Kestrel could explain. All of it would have been harder to find with the boundary gone.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "kestrel.reviewed"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "acquisition",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-kestrel-held",
+      "type": "executive",
+      "title": "The synergy number moves to next year",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The Kestrel synergy number moves to next year. I have explained why to the board, in your words rather than mine. I will want the boundary decision on my desk in the first week of January.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "kestrel.held"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "acquisition",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-shown",
+      "type": "executive",
+      "title": "Audit: the account matched production",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The auditors have written up the follow-up. They recorded what is enforced and what is not, and noted that management's account matched what they found. That last line is the one the audit committee will read.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "audit.shown"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "assurance",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-overstated",
+      "type": "executive",
+      "title": "Audit found production behind the account",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The auditors tested the milestones we presented and found production behind them. The finding stays open, now with a note that management's account was ahead of the evidence. The committee will read that note first.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "audit.on-track"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "programme.status",
+            "programmeId": "prog-identity",
+            "status": "complete"
+          }
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": -0.08,
+          "reason": "The auditors found production behind the account you gave them."
+        },
+        {
+          "type": "board.confidence",
+          "delta": -0.04
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "assurance",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-borne-out",
+      "type": "executive",
+      "title": "The privileged access finding is closed",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The auditors tested the milestones we presented and found them in production. The privileged access finding is closed after three years. I have told the committee whose dates they were.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "audit.on-track"
+        },
+        {
+          "kind": "programme.status",
+          "programmeId": "prog-identity",
+          "status": "complete"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": 0.04,
+          "reason": "The auditors found production where you said it was."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "assurance",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-rescoped",
+      "type": "executive",
+      "title": "The finding is narrower, not closed",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Audit agreed to narrow the finding to production, and said in the same letter that they would widen it again if the next follow-up found the same gaps elsewhere. It is narrower, not closed.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "audit.rescoped"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "assurance",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priorities-risks",
+      "type": "board",
+      "title": "Your priorities are the risks you raised",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "I have your priorities. They are the risks you have been bringing me all year, which makes them easy to hold you to. I will put them to the committee as written.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priorities.risks"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priorities-programmes",
+      "type": "board",
+      "title": "Your priorities read as a delivery plan",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "I have your priorities. They read as next year's delivery plan, which the CFO will like. What I will ask in January is what each one is for.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priorities.programmes"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priorities-unknowns",
+      "type": "board",
+      "title": "Three questions, not three answers",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "I have your priorities. Three questions rather than three answers is not what the committee asked for, and I think it is what it needs. I will put them as written.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priorities.unknowns"
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
     }
   ]
 }
