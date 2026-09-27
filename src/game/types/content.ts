@@ -403,6 +403,12 @@ export interface GameEventDef {
   decisionId?: string
   relatedNodeIds: string[]
   tags: string[]
+  /**
+   * Other ways of saying a recurring message. The first firing uses the title
+   * and body; later ones take the variants in turn and then start again, so a
+   * message that arrives six times a year is not read word for word six times.
+   */
+  variants?: { title?: string; body: string }[]
 }
 
 export interface RationaleTagDef {

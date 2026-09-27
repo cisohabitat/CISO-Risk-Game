@@ -434,6 +434,7 @@ export const eventSchema = z.object({
   decisionId: id.optional(),
   relatedNodeIds: z.array(id),
   tags: z.array(z.string()),
+  variants: z.array(z.object({ title: z.string().optional(), body: z.string() })).optional(),
 })
 
 export const rationaleTagSchema = z.object({ id, label: z.string(), description: z.string(), dimension: z.string() })

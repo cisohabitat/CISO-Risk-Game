@@ -45,3 +45,21 @@ describe('the event draw', () => {
     expect(h1 + h2).toBeGreaterThanOrEqual(texture.size * 0.75)
   })
 })
+
+describe('a message that comes back', () => {
+  it('comes back in other words', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'reworded' })
+    runDays(state, index, 364)
+    const byEvent = new Map<string, string[]>()
+    for (const m of [...state.inbox.messages].reverse()) {
+      if (!m.eventId) continue
+      byEvent.set(m.eventId, [...(byEvent.get(m.eventId) ?? []), m.body])
+    }
+    const recurring = [...byEvent.entries()].filter(([id, bodies]) => bodies.length >= 2 && index.event.get(id)?.variants)
+    expect(recurring.length).toBeGreaterThan(0)
+    for (const [id, bodies] of recurring) {
+      expect(bodies[1], id).not.toBe(bodies[0])
+    }
+  })
+})

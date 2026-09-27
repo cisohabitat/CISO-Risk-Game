@@ -5,7 +5,7 @@
  * other's output within a day, so reordering silently changes the simulation.
  * One tick = one in-game day. There is no real-time loop anywhere in the game.
  */
-import type { ContentIndex, GameEffect, GameState, PauseReason } from '../types'
+import type { ContentIndex, GameEffect, GameEventDef, GameState, PauseReason } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, DAYS_PER_WEEK, clamp01 } from '../types'
 import { createRng } from './rng'
 import { applyEffects } from './effects'
@@ -309,10 +309,11 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       decisionRuntimeId = decision?.id
       if (decision) pauseReasons.add('decision-deadline')
     }
+    const wording = eventWording(fired.def, state.events.firedCount?.[fired.def.id] ?? 1)
     pushMessage(state, {
       from: fired.def.from,
-      subject: fired.def.title,
-      body: fired.def.body,
+      subject: wording.title,
+      body: wording.body,
       type: fired.def.type,
       priority: fired.def.priority,
       decisionId: decisionRuntimeId,
@@ -519,4 +520,11 @@ function averageProgrammeProgress(state: GameState): number {
     .map((p) => p.progress)
   if (values.length === 0) return 0
   return clamp01(values.reduce((sum, v) => sum + v, 0) / values.length)
+}
+
+/** The words a recurring message uses on its nth firing, counting from one. */
+export function eventWording(def: GameEventDef, occurrence: number): { title: string; body: string } {
+  const texts = [{ title: def.title, body: def.body }, ...(def.variants ?? [])]
+  const text = texts[(Math.max(1, occurrence) - 1) % texts.length]!
+  return { title: text.title ?? def.title, body: text.body }
 }

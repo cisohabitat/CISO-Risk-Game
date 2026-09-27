@@ -314,6 +314,8 @@ export interface InboxState {
 export interface EventState {
   firedEventIds: string[]
   firedOnDay: Record<string, number>
+  /** How many times each event has fired; picks a recurring message's wording. */
+  firedCount?: Record<string, number>
   suppressedEventIds: string[]
   scheduled: { eventId: string; day: number }[]
   lastFiredDayByTag: Record<string, number>

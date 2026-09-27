@@ -133,6 +133,8 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
     firedThisDay.add(def.id)
     if (!state.events.firedEventIds.includes(def.id)) state.events.firedEventIds.push(def.id)
     state.events.firedOnDay[def.id] = state.currentDay
+    const counts = (state.events.firedCount ??= {})
+    counts[def.id] = (counts[def.id] ?? 0) + 1
     for (const tag of def.tags) state.events.lastFiredDayByTag[tag] = state.currentDay
     result.fired.push({ def, effects: def.effectsOnReveal ?? [] })
   }

@@ -877,6 +877,11 @@
       "relatedNodeIds": [],
       "tags": [
         "programme"
+      ],
+      "variants": [
+        { "title": "Endpoint coverage has slipped again", "body": "Endpoint coverage is down again this quarter. New machines are arriving faster than the agent is being installed on them, and nobody owns closing the gap." },
+        { "title": "New laptops, no agent", "body": "The latest batch of new laptops went out without the endpoint agent. They work perfectly well. We just cannot see what happens on them." },
+        { "title": "The estate keeps outgrowing the tooling", "body": "Coverage has drifted backwards again. Every quarter we lose a little to growth, and every quarter the fix is a project nobody has funded." }
       ]
     },
     {
@@ -941,6 +946,11 @@
       "relatedNodeIds": [],
       "tags": [
         "governance"
+      ],
+      "variants": [
+        { "title": "Your assumptions are getting older", "body": "Some of what you recorded as true earlier in the year was true when you wrote it down. Whether it still is, nobody has checked." },
+        { "title": "Worth checking what you assumed", "body": "Decisions you took this year rest on assumptions you recorded at the time. The organisation has moved since, and an assumption does not tell you when it stops being true." },
+        { "title": "Assumptions do not check themselves", "body": "A reminder rather than a problem: the assumptions behind this year's decisions have not been looked at since you recorded them. The ones that matter most are the ones worth an enquiry." }
       ]
     },
     {
@@ -1198,6 +1208,11 @@
       "relatedNodeIds": [],
       "tags": [
         "quiet"
+      ],
+      "variants": [
+        { "title": "Nothing on fire", "body": "Nothing needs you this week. If there is an enquiry you have been meaning to commission, or a risk you have been meaning to look at properly, this is the week for it." },
+        { "title": "A week to think", "body": "The inbox is quiet. Quiet weeks do not last, and they are worth spending on something that will matter in the next busy one." },
+        { "title": "Quiet, for now", "body": "Nothing to escalate. I would spend the time on the thing we both know we have not looked at yet." }
       ]
     },
     {

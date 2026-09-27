@@ -66,6 +66,13 @@ compromise" is the thing the design is trying to avoid; "a supplier compromise
 becomes possible when the conditions create the opportunity" is the goal. A small
 number of pinned beats carry the campaign's spine and that is deliberate.
 
+A message that can arrive more than once (`oncePerCampaign: false`) should
+carry `variants`: other titles and bodies for the same event, taken in turn on
+its later firings and then round again. They share the event's conditions and
+effects, so each must be true of everything the original is true of, and like
+the original none may state a count (`tests/content/repeats.test.ts`). A
+variant only ever arrives after the original, so it may say "again".
+
 ## Writing a decision
 
 Each option needs a label, a description, the foreseeable effects, immediate
