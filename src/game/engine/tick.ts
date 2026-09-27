@@ -193,7 +193,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     if (alreadyReported) continue
     state.flags[`signal.${signal.campaignId}.${signal.stage}`] = true
     pushMessage(state, {
-      from: 'SOC (managed service)',
+      from: 'Sentinel SOC',
       subject: signal.strength === 'clear' ? 'Confirmed suspicious activity' : 'Low-confidence anomaly',
       body:
         signal.strength === 'clear'
