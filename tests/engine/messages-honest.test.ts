@@ -214,6 +214,9 @@ describe('decisions that name a date', () => {
     const state = newGame(index, { seed: 'next-board' })
     state.currentDay = 70
     expect(renderDecisionText(def.description, state, index)).toContain('The next scheduled meeting is in three weeks.')
+    state.currentDay = 93
+    state.reviews.pendingQuarter = 1
+    expect(renderDecisionText(def.description, state, index)).toContain('The next scheduled meeting is this week.')
     expect(JSON.stringify(def)).not.toMatch(/six weeks is not long/i)
   })
 

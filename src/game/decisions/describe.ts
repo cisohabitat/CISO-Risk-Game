@@ -28,7 +28,9 @@ export function renderDecisionText(
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
-    .replaceAll('{{nextBoard}}', nextBoard(state.currentDay))
+    // A quarter's paper still waiting to go in is the next meeting, whatever
+    // the calendar says comes after it.
+    .replaceAll('{{nextBoard}}', state.reviews.pendingQuarter !== undefined ? 'this week' : nextBoard(state.currentDay))
 }
 
 const WEEKS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen']
