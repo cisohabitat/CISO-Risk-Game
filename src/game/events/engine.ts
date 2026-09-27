@@ -66,8 +66,20 @@ function isEligible(state: GameState, index: ContentIndex, def: GameEventDef): b
 }
 
 /**
- * A one-shot pool event gated on nothing but the calendar: colour, not
- * consequence. These are what the draw paces across the year.
+ * A condition that says when a message stops being true rather than when it
+ * becomes true. "The vault stalled at a third of administrators" is true until
+ * the identity programme starts; guarding it on that did not make it a
+ * response to anything, but it took it out of the pacing, and five such
+ * messages fired within a day of becoming available instead of across the year.
+ */
+function isClosingGuard(kind: string): boolean {
+  return kind === 'not' || kind === 'flag.notSet' || kind === 'node.notDiscovered' || kind === 'event.notFired'
+}
+
+/**
+ * A one-shot pool event gated on nothing but the calendar, and on guards that
+ * only close it: colour, not consequence. These are what the draw paces
+ * across the year.
  */
 function isTexture(def: GameEventDef): boolean {
   return (
@@ -75,7 +87,7 @@ function isTexture(def: GameEventDef): boolean {
     !def.pinned &&
     !def.scheduledOnly &&
     !def.decisionId &&
-    def.conditions.every((c) => c.kind === 'always' || c.kind === 'day.after' || c.kind === 'day.before')
+    def.conditions.every((c) => c.kind === 'always' || c.kind === 'day.after' || c.kind === 'day.before' || isClosingGuard(c.kind))
   )
 }
 

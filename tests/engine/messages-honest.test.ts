@@ -224,3 +224,41 @@ describe('decisions that name a date', () => {
     expect(JSON.stringify(def)).not.toMatch(/before the (peak-trading change )?freeze/i)
   })
 })
+
+describe('messages about a weakness the player has since fixed', () => {
+  const cases: [string, string, string][] = [
+    ['evt-org-cloud-public-bucket', 'prog-cloud', 'complete'],
+    ['evt-org-k8s-permissions', 'prog-cloud', 'complete'],
+    ['evt-org-backup-test', 'prog-ransomware', 'complete'],
+    ['evt-thr-escalation-quality', 'prog-detection', 'complete'],
+    ['evt-org-pam-adoption', 'prog-identity', 'active'],
+  ]
+  for (const [eventId, programmeId, status] of cases) {
+    it(`${eventId} is not sent once ${programmeId} is ${status}`, () => {
+      const def = index.event.get(eventId)!
+      const state = newGame(index, { seed: `fixed-${eventId}` })
+      state.currentDay = def.availableFromDay
+      expect(evaluateAll(state, index, def.conditions), 'not true to begin with').toBe(true)
+      const programme = index.programme.get(programmeId)!
+      expect(applyAction(state, index, { type: 'startProgramme', programmeId, budget: programme.budgetCost }).ok).toBe(true)
+      state.programmes.programmes[programmeId]!.status = status as 'active' | 'complete'
+      expect(evaluateAll(state, index, def.conditions)).toBe(false)
+    })
+  }
+
+  it('still spreads them across the year rather than sending each the day it becomes possible', () => {
+    // A guard that only closes a message used to take it out of the pacing.
+    const days: number[] = []
+    for (let i = 0; i < 12; i += 1) {
+      const state = newGame(index, { seed: `spread-${i}` })
+      runDays(state, index, 364)
+      const day = state.inbox.messages.find((m) => m.eventId === 'evt-org-cloud-public-bucket')?.day
+      if (day !== undefined) days.push(day)
+    }
+    days.sort((a, b) => a - b)
+    expect(days.length).toBeGreaterThan(8)
+    // Unpaced, it arrived by day 64 in every year, median 39.
+    expect(days[Math.floor(days.length / 2)]!, `days ${days.join(', ')}`).toBeGreaterThan(50)
+    expect(days.at(-1)!, `days ${days.join(', ')}`).toBeGreaterThan(100)
+  })
+})

@@ -63,8 +63,17 @@ describe('incident engine', () => {
     runDays(state, index, 12)
     const ordersNode = index.service.get('svc-orders')!.nodeId
     expect(state.business.serviceHealth[ordersNode]).toBeLessThan(1)
-    runDays(state, index, 120)
-    expect(state.business.serviceHealth[ordersNode]).toBeGreaterThan(0.9)
+    // Read the recovery before anything else happens to the service: on this
+    // seed a separate breach starts on day 129 and hits order management, and
+    // a single reading at day 132 measured that instead.
+    let recovered = 0
+    for (let day = 0; day < 120; day += 1) {
+      runDays(state, index, 1)
+      const another = Object.values(state.incidents.incidents).some((i) => i.startedDay > 1 && i.affectedServiceIds.includes('svc-orders'))
+      if (another) break
+      recovered = Math.max(recovered, state.business.serviceHealth[ordersNode]!)
+    }
+    expect(recovered).toBeGreaterThan(0.9)
   })
 
   it('reconstructs the path without labelling decisions right or wrong', () => {

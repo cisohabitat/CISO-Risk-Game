@@ -209,6 +209,33 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **Five messages described a weakness after the player had fixed it.** Read
+  from the firing days of every date- or state-sensitive message over 60
+  campaigns across the three modes and four play styles: "the vault stalled at
+  a third of administrators and nobody pushed" arrived on day 288 while the
+  identity programme was pushing it; the public storage buckets and the
+  cluster's broad read role arrived after the cloud programme finished; "the
+  last restore test was abandoned fourteen months ago" arrived after recovery
+  was built and tested; "318 of 340 escalations were false positives" after
+  the SOC scope was rewritten to measure escalation quality. Each is now
+  withheld once its fix is in. Gating them took them out of the pacing — each
+  then fired within a day of becoming possible, median day 33 to 107 — because
+  the pacing treated any condition as a trigger. A negated condition says when
+  a message stops being true, not when it becomes true, so `not`,
+  `flag.notSet`, `node.notDiscovered` and `event.notFired` no longer disqualify
+  a message from being paced; the five spread across the year again (median
+  day 65 to 168), and so does the cardholder-scope message, which an earlier
+  fix this session had taken out of the pacing the same way. Tests for each
+  gate and for the spread, mutation-checked (unpaced, the storage message
+  arrived by day 43 in every year).
+
+  A service-recovery test sampled health once, at day 132, and on the new draw
+  a separate breach reached order management on day 129; it now reads the
+  recovery before any later incident touches the service. The ladder over 40
+  seeds afterwards reads 0.40 / 0.88 / 1.63 incidents, 0.13 / 0.24 / 0.43
+  worst consequence and 0.61 / 0.48 / 0.36 patience left: monotone, and within
+  noise of the last 40-seed reading.
+
 - **Two calendar fixes from the first grading had come back.** The earlier
   pass moved the board-risk decision and the identity enforcement decision to
   days where their text was true, but both open on state — a raised risk, a
