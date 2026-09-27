@@ -8,9 +8,55 @@ import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { nexoraContent } from '../src/content/nexora'
 import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
-import type { GameState, ContentIndex, Difficulty } from '../src/game/types'
+import type { GameState, ContentIndex, DecisionOptionDef, Difficulty } from '../src/game/types'
 
 type Policy = 'passive' | 'defensive' | 'business' | 'balanced'
+
+/**
+ * How much an option does for security, read from its effects. The defensive
+ * style used to take each decision's last option, which is as often "leave it
+ * for now" or "note it and keep watching" as anything protective, and so read
+ * as a defensive player doing nothing.
+ */
+function securityValue(option: DecisionOptionDef): number {
+  let score = 0
+  const effects = [...option.immediateEffects, ...(option.delayedEffects ?? []).flatMap((d) => d.effects)]
+  for (const e of effects) {
+    switch (e.type) {
+      case 'control.coverage':
+      case 'control.configuration':
+      case 'control.operational':
+      case 'control.monitoring':
+        score += e.delta * 10
+        break
+      case 'control.exceptions':
+        score -= e.delta * 10
+        break
+      case 'control.assess':
+        score += 0.5
+        break
+      case 'node.exposure':
+      case 'node.weakness':
+        score -= e.delta * 10
+        break
+      case 'threat.setback':
+        score += 1
+        break
+      case 'threat.interest':
+        score -= e.delta * 5
+        break
+      case 'incident.containment':
+        score += e.delta * 10
+        break
+      case 'evidence.reveal':
+        score += 0.2
+        break
+      default:
+        break
+    }
+  }
+  return score
+}
 
 function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Difficulty): GameState {
   const state = newGame(index, { seed, difficulty })
@@ -31,7 +77,7 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
       if (!def) continue
       const preferred =
         policy === 'defensive'
-          ? def.options[def.options.length - 1]
+          ? [...def.options].sort((a, b) => securityValue(b) - securityValue(a))[0]
           : policy === 'business'
             ? def.options[0]
             : def.options[Math.floor(def.options.length / 2)]
@@ -44,9 +90,12 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
         rationaleTagIds: rationaleFor(index, state.decisions.decisions[decisionId]!.defId),
       })
     }
-    // Start programmes when affordable.
+    // Start programmes when affordable, one at a time: the next once the last
+    // is past halfway. Starting all six on consecutive twenty-day marks
+    // overloaded the team and finished 1.7 of them.
     const wanted = programmesByPolicy[policy]
-    if (started < wanted.length && day % 20 === 0) {
+    const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active' || p.status === 'at-risk')
+    if (started < wanted.length && day % 20 === 0 && live.every((p) => p.progress > 0.5)) {
       const programmeId = wanted[started]
       if (programmeId) {
         const def = index.programme.get(programmeId)

@@ -233,6 +233,18 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **The tuning harness's defensive player was not defensive.** It took each
+  decision's last option — as often "leave it for now" or "note it and keep
+  watching" as anything protective — and started all six programmes on
+  consecutive twenty-day marks, which overloaded the team and finished 1.7 of
+  them. It read 1.10 incidents a year against the passive player's 1.08, which
+  looked like building not paying. It now takes the option whose effects do
+  most for security and starts the next programme only once the last is past
+  halfway, as every style does. Over 60 CISO seeds: passive 1.08, business
+  0.87, balanced 0.77, defensive 0.70 incidents (±0.10–0.11), worst
+  consequence 0.40 / 0.28 / 0.32 / 0.22, objectives 4.9 / 4.2 / 3.7 / 4.3.
+  The harness, not the game.
+
 - **The start screen had never been audited.** Every accessibility test began
   after "Begin your first day", so the first screen anyone sees, now carrying
   the situation picker, was outside the audit. It is audited in both themes,
