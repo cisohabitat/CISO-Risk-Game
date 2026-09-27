@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 import { evaluateAll } from '@/game/events/conditions'
+import { nextBoard, renderDecisionText } from '@/game/decisions/describe'
 import type { GameState } from '@/game/types'
 
 /**
@@ -199,5 +200,27 @@ describe('messages about the calendar', () => {
     // "Integration work starts next month."
     expect(def.availableUntilDay).toBeDefined()
     expect(def.availableUntilDay! + 30).toBeLessThan(target - 45)
+  })
+})
+
+describe('decisions that name a date', () => {
+  it('says when the board next meets from the day it is asked, not from when it was written', () => {
+    expect(nextBoard(70)).toBe('in three weeks')
+    expect(nextBoard(84)).toBe('next week')
+    expect(nextBoard(89)).toBe('this week')
+    expect(nextBoard(100)).toBe('in twelve weeks')
+    expect(nextBoard(280)).toBe('not until the new year')
+    const def = index.decision.get('dec-board-material-risk')!
+    const state = newGame(index, { seed: 'next-board' })
+    state.currentDay = 70
+    expect(renderDecisionText(def.description, state, index)).toContain('The next scheduled meeting is in three weeks.')
+    expect(JSON.stringify(def)).not.toMatch(/six weeks is not long/i)
+  })
+
+  it('does not offer to act before a freeze the decision can arrive during', () => {
+    // The enforcement decision waits for the identity programme, which can
+    // finish after the freeze begins on day 270.
+    const def = index.decision.get('dec-q4-identity-enforce')!
+    expect(JSON.stringify(def)).not.toMatch(/before the (peak-trading change )?freeze/i)
   })
 })

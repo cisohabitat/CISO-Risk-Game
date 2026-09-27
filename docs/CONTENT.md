@@ -106,6 +106,21 @@ month, or before something — say so with a condition, or pin it. A pinned
 event, a decision-opening event and anything gated on state fire when they
 become eligible and are never held back.
 
+**A date in the text must hold on every day the text can appear.** An event
+gated on state fires whenever the state arises, so "before the freeze" in a
+decision that waits for a programme to finish was offered a month into the
+freeze, and "the next meeting is in six weeks" arrived three weeks before it.
+Close the window with `availableUntilDay`, word it so it holds either side, or
+write `{{nextBoard}}`, which renders when the board next meets from the day
+the decision opens ("in three weeks", "not until the new year"). A message
+about a quiet stretch tests for it: `incident.noneWithin` and
+`inbox.noUrgentWithin` take a number of days.
+
+**A report the player has overtaken is not sent.** A once-only message whose
+every effect reveals evidence, a node or an edge the player already holds is
+skipped, so a colleague does not "discover" what the player's own enquiry
+found. Give a message another effect only if it genuinely changes something.
+
 **Do not name a function the engine chooses.** A decision that fires on team
 strain fires on whichever function is closest to breaking, and it was once
 authored as if that were always the SOC: over 92 firings it never was. Where an

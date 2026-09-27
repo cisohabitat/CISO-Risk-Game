@@ -209,6 +209,18 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **Two calendar fixes from the first grading had come back.** The earlier
+  pass moved the board-risk decision and the identity enforcement decision to
+  days where their text was true, but both open on state — a raised risk, a
+  programme at 80% — and the fourth year read met each on the wrong side of
+  its date: "the next scheduled meeting is in six weeks" on day 70, three
+  weeks before the first paper, and "Enforce now, before the freeze" on day
+  305, a month into it. Neither is fixable by day. The board text now renders
+  `{{nextBoard}}` from the day it opens, the option no longer says six weeks,
+  and enforcement is worded to hold before or during the freeze. Tests pin
+  both, mutation-checked; `docs/CONTENT.md` now says a date in the text must
+  hold on every day the text can appear.
+
 - **Three more messages and one close line from a fourth year read end to
   end** (guided, building). "A quiet quarter — nothing has gone wrong for three
   months" checked only that no incident was running, so it could arrive a

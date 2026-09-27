@@ -8,6 +8,7 @@
  * here, in one place, for the interface and the harness alike.
  */
 import type { ContentIndex, DecisionRuntime, GameState } from '../types'
+import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
 import { functionName, mostPressedFunction } from '../team/capacity'
 
 /**
@@ -27,6 +28,23 @@ export function renderDecisionText(
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
+    .replaceAll('{{nextBoard}}', nextBoard(state.currentDay))
+}
+
+const WEEKS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen']
+
+/**
+ * When the board next meets, in words. "The next scheduled meeting is in six
+ * weeks" was authored once and fired on day 70, three weeks before the first
+ * quarter's paper was due.
+ */
+export function nextBoard(day: number): string {
+  const next = (Math.floor(day / DAYS_PER_QUARTER) + 1) * DAYS_PER_QUARTER
+  if (next >= CAMPAIGN_DAYS) return 'not until the new year'
+  const weeks = Math.round((next - day) / 7)
+  if (weeks <= 0) return 'this week'
+  if (weeks === 1) return 'next week'
+  return `in ${WEEKS[weeks] ?? weeks} weeks`
 }
 
 /**
