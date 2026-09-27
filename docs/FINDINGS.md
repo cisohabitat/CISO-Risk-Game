@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **Two cards named a timescale their effects did not keep.** *Renew with a
+  rewritten scope* said "Takes three months to take effect" and took 75 days;
+  *Replace the provider* said "Six months of your team's attention" and gave
+  the SOC analyst back after 150, and it costs SOC capacity, not the player's
+  attention. They now say "about ten weeks" and "The SOC is a person down for
+  five months". A content test reads every card that names days, weeks or
+  months and holds it to the option's last delayed effect within a tenth; at
+  a fifth it let both old lines through, so the tolerance is the tighter one,
+  and the old content fails it by name.
+
 - **Two programmes, one team promised a slip it never made.** The card for
   *Prioritise identity* said "Segmentation slips", *Prioritise segmentation*
   said "Identity slips", and *Run both* said "Neither is delivered quickly";
@@ -37,6 +47,9 @@ fault.
   arrives on day 45, 15 February, and the programme option is not its default,
   so it is chosen within the fortnight: 120 of 120 years that took it did so on
   day 45 (`audit-day.ts`, scratch). Both now say "early in the year". The
+  close's "by the autumn it was a console nobody watched" rested on a letter
+  that lands 90 days after a decision answered between days 50 and 64, so
+  between 20 May and 3 June; it now says "by the summer". The
   other month names in the content were checked against the calendar in
   `src/game/time.ts` and the days their messages can arrive.
 

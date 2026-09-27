@@ -282,13 +282,13 @@
       "options": [
         { "id": "opt-soc-renew", "label": "Renew as-is", "description": "Keep the service and spend your energy elsewhere.", "visibleKnownEffects": ["No disruption", "The escalation quality problem persists"],
           "immediateEffects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.04, "reason": "You renewed without reopening the contract." } ] },
-        { "id": "opt-soc-renegotiate", "label": "Renew with a rewritten scope", "description": "Same provider, different service: use cases tied to Nexora's attack paths, and escalation quality measured.", "visibleKnownEffects": ["Costs more", "Takes three months to take effect"],
+        { "id": "opt-soc-renegotiate", "label": "Renew with a rewritten scope", "description": "Same provider, different service: use cases tied to Nexora's attack paths, and escalation quality measured.", "visibleKnownEffects": ["Costs more", "Takes about ten weeks to take effect"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -140 },
             { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": -0.04, "reason": "You reopened a contract schedule mid-cycle." }
           ],
           "delayedEffects": [ { "dayOffset": 75, "effects": [ { "type": "control.operational", "controlId": "ctl-soc", "delta": 0.18 }, { "type": "control.monitoring", "controlId": "ctl-soc", "delta": 0.15 } ], "note": "The rewritten SOC scope is now in effect." } ] },
-        { "id": "opt-soc-replace", "label": "Go to market for a replacement", "description": "Start a procurement for a different provider.", "visibleKnownEffects": ["Six months of your team's attention", "Detection quality dips during transition"],
+        { "id": "opt-soc-replace", "label": "Go to market for a replacement", "description": "Start a procurement for a different provider.", "visibleKnownEffects": ["The SOC is a person down for five months", "Detection quality dips during transition"],
           "immediateEffects": [
             { "type": "budget.change", "amount": -60 },
             { "type": "capacity.change", "fn": "soc", "delta": -1 },

@@ -84,4 +84,32 @@ describe('decision affordability', () => {
       }
     }
   })
+
+  it('names only the timescale its delayed effects keep', () => {
+    // "Takes three months to take effect" took 75 days and "Six months of
+    // your team's attention" returned the analyst after 150. Where a card
+    // names a length of time and the option has delayed effects, the last of
+    // them lands within a tenth of it.
+    const words: Record<string, number> = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 }
+    const units: Record<string, number> = { day: 1, week: 7, month: 30.4 }
+    const span = /\b(\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)(?: to (\d+|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve))? (day|week|month)s?\b/i
+    let checked = 0
+    for (const decision of content.decisions) {
+      for (const option of decision.options) {
+        const last = Math.max(0, ...(option.delayedEffects ?? []).map((delayed) => delayed.dayOffset))
+        if (last === 0) continue
+        for (const said of option.visibleKnownEffects) {
+          const match = span.exec(said)
+          if (!match) continue
+          const count = (token: string) => words[token.toLowerCase()] ?? Number(token)
+          const unit = units[match[3]!.toLowerCase()]!
+          const low = count(match[1]!) * unit
+          const high = (match[2] ? count(match[2]) : count(match[1]!)) * unit
+          checked += 1
+          expect(last >= low * 0.9 && last <= high * 1.1, `${option.id} says "${said}" but its last effect lands on day ${last}`).toBe(true)
+        }
+      }
+    }
+    expect(checked).toBeGreaterThan(3)
+  })
 })

@@ -87,6 +87,11 @@ dialog prints both beside the label. Do not write them into the option's words
 as well ("Costs £250k", "Costs attention"): `tests/content/decisions.test.ts`
 fails it. And an option that says *Nothing changes* must not move trust,
 confidence, morale or money without naming who notices.
+A length of time on the card ("Takes about ten weeks", "Two months before
+anyone starts") is the one the option's delayed effects keep, to within a
+tenth; the same test holds it. And what a card says will slip, or a later
+letter says has slipped, must be an effect somebody wrote, not a flag nothing
+reads.
 
 **Name the reasons a decision can be taken for** when the whole vocabulary
 would mislead. `rationaleTagIds` on a decision limits what the dialog offers

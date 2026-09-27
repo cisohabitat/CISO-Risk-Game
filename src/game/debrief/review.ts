@@ -1051,7 +1051,7 @@ function situationDecisionLine(state: GameState): string | undefined {
         return fired('evt-con-flagship-used')
           ? `${lead} you bought the platform, and the detection work made it find things.`
           : fired('evt-con-flagship-shelfware')
-            ? `${lead} you bought the platform, and by the autumn it was a console nobody watched.`
+            ? `${lead} you bought the platform, and by the summer it was a console nobody watched.`
             : `${lead} you bought the platform.`
       case 'opt-flagship-programmes':
         return `${lead} you put the money into the programmes instead.`
