@@ -471,7 +471,9 @@ test.describe('a first year at Nexora', () => {
 
     for (let i = 0; i < 320; i += 1) {
       // Finishing the year switches to the debrief automatically.
-      if (await page.getByText('Annual review').first().isVisible().catch(() => false)) break
+      // The year view loads on demand, so the close may show its placeholder
+      // for a moment before the review; either means the year is over.
+      if (await page.getByText(/Annual review|Opening your year/).first().isVisible().catch(() => false)) break
       const banner = page.getByRole('button', { name: 'Read the annual review' })
       if (await banner.isVisible().catch(() => false)) {
         await banner.click()

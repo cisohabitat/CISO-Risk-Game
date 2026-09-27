@@ -3,7 +3,7 @@
  * this is a single-player shell, and avoiding a router keeps the static
  * deployment trivial (plan §32.2).
  */
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { AppShell } from '@/components/layout/AppShell'
 import { StartScreen } from '@/screens/start/StartScreen'
 import { HomeScreen } from '@/screens/home/HomeScreen'
@@ -13,7 +13,6 @@ import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
 import { TeamScreen } from '@/screens/team/TeamScreen'
 import { BoardScreen } from '@/screens/board/BoardScreen'
-import { DebriefScreen } from '@/screens/debrief/DebriefScreen'
 import { DecisionDialog } from '@/components/decisions/DecisionDialog'
 import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
@@ -24,6 +23,12 @@ import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
 import { Button, Card, CardBody } from '@/components/ui/primitives'
 
+// The year view is opened a few times a year and read once at the close, so
+// it stays out of what the first screen waits for. It is fetched in the
+// background once a campaign is open, so the close never waits on it.
+const loadDebrief = () => import('@/screens/debrief/DebriefScreen')
+const DebriefScreen = lazy(() => loadDebrief().then((m) => ({ default: m.DebriefScreen })))
+
 export function App() {
   const state = useGameStore((store) => store.state)
   const screen = useGameStore((store) => store.ui.screen)
@@ -33,6 +38,11 @@ export function App() {
 
   useGameClock()
   useKeyboardShortcuts()
+
+  const inCampaign = state !== null
+  useEffect(() => {
+    if (inCampaign) void loadDebrief().catch(() => undefined)
+  }, [inCampaign])
 
   // An incident subtly raises the temperature of the whole shell (plan §30).
   const incidentRunning = Boolean(
@@ -83,7 +93,11 @@ export function App() {
         {screen === 'programmes' && <ProgrammesScreen />}
         {screen === 'team' && <TeamScreen />}
         {screen === 'board' && <BoardScreen />}
-        {screen === 'debrief' && <DebriefScreen />}
+        {screen === 'debrief' && (
+          <Suspense fallback={<p className="text-sm text-ink-muted">Opening your year…</p>}>
+            <DebriefScreen />
+          </Suspense>
+        )}
       </AppShell>
       {openDecisionId && (
         <DecisionDialog decisionId={openDecisionId} onClose={() => setUi({ openDecisionId: undefined })} />

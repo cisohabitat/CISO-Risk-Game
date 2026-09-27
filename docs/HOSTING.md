@@ -128,7 +128,10 @@ regression, not a convenience.
 
 The initial bundle carries the app shell, the engine and the campaign content.
 The dependency graph library is lazy-loaded into its own chunk and is only
-fetched when a player opens the graph view. Check after changes:
+fetched when a player opens the graph view; the year view (the annual review
+and timeline) is split the same way. Both are listed in `MUST_STAY_LAZY`, and
+`pnpm size` fails if either is fetched before the first screen or stops being
+a chunk of its own. `pnpm check` runs the budget. Check after changes:
 
 ```bash
 pnpm build && pnpm size   # every chunk, and what the entry HTML fetches first

@@ -18,6 +18,24 @@ fault.
 
 ### Fixed
 
+- **The first load had 1.4 kB of headroom left.** After this session's content
+  and review lines it stood at 258.6 of 260 kB, so the next message written
+  would have needed another budget rise. The year view — the annual review
+  and the timeline, opened a few times a year and read once at the close —
+  now loads when first opened, like the organisation graph. First load
+  255.6 kB. The size script lists it as a chunk that must stay lazy, and now
+  also fails if such a chunk stops existing at all, which the leak check alone
+  could not see: restoring the static import fails it by name.
+
+  The first version of the split hung the whole-year browser test for its
+  full five minutes: at the close the review showed a loading line for a
+  moment, the test looked for "Annual review", did not find it, and waited
+  on a Skip ahead button that no longer exists once the year is over. A
+  player would have seen the same line flash. The year view is now fetched
+  in the background as soon as a campaign is open — out of the first load,
+  not out of the session — and the test accepts the loading line as the
+  close having arrived.
+
 - **A situation's own decision was forgotten by December.** The close
   answered the question each situation began with, but not the decision it
   alone asks: whether you paid the attackers, bought the platform, or

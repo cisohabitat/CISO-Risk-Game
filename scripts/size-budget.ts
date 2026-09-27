@@ -38,9 +38,10 @@ const BUDGETS: Budget[] = [
 /**
  * Chunks that must never appear in the entry HTML. The graph is the whole
  * reason the organisation view is code-split; if it is preloaded or its
- * stylesheet blocks rendering, the split has bought nothing.
+ * stylesheet blocks rendering, the split has bought nothing. The year view is
+ * split for headroom: it is opened a few times a year and read at the close.
  */
-const MUST_STAY_LAZY = ['OrgGraph-']
+const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-']
 
 /**
  * Everything the entry HTML fetches before the first screen can be
@@ -101,6 +102,11 @@ async function main(): Promise<void> {
   }
 
   for (const prefix of MUST_STAY_LAZY) {
+    // A split that quietly stops happening folds the chunk back into the app,
+    // which the leak check below cannot see.
+    if (![...sizes.keys()].some((name) => name.startsWith(prefix) && name.endsWith('.js'))) {
+      failures.push(`no chunk named ${prefix}* — it is meant to be split out and loaded on demand`)
+    }
     const leaked = [...inFirstLoad].filter((file) => file.startsWith(prefix))
     for (const file of leaked) {
       failures.push(`${file} is fetched before the first screen; it is meant to load only when it is needed`)
