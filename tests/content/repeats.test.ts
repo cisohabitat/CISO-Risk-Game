@@ -31,10 +31,12 @@ describe('recurring messages', () => {
     ]
     for (const id of frequent) {
       const def = nexoraContent.events.find((e) => e.id === id)!
-      const said = [1, 2, 3, 4].map((n) => eventWording(def, n))
-      expect(new Set(said.map((w) => w.body)).size, id).toBe(4)
-      expect(new Set(said.map((w) => w.title)).size, id).toBe(4)
-      expect(eventWording(def, 5), id).toEqual(said[0])
+      const texts = 1 + (def.variants ?? []).length
+      expect(texts, id).toBeGreaterThanOrEqual(4)
+      const said = Array.from({ length: texts }, (_, n) => eventWording(def, n + 1))
+      expect(new Set(said.map((w) => w.body)).size, id).toBe(texts)
+      expect(new Set(said.map((w) => w.title)).size, id).toBe(texts)
+      expect(eventWording(def, texts + 1), id).toEqual(said[0])
     }
   })
 })

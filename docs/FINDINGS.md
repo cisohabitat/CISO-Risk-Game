@@ -95,7 +95,9 @@ fault.
   taken in turn by how many times the event has fired (a count in state, not
   a draw, so nothing else in the simulation moves: 145.3 messages a year
   before and after). Each of the ten has three. Repeats fell to 14.9 a year
-  (10%), and the most any message repeats in a year to three. A content test
+  (10%), and the most any message repeats in a year to three. The two that
+  fire most — the benign alerts and the finance lures, up to eight times a
+  year — then got three more each, which took repeats to 8.9 a year (6%). A content test
   checks the ten say four different things before cycling, and an engine test
   that a year's second firing is reworded; sending the original body again
   fails it.
