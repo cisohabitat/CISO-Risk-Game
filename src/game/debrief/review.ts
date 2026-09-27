@@ -336,7 +336,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // between having seen something and having checked it.
       `${seenNodes} of ${existingNodes} systems were ever brought into view`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
-      `${assessedControls} of ${index.content.controls.length} controls were independently assessed`,
+      // Current and lapsed apart: "0 of 13 controls were independently
+      // assessed" printed for a year that had assessed four of them, in
+      // January, because only current assurance was counted.
+      (() => {
+        const everAssessed = Object.values(state.controls.controls).filter(
+          (c) => c.believed && c.believed.assessedOnDay >= 0,
+        ).length
+        const total = index.content.controls.length
+        return everAssessed > assessedControls
+          ? `${everAssessed} of ${total} controls were independently assessed during the year, and the assurance on ${everAssessed - assessedControls} of them has since lapsed`
+          : `${assessedControls} of ${total} controls were independently assessed`
+      })(),
     ],
   })
 

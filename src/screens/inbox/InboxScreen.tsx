@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
+import { Terms } from '@/components/game/Terms'
 import { cn } from '@/lib/utils/cn'
 import type { InboxMessage } from '@/game/types'
 
@@ -116,6 +117,9 @@ export function InboxScreen() {
                     </p>
                   ))}
                 </div>
+                {/* The words live in the messages at least as much as in the
+                    risks: break-glass, jump servers, credential stuffing. */}
+                <Terms text={`${selected.subject} ${selected.body}`} className="mt-3" />
                 {selected.decisionId && state.decisions.openIds.includes(selected.decisionId) && (
                   <Button
                     variant="primary"

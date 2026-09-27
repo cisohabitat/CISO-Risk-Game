@@ -227,7 +227,12 @@ export function unexaminedMaterial(
     ) {
       examined += 1
     }
-    else names.push(`${def.name} was never independently assessed`)
+    // A control the player did assess, long enough ago that the assurance has
+    // lapsed, was called "never independently assessed" — beside the privileged
+    // access review the same player ran in January.
+    else if (control.believed && control.believed.assessedOnDay >= 0) {
+      names.push(`${def.name} was last assessed on day ${control.believed.assessedOnDay}, and that assurance has lapsed`)
+    } else names.push(`${def.name} was never independently assessed`)
   }
 
   return { examined, reachable, names }

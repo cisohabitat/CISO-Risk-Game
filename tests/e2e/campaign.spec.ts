@@ -231,6 +231,43 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
   })
 
+  test('a word in a decision opens the glossary on top, and Escape closes only the glossary', async ({ page }) => {
+    // The glossary opens as a second dialog over the decision. Both listened on
+    // the document, so Escape closed the decision underneath first.
+    await startCampaign(page, 'e2e-words')
+    const got = page.getByRole('button', { name: 'Got it' }).first()
+    // Answer the opening decision so the CEO's question, which names
+    // ransomware, is the one waiting.
+    for (let i = 0; i < 12; i += 1) {
+      if (await got.isVisible().catch(() => false)) await got.click()
+      const ceo = page.getByText('The CEO wants your three risks').first()
+      if (await ceo.isVisible().catch(() => false)) break
+      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      if (await decide.isVisible().catch(() => false)) {
+        await decide.click()
+        const dialog = page.getByRole('dialog')
+        await dialog.getByRole('radio').first().check()
+        const why = dialog.getByRole('button', { name: /Record why first/ })
+        if (await why.isVisible().catch(() => false)) await dialog.getByRole('button', { pressed: false }).first().click()
+        await dialog.getByRole('button', { name: /Commit to this/ }).click()
+        continue
+      }
+      await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
+    }
+    await page.getByRole('button', { name: /^Decide$/ }).first().click()
+    const decision = page.getByRole('dialog', { name: 'The CEO wants your three risks' })
+    await expect(decision).toBeVisible()
+    await decision.getByRole('button', { name: 'Ransomware' }).click()
+    const glossary = page.getByRole('dialog', { name: 'Glossary' })
+    await expect(glossary).toBeVisible()
+
+    await page.keyboard.press('Escape')
+    await expect(glossary, 'Escape did not close the glossary').toBeHidden()
+    await expect(decision, 'Escape closed the decision underneath the glossary').toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(decision).toBeHidden()
+  })
+
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
     await startCampaign(page, 'e2e-delete')
     await page.getByRole('button', { name: 'Save campaign' }).click()

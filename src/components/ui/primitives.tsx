@@ -196,6 +196,16 @@ export function Meter({
 
 /* ---------------------------------------------------------------- Dialog -- */
 
+/**
+ * Open dialogs, innermost last. A glossary opened from a word inside a decision
+ * sits on top of it, and both listened on the document: Escape closed the
+ * decision underneath before the glossary, and Tab was pulled back into
+ * whichever panel's trap ran first. Only the topmost dialog handles keys, and
+ * the page stays locked until the last one closes.
+ */
+const openDialogStack: number[] = []
+let dialogSerial = 0
+
 export function Dialog({
   open,
   onClose,
@@ -219,10 +229,13 @@ export function Dialog({
 
   useEffect(() => {
     if (!open) return
+    const me = (dialogSerial += 1)
+    openDialogStack.push(me)
     const previous = document.activeElement as HTMLElement | null
     const panel = panelRef.current
     panel?.focus()
     const onKeyDown = (event: KeyboardEvent) => {
+      if (openDialogStack[openDialogStack.length - 1] !== me) return
       if (event.key === 'Escape') {
         event.stopPropagation()
         onClose()
@@ -248,7 +261,9 @@ export function Dialog({
     document.body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKeyDown, true)
-      document.body.style.overflow = ''
+      const at = openDialogStack.indexOf(me)
+      if (at >= 0) openDialogStack.splice(at, 1)
+      if (openDialogStack.length === 0) document.body.style.overflow = ''
       previous?.focus?.()
     }
   }, [open, onClose])

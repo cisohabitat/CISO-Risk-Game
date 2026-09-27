@@ -18,6 +18,33 @@ fault.
 
 ### Fixed
 
+- **Four smaller things the transcripts found, and a dialog bug the fix for
+  one of them exposed.**
+  - *"Never independently assessed"* named controls the player had assessed,
+    once the 200-day assurance had lapsed: a year that ran the privileged
+    access review in January was told in December that privileged access was
+    never assessed, beside "0 of 13 controls were independently assessed".
+    Lapsed assurance now says so, with the day, and the count separates
+    controls assessed during the year from those still current at the close.
+  - *A penetration test's findings arrived the moment it was scoped*, and the
+    full scope, whose finding is that the legacy estate routes into the core,
+    assessed no control at all. Both paid scopes now report a month later,
+    with a note that the report is in, and the full scope assesses
+    segmentation, which is what its finding is about.
+  - *"The acquirer does not know"*, in a year built around acquiring Kestrel,
+    means the card-acquiring bank. It says so.
+  - *The glossary chips only appeared on risks*, while the words a newcomer
+    stumbles on — break-glass, jump servers, credential stuffing, tenancy —
+    are in the messages and decisions. Both carry them now.
+
+  **Stacked dialogs.** A word inside a decision opens the glossary as a
+  second dialog over it, and every dialog listened for keys on the document:
+  Escape closed the decision underneath, and Tab was pulled into whichever
+  panel's trap ran first. The dialog primitive now keeps a stack; only the
+  topmost handles keys, and the page stays locked until the last one closes.
+  A browser test opens a decision, taps a word and checks Escape closes only
+  the glossary; with the stack removed it fails.
+
 - **The messages said things nobody had checked, on days that did not fit.**
   From the same three transcripts. Every claim was checked against the
   event's conditions and the engine before anything changed; the ones that

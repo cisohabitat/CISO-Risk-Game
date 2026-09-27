@@ -8,6 +8,7 @@
 import { useMemo, useState } from 'react'
 import { Badge, Button, Dialog } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
+import { Terms } from '@/components/game/Terms'
 import { openDecisions, type OpenDecisionView } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
 import { money } from '@/lib/formatting/labels'
@@ -70,6 +71,9 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         <p className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-ink-muted text-pretty">
           {decision.context}
         </p>
+        <Terms
+          text={`${decision.title} ${decision.description} ${decision.context} ${decision.options.map((o) => `${o.label} ${o.description}`).join(' ')}`}
+        />
 
         {decision.daysRemaining !== undefined && (
           <p className={cn('text-sm', decision.urgent ? 'text-band-high' : 'text-ink-muted')}>
