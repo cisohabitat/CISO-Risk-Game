@@ -48,7 +48,9 @@ describe('resilience is not awarded for a quiet year', () => {
   it('never reads strong when nothing tested the organisation', () => {
     const index = testIndex()
     let quiet = 0
-    for (let seed = 0; seed < 14; seed += 1) {
+    // About one idle year in five has no incident; search until two are found
+    // rather than hoping a fixed fourteen seeds contain one.
+    for (let seed = 0; seed < 40 && quiet < 2; seed += 1) {
       const state = newGame(index, { seed: `res-${seed}` })
       runDays(state, index, 364)
       if (Object.keys(state.incidents.incidents).length > 0) continue

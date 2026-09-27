@@ -17,8 +17,29 @@ export interface EventTickResult {
   fired: FiredEvent[]
 }
 
+/**
+ * A one-off report whose only effect is to tell the player things they already
+ * know. An inquisitive player's own enquiries reach most findings first, and
+ * the report then arrived anyway: a colleague "went looking for the last
+ * recovery test report" after the player had run the test, twenty such
+ * messages a year for a player who kept the team on enquiries. Repeatable
+ * news and anything that also changes the world still arrives.
+ */
+function isRedundant(state: GameState, def: GameEventDef): boolean {
+  if (!def.oncePerCampaign || def.pinned || def.decisionId || def.scheduledOnly) return false
+  const effects = def.effectsOnReveal ?? []
+  if (effects.length === 0) return false
+  return effects.every((effect) => {
+    if (effect.type === 'evidence.reveal') return state.evidence.items[effect.evidenceId] !== undefined
+    if (effect.type === 'node.reveal') return state.organisation.nodes[effect.nodeId]?.discovered === true
+    if (effect.type === 'edge.reveal') return state.organisation.edges[effect.edgeId]?.discovered === true
+    return false
+  })
+}
+
 function isEligible(state: GameState, index: ContentIndex, def: GameEventDef): boolean {
   if (state.events.suppressedEventIds.includes(def.id)) return false
+  if (isRedundant(state, def)) return false
   if (state.currentDay < def.availableFromDay) return false
   if (def.availableUntilDay !== undefined && state.currentDay > def.availableUntilDay) return false
   if (def.oncePerCampaign && state.events.firedEventIds.includes(def.id)) return false
@@ -144,7 +165,11 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
     // probability that keeps the unfired reservoir in step with the days
     // left, so it lasts the year; anything gated on state still fires when
     // the state arises, and a decision-opening event is never held back.
-    const unfired = index.content.events.filter((def) => isTexture(def) && !state.events.firedEventIds.includes(def.id))
+    // A report the player has already overtaken will never be sent, so it is
+    // not part of what is left to pace.
+    const unfired = index.content.events.filter(
+      (def) => isTexture(def) && !state.events.firedEventIds.includes(def.id) && !isRedundant(state, def),
+    )
     const daysLeft = Math.max(1, CAMPAIGN_DAYS - state.currentDay)
     const signalChance = Math.min(1, (SIGNAL_PACE * unfired.filter(isSignal).length) / daysLeft)
     const colourChance = Math.min(1, (COLOUR_PACE * unfired.filter((def) => !isSignal(def)).length) / daysLeft)

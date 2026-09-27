@@ -209,6 +209,32 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **Colleagues reported findings the player already had.** Forty-five
+  messages reveal evidence that an enquiry can also reach, and none checked
+  whether it had: a player who ran the recovery test was then told by Jo that
+  she "went looking for the last recovery test report" and found it abandoned
+  fourteen months ago. Measured over 20 campaigns of a player who kept the team
+  on enquiries, 29.9 messages a year re-announced only evidence already held,
+  about 20 of them once-only discovery reports rather than repeatable sector
+  news. Fixed in the event engine rather than in forty conditions: a once-only,
+  unpinned message whose every effect reveals something already known is not
+  sent, and is not counted in what the pacing has left to spend. Repeatable
+  news and anything that also changes the world still arrives. Re-announcements
+  fell to 18.4 a year, of which about 3 are once-only (the rest are the
+  repeatable threat texture). The cost is volume: that player's inbox reads
+  45.0 / 47.7 / 33.5 / 31.8 messages a quarter against 46.8 / 52.3 / 34.4 /
+  34.5. It changes no information, and idle incidents over 300 seeds read
+  1.363 ± 0.052 against 1.333 ± 0.056; the ladder stays monotone (15 seeds:
+  0.47 / 1.13 / 1.53 against 0.67 / 1.07 / 1.73). Tests in
+  `tests/engine/messages-honest.test.ts`, mutation-checked. One judgement test
+  sampled fourteen idle seeds for a quiet year and found none on the new draw
+  path; it now searches up to forty.
+
+- **"Coverage has quietly gone backwards" arrived while the detection programme
+  was raising it.** The endpoint-drift message had no condition. It now waits
+  for the detection programme not to be running; mutation-checked (it fired on
+  days 150 and 255 of a run with the programme live).
+
 - **A year written up early said the business met every objective.** Found by
   a new layout test that closes a prepared campaign on day 200: the close read
   "Nexora met all 5 of its stated objectives" beside a list of one achieved and

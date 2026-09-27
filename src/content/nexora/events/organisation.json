@@ -853,7 +853,18 @@
       "body": "Endpoint coverage has slipped this quarter. Nothing broke. The estate simply grew faster than deployment did.",
       "priority": "routine",
       "availableFromDay": 150,
-      "conditions": [],
+      "conditions": [
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "any",
+            "conditions": [
+              { "kind": "programme.status", "programmeId": "prog-detection", "status": "active" },
+              { "kind": "programme.status", "programmeId": "prog-detection", "status": "at-risk" }
+            ]
+          }
+        }
+      ],
       "weight": 9,
       "pinned": false,
       "oncePerCampaign": false,

@@ -118,3 +118,59 @@ describe('incidents', () => {
     expect(checked, 'no incident closed, so nothing was counted').toBeGreaterThan(0)
   })
 })
+
+describe('messages about controls', () => {
+  it('does not say endpoint coverage went backwards while the detection programme is raising it', () => {
+    for (const seed of ['drift-1', 'drift-2', 'drift-3']) {
+      const state = newGame(index, { seed })
+      const def = index.programme.get('prog-detection')!
+      const running: number[] = []
+      for (let day = 0; day < 364; day += 1) {
+        answerAll(state)
+        if (day === 140) applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost })
+        for (const blocker of state.programmes.programmes[def.id]?.blockers ?? []) {
+          if (!blocker.resolved) applyAction(state, index, { type: 'resolveProgrammeBlocker', programmeId: def.id, blockerId: blocker.id })
+        }
+        runDays(state, index, 1)
+        const status = state.programmes.programmes[def.id]?.status
+        if (status === 'active' || status === 'at-risk') running.push(state.currentDay)
+      }
+      expect(running.length, `${seed}: the programme never ran`).toBeGreaterThan(60)
+      const drift = state.inbox.messages.filter((m) => m.eventId === 'evt-org-control-drift').map((m) => m.day)
+      expect(drift.filter((day) => running.includes(day)), `${seed}: drift reported while the programme ran`).toEqual([])
+    }
+  })
+})
+
+describe('reports the player has already overtaken', () => {
+  it('does not have a colleague discover a finding the player already holds', () => {
+    // The recovery test enquiry guarantees the same evidence as the message in
+    // which Jo "went looking for the last recovery test report".
+    for (const seed of ['overtaken-1', 'overtaken-2']) {
+      const state = newGame(index, { seed })
+      applyAction(state, index, {
+        type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id,
+      })
+      for (let day = 0; day < 200; day += 1) {
+        answerAll(state)
+        runDays(state, index, 1)
+      }
+      const known = state.evidence.items['ev-backup-test-failed']
+      expect(known, `${seed}: the enquiry did not find it`).toBeDefined()
+      const told = state.inbox.messages.filter((m) => m.eventId === 'evt-org-backup-test')
+      expect(told.filter((m) => m.day > known!.discoveredDay), `${seed}: reported after the player had it`).toEqual([])
+    }
+  })
+
+  it('still sends the report to a player who does not have it', () => {
+    const sent = ['overtaken-1', 'overtaken-2', 'overtaken-3', 'overtaken-4'].filter((seed) => {
+      const state = newGame(index, { seed })
+      for (let day = 0; day < 250; day += 1) {
+        answerAll(state)
+        runDays(state, index, 1)
+      }
+      return state.inbox.messages.some((m) => m.eventId === 'evt-org-backup-test')
+    })
+    expect(sent.length).toBeGreaterThan(0)
+  })
+})
