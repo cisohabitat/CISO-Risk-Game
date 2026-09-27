@@ -806,17 +806,21 @@
         { "id": "opt-tradeoff-identity", "label": "Prioritise identity", "description": "Concentrate the capacity where most attack paths converge.", "visibleKnownEffects": ["Segmentation slips", "Identity delivers faster"],
           "immediateEffects": [
             { "type": "programme.progress", "programmeId": "prog-identity", "delta": 0.06 },
+            { "type": "programme.progress", "programmeId": "prog-segmentation", "delta": -0.05 },
             { "type": "flag.set", "flag": "priority.identity" },
             { "type": "event.schedule", "eventId": "evt-con-priority-identity-felt", "dayOffset": 45 }
           ] },
         { "id": "opt-tradeoff-segmentation", "label": "Prioritise segmentation", "description": "Concentrate on limiting what any single compromise can reach.", "visibleKnownEffects": ["Identity slips", "Segmentation delivers faster"],
           "immediateEffects": [
             { "type": "programme.progress", "programmeId": "prog-segmentation", "delta": 0.06 },
+            { "type": "programme.progress", "programmeId": "prog-identity", "delta": -0.06 },
             { "type": "flag.set", "flag": "priority.segmentation" },
             { "type": "event.schedule", "eventId": "evt-con-priority-segmentation-felt", "dayOffset": 45 }
           ] },
         { "id": "opt-tradeoff-both", "label": "Run both at reduced pace", "description": "Keep both alive.", "visibleKnownEffects": ["Neither is delivered quickly", "Nobody has to be told no"],
           "immediateEffects": [
+            { "type": "programme.progress", "programmeId": "prog-identity", "delta": -0.03 },
+            { "type": "programme.progress", "programmeId": "prog-segmentation", "delta": -0.03 },
             { "type": "team.morale", "fn": "architecture", "delta": -0.05 },
             { "type": "flag.set", "flag": "priority.split" },
             { "type": "event.schedule", "eventId": "evt-con-priority-split-felt", "dayOffset": 45 }

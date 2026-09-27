@@ -390,7 +390,7 @@
       "type": "programme",
       "title": "What prioritising identity cost",
       "from": "Stefan Alvarez, Head of Security Architecture",
-      "body": "You told me to put the architecture capacity behind identity. I did. Identity is further along than it would have been and segmentation is where you left it. I am not complaining — I am making sure you know that is what the choice bought.",
+      "body": "You told me to put the architecture capacity behind identity. I did. Identity is further along than it would have been, and segmentation is behind where it would have been. I am not complaining — I am making sure you know that is what the choice bought.",
       "priority": "routine",
       "availableFromDay": 0,
       "conditions": [
@@ -438,7 +438,7 @@
       "type": "programme",
       "title": "Both, at half pace",
       "from": "Stefan Alvarez, Head of Security Architecture",
-      "body": "We kept both programmes alive, as you decided. Neither has moved much. I said at the time that running both badly was possible, and I would like the record to show that we are now doing it.",
+      "body": "We kept both programmes alive, as you decided. Both are behind where either would have been on its own. I said at the time that running both badly was possible, and I would like the record to show that we are now doing it.",
       "priority": "notable",
       "availableFromDay": 0,
       "conditions": [

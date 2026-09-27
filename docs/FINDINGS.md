@@ -18,6 +18,20 @@ fault.
 
 ### Fixed
 
+- **Two programmes, one team promised a slip it never made.** The card for
+  *Prioritise identity* said "Segmentation slips", *Prioritise segmentation*
+  said "Identity slips", and *Run both* said "Neither is delivered quickly";
+  45 days later Stefan wrote that segmentation "is where you left it" or that
+  neither had "moved much". The only effect on delivery was +0.06 to the
+  favoured programme (no engine code reads the `priority.*` flags). The
+  programme that loses the architecture capacity now loses progress through
+  the reducer: 0.05 of segmentation's 240 days or 0.06 of identity's 200,
+  about twelve days each, and running both costs each 0.03, about a week, as
+  well as the morale it already cost. The letters say "behind where it would
+  have been" rather than claiming the work stood still. Milestones are
+  recorded by id, so a lower figure cannot fire one twice. A test takes each
+  option through the decision and fails on the old content.
+
 - **The audit follow-up misplaced the spring.** The Q4 follow-up and its
   decision said the dates were committed "in the spring". The audit finding
   arrives on day 45, 15 February, and the programme option is not its default,

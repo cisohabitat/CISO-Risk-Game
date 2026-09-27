@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 import { evaluateAll } from '@/game/events/conditions'
+import { openDecision } from '@/game/decisions/open'
 import { nextBoard, renderDecisionText } from '@/game/decisions/describe'
 import { cameBack, patternSuggestions } from '@/store/selectors'
 import type { GameState } from '@/game/types'
@@ -495,3 +496,29 @@ function runUntilRisk(state: GameState): GameState {
   for (let day = 0; day < 364 && Object.keys(state.risks.scenarios).length === 0; day += 1) runDays(state, index, 1)
   return state
 }
+
+describe('two programmes, one team', () => {
+  it('moves both programmes the way the card says', () => {
+    // "Segmentation slips", "Identity slips" and "Neither is delivered
+    // quickly" were promised, and 45 days later "segmentation is where you
+    // left it"; the only effect on delivery was a lift for the favoured one.
+    const expected: Record<string, [number, number]> = {
+      'opt-tradeoff-identity': [1, -1],
+      'opt-tradeoff-segmentation': [-1, 1],
+      'opt-tradeoff-both': [-1, -1],
+    }
+    for (const [optionId, [identity, segmentation]] of Object.entries(expected)) {
+      const state = newGame(index, { seed: `tradeoff-${optionId}` })
+      for (const id of ['prog-identity', 'prog-segmentation']) {
+        const programme = state.programmes.programmes[id]!
+        programme.status = 'active'
+        programme.progress = 0.4
+      }
+      const decision = openDecision(state, index, 'dec-programme-tradeoff')!
+      const tags = index.decision.get('dec-programme-tradeoff')!.rationaleTagIds?.slice(0, 1) ?? ['rat-resources']
+      expect(applyAction(state, index, { type: 'resolveDecision', decisionId: decision.id, optionId, rationaleTagIds: tags }).ok, optionId).toBe(true)
+      expect(Math.sign(state.programmes.programmes['prog-identity']!.progress - 0.4), `${optionId} identity`).toBe(identity)
+      expect(Math.sign(state.programmes.programmes['prog-segmentation']!.progress - 0.4), `${optionId} segmentation`).toBe(segmentation)
+    }
+  })
+})
