@@ -184,6 +184,11 @@ The **Risk** screen is where understanding gets built, across five tabs:
 - **Investigate** — commissioning work.
 - **Assumptions** — things your past decisions depend on being true.
 
+Each scenario leads with two badges: its **residual** exposure — how bad it is
+with the controls you have today — and how much **confidence** that reading
+deserves. A severe risk you are unsure of and a moderate one you are sure of
+call for different next steps: the first for looking, the second for acting.
+
 After a risk has been watched for a fortnight it says which way it has moved
 since it was first assessed. A green **Improving** means something you did is
 landing; an amber **Worsening** means the world has moved and you have not. A
