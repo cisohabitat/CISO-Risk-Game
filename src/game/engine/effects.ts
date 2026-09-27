@@ -114,7 +114,7 @@ export function applyEffect(
         refs: [stopped.id],
       })
       pushMessage(state, {
-        from: leader?.name ?? 'Cyber team',
+        from: leader ? `${leader.name}, ${leader.role}` : 'Cyber team',
         subject: `${stopped.kind === 'programme' ? 'Paused' : 'Pulled back'}: ${stopped.title}`,
         body: stopped.kind === 'programme'
           ? `You paused it to take the load off ${functionName(fn)}. The money already spent stays spent and nothing moves until you resume it from the Programmes screen.`

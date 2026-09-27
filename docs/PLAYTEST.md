@@ -80,6 +80,14 @@ While you play, note:
   attacks without stopping them (see Known weaknesses). Decide whether that
   reads as a lesson — "closing one door sends them to another" — or as money
   thrown away. That decides whether the threat engine should change.
+- **Board confidence on the Briefing.** It now remembers a paper for about a
+  season and drops when the committee meets without one. Does it move when you
+  expect it to? Incidents do not move it directly — the board judges what you
+  tell it. Note whether that feels right after your first incident.
+- **A second year in another situation.** Play a second year starting *after
+  the breach*, with *new money* or in *a tidy inheritance*. Each brings a
+  decision the others never see. Does the year feel different by June, or only
+  in its first week?
 
 At the end of Q3, before the review, write three sentences: what your year was
 about, how your team is, and which risk worries you most. Then read the annual

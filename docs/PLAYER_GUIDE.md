@@ -354,6 +354,11 @@ There is no winning. A good first year is one where the trade-offs you made were
 the ones you would defend — and the review is designed to show you where they
 were not.
 
+At the foot of the review, **Start another year** takes you back to the start
+screen, where the finished year stays in the list. A second year is worth
+starting from a different situation: each has its own budget, its own threat
+and a decision the others never see.
+
 ---
 
 ## A first year that works

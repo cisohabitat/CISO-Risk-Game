@@ -162,7 +162,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
           ? ' It confirmed what you already had, and found nothing new.'
           : ''
     pushMessage(state, {
-      from: leader?.name ?? 'Cyber team',
+      from: leader ? `${leader.name}, ${leader.role}` : 'Cyber team',
       subject: `Completed: ${completed.title}`,
       body: `${completed.summary}${findings}`,
       type: 'discovery',

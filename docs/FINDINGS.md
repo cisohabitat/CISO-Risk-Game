@@ -18,6 +18,31 @@ fault.
 
 ### Fixed
 
+- **A finished year had no way to start another.** The start screen shows
+  only when no campaign is loaded, and nothing unloaded one: the annual review
+  ended with "Export this campaign", the guide did not mention reloading, and
+  a player who wanted the second year the starting situations exist for had to
+  guess that refreshing the page would get them there. The review now ends
+  with *Another year*: it names the situation this year began in and the
+  other three, and *Start another year* saves, closes the campaign and returns
+  to the start screen, where the finished year stays in the list. The browser
+  test that plays a whole year now presses it and checks the start screen and
+  the saved year.
+
+- **Three small things found reading whole years after the board change.**
+  - *The Board screen never said when the paper was due.* An unwritten paper
+    now costs something when the next quarter closes, so the screen says the
+    date: "Write it by 1 July. After that the committee meets without it, and
+    notices." A browser test reads it.
+  - *An idle year's review counted "0 of 0 decisions you took carried a
+    recorded rationale"* beside "28 decisions lapsed and were taken by
+    default". The first line is left out when there is nothing to count; a
+    test holds it and fails when the line is restored.
+  - *Enquiry and programme messages signed "Stefan Alvarez"* beside authored
+    messages from "Stefan Alvarez, Head of Security Architecture". Senders the
+    engine builds now carry the title too, and a test plays two hundred days
+    and checks every message from a person is signed the same way.
+
 - **CI went red on the size budget again, for the same reason as before.**
   `pnpm check` still did not build or run `pnpm size`, so a push that passed
   every local check failed CI's budget step: the first load was 257.4 kB

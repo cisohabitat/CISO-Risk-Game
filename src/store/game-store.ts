@@ -58,6 +58,8 @@ interface GameStore {
   dismissToast: (id: number) => void
   openGlossary: (term?: string) => void
   finishCampaign: () => void
+  /** Saves and closes the campaign, back to the start screen. */
+  leaveCampaign: () => Promise<void>
 }
 
 let toastId = 0
@@ -224,5 +226,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
     })
     set({ state: next, ui: { ...get().ui, screen: 'debrief' } })
     void writeCampaign(next, index.content.meta.title)
+  },
+
+  // A finished year had no way out: the start screen only shows when no
+  // campaign is loaded, and nothing unloaded one short of reloading the page.
+  async leaveCampaign() {
+    const { state, index } = get()
+    if (state) {
+      try {
+        await writeCampaign(state, index.content.meta.title)
+      } catch {
+        // Already saved when the year closed; leaving is still allowed.
+      }
+    }
+    set({ state: null, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    await get().refreshSaves()
   },
 }))

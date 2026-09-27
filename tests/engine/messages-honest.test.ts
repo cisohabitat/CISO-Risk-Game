@@ -349,3 +349,26 @@ describe('the fourth-quarter follow-ups', () => {
     expect(evaluateAll(state, index, borne.conditions)).toBe(true)
   })
 })
+
+describe('who a message is from, in play', () => {
+  it('signs every person the same way, whether content or the engine wrote it', () => {
+    // The content test holds authored events; enquiry and programme messages
+    // are built by the engine, and signed "Stefan Alvarez" beside "Stefan
+    // Alvarez, Head of Security Architecture".
+    const people = [...index.content.stakeholders, ...index.content.leaders].map((p) => ({ name: p.name, full: `${p.name}, ${p.role}` }))
+    const state = newGame(index, { seed: 'signed' })
+    for (let day = 0; day < 200; day += 1) {
+      if (day === 3) {
+        const investigation = index.content.investigations[0]!
+        applyAction(state, index, { type: 'startInvestigation', investigationId: investigation.id, leaderId: index.content.leaders[0]!.id })
+      }
+      runDays(state, index, 1)
+    }
+    const signed = state.inbox.messages.filter((m) => people.some((p) => m.from.startsWith(p.name)))
+    expect(signed.some((m) => !m.eventId), 'no engine-built message from a person was sent').toBe(true)
+    for (const m of signed) {
+      const person = people.find((p) => m.from.startsWith(p.name))!
+      expect(m.from, m.subject).toBe(person.full)
+    }
+  })
+})

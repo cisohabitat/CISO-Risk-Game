@@ -24,6 +24,7 @@ export function DebriefScreen() {
   const state = useGameStore((store) => store.state)
   const index = useGameStore((store) => store.index)
   const finishCampaign = useGameStore((store) => store.finishCampaign)
+  const leaveCampaign = useGameStore((store) => store.leaveCampaign)
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
@@ -307,9 +308,30 @@ export function DebriefScreen() {
         </section>
       )}
 
-      <div className="flex flex-wrap gap-2">
-        <Button variant="secondary" onClick={download}>Export this campaign</Button>
-      </div>
+      <section aria-labelledby="another-year">
+        <SectionHeading><span id="another-year">Another year</span></SectionHeading>
+        <Card>
+          <CardBody className="space-y-3">
+            <p className="text-sm text-ink-muted text-pretty">{anotherYear(state.situationId, index.content.situations ?? [])}</p>
+            <div className="flex flex-wrap gap-2">
+              {state.finished && (
+                <Button variant="primary" onClick={() => void leaveCampaign()}>Start another year</Button>
+              )}
+              <Button variant="secondary" onClick={download}>Export this campaign</Button>
+            </div>
+          </CardBody>
+        </Card>
+      </section>
     </div>
   )
+}
+
+/** Names the openings this year did not have, so a second year is a choice rather than a repeat. */
+function anotherYear(situationId: string | undefined, situations: { id: string; name: string }[]): string {
+  const quoted = (name: string) => `\u201c${name}\u201d`
+  const current = situations.find((s) => s.id === situationId)
+  const others = situations.filter((s) => s.id !== situationId).map((s) => quoted(s.name))
+  const list = others.length > 1 ? `${others.slice(0, -1).join(', ')} or ${others[others.length - 1]}` : (others[0] ?? '')
+  const opening = current ? `This year was ${quoted(current.name)}.` : 'Nexora can begin more than one way.'
+  return `${opening} The same organisation can also start from ${list}, each with its own budget, its own threat and a decision this year never asked. Your saved years stay on the start screen.`
 }

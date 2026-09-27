@@ -8,6 +8,8 @@ import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } fro
 import { useGameStore } from '@/store/game-store'
 import { stakeholderViews } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/review'
+import { formatGameDate } from '@/game/time'
+import { DAYS_PER_QUARTER } from '@/game/types'
 import { plural, relationshipTone } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
@@ -61,6 +63,9 @@ export function BoardScreen() {
             <p className="font-medium">The risk committee meets this quarter.</p>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
               Choose what goes in front of them. Leaving out something material does more damage than bringing bad news.
+            </p>
+            <p className="mt-1 text-sm text-ink-muted text-pretty" data-testid="paper-deadline">
+              Write it by {formatGameDate((pendingQuarter + 1) * DAYS_PER_QUARTER - 1).label}. After that the committee meets without it, and notices.
             </p>
           </CardBody>
         </Card>

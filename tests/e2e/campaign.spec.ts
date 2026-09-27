@@ -495,6 +495,12 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByText('Annual review').first()).toBeVisible()
     await expect(page.getByText('How the year is read')).toBeVisible()
     await expect(page.getByText('What the business achieved')).toBeVisible()
+
+    // A finished year used to have no way out short of reloading the page.
+    await expect(page.getByText(/can also start from/)).toBeVisible()
+    await page.getByRole('button', { name: 'Start another year' }).click()
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await expect(page.getByText(/seed e2e-full-year/).first()).toBeVisible()
   })
 
   test('core screens hold together at this viewport', async ({ page }) => {
@@ -660,6 +666,9 @@ test.describe('a first year at Nexora', () => {
     expect(found, 'a whole quarter passed on the Briefing with no sign of the board paper').toBe(true)
     await page.getByRole('button', { name: 'Prepare it' }).click()
     await expect(page.getByRole('button', { name: /Prepare the Q\d board paper/ })).toBeVisible()
+    // An unwritten paper costs something when the next quarter closes, so the
+    // screen says when that is: the Q1 paper is due the day before Q2 closes.
+    await expect(page.getByTestId('paper-deadline')).toContainText('Write it by 1 July')
   })
 
   test('a dialog can always be closed', async ({ page }) => {

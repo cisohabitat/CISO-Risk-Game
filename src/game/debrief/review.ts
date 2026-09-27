@@ -431,7 +431,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         effort.commitments.length === 0
           ? 'You started no programme and commissioned no enquiry aimed at a risk'
           : `${effort.commitments.length} commitment${effort.commitments.length === 1 ? '' : 's'} of budget and attention, aimed at ${new Set(effort.commitments.map((c) => c.scenarioId)).size} of the risks in front of you`,
-        `${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`,
+        // "0 of 0 decisions you took" beside "28 decisions lapsed" said the
+        // same thing twice, the first time as arithmetic.
+        ...(resolved.length > 0 ? [`${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`] : []),
         lapsed === 0
           ? `you answered all ${resolved.length} of the decisions put to you`
           : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and were taken by default`,

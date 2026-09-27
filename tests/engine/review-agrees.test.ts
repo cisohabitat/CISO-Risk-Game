@@ -246,7 +246,10 @@ describe('what the close says about two incidents', () => {
   it('does not tell a year nobody played that it worked what was in front of it', () => {
     const idle = newGame(index, { seed: 'nobody-home' })
     runDays(idle, index, 364)
-    expect(buildAnnualReview(idle, index).narrative[0]).toMatch(/^You let the year run without you/)
+    const review = buildAnnualReview(idle, index)
+    expect(review.narrative[0]).toMatch(/^You let the year run without you/)
+    // Nor count its decisions as "0 of 0" beside the line saying they all lapsed.
+    expect(review.dimensions.flatMap((d) => d.evidence).join(' ')).not.toMatch(/\b0 of 0\b/)
     for (const { label, state } of years.filter((y) => y.label.includes('building'))) {
       expect(buildAnnualReview(state, index).narrative[0], label).not.toMatch(/without you/)
     }
