@@ -109,15 +109,15 @@ conditions, unreachable decisions, invalid effect targets and dependency cycles.
 
 ## How it behaves
 
-1,000 automated campaigns across all three difficulties (`pnpm soak 1000`, about
-half a minute):
+1,000 automated campaigns across all three difficulties and all four starting
+situations (`pnpm soak 1000`, under a minute):
 
 ```
   crashes            0
   invariant failures 0
-  incidents per run  1.20
-  years with none    28%
-  years with 4+      3%
+  incidents per run  1.05
+  years with none    34%
+  years with 4+      1%
 ```
 
 A year is neither a procession of disasters nor a year in which nothing happens,
@@ -134,6 +134,13 @@ remembers creating), how good the controls actually are behind the assurance
 paperwork, what the executives are like, where the vacancies fall, and how the
 threat environment behaves. Share a seed to compare two people playing the same
 organisation.
+
+A year also begins in one of four situations — the usual inherited mess, after
+a breach, new money with short patience, or a tidy inheritance — or one drawn
+from the seed. Each changes the budget and the threat, sends its own messages,
+asks one decision the others never see, and is answered in the annual review.
+The review ends with a way into another year, and the start screen keeps every
+year played.
 
 ## Hosting
 
