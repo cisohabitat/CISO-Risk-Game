@@ -552,6 +552,20 @@ test.describe('a first year at Nexora', () => {
     }
   })
 
+  test('a toast is spoken from a live region that was already on the page', async ({ page }) => {
+    await startCampaign(page, 'e2e-live')
+    // Screen readers do not reliably announce a live region's initial content,
+    // so the region has to exist, empty, before the first toast arrives.
+    const region = page.getByTestId('toasts')
+    await expect(region).toHaveAttribute('aria-live', 'polite')
+    await expect(region).toBeEmpty()
+    const before = await region.elementHandle()
+    await page.getByRole('button', { name: 'Save campaign' }).click()
+    await expect(region).toContainText('Campaign saved')
+    expect(await region.elementHandle().then((after) => after?.evaluate((node, earlier) => node === earlier, before))).toBe(true)
+    await expect(page.getByTestId('pause-reason')).toHaveAttribute('role', 'status')
+  })
+
   test('an offer the player cannot afford says so instead of refusing after the click', async ({ page }) => {
     await startCampaign(page, 'e2e-attention')
     // Find a day that offers a pattern.

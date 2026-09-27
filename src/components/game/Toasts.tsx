@@ -13,13 +13,16 @@ export function Toasts() {
     return () => timers.forEach((timer) => window.clearTimeout(timer))
   }, [toasts, dismissToast])
 
-  if (toasts.length === 0) return null
-
+  // The live region is always in the page, empty when there is nothing to
+  // say. Rendered only alongside its first toast, it arrived with its content,
+  // and screen readers do not reliably announce a region's initial content:
+  // "Campaign saved" could pass in silence.
   return (
     <div
       className="pointer-events-none fixed inset-x-0 bottom-20 z-40 flex flex-col items-center gap-2 px-4 lg:bottom-6"
       role="status"
       aria-live="polite"
+      data-testid="toasts"
     >
       {toasts.map((toast) => (
         <div

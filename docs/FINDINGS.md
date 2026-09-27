@@ -209,6 +209,16 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **Toasts could pass in silence for a screen reader.** The toast live region
+  was rendered only once a toast existed, so it arrived together with its
+  first message, and screen readers do not reliably announce a region's
+  initial content: "Campaign saved" and "Campaign deleted" could go unspoken.
+  The pause-reason pill had the same shape. Both regions are always present
+  now, empty when there is nothing to say. A browser test holds the toast
+  region to existing, empty, before the first toast and to being the same
+  element afterwards; mutation-checked. Whether the announcements read well is
+  for a person with a screen reader, not a harness.
+
 - **A running clock took focus out of every dialog.** Found driving a decision
   with the keyboard alone, which nothing had tested. Every caller passes the
   dialog an inline `onClose`, and the dialog's focus effect depended on it, so

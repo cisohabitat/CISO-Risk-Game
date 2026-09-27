@@ -88,17 +88,20 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}
       </Button>
-      {state.pauseReasons.length > 0 && (
-        <span
-          className={cn(
-            'rounded-full border px-2.5 py-1 text-xs font-medium',
-            blocked ? 'border-band-high/40 bg-band-high-soft text-band-high' : 'border-line bg-surface-2 text-ink-muted',
-          )}
-          role="status"
-        >
-          {PAUSE_REASON_TEXT[state.pauseReasons[0]!]}
-        </span>
-      )}
+      {/* Always present, for the same reason as the toasts: a status that
+          arrives with its region is not reliably announced. */}
+      <span role="status" data-testid="pause-reason" className="contents">
+        {state.pauseReasons.length > 0 && (
+          <span
+            className={cn(
+              'rounded-full border px-2.5 py-1 text-xs font-medium',
+              blocked ? 'border-band-high/40 bg-band-high-soft text-band-high' : 'border-line bg-surface-2 text-ink-muted',
+            )}
+          >
+            {PAUSE_REASON_TEXT[state.pauseReasons[0]!]}
+          </span>
+        )}
+      </span>
     </div>
   )
 }
