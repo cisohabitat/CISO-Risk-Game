@@ -65,18 +65,23 @@ for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
 
 describe('the annual review agrees with itself', () => {
   it('leads the resilience sentence from the resilience band', () => {
-    const sentences: Record<string, string> = {
-      strong: 'came through with little lasting damage',
-      solid: 'absorbed it, though not without cost',
-      developing: 'took real damage before it recovered',
-      weak: 'ran well beyond what the business could absorb',
+    // Each band's sentence, and its form for a year that ends with an
+    // incident still running, which has not yet been come through.
+    const sentences: Record<string, [string, string]> = {
+      strong: ['came through with little lasting damage', 'with little lasting damage so far'],
+      solid: ['absorbed it, though not without cost', 'absorbed it so far, though not without cost'],
+      developing: ['took real damage before it recovered', 'took real damage, and an incident was still running'],
+      weak: ['ran well beyond what the business could absorb', 'ran well beyond what the business could absorb, and an incident'],
     }
     let tested = 0
     for (const { label, state } of years) {
       if (Object.keys(state.incidents.incidents).length === 0) continue
       tested += 1
+      const running = Object.values(state.incidents.incidents).some((i) => i.phase !== 'closed')
       const resilience = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
-      expect(resilience.narrative, `${label}: ${resilience.band} beside "${resilience.narrative}"`).toContain(sentences[resilience.band])
+      expect(resilience.narrative, `${label}: ${resilience.band} beside "${resilience.narrative}"`).toContain(
+        sentences[resilience.band]![running ? 1 : 0],
+      )
     }
     expect(tested, 'no year had an incident to test this against').toBeGreaterThan(2)
   })
@@ -206,5 +211,28 @@ describe('what the close says about a system an incident ran through', () => {
     }
     const after = unexaminedMaterial(state, index).names.filter((s) => s.startsWith(name))
     expect(after).toEqual([`${name} was never examined, except by the incident that ran through it`])
+  })
+})
+
+describe('what the close says about two incidents', () => {
+  it('orders them by date, and does not say the organisation came through one still running', () => {
+    const state = newGame(index, { seed: 'two-incidents' })
+    const family = index.content.incidentFamilies[0]!
+    const arranged = (id: string, startedDay: number, consequence: number, phase: string, pathId: string) => ({
+      ...({} as GameState['incidents']['incidents'][string]),
+      id, familyId: family.id, startedDay, consequence, phase, pathId, phaseEnteredDay: startedDay,
+      affectedServiceIds: [], decisionsTaken: [],
+      resolvedDay: phase === 'closed' ? startedDay + 20 : undefined,
+    }) as GameState['incidents']['incidents'][string]
+    state.incidents.incidents['inc-early'] = arranged('inc-early', 198, 0.05, 'closed', 'path-a')
+    state.incidents.incidents['inc-late'] = arranged('inc-late', 358, 0.1, 'containment', 'path-b')
+    const review = buildAnnualReview(state, index)
+    const story = review.narrative.join(' ')
+    expect(story).toContain(`${family.name} tested the organisation on day 358`)
+    expect(story).toContain('the same kind of incident earlier, on day 198, by a different route')
+    expect(story).not.toContain('again on day 198')
+    const resilience = review.dimensions.find((d) => d.id === 'resilience')!
+    expect(resilience.narrative).toContain('still running when the year was written up')
+    expect(resilience.narrative).not.toMatch(/came through|before it recovered/)
   })
 })

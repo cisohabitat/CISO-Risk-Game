@@ -486,6 +486,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ) / recoveryControls.length
 
   const tested = incidents.length > 0
+  const stillRunning = incidents.some((i) => i.phase !== 'closed')
   // A production restore taken in the fourth quarter is an exercise as much
   // as a commissioned test is; it is recorded as a flag by the decision.
   const restoreTaken = state.flags['recovery.tested'] === true
@@ -509,7 +510,16 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // 0.5, a worst consequence of 0.52 scored `solid` and printed "ran well
     // beyond what the business could absorb" beside it; all three transcripts
     // read in grading showed the pair.
-    narrative: tested
+    // An incident still running on the last day has not been come through,
+    // absorbed or recovered from, and its cost is still being counted.
+    narrative: tested && stillRunning
+      ? ({
+          strong: 'The organisation was tested, with little lasting damage so far, but an incident was still running when the year was written up.',
+          solid: 'The organisation was tested and has absorbed it so far, though not without cost, and an incident was still running when the year was written up.',
+          developing: 'When the organisation was tested, it took real damage, and an incident was still running when the year was written up.',
+          weak: 'When the organisation was tested, the consequences ran well beyond what the business could absorb, and an incident was still running when the year was written up.',
+        } as const)[band(resilience)]
+      : tested
       ? ({
           strong: 'The organisation was tested and came through with little lasting damage.',
           solid: 'The organisation was tested and absorbed it, though not without cost.',
@@ -774,6 +784,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           if (i.familyId !== worst.familyId) return `${name} on day ${i.startedDay}`
           // Same kind again: the route says whether it was the same door.
           const sameRoute = !i.pathId || !worst.pathId || i.pathId === worst.pathId
+          // The worst is narrated first whatever its date, so "again" pointed
+          // backwards when the other came before it: "tested on day 358 ... the
+          // same kind of incident again on day 198".
+          if (i.startedDay < worst.startedDay) {
+            return sameRoute
+              ? `the same kind of incident earlier, on day ${i.startedDay}, through the same route — the weakness was still open when it came again`
+              : `the same kind of incident earlier, on day ${i.startedDay}, by a different route`
+          }
           return sameRoute
             ? `the same kind of incident again on day ${i.startedDay}, through the same route — the same weakness, still open`
             : `the same kind of incident again on day ${i.startedDay}, by a different route`

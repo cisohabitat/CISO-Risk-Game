@@ -209,6 +209,18 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **The close told two incidents backwards, and called a running one over.**
+  From a high-pressure year read end to end: the story narrates the worst
+  incident first whatever its date, then listed the others as "again", so it
+  read "tested the organisation on day 358 … the same kind of incident again on
+  day 198". An earlier one is now "earlier, on day 198". The same year ended
+  with its second incident still running, beside "came through with little
+  lasting damage"; every resilience sentence described an ending. A year that
+  closes mid-incident now says so in the band's sentence ("with little lasting
+  damage so far, but an incident was still running when the year was written
+  up"). One of the twelve played years in the review test ends that way. Tests
+  for both, mutation-checked.
+
 - **Toasts could pass in silence for a screen reader.** The toast live region
   was rendered only once a toast existed, so it arrived together with its
   first message, and screen readers do not reliably announce a region's
