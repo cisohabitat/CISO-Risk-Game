@@ -151,8 +151,8 @@ been fixed and moved to `docs/FINDINGS.md`.
   told rather than luck, which may be the lesson; whether it feels right after
   a first ransomware year is in `docs/PLAYTEST.md`.
 
-- **There is about 4 kB of first-load headroom left for content.** The first
-  screen waits on 256.1 of the 260 kB budget, of which the campaign is 74.4 of
+- **There is under 3 kB of first-load headroom left for content.** The first
+  screen waits on 257.4 of the 260 kB budget, of which the campaign is 75.2 of
   its 77. The year view is already split out; the next few messages or
   decisions of any length will need either another split or a deliberate rise
   in `scripts/size-budget.ts`, which `pnpm check` now enforces.
