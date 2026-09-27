@@ -92,6 +92,21 @@ describe('campaign content', () => {
   })
 })
 
+describe('who a message is from', () => {
+  it('names each person the same way every time', () => {
+    // One year's inbox had "Nadia Farrell, Procurement" beside "Nadia Farrell,
+    // Director of Procurement and Supplier Management", and the Digital MD
+    // under two titles. A player meeting a cast for the first time reads that
+    // as two people.
+    const content = nexoraContentRaw as unknown as CampaignContent
+    const people = [...content.stakeholders, ...content.leaders].map((p) => ({ name: p.name, full: `${p.name}, ${p.role}` }))
+    for (const event of content.events) {
+      const person = people.find((p) => event.from.startsWith(p.name))
+      if (person) expect(event.from, event.id).toBe(person.full)
+    }
+  })
+})
+
 describe('the organisation remembers what the player chose', () => {
   const content = parsed.success ? (parsed.data as unknown as CampaignContent) : undefined
 

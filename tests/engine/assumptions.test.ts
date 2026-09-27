@@ -179,6 +179,10 @@ describe('assumptions that were never true', () => {
     expect(assumption.status).not.toBe('invalidated')
     const review = buildAnnualReview(state, index)
     expect(review.blindSpots.join(' ')).toMatch(/relied on .* and never tested it after that/i)
+    // The authored statement is a sentence; quoted inside another it loses its full stop.
+    for (const line of [...review.blindSpots, ...review.dimensions.flatMap((d) => d.evidence)]) {
+      expect(line, line).not.toMatch(/\."/)
+    }
   })
 
   it('stops the assumption mechanic firing as background noise', () => {

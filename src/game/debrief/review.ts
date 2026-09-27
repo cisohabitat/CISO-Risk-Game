@@ -736,7 +736,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // may well remember one: a year that ran a recovery test on day 139 and
     // began relying on backups on day 275 read "without ever testing it"
     // beside "1 recovery exercise completed".
-    spots.unshift(`from day ${assumption.createdDay} you relied on "${assumption.statement}" and never tested it after that; it was not true`)
+    spots.unshift(`from day ${assumption.createdDay} you relied on "${quotedInline(assumption.statement)}" and never tested it after that; it was not true`)
   }
   dimensions.push({
     id: 'blind-spots',
@@ -762,7 +762,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         : []),
       ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
-        (a) => `"${a.statement}" was relied on from day ${a.createdDay}, not tested after that, and not true`,
+        (a) => `"${quotedInline(a.statement)}" was relied on from day ${a.createdDay}, not tested after that, and not true`,
       ),
     ],
   })
@@ -1007,4 +1007,12 @@ function bandValue(band: AnnualReviewDimension['band']): number {
     default:
       return 0.88
   }
+}
+
+/**
+ * An authored sentence quoted inside another loses its own full stop:
+ * `relied on "Backups recover critical services." and never tested it`.
+ */
+function quotedInline(sentence: string): string {
+  return sentence.replace(/\.\s*$/, '')
 }
