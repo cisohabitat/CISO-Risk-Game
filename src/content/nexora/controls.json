@@ -69,7 +69,7 @@
       "description": "Control over what third parties can reach, with what accounts, watched by whom.",
       "baseCoverage": 0.3, "baseConfigurationQuality": 0.4, "baseOperationalEffectiveness": 0.35, "baseMonitoringQuality": 0.3, "baseExceptionRate": 0.45, "variance": 0.13,
       "targetNodeIds": ["node-sup-msp", "node-net-remote", "node-sup-logistics", "node-app-portal"],
-      "mitigates": { "supplier-remote-access": 0.8, "privilege-abuse": 0.35 },
+      "mitigates": { "supplier-remote-access": 0.8, "privilege-abuse": 0.35, "credential-stuffing": 0.4 },
       "detectionStrength": 0.25, "recoveryStrength": 0, "driftPerDay": 0.0005, "driftKind": "exception-accumulation", "driftFloor": 0.68
     },
     {
@@ -85,7 +85,7 @@
       "description": "Guardrails, baseline configuration and drift detection in the cloud tenancies.",
       "baseCoverage": 0.42, "baseConfigurationQuality": 0.45, "baseOperationalEffectiveness": 0.4, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.35, "variance": 0.13,
       "targetNodeIds": ["node-cloud-prod", "node-cloud-dev", "node-k8s", "node-ci-pipeline"],
-      "mitigates": { "exploit-public-app": 0.4, "privilege-abuse": 0.4, "data-exfiltration": 0.35 },
+      "mitigates": { "exploit-public-app": 0.4, "privilege-abuse": 0.4, "data-exfiltration": 0.35, "persistence": 0.45, "lateral-movement": 0.3 },
       "detectionStrength": 0.35, "recoveryStrength": 0.1, "driftPerDay": 0.0006, "driftKind": "coverage-erosion", "driftFloor": 0.7
     },
     {
