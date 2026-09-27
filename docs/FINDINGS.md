@@ -18,6 +18,30 @@ fault.
 
 ### Fixed
 
+- **CI went red on the size budget again, for the same reason as before.**
+  `pnpm check` still did not build or run `pnpm size`, so a push that passed
+  every local check failed CI's budget step: the first load was 257.4 kB
+  against 255. The earlier entry below found exactly this and fixed the
+  measurement, not the gap. `pnpm check` now ends with a build and the size
+  budget. The budget itself was raised deliberately, to 260 kB with the
+  campaign chunk at 77: the owner asked for more late-year content and more
+  replay value, and the fourth-quarter decisions, the four starting situations
+  with a decision each and the reworded recurring messages cost about 12 kB of
+  campaign between them. The next content that needs room is a decision too.
+
+- **A third of the inbox was word-for-word repeats.** Over 30 CISO years,
+  41.5 of 145 messages a year (29%) repeated one already received exactly, and
+  one message could arrive eight times in the same words; ten recurring events
+  — the benign alerts, finance phishing, the portal scanning, the quiet week
+  and six others — were nearly all of it. Events can now carry `variants`,
+  taken in turn by how many times the event has fired (a count in state, not
+  a draw, so nothing else in the simulation moves: 145.3 messages a year
+  before and after). Each of the ten has three. Repeats fell to 14.9 a year
+  (10%), and the most any message repeats in a year to three. A content test
+  checks the ten say four different things before cycling, and an engine test
+  that a year's second firing is reworded; sending the original body again
+  fails it.
+
 - **The board's standing read "Neutral" whatever the player did.** The home
   screen shows board confidence all year. Over 40 CISO campaigns it read
   *Neutral* on 86–90% of days for an idle player, one who only answered

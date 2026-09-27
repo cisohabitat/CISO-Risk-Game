@@ -30,7 +30,7 @@ interface Budget {
 
 const BUDGETS: Budget[] = [
   { name: 'index-', limit: 110, why: 'app code a player waits for before anything works' },
-  { name: 'campaign-', limit: 75, why: 'the authored campaign; rises with every event written' },
+  { name: 'campaign-', limit: 77, why: 'the authored campaign; rises with every event written' },
   { name: 'react-', limit: 75, why: 'the framework' },
   { name: 'OrgGraph-', limit: 70, why: 'the graph library, which must stay out of the first load' },
 ]
@@ -49,8 +49,14 @@ const MUST_STAY_LAZY = ['OrgGraph-']
  * was preloading, so 240 was never the real number. The real one fell by
  * about 50 kB when the graph was made genuinely lazy, and this is set just
  * above where that leaves it.
+ *
+ * Raised from 255 to 260, and the campaign from 75 to 77, as a decision: the
+ * owner asked for more late-year content and more replay value, and the
+ * fourth-quarter decisions, four starting situations with a decision each,
+ * and reworded recurring messages cost about 12 kB of campaign between them.
+ * Still set just above where that leaves the build (257.4 kB, 74.0 kB).
  */
-const CRITICAL_LIMIT_KB = 255
+const CRITICAL_LIMIT_KB = 260
 
 async function main(): Promise<void> {
   const dir = join(process.cwd(), 'dist', 'assets')

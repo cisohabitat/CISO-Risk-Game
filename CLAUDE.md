@@ -8,8 +8,9 @@ simulation runs in the browser and there is no server component.
 
 - **Push straight to `main`.** Commit and push without asking. Keep the feature
   branch in sync when one is in play.
-- Run `pnpm check` (typecheck, lint, content validation, unit tests) before
-  pushing. `pnpm test:e2e:local` for anything touching the UI.
+- Run `pnpm check` (typecheck, lint, content validation, unit tests, build and
+  size budget) before pushing. `pnpm test:e2e:local` for anything touching
+  the UI.
 - Report what was actually measured. The harnesses below exist so claims about
   the game's behaviour can be checked rather than asserted.
 
@@ -88,14 +89,20 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   Whether somebody who does not know the subject finishes feeling they learned
   something is still open; `docs/PLAYTEST.md` is how to ask a person.
 
-- **The last quarter is still the lightest, but less so.** Four late-year
-  decisions now follow up choices made earlier in the year — the Corvus
-  renewal, the Kestrel quarantine, the audit follow-up and next year's
-  priorities — each with its own replies. On one fixed policy over 30 CISO
+- **The third quarter is now the lightest, and June the thinnest month.**
+  Four late-year decisions now follow up choices made earlier in the year —
+  the Corvus renewal, the Kestrel quarantine, the audit follow-up and next
+  year's priorities — each with its own replies. On one fixed policy over 30 CISO
   years, decisions read 12.6 / 4.8 / 3.2 / 4.8 a quarter (Q4 was 2.7), the
   inbox 48 / 42 / 28 / 32, and the longest stretch with nothing to decide 63
-  days, max 75 (was 73, max 89). Whether the back half now *feels* like the
-  year building is the playtest question in `docs/PLAYTEST.md`.
+  days, max 75 (was 73, max 89). By month, a player answering everything
+  sees 4.0 / 4.3 / 3.2 / 3.1 / 1.6 / **0.3** / 1.4 / 1.1 / 0.9 / 3.3 / 0.9 /
+  0.2 decisions: the year's longest quiet stretch starts on day 150, between
+  the budget request and the Kestrel join on day 200, in 9 of 30 years, and
+  otherwise after the October cluster. The spine choices already have their
+  follow-ups, so a June decision would be filler; left for a playtest to ask
+  for. Whether the back half *feels* like the year building is the playtest
+  question in `docs/PLAYTEST.md`.
 
 - **Third-party is still the weakest programme, by the owner's choice.** Over
   150 seeds second-half incidents read identity 0.51, detection 0.54,
