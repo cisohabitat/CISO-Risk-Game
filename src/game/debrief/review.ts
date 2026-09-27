@@ -1066,6 +1066,7 @@ function situationDecisionLine(state: GameState): string | undefined {
       case 'opt-tidy-restate':
         return 'You restated your predecessor\'s coverage figure to the board yourself.'
       case 'opt-tidy-quiet':
+        if (fired('evt-con-tidy-unwritten')) return "You chose to correct your predecessor's coverage figure quietly in the next paper, and the committee met without one."
         return `You corrected your predecessor's coverage figure quietly${fired('evt-con-tidy-noticed') ? ', and the chair found the change before you explained it' : ''}.`
       case 'opt-tidy-leave':
         return `You left your predecessor's coverage figure standing${fired('evt-con-tidy-insurers') ? ', and it went to the insurers' : ''}.`

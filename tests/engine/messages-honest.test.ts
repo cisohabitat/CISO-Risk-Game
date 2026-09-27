@@ -444,3 +444,26 @@ describe('the restore test the player took a window for', () => {
     }
   })
 })
+
+describe('a correction promised for the next paper', () => {
+  it('is only noticed in a paper that was written', () => {
+    // "The multi-factor figure in your last paper is twenty points lower"
+    // arrived on day 115 whether or not a paper had gone in since the choice:
+    // in 12 of 36 years that missed the first quarter's paper, it quoted one
+    // that was never written.
+    for (const writes of [true, false]) {
+      const state = newGame(index, { seed: 'tidy-quiet', situation: 'sit-tidy' })
+      for (let day = 0; day < 130; day += 1) {
+        answerAll(state, { 'dec-sit-tidy-numbers': 'opt-tidy-quiet' })
+        if (writes && state.reviews.pendingQuarter !== undefined) {
+          applyAction(state, index, { type: 'completeQuarterReview', quarter: state.reviews.pendingQuarter, topics: [], recommendations: [], communicateUncertainty: true })
+        }
+        runDays(state, index, 1)
+      }
+      const taken = Object.values(state.decisions.decisions).find((decision) => decision.defId === 'dec-sit-tidy-numbers')
+      expect(taken?.selectedOptionId).toBe('opt-tidy-quiet')
+      expect(dayOf(state, 'evt-con-tidy-noticed') !== undefined, `noticed, writes=${writes}`).toBe(writes)
+      expect(dayOf(state, 'evt-con-tidy-unwritten') !== undefined, `unwritten, writes=${writes}`).toBe(!writes)
+    }
+  })
+})

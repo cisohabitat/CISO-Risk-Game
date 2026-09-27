@@ -47,6 +47,8 @@ export type Condition =
   | { kind: 'evidence.known'; evidenceId: string }
   | { kind: 'evidence.tagKnown'; tag: string }
   | { kind: 'evidence.countAtLeast'; value: number }
+  /** Board papers the player has written this year, whatever the committee made of them. */
+  | { kind: 'review.papersWrittenAtLeast'; value: number }
   | { kind: 'risk.scenarioStatus'; scenarioId: string; status: string }
   | { kind: 'risk.openCountAtLeast'; value: number }
   | { kind: 'assumption.invalidated'; assumptionId: string }

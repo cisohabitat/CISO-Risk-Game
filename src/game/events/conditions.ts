@@ -139,6 +139,8 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       return state.evidence.order.some((id) => index.evidence.get(id)?.tags.includes(condition.tag))
     case 'evidence.countAtLeast':
       return state.evidence.order.length >= condition.value
+    case 'review.papersWrittenAtLeast':
+      return state.reviews.quarters.filter((quarter) => quarter.completed).length >= condition.value
     case 'risk.scenarioStatus':
       return state.risks.scenarios[condition.scenarioId]?.status === condition.status
     case 'risk.openCountAtLeast':

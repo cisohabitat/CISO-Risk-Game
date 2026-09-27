@@ -462,7 +462,12 @@
       "body": "The multi-factor figure in your last paper is twenty points lower than last year's. Nobody told the committee why. I assume there is a good reason; I would have preferred to hear it before I found it.",
       "priority": "notable",
       "availableFromDay": 0,
-      "conditions": [],
+      "conditions": [
+        {
+          "kind": "review.papersWrittenAtLeast",
+          "value": 1
+        }
+      ],
       "weight": 20,
       "pinned": false,
       "oncePerCampaign": true,
@@ -474,6 +479,33 @@
           "reason": "The board found the coverage figure had changed without a word."
         }
       ],
+      "relatedNodeIds": [],
+      "tags": [
+        "situation",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-tidy-unwritten",
+      "type": "executive",
+      "title": "The correction had no paper to go in",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "You chose to put the right coverage figure in the next paper without drawing attention to it. The committee met without a paper, so it is still working from last year's number. A quarter on, that is no longer your predecessor's figure; it is ours.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "review.papersWrittenAtLeast",
+            "value": 1
+          }
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
       "relatedNodeIds": [],
       "tags": [
         "situation",

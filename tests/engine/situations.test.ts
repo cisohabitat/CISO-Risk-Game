@@ -127,11 +127,12 @@ describe('each situation brings a decision of its own', () => {
   }
 
   /** Plays to the situation's decision, answers it, and returns what came after. */
-  function answer(situationId: string, optionId: string, before?: (state: GameState) => void): string[] {
-    return play(situationId, optionId, before).inbox.messages.flatMap((m) => (m.eventId ? [m.eventId] : []))
+  function answer(situationId: string, optionId: string, before?: (state: GameState) => void, papers = false): string[] {
+    return play(situationId, optionId, before, 100, papers).inbox.messages.flatMap((m) => (m.eventId ? [m.eventId] : []))
   }
 
-  function play(situationId: string, optionId: string, before?: (state: GameState) => void, days = 100): GameState {
+  /** Answers the situation's decision, then plays on; with `papers`, every board paper is written as it falls due. */
+  function play(situationId: string, optionId: string, before?: (state: GameState) => void, days = 100, papers = false): GameState {
     const state = newGame(index, { seed: `own-${optionId}`, situation: situationId })
     before?.(state)
     const defId = asked[situationId]!
@@ -148,7 +149,13 @@ describe('each situation brings a decision of its own', () => {
       rationaleTagIds: (index.decision.get(defId)!.rationaleTagIds ?? []).slice(0, 1),
     })
     expect(result.ok, optionId).toBe(true)
-    runDays(state, index, days)
+    for (let day = 0; day < days; day += 1) {
+      const quarter = state.reviews.pendingQuarter
+      if (papers && quarter !== undefined) {
+        applyAction(state, index, { type: 'completeQuarterReview', quarter, topics: [], recommendations: [], communicateUncertainty: true })
+      }
+      runDays(state, index, 1)
+    }
     return state
   }
 
@@ -164,7 +171,7 @@ describe('each situation brings a decision of its own', () => {
   })
 
   it('answers every option with a reply of its own', () => {
-    const replies: [string, string, string][] = [
+    const replies: [string, string, string, boolean?][] = [
       ['sit-after-breach', 'opt-extortion-notify', 'evt-con-extortion-notified'],
       ['sit-after-breach', 'opt-extortion-silent', 'evt-con-extortion-published'],
       ['sit-after-breach', 'opt-extortion-pay', 'evt-con-extortion-paid'],
@@ -172,16 +179,19 @@ describe('each situation brings a decision of its own', () => {
       ['sit-new-money', 'opt-flagship-programmes', 'evt-con-flagship-delivery'],
       ['sit-new-money', 'opt-flagship-plan', 'evt-con-flagship-plan'],
       ['sit-tidy', 'opt-tidy-restate', 'evt-con-tidy-restated'],
-      ['sit-tidy', 'opt-tidy-quiet', 'evt-con-tidy-noticed'],
+      // The quiet correction goes in the next paper, so what comes back
+      // depends on whether there was one.
+      ['sit-tidy', 'opt-tidy-quiet', 'evt-con-tidy-noticed', true],
+      ['sit-tidy', 'opt-tidy-quiet', 'evt-con-tidy-unwritten', false],
       ['sit-tidy', 'opt-tidy-leave', 'evt-con-tidy-insurers'],
     ]
-    for (const [situationId, optionId, eventId] of replies) {
-      expect(answer(situationId, optionId), optionId).toContain(eventId)
+    for (const [situationId, optionId, eventId, papers] of replies) {
+      expect(answer(situationId, optionId, undefined, papers), `${optionId} papers=${papers}`).toContain(eventId)
     }
   })
 
   it('is remembered in the close, with what came of it', () => {
-    const closes: [string, string, RegExp][] = [
+    const closes: [string, string, RegExp, boolean?][] = [
       ['sit-after-breach', 'opt-extortion-notify', /came back for money, you refused and told the regulator/],
       ['sit-after-breach', 'opt-extortion-silent', /you refused and said nothing\. They published/],
       ['sit-after-breach', 'opt-extortion-pay', /you paid, and within two months they were back/],
@@ -189,11 +199,12 @@ describe('each situation brings a decision of its own', () => {
       ['sit-new-money', 'opt-flagship-programmes', /you put the money into the programmes instead/],
       ['sit-new-money', 'opt-flagship-plan', /you showed them the plan/],
       ['sit-tidy', 'opt-tidy-restate', /You restated your predecessor's coverage figure/],
-      ['sit-tidy', 'opt-tidy-quiet', /quietly, and the chair found the change/],
+      ['sit-tidy', 'opt-tidy-quiet', /quietly, and the chair found the change/, true],
+      ['sit-tidy', 'opt-tidy-quiet', /quietly in the next paper, and the committee met without one/, false],
       ['sit-tidy', 'opt-tidy-leave', /standing, and it went to the insurers/],
     ]
-    for (const [situationId, optionId, line] of closes) {
-      const state = play(situationId, optionId, undefined, 364 - 120)
+    for (const [situationId, optionId, line, papers] of closes) {
+      const state = play(situationId, optionId, undefined, 364 - 120, papers)
       expect(buildAnnualReview(state, index).narrative.join(' '), optionId).toMatch(line)
     }
     const usual = newGame(index, { seed: 'own-usual', situation: 'sit-inherited-mess' })

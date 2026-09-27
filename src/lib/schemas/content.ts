@@ -45,6 +45,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('evidence.known'), evidenceId: id }),
     z.object({ kind: z.literal('evidence.tagKnown'), tag: z.string() }),
     z.object({ kind: z.literal('evidence.countAtLeast'), value: z.number().int() }),
+    z.object({ kind: z.literal('review.papersWrittenAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('risk.scenarioStatus'), scenarioId: id, status: z.string() }),
     z.object({ kind: z.literal('risk.openCountAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('assumption.invalidated'), assumptionId: id }),

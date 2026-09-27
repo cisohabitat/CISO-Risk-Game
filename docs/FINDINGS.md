@@ -18,6 +18,20 @@ fault.
 
 ### Fixed
 
+- **The chair quoted a paper that was never written.** In the tidy
+  inheritance, *Correct it quietly in the next paper* is always answered on
+  day 55 and draws the chair's "The multi-factor figure in your last paper is
+  twenty points lower" on day 115, and the only paper between them is the
+  first quarter's. Over 36 years that took the option, the 12 that missed
+  that paper still got the letter (`tidy-probe.ts`, scratch). A
+  `review.papersWrittenAtLeast` condition now gates it; a year without the
+  paper gets Fenella instead ("The committee met without a paper, so it is
+  still working from last year's number … it is ours"), and the close says
+  "the committee met without one" rather than "You corrected … quietly". After
+  the change, 24 of 24 letters follow a written paper. The situation tests
+  had played the option without papers and so asserted the old letter; they
+  now play both paths, and removing the gate or the closing line fails them.
+
 - **A choice's delayed consequence was a toast, and one contradicted the
   game.** Twenty decision options carry a consequence that lands weeks later
   with a note — "Somebody senior on the part of the team you asked to push
