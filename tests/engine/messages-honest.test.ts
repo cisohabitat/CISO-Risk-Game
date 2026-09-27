@@ -311,7 +311,7 @@ describe('the fourth-quarter follow-ups', () => {
     ['dec-q4-audit-followup', 'opt-q4-audit-show', ['evt-con-audit-shown']],
     ['dec-q4-audit-followup', 'opt-q4-audit-ontrack', ['evt-con-audit-overstated', 'evt-con-audit-borne-out']],
     ['dec-q4-audit-followup', 'opt-q4-audit-rescope', ['evt-con-audit-rescoped']],
-    ['dec-q4-priorities', 'opt-q4-priorities-risks', ['evt-con-priorities-risks']],
+    ['dec-q4-priorities', 'opt-q4-priorities-risks', ['evt-con-priorities-risks', 'evt-con-priorities-risks-unheard']],
     ['dec-q4-priorities', 'opt-q4-priorities-unknowns', ['evt-con-priorities-unknowns']],
   ]
   for (const [decisionId, optionId, replies] of cases) {
@@ -467,3 +467,31 @@ describe('a correction promised for the next paper', () => {
     }
   })
 })
+
+describe('the priorities the chair asks for at the end of the year', () => {
+  it('says it has read your papers only when there were some', () => {
+    // "I have read your papers this year, and I will notice if they do not
+    // match" reached every year with an open risk, including 30 of 30 that
+    // never wrote a paper; so did "the risks you have been bringing me all
+    // year".
+    const state = newGame(index, { seed: 'priorities-papers' })
+    const scenario = Object.values(state.risks.scenarios)[0] ?? Object.values(runUntilRisk(state).risks.scenarios)[0]!
+    scenario.status = 'open'
+    state.flags['priorities.risks'] = true
+    const read = ['evt-q4-board-priorities', 'evt-con-priorities-risks']
+    const unread = ['evt-q4-board-priorities-unread', 'evt-con-priorities-risks-unheard']
+    for (const written of [0, 1]) {
+      state.reviews.quarters = written
+        ? [{ quarter: 1, day: 91, topicsChosen: [], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true }]
+        : []
+      for (const id of read) expect(evaluateAll(state, index, index.event.get(id)!.conditions), `${id}, written=${written}`).toBe(written > 0)
+      for (const id of unread) expect(evaluateAll(state, index, index.event.get(id)!.conditions), `${id}, written=${written}`).toBe(written === 0)
+    }
+    expect(index.event.get('evt-q4-board-priorities-unread')!.decisionId).toBe('dec-q4-priorities')
+  })
+})
+
+function runUntilRisk(state: GameState): GameState {
+  for (let day = 0; day < 364 && Object.keys(state.risks.scenarios).length === 0; day += 1) runDays(state, index, 1)
+  return state
+}

@@ -470,7 +470,7 @@
       "type": "executive",
       "title": "The auditors are back in December",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "The auditors are back in December for the follow-up on privileged access. In the spring we committed to a funded programme with dates. They will compare those dates with what is running in production, not with what is in the plan.",
+      "body": "The auditors are back in December for the follow-up on privileged access. Early in the year we committed to a funded programme with dates. They will compare those dates with what is running in production, not with what is in the plan.",
       "priority": "urgent",
       "availableFromDay": 295,
       "conditions": [
@@ -504,6 +504,41 @@
         {
           "kind": "risk.openCountAtLeast",
           "value": 1
+        },
+        {
+          "kind": "review.papersWrittenAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-priorities",
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-board-priorities-unread",
+      "type": "board",
+      "title": "Your priorities for next year, in writing",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The January committee sets next year's cyber priorities. I would like yours in writing before Christmas: three things, and what you have decided not to do. The committee has not had a paper from you this year, so this will be the first thing of yours it reads.",
+      "priority": "notable",
+      "availableFromDay": 318,
+      "conditions": [
+        {
+          "kind": "risk.openCountAtLeast",
+          "value": 1
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "review.papersWrittenAtLeast",
+            "value": 1
+          }
         }
       ],
       "weight": 30,
@@ -819,6 +854,43 @@
         {
           "kind": "flag.set",
           "flag": "priorities.risks"
+        },
+        {
+          "kind": "review.papersWrittenAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "board",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-priorities-risks-unheard",
+      "type": "board",
+      "title": "Your priorities are risks the committee has not heard",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "I have your priorities. They are three risks from your register, and the committee will be hearing of all three for the first time. I will put them as written. I will be asked how long you have known.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "priorities.risks"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "review.papersWrittenAtLeast",
+            "value": 1
+          }
         }
       ],
       "weight": 20,

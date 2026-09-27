@@ -18,6 +18,28 @@ fault.
 
 ### Fixed
 
+- **The audit follow-up misplaced the spring.** The Q4 follow-up and its
+  decision said the dates were committed "in the spring". The audit finding
+  arrives on day 45, 15 February, and the programme option is not its default,
+  so it is chosen within the fortnight: 120 of 120 years that took it did so on
+  day 45 (`audit-day.ts`, scratch). Both now say "early in the year". The
+  other month names in the content were checked against the calendar in
+  `src/game/time.ts` and the days their messages can arrive.
+
+- **The chair's year-end request assumed papers.** "I have read your papers
+  this year, and I will notice if they do not match" reached every year with
+  an open risk, and so did the reply to *Lead with the risks you raised*,
+  "the risks you have been bringing me all year". Over 30 years that wrote no
+  paper and raised risks, all 30 got both (`prio-papers.ts`, scratch). Each
+  now has a twin gated on `review.papersWrittenAtLeast`: the request says the
+  committee has had no paper from you, so this is the first thing of yours it
+  will read, and the reply says the committee will be hearing of all three
+  risks for the first time and he will be asked how long you have known. The
+  decision's own context no longer claims he read "every paper you sent".
+  After the change, 30 of 30 paperless years get the unread request, and none
+  of the 60 years with a paper do; no year gets both. Dropping the gate fails
+  the test.
+
 - **The chair quoted a paper that was never written.** In the tidy
   inheritance, *Correct it quietly in the next paper* is always answered on
   day 55 and draws the chair's "The multi-factor figure in your last paper is
