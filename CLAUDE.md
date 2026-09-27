@@ -95,8 +95,15 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   now read 12.3 / 7.2 / 3.9 / 2.8, the longest stretch with nothing to decide
   fell from 114 days to 67, and the inbox carries 49 / 53 / 33 / 34 messages a
   quarter. The fourth quarter still carries just under a quarter of the first.
-  Whether the back half now *feels* like the year building is the playtest
-  question in `docs/PLAYTEST.md`, not a number to tune further.
+  Removing messages that were untrue when they arrived — reports of findings
+  the player already had, weaknesses already fixed, quiet spells that were not
+  — thinned the back half further: on one fixed policy over 30 CISO years the
+  inbox went from 48 / 49 / 33 / 32 to 48 / 42 / 28 / 28 a quarter, with
+  decisions in Q3 and Q4 unchanged (3.2 / 2.7) and the longest stretch with
+  nothing to decide at 73 days. That was the right trade; padding the quarter
+  back out with text that is not true would not be. Whether the back half
+  *feels* like the year building is the playtest question in
+  `docs/PLAYTEST.md`, not a number to tune further.
 
 - **Two programmes buy nothing measurable inside a year.** Over 150 seeds,
   third-party assurance and the cloud programme each finish every time and move
