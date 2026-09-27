@@ -121,7 +121,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <ShellHeader />
         <main
           id="main"
-          className="scroll-area flex-1 pb-24 lg:pb-8"
+          tabIndex={-1}
+          className="scroll-area flex-1 pb-24 outline-none lg:pb-8"
           aria-label={current?.label ?? 'Game'}
         >
           <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">{children}</div>

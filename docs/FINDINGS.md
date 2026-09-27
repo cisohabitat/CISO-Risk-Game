@@ -209,6 +209,19 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
+- **A running clock took focus out of every dialog.** Found driving a decision
+  with the keyboard alone, which nothing had tested. Every caller passes the
+  dialog an inline `onClose`, and the dialog's focus effect depended on it, so
+  each render re-ran the effect and each run put focus back on the panel. With
+  the clock at 1× the chosen option lost focus within a second, and so would a
+  reason being typed into the note. The effect now depends only on the dialog
+  opening and closing. And once a decision was taken, the "Decide" button that
+  opened it no longer existed, so focus fell to the page body and a keyboard
+  player started again from the top; it now goes to the main region. A browser
+  test takes a decision by keyboard with the clock running, and fails on
+  either defect (both mutation-checked). Focus was otherwise visible on every
+  stop, trapped in the dialog, and a skip link is present.
+
 - **Five messages described a weakness after the player had fixed it.** Read
   from the firing days of every date- or state-sensitive message over 60
   campaigns across the three modes and four play styles: "the vault stalled at

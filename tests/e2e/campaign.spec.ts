@@ -269,6 +269,44 @@ test.describe('a first year at Nexora', () => {
     await expect(decision).toBeHidden()
   })
 
+  test('a decision can be taken with the keyboard alone, with the clock running', async ({ page }) => {
+    test.skip((page.viewportSize()?.width ?? 0) < 1024, 'keyboard play is a desktop concern')
+    await startCampaign(page, 'e2e-keyboard')
+    const got = page.getByRole('button', { name: 'Got it' }).first()
+    if (await got.isVisible().catch(() => false)) await got.click()
+    await page.getByRole('button', { name: '1×' }).click()
+    const focused = () =>
+      page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null
+        return { tag: el?.tagName, id: el?.id, text: (el?.textContent ?? '').trim().slice(0, 40), inDialog: Boolean(el?.closest('[role=dialog]')) }
+      })
+
+    const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+    await decide.focus()
+    await page.keyboard.press('Enter')
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    expect((await focused()).inDialog, 'focus did not move into the dialog').toBe(true)
+
+    for (let i = 0; i < 5 && (await focused()).tag !== 'INPUT'; i += 1) await page.keyboard.press('Tab')
+    await page.keyboard.press('ArrowDown')
+    const chosen = await dialog.locator('input[type=radio]:checked').getAttribute('value')
+    expect(chosen).toBeTruthy()
+    // The clock is running. Every dialog re-rendered on each tick, and each
+    // render put focus back on the panel within a second.
+    await page.waitForTimeout(2500)
+    expect((await focused()).tag, 'a running clock took focus off the chosen option').toBe('INPUT')
+
+    await page.keyboard.press('Tab')
+    await page.keyboard.press('Space')
+    for (let i = 0; i < 25 && !(await focused()).text.includes('Commit'); i += 1) await page.keyboard.press('Tab')
+    await page.keyboard.press('Enter')
+    await expect(dialog).toBeHidden()
+    // The button that opened it is gone with the decision; focus should not
+    // fall to the page body and send the player back to the top.
+    expect((await focused()).tag, 'focus fell to the page body').not.toBe('BODY')
+  })
+
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
     await startCampaign(page, 'e2e-delete')
     await page.getByRole('button', { name: 'Save campaign' }).click()

@@ -226,6 +226,14 @@ export function Dialog({
   const titleId = useId()
   const descriptionId = useId()
   const panelRef = useRef<HTMLDivElement>(null)
+  // Every caller passes an inline onClose, so it changes on every render. As
+  // an effect dependency it re-ran the effect on each tick of a running clock,
+  // and each run put focus back on the panel: an option chosen with the arrow
+  // keys, or a reason being typed, lost focus within a second.
+  const onCloseRef = useRef(onClose)
+  useEffect(() => {
+    onCloseRef.current = onClose
+  })
 
   useEffect(() => {
     if (!open) return
@@ -238,7 +246,7 @@ export function Dialog({
       if (openDialogStack[openDialogStack.length - 1] !== me) return
       if (event.key === 'Escape') {
         event.stopPropagation()
-        onClose()
+        onCloseRef.current()
         return
       }
       if (event.key !== 'Tab' || !panel) return
@@ -264,9 +272,13 @@ export function Dialog({
       const at = openDialogStack.indexOf(me)
       if (at >= 0) openDialogStack.splice(at, 1)
       if (openDialogStack.length === 0) document.body.style.overflow = ''
-      previous?.focus?.()
+      // Back to whatever opened it. A decision's "Decide" button is gone once
+      // the decision is taken, and focus fell to the page body, so a keyboard
+      // player started again from the top; the main region is the next best.
+      if (previous && previous.isConnected) previous.focus()
+      else document.getElementById('main')?.focus()
     }
-  }, [open, onClose])
+  }, [open])
 
   if (!open) return null
 
