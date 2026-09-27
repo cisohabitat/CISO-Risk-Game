@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **A situation's own decision was forgotten by December.** The close
+  answered the question each situation began with, but not the decision it
+  alone asks: whether you paid the attackers, bought the platform, or
+  restated your predecessor's figure never appeared again. The close now has
+  a line for it, with what came of it where the year showed — "you refused
+  and said nothing. They published, and the regulator asked when you had
+  known"; "you bought the platform, and by the autumn it was a console nobody
+  watched". A test plays each of the nine options to the close and reads the
+  line, and checks the usual year has none; dropping the line fails it.
+
 - **A finished year had no way to start another.** The start screen shows
   only when no campaign is loaded, and nothing unloaded one: the annual review
   ended with "Export this campaign", the guide did not mention reloading, and

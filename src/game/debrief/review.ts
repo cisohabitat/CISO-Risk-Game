@@ -879,6 +879,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     )
   }
 
+  // Each situation asks one decision of its own; the close says how it was
+  // answered and what came of it, so the year's opening is not forgotten by
+  // December.
+  const ownDecision = situationDecisionLine(state)
+  if (ownDecision) narrative.push(ownDecision)
+
   const nextYear = state.flags['next-year.budget']
   if (nextYear === 'cut') {
     // The cut is only offered while no incident has happened, so one at the
@@ -1017,4 +1023,53 @@ function bandValue(band: AnnualReviewDimension['band']): number {
  */
 function quotedInline(sentence: string): string {
   return sentence.replace(/\.\s*$/, '')
+}
+
+/** How the situation's own decision was answered, and what came of it. */
+function situationDecisionLine(state: GameState): string | undefined {
+  const fired = (eventId: string) => state.events.firedEventIds.includes(eventId)
+  const taken = (defId: string) => Object.values(state.decisions.decisions).find((d) => d.defId === defId && d.selectedOptionId)
+  const extortion = taken('dec-sit-breach-extortion')
+  if (extortion) {
+    const lead = 'When last quarter\'s attackers came back for money,'
+    if (extortion.resolvedByDefault) return `${lead} nobody answered them${fired('evt-con-extortion-published') ? ', and they published' : ''}.`
+    switch (extortion.selectedOptionId) {
+      case 'opt-extortion-notify':
+        return `${lead} you refused and told the regulator before they could.`
+      case 'opt-extortion-silent':
+        return `${lead} you refused and said nothing${fired('evt-con-extortion-published') ? '. They published, and the regulator asked when you had known' : ''}.`
+      case 'opt-extortion-pay':
+        return `${lead} you paid${fired('evt-con-extortion-paid') ? ', and within two months they were back at the partner portal' : ', on the strength of their promise'}.`
+    }
+  }
+  const flagship = taken('dec-sit-money-flagship')
+  if (flagship) {
+    const lead = 'When the committee wanted something it could point at,'
+    if (flagship.resolvedByDefault) return `${lead} nobody answered, and the money stayed in the plan.`
+    switch (flagship.selectedOptionId) {
+      case 'opt-flagship-buy':
+        return fired('evt-con-flagship-used')
+          ? `${lead} you bought the platform, and the detection work made it find things.`
+          : fired('evt-con-flagship-shelfware')
+            ? `${lead} you bought the platform, and by the autumn it was a console nobody watched.`
+            : `${lead} you bought the platform.`
+      case 'opt-flagship-programmes':
+        return `${lead} you put the money into the programmes instead.`
+      case 'opt-flagship-plan':
+        return `${lead} you showed them the plan and asked them to wait for it.`
+    }
+  }
+  const figure = taken('dec-sit-tidy-numbers')
+  if (figure) {
+    if (figure.resolvedByDefault) return `Nobody answered the question about your predecessor's coverage figure, so it stood${fired('evt-con-tidy-insurers') ? ', and went to the insurers' : ''}.`
+    switch (figure.selectedOptionId) {
+      case 'opt-tidy-restate':
+        return 'You restated your predecessor\'s coverage figure to the board yourself.'
+      case 'opt-tidy-quiet':
+        return `You corrected your predecessor's coverage figure quietly${fired('evt-con-tidy-noticed') ? ', and the chair found the change before you explained it' : ''}.`
+      case 'opt-tidy-leave':
+        return `You left your predecessor's coverage figure standing${fired('evt-con-tidy-insurers') ? ', and it went to the insurers' : ''}.`
+    }
+  }
+  return undefined
 }

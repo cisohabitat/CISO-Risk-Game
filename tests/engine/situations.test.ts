@@ -128,6 +128,10 @@ describe('each situation brings a decision of its own', () => {
 
   /** Plays to the situation's decision, answers it, and returns what came after. */
   function answer(situationId: string, optionId: string, before?: (state: GameState) => void): string[] {
+    return play(situationId, optionId, before).inbox.messages.flatMap((m) => (m.eventId ? [m.eventId] : []))
+  }
+
+  function play(situationId: string, optionId: string, before?: (state: GameState) => void, days = 100): GameState {
     const state = newGame(index, { seed: `own-${optionId}`, situation: situationId })
     before?.(state)
     const defId = asked[situationId]!
@@ -144,8 +148,8 @@ describe('each situation brings a decision of its own', () => {
       rationaleTagIds: (index.decision.get(defId)!.rationaleTagIds ?? []).slice(0, 1),
     })
     expect(result.ok, optionId).toBe(true)
-    runDays(state, index, 100)
-    return state.inbox.messages.flatMap((m) => (m.eventId ? [m.eventId] : []))
+    runDays(state, index, days)
+    return state
   }
 
   it('arrives only in its own year', () => {
@@ -174,6 +178,27 @@ describe('each situation brings a decision of its own', () => {
     for (const [situationId, optionId, eventId] of replies) {
       expect(answer(situationId, optionId), optionId).toContain(eventId)
     }
+  })
+
+  it('is remembered in the close, with what came of it', () => {
+    const closes: [string, string, RegExp][] = [
+      ['sit-after-breach', 'opt-extortion-notify', /came back for money, you refused and told the regulator/],
+      ['sit-after-breach', 'opt-extortion-silent', /you refused and said nothing\. They published/],
+      ['sit-after-breach', 'opt-extortion-pay', /you paid, and within two months they were back/],
+      ['sit-new-money', 'opt-flagship-buy', /you bought the platform, and by the autumn it was a console nobody watched/],
+      ['sit-new-money', 'opt-flagship-programmes', /you put the money into the programmes instead/],
+      ['sit-new-money', 'opt-flagship-plan', /you showed them the plan/],
+      ['sit-tidy', 'opt-tidy-restate', /You restated your predecessor's coverage figure/],
+      ['sit-tidy', 'opt-tidy-quiet', /quietly, and the chair found the change/],
+      ['sit-tidy', 'opt-tidy-leave', /standing, and it went to the insurers/],
+    ]
+    for (const [situationId, optionId, line] of closes) {
+      const state = play(situationId, optionId, undefined, 364 - 120)
+      expect(buildAnnualReview(state, index).narrative.join(' '), optionId).toMatch(line)
+    }
+    const usual = newGame(index, { seed: 'own-usual', situation: 'sit-inherited-mess' })
+    runDays(usual, index, 364)
+    expect(buildAnnualReview(usual, index).narrative.join(' ')).not.toMatch(/came back for money|could point at|coverage figure/)
   })
 
   it('tells a bought platform apart from a used one', () => {
