@@ -234,5 +234,21 @@ describe('what the close says about two incidents', () => {
     const resilience = review.dimensions.find((d) => d.id === 'resilience')!
     expect(resilience.narrative).toContain('still running when the year was written up')
     expect(resilience.narrative).not.toMatch(/came through|before it recovered/)
+    // The evidence line agrees with the story about the route.
+    expect(resilience.evidence.join(' ')).toContain('by a different route each time')
+    expect(resilience.evidence.join(' ')).not.toContain('the same weakness')
+    state.incidents.incidents['inc-late']!.pathId = 'path-a'
+    const same = buildAnnualReview(state, index)
+    expect(same.dimensions.find((d) => d.id === 'resilience')!.evidence.join(' ')).toContain('the same weakness, still open')
+    expect(same.narrative.join(' ')).toContain('through the same route')
+  })
+
+  it('does not tell a year nobody played that it worked what was in front of it', () => {
+    const idle = newGame(index, { seed: 'nobody-home' })
+    runDays(idle, index, 364)
+    expect(buildAnnualReview(idle, index).narrative[0]).toMatch(/^You let the year run without you/)
+    for (const { label, state } of years.filter((y) => y.label.includes('building'))) {
+      expect(buildAnnualReview(state, index).narrative[0], label).not.toMatch(/without you/)
+    }
   })
 })

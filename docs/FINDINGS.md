@@ -245,6 +245,15 @@ fault.
   up"). One of the twelve played years in the review test ends that way. Tests
   for both, mutation-checked.
 
+  An idle CISO year read afterwards found two more of the same kind. Its
+  resilience evidence called two data exposures "the same weakness, still
+  open" by family alone, beside a story that said the second came "by a
+  different route"; the line now claims the same weakness only when the route
+  was the same. And a year in which nothing was taken, commissioned or built
+  opened "You worked what was in front of you" under the headline "The year
+  was decided largely without you"; it now opens "You let the year run
+  without you". Both tested, mutation-checked.
+
 - **Toasts could pass in silence for a screen reader.** The toast live region
   was rendered only once a toast existed, so it arrived together with its
   first message, and screen readers do not reliably announce a region's

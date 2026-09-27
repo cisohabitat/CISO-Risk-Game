@@ -535,16 +535,23 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // 176", "…on day 300" — which looks like a duplicate rather than the
     // point the year was making.
     evidence: (() => {
-      const byFamily = new Map<string, number[]>()
+      const byFamily = new Map<string, { day: number; pathId?: string }[]>()
       for (const i of incidents) {
         const name = index.incidentFamily.get(i.familyId)?.name ?? 'Incident'
-        byFamily.set(name, [...(byFamily.get(name) ?? []), i.startedDay].sort((a, b) => a - b))
+        byFamily.set(name, [...(byFamily.get(name) ?? []), { day: i.startedDay, pathId: i.pathId }].sort((a, b) => a.day - b.day))
       }
-      const lines = [...byFamily].map(([name, days]) => {
+      const lines = [...byFamily].map(([name, runs]) => {
+        const days = runs.map((r) => r.day)
         if (days.length === 1) return `${name} on day ${days[0]}`
         const rest = days.slice(1)
         const list = rest.length === 1 ? `day ${rest[0]}` : `days ${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}`
-        return `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
+        // "The same weakness" only when it was the same way in. Two data
+        // exposures by different routes read "the same weakness, still open"
+        // here and "by a different route" in the story above it.
+        const routes = new Set(runs.map((r) => r.pathId ?? 'unknown'))
+        return routes.size === 1
+          ? `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
+          : `${name} on day ${days[0]}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
       })
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
@@ -750,10 +757,19 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const worstRiskDef = worstRisk ? index.riskScenario.get(worstRisk.id) : undefined
 
   const narrative: string[] = []
+  // A year with nothing taken, commissioned or built was told "you worked
+  // what was in front of you" beside a headline saying it was decided largely
+  // without the player.
+  const engaged =
+    Object.values(state.decisions.decisions).some((d) => d.resolvedDay !== undefined && !d.resolvedByDefault) ||
+    state.team.assignments.length > 0 ||
+    Object.values(state.programmes.programmes).some((p) => p.status !== 'proposed')
   narrative.push(
     understandingScore > 0.55
       ? 'You spent your first months finding out how Nexora actually works rather than reacting to the inherited backlog.'
-      : 'You worked what was in front of you, and much of how the organisation fits together was never verified.',
+      : engaged
+        ? 'You worked what was in front of you, and much of how the organisation fits together was never verified.'
+        : 'You let the year run without you, and much of how the organisation fits together was never verified.',
   )
   if (started.length > 0) {
     const lead = started.slice().sort((a, b) => b.progress - a.progress)[0]
