@@ -233,6 +233,14 @@ fault.
   when it found nothing new. Presentation only; test in
   `tests/engine/messages-honest.test.ts`.
 
+- **The start screen had never been audited.** Every accessibility test began
+  after "Begin your first day", so the first screen anyone sees, now carrying
+  the situation picker, was outside the audit. It is audited in both themes,
+  with a saved campaign listed and the replay settings open: clean, and it
+  fits at 320px. The Continue list read "Day 1 · ciso" whatever situation a
+  campaign began in, so two saved years looked alike; it names the situation
+  now, tested in the browser.
+
 - **Every year began the same way.** At the owner's request for replay value,
   a year can now begin in one of four situations: the usual opening, after a
   breach, with new money and short patience, or with a tidy inheritance, or

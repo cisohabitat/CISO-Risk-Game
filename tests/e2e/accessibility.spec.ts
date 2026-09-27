@@ -123,6 +123,28 @@ test.describe('accessibility', () => {
     })
   }
 
+  /**
+   * The start screen is the first thing anyone sees and was never audited: the
+   * audits above begin after "Begin your first day". Audited with a saved
+   * campaign listed and the replay settings open, so every control is there.
+   */
+  for (const theme of ['light', 'dark'] as const) {
+    test(`the start screen has no WCAG A/AA violations in ${theme} mode`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: theme })
+      await startCampaign(page, `a11y-start-${theme}`)
+      await page.getByRole('button', { name: 'Save campaign' }).click()
+      await page.goto('/')
+      await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+      await page.locator('summary', { hasText: 'Replay settings' }).click()
+      await settle(page)
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+      expect(
+        results.violations.map((violation) => `${violation.id} — ${violation.description}`),
+        JSON.stringify(results.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.html).slice(0, 3) })), null, 2),
+      ).toEqual([])
+    })
+  }
+
   test('the decision dialog is accessible', async ({ page }) => {
     await startCampaign(page, 'a11y-dialog')
     await page.getByRole('button', { name: 'Decide' }).first().click()

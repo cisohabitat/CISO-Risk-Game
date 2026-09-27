@@ -98,6 +98,7 @@ export function StartScreen() {
                       <span>
                         <span className="block font-medium">
                           Day {save.day} · {save.difficulty}
+                          {save.situationId && index.situation.get(save.situationId) && ` · ${index.situation.get(save.situationId)!.name}`}
                         </span>
                         <span className="block text-sm text-ink-faint">
                           seed {save.seed} · saved {new Date(save.savedAtIso).toLocaleString()}

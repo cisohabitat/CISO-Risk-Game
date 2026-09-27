@@ -41,6 +41,8 @@ export interface SaveSummary {
   seed: string
   day: number
   difficulty: string
+  /** The starting situation, if the campaign began in one. */
+  situationId?: string
   savedAtIso: string
   savedByPlayer: boolean
   schemaVersion: number
@@ -156,6 +158,7 @@ export async function listSaves(): Promise<SaveSummary[]> {
         seed: migrated.state.seed,
         day: migrated.state.currentDay,
         difficulty: migrated.state.difficulty,
+        situationId: migrated.state.situationId,
         savedAtIso: migrated.savedAtIso,
         savedByPlayer: migrated.savedByPlayer,
         schemaVersion: migrated.schemaVersion,

@@ -319,6 +319,10 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByText('£2.8m of £2.8m')).toBeVisible()
     await goTo(page, 'Inbox')
     await expect(page.getByText('You know why the job was open').first()).toBeVisible()
+    // And the Continue list says which year it was.
+    await page.getByRole('button', { name: 'Save campaign' }).click()
+    await page.goto('/')
+    await expect(page.getByRole('button', { name: /Day \d+ · ciso · After the breach/ })).toBeVisible()
   })
 
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
