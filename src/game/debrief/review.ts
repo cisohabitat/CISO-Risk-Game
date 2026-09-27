@@ -577,7 +577,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       const exerciseCount = exercises.length + (restoreTaken ? 1 : 0)
       lines.push(
         exerciseCount > 0
-          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? ', one of them a production restore' : ''}`
+          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? (exerciseCount === 1 ? ', a production restore' : ', one of them a production restore') : ''}`
           : 'Recovery was never exercised',
       )
       lines.push(

@@ -253,6 +253,12 @@ describe('the date in the header', () => {
     expect(formatGameDate(31).label).toBe('1 February')
     expect(formatGameDate(59).label).toBe('1 March')
   })
+
+  it('ends the year in week 52, not on a week 53 of one day', () => {
+    expect(formatGameDate(357).weekLabel).toBe('Week 52')
+    expect(formatGameDate(364).label).toBe('31 December')
+    expect(formatGameDate(364).weekLabel).toBe('Week 52')
+  })
 })
 
 describe('team sustainability', () => {

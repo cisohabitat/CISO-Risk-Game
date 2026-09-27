@@ -18,6 +18,17 @@ fault.
 
 ### Fixed
 
+- **The last day of the year was "Week 53".** 364 days is 52 weeks and a day,
+  so 31 December opened a week 53 in the header and the Briefing masthead,
+  seen by every player reading the review. The label stops at 52; a test holds
+  it and fails with the cap removed. Found by running the playthrough harness
+  after the screenshot gallery turned out to have been broken since the
+  late-year decisions landed (it now takes the first reason a decision offers,
+  as the main suite does). A high-pressure close read "1 recovery exercise
+  completed, one of them a production restore"; the singular now reads "1
+  recovery exercise completed, a production restore", held by the existing
+  restore test.
+
 - **The first load had 1.4 kB of headroom left.** After this session's content
   and review lines it stood at 258.6 of 260 kB, so the next message written
   would have needed another budget rise. The year view — the annual review

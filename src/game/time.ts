@@ -32,7 +32,9 @@ export function formatGameDate(day: number): { label: string; month: string; wee
   return {
     label: `${remaining + 1} ${month}`,
     month,
-    weekLabel: `Week ${Math.floor(day / 7) + 1}`,
+    // 364 days is 52 weeks and a day; the last day, 31 December, belongs to
+    // week 52 rather than opening a week 53 nobody will play.
+    weekLabel: `Week ${Math.min(52, Math.floor(day / 7) + 1)}`,
   }
 }
 

@@ -42,6 +42,8 @@ describe('the review against the visible decision record', () => {
     const resilience = review.dimensions.find((d) => d.id === 'resilience')!
     expect(resilience.evidence.join(' ')).not.toContain('Recovery was never exercised')
     expect(resilience.evidence.join(' ')).toContain('production restore')
+    // "1 recovery exercise completed, one of them a production restore".
+    expect(resilience.evidence.join(' ')).not.toMatch(/\b1 recovery exercise completed, one of them/)
   })
 
   it('does not call a risk untouched when a programme that treats it was funded', () => {
