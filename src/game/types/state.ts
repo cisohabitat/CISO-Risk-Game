@@ -477,6 +477,8 @@ export interface QuarterReviewState {
 export interface ReviewState {
   quarters: QuarterReviewState[]
   pendingQuarter?: number
+  /** Quarters whose paper was never written; the committee met without one. */
+  missedQuarters?: number
   annual?: AnnualReview
 }
 

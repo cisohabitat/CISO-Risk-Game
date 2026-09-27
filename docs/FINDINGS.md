@@ -18,6 +18,36 @@ fault.
 
 ### Fixed
 
+- **The board's standing read "Neutral" whatever the player did.** The home
+  screen shows board confidence all year. Over 40 CISO campaigns it read
+  *Neutral* on 86–90% of days for an idle player, one who only answered
+  decisions, one who engaged fully and one who engaged but never wrote a board
+  paper; the full engager ended at 0.54 and the one who skipped every paper at
+  0.47, both *Neutral*. Two causes: confidence was pulled 1% a day towards the
+  executives' average trust, which itself drifts to the middle, so a good paper
+  was forgotten inside two months; and a paper never written cost nothing — the
+  quarter was simply overwritten by the next.
+
+  The pull is now 0.4% a day, so a paper is remembered for about a season, and
+  a quarter whose paper is still unwritten when the next one closes (or the year
+  ends) costs 0.08, with a letter from the chair and a line in the review's
+  communication evidence. A late paper, written any time before the next
+  quarter closes, is not charged. Same 40 campaigns after:
+
+  | | end | days *Solid* or better | end bands |
+  |---|---|---|---|
+  | Idle | 0.29 | 0% | 37 *Questioning*, 3 *Fragile* |
+  | Answers decisions only | 0.33 | 0% | 38 *Questioning*, 2 *Fragile* |
+  | Engaged, never writes a paper | 0.32 | 0% | 36 *Questioning*, 4 *Fragile* |
+  | Engaged, writes every paper | 0.65 | 40% | 24 *Solid*, 15 *Neutral*, 1 *Questioning* |
+
+  `tune.ts` reads board 0.25 passive against 0.62–0.68 for the three active
+  styles; the ladder, whose player writes every paper, reads 0.79 in all three
+  modes (was 0.61–0.63). Incidents still do not move the board directly: it
+  judges what it is told, through the papers. Tests in
+  `tests/engine/board-standing.test.ts`; restoring the old pull fails two of
+  them and removing the charge fails one, by name.
+
 - **A starting situation was felt in two messages and then forgotten.** Each
   non-default situation now asks one decision the others never see — after the
   breach, the attackers return with an extortion demand (notify, stay silent,

@@ -108,11 +108,13 @@ risk bands, executive patience and the noise dial has been fixed and moved to
   after the breach, new money, a tidy inheritance). Over 100 CISO seeds each,
   a player building what the budget allows sees 0.83 / 0.90 / 0.69 / 0.68
   incidents and starts 2.0 / 2.3 / 2.6 / 1.7 programmes; ransomware is
-  commonest after the breach (0.22 against 0.15–0.18). Board confidence
-  converges to about 0.55 by December in all four, so the difference lives in
-  the budget, the threat, two messages and a decision of its own each (an
+  commonest after the breach (0.22 against 0.15–0.18). For a player who
+  writes every board paper, board confidence ends 0.62–0.66 in all four,
+  because the papers outweigh the start, so the difference lives in the
+  budget, the threat, two messages and a decision of its own each (an
   extortion demand, a flagship purchase, a predecessor's figure that counted
-  less than it seemed) and the review's answer to the situation's question. Whether that is enough to make a second year feel
+  less than it seemed) and the review's answer to the situation's question.
+  Whether that is enough to make a second year feel
   different is a playtest question.
 
 - **Objectives missed does not read as difficulty, and should not be read

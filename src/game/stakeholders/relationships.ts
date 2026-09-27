@@ -31,12 +31,15 @@ export function tickRelationships(state: GameState): void {
     const drift = person.trust > 0.5 ? -0.0006 : 0.0004
     person.trust = clamp01(person.trust + drift)
   }
-  // Board confidence follows the executives' view of the CISO, slowly.
+  // Board confidence follows the executives' view of the CISO, slowly. At a
+  // percent a day a good paper was forgotten inside two months, and the
+  // standing on the home screen read "Neutral" on nine days in ten whatever
+  // the player did. At 0.4% a paper is remembered for about a season.
   const trusts = Object.values(state.stakeholders.stakeholders).map((p) => p.trust)
   if (trusts.length > 0) {
     const avg = trusts.reduce((sum, v) => sum + v, 0) / trusts.length
     state.stakeholders.boardConfidence = clamp01(
-      state.stakeholders.boardConfidence + (avg - state.stakeholders.boardConfidence) * 0.01,
+      state.stakeholders.boardConfidence + (avg - state.stakeholders.boardConfidence) * 0.004,
     )
   }
   // Patience recovers towards the level this organisation actually has, and

@@ -276,7 +276,11 @@ committee sees**.
 The rule the game enforces: *surprising the board with something you already knew
 is the classic failure*. Leave a material item off and they find out another way,
 and your standing drops. Bring twenty things and the chair asks you for fewer,
-sharper items.
+sharper items. A paper can be written any time before the next quarter closes;
+if it never is, the committee meets without one, the chair writes to say so, and
+the board's standing on the Briefing drops. The board remembers a good paper for
+about a season, so the standing you see in December is the one you earned in the
+second half of the year.
 
 There is also a checkbox — **"Be explicit about what you do not yet know"**.
 Tick it. Honest uncertainty, communicated well, builds more credibility than

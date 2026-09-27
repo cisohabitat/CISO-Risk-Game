@@ -672,7 +672,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           return 'The board ended the year unsure whether they were hearing the whole picture.'
       }
     })(),
-    evidence: [`${quarters.length} quarterly reviews prepared`],
+    evidence: [
+      `${quarters.length} quarterly reviews prepared`,
+      ...((state.reviews.missedQuarters ?? 0) > 0
+        ? [`The committee met ${state.reviews.missedQuarters === 1 ? 'once' : `${state.reviews.missedQuarters} times`} without a paper from you`]
+        : []),
+    ],
   })
 
   // 7. Team sustainability.

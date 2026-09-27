@@ -71,6 +71,29 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     state.resources.weekIndex += 1
     state.resources.focusRemaining = state.resources.focusPerWeek
   }
+  // A paper still unwritten when the next quarter closes, or when the year
+  // does, means the committee met without one. It used to cost nothing: a
+  // player who never went to the board ended the year where one who filed
+  // every paper did.
+  if (day % DAYS_PER_QUARTER === 0 && state.reviews.pendingQuarter !== undefined) {
+    const again = state.reviews.missedQuarters ?? 0
+    state.reviews.missedQuarters = again + 1
+    queued.push({ type: 'board.confidence', delta: -0.08 })
+    // On the last day the review says it; a letter hoping it will not happen
+    // again would arrive after the year it hopes about.
+    if (day < CAMPAIGN_DAYS) pushMessage(state, {
+      from: 'Sir Alan Whitcombe, Chair, Board Risk Committee',
+      subject: again === 0 ? 'The committee met without your paper' : 'Again, no paper',
+      body:
+        again === 0
+          ? 'The committee met without a paper from you. We discussed cyber risk anyway, which is to say we discussed what we had read in the newspapers. I would rather that did not happen again.'
+          : 'The committee has met again without a paper from you. I have stopped assuming there is a good reason, and so have my colleagues.',
+      type: 'board',
+      priority: 'notable',
+      relatedNodeIds: [],
+    })
+    state.reviews.pendingQuarter = undefined
+  }
   if (day % DAYS_PER_QUARTER === 0 && day < CAMPAIGN_DAYS) {
     quarterEnded = Math.floor(day / DAYS_PER_QUARTER)
     state.reviews.pendingQuarter = quarterEnded

@@ -43,7 +43,8 @@ the seventeen steps and a test fails if they are reordered, because subsystems
 read each other's output within a day:
 
 1. advance the date
-2. refresh weekly resources and quarter boundaries
+2. refresh weekly resources and quarter boundaries (a board paper still
+   unwritten when the next quarter closes is charged here)
 3. apply delayed effects that fall due
 4. progress business objectives
 5. progress cyber programmes
