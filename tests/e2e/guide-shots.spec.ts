@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { goTo, startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 /**
  * The pictures in docs/PLAYER_GUIDE.md.
@@ -131,75 +132,34 @@ test.describe('player guide', () => {
   })
 
   /**
-   * The slow one. Reaching the first board paper means covering a quarter
-   * through the interface, and neither stepping event by event nor running the
-   * in-game clock has proved quick or reliable about it. If this fails, the
-   * committed picture is still current — re-run it alone, or leave it.
+   * A pattern offer and the first board paper, from campaigns the engine
+   * prepared. This used to drive a quarter of play through the interface at
+   * 4x and poll for the board paper; measured, it ran out of polls before the
+   * clock reached day 91 on more runs than not, even at 2,200 polls and
+   * fifteen minutes, while the engine reaches the same day instantly. The
+   * screens photographed are still the real ones, loaded from a real save.
    */
   test('a pattern offer and the quarterly board paper', async ({ page }) => {
-    test.setTimeout(600_000)
-    await startCampaign(page, SEED)
+    test.setTimeout(180_000)
 
-    // Reaching the first board paper means covering a quarter. Stepping it
-    // event by event costs one round trip per stop and took twenty minutes;
-    // the game's own 4x clock covers the same ground while this polls, and
-    // only stops for the things that pause it.
-    await page.getByRole('button', { name: '4×' }).first().click()
-    let sawPattern = false
+    // A campaign far enough in that the game has spotted a pattern.
+    const patterned = prepareCampaign(SEED, 'pattern')
+    await openPreparedCampaign(page, patterned)
+    await dismissNote(page)
+    const offer = page.getByRole('button', { name: 'Form the hypothesis' }).first()
+    await expect(offer, 'no pattern was on offer in the prepared campaign').toBeVisible()
+    await shot(page, '07-pattern')
 
-    for (let i = 0; i < 900; i += 1) {
-      await page.waitForTimeout(200)
-      await dismissNote(page)
-
-      // Time pauses itself for anything worth stopping for, not only for
-      // decisions, so the clock has to be restarted each time or the poll
-      // loop spins against a stopped world.
-      const resume = page.getByRole('button', { name: 'Resume time' }).first()
-      if (await resume.isVisible().catch(() => false)) {
-        await resume.click().catch(() => undefined)
-        await page.getByRole('button', { name: '4×' }).first().click().catch(() => undefined)
-      }
-
-      if (!sawPattern) {
-        const offer = page.getByRole('button', { name: 'Form the hypothesis' }).first()
-        if (await offer.isVisible().catch(() => false)) {
-          await shot(page, '07-pattern')
-          sawPattern = true
-          if (!(await offer.isDisabled())) await offer.click()
-        }
-      }
-
-      if (await page.getByText(/board paper is due/i).first().isVisible().catch(() => false)) {
-        await page.getByRole('button', { name: 'Prepare it' }).first().click()
-        await page.getByRole('button', { name: /Prepare the Q\d board paper/ }).first().click()
-        await expect(page.getByRole('dialog')).toBeVisible()
-        await page.waitForTimeout(250)
-        await shot(page, '08-board')
-        expect(sawPattern, 'no pattern was offered before the board paper').toBe(true)
-        return
-      }
-
-      // The clock pauses for a decision; answer it and let time run again.
-      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
-      if (await decide.isVisible().catch(() => false)) {
-        await decide.click()
-        await page.getByRole('radio').first().check()
-        const why = page.getByRole('button', { name: /Record why first/ }).first()
-        if (await why.isVisible().catch(() => false)) {
-          await page.getByRole('button', { name: 'More evidence is required' }).first().click()
-        }
-        const commit = page.getByRole('button', { name: /Commit to this/ }).first()
-        if (await commit.isVisible().catch(() => false)) await commit.click()
-        else await page.keyboard.press('Escape')
-        await page.getByRole('button', { name: '4×' }).first().click().catch(() => undefined)
-      }
-    }
-    // Measured: raising the cap to 2,200 polls and the timeout to fifteen
-    // minutes did not reach it either, while the engine reaches board papers
-    // on days 91, 182 and 273 of every campaign. The mechanic is fine and
-    // this loop is not; 08-board goes stale until somebody drives the clock
-    // a better way. See docs/FINDINGS.md.
-    throw new Error('never reached a board paper')
+    // And the same world at the end of the first quarter.
+    const boardDue = prepareCampaign(SEED, 'board')
+    await openPreparedCampaign(page, boardDue)
+    await dismissNote(page)
+    await expect(page.getByText(/board paper is due/i).first()).toBeVisible()
+    await page.getByRole('button', { name: 'Prepare it' }).first().click()
+    await page.getByRole('button', { name: /Prepare the Q\d board paper/ }).first().click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await page.waitForTimeout(250)
+    await shot(page, '08-board')
   })
 
   test('an incident, and the closing review', async ({ page }) => {

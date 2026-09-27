@@ -209,17 +209,23 @@ fault.
   not have to discover is a question about what the game is teaching, so it is
   recorded under Known weaknesses rather than tuned.
 
-- **Open: the guide's board-paper picture cannot be regenerated.** The
-  screenshot harness drives a quarter of play through the interface at 4x to
-  reach the first board paper, and it no longer gets there: measured, neither
-  raising its poll cap to 2,200 nor its timeout to fifteen minutes reaches it,
-  and the loop ends on "never reached a board paper". The mechanic itself is
-  healthy — the engine reaches board papers on days 91, 182 and 273 of every
-  campaign, with two to four material items on each — so this is the loop, not
-  the game. `docs/images/08-board.png` therefore predates the materiality
-  change described below and may show one item more than a board pack would
-  now. Every other picture in the guide is current. Left open because the fix
-  is a better way to drive the clock from a browser, not a change to the game.
+- **The guide's board-paper picture could not be regenerated.** The
+  screenshot harness drove a quarter of play through the interface at 4x to
+  reach the first board paper, and it no longer got there: neither raising its
+  poll cap to 2,200 nor its timeout to fifteen minutes reached day 91, while the
+  engine reaches board papers on days 91, 182 and 273 of every campaign. The
+  loop, not the game. Closed by not driving the clock from a browser at all:
+  `scripts/prepare-campaign.ts` plays a light, engaged year in the engine up to
+  a named stopping point (a pattern on offer, a board paper due, a given day)
+  and prints the save record, and `tests/e2e/prepared.ts` puts it in the
+  browser's save store and opens it from the Continue list. The screens
+  photographed are the real ones loaded from a real save. The pattern and board
+  test now takes 2.5 seconds instead of timing out. The first version of the
+  policy never formed a pattern, so the board paper it photographed read "You
+  have nothing to report"; the policy now forms what the game notices, and the
+  picture shows four raised risks on the agenda. The preparation runs outside
+  Playwright because Playwright loads modules as native ESM and the campaign's
+  JSON imports are written for Vite and tsx.
 
 - **Five risk bands were authored and two were ever used.** One cut list at
   0.16 / 0.34 / 0.55 / 0.75 served three different quantities, and it was cut

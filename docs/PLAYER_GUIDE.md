@@ -262,11 +262,13 @@ Tick it. Honest uncertainty, communicated well, builds more credibility than
 confidence you cannot support. That is true in the game and it is true in the
 job.
 
-The pack in the picture above is empty, which is what an early one looks like
-if you have not yet assessed a risk, had an assumption fail or run an incident.
-The game does not pretend otherwise — it says so, and points out that having
-nothing to report is itself something the board may ask about. Raise a risk or
-two and the same dialog fills with items to choose between.
+The pack in the picture holds the four risks this player raised during the
+quarter. The line above them counts the ones still *emerging*: the board hears
+only about risks you have raised, and you raise an emerging one from the Risk
+screen. An early pack can also be empty, if you have not yet assessed a risk,
+had an assumption fail or run an incident. The game does not pretend otherwise
+— it says so, and points out that having nothing to report is itself something
+the board may ask about.
 
 ---
 
