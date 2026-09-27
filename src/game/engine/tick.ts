@@ -121,6 +121,22 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     const def = index.objective.get(id)
     if (def) highlights.push(`${def.name} is slipping.`)
   }
+  // A missed objective used to pass in silence: delivery and slipping were
+  // announced, and the first a player heard of a failure was the review.
+  for (const id of objectiveResult.failed) {
+    const def = index.objective.get(id)
+    if (!def) continue
+    const owner = def.ownerStakeholderId ? index.stakeholder.get(def.ownerStakeholderId) : undefined
+    highlights.push(`${def.name} missed its date.`)
+    pushMessage(state, {
+      from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',
+      subject: `Missed: ${def.name}`,
+      body: `${def.name} has missed the date the business set for it. It carries into next year, and the annual review will count it among the objectives missed.`,
+      type: 'business',
+      priority: 'notable',
+      relatedNodeIds: [],
+    })
+  }
   recoverServiceHealth(state, index)
 
   // 5. Cyber programmes.
@@ -129,6 +145,30 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   for (const milestone of programmeResult.milestones) {
     const programme = index.programme.get(milestone.programmeId)
     highlights.push(`${programme?.shortName ?? milestone.programmeId}: ${milestone.name} reached.`)
+  }
+  // Enquiries announce themselves when they finish; a programme, the largest
+  // thing a player builds, used to finish with a toast about its last
+  // milestone and nothing in the inbox.
+  for (const programmeId of programmeResult.completed) {
+    const programme = index.programme.get(programmeId)
+    if (!programme) continue
+    const strengthened = [...new Set(programme.milestones.flatMap((m) => (m.controlEffects ?? []).map((e) => e.controlId)))]
+      .map((id) => index.control.get(id)?.name.toLowerCase())
+      .filter((name): name is string => Boolean(name))
+    // Several control names carry their own "and" ("backup and recovery"),
+    // so a list of them is counted and separated rather than run together.
+    const counted = ['', 'one', 'two', 'three', 'four', 'five'][strengthened.length] ?? String(strengthened.length)
+    const list = strengthened.length > 1 ? `${counted} controls: ${strengthened.join('; ')}` : (strengthened[0] ?? '')
+    highlights.push(`${programme.shortName} delivered.`)
+    pushMessage(state, {
+      from: programme.name,
+      subject: `Delivered: ${programme.name}`,
+      body: list
+        ? `${programme.name} is delivered. It strengthened ${list}. Controls drift when nothing maintains them, and an assessment is still the only way to know how well they now work.`
+        : `${programme.name} is delivered. An assessment is still the only way to know how well what it built now works.`,
+      type: 'programme',
+      priority: 'notable',
+    })
   }
   for (const blocker of programmeResult.newBlockers) {
     const programme = index.programme.get(blocker.programmeId)

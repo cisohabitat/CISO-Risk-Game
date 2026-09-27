@@ -69,6 +69,9 @@ used", a previous run left a server behind: kill it rather than setting
 `reuseExistingServer`, because a stale server can hide a real break as easily as
 it can invent one.
 
+`pnpm check` ends with a build, so it rewrites `dist/` — the directory the
+end-to-end suite is serving. Do not run the two at once; finish one first.
+
 ## Where the project is
 
 **The feature set is complete and the major systems are frozen.** The remaining

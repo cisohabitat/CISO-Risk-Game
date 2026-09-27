@@ -18,6 +18,77 @@ fault.
 
 ### Fixed
 
+- **A business objective could fail in silence.** Delivery ("Launch the new
+  customer platform delivered.") and slipping each had a notice; failure had
+  none, so a player's first word that an objective had missed its date was
+  *failed* in the annual review — three of them in one high-pressure year read
+  this session. The owning executive now writes on the day it misses ("Missed:
+  Launch the new customer platform"), and the day carries a toast. A test moves
+  an objective's date to the next day and checks the notice, its day and its
+  sender; removing the notice fails it.
+
+  Programmes had the same gap at the other end. Enquiries announce
+  themselves ("Completed: Privileged access review"); a programme — the
+  largest thing a player builds — finished with a toast about its last
+  milestone and nothing in the inbox. It now writes "Delivered: Identity and
+  privileged access uplift", names the controls its milestones strengthened
+  (read from its own content, counted and separated because several control
+  names carry their own "and"), and says an assessment is still the only way
+  to know how well they now work. A test drives the identity programme to
+  completion and reads the message; removing it fails the test.
+
+- **A machine read of everything a year says.** Over 72 campaigns — every
+  mode and every starting situation, half engaged and half neglectful — every
+  message, decision text, board reaction and line of the close was checked
+  for unrendered tokens, leaked values, doubled words and spaces, stray
+  punctuation, articles and plurals; every authored string in the content
+  files was checked the same way. Three things turned up: "0 of 1 programmes
+  you started reached completion", one evidence line that began in lower case
+  ("you answered all 22 of the decisions put to you"), and the list under
+  *What you never looked at*, whose items begin lower case because the same
+  phrases are joined into a sentence in the narrative. The first two are
+  fixed at the source and the list capitalises its items when it shows them.
+  `tests/engine/text-lint.test.ts` keeps four of those campaigns under the
+  same checks; reverting either fix fails it by name.
+
+  The same pass compared what options say about money with what they spend.
+  The dialog prints an option's price beside it, and three options said it
+  again in their own words ("Costs £250k", "Costs £300k", "£180k"): the two
+  situation decisions from this session and the fourth-quarter platform
+  redesign. The words are gone, and the content test that already stops a
+  price being stated as both effect and requirement now also stops it being
+  written into the option's text.
+
+  And options that promise nothing: "Defer until after the launch" on the
+  retention decision said *Nothing changes* and cost Legal's trust and a
+  standing concern. It now reads *The data stays where it is* and *Legal will
+  remember that you deferred it*, and a content test fails any option that
+  says nothing changes while moving trust, confidence, morale or money
+  without naming it.
+
+  Attention was the other half of that. Five options spend attention when
+  taken; three said *Costs attention* in their own words and two — testing
+  restores outside production and reviewing the Kestrel boundary — said
+  nothing, so the player found out when the week's count dropped. The card
+  now prints the attention an option spends beside its price, from the same
+  requirements the engine checks, and the hand-written lines are gone. A test
+  reads the flagship decision's card (one option £300k, one 1 attention) and
+  fails when the cost is dropped from the view.
+
+  Last, the glossary: the content says *extort…* 27 times and *threat hunt*
+  five, and neither was defined for a player who does not know the subject.
+  Both have entries now, so the chips appear under the text that uses them,
+  and the glossary test holds them like the other terms of art.
+
+  The reverse check — options that warn of a cost the game never charges —
+  found one: the fourth-quarter platform redesign said *Engineering time in
+  peak season* and took none. It now takes half of engineering's capacity for
+  forty days, as the executive-exception redesign does for identity. The
+  audit decision's *Requires real budget and capacity* described what keeping
+  the promise would take rather than what the choice costs, and now says so:
+  *Meeting them means funding and staffing a programme*. A content test fails
+  any option that warns of capacity and takes none.
+
 - **"A programme has stalled" arrived on the same day as the blocker it
   reminded about.** The reminder fired on any unresolved blocker, so it often
   landed beside the programme's own "Blocker: …" message and said the same

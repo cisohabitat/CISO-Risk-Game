@@ -372,3 +372,23 @@ describe('who a message is from, in play', () => {
     }
   })
 })
+
+describe('a business objective that misses its date', () => {
+  it('is announced on the day it fails, by the executive who owns it', () => {
+    // Delivery and slipping had notices; failure had none, and the first a
+    // player heard of it was "Launch the new customer platform: failed" in
+    // the annual review.
+    const state = newGame(index, { seed: 'missed' })
+    runDays(state, index, 30)
+    const def = index.content.objectives[0]!
+    const runtime = state.business.objectives[def.id]!
+    runtime.targetDay = state.currentDay
+    runDays(state, index, 1)
+    expect(runtime.status).toBe('failed')
+    const owner = index.stakeholder.get(def.ownerStakeholderId!)!
+    const notice = state.inbox.messages.find((m) => m.subject === `Missed: ${def.name}`)
+    expect(notice, `${def.id} failed in silence`).toBeDefined()
+    expect(notice!.day).toBe(state.currentDay)
+    expect(notice!.from).toBe(`${owner.name}, ${owner.role}`)
+  })
+})

@@ -81,3 +81,28 @@ describe('programme messages claim only what is true', () => {
     expect(ahead, '"A programme is on plan" never arrived in eight building campaigns').toBeGreaterThan(0)
   })
 })
+
+describe('a programme that finishes', () => {
+  it('says so in the inbox, naming what it strengthened', () => {
+    // Enquiries announced themselves; a finished programme had only a toast
+    // about its last milestone.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'delivered' })
+    runDays(state, index, 3)
+    const def = index.programme.get('prog-identity')!
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    let notice
+    for (let day = 0; day < 364 && !notice; day += 1) {
+      const runtime = state.programmes.programmes[def.id]!
+      for (const blocker of runtime.blockers) blocker.resolved = true
+      runtime.progress = Math.max(runtime.progress, 0.9)
+      runDays(state, index, 1)
+      notice = state.inbox.messages.find((m) => m.subject === `Delivered: ${def.name}`)
+    }
+    expect(notice, 'the identity programme finished in silence').toBeDefined()
+    expect(state.programmes.programmes[def.id]!.status).toBe('complete')
+    expect(notice!.body).toContain('multi-factor authentication')
+    expect(notice!.body).toContain('privileged access management')
+    expect(state.inbox.messages.filter((m) => m.subject === `Delivered: ${def.name}`)).toHaveLength(1)
+  })
+})
