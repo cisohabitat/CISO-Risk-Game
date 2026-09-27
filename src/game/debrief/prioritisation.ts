@@ -180,6 +180,27 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
   const floor = ceiling > 0 ? worst / ceiling : 0
   const allocation = commitments.length === 0 || floor >= 1 ? 0 : Math.max(0, Math.min(1, (raw - floor) / (1 - floor)))
 
+  // Decisions the player chose, as opposed to ones that lapsed, count as having
+  // gone near whatever risk their effects touched. They are not commitments in
+  // the sense scored above — the game offered them, the player did not pick the
+  // risk — so they leave the score alone. But "nothing you did went near it" is
+  // a claim about everything the player did: a year that fixed card data on
+  // day 244 was told nothing it did went near the card data risk.
+  for (const runtime of Object.values(state.decisions.decisions)) {
+    if (!runtime.selectedOptionId || runtime.resolvedByDefault) continue
+    const option = index.decision.get(runtime.defId)?.options.find((o) => o.id === runtime.selectedOptionId)
+    if (!option) continue
+    if (runtime.scenarioId) addressed.add(runtime.scenarioId)
+    const nodeIds = new Set<string>()
+    const effects = [...(option.immediateEffects ?? []), ...(option.delayedEffects ?? []).flatMap((d) => d.effects)]
+    for (const effect of effects) {
+      const target = effect as { nodeId?: unknown; scenarioId?: unknown }
+      if (typeof target.nodeId === 'string') nodeIds.add(target.nodeId)
+      if (typeof target.scenarioId === 'string' && index.riskScenario.has(target.scenarioId)) addressed.add(target.scenarioId)
+    }
+    for (const id of aimedAt(index, { nodeIds })) addressed.add(id)
+  }
+
   const missed = ranked.find((s) => !addressed.has(s.id) && s.materiality > 0)
 
   return { allocation, raw, floor, commitments, biggest, missed }

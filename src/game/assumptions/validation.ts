@@ -277,8 +277,19 @@ export function invalidatedAssumptions(state: GameState) {
  * Assumptions that were never true and that the player never went and checked.
  * These are blind spots in the strict sense: relied on all year, never tested.
  */
-export function unexaminedAssumptions(state: GameState) {
-  return Object.values(state.assumptions.assumptions).filter(
-    (assumption) => assumption.heldWhenRecorded === false && assumption.status !== 'invalidated',
-  )
+/**
+ * Assumptions relied on that were never true and never examined. Not merely
+ * "never invalidated": an assumption waits for both the reveal and the truth
+ * still being false, so a player who tested backups after a programme had
+ * already fixed them passed the reveal and was never told — and the review
+ * then said they had relied on it without ever testing it, beside a line
+ * counting the recovery test they ran.
+ */
+export function unexaminedAssumptions(state: GameState, index: ContentIndex) {
+  return Object.values(state.assumptions.assumptions).filter((assumption) => {
+    if (assumption.heldWhenRecorded !== false || assumption.status === 'invalidated') return false
+    const def = index.assumption.get(assumption.defId)
+    const rule = def ? VALIDATION_RULES[def.validationRuleId] : undefined
+    return !rule || !hasBeenRevealed(state, rule.revealedBy, assumption.createdDay)
+  })
 }

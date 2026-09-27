@@ -18,6 +18,60 @@ fault.
 
 ### Fixed
 
+- **The annual review contradicted the year's own record, in all three modes.**
+  Graded by reading three whole years end to end — `pnpm ladder transcript`,
+  one per mode, every message, decision and line of the close — with three
+  reviewers reading the message streams in parallel and each of their claims
+  checked in source before anything changed. Seven defects in the close, all
+  real:
+
+  - **"Nothing you did went near it"** counted programmes and enquiries only.
+    A year that chose to fix card data outside the payment environment on day
+    244 was told nothing it did went near the card data risk; another that
+    enforced the retention policy was told the same of customer records.
+    Decisions the player chose, not ones that lapsed, now count as having gone
+    near whatever risk their effects touch. They do not enter the score: the
+    game offered them, the player did not pick the risk.
+  - **"Among it"** named the most material risk anything could have reached,
+    not anything the player's work was aimed at. It names the player's own
+    top target now.
+  - **Resilience read Solid beside "the consequences ran well beyond what the
+    business could absorb".** The sentence was picked from its own threshold of
+    0.5 while the band sat on 0.52..0.75; it is led by the band now, as
+    prioritisation's already was.
+  - **Every hidden dependency was listed twice**, as "stayed hidden" and again
+    as "was never traced", because the edge case never drew the line the node
+    case did between never seen and taken on trust. And the screen showed the
+    same list four times: in the opening summary, the dimension's sentence, its
+    evidence and its own section. The dimension now counts — never discovered,
+    known about but taken on trust — and the list appears once. Its sentence no
+    longer says "never brought into view" under "38 of 38 systems were ever
+    brought into view".
+  - **"You relied on backups without ever testing it"** printed beside "1
+    recovery exercise completed". Two things: an assumption whose test the
+    player met was still counted as untested if the truth had changed first,
+    and a test before the reliance began does not count by design, which the
+    player cannot know. The first is fixed; the second is now stated with the
+    day the reliance began.
+  - **"Nexora met 4 of 5 objectives; 1 were missed."**
+  - **Business enablement blamed "security friction you chose to impose"** on
+    every year, including one that ran no programme, and said "some of that"
+    of a single objective.
+
+  Also: the reasoning section printed "nothing this year contradicted it" on
+  every line, six times over; it says so once for the section now. Tests hold
+  the review to agreeing with itself across three modes, building and idle, and
+  two arranged cases for the branches a played year rarely reaches. Every fix
+  was mutation-checked, and two of the first round of tests survived their
+  mutation because no played year reached the branch, which is why the
+  arranged cases exist.
+
+  **Checked and left.** A reviewer read "among it: the build pipeline" as
+  unearned; the architecture review the player commissioned is aimed at it, so
+  it stands. "Multi-factor authentication was in place" beside "never
+  independently assessed" is two true things: the reconstruction reveals what
+  was there, and the player never checked it.
+
 - **A player's investment had a visible cost and an invisible benefit.**
   Grading with `tune.ts` at its default of 25 campaigns a style put the passive
   player, who builds nothing, on the fewest incidents, the most clean years and

@@ -271,6 +271,13 @@ export function DebriefScreen() {
           <SectionHeading><span id="reasoning">The reasoning you used</span></SectionHeading>
           <Card>
             <CardBody>
+              {(review.reasoning ?? []).some((line) => line.materialised === 0 && line.assumptionsFailed === 0) && (
+                <p className="mb-3 text-sm text-ink-muted text-pretty">
+                  {(review.reasoning ?? []).every((line) => line.materialised === 0 && line.assumptionsFailed === 0)
+                    ? 'Nothing this year contradicted any reason you gave. That is not the same as the reasons having been tested.'
+                    : 'Where a reason says only how often you used it, nothing this year contradicted it. That is not the same as its having been tested.'}
+                </p>
+              )}
               <ul className="space-y-3 text-sm">
                 {(review.reasoning ?? []).map((line) => (
                   <li key={line.tagId} className="border-b border-line pb-3 last:border-0 last:pb-0">

@@ -178,7 +178,7 @@ describe('assumptions that were never true', () => {
     // Never assessed, so it never fired — and that is exactly the failure.
     expect(assumption.status).not.toBe('invalidated')
     const review = buildAnnualReview(state, index)
-    expect(review.blindSpots.join(' ')).toMatch(/relied on .* without ever testing it/i)
+    expect(review.blindSpots.join(' ')).toMatch(/relied on .* and never tested it after that/i)
   })
 
   it('stops the assumption mechanic firing as background noise', () => {

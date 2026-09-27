@@ -208,3 +208,54 @@ describe('effort allocation', () => {
     expect(effortAllocation(state, index).commitments.some((c) => c.label.toLowerCase().includes('team'))).toBe(false)
   })
 })
+
+/**
+ * "Nothing you did went near it" read programmes and enquiries only. A
+ * transcript year fixed card data outside the payment environment on day 244
+ * and was told, of the card data risk, that nothing it did went near it.
+ */
+describe('what went near a risk', () => {
+  const setUp = () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'went-near' })
+    // Make the card data risk the biggest thing in the world, so it is the one
+    // the review would name.
+    state.risks.initialMateriality = Object.fromEntries(
+      index.content.riskScenarios.map((def) => [def.id, def.id === 'risk-payment-scope' ? 0.9 : 0.05]),
+    )
+    return { index, state }
+  }
+  const decide = (state: GameState, byDefault: boolean) => {
+    state.decisions.decisions['d-card'] = {
+      id: 'd-card', defId: 'dec-cardholder-scope', createdDay: 200,
+      selectedOptionId: 'opt-card-fix', resolvedDay: 200, resolvedByDefault: byDefault,
+      rationaleTagIds: [], assumptionIds: [],
+    }
+  }
+
+  it('names the card data risk as missed when nothing touched it', () => {
+    const { index, state } = setUp()
+    expect(effortAllocation(state, index).missed?.id).toBe('risk-payment-scope')
+  })
+
+  it('does not, once the player chose to fix it', () => {
+    const { index, state } = setUp()
+    decide(state, false)
+    expect(effortAllocation(state, index).missed?.id).not.toBe('risk-payment-scope')
+  })
+
+  it('still does when the organisation decided it for them', () => {
+    const { index, state } = setUp()
+    decide(state, true)
+    expect(effortAllocation(state, index).missed?.id).toBe('risk-payment-scope')
+  })
+
+  it('leaves the prioritisation score alone: a decision is not a commitment', () => {
+    const { index, state } = setUp()
+    const before = effortAllocation(state, index)
+    decide(state, false)
+    const after = effortAllocation(state, index)
+    expect(after.allocation).toBe(before.allocation)
+    expect(after.commitments).toEqual(before.commitments)
+  })
+})

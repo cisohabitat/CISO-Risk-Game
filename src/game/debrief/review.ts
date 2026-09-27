@@ -246,8 +246,10 @@ export function reasoningReview(state: GameState, index: ContentIndex): Reasonin
       verdict = `You leaned on this ${times}. On ${row.assumptionsFailed} of them the assurance underneath it turned out not to hold.`
     } else {
       // Deliberately not "it was right": nothing contradicting a belief is not
-      // the same as the belief having been tested.
-      verdict = `You leaned on this ${times}, and nothing this year contradicted it.`
+      // the same as the belief having been tested. Said once for the section
+      // on the debrief rather than on every line, where six reasons read as six
+      // copies of the same sentence.
+      verdict = `You leaned on this ${times}.`
     }
     lines.push({ tagId, label, uses: row.uses, materialised: row.materialised, assumptionsFailed: row.assumptionsFailed, verdict })
   }
@@ -390,7 +392,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // and the player reads the sentence.
     narrative: (() => {
       const lapses = lapsed === 0 ? '' : ` ${lapsed} lapsed and the organisation chose ${lapsed === 1 ? 'that one' : 'those'} for you.`
-      const biggest = effort.biggest?.title
+      // The most material thing the player's own work was aimed at. This used
+      // to be the most material thing anything could have been aimed at, so a
+      // year that built identity and recovery was told the build pipeline was
+      // "among" what it committed to, beside a line saying the pipeline ended
+      // at high residual. Every transcript read in grading said it.
+      const biggest = [...effort.commitments].sort((a, b) => b.materiality - a.materiality)[0]?.scenarioTitle
       switch (band(prioritisation)) {
         case 'strong':
           return `What you committed to was what mattered${biggest ? `, ${biggest} among it` : ''}.${lapses}`
@@ -487,10 +494,17 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     id: 'resilience',
     label: 'Resilience',
     band: band(resilience),
+    // Led by the band, as prioritisation is. Picked from its own threshold of
+    // 0.5, a worst consequence of 0.52 scored `solid` and printed "ran well
+    // beyond what the business could absorb" beside it; all three transcripts
+    // read in grading showed the pair.
     narrative: tested
-      ? worstConsequence > 0.5
-        ? 'When the organisation was tested, the consequences ran well beyond what the business could absorb comfortably.'
-        : 'The organisation was tested and absorbed it without lasting damage.'
+      ? ({
+          strong: 'The organisation was tested and came through with little lasting damage.',
+          solid: 'The organisation was tested and absorbed it, though not without cost.',
+          developing: 'When the organisation was tested, it took real damage before it recovered.',
+          weak: 'When the organisation was tested, the consequences ran well beyond what the business could absorb.',
+        } as const)[band(resilience)]
       : exercised
         ? 'No material incident reached the business this year. What recovery capability you did exercise is the only evidence you have that it would have held.'
         : 'No material incident reached the business this year, and recovery was never exercised. That is an outcome, not a demonstrated capability.',
@@ -555,12 +569,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     id: 'business-enablement',
     label: 'Business enablement',
     band: band(enablement),
-    narrative:
-      failed === 0
-        ? 'The business met its commitments with security alongside it rather than in the way.'
-        : failed === 1
-          ? 'One business objective was missed. Some of that was security friction you chose to impose.'
-          : `${failed} business objectives were missed. Some of that was security friction you chose to impose.`,
+    // The friction a player chooses is the programmes they run: each one drags
+    // on delivery while it is live. The sentence used to blame that friction
+    // whatever the player did, including a year that built nothing, and read
+    // "Some of that" against a single missed objective.
+    narrative: (() => {
+      if (failed === 0) return 'The business met its commitments with security alongside it rather than in the way.'
+      const missed = failed === 1 ? 'One business objective was missed.' : `${failed} business objectives were missed.`
+      const built = Object.values(state.programmes.programmes).some((p) => p.status !== 'proposed')
+      return built
+        ? `${missed} Security programmes you chose to run were part of the pressure on ${failed === 1 ? 'it' : 'them'}.`
+        : `${missed} None of it was friction you imposed: you ran no security programme.`
+    })(),
     evidence: (() => {
       const lines = index.content.objectives.map((def) => {
         const runtime = state.business.objectives[def.id]
@@ -645,6 +665,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   const spots = blindSpots(state, index)
+  const neverSeen = spots.length
+  const onTrust = examined.names.length
   // Things taken on trust sit behind things never seen at all: both are blind
   // spots, but not knowing something exists is the worse of the two.
   spots.push(...examined.names)
@@ -653,20 +675,40 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   spots.splice(12)
   // Relying on something untrue for a year without ever checking is the purest
   // blind spot the simulation can identify, so it is named explicitly.
-  for (const assumption of unexaminedAssumptions(state)) {
-    spots.unshift(`you relied on "${assumption.statement}" all year without ever testing it, and it was not true`)
+  for (const assumption of unexaminedAssumptions(state, index)) {
+    // Dated, because a test before the reliance does not count and the player
+    // may well remember one: a year that ran a recovery test on day 139 and
+    // began relying on backups on day 275 read "without ever testing it"
+    // beside "1 recovery exercise completed".
+    spots.unshift(`from day ${assumption.createdDay} you relied on "${assumption.statement}" and never tested it after that; it was not true`)
   }
   dimensions.push({
     id: 'blind-spots',
     label: 'Material blind spots',
     // Scored against how much there was to find, so a big estate is not
     // penalised for being big, and the dimension actually discriminates.
-    band: band(clamp01(examinedShare - unexaminedAssumptions(state).length * 0.08)),
+    band: band(clamp01(examinedShare - unexaminedAssumptions(state, index).length * 0.08)),
+    // Counted here and named once, under "What you never looked at". The
+    // screen used to show the same list four times: in the opening summary, in
+    // this sentence, in this evidence and in its own section. And "never
+    // brought into view" sat under "38 of 38 systems were ever brought into
+    // view", because most of what it listed were dependencies and systems the
+    // player knew of and never checked, not things they never saw.
     narrative:
       spots.length === 0
         ? 'Nothing material was left unexamined.'
-        : `Material parts of Nexora were never brought into view: ${spots.slice(0, 3).join('; ')}.`,
-    evidence: spots.slice(0, 12),
+        : neverSeen > 0
+          ? 'Material parts of how Nexora fits together were never seen, and more were known about but never examined.'
+          : 'You saw all of what mattered, but much of it was taken on trust rather than examined.',
+    evidence: [
+      ...(neverSeen > 0
+        ? [`${neverSeen} material ${neverSeen === 1 ? 'system or dependency was' : 'systems and dependencies were'} never discovered`]
+        : []),
+      ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
+      ...unexaminedAssumptions(state, index).map(
+        (a) => `"${a.statement}" was relied on from day ${a.createdDay}, not tested after that, and not true`,
+      ),
+    ],
   })
 
   const overall = dimensions.reduce((sum, d) => sum + bandValue(d.band), 0) / dimensions.length
@@ -747,7 +789,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const businessOutcome =
     failed === 0
       ? `Nexora met all ${objectives.length} of its stated objectives.`
-      : `Nexora met ${achieved} of ${objectives.length} objectives; ${failed} were missed.`
+      : `Nexora met ${achieved} of ${objectives.length} objectives; ${failed} ${failed === 1 ? 'was' : 'were'} missed.`
 
   return {
     day: state.currentDay,

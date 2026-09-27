@@ -141,7 +141,9 @@ export function blindSpots(state: GameState, index: ContentIndex): string[] {
       out.push(`the dependency between ${from.name} and ${to.name} stayed hidden`)
     }
   }
-  return out.slice(0, 8)
+  // Uncapped: the review caps the list it shows and counts the rest, and a
+  // count taken from a capped list undercounts.
+  return out
 }
 
 /**
@@ -197,7 +199,11 @@ export function unexaminedMaterial(
     if (!edge?.exists) continue
     reachable += 1
     if (edge.verified) examined += 1
-    else if (from && to) names.push(`the dependency between ${from.name} and ${to.name} was never traced`)
+    // The same line as for nodes: a dependency nobody ever discovered is named
+    // by blindSpots as hidden, and naming it here as well put one dependency in
+    // the review twice, once as "stayed hidden" and once as "was never traced".
+    // Every transcript read in grading had two such pairs.
+    else if (edge.discovered && from && to) names.push(`the dependency between ${from.name} and ${to.name} was never traced`)
   }
 
   for (const def of index.content.controls) {
