@@ -403,6 +403,16 @@ fault.
   Playwright because Playwright loads modules as native ESM and the campaign's
   JSON imports are written for Vite and tsx.
 
+  The incident and annual-review pictures went the same way afterwards: that
+  test drove a whole year through the interface, up to 500 polls and ten
+  minutes, and now loads prepared campaigns stopped mid-incident and at the
+  year's natural end, in about three seconds. The prepared policy was first
+  too idle to photograph honestly — the Q3 board paper still "Due" on 30
+  December, 157 unread messages, a review about a player who built nothing —
+  so it now files each quarter's paper with what is material, reads the
+  inbox, runs the identity programme and clears its blockers. The mid-year
+  layout and accessibility tests use the same prepared year.
+
 - **Five risk bands were authored and two were ever used.** One cut list at
   0.16 / 0.34 / 0.55 / 0.75 served three different quantities, and it was cut
   for a 0..1 range none of them reach. Measured with a new probe,

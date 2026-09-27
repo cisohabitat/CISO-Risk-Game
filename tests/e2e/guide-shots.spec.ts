@@ -11,10 +11,10 @@ import { openPreparedCampaign, prepareCampaign } from './prepared'
  *
  *   pnpm guide:shots
  *
- * Three independent tests rather than one long one, each starting its own
- * campaign. The screens that only appear later in a year take minutes of
- * simulated time to reach, and a single sequence meant one slow phase stopped
- * the rest being captured at all.
+ * Three independent tests rather than one long one. The first hour is played
+ * through the interface; the screens that only appear later in a year are
+ * photographed from campaigns the engine played there (see prepared.ts),
+ * because reaching them through the interface took minutes and often failed.
  */
 
 /** Transient confirmations sit over the page for five seconds: noise in a guide. */
@@ -45,41 +45,6 @@ async function dismissNote(page: Page): Promise<boolean> {
   if (!(await got.isVisible().catch(() => false))) return false
   await got.click()
   return true
-}
-
-/**
- * One turn of ordinary play: clear the note, form what is offered, answer what
- * is asked, otherwise advance. Every probe takes `.first()` — a locator that
- * resolves to more than one element throws in strict mode, and a `catch` around
- * it turns that into a silent "not visible" that never fires the branch.
- */
-async function playOn(page: Page): Promise<'moved' | 'ended'> {
-  if (await dismissNote(page)) return 'moved'
-
-  const offer = page.getByRole('button', { name: 'Form the hypothesis' }).first()
-  if ((await offer.isVisible().catch(() => false)) && !(await offer.isDisabled())) {
-    await offer.click()
-    return 'moved'
-  }
-
-  const decide = page.getByRole('button', { name: /^Decide$/ }).first()
-  if (await decide.isVisible().catch(() => false)) {
-    await decide.click()
-    await page.getByRole('radio').first().check()
-    const why = page.getByRole('button', { name: /Record why first/ }).first()
-    if (await why.isVisible().catch(() => false)) {
-      await page.getByRole('button', { name: 'More evidence is required' }).first().click()
-    }
-    const commit = page.getByRole('button', { name: /Commit to this/ }).first()
-    if (await commit.isVisible().catch(() => false)) await commit.click()
-    else await page.keyboard.press('Escape')
-    return 'moved'
-  }
-
-  const skip = page.getByRole('button', { name: 'Skip ahead' }).first()
-  if (!(await skip.isVisible().catch(() => false))) return 'ended'
-  await skip.click()
-  return 'moved'
 }
 
 // A seed whose year has something on every board paper and more than one
@@ -162,23 +127,25 @@ test.describe('player guide', () => {
     await shot(page, '08-board')
   })
 
+  /**
+   * An incident mid-response and the annual review, from prepared campaigns
+   * like the board paper above. This drove a whole year through the interface
+   * at up to 500 polls and ten minutes, which is why the pictures went stale
+   * between runs; the engine reaches both in seconds.
+   */
   test('an incident, and the closing review', async ({ page }) => {
-    test.setTimeout(600_000)
-    await startCampaign(page, SEED)
-    let sawIncident = false
+    test.setTimeout(180_000)
 
-    for (let i = 0; i < 500; i += 1) {
-      if (!sawIncident && (await page.getByText('Incident active').first().isVisible().catch(() => false))) {
-        await shot(page, '09-incident')
-        sawIncident = true
-      }
-      if (await page.getByText('Annual review').first().isVisible().catch(() => false)) break
-      if ((await playOn(page)) === 'ended') break
-    }
+    await openPreparedCampaign(page, prepareCampaign(SEED, 'incident'))
+    await dismissNote(page)
+    await expect(page.getByText('Incident active').first()).toBeVisible()
+    await shot(page, '09-incident')
 
+    await openPreparedCampaign(page, prepareCampaign(SEED, 'year-end'))
+    await dismissNote(page)
+    // A finished year opens on its review.
+    await expect(page.getByText('How the year is read')).toBeVisible()
     await page.waitForTimeout(400)
     await shot(page, '10-review')
-    expect(sawIncident, 'the year had no incident to photograph').toBe(true)
-    await expect(page.getByText('Annual review').first()).toBeVisible()
   })
 })

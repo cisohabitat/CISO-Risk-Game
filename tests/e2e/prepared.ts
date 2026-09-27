@@ -6,7 +6,7 @@ import { expect, type Page } from '@playwright/test'
  * own save, for screens that only exist months into a year. The playing is
  * done by `scripts/prepare-campaign.ts`; see there for why it is not done here.
  */
-export type Stop = 'pattern' | 'board' | `day:${number}`
+export type Stop = 'pattern' | 'board' | 'incident' | 'year-end' | `day:${number}`
 
 export function prepareCampaign(seed: string, stop: Stop, difficulty = 'ciso'): unknown {
   const out = execFileSync('node_modules/.bin/tsx', ['scripts/prepare-campaign.ts', seed, stop, difficulty], {
