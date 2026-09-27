@@ -20,7 +20,7 @@ import { applyEffects, recordAssumption } from './effects'
 import { tickDay, type TickResult } from './tick'
 export type { TickResult }
 import { createInitialState, type NewGameOptions } from './setup'
-import { canAfford, refreshCommittedCapacity } from '../team/capacity'
+import { canAfford, functionName, refreshCommittedCapacity } from '../team/capacity'
 import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
 import { pushMessage } from '../inbox/messages'
@@ -673,7 +673,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           { type: 'team.vacancyFilled', fn: action.fn },
           { type: 'team.morale', fn: action.fn, delta: 0.06 },
         ],
-        note: 'A new hire has joined the team.',
+        note: `A new hire has joined the ${functionName(action.fn)} team.`,
         source: 'hiring',
       })
       commit()

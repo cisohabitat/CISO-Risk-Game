@@ -249,6 +249,14 @@
         {
           "kind": "flag.set",
           "flag": "recovery.tested"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "control.effectivenessBelow",
+            "controlId": "ctl-backup",
+            "value": 0.35
+          }
         }
       ],
       "weight": 20,
@@ -266,6 +274,43 @@
           "stakeholderId": "stk-ceo",
           "delta": 0.03,
           "reason": "The COO told her the restore test held."
+        }
+      ],
+      "relatedNodeIds": [],
+      "tags": [
+        "executive",
+        "consequence",
+        "fourth-quarter"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-recovery-struggled",
+      "type": "executive",
+      "title": "The restore ran past the window",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Four hours of payments, and the restore ran past them. We got payments back, but not by the runbook: steps were out of date and one depended on an account that no longer exists. I would rather have found that in a window we chose than in one somebody else chose for us, and I have said so to Marianne.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "recovery.tested"
+        },
+        {
+          "kind": "control.effectivenessBelow",
+          "controlId": "ctl-backup",
+          "value": 0.35
+        }
+      ],
+      "weight": 20,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-coo",
+          "concern": "Whether recovery works when it is needed"
         }
       ],
       "relatedNodeIds": [],

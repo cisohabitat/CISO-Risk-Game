@@ -107,6 +107,19 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     for (const entry of duePending) {
       const outcome = applyEffects(state, entry.effects, { index, rng, source: entry.source })
       if (entry.note) highlights.push(entry.note)
+      // A choice's delayed consequence was a toast, gone in a moment at
+      // speed: "somebody senior has resigned" among them. It stays in the
+      // inbox now, named for the decision it follows from.
+      const decisionDef = entry.note && entry.source.startsWith('decision:') ? index.decision.get(entry.source.slice('decision:'.length)) : undefined
+      if (decisionDef && entry.note) {
+        pushMessage(state, {
+          from: 'Nexora Group',
+          subject: `Followed up: ${decisionDef.title}`,
+          body: entry.note,
+          type: 'executive',
+          priority: 'notable',
+        })
+      }
       for (const interrupt of outcome.interrupts) pauseReasons.add(interrupt as PauseReason)
     }
   }

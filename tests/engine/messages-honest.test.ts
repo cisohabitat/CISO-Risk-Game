@@ -3,7 +3,7 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 import { evaluateAll } from '@/game/events/conditions'
 import { nextBoard, renderDecisionText } from '@/game/decisions/describe'
-import { patternSuggestions } from '@/store/selectors'
+import { cameBack, patternSuggestions } from '@/store/selectors'
 import type { GameState } from '@/game/types'
 
 /**
@@ -390,5 +390,57 @@ describe('a business objective that misses its date', () => {
     expect(notice, `${def.id} failed in silence`).toBeDefined()
     expect(notice!.day).toBe(state.currentDay)
     expect(notice!.from).toBe(`${owner.name}, ${owner.role}`)
+  })
+})
+
+describe('a choice that comes back later', () => {
+  it('lands in the inbox and on the briefing, not only in a toast', () => {
+    // Delayed consequences were toasts: "somebody senior has resigned" was
+    // gone in a moment at speed.
+    const state = newGame(index, { seed: 'followed-up' })
+    let decisionId: string | undefined
+    for (let day = 0; day < 120 && !decisionId; day += 1) {
+      runDays(state, index, 1)
+      decisionId = state.decisions.openIds.find((id) => state.decisions.decisions[id]!.defId === 'dec-exploit-published')
+    }
+    expect(decisionId).toBeDefined()
+    const def = index.decision.get('dec-exploit-published')!
+    expect(applyAction(state, index, { type: 'resolveDecision', decisionId: decisionId!, optionId: 'opt-exploit-window', rationaleTagIds: (def.rationaleTagIds ?? ['rat-more-evidence']).slice(0, 1) }).ok).toBe(true)
+    const note = def.options.find((o) => o.id === 'opt-exploit-window')!.delayedEffects![0]!.note!
+    runDays(state, index, 12)
+    const message = state.inbox.messages.find((m) => m.subject === `Followed up: ${def.title}`)
+    expect(message, 'the delayed consequence left no message').toBeDefined()
+    expect(message!.body).toBe(note)
+    expect(cameBack(state, index, 10).some((item) => item.id === message!.id && item.kind === 'consequence')).toBe(true)
+  })
+
+  it('does not tell a player their promised work is missing after the game did it', () => {
+    // "Support now, compensate afterwards" fixed checkout on day 60 and said
+    // so; on day 80 the CIO wrote that he could not find the work and that it
+    // had quietly not been done.
+    const body = index.event.get('evt-con-launch-compensated-due')!.body
+    expect(body).not.toMatch(/cannot find the work|did not get done/)
+  })
+})
+
+describe('the restore test the player took a window for', () => {
+  it('reports what the backups could actually do', () => {
+    // "The restore came back in three and a half, the runbook held" arrived
+    // whatever state the backups were in, though the same choice had just
+    // assessed them: in 20 guided years that took the window, 5 had backups
+    // too weak for it to be true.
+    const held = index.event.get('evt-con-recovery-tested')!
+    const struggled = index.event.get('evt-con-recovery-struggled')!
+    const state = newGame(index, { seed: 'restore-window' })
+    state.flags['recovery.tested'] = true
+    const backup = state.controls.controls['ctl-backup']!
+    for (const operational of [0.1, 0.95]) {
+      backup.operationalEffectiveness = operational
+      backup.configurationQuality = operational
+      backup.coverage = operational
+      const weak = operational < 0.5
+      expect(evaluateAll(state, index, held.conditions), `held, weak=${weak}`).toBe(!weak)
+      expect(evaluateAll(state, index, struggled.conditions), `struggled, weak=${weak}`).toBe(weak)
+    }
   })
 })

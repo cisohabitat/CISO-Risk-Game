@@ -18,6 +18,35 @@ fault.
 
 ### Fixed
 
+- **A choice's delayed consequence was a toast, and one contradicted the
+  game.** Twenty decision options carry a consequence that lands weeks later
+  with a note — "Somebody senior on the part of the team you asked to push
+  through has resigned", "Legal has flagged the notification timing" — and the
+  note was a toast, gone in a moment at speed. It now also arrives as
+  *Followed up: <decision>* and sits in *Came back to you* with the other
+  follow-ups. Reading them together turned up two faults. "Support now,
+  compensate afterwards" fixed checkout on day 60 and said so; on day 80 the
+  CIO wrote that he could not find the work and that it had quietly not been
+  done. His trust cost was already reasoned as the work never being *visible*
+  to him, so the message now says that: the fix window closed and he has not
+  seen what it fixed. And "Wait for the scheduled meeting" had the chair ask,
+  six weeks on, why he was hearing it late — seventeen days after he had
+  written to say exactly that; the later note now records the minutes instead.
+  Tests check the follow-up message, its place on the briefing and the
+  corrected wording; removing the message fails the first. The toast for a
+  hire also names the team it joined.
+
+  Reading every option beside the message it schedules found three more.
+  *Take the window now* on the restore test always drew "The restore came
+  back in three and a half, the runbook held" whatever the backups were like,
+  though the same choice had just assessed them. The success message now needs
+  backups at least moderately effective, and a second message says the restore
+  ran past the window and was not done by the runbook. Over 20 guided years
+  that built recovery and took the window, 14 read the first and 5 the second.
+  A test holds the split and fails when the condition is removed. Two timescales were wrong: opposing the launch delays it 45 days,
+  not "three months", and waiting on the HR provider's update was five weeks,
+  not six.
+
 - **A business objective could fail in silence.** Delivery ("Launch the new
   customer platform delivered.") and slipping each had a notice; failure had
   none, so a player's first word that an objective had missed its date was

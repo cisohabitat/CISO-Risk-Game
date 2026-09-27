@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
-import type { GameState } from '@/game/types'
+import type { CyberFunction, GameState } from '@/game/types'
 
 /**
  * Two programme messages used to fire on "any programme active" and claim a
@@ -104,5 +104,17 @@ describe('a programme that finishes', () => {
     expect(notice!.body).toContain('multi-factor authentication')
     expect(notice!.body).toContain('privileged access management')
     expect(state.inbox.messages.filter((m) => m.subject === `Delivered: ${def.name}`)).toHaveLength(1)
+  })
+})
+
+describe('a hire that arrives', () => {
+  it('says which team it joined', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'hired' })
+    const fn = Object.entries(state.team.functions).find(([, f]) => f.vacancies > 0)![0] as CyberFunction
+    expect(applyAction(state, index, { type: 'hire', fn }).ok).toBe(true)
+    const pending = state.pendingEffects.find((p) => p.source === 'hiring')!
+    expect(pending.note).not.toBe('A new hire has joined the team.')
+    expect(pending.note).toMatch(/^A new hire has joined the .+ team\.$/)
   })
 })

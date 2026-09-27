@@ -158,7 +158,7 @@
       "type": "business",
       "title": "The launch you stopped",
       "from": "Priya Nandakumar, Managing Director, Digital",
-      "body": "We are three months behind where we told the market we would be, and the reason on the slide is security. I am not relitigating it. I am telling you that the next time I need to move quickly, I will be going to the CIO first.",
+      "body": "We are six weeks behind where we told the market we would be, and the reason on the slide is security. I am not relitigating it. I am telling you that the next time I need to move quickly, I will be going to the CIO first.",
       "priority": "notable",
       "availableFromDay": 0,
       "conditions": [
@@ -190,7 +190,7 @@
       "type": "business",
       "title": "The compensating work you promised",
       "from": "Dev Raghunathan, Chief Information Officer",
-      "body": "You let the launch go ahead on the understanding that the work would follow it. The launch happened. I cannot find the work. Either it is somewhere I am not looking or it is one of the things that quietly did not get done.",
+      "body": "You let the launch go ahead on the understanding that the work would follow it. I am told the fix window on checkout has closed, and I have not seen what it fixed. If it is done, I would like to be able to say so; if part of it is not, I would like to know which part.",
       "priority": "urgent",
       "availableFromDay": 0,
       "conditions": [
@@ -358,7 +358,7 @@
       "type": "supplier",
       "title": "The update you waited for",
       "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
-      "body": "You chose to wait for the HR provider's next update rather than press them. It has arrived. It is four paragraphs, it confirms that our data was in scope, and it does not say what was taken. We are now asking the questions we could have asked six weeks ago.",
+      "body": "You chose to wait for the HR provider's next update rather than press them. It has arrived. It is four paragraphs, it confirms that our data was in scope, and it does not say what was taken. We are now asking the questions we could have asked five weeks ago.",
       "priority": "notable",
       "availableFromDay": 0,
       "conditions": [
