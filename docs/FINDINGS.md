@@ -18,6 +18,11 @@ fault.
 
 ### Fixed
 
+- **The SOC said where an attempt was raised, naming where it was held.**
+  "The activity we raised around X has stopped" named the step the attacker
+  gave up on, which need not be where the SOC first saw them. It now says the
+  activity stopped at X. The holding test fails on the old wording.
+
 - **The stalled-programme reminder said a blocked programme stood still.**
   "One of your programmes is blocked and will not move until somebody clears
   it", but every blocker in the content multiplies the day's progress by

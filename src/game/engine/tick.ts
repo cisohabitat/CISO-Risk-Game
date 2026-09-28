@@ -291,7 +291,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       pushMessage(state, {
         from: 'Sentinel SOC',
         subject: 'The attempt did not get through',
-        body: `The activity we raised around ${node?.name ?? 'an internal system'} has stopped. Nobody pushed them out: whatever they were trying there did not get through, and they appear to have given up on it.`,
+        body: `The activity we raised has stopped, at ${node?.name ?? 'an internal system'}. Nobody pushed them out: whatever they were trying there did not get through, and they appear to have given up on it.`,
         type: 'threat',
         priority: 'notable',
         relatedNodeIds: node ? [campaign.heldAt] : [],

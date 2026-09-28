@@ -63,6 +63,9 @@ describe('a step that holds', () => {
       // Discovery only grows, so a system unmapped now was unmapped then.
       if (!mapped) expect(message!.body).not.toContain(name)
       expect(message!.body.includes(name) || message!.body.includes('an internal system')).toBe(true)
+      // The place named is where it was held, which need not be where the SOC
+      // first saw it; the message says it stopped there, not that it was raised there.
+      expect(message!.body).toMatch(/has stopped, at /)
       reported += 1
     }
     expect(reported).toBeGreaterThan(0)
