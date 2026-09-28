@@ -438,9 +438,10 @@
           "immediateEffects": [
             { "type": "capacity.change", "fn": "soc", "delta": -1 },
             { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.05 },
-            { "type": "flag.set", "flag": "anomaly.hunted" }
+            { "type": "event.schedule", "eventId": "evt-thr-hunt-found", "dayOffset": 8 },
+            { "type": "event.schedule", "eventId": "evt-thr-hunt-clean", "dayOffset": 8 }
           ],
-          "delayedEffects": [ { "dayOffset": 8, "effects": [ { "type": "capacity.change", "fn": "soc", "delta": 1 }, { "type": "threat.setback", "actorId": "actor-ransom", "stages": 2, "note": "The hunt disrupted activity that had been running through vendor access." } ], "note": "The threat hunt has reported." } ] },
+          "delayedEffects": [ { "dayOffset": 8, "effects": [ { "type": "capacity.change", "fn": "soc", "delta": 1 } ] } ] },
         { "id": "opt-anomaly-ask", "label": "Ask the provider to explain it", "description": "Cheap, fast, and depends entirely on the provider being both honest and informed.", "visibleKnownEffects": ["Costs almost nothing", "Tells you what the provider believes, not what happened"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.02 },

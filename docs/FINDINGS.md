@@ -18,6 +18,21 @@ fault.
 
 ### Fixed
 
+- **The threat hunt said two things, and both were usually wrong.** Eight
+  days after *Commission a focused threat hunt*, a delayed effect set the
+  ransomware actor back and said "The hunt disrupted activity that had been
+  running through vendor access"; separately, Jo's "The hunt came back clean"
+  could arrive any day from day 50. The anomaly is put to the player when a
+  campaign is live *or* ransomware pressure is merely high, so over 174 years
+  that hunted (`hunt-probe.ts`, scratch) 158 had no campaign to disrupt, 14 of
+  the 16 that did were still told it was clean, and 22 heard it was clean
+  before the hunt had reported. The option now schedules two letters for the
+  day it reports, gated on whether a ransomware campaign is live: the clean
+  one as before, and a new one saying what the hunt found. Both carry the
+  setback and the coverage-gap evidence, so the mechanics are unchanged.
+  After the change: 16 of 16 live years hear it found something, 158 of 158
+  others hear it was clean, none early and none both.
+
 - **Two cards named a timescale their effects did not keep.** *Renew with a
   rewritten scope* said "Takes three months to take effect" and took 75 days;
   *Replace the provider* said "Six months of your team's attention" and gave

@@ -522,3 +522,31 @@ describe('two programmes, one team', () => {
     }
   })
 })
+
+describe('the threat hunt', () => {
+  it('reports what it found, on the day it reports', () => {
+    // The hunt's follow-up always said it "disrupted activity that had been
+    // running through vendor access", and a separate letter, due any time
+    // from day 50, said it "came back clean". Over 174 years that hunted, 158
+    // had no campaign to disrupt, 14 of the 16 that did were still told it
+    // was clean, and 22 heard it was clean before it had reported.
+    const def = index.decision.get('dec-anomaly-response')!
+    const hunt = def.options.find((o) => o.id === 'opt-anomaly-hunt')!
+    const scheduled = hunt.immediateEffects.flatMap((e) => (e.type === 'event.schedule' ? [[e.eventId, e.dayOffset]] : []))
+    expect(scheduled).toEqual([['evt-thr-hunt-found', 8], ['evt-thr-hunt-clean', 8]])
+    const found = index.event.get('evt-thr-hunt-found')!
+    const clean = index.event.get('evt-thr-hunt-clean')!
+    for (const event of [found, clean]) {
+      expect(event.scheduledOnly, event.id).toBe(true)
+      expect(event.effectsOnReveal?.some((e) => e.type === 'threat.setback'), `${event.id} keeps the setback`).toBe(true)
+    }
+    const state = newGame(index, { seed: 'hunt' })
+    for (const live of [true, false]) {
+      state.threats.campaigns = live
+        ? [{ id: 'c-1', actorId: 'actor-ransom', pathId: 'path-msp-ransom', stage: 'initial-access', stepIndex: 1, stepProgress: 0, startedDay: 0, lastAdvanceDay: 0, detected: false, disrupted: false } as GameState['threats']['campaigns'][number]]
+        : []
+      expect(evaluateAll(state, index, found.conditions), `found, live=${live}`).toBe(live)
+      expect(evaluateAll(state, index, clean.conditions), `clean, live=${live}`).toBe(!live)
+    }
+  })
+})
