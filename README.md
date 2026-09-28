@@ -48,6 +48,12 @@ Other commands:
 | `pnpm coverage 60` | Which authored content a player actually reaches, and which mechanics ever fire |
 | `pnpm screenshots` | Capture the screens for visual review |
 | `pnpm tsx scripts/tune.ts 25` | Balance harness across policies and seeds |
+| `pnpm tsx scripts/efficacy.ts 150` | Whether each programme reduces what it is meant to |
+| `pnpm ladder sweep 15` | Whether one philosophy produces three different years across the modes |
+| `pnpm ladder transcript ciso [seed] [situation]` | Everything one year says, in full: messages, decisions and the close |
+| `pnpm play` | A year played by hand in the terminal, a decision at a time |
+| `pnpm playthrough` | One campaign played end to end in a browser, photographed as it goes |
+| `pnpm guide:shots` | Regenerate the pictures in `docs/PLAYER_GUIDE.md` from the running game |
 
 ## How it is put together
 
