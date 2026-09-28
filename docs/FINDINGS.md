@@ -32,6 +32,12 @@ fault.
   setback and the coverage-gap evidence, so the mechanics are unchanged.
   After the change: 16 of 16 live years hear it found something, 158 of 158
   others hear it was clean, none early and none both.
+  Two notes on other options' setbacks made the same claim unconditionally:
+  suspending the vendor access "mid-operation" (the same anomaly, so no
+  operation in about nine years of ten) and removing the provider's access
+  closing "a route the extortion actor was working". They now say what is
+  true either way, and a content test refuses a setback note that claims an
+  attack was under way.
 
 - **Two cards named a timescale their effects did not keep.** *Renew with a
   rewritten scope* said "Takes three months to take effect" and took 75 days;

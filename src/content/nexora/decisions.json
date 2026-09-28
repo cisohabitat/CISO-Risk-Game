@@ -174,7 +174,7 @@
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.1, "reason": "You removed supplier access without an alternative for night operations." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": -0.06, "reason": "You forced a mid-term contract conversation." },
             { "type": "operationalTolerance", "delta": -0.08 },
-            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 1, "note": "A route the extortion actor was working has closed." }
+            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 1, "note": "A route an extortion group could use into the estate has closed." }
           ] },
         { "id": "opt-msp-breakglass", "label": "Replace standing access with a monitored break-glass path", "description": "Time-bound, requested, recorded access, with a documented emergency route.", "visibleKnownEffects": ["Takes six to eight weeks to implement", "Keeps night operations working"],
           "immediateEffects": [
@@ -450,7 +450,7 @@
           ] },
         { "id": "opt-anomaly-suspend", "label": "Suspend vendor access until it is explained", "description": "Close the route now, ask questions afterwards.", "visibleKnownEffects": ["Night operations are affected immediately", "The provider will escalate"],
           "immediateEffects": [
-            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 2, "note": "Vendor access was suspended mid-operation." },
+            { "type": "threat.setback", "actorId": "actor-ransom", "stages": 2, "note": "Vendor remote access is suspended; whoever was using it at night is locked out." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": -0.09, "reason": "You suspended supplier access with no notice." },
             { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.08 },
             { "type": "operationalTolerance", "delta": -0.07 }

@@ -112,4 +112,22 @@ describe('decision affordability', () => {
     }
     expect(checked).toBeGreaterThan(3)
   })
+
+  it('does not say a setback interrupted an attack it cannot see', () => {
+    // A note on an option's setback is shown whenever the option is taken,
+    // whether or not a campaign is running. "Suspended mid-operation" and
+    // "disrupted activity that had been running" were said in years with
+    // nothing running: 158 of 174 for the anomaly. What the attacker was
+    // doing belongs in a letter gated on threat.campaignActive.
+    const claims = /mid-operation|was working|had been running|disrupted|interrupted/i
+    for (const decision of content.decisions) {
+      for (const option of decision.options) {
+        const effects = [...option.immediateEffects, ...(option.delayedEffects ?? []).flatMap((delayed) => delayed.effects)]
+        for (const effect of effects) {
+          if (effect.type !== 'threat.setback' || !effect.note) continue
+          expect(claims.test(effect.note), `${option.id}: "${effect.note}"`).toBe(false)
+        }
+      }
+    }
+  })
 })
