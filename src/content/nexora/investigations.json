@@ -44,7 +44,7 @@
       "id": "inv-recovery-test", "theme": "recovery-response", "name": "Recovery test for a critical service", "description": "Attempt a full restore of a critical service and time it honestly.",
       "workingNarrative": "Engineering is running a restore in a clean environment. Operations is watching nervously.",
       "functions": ["engineering", "incident-response"], "capacityPerDay": { "engineering": 1.5, "incident-response": 0.5 }, "durationDays": 16, "focusCost": 2, "budgetCost": 80,
-      "guaranteedEvidenceIds": ["ev-backup-test-failed"], "possibleEvidenceIds": ["ev-backup-same-credentials", "ev-backup-coverage-gap"],
+      "guaranteedEvidenceIds": ["ev-restore-timed"], "possibleEvidenceIds": ["ev-backup-same-credentials", "ev-backup-coverage-gap"],
       "revealsNodeIds": ["node-backup"], "revealsEdgeIds": ["edge-backup-legacy"], "assessesControlIds": ["ctl-backup"],
       "tags": ["recovery"], "repeatable": true
     },

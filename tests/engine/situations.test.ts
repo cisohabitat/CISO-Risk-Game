@@ -65,6 +65,22 @@ describe('starting situations', () => {
     }
   })
 
+  it('does not report a failed restore test from a year that had a working one', () => {
+    // The letter about the abandoned restore test was kept out of these two
+    // years, but the recovery test investigation revealed the same finding
+    // unconditionally: in 37 of 37 tidy and after-breach years that
+    // commissioned it. The investigation now reports its own restore.
+    for (const situationId of ['sit-tidy', 'sit-after-breach']) {
+      const state = newGame(index, { seed: `restore-${situationId}`, situation: situationId })
+      runDays(state, index, 20)
+      const started = applyAction(state, index, { type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id })
+      expect(started.ok, situationId).toBe(true)
+      runDays(state, index, 60)
+      expect(state.evidence.items['ev-restore-timed'], `${situationId} restore reported`).toBeDefined()
+      expect(state.evidence.items['ev-backup-test-failed'], `${situationId} failed test`).toBeUndefined()
+    }
+  })
+
   it('does not send a message the situation contradicts', () => {
     const contradicted: Record<string, string[]> = {
       'sit-tidy': ['evt-org-backup-test', 'evt-org-pam-adoption'],

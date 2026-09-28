@@ -293,7 +293,7 @@ describe('an enquiry coming back', () => {
     }
     const back = state.inbox.messages.find((m) => m.subject === 'Completed: Recovery test for a critical service')
     expect(back, 'the enquiry never came back').toBeDefined()
-    const guaranteed = index.evidence.get('ev-backup-test-failed')!.title
+    const guaranteed = index.evidence.get(index.investigation.get('inv-recovery-test')!.guaranteedEvidenceIds[0]!)!.title
     expect(back!.body).toMatch(new RegExp(`What came back: .*${guaranteed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|confirmed what you already had`))
   })
 })

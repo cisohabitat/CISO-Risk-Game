@@ -18,6 +18,20 @@ fault.
 
 ### Fixed
 
+- **A recovery test reported somebody else's failed one.** The letter about
+  the restore test "abandoned after eleven hours" is kept out of the tidy and
+  after-breach years, whose openings say the backups have been restored, and
+  out of any year that has built or tested recovery. But the recovery test
+  investigation revealed the same finding as its guaranteed evidence, with
+  no conditions: in 37 of 37 tidy and after-breach years that commissioned it
+  (`backup-ev.ts`, scratch), the player ran a restore and got back "Last
+  recovery test did not complete". The investigation now reports its own
+  restore, timed from the request, and its control assessment still says
+  how good the backups are; the predecessor's failure arrives only through
+  the gated letter, which still reaches 10 of 10 years in the other two
+  situations. The recovery hypothesis needs only the recovery tag, which the
+  new evidence carries.
+
 - **The threat hunt said two things, and both were usually wrong.** Eight
   days after *Commission a focused threat hunt*, a delayed effect set the
   ransomware actor back and said "The hunt disrupted activity that had been
