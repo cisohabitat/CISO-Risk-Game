@@ -42,7 +42,8 @@ Other commands:
 | `pnpm test:e2e:local` | The same without WebKit, for machines that cannot fetch it |
 | `BASE_URL=… pnpm test:e2e:live` | Run the suite against a deployed URL |
 | `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript |
-| `pnpm check` | Everything short of end-to-end |
+| `pnpm check` | Everything short of end-to-end, ending with a build and the size budget. It rewrites `dist/`, so do not run it while the browser suite is serving that directory |
+| `pnpm build && pnpm size` | What a first-time player downloads, chunk by chunk, against the budget |
 | `pnpm soak 1000` | 1,000 headless campaigns, checking for crashes and invariant failures |
 | `pnpm coverage 60` | Which authored content a player actually reaches, and which mechanics ever fire |
 | `pnpm screenshots` | Capture the screens for visual review |
