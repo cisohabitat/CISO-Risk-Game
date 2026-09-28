@@ -98,6 +98,21 @@ describe('starting situations', () => {
     expect(revealEvidence(usual, index, 'ev-cloud-public-storage', 'test')).toBe(false)
   })
 
+  it('does not report a finding as come back when the year made it untrue', () => {
+    // The completion report is written from what the enquiry collected, so a
+    // finding the reveal skipped was still listed under "What came back".
+    const state = newGame(index, { seed: 'stale-report', situation: 'sit-after-breach' })
+    const def = index.investigation.get('inv-ir-readiness')!
+    expect(def.guaranteedEvidenceIds).toContain('ev-ir-untested')
+    runDays(state, index, 20)
+    expect(applyAction(state, index, { type: 'startInvestigation', investigationId: def.id, leaderId: index.content.leaders[0]!.id }).ok).toBe(true)
+    runDays(state, index, 80)
+    const report = state.inbox.messages.find((m) => m.subject === `Completed: ${def.name}`)
+    expect(report, 'the review never reported').toBeDefined()
+    expect(report!.body).not.toContain(index.evidence.get('ev-ir-untested')!.title)
+    expect(state.evidence.items['ev-ir-untested']).toBeUndefined()
+  })
+
   it('does not send a message the situation contradicts', () => {
     const contradicted: Record<string, string[]> = {
       'sit-tidy': ['evt-org-backup-test', 'evt-org-pam-adoption'],

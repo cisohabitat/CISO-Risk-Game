@@ -47,6 +47,12 @@ export function isEvidenceKnown(evidence: EvidenceState, evidenceId: string): bo
   return Boolean(evidence.items[evidenceId])
 }
 
+/** A finding the year has made untrue: its situation contradicts it, or a programme fixed it. */
+export function evidenceIsStale(state: GameState, index: ContentIndex, evidenceId: string): boolean {
+  const staleWhen = index.evidence.get(evidenceId)?.staleWhen
+  return staleWhen !== undefined && evaluateCondition(state, index, staleWhen)
+}
+
 export function revealEvidence(
   state: GameState,
   index: ContentIndex,
@@ -56,7 +62,7 @@ export function revealEvidence(
   const def = index.evidence.get(evidenceId)
   if (!def) return false
   if (state.evidence.items[evidenceId]) return false
-  if (def.staleWhen && evaluateCondition(state, index, def.staleWhen)) return false
+  if (evidenceIsStale(state, index, evidenceId)) return false
   state.evidence.items[evidenceId] = {
     id: evidenceId,
     discoveredDay: state.currentDay,

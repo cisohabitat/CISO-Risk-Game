@@ -17,6 +17,7 @@ import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
 import { delegationDelayDays, delegationQuality, teamStrain } from './capacity'
 import { DIFFICULTY_PROFILES } from '../engine/setup'
+import { evidenceIsStale } from '../knowledge/discovery'
 
 export interface AssignmentTickResult {
   effects: GameEffect[]
@@ -149,14 +150,18 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
     const def = index.investigation.get(assignment.refId)
     if (!def) continue
 
+    // A finding the year has made untrue does not come back, and so is not
+    // reported as having come back either. The draw for an optional one is
+    // still made, so the rest of the year's draws do not move.
     const evidenceIds: string[] = []
     for (const evidenceId of def.guaranteedEvidenceIds) {
+      if (evidenceIsStale(state, index, evidenceId)) continue
       evidenceIds.push(evidenceId)
       result.effects.push({ type: 'evidence.reveal', evidenceId, note: def.name })
     }
     // Quality decides how much of the optional picture comes back.
     for (const evidenceId of def.possibleEvidenceIds) {
-      if (rng.chance(0.25 + 0.7 * quality)) {
+      if (rng.chance(0.25 + 0.7 * quality) && !evidenceIsStale(state, index, evidenceId)) {
         evidenceIds.push(evidenceId)
         result.effects.push({ type: 'evidence.reveal', evidenceId, note: def.name })
       }

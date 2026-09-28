@@ -35,7 +35,13 @@ fault.
   requires every letter's situation or completed-programme gate to appear in
   its evidence's `staleWhen`, and found three more (the false-positive flood
   once detection is done, the retainer after a breach, the failed restore
-  once recovery is built); an engine test fails with the guard removed.
+  once recovery is built), leaving 26 unrelated reveals; an engine test fails
+  with the guard removed. The first version skipped the reveal in the reducer
+  only, and the enquiry's completion report, written from what it collected,
+  still listed the skipped finding under "What came back"; the investigation
+  now leaves a stale finding out when it collects, after its random draw so
+  the year's other draws do not move, and a test of an after-breach readiness
+  review fails without it.
 
 - **A recovery test reported somebody else's failed one.** The letter about
   the restore test "abandoned after eleven hours" is kept out of the tidy and
