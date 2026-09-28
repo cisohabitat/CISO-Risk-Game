@@ -254,6 +254,13 @@ export interface EvidenceDef {
   /** Truth pointer used by the debrief to explain what the evidence meant. */
   interpretation: string
   expiresAfterDays?: number
+  /**
+   * When this holds, the finding is no longer true of the organisation (a
+   * starting situation that contradicts it, or the programme that fixed it)
+   * and nothing reveals it. The letters that carry such findings were gated
+   * on the same facts; the investigations that also carry them were not.
+   */
+  staleWhen?: Condition
 }
 
 export interface HypothesisTemplateDef {

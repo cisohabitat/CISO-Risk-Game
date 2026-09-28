@@ -334,6 +334,7 @@ export const evidenceSchema = z.object({
   noise: z.boolean(),
   interpretation: z.string(),
   expiresAfterDays: z.number().int().positive().optional(),
+  staleWhen: conditionSchema.optional(),
 })
 
 export const hypothesisTemplateSchema = z.object({

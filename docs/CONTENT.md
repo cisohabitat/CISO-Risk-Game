@@ -93,6 +93,14 @@ tenth; the same test holds it. And what a card says will slip, or a later
 letter says has slipped, must be an effect somebody wrote, not a flag nothing
 reads.
 
+**Say when a finding stops being true.** A letter that carries evidence is
+often kept away by a situation (`not situation.is`) or by the programme that
+fixes the problem (`not programme.status … complete`). Investigations carry
+the same evidence without those gates, so put the same facts on the evidence
+as `staleWhen`, and nothing will reveal it in a year that has made it untrue.
+`tests/content/content.test.ts` fails a letter whose gate its evidence does
+not share.
+
 **Name the reasons a decision can be taken for** when the whole vocabulary
 would mislead. `rationaleTagIds` on a decision limits what the dialog offers
 and what the engine accepts; leave it off where most reasons are arguable, and

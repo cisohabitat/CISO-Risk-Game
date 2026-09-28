@@ -3,6 +3,7 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
 import type { GameState } from '@/game/types'
 import { testIndex } from './helpers'
+import { revealEvidence } from '@/game/knowledge/discovery'
 
 /**
  * Starting situations: the same organisation, a different year. Each is data —
@@ -79,6 +80,22 @@ describe('starting situations', () => {
       expect(state.evidence.items['ev-restore-timed'], `${situationId} restore reported`).toBeDefined()
       expect(state.evidence.items['ev-backup-test-failed'], `${situationId} failed test`).toBeUndefined()
     }
+  })
+
+  it('does not reveal a finding the year has made untrue', () => {
+    // Investigations carry the same findings as the gated letters: 60 of the
+    // reveals over 64 engaged years were findings the year contradicted,
+    // among them a stalled privileged access vault in the tidy year and an
+    // unexercised response plan the year after a breach.
+    const tidy = newGame(index, { seed: 'stale-tidy', situation: 'sit-tidy' })
+    const usual = newGame(index, { seed: 'stale-usual', situation: 'sit-inherited-mess' })
+    const breach = newGame(index, { seed: 'stale-breach', situation: 'sit-after-breach' })
+    expect(revealEvidence(tidy, index, 'ev-pam-adoption', 'test')).toBe(false)
+    expect(revealEvidence(usual, index, 'ev-pam-adoption', 'test')).toBe(true)
+    expect(revealEvidence(breach, index, 'ev-ir-untested', 'test')).toBe(false)
+    expect(revealEvidence(usual, index, 'ev-ir-untested', 'test')).toBe(true)
+    usual.programmes.programmes['prog-cloud']!.status = 'complete'
+    expect(revealEvidence(usual, index, 'ev-cloud-public-storage', 'test')).toBe(false)
   })
 
   it('does not send a message the situation contradicts', () => {

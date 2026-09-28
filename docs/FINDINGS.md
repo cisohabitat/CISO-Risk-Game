@@ -18,6 +18,25 @@ fault.
 
 ### Fixed
 
+- **Investigations reported findings the year had made untrue.** Several
+  letters that carry a finding are kept away by a situation or by the
+  programme that fixes it: no stalled privileged access vault in the tidy
+  year, no unexercised response plan the year after a breach, no public
+  storage buckets once the cloud programme is done. The investigations that
+  carry the same findings had no such gate. Over 64 engaged years
+  (`stale-ev.ts`, scratch), 46 years saw 60 such reveals; the commonest were
+  the vault in tidy years through control testing, and "No exercise has been
+  run in two years" through the readiness review after a breach. Evidence can
+  now declare `staleWhen`, and the reducer's one reveal path does not reveal
+  it while that holds; twelve findings carry the facts their letters were
+  already gated on. After the change none of those reveals remain; the 34
+  left are findings the year had not contradicted (the vault while the
+  identity programme is still running, the lapsed retainer). A content test
+  requires every letter's situation or completed-programme gate to appear in
+  its evidence's `staleWhen`, and found three more (the false-positive flood
+  once detection is done, the retainer after a breach, the failed restore
+  once recovery is built); an engine test fails with the guard removed.
+
 - **A recovery test reported somebody else's failed one.** The letter about
   the restore test "abandoned after eleven hours" is kept out of the tidy and
   after-breach years, whose openings say the backups have been restored, and

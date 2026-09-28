@@ -172,3 +172,43 @@ describe('delayed consequences', () => {
     expect(orphans, `nothing ever schedules these:\n${orphans.join('\n')}`).toEqual([])
   })
 })
+
+describe('findings that stop being true', () => {
+  const content = nexoraContentRaw as unknown as CampaignContent
+  // What a gate names: a starting situation that contradicts the finding, or
+  // the programme whose completion fixes it.
+  function contradictions(condition: unknown, negated = false): string[] {
+    const c = condition as { kind: string; condition?: unknown; conditions?: unknown[]; situationId?: string; programmeId?: string; status?: string }
+    if (c.kind === 'not') return contradictions(c.condition, !negated)
+    if (c.kind === 'any' || c.kind === 'all') return (c.conditions ?? []).flatMap((inner) => contradictions(inner, negated))
+    if (!negated) return []
+    if (c.kind === 'situation.is') return [`situation:${c.situationId}`]
+    if (c.kind === 'programme.status' && c.status === 'complete') return [`complete:${c.programmeId}`]
+    return []
+  }
+  function covered(condition: unknown): string[] {
+    return condition ? contradictions({ kind: 'not', condition }) : []
+  }
+
+  it('are stale on the same facts that keep their letters away', () => {
+    // A recovery test in a tidy year reported "Last recovery test did not
+    // complete", and a readiness review the year after a breach reported no
+    // exercise in two years: the letters carrying those findings were gated
+    // off in those years, the investigations carrying them were not.
+    const evidence = new Map(content.evidence.map((e) => [e.id, e]))
+    let checked = 0
+    for (const event of content.events) {
+      const gates = event.conditions.flatMap((condition) => contradictions(condition))
+      if (!gates.length) continue
+      for (const effect of event.effectsOnReveal ?? []) {
+        if (effect.type !== 'evidence.reveal') continue
+        const stale = covered(evidence.get(effect.evidenceId)?.staleWhen)
+        for (const gate of gates) {
+          checked += 1
+          expect(stale, `${event.id} is kept away on ${gate}; ${effect.evidenceId} is not stale on it`).toContain(gate)
+        }
+      }
+    }
+    expect(checked).toBeGreaterThan(5)
+  })
+})

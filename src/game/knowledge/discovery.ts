@@ -5,6 +5,7 @@
  */
 import type { ContentIndex, EvidenceState, GameState, OrganisationState } from '../types'
 import { clamp01 } from '../types'
+import { evaluateCondition } from '../events/conditions'
 
 export function revealNode(state: GameState, nodeId: string, confidence = 0.8, verified = false): boolean {
   const node = state.organisation.nodes[nodeId]
@@ -55,6 +56,7 @@ export function revealEvidence(
   const def = index.evidence.get(evidenceId)
   if (!def) return false
   if (state.evidence.items[evidenceId]) return false
+  if (def.staleWhen && evaluateCondition(state, index, def.staleWhen)) return false
   state.evidence.items[evidenceId] = {
     id: evidenceId,
     discoveredDay: state.currentDay,
