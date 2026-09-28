@@ -118,3 +118,22 @@ describe('a hire that arrives', () => {
     expect(pending.note).toMatch(/^A new hire has joined the .+ team\.$/)
   })
 })
+
+describe('a blocked programme', () => {
+  const index = testIndex()
+  it('keeps moving, slowly, and the reminder says so', () => {
+    // "Blocked and will not move until somebody clears it": every blocker
+    // multiplies progress by 0.4 to 0.65, so a blocked programme moves.
+    const state = newGame(index, { seed: 'blocked-moves' })
+    const def = index.programme.get('prog-segmentation')!
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    runDays(state, index, 10)
+    const programme = state.programmes.programmes[def.id]!
+    programme.blockers.push({ id: def.blockers[0]!.id, startedDay: state.currentDay, resolved: false })
+    const before = programme.progress
+    runDays(state, index, 7)
+    expect(programme.blockers.some((b) => !b.resolved)).toBe(true)
+    expect(programme.progress).toBeGreaterThan(before)
+    expect(index.event.get('evt-org-programme-blocked')!.body).not.toMatch(/will not move|has stopped|cannot move/)
+  })
+})

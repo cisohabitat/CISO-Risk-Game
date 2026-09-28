@@ -86,6 +86,13 @@ configuration, `believed` holds the player's assurance picture and the day it wa
 taken. Inherited beliefs start optimistic, so "we have MFA" is a statement about
 procurement until somebody goes and tests it.
 
+Evidence is authored as a fact about the inherited organisation, and some of
+those facts stop being true: a situation contradicts them, or a programme
+fixes them. An evidence definition's `staleWhen` says when, and
+`evidenceIsStale` in `src/game/knowledge/discovery.ts` keeps the finding from
+being revealed or reported while it holds. Letters that carry evidence are
+gated on the same facts, and a content test holds the two together.
+
 ## Risk
 
 There is no single risk formula. `src/game/risk/calculations.ts` composes small,

@@ -798,7 +798,7 @@
       "type": "programme",
       "title": "A programme has stalled",
       "from": "Stefan Alvarez, Head of Security Architecture",
-      "body": "One of your programmes is blocked and will not move until somebody clears it. The Programmes screen says what that takes.",
+      "body": "One of your programmes has been blocked for a week. It is still moving, at a fraction of its pace, and will stay that way until somebody clears it. The Programmes screen says what that takes.",
       "priority": "notable",
       "availableFromDay": 60,
       "conditions": [

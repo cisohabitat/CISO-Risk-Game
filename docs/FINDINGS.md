@@ -18,6 +18,13 @@ fault.
 
 ### Fixed
 
+- **The stalled-programme reminder said a blocked programme stood still.**
+  "One of your programmes is blocked and will not move until somebody clears
+  it", but every blocker in the content multiplies the day's progress by
+  0.4 to 0.65; none stops it. It now says the programme is still moving at a
+  fraction of its pace. A test blocks a programme for a week, sees it move,
+  and fails on the old wording.
+
 - **Investigations reported findings the year had made untrue.** Several
   letters that carry a finding are kept away by a situation or by the
   programme that fixes it: no stalled privileged access vault in the tidy
