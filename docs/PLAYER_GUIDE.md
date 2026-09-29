@@ -151,8 +151,9 @@ commit, along with how long it takes and what it costs in money.
 Answering a decision is free. Reading is free. Thinking is free. **Acting** is
 what costs.
 
-If a button is greyed out with *"No attention left this week"*, that is not a
-bug — come back on Monday, or spend the week on something else.
+If a button is greyed out with *"No attention left this week"* (on a
+programme, *"Out of attention this week"*), that is not a bug — come back on
+Monday, or spend the week on something else.
 
 ---
 
@@ -165,11 +166,16 @@ options, and — importantly — **what each option will visibly cost you**. The
 is usually no correct answer. The first decision of the game says so outright:
 *"There is no mechanically superior answer here."*
 
-Two things to understand:
+Three things to understand:
 
 **The deadline is real.** A decision left unanswered lapses, and the organisation
 does whatever it would have done anyway. That is a worse outcome than choosing
 badly, and the annual review names it.
+
+**An option you cannot take says why.** It stays on the card with the reason
+underneath: not enough budget, no attention left this week, or something the
+year has not given you. Money taken *from* you is the exception — a cut is
+never refused, it takes what is left, and the card says how much that is.
 
 **Record why.** Below the options is a *Why?* panel with reasons like *"The
 consequence is material"* or *"Compensating controls are sufficient"*. On serious
@@ -213,6 +219,12 @@ risk that has not moved says nothing, so the badges that do appear are the ones
 worth reading. Expect most of an untended register to drift towards worsening:
 controls decay on their own and the threat grows through the year.
 
+A risk marked **Review due** is asking for a decision about it, not for more
+reading. Open it and either accept it for a stated period, on assumptions you
+record, or link it to the programme that treats it. The link button names the
+programme, and appears once that programme has started; until then the risk
+says which programme would treat it. Either answer sets the next review.
+
 If a risk uses a word you do not know, the **Words** line under it lists the
 terms it leans on; tap one and the glossary opens at the definition.
 
@@ -224,9 +236,11 @@ The enquiries are grouped by the question they answer — what the business
 cannot lose, how an attacker would get in, identity and supplier access,
 recovery and response, team and governance — and each says which of the risks
 on your list it speaks to. Each line of enquiry shows how long it takes, what
-it costs and which of your four leaders you are giving it to. **Who you choose matters**: their expertise,
-their current workload and their morale all shape what comes back. Overload
-someone and you get a thin answer, late — and a thin answer is not a clean bill
+it costs and which of your four leaders you are giving it to. **Who you choose matters**: their skill,
+their current workload, their morale and how stretched the whole team is all
+shape what comes back. The dialog says what to expect before you choose — *Has
+room for this*, *expect part of an answer*, or *too stretched to do this well*
+— and when work comes back thin, it says why. A thin answer is not a clean bill
 of health.
 
 This is the main way the *Checked for yourself* bar moves, and it is the thing
@@ -261,8 +275,8 @@ It stops there deliberately. Forming the hypothesis costs attention, and **"Not
 this"** is a real answer that sticks. The game will point out what it noticed; it
 will not do your thinking for you.
 
-These offers are rare — roughly one day in fifty — and they expire as the
-evidence goes stale. If one looks right, take it.
+An offer expires as the evidence behind it goes stale. If one looks right,
+take it.
 
 ---
 
@@ -276,8 +290,10 @@ committee sees**.
 
 The rule the game enforces: *surprising the board with something you already knew
 is the classic failure*. Leave a material item off and they find out another way,
-and your standing drops. Bring twenty things and the chair asks you for fewer,
-sharper items. A paper can be written any time before the next quarter closes;
+and your standing drops. Pad it with items that are not material and the chair
+names them and asks for fewer, sharper items. Material means a high residual
+rating, a high consequence, or a risk you accepted on the organisation's
+behalf; the Risk screen shows the first two. A paper can be written any time before the next quarter closes;
 if it never is, the committee meets without one, the chair writes to say so, and
 the board's standing on the Briefing drops. The board remembers a good paper for
 about a season, so the standing you see in December is the one you earned in the

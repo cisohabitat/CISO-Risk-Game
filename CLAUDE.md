@@ -182,9 +182,11 @@ a system, and update it if the architecture genuinely moves.
 nothing about the subject: what the screens are, what the two scarce resources
 are, and what a sane first year looks like. Its screenshots come from the
 running game via `pnpm guide:shots`, so a screen that changes can be
-re-photographed rather than left to go quietly stale. Hand it to a playtester
-only *after* their session — whether the game teaches itself is one of the
-things under test.
+re-photographed rather than left to go quietly stale. The build publishes it at
+`/guide` (`scripts/guide/`), linked quietly from the start screen and beside
+the glossary, and `tests/content/guide.test.ts` fails if it quotes interface
+text the game no longer uses. Ask a playtester to leave it until after their
+session — whether the game teaches itself is one of the things under test.
 
 Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring),
 `docs/HOSTING.md` (the release gate), `docs/PLAYTEST.md` (the question the

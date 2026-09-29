@@ -47,6 +47,10 @@ Half an hour is enough. A first year takes twenty minutes at a normal pace.
   "what are you doing?" — the second one makes people narrate rather than play.
 - Do not answer questions during play. Write the question down; an unanswered
   question is data, and answering it destroys the thing you came to measure.
+- The player's guide is linked from the start screen and the help area
+  (`/guide`). Ask them to leave it until after the review. If they open it
+  anyway, note when and what they were stuck on: that is the answer to
+  question 1.
 - Note times, not just events. "Went quiet from about day 120" is worth more
   than "seemed engaged".
 - Stop them at the end of Q3 and ask question 5 before they reach the review.

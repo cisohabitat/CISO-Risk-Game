@@ -37,6 +37,13 @@ export function destinationFor(screen: Screen): Destination | undefined {
   return DESTINATIONS.find((destination) => destination.id === screen)
 }
 
+/**
+ * The player's guide, built beside the game from docs/PLAYER_GUIDE.md. Linked
+ * quietly and opened in its own tab: the game is meant to teach itself, and the
+ * guide is for whoever wants it, not a step on the way to the first morning.
+ */
+export const GUIDE_URL = '/guide'
+
 export const KEYBOARD_HELP: { keys: string; action: string }[] = [
   { keys: 'Space', action: 'Pause or resume time' },
   { keys: '→', action: 'Advance to the next meaningful event' },

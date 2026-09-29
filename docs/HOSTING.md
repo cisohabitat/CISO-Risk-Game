@@ -80,6 +80,14 @@ The SPA fallback deliberately excludes `assets/`, `favicon.svg` and
 those files would be served anyway, but excluding them means the rule does not
 depend on that ordering.
 
+The player's guide is the one page that does depend on it. The build renders
+`docs/PLAYER_GUIDE.md` into `dist/guide.html` (`scripts/guide/`), with its
+pictures emitted as hashed files in `assets/`, and `cleanUrls` serves it at
+`/guide` because the file exists. It is plain HTML with inline styles and no
+script, so the Content-Security-Policy needs nothing new, and it adds nothing to
+the game's first load. `vite preview` resolves `/guide` the same way, which is
+what `tests/e2e/guide.spec.ts` checks.
+
 Note that Vercel schema-validates this file and **rejects any property it does
 not recognise**, including comment keys — adding one fails the deployment. The
 constraints above are therefore asserted in `tests/content/deployment.test.ts`

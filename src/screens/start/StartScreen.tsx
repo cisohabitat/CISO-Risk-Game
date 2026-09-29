@@ -9,6 +9,7 @@ import { situationChoices, situationName } from '@/lib/content/situations'
 import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
+import { GUIDE_URL } from '@/app/navigation'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -324,7 +325,14 @@ export function StartScreen() {
           </CardBody>
         </Card>
 
-        <p className="mt-8 text-center text-sm text-ink-faint text-pretty">
+        <p className="mt-8 text-center text-sm text-ink-muted text-pretty">
+          The game teaches itself as you go. If you would rather read first, there is a{' '}
+          <a href={GUIDE_URL} target="_blank" rel="noopener" className="text-accent-ink underline underline-offset-2">
+            player's guide<span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          .
+        </p>
+        <p className="mt-3 text-center text-sm text-ink-faint text-pretty">
           Nexora Group is fictional. Any resemblance to your own organisation is a coincidence you should probably act on.
         </p>
       </div>

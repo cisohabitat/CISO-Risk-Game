@@ -6,7 +6,7 @@
  * The same screens are reachable everywhere; only the presentation changes.
  */
 import { useEffect, useState, type ReactNode } from 'react'
-import { DESTINATIONS, destinationFor } from '@/app/navigation'
+import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
@@ -114,6 +114,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Button variant="quiet" size="sm" block onClick={() => openGlossary()} className="compact min-h-10">
             Glossary
           </Button>
+          <a
+            href={GUIDE_URL}
+            target="_blank"
+            rel="noopener"
+            className="flex min-h-10 items-center justify-center rounded-lg text-sm text-ink-muted underline-offset-2 hover:underline"
+          >
+            Player's guide<span className="sr-only"> (opens in a new tab)</span>
+          </a>
         </div>
       </nav>
 
@@ -211,6 +219,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="block text-sm text-ink-muted">What the game means by its terms</span>
               </span>
             </button>
+          </li>
+          <li>
+            <a
+              href={GUIDE_URL}
+              target="_blank"
+              rel="noopener"
+              className="flex w-full items-center gap-3 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left"
+            >
+              <span aria-hidden="true" className="text-lg text-ink-faint">↗</span>
+              <span>
+                <span className="block font-medium">Player's guide</span>
+                <span className="block text-sm text-ink-muted">How the screens work, in its own tab</span>
+              </span>
+            </a>
           </li>
         </ul>
       </Dialog>

@@ -2,11 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
+import { guidePage } from './scripts/guide/plugin.ts'
 
 // Static-first build: no SSR, no server runtime. Output in dist/ is deployable
-// to any CDN (see docs/HOSTING.md for the Vercel Hobby constraints).
+// to any CDN (see docs/HOSTING.md for the Vercel Hobby constraints). The
+// player's guide is built beside the game as dist/guide.html, served at /guide.
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), guidePage()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

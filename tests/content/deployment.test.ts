@@ -68,6 +68,10 @@ describe('deployment configuration', () => {
     for (const path of ['/assets/index-abc123.js', '/favicon.svg', '/manifest.webmanifest']) {
       expect(pattern.test(path), `${path} must be served from disk, not rewritten`).toBe(false)
     }
+    // The player's guide is dist/guide.html. Vercel serves a file that exists
+    // before it applies a rewrite, and clean URLs are what make /guide find it;
+    // without them the link from the game would land back on the game.
+    expect(vercelConfig.cleanUrls).toBe(true)
     // Application routes must still fall back to the shell.
     for (const path of ['/', '/risk', '/organisation/node-idp']) {
       expect(pattern.test(path), `${path} should fall back to index.html`).toBe(true)
