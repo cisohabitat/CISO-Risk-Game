@@ -495,10 +495,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // A production restore taken in the fourth quarter is an exercise as much
   // as a commissioned test is; it is recorded as a flag by the decision.
   const restoreTaken = state.flags['recovery.tested'] === true
+  // A restore into the test tenancy proves the backups if not the runbook. It
+  // assessed the backup control, so the score counted it; the line beside the
+  // score said "Recovery was never exercised". Found by the New money playtest.
+  const sandboxRestore = state.flags['recovery.tested-nonprod'] === true
   // How the production restore went is known once its letter has come: it
   // ran past the window when the backups were too weak for the runbook.
   const restoreOverran = state.events.firedEventIds.includes('evt-con-recovery-struggled')
-  const exercised = exercises.length > 0 || selfAssured.length > 0 || restoreTaken
+  const exercised = exercises.length > 0 || selfAssured.length > 0 || restoreTaken || sandboxRestore
   // The untested scale is capped below `strong`: a year nothing tested cannot
   // demonstrate the top band, however much was built. Within that it separates
   // four real years — nothing done, exercised but nothing to exercise, built but
@@ -582,10 +586,22 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           `${held.length} attack${held.length === 1 ? '' : 's'} gave up at a control that held, at ${where.length > 1 ? `${where.slice(0, -1).join(', ')} and ${where.at(-1)}` : where[0]}`,
         )
       }
-      const exerciseCount = exercises.length + (restoreTaken ? 1 : 0)
+      const restores = [
+        ...(restoreTaken ? [`a production restore${restoreOverran ? ', which ran past its window' : ''}`] : []),
+        ...(sandboxRestore ? ['a restore into the test tenancy'] : []),
+      ]
+      const exerciseCount = exercises.length + restores.length
+      const which =
+        restores.length === 0
+          ? ''
+          : exerciseCount === 1
+            ? `, ${restores[0]}`
+            : restores.length === 1
+              ? `, one of them ${restores[0]}`
+              : `, among them ${restores.join(' and ')}`
       lines.push(
         exerciseCount > 0
-          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? (exerciseCount === 1 ? ', a production restore' : ', one of them a production restore') : ''}${restoreOverran ? ', which ran past its window' : ''}`
+          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${which}`
           : 'Recovery was never exercised',
       )
       lines.push(

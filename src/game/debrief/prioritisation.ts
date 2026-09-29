@@ -191,7 +191,10 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
     const option = index.decision.get(runtime.defId)?.options.find((o) => o.id === runtime.selectedOptionId)
     if (!option) continue
     if (runtime.scenarioId) addressed.add(runtime.scenarioId)
-    const nodeIds = new Set<string>()
+    // A decision about something went near it whatever was chosen: refusing
+    // the Kestrel join until due diligence was done changes no node, and the
+    // close said nothing the player did went near the acquisition risk.
+    const nodeIds = new Set<string>(index.decision.get(runtime.defId)?.relatedNodeIds ?? [])
     const effects = [...(option.immediateEffects ?? []), ...(option.delayedEffects ?? []).flatMap((d) => d.effects)]
     for (const effect of effects) {
       const target = effect as { nodeId?: unknown; scenarioId?: unknown }

@@ -18,6 +18,26 @@ fault.
 
 ### Fixed
 
+- **The same playtest, the close: two lines the decision record
+  contradicted.**
+  - **"Recovery was never exercised"** after the player restored into the test
+    tenancy in October. That option assessed the backup control, so the
+    resilience score counted it, but the line beside the score only knew the
+    production restore and commissioned tests. The option now records itself
+    and the line reads "1 recovery exercise completed, a restore into the
+    test tenancy".
+  - **"Acquisition integration imports unknown compromise was among the
+    largest risks you inherited, and nothing you did went near it"**, to a
+    player who had refused the Kestrel join until due diligence was done. A
+    chosen decision counted as going near a risk only through its effects'
+    nodes, and refusing the join changes none. A chosen decision now also
+    goes near the nodes it is about. Over 40 CISO years answering every
+    decision, the line named recovery failure in all 40 before, although
+    those answers included a production restore; after, it names a risk the
+    player never touched (non-production to production in 39). It still
+    appears every year and the prioritisation score is unchanged. Tests fail
+    without either.
+
 - **The same playtest, July: "bring fewer, sharper items" without saying
   which.** The Q2 paper carried three raised risks, all at moderate residual
   and consequence, and the board replied that it had sat through a long list.
