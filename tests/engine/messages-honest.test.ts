@@ -3,6 +3,7 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { testIndex } from './helpers'
 import { evaluateAll } from '@/game/events/conditions'
 import { openDecision } from '@/game/decisions/open'
+import { buildAnnualReview } from '@/game/debrief/review'
 import { nextBoard, renderDecisionText } from '@/game/decisions/describe'
 import { cameBack, patternSuggestions } from '@/store/selectors'
 import type { GameState } from '@/game/types'
@@ -606,6 +607,24 @@ describe('a review that came back thin', () => {
       const said = report!.body.includes('too thin to count as an assessment of multi-factor authentication or privileged access management')
       expect(assessed, `skill ${skill}: assessed`).toBe(skill === 1)
       expect(said, `skill ${skill}: said too thin`).toBe(!assessed)
+    }
+  })
+})
+
+describe('the close after a production restore', () => {
+  it('says the restore overran when it did', () => {
+    // An after-breach year whose restore "ran past the window" closed with
+    // "What recovery capability you did exercise is the only evidence you
+    // have that it would have held", and listed the restore without its result.
+    for (const overran of [false, true]) {
+      const state = newGame(index, { seed: 'restore-close' })
+      runDays(state, index, 5)
+      state.flags['recovery.tested'] = true
+      if (overran) state.events.firedEventIds.push('evt-con-recovery-struggled')
+      const resilience = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
+      expect(resilience.evidence.some((line) => line.includes('ran past its window')), `evidence, overran=${overran}`).toBe(overran)
+      expect(resilience.narrative.includes('went past its window'), `narrative, overran=${overran}`).toBe(overran)
+      expect(resilience.narrative.includes('that it would have held'), `held, overran=${overran}`).toBe(!overran)
     }
   })
 })

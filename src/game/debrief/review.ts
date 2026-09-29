@@ -492,6 +492,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // A production restore taken in the fourth quarter is an exercise as much
   // as a commissioned test is; it is recorded as a flag by the decision.
   const restoreTaken = state.flags['recovery.tested'] === true
+  // How the production restore went is known once its letter has come: it
+  // ran past the window when the backups were too weak for the runbook.
+  const restoreOverran = state.events.firedEventIds.includes('evt-con-recovery-struggled')
   const exercised = exercises.length > 0 || selfAssured.length > 0 || restoreTaken
   // The untested scale is capped below `strong`: a year nothing tested cannot
   // demonstrate the top band, however much was built. Within that it separates
@@ -529,7 +532,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           weak: 'When the organisation was tested, the consequences ran well beyond what the business could absorb.',
         } as const)[band(resilience)]
       : exercised
-        ? 'No material incident reached the business this year. What recovery capability you did exercise is the only evidence you have that it would have held.'
+        ? restoreOverran
+          ? 'No material incident reached the business this year. The production restore you ran went past its window, and that is the clearest evidence you have of how recovery would have gone.'
+          : 'No material incident reached the business this year. What recovery capability you did exercise is the only evidence you have that it would have held.'
         : 'No material incident reached the business this year, and recovery was never exercised. That is an outcome, not a demonstrated capability.',
     // Grouped by family, because the same kind of incident twice is not two
     // facts, it is one: the same door, still open. Listed flat it read as
@@ -577,7 +582,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       const exerciseCount = exercises.length + (restoreTaken ? 1 : 0)
       lines.push(
         exerciseCount > 0
-          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? (exerciseCount === 1 ? ', a production restore' : ', one of them a production restore') : ''}`
+          ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${restoreTaken ? (exerciseCount === 1 ? ', a production restore' : ', one of them a production restore') : ''}${restoreOverran ? ', which ran past its window' : ''}`
           : 'Recovery was never exercised',
       )
       lines.push(

@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **The close said an overrun restore was evidence recovery would hold.** In
+  the same after-breach year the production restore "ran past the window",
+  and the close's resilience section said "What recovery capability you did
+  exercise is the only evidence you have that it would have held", listing
+  "one of them a production restore" without its result. When the overrun
+  letter has come, the section now says the restore went past its window and
+  that this is the clearest evidence of how recovery would have gone, and the
+  evidence line says so too. A test builds the close both ways and fails on
+  the old text.
+
 - **A thin review did not say it had assessed nothing.** Reading an
   after-breach year end to end: a privileged access review on day 30 "came
   back thin", and at the close "Multi-factor authentication was never
