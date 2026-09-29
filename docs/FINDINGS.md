@@ -23,8 +23,8 @@ fault.
   - **"Recovery was never exercised"** after the player restored into the test
     tenancy in October. That option assessed the backup control, so the
     resilience score counted it, but the line beside the score only knew the
-    production restore and commissioned tests. The option now records itself
-    and the line reads "1 recovery exercise completed, a restore into the
+    production restore and commissioned tests. It now reads the decision
+    record, and says "1 recovery exercise completed, a restore into the
     test tenancy".
   - **"Acquisition integration imports unknown compromise was among the
     largest risks you inherited, and nothing you did went near it"**, to a

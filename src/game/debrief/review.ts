@@ -498,7 +498,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // A restore into the test tenancy proves the backups if not the runbook. It
   // assessed the backup control, so the score counted it; the line beside the
   // score said "Recovery was never exercised". Found by the New money playtest.
-  const sandboxRestore = state.flags['recovery.tested-nonprod'] === true
+  // Read from the decision record: a flag would be one the content never reads.
+  const sandboxRestore = Object.values(state.decisions.decisions).some(
+    (d) => d.defId === 'dec-q4-recovery-window' && d.selectedOptionId === 'opt-q4-recovery-nonprod',
+  )
   // How the production restore went is known once its letter has come: it
   // ran past the window when the backups were too weak for the runbook.
   const restoreOverran = state.events.firedEventIds.includes('evt-con-recovery-struggled')
