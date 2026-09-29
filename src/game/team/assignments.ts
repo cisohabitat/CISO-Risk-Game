@@ -174,12 +174,21 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
       // A thin review can miss a dependency entirely.
       if (quality > 0.35 || rng.chance(0.4)) result.effects.push({ type: 'edge.reveal', edgeId, verified: true })
     }
-    for (const controlId of def.assessesControlIds) {
-      if (quality > 0.3) result.effects.push({ type: 'control.assess', controlId })
-    }
+    const assesses = quality > 0.3
+    if (assesses) for (const controlId of def.assessesControlIds) result.effects.push({ type: 'control.assess', controlId })
 
     assignment.producedEvidenceIds = evidenceIds
     assignment.resultSummary = summariseQuality(def, quality)
+    // A thin enquiry does not count as assessing its controls, and the close
+    // later says they were "never independently assessed": a player who had
+    // commissioned the review heard nothing linking the two.
+    if (!assesses && def.assessesControlIds.length > 0) {
+      const names = def.assessesControlIds.map((id) => index.control.get(id)?.name).filter((name): name is string => Boolean(name))
+      const listed = names.map((name) => (/^[A-Z][a-z]/.test(name) ? name.charAt(0).toLowerCase() + name.slice(1) : name))
+      if (listed.length > 0) {
+        assignment.resultSummary += ` It was too thin to count as an assessment of ${listed.length === 1 ? listed[0] : `${listed.slice(0, -1).join(', ')} or ${listed.at(-1)}`}.`
+      }
+    }
     result.completed.push({
       assignmentId: assignment.id,
       title: assignment.title,

@@ -588,3 +588,24 @@ describe('a new starter', () => {
     expect(letter!).toBeGreaterThanOrEqual(joins - 7)
   })
 })
+
+describe('a review that came back thin', () => {
+  it('says it could not count as an assessment, so the close does not surprise', () => {
+    // A thin privileged access review assesses nothing, and the close then
+    // says both controls were "never independently assessed"; the report had
+    // only said the picture was incomplete.
+    for (const skill of [0.05, 1]) {
+      const state = newGame(index, { seed: `thin-${skill}` })
+      const leaderId = index.content.leaders[0]!.id
+      Object.assign(state.team.leaders[leaderId]!, { skill, reliability: 1, workload: 0, morale: 1 })
+      expect(applyAction(state, index, { type: 'startInvestigation', investigationId: 'inv-access-review', leaderId }).ok).toBe(true)
+      runDays(state, index, 60)
+      const report = state.inbox.messages.find((m) => m.subject === 'Completed: Privileged access review')
+      expect(report, `skill ${skill}: no report`).toBeDefined()
+      const assessed = (state.controls.controls['ctl-pam']!.believed?.assessedOnDay ?? -1) >= 0
+      const said = report!.body.includes('too thin to count as an assessment of multi-factor authentication or privileged access management')
+      expect(assessed, `skill ${skill}: assessed`).toBe(skill === 1)
+      expect(said, `skill ${skill}: said too thin`).toBe(!assessed)
+    }
+  })
+})

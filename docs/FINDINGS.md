@@ -18,6 +18,17 @@ fault.
 
 ### Fixed
 
+- **A thin review did not say it had assessed nothing.** Reading an
+  after-breach year end to end: a privileged access review on day 30 "came
+  back thin", and at the close "Multi-factor authentication was never
+  independently assessed" and so was privileged access. Both true: an enquiry
+  of quality 0.3 or less does not count as assessing its controls. But
+  nothing had linked the two, and the coverage harness counts about six thin
+  enquiries a year. A thin enquiry that would have assessed controls now says
+  it was too thin to count as an assessment of them, on exactly the condition
+  that skips the assessment. A test runs the review with a weak and a strong
+  leader and fails without the sentence.
+
 - **A new starter was announced after they had started.** "Our new identity
   engineer starts on Monday" was a free-standing letter from day 90, gated
   only on having chosen to recruit. The hire joins 60 days after that choice,
