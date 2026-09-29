@@ -18,6 +18,15 @@ fault.
 
 ### Fixed
 
+- **The same playtest, July: "bring fewer, sharper items" without saying
+  which.** The Q2 paper carried three raised risks, all at moderate residual
+  and consequence, and the board replied that it had sat through a long list.
+  The paper dialog lists titles only, and the Board screen's advice is that
+  leaving something material out does more damage, so a player cannot learn
+  from the reply which items were surplus. The missed-item reply was fixed to
+  name what was missing; this one now names what did not need the board's
+  time. A test fails without it.
+
 - **The same playtest, June.**
   - **Giving back money you did not have earned full thanks.** Finance asks
     for £220k on day 150, or a named line worth half. Money taken from you is

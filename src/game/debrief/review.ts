@@ -123,7 +123,10 @@ export function buildQuarterReview(
     reaction = 'The board notes that nothing has yet been assessed. The chair asks what the quarter found, and when they will hear what it means.'
   } else if (noise.length > 2) {
     effects.push({ type: 'board.confidence', delta: -0.02 })
-    reaction = 'The board sat through a long list. The chair asks you to bring fewer, sharper items next time.'
+    // It said which items were missing but not which were surplus, so a
+    // player who had covered everything could not tell what to leave out.
+    const surplus = noise.map((id) => topics.find((t) => t.id === id)?.label ?? id)
+    reaction = `The board sat through a long list. ${surplus.slice(0, -1).join(', ')} and ${surplus.at(-1)} did not need its time this quarter; the chair asks for fewer, sharper items next time.`
   } else {
     effects.push({ type: 'board.confidence', delta: 0.05 + 0.05 * coverage })
     reaction = 'The board follows the argument and supports the direction you set out.'

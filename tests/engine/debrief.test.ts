@@ -31,6 +31,33 @@ describe('reviews', () => {
     expect(covered.effects.some((e) => e.type === 'board.confidence' && e.delta > 0)).toBe(true)
   })
 
+  it('names the items that did not need the board\'s time', () => {
+    // A playtest took three raised risks to the board, none of them material,
+    // and heard "bring fewer, sharper items" without being told which.
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-surplus' })
+    const ids = ['risk-legacy-outage', 'risk-customer-data-exposure', 'risk-payment-scope']
+    for (const scenarioId of ids) applyAction(state, index, { type: 'openRisk', scenarioId })
+    runDays(state, index, 91)
+    for (const scenarioId of ids) {
+      const scenario = state.risks.scenarios[scenarioId]!
+      scenario.status = 'open'
+      scenario.lastAssessed = { day: state.currentDay, exposure: 0.15, consequence: 0.2, residual: 0.18 }
+    }
+    const topics = materialTopics(state, index).filter((t) => ids.includes(t.id.replace('risk:', '')))
+    expect(topics).toHaveLength(3)
+    expect(topics.every((t) => !t.material)).toBe(true)
+
+    const review = buildQuarterReview(state, index, {
+      quarter: 1,
+      topics: [...topics.map((t) => t.id), ...materialTopics(state, index).filter((t) => t.material).map((t) => t.id)],
+      recommendations: [],
+      communicateUncertainty: false,
+    })
+    expect(review.boardReaction).toMatch(/long list/)
+    for (const topic of topics) expect(review.boardReaction).toContain(topic.label)
+  })
+
   it('does not credit an empty paper as full coverage', () => {
     // A player who has raised nothing has nothing to report. That is not the
     // failure of leaving something out, but it is not covering everything
