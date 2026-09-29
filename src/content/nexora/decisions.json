@@ -501,7 +501,7 @@
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-hire-recruit", "label": "Recruit properly", "description": "Take the time to hire the right people.", "visibleKnownEffects": ["Two months before anyone starts", "Permanent capability"],
-          "immediateEffects": [ { "type": "budget.change", "amount": -140 } ],
+          "immediateEffects": [ { "type": "budget.change", "amount": -140 }, { "type": "event.schedule", "eventId": "evt-org-new-starter", "dayOffset": 55 } ],
           "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "team.vacancyFilled", "fn": "iam" }, { "type": "team.morale", "delta": 0.05 } ], "note": "A new identity engineer has joined." } ] },
         { "id": "opt-hire-contract", "label": "Bring in contractors now", "description": "Buy capacity immediately at a premium.", "visibleKnownEffects": ["Capacity within weeks", "Expensive, and it leaves when the money stops"],
           "immediateEffects": [

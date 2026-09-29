@@ -18,6 +18,15 @@ fault.
 
 ### Fixed
 
+- **A new starter was announced after they had started.** "Our new identity
+  engineer starts on Monday" was a free-standing letter from day 90, gated
+  only on having chosen to recruit. The hire joins 60 days after that choice,
+  which is usually made around day 20, so over 60 years that recruited
+  (`starter-probe.ts`, scratch) the letter came 8 to 20 days after the
+  engineer had joined, in all 60. The choice now schedules it for five days
+  before the join, and it says "next week". After: 60 of 60 arrive five days
+  ahead. A test fails on the old content.
+
 - **The Digital MD thanked a player who had stopped her launch.** Reading an
   after-breach year end to end: opposing the launch draws "the reason on the
   slide is security… next time I will be going to the CIO first", and the

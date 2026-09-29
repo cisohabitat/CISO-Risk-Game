@@ -569,3 +569,22 @@ describe('the launch day letter', () => {
     expect(oppose.immediateEffects.some((e) => e.type === 'flag.set' && e.flag === 'launch.blocked')).toBe(true)
   })
 })
+
+describe('a new starter', () => {
+  it('is announced the week before they join, not after', () => {
+    // "Our new identity engineer starts on Monday" was free to arrive any
+    // time from day 90; the hire joins 60 days after the choice, and in 60 of
+    // 60 years the letter came 8 to 20 days after they had joined.
+    const state = newGame(index, { seed: 'new-starter' })
+    runDays(state, index, 20)
+    const decision = openDecision(state, index, 'dec-hire-or-outsource')!
+    const chosen = state.currentDay
+    expect(applyAction(state, index, { type: 'resolveDecision', decisionId: decision.id, optionId: 'opt-hire-recruit', rationaleTagIds: ['rat-resources'] }).ok).toBe(true)
+    runDays(state, index, 70)
+    const letter = dayOf(state, 'evt-org-new-starter')
+    const joins = chosen + 60
+    expect(letter, 'no letter').toBeDefined()
+    expect(letter!).toBeLessThan(joins)
+    expect(letter!).toBeGreaterThanOrEqual(joins - 7)
+  })
+})

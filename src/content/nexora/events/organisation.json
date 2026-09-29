@@ -914,9 +914,9 @@
       "type": "people",
       "title": "A new starter, and a reminder",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "Our new identity engineer starts on Monday. They will take about two months to be useful, which is worth remembering before we commit them to anything.",
+      "body": "Our new identity engineer starts next week. They will take about two months to be useful, which is worth remembering before we commit them to anything.",
       "priority": "routine",
-      "availableFromDay": 90,
+      "availableFromDay": 0,
       "conditions": [{ "kind": "decision.optionTaken", "decisionId": "dec-hire-or-outsource", "optionId": "opt-hire-recruit" }],
       "weight": 7,
       "pinned": false,
@@ -925,7 +925,8 @@
       "relatedNodeIds": [],
       "tags": [
         "team"
-      ]
+      ],
+      "scheduledOnly": true
     },
     {
       "id": "evt-org-assumption-prompt",
