@@ -8,14 +8,14 @@ import { Collisions } from '@/components/game/Collisions'
 import { CameBack } from '@/components/game/CameBack'
 import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
 import { bandTone, capacityTone, confidenceTone, money, plural, trendBadge } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const setScreen = useGameStore((store) => store.setScreen)
   const setUi = useGameStore((store) => store.setUi)
   const openGlossary = useGameStore((store) => store.openGlossary)

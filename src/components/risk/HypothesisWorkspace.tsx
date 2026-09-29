@@ -8,14 +8,14 @@
  */
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { evidenceList } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
 import { evidenceSourceLabel, statusLabel } from '@/lib/formatting/labels'
 
 export function HypothesisWorkspace() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [creating, setCreating] = useState(false)
   const [templateId, setTemplateId] = useState('')

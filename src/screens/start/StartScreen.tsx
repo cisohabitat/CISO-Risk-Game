@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
+import { situationChoices, situationName } from '@/lib/content/situations'
 import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
@@ -37,29 +38,48 @@ export function StartScreen() {
   const startNewGame = useGameStore((store) => store.startNewGame)
   const loadGame = useGameStore((store) => store.loadGame)
   const loadImported = useGameStore((store) => store.loadImported)
+  const ensureCampaign = useGameStore((store) => store.ensureCampaign)
   const deleteCampaign = useGameStore((store) => store.deleteCampaign)
   const deleteAllSaves = useGameStore((store) => store.deleteAllSaves)
   const refreshSaves = useGameStore((store) => store.refreshSaves)
   const pushToast = useGameStore((store) => store.pushToast)
   const saves = useGameStore((store) => store.ui.saves)
-  const index = useGameStore((store) => store.index)
   const [seed, setSeed] = useState(randomSeed)
   const [difficulty, setDifficulty] = useState<Difficulty>('ciso')
-  const situations = index.content.situations ?? []
+  const situations = situationChoices
   const [situation, setSituation] = useState<string>(situations[0]?.id ?? 'surprise')
   // What the player has asked to delete: one campaign, or everything.
   const [pendingDelete, setPendingDelete] = useState<SaveSummary | 'all' | undefined>()
   const fileInput = useRef<HTMLInputElement>(null)
+  // What is being opened. The campaign content is fetched while this screen is
+  // up; on a slow connection a quick click can still wait a few seconds for
+  // it (2.8 s on Slow 3G a second after the screen appeared), and a button
+  // that did nothing for that long would read as broken.
+  const [opening, setOpening] = useState<string | undefined>()
+  const open = async (what: string, action: () => Promise<unknown>) => {
+    setOpening(what)
+    try {
+      await action()
+    } finally {
+      setOpening(undefined)
+    }
+  }
 
   useEffect(() => {
     void refreshSaves()
   }, [refreshSaves])
 
+  // The campaign is not part of what this screen waits for, but it is fetched
+  // as soon as the screen is up, so starting or continuing does not wait on it.
+  useEffect(() => {
+    void ensureCampaign().catch(() => undefined)
+  }, [ensureCampaign])
+
   const onImport = async (file: File) => {
     try {
       const text = await file.text()
       const save = parseImportedSave(text)
-      loadImported(save.state)
+      await loadImported(save.state)
       pushToast('Campaign imported.', 'success')
     } catch (error) {
       pushToast(error instanceof Error ? error.message : 'That file could not be read.', 'warning')
@@ -92,13 +112,15 @@ export function StartScreen() {
                   <li key={save.key} className="flex items-stretch gap-2">
                     <button
                       type="button"
-                      onClick={() => void loadGame(save.key)}
+                      onClick={() => void open(save.key, () => loadGame(save.key))}
+                      disabled={opening !== undefined}
+                      aria-busy={opening === save.key}
                       className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left hover:border-line-strong"
                     >
                       <span>
                         <span className="block font-medium">
-                          Day {save.day} · {save.difficulty}
-                          {save.situationId && index.situation.get(save.situationId) && ` · ${index.situation.get(save.situationId)!.name}`}
+                          {opening === save.key ? 'Opening… ' : ''}Day {save.day} · {save.difficulty}
+                          {save.situationId && situationName(save.situationId) && ` · ${situationName(save.situationId)}`}
                         </span>
                         <span className="block text-sm text-ink-faint">
                           seed {save.seed} · saved {new Date(save.savedAtIso).toLocaleString()}
@@ -266,9 +288,11 @@ export function StartScreen() {
               variant="primary"
               size="lg"
               block
-              onClick={() => void startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined)}
+              onClick={() => void open('new', () => startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined))}
+              disabled={opening !== undefined}
+              aria-busy={opening === 'new'}
             >
-              Begin your first day
+              {opening === 'new' ? 'Opening the campaign…' : 'Begin your first day'}
             </Button>
 
             {!storageAvailable() && (

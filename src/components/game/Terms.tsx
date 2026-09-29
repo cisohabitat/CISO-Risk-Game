@@ -4,10 +4,10 @@
  * long, passive and not surfaced at the point of confusion" by the opening
  * playtest's newcomer. This is the point of confusion.
  */
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 
 export function Terms({ text, className }: { text: string; className?: string }) {
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const openGlossary = useGameStore((store) => store.openGlossary)
   const lower = text.toLowerCase()
   const hits = index.content.glossary.filter((entry) => {

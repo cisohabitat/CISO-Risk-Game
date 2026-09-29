@@ -11,13 +11,13 @@
  * hidden truth and does not appear here.
  */
 import { Button, Card, CardBody } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
 import { plural } from '@/lib/formatting/labels'
 
 export function IncidentCommand() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const setUi = useGameStore((store) => store.setUi)
   const setScreen = useGameStore((store) => store.setScreen)
   // Once the year is over nothing can be decided, and the panel sat above the

@@ -4,7 +4,7 @@
  */
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, Tab, TabList, TabPanel, Tabs } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { assumptionViews, evidenceList, visibleRisks } from '@/store/selectors'
 import { InvestigationPanel } from '@/components/risk/InvestigationPanel'
 import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils/cn'
 
 export function RiskScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const selectedScenarioId = useGameStore((store) => store.ui.selectedScenarioId)
   const setUi = useGameStore((store) => store.setUi)

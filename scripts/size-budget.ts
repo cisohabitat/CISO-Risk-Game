@@ -29,8 +29,12 @@ interface Budget {
 }
 
 const BUDGETS: Budget[] = [
-  { name: 'index-', limit: 110, why: 'app code a player waits for before anything works' },
-  { name: 'campaign-', limit: 77, why: 'the authored campaign; rises with every event written' },
+  { name: 'index-', limit: 105, why: 'app code a player waits for before anything works' },
+  // Loaded on demand, and fetched while the start screen is up, so it no
+  // longer delays the first screen; it still has to arrive before the first
+  // day can be played. Raised from 77 when it left the first load, to leave
+  // room for roughly sixty more short letters before this is looked at again.
+  { name: 'campaign-', limit: 90, why: 'the authored campaign, loaded when a campaign opens' },
   { name: 'react-', limit: 75, why: 'the framework' },
   { name: 'OrgGraph-', limit: 70, why: 'the graph library, which must stay out of the first load' },
 ]
@@ -40,8 +44,10 @@ const BUDGETS: Budget[] = [
  * reason the organisation view is code-split; if it is preloaded or its
  * stylesheet blocks rendering, the split has bought nothing. The year view is
  * split for headroom: it is opened a few times a year and read at the close.
+ * The campaign and its loader (with the schema library) are split because the
+ * start screen needs neither, and they were most of what it waited for.
  */
-const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-']
+const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-', 'campaign-', 'loader-']
 
 /**
  * Everything the entry HTML fetches before the first screen can be
@@ -56,8 +62,12 @@ const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-']
  * fourth-quarter decisions, four starting situations with a decision each,
  * and reworded recurring messages cost about 12 kB of campaign between them.
  * Still set just above where that leaves the build (257.4 kB, 74.0 kB).
+ *
+ * Lowered from 260 to 185 when the campaign content left the first load: the
+ * first screen fell from 258.2 kB to 176.7 kB, and the limit is set just above
+ * that so the gain cannot drift away unnoticed.
  */
-const CRITICAL_LIMIT_KB = 260
+const CRITICAL_LIMIT_KB = 185
 
 async function main(): Promise<void> {
   const dir = join(process.cwd(), 'dist', 'assets')

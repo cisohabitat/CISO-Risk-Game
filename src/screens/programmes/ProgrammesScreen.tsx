@@ -4,13 +4,13 @@
  */
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, type ProgrammeView } from '@/store/selectors'
 import { functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
 
 export function ProgrammesScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [starting, setStarting] = useState<ProgrammeView | undefined>()
   const [budget, setBudget] = useState(0)

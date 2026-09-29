@@ -151,11 +151,15 @@ been fixed and moved to `docs/FINDINGS.md`.
   told rather than luck, which may be the lesson; whether it feels right after
   a first ransomware year is in `docs/PLAYTEST.md`.
 
-- **There is under 2 kB of first-load headroom left for content.** The first
-  screen waits on 258.2 of the 260 kB budget, of which the campaign is 75.8 of
-  its 77. The year view is already split out; the next few messages or
-  decisions of any length will need either another split or a deliberate rise
-  in `scripts/size-budget.ts`, which `pnpm check` now enforces.
+- **The campaign content now loads on demand, not with the first screen.**
+  The first screen waits on 176.7 kB against a 185 kB limit (it was 258.2
+  against 260), and content no longer adds to it. The campaign chunk has its
+  own budget, 90 kB with about 15 kB to spare, and is fetched while the start
+  screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
+  to 7.7 s). The cost is one round trip for somebody who presses Begin
+  within a few seconds on a very slow link: 2.8 s of waiting a second after
+  the screen appears on Slow 3G, none after five; on Fast 3G none after one.
+  The button says it is opening while it waits. Measured in `docs/FINDINGS.md`.
 
 Add measured findings here rather than suspicions. The ledger of what was
 found, how it was measured and how it was closed — every fixed defect and every

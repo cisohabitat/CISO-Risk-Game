@@ -4,7 +4,7 @@
  * without having to go and look for it.
  */
 import { Button } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { cameBack } from '@/store/selectors'
 
 const KIND_LABEL: Record<ReturnType<typeof cameBack>[number]['kind'], string> = {
@@ -18,7 +18,7 @@ const KIND_LABEL: Record<ReturnType<typeof cameBack>[number]['kind'], string> = 
 
 export function CameBack() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const setUi = useGameStore((store) => store.setUi)
   const setScreen = useGameStore((store) => store.setScreen)
   if (!state) return null

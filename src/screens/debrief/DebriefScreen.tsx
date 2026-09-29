@@ -5,7 +5,7 @@
  */
 import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentViews, yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
 import { CAMPAIGN_DAYS } from '@/game/types'
@@ -22,7 +22,7 @@ const BAND_TONE: Record<string, 'severe' | 'elevated' | 'moderate' | 'low'> = {
 
 export function DebriefScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const finishCampaign = useGameStore((store) => store.finishCampaign)
   const leaveCampaign = useGameStore((store) => store.leaveCampaign)
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])

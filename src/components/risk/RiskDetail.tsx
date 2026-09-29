@@ -4,7 +4,7 @@
  */
 import { useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
 import type { VisibleRisk } from '@/store/selectors'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils/cn'
 
 export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () => void }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [accepting, setAccepting] = useState(false)
   const [tags, setTags] = useState<string[]>([])

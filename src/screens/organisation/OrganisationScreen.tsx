@@ -5,7 +5,7 @@
  */
 import { Suspense, lazy, useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { discoveredNodes, undiscoveredCount } from '@/store/selectors'
 import { NodeInspector } from '@/components/organisation/NodeInspector'
 import { nodeTypeLabel, plural } from '@/lib/formatting/labels'
@@ -17,7 +17,7 @@ const GROUP_ORDER = ['service', 'application', 'identity', 'cloud-platform', 'in
 
 export function OrganisationScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const graphMode = useGameStore((store) => store.ui.graphMode)
   const selectedNodeId = useGameStore((store) => store.ui.selectedNodeId)
   const setUi = useGameStore((store) => store.setUi)

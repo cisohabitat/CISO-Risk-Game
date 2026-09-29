@@ -7,7 +7,7 @@
  */
 import { useEffect, useState, type ReactNode } from 'react'
 import { DESTINATIONS, destinationFor } from '@/app/navigation'
-import { useGameStore, type Screen } from '@/store/game-store'
+import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
 import { Badge, Button, Dialog } from '@/components/ui/primitives'
@@ -17,7 +17,7 @@ import { capacityTone } from '@/lib/formatting/labels'
 
 export function AppShell({ children }: { children: ReactNode }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const screen = useGameStore((store) => store.ui.screen)
   const setScreen = useGameStore((store) => store.setScreen)
   const openGlossary = useGameStore((store) => store.openGlossary)
@@ -220,7 +220,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 function ShellHeader() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const saveManual = useGameStore((store) => store.saveManual)
   const leaveCampaign = useGameStore((store) => store.leaveCampaign)
   const [theme, setTheme] = useState<'dark' | 'light'>(() =>

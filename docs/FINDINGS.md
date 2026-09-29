@@ -18,6 +18,37 @@ fault.
 
 ### Fixed
 
+- **The first screen waited on the whole campaign.** The start screen needs
+  the starting situations and nothing else from the content, but the store
+  built the content index at import, so the first load carried the campaign
+  (75.8 kB), its loader and the schema library: 258.2 of a 260 kB budget,
+  with under 2 kB left for writing. The store now loads the content on
+  demand (`ensureCampaign`), before any campaign is started, resumed or
+  imported, so a campaign never exists without it; the start screen reads the
+  situations from a 0.9 kB chunk of their own and fetches the rest as soon as
+  it is up. First load: 176.7 kB. The critical-path limit is lowered to 185 so
+  the gain cannot drift away, the campaign's own budget rises to 90 because
+  it no longer delays the first screen, and the size check fails if the
+  campaign or its loader is ever preloaded again; one static import from the
+  start screen put it back at 259.6 kB and failed the check by name. A
+  `manualChunks` rule for the situations file did nothing under Rolldown; the
+  chunks are now `advancedChunks` groups. A store test checks that there is no
+  content before a campaign and always content during one, and that the start
+  screen's situations match the campaign's.
+
+  Measured in Chromium under the DevTools throttling presets, both builds
+  served gzipped (`throttle.mjs`, scratch; median of three): the start screen
+  appears in 2.2 s rather than 2.7 on Fast 3G and 7.7 rather than 9.4 on Slow
+  3G. The cost is one more round trip for the content: a player who presses
+  Begin the instant the screen appears reaches the campaign at 3.6 s rather
+  than 2.8 (Fast 3G) and 11.6 rather than 9.5 (Slow 3G). After a pause the
+  cost is gone: on Fast 3G the wait after the click is 0.1 s from a one-second
+  pause, and on Slow 3G it is 2.8 / 1.8 / 0.8 / 0.1 s after pauses of 1 / 2 /
+  3 / 5 s. A first-time player chooses a difficulty and a situation before
+  pressing Begin, so the common case is the faster one. The rare slow click
+  used to do nothing visible while it waited; Begin and Continue now say they
+  are opening and cannot be pressed twice, held by a UI test.
+
 - **The close said an overrun restore was evidence recovery would hold.** In
   the same after-breach year the production restore "ran past the window",
   and the close's resilience section said "What recovery capability you did

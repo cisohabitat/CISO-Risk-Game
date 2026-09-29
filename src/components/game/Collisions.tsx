@@ -8,7 +8,7 @@
  * what do you do in the gap?
  */
 import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { collisions, type CollisionView } from '@/store/selectors'
 import { plural } from '@/lib/formatting/labels'
 
@@ -126,7 +126,7 @@ function Race({ collision, tone }: { collision: CollisionView; tone: 'severe' | 
 
 export function Collisions({ limit = 2 }: { limit?: number }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const setScreen = useGameStore((store) => store.setScreen)
   const setUi = useGameStore((store) => store.setUi)
   if (!state) return null

@@ -5,7 +5,7 @@
  */
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/review'
 import { formatGameDate } from '@/game/time'
@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils/cn'
 
 export function BoardScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [preparing, setPreparing] = useState(false)
   const [topics, setTopics] = useState<string[]>([])

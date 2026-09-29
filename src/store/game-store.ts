@@ -8,7 +8,6 @@ import { produce } from 'immer'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import { applyAction, newGame } from '@/game/engine/orchestrator'
-import { loadCampaign } from '@/lib/content/loader'
 import { buildAnnualReview } from '@/game/debrief/review'
 import { clearSaves, deleteCampaign, listSaves, readSave, type SaveKey, type SaveSummary, writeCampaign } from './persistence'
 
@@ -36,15 +35,22 @@ export interface UiState {
 }
 
 interface GameStore {
-  index: ContentIndex
+  /**
+   * The campaign content, loaded on demand rather than with the first screen:
+   * it is most of what a first-time player would otherwise wait for, and the
+   * start screen needs none of it. It is always present while a campaign is.
+   */
+  index: ContentIndex | null
   state: GameState | null
   ui: UiState
   lastTicks: TickResult[]
   busy: boolean
 
+  /** Loads the campaign content if it is not loaded yet. Safe to call early and often. */
+  ensureCampaign: () => Promise<ContentIndex>
   startNewGame: (seed: string, difficulty: Difficulty, situation?: string) => Promise<void>
   loadGame: (key: SaveKey) => Promise<boolean>
-  loadImported: (state: GameState) => void
+  loadImported: (state: GameState) => Promise<void>
   refreshSaves: () => Promise<void>
   saveManual: () => Promise<void>
   deleteCampaign: (gameId: string) => Promise<void>
@@ -63,6 +69,14 @@ interface GameStore {
 }
 
 let toastId = 0
+let loadingCampaign: Promise<ContentIndex> | undefined
+const CAMPAIGN_UNAVAILABLE = 'The campaign could not be loaded. Check the connection and try again.'
+
+/** The content of the running campaign; there is no campaign without it. */
+function contentOf(index: ContentIndex | null): ContentIndex {
+  if (!index) throw new Error('The campaign content is not loaded.')
+  return index
+}
 
 /** Autosave on the transitions that matter, never on every tick (plan §32.8). */
 function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boolean {
@@ -82,7 +96,7 @@ function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boolean {
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
-  index: loadCampaign(),
+  index: null,
   state: null,
   lastTicks: [],
   busy: false,
@@ -94,8 +108,29 @@ export const useGameStore = create<GameStore>((set, get) => ({
     saves: [],
   },
 
+  async ensureCampaign() {
+    const loaded = get().index
+    if (loaded) return loaded
+    loadingCampaign ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign())
+    try {
+      const index = await loadingCampaign
+      set({ index })
+      return index
+    } catch (error) {
+      // A failed fetch (offline, a deploy mid-session) must not stick.
+      loadingCampaign = undefined
+      throw error
+    }
+  },
+
   async startNewGame(seed, difficulty, situation) {
-    const { index } = get()
+    let index: ContentIndex
+    try {
+      index = await get().ensureCampaign()
+    } catch {
+      get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+      return
+    }
     const state = newGame(index, {
       seed,
       difficulty,
@@ -116,6 +151,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     try {
       const state = await readSave(key)
       if (!state) return false
+      try {
+        await get().ensureCampaign()
+      } catch {
+        get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+        return false
+      }
       set({ state, ui: { ...get().ui, screen: 'home' } })
       return true
     } catch (error) {
@@ -124,9 +165,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  loadImported(state) {
+  async loadImported(state) {
+    const index = await get().ensureCampaign()
     set({ state, ui: { ...get().ui, screen: 'home' } })
-    void writeCampaign(state, get().index.content.meta.title, { savedByPlayer: true })
+    void writeCampaign(state, index.content.meta.title, { savedByPlayer: true })
     void get().refreshSaves()
   },
 
@@ -162,14 +204,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   async saveManual() {
     const { state, index } = get()
     if (!state) return
-    await writeCampaign(state, index.content.meta.title, { savedByPlayer: true })
+    await writeCampaign(state, contentOf(index).content.meta.title, { savedByPlayer: true })
     await get().refreshSaves()
     get().pushToast('Campaign saved.', 'success')
   },
 
   dispatch(action) {
-    const { state, index } = get()
+    const { state } = get()
     if (!state) return { ok: false, message: 'No campaign is running.' }
+    const index = contentOf(get().index)
 
     let result: ActionResult = { ok: false, message: '' }
     const next = produce(state, (draft) => {
@@ -218,8 +261,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   finishCampaign() {
-    const { state, index } = get()
+    const { state } = get()
     if (!state) return
+    const index = contentOf(get().index)
     const next = produce(state, (draft) => {
       draft.finished = true
       draft.reviews.annual = buildAnnualReview(draft, index)
@@ -234,7 +278,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { state, index } = get()
     if (state) {
       try {
-        await writeCampaign(state, index.content.meta.title)
+        await writeCampaign(state, contentOf(index).content.meta.title)
       } catch {
         // Already saved when the year closed; leaving is still allowed.
       }
@@ -243,3 +287,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     await get().refreshSaves()
   },
 }))
+
+/** The campaign content, for components that only render inside a campaign. */
+export function useCampaignIndex(): ContentIndex {
+  return contentOf(useGameStore((store) => store.index))
+}

@@ -7,12 +7,12 @@
  * attention, dismissing it is a real answer, and neither is done for them.
  */
 import { Button } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { patternSuggestions } from '@/store/selectors'
 
 export function PatternNotice({ limit = 1 }: { limit?: number }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   if (!state) return null
 

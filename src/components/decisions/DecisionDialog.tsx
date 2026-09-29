@@ -7,7 +7,7 @@
  */
 import { useMemo, useState } from 'react'
 import { Badge, Button, Dialog } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
 import { openDecisions, type OpenDecisionView } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
@@ -15,7 +15,7 @@ import { money } from '@/lib/formatting/labels'
 
 export function DecisionDialog({ decisionId, onClose }: { decisionId: string; onClose: () => void }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [optionId, setOptionId] = useState<string | undefined>()
   const [tags, setTags] = useState<string[]>([])

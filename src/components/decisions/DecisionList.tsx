@@ -1,10 +1,10 @@
 import { Badge, Button, Card, CardBody, EmptyState } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { openDecisions } from '@/store/selectors'
 
 export function DecisionList({ limit, quiet = false }: { limit?: number; quiet?: boolean }) {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const setUi = useGameStore((store) => store.setUi)
   if (!state) return null
 

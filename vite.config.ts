@@ -16,14 +16,18 @@ export default defineConfig({
     chunkSizeWarningLimit: 700,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          // The campaign is data, not code: it changes on a different cadence
-          // from the app, it is fetched in parallel rather than after it, and
-          // its size is the thing most likely to creep as content is authored.
-          // Its own chunk makes all three true and visible (plan §48).
-          if (id.includes('src/content/nexora')) return 'campaign'
-          if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'react'
-          return undefined
+        // Named groups, highest priority first. The campaign is data, not
+        // code: it changes on a different cadence from the app and its size is
+        // the thing most likely to creep as content is authored, so it is its
+        // own chunk (plan §48), and it is loaded on demand: the start screen
+        // needs none of it but the starting situations, which have a small
+        // chunk of their own so that the campaign's group does not take them.
+        advancedChunks: {
+          groups: [
+            { name: 'situations', test: /src[\\/]content[\\/]nexora[\\/]situations\.json/, priority: 30 },
+            { name: 'campaign', test: /src[\\/]content[\\/]nexora[\\/]/, priority: 20 },
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/, priority: 10 },
+          ],
         },
       },
     },

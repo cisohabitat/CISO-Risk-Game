@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
@@ -17,7 +17,7 @@ import type { InvestigationDef } from '@/game/types'
 
 export function InvestigationPanel() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [chosen, setChosen] = useState<InvestigationDef | undefined>()
   const [leaderId, setLeaderId] = useState<string>('')

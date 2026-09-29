@@ -4,13 +4,13 @@
  */
 import { useEffect, useRef } from 'react'
 import { Dialog } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 
 export function Glossary() {
   const open = useGameStore((store) => store.ui.glossaryOpen)
   const term = useGameStore((store) => store.ui.glossaryTerm)
   const setUi = useGameStore((store) => store.setUi)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const guided = useGameStore((store) => store.state?.difficulty === 'guided')
   const target = useRef<HTMLDivElement>(null)
 

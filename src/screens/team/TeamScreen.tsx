@@ -4,13 +4,13 @@
  */
 import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
 import { capacityTone, money, plural } from '@/lib/formatting/labels'
 
 export function TeamScreen() {
   const state = useGameStore((store) => store.state)
-  const index = useGameStore((store) => store.index)
+  const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
 
   const view = useMemo(() => (state ? teamView(state, index) : undefined), [state, index])
