@@ -86,7 +86,7 @@ Measured, not yet fixed. Ranked. Everything that used to sit here about the
 risk bands, executive patience, the noise dial and the board's standing has
 been fixed and moved to `docs/FINDINGS.md`.
 
-- **Almost nobody has played this.** Four playtest reports in
+- **Almost nobody has played this.** Five playtest reports in
   `docs/playtests/` are an AI driving a browser. The owner has played one year
   and it felt right, but a designer cannot say whether the game teaches itself.
   Whether somebody who does not know the subject finishes feeling they learned
