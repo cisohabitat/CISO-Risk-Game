@@ -19,6 +19,8 @@ describe('loading the campaign on demand', () => {
 
   it('offers the start screen the same situations the campaign has', async () => {
     const index = await useGameStore.getState().ensureCampaign()
-    expect(situationChoices.map((s) => [s.id, s.name])).toEqual((index.content.situations ?? []).map((s) => [s.id, s.name]))
+    expect(situationChoices.map((s) => [s.id, s.name, s.summary])).toEqual(
+      (index.content.situations ?? []).map((s) => [s.id, s.name, s.summary]),
+    )
   })
 })

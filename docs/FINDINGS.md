@@ -18,6 +18,34 @@ fault.
 
 ### Fixed
 
+- **Loading the campaign on demand had its own faults, found by reviewing
+  the change.** The playthrough, screenshot and guide harnesses and a soak of
+  1,000 all passed after it; a line-by-line review of the commit found what
+  they could not reach:
+  - A deploy while the start screen was open left the page asking for a
+    content file that no longer existed, and "check the connection and try
+    again" could never succeed. The page now reloads once to pick up the new
+    version, only while no campaign is open and at most once in thirty
+    seconds. Measured in Chromium with the loader's first request failed: one
+    reload and the campaign opens. With every request failed (offline): one
+    reload, then the message, and Begin is usable again.
+  - In development an authoring mistake arrived as a connection error and
+    its issue list was lost; it is now logged.
+  - An import that could not load the content showed the browser's raw error
+    and then "Campaign imported."; it now shows the same message as Begin and
+    says nothing about importing. Import is also disabled while Begin or
+    Continue is opening, so two campaigns cannot race to open.
+  - A failed attempt cleared the shared in-flight fetch even when a newer one
+    had started; it now forgets only itself.
+  - The campaign screens were shown on the campaign's state alone and relied
+    on every component to find the content; the app now waits for both.
+  - The loader carried the schema library, used only in development, onto
+    every production player's path to the first day. Validation moved to its
+    own module loaded only in development: the loader fell from 7.3 kB to
+    0.5 kB and the first load to 174.9 kB.
+  - The test holding the start screen's situations to the campaign's compared
+    names but not the summaries the screen shows; it compares both.
+
 - **The first screen waited on the whole campaign.** The start screen needs
   the starting situations and nothing else from the content, but the store
   built the content index at import, so the first load carried the campaign

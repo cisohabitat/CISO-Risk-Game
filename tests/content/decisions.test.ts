@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseCampaignContent } from '@/lib/content/loader'
+import { parseCampaignContent } from '@/lib/content/validate-content'
 import { nexoraContentRaw } from '@/content/nexora'
 
 /**

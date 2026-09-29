@@ -31,6 +31,7 @@ const DebriefScreen = lazy(() => loadDebrief().then((m) => ({ default: m.Debrief
 
 export function App() {
   const state = useGameStore((store) => store.state)
+  const contentLoaded = useGameStore((store) => store.index !== null)
   const screen = useGameStore((store) => store.ui.screen)
   const openDecisionId = useGameStore((store) => store.ui.openDecisionId)
   const setUi = useGameStore((store) => store.setUi)
@@ -56,7 +57,9 @@ export function App() {
     if (state?.finished && !state.reviews.annual) finishCampaign()
   }, [state?.finished, state?.reviews.annual, finishCampaign, state])
 
-  if (!state) {
+  // The campaign screens read the content; they are shown only once both the
+  // campaign and its content are here, which the store opens in that order.
+  if (!state || !contentLoaded) {
     return (
       <>
         <StartScreen />

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from '@/app/App'
+import { useGameStore } from '@/store/game-store'
 import './index.css'
 
 // Theme preference is restored before first paint where storage allows it.
@@ -14,6 +15,24 @@ try {
 } catch {
   /* Blocked storage must never stop the game loading. */
 }
+
+// A deploy replaces the hashed files that an open page would fetch next, so
+// the campaign it has not loaded yet no longer exists at the address it knows.
+// On the start screen nothing is lost by reloading to pick up the new version;
+// once a campaign is open the error is left to surface instead. At most once
+// in thirty seconds, so a page that is simply offline cannot loop.
+window.addEventListener('vite:preloadError', (event) => {
+  if (useGameStore.getState().state) return
+  try {
+    const last = Number(sessionStorage.getItem('ciso-reloaded-at') ?? 0)
+    if (Date.now() - last < 30_000) return
+    sessionStorage.setItem('ciso-reloaded-at', String(Date.now()))
+  } catch {
+    return
+  }
+  event.preventDefault()
+  window.location.reload()
+})
 
 const container = document.getElementById('root')
 if (!container) throw new Error('Root container missing')

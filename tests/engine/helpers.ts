@@ -1,5 +1,5 @@
 import { buildContentIndex } from '@/game/engine/content-index'
-import { parseCampaignContent } from '@/lib/content/loader'
+import { parseCampaignContent } from '@/lib/content/validate-content'
 import { nexoraContentRaw } from '@/content/nexora'
 import type { ContentIndex } from '@/game/types'
 

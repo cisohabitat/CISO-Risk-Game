@@ -75,16 +75,16 @@ export function StartScreen() {
     void ensureCampaign().catch(() => undefined)
   }, [ensureCampaign])
 
-  const onImport = async (file: File) => {
-    try {
-      const text = await file.text()
-      const save = parseImportedSave(text)
-      await loadImported(save.state)
-      pushToast('Campaign imported.', 'success')
-    } catch (error) {
-      pushToast(error instanceof Error ? error.message : 'That file could not be read.', 'warning')
-    }
-  }
+  const onImport = (file: File) =>
+    open('import', async () => {
+      try {
+        const text = await file.text()
+        const save = parseImportedSave(text)
+        if (await loadImported(save.state)) pushToast('Campaign imported.', 'success')
+      } catch (error) {
+        pushToast(error instanceof Error ? error.message : 'That file could not be read.', 'warning')
+      }
+    })
 
   return (
     <div className="min-h-[100dvh] bg-paper">
@@ -120,7 +120,7 @@ export function StartScreen() {
                       <span>
                         <span className="block font-medium">
                           {opening === save.key ? 'Opening… ' : ''}Day {save.day} · {save.difficulty}
-                          {save.situationId && situationName(save.situationId) && ` · ${situationName(save.situationId)}`}
+                          {save.situationId && situationName(save.situationId) ? ` · ${situationName(save.situationId)}` : ''}
                         </span>
                         <span className="block text-sm text-ink-faint">
                           seed {save.seed} · saved {new Date(save.savedAtIso).toLocaleString()}
@@ -317,7 +317,7 @@ export function StartScreen() {
                   if (file) void onImport(file)
                 }}
               />
-              <Button variant="secondary" size="sm" onClick={() => fileInput.current?.click()}>
+              <Button variant="secondary" size="sm" disabled={opening !== undefined} onClick={() => fileInput.current?.click()}>
                 Choose a save file
               </Button>
             </Disclosure>

@@ -50,7 +50,8 @@ interface GameStore {
   ensureCampaign: () => Promise<ContentIndex>
   startNewGame: (seed: string, difficulty: Difficulty, situation?: string) => Promise<void>
   loadGame: (key: SaveKey) => Promise<boolean>
-  loadImported: (state: GameState) => Promise<void>
+  /** Opens an imported campaign; false if the content could not be loaded. */
+  loadImported: (state: GameState) => Promise<boolean>
   refreshSaves: () => Promise<void>
   saveManual: () => Promise<void>
   deleteCampaign: (gameId: string) => Promise<void>
@@ -111,14 +112,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
   async ensureCampaign() {
     const loaded = get().index
     if (loaded) return loaded
-    loadingCampaign ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign())
+    const attempt = (loadingCampaign ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign()))
     try {
-      const index = await loadingCampaign
+      const index = await attempt
       set({ index })
       return index
     } catch (error) {
-      // A failed fetch (offline, a deploy mid-session) must not stick.
-      loadingCampaign = undefined
+      // A failed fetch (offline, a deploy mid-session) must not stick, but
+      // only this attempt is forgotten: a newer one may already be under way.
+      if (loadingCampaign === attempt) loadingCampaign = undefined
+      // In development this is where an authoring mistake arrives.
+      console.error(error)
       throw error
     }
   },
@@ -166,10 +170,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   async loadImported(state) {
-    const index = await get().ensureCampaign()
+    let index: ContentIndex
+    try {
+      index = await get().ensureCampaign()
+    } catch {
+      get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+      return false
+    }
     set({ state, ui: { ...get().ui, screen: 'home' } })
     void writeCampaign(state, index.content.meta.title, { savedByPlayer: true })
     void get().refreshSaves()
+    return true
   },
 
   async refreshSaves() {
