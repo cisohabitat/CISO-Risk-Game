@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type * as Persistence from '@/store/persistence'
 
 const written = vi.hoisted(() => ({ count: 0 }))
 vi.mock('@/store/persistence', async (original) => {
-  const actual = await original<typeof import('@/store/persistence')>()
+  const actual = await original<typeof Persistence>()
   return { ...actual, writeCampaign: vi.fn(async () => { written.count += 1 }) }
 })
 

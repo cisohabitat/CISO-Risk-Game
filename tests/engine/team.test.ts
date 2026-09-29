@@ -5,6 +5,7 @@ import { CYBER_FUNCTIONS } from '@/game/types'
 import { relationshipBand, supportLikelihood } from '@/game/stakeholders/relationships'
 import { computeStaffing, deliveryConfidence } from '@/game/programmes/progression'
 import { testIndex } from './helpers'
+import { thinBecause } from '@/game/team/assignments'
 import { applyEffects } from '@/game/engine/effects'
 import { deriveRng } from '@/game/engine/rng'
 
@@ -31,6 +32,18 @@ describe('team and delegation', () => {
     expect(delegationOutlook(idle, 0.85)).toBe('partial')
     expect(delegationOutlook({ ...idle, morale: 0.2, skill: 0.5 }, 0.9)).toBe('thin')
     expect(delegationOutlook({ ...idle, skill: 0.95, morale: 0.9, workload: 0.7 }, 0.2)).toBe('busy')
+  })
+
+  it('blames a stretched team for thin work only when the team was stretched', () => {
+    // A playtest bought capacity, was told the functions had room, and then
+    // read that an enquiry "came back thin — the team was stretched".
+    const index = testIndex()
+    const leader = index.content.leaders[0]!
+    const rested = { id: leader.id, skill: 0.5, reliability: 0.7, morale: 0.7, workload: 0.1, assignmentsCompleted: 0, assignmentsLate: 0 }
+    expect(thinBecause(index, rested, 0.8)).toBe('the team was stretched')
+    expect(thinBecause(index, rested, 0.3)).not.toMatch(/stretched/)
+    expect(thinBecause(index, { ...rested, workload: 0.7 }, 0.3)).toBe(`${leader.name} had too much else on`)
+    expect(thinBecause(index, { ...rested, morale: 0.3 }, 0.3)).toBe(`${leader.name} is running low`)
   })
 
   it('grinds morale down under sustained overcommitment', () => {

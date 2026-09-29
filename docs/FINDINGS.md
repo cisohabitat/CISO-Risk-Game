@@ -47,6 +47,13 @@ fault.
     signed by whoever runs the pressed function and names it, and the
     evidence it reveals says "a security lead" rather than "SOC lead". A
     test reads the delivered message.
+  - **Every thin enquiry blamed "the team was stretched".** The playtest
+    bought capacity, read "Your functions have room to take on work", and
+    then an enquiry "came back thin — the team was stretched". Over the same
+    40 years, 65 of 194 thin results came back with team strain below
+    stretched. The result now names what the engine saw: a stretched team, a
+    leader with too much else on, one running low, or none of those ("it did
+    not get far enough"). A test fails if a rested team is blamed.
 
 - **A browser playtest of a New money year, first quarter.** Played in
   Chromium at CISO difficulty, a few days at a time, deciding from the screen.

@@ -12,10 +12,11 @@ import type {
   GameEffect,
   GameState,
   InvestigationDef,
+  LeaderRuntime,
 } from '../types'
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
-import { delegationDelayDays, delegationQuality, teamStrain } from './capacity'
+import { capacityBand, delegationDelayDays, delegationQuality, teamStrain } from './capacity'
 import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { evidenceIsStale } from '../knowledge/discovery'
 
@@ -178,7 +179,7 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
     if (assesses) for (const controlId of def.assessesControlIds) result.effects.push({ type: 'control.assess', controlId })
 
     assignment.producedEvidenceIds = evidenceIds
-    assignment.resultSummary = summariseQuality(def, quality)
+    assignment.resultSummary = summariseQuality(def, quality, thinBecause(index, leader, strain))
     // A thin enquiry does not count as assessing its controls, and the close
     // later says they were "never independently assessed": a player who had
     // commissioned the review heard nothing linking the two.
@@ -209,8 +210,21 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
   return result
 }
 
-function summariseQuality(def: InvestigationDef, quality: number): string {
-  if (quality < 0.3) return `${def.name} came back thin — the team was stretched and the picture is incomplete.`
+/**
+ * Why thin work was thin, as far as anyone could say. Every thin result used
+ * to blame a stretched team, and a third of them came back while the Briefing
+ * said the functions had room.
+ */
+export function thinBecause(index: ContentIndex, leader: LeaderRuntime, strain: number): string {
+  if (capacityBand(strain) !== 'available' && capacityBand(strain) !== 'committed') return 'the team was stretched'
+  const name = index.content.leaders.find((candidate) => candidate.id === leader.id)?.name
+  if (leader.workload > 0.55) return `${name ?? 'whoever led it'} had too much else on`
+  if (leader.morale < 0.45) return `${name ?? 'whoever led it'} is running low`
+  return 'it did not get far enough'
+}
+
+function summariseQuality(def: InvestigationDef, quality: number, because: string): string {
+  if (quality < 0.3) return `${def.name} came back thin — ${because}, and the picture is incomplete.`
   if (quality < 0.55) return `${def.name} answered part of the question and raised others.`
   if (quality < 0.78) return `${def.name} produced a solid, usable picture.`
   return `${def.name} was thorough: the team went further than asked.`
