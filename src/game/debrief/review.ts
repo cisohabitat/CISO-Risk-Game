@@ -906,6 +906,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     )
   }
 
+  // Money running out is a choice the year goes on answering. A playtest
+  // committed the last of a bigger budget in April and met three priced
+  // options it could not take; the close said nothing about it.
+  const pricedOut = Object.values(state.decisions.decisions)
+    .filter((decision) => (decision.pricedOutOptionIds?.length ?? 0) > 0)
+    .sort((a, b) => a.createdDay - b.createdDay)
+  if (pricedOut.length > 0) {
+    narrative.push(
+      `From ${formatGameDate(pricedOut[0]!.createdDay).label}, the year offered things the budget could no longer pay for: ${pricedOut.length === 1 ? 'one decision' : `${pricedOut.length} decisions`} held an option out of reach.`,
+    )
+  }
+
   // Each situation asks one decision of its own; the close says how it was
   // answered and what came of it, so the year's opening is not forgotten by
   // December.

@@ -135,15 +135,6 @@ been fixed and moved to `docs/FINDINGS.md`.
   1.67 across the modes — and `pnpm ladder sweep` prints both. Read the per
   programme figure, or compare modes at equal build.
 
-- **Recovery confidence rarely leaves *Partial*, even for a player who builds
-  recovery.** Over 12 CISO years that started the ransomware resilience
-  programme on day five, 11 completed it and backup effectiveness roughly
-  doubled (about 0.19 to 0.44), yet the Briefing ended *Partial* in 9 and
-  *Limited* in 2, never *Reasonable*: that band starts at 0.55, which almost
-  no year reaches. An earlier finding kept delivery and assurance as two
-  facts on purpose; this is the ceiling, not the lag. Whether a completed
-  programme should read *Reasonable* is a design call for the owner.
-
 - **Incidents do not move the board.** Board confidence changes through the
   papers, a missed paper and authored decisions; an incident, however bad,
   does not touch it directly. The ladder reads board 0.79 in every mode while
@@ -152,7 +143,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 174.9 kB against a 185 kB limit (it was 258.2
+  The first screen waits on 176.6 kB against a 185 kB limit (it was 258.2
   against 260), and content no longer adds to it. The campaign chunk has its
   own budget, 90 kB with about 15 kB to spare, and is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s

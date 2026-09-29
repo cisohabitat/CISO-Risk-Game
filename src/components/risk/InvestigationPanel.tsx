@@ -10,7 +10,7 @@ import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
-import { availableCapacity, delegationOutlook, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
+import { availableCapacity, delegationOutlook, delegationQuality, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import type { InvestigationDef } from '@/game/types'
@@ -161,10 +161,15 @@ export function InvestigationPanel() {
                         disabled={short || noFocus || noBudget}
                         onClick={() => {
                           setChosen(investigation)
-                          const preferred = index.content.leaders.find((leader) =>
-                            leader.functions.some((fn) => investigation.functions.includes(fn)),
-                          )
-                          setLeaderId(preferred?.id ?? index.content.leaders[0]?.id ?? '')
+                          // Offered the leader whose work would come back best. It
+                          // used to be whoever ran the area, which the quality of
+                          // delegated work does not read.
+                          const best = [...index.content.leaders].sort(
+                            (a, b) =>
+                              delegationQuality(state.team.leaders[b.id]!, strain, 0.5) -
+                              delegationQuality(state.team.leaders[a.id]!, strain, 0.5),
+                          )[0]
+                          setLeaderId(best?.id ?? '')
                         }}
                       >
                         Commission
@@ -198,7 +203,6 @@ export function InvestigationPanel() {
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Delegate to</legend>
             {index.content.leaders.map((leader) => {
               const runtime = state.team.leaders[leader.id]!
-              const fits = leader.functions.some((fn) => chosen.functions.includes(fn))
               return (
                 <label
                   key={leader.id}
@@ -220,7 +224,6 @@ export function InvestigationPanel() {
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="font-medium">{leader.name}</span>
                       <span className="text-sm text-ink-muted">{leader.role}</span>
-                      {fits && <Badge tone="low" glyph={false}>In their area</Badge>}
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">
                       {OUTLOOK[delegationOutlook(runtime, strain)]}

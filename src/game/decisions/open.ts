@@ -4,6 +4,7 @@
  * carry their own id and the definition id they came from.
  */
 import type { ContentIndex, DecisionRuntime, GameState } from '../types'
+import { optionBudgetCost } from './cost'
 
 export function openDecision(
   state: GameState,
@@ -33,6 +34,16 @@ export function openDecision(
     assumptionIds: [],
     scenarioId: options.scenarioId,
   }
+  // Only money the player would have spent; a cut taken from them is never
+  // out of reach, and an emergency is allowed to overdraw.
+  const pricedOut = def.options
+    .filter((option) => {
+      const discretionary = (option.budgetTreatment ?? 'discretionary') === 'discretionary'
+      const cost = Math.max(discretionary ? optionBudgetCost(option) : 0, option.requirements?.budget ?? 0)
+      return cost > 0 && state.resources.budgetRemaining < cost
+    })
+    .map((option) => option.id)
+  if (pricedOut.length > 0) runtime.pricedOutOptionIds = pricedOut
   state.decisions.decisions[id] = runtime
   state.decisions.openIds.push(id)
   return runtime

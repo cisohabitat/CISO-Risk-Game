@@ -335,6 +335,13 @@ export interface DecisionRuntime {
   note?: string
   assumptionIds: string[]
   scenarioId?: string
+  /**
+   * Options the remaining budget could not pay for when the decision opened.
+   * The close says from when the year could no longer afford what it offered;
+   * a playtest spent the last of the money in April and was never told what
+   * that had cost.
+   */
+  pricedOutOptionIds?: string[]
 }
 
 export interface DecisionState {

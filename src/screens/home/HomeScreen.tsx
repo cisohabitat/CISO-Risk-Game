@@ -94,6 +94,7 @@ export function HomeScreen() {
             label="Recovery confidence"
             value={view.recoveryConfidence}
             tone={view.recoveryConfidence === 'Limited' ? 'high' : view.recoveryConfidence === 'Partial' ? 'elevated' : 'low'}
+            note={view.recoveryNote}
           />
         </dl>
       </section>
@@ -335,10 +336,12 @@ export function HomeScreen() {
               <CardBody>
                 <p className="text-sm text-ink-muted text-pretty">
                   {team.strainBand === 'available' || team.strainBand === 'committed'
-                    ? 'Your functions have room to take on work.'
+                    ? team.healthClause
+                      ? `Your functions have room to take on work, but ${team.healthClause}.`
+                      : 'Your functions have room to take on work.'
                     : team.strainBand === 'stretched'
-                      ? 'Your functions are stretched. More delegation will come back thinner.'
-                      : 'Your team is past what it can sustain. Something has to stop.'}
+                      ? `Your functions are stretched${team.healthClause ? `, and ${team.healthClause}` : ''}. More delegation will come back thinner.`
+                      : `Your team is past what it can sustain${team.healthClause ? `, and ${team.healthClause}` : ''}. Something has to stop.`}
                 </p>
                 {state.team.assignments.filter((assignment) => assignment.status === 'running').length > 0 && (
                   <ul className="mt-3 space-y-1 text-sm">

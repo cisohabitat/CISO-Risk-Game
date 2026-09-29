@@ -16,7 +16,7 @@ export default defineConfig({
     target: 'es2022',
     sourcemap: false,
     chunkSizeWarningLimit: 700,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         // Named groups, highest priority first. The campaign is data, not
         // code: it changes on a different cadence from the app and its size is
@@ -24,7 +24,7 @@ export default defineConfig({
         // own chunk (plan §48), and it is loaded on demand: the start screen
         // needs none of it but the starting situations, which have a small
         // chunk of their own so that the campaign's group does not take them.
-        advancedChunks: {
+        codeSplitting: {
           groups: [
             { name: 'situations', test: /src[\\/]content[\\/]nexora[\\/]situations\.json/, priority: 30 },
             { name: 'campaign', test: /src[\\/]content[\\/]nexora[\\/]/, priority: 20 },

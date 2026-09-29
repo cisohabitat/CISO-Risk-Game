@@ -8,6 +8,7 @@
 import type {
   AssignmentState,
   ContentIndex,
+  CyberFunction,
   EvidenceDef,
   GameState,
   HypothesisTemplateDef,
@@ -21,7 +22,7 @@ import { imposedTake, optionBudgetCost } from '@/game/decisions/cost'
 import { evaluateCondition } from '@/game/events/conditions'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
-import { capacityBand, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
+import { capacityBand, functionName, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { statusLabel } from '@/lib/formatting/labels'
@@ -466,6 +467,8 @@ export interface TeamView {
   strainBand: string
   /** The worst function's morale in words, when it is below holding up. */
   healthNote?: string
+  /** The same, as a clause for a sentence: "engineering is burning out". */
+  healthClause?: string
 }
 
 const FUNCTION_LABELS: Record<string, string> = {
@@ -527,6 +530,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
       })),
     strainBand: capacityBand(teamStrain(state)),
     healthNote: teamHealthNote(state),
+    healthClause: teamHealthClause(state),
   }
 }
 
@@ -555,16 +559,64 @@ export interface BriefingView {
    * and met "burning out" for the first time in the annual review.
    */
   teamHealthNote?: string
+  /**
+   * Beneath recovery confidence when recovery has been built since the player
+   * last verified it. The reading rests on what was verified, and three
+   * playtests read "100% delivered" beside *Limited* as a contradiction.
+   */
+  recoveryNote?: string
   understandingPercent: number
   /** How much of what the player could have checked themselves, they have. */
   examinedShare: number
 }
 
+function worstMorale(state: GameState): { fn: CyberFunction; morale: number } | undefined {
+  const worst = CYBER_FUNCTIONS.map((fn) => ({ fn, morale: state.team.functions[fn]?.morale ?? 1 })).sort((a, b) => a.morale - b.morale)[0]
+  return worst && worst.morale < 0.45 ? worst : undefined
+}
+
 /** The function whose morale is lowest, in words, when it is below holding up. */
 function teamHealthNote(state: GameState): string | undefined {
-  const worst = CYBER_FUNCTIONS.map((fn) => ({ fn, morale: state.team.functions[fn]?.morale ?? 1 })).sort((a, b) => a.morale - b.morale)[0]
-  if (!worst || worst.morale >= 0.45) return undefined
-  return `${functionTitle(worst.fn)} ${moraleLabel(worst.morale).toLowerCase()}`
+  const worst = worstMorale(state)
+  return worst && `${functionTitle(worst.fn)} ${moraleLabel(worst.morale).toLowerCase()}`
+}
+
+/**
+ * The same as a clause. The Briefing's team card said "Your functions have
+ * room to take on work" through a third quarter in which engineering was
+ * burning out; the note sat under a different reading, and a playtest met
+ * the burnout for the first time in the annual review.
+ */
+export function teamHealthClause(state: GameState): string | undefined {
+  const worst = worstMorale(state)
+  return worst && `${functionName(worst.fn)} is ${moraleLabel(worst.morale).toLowerCase()}`
+}
+
+/**
+ * Recovery confidence in words, from the backup control as the player last
+ * verified it. The cuts were 0.30 / 0.55 / 0.78, and the product the reading
+ * takes (coverage, configuration, operation, exceptions) does not reach 0.55
+ * in a real year: over 30 CISO years that built and tested recovery, the
+ * reading ran 0.30 to 0.54 and the truth never passed 0.47, so a finished,
+ * tested programme read *Partial* and *Reasonable* was unreachable. Limited is
+ * unchanged, so an untouched or untested year reads as it did.
+ */
+export function recoveryConfidenceLabel(value: number): string {
+  if (value < 0.3) return 'Limited'
+  if (value < 0.36) return 'Partial'
+  if (value < 0.55) return 'Reasonable'
+  return 'Strong'
+}
+
+/** Recovery built since the backups were last verified. */
+function recoveryNote(state: GameState, index: ContentIndex): string | undefined {
+  const verifiedOn = state.controls.controls['ctl-backup']?.believed?.assessedOnDay ?? -Infinity
+  const builtSince = index.content.programmes.some((def) => {
+    const runtime = state.programmes.programmes[def.id]
+    if (runtime?.status !== 'complete' || (runtime.completedDay ?? -Infinity) <= verifiedOn) return false
+    return def.milestones.some((milestone) => milestone.controlEffects?.some((effect) => effect.controlId === 'ctl-backup'))
+  })
+  return builtSince ? 'Built, not yet verified by a restore' : undefined
 }
 
 export function briefing(state: GameState, index: ContentIndex): BriefingView {
@@ -593,7 +645,8 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
     boardConfidence: boardConfidenceLabel(state.stakeholders.boardConfidence),
     teamCapacity: capacityBand(teamStrain(state)),
     residualExposure: residualBand(residual),
-    recoveryConfidence: recovery < 0.3 ? 'Limited' : recovery < 0.55 ? 'Partial' : recovery < 0.78 ? 'Reasonable' : 'Strong',
+    recoveryConfidence: recoveryConfidenceLabel(recovery),
+    recoveryNote: recoveryNote(state, index),
     openDecisions: state.decisions.openIds.length,
     unreadMessages: state.inbox.messages.filter((message) => !message.read).length,
     invalidatedAssumptions: Object.values(state.assumptions.assumptions).filter((a) => a.status === 'invalidated' && !a.acknowledged).length,

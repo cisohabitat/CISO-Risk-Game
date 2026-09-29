@@ -18,6 +18,43 @@ fault.
 
 ### Fixed
 
+- **What was left from the New money playtest, and the recovery ceiling.**
+  - **Recovery confidence never read *Reasonable*.** The reading is the
+    backup control's effectiveness as last verified, a product of coverage,
+    configuration, operation and exceptions, and its bands began at 0.30 /
+    0.55 / 0.78. Over 30 CISO years that built and tested recovery, the
+    reading ran 0.30 to 0.54 (median 0.38) and the truth never passed 0.47,
+    so a finished, tested programme read *Partial* and the top two bands
+    were unreachable. The cuts are now 0.30 / 0.36 / 0.55: 24 of those 27
+    tested years read *Reasonable*, one *Strong*, and a year whose estate
+    stayed weak (coverage 0.63, reading 0.35) honestly reads *Partial*. An
+    untouched or untested year reads *Limited*, as before. Three playtests
+    read "100% delivered" beside *Limited* as a contradiction; the reading
+    now says "Built, not yet verified by a restore" beneath it until the
+    player verifies the backups. Tests pin the cuts and the note.
+  - **The team card said there was room while engineering burned out.** The
+    Briefing's sentence now carries the worst function's morale when it is
+    below holding up ("…room to take on work, but engineering is burning
+    out"), and the Team screen's "— and Engineering burning out" reads the
+    same way. A UI test fails without either.
+  - **"In their area" promised something the engine does not read.** The
+    delegation dialog badged and preselected the leader whose area the
+    enquiry fell in; what comes back reads skill, workload, morale and team
+    strain, never area. The badge is gone and the dialog preselects the
+    leader whose work would come back best. A UI test fails without it.
+  - **The close never said the money had run out.** A decision now records
+    the options the remaining budget could not pay for when it opened, and
+    the review says from when that began and how often. Over 30 CISO years
+    each, no idle or single-programme year gets the line, 5 of 30
+    two-programme years do, and every year that spends whatever it can.
+  - The out-of-hours decision's "Commission a focused threat hunt" read as
+    the paid "Targeted threat hunt" enquiry; it is now "Have the SOC hunt it
+    for a week", and says it is the narrower of the two. The year-end audit
+    follow-up now offers "Regulatory exposure requires action".
+  - Rolldown's `advancedChunks` became `codeSplitting`, and `rollupOptions`
+    `rolldownOptions`, as Vite 8 asks; the build output is identical chunk
+    for chunk and the deprecation warning is gone.
+
 - **The same playtest, the close: two lines the decision record
   contradicted.**
   - **"Recovery was never exercised"** after the player restored into the test

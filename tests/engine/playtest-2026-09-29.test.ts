@@ -24,6 +24,25 @@ describe('the close against what the player chose', () => {
     expect(evidence).toContain('a restore into the test tenancy')
   })
 
+  it('says when the year could no longer pay for what it offered', () => {
+    const index = testIndex()
+    const broke = newGame(index, { seed: 'pt5-broke' })
+    runDays(broke, index, 110)
+    broke.resources.budgetRemaining = 0
+    // The SOC renewal offers a £140k rewrite and a £60k replacement.
+    const renewal = openDecision(broke, index, 'dec-soc-contract')!
+    expect(renewal.pricedOutOptionIds?.length).toBeGreaterThan(0)
+    runDays(broke, index, 364 - broke.currentDay)
+    const line = buildAnnualReview(broke, index).narrative.find((text) => text.includes('could no longer pay for'))
+    expect(line).toMatch(/^From .+, the year offered things the budget could no longer pay for: (one decision|\d+ decisions) held an option out of reach\.$/)
+
+    // A year that never ran short hears nothing of it.
+    const flush = newGame(index, { seed: 'pt5-flush' })
+    flush.resources.budgetRemaining = 100_000
+    runDays(flush, index, 364)
+    expect(buildAnnualReview(flush, index).narrative.join(' ')).not.toContain('could no longer pay for')
+  })
+
   it('does not say nothing went near the acquisition after the join was refused', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'pt5-kestrel' })
