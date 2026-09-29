@@ -24,7 +24,7 @@
           "controlEffects": [{ "controlId": "ctl-mfa", "coverage": 0.12, "configurationQuality": 0.1 }, { "controlId": "ctl-pam", "operationalEffectiveness": 0.12 }] }
       ],
       "blockers": [
-        { "id": "blk-identity-exec", "name": "Executive exemption requests", "description": "Three executives have asked to be exempted from the new privileged access flow. Their assistants have already escalated.", "chancePerDay": 0.004, "progressMultiplier": 0.55,
+        { "id": "blk-identity-exec", "name": "A change freeze over the quarter close", "description": "Finance has asked that nothing touching administrator access changes until the quarter's books are closed. Only the CIO can overrule it.", "chancePerDay": 0.004, "progressMultiplier": 0.55,
           "resolution": { "label": "Hold the line with the CIO", "focus": 1, "stakeholderId": "stk-cio", "description": "The CIO backs you, at the cost of some goodwill he will want back later." } },
         { "id": "blk-identity-legacy", "name": "Legacy applications cannot federate", "description": "Two legacy applications cannot support modern authentication without an upgrade nobody has budgeted for.", "chancePerDay": 0.003, "progressMultiplier": 0.65,
           "resolution": { "label": "Fund a compatibility shim", "budget": 120, "description": "An interim gateway lets the legacy applications ride the modern identity flow." } }

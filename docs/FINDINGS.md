@@ -18,6 +18,31 @@ fault.
 
 ### Fixed
 
+- **The same playtest, March to May.**
+  - **"Link to treatment" was offered and then refused**, "Start the
+    programme before pointing a risk at it", on a risk whose only treatment
+    had not started; on another it linked to a programme it never named. The
+    button now names the programme ("Link to Cloud security uplift") and
+    appears only when one is under way; otherwise the detail says which
+    programme treats the risk and that it has not started.
+  - **"Review due" never said what a review was.** Four risks sat under "Due
+    for reassessment" for two months with nothing on the page saying that
+    accepting a risk or linking it to its treatment is the review. The
+    detail says so while one is due. A UI test covers both.
+  - **The identity programme's blocker was the day-90 decision in advance.**
+    "Three executives have asked to be exempted", cleared by holding the line
+    with the CIO; then the spine asked the same question as though it had
+    never been answered, and offered to grant the exemptions. For a player
+    who starts identity early and clears its blockers, 43 of 100 CISO years
+    raised both. The blocker is now a finance change freeze over the quarter
+    close, which only the CIO can overrule; its odds and cost are unchanged.
+  - **The retention decision quoted what only an enquiry finds.** "Cut the
+    190 standing readers" was offered to every player; 190 comes from the
+    data holdings review. It reads "cut everyone who can read it". A content
+    test now fails when a decision quotes a figure from a piece of evidence
+    its opening message does not reveal (the inherited register's 23 entries,
+    handed over on the first morning, are allowed by name).
+
 - **The same playtest, into February.**
   - **Forming a hypothesis, clearing a blocker, accelerating, hiring or
     meeting an executive was not saved.** Only seven actions wrote to storage

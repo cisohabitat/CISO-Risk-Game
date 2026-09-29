@@ -478,7 +478,7 @@
             { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.05, "reason": "You deleted data the analytics business wanted." },
             { "type": "objective.progress", "objectiveId": "obj-new-market", "delta": -0.03 }
           ] },
-        { "id": "opt-retention-restrict", "label": "Restrict access rather than delete", "description": "Keep the data, cut the 190 standing readers down to a governed few.", "visibleKnownEffects": ["Commercially acceptable", "The data still exists to be taken"],
+        { "id": "opt-retention-restrict", "label": "Restrict access rather than delete", "description": "Keep the data, and cut everyone who can read it down to a governed few.", "visibleKnownEffects": ["Commercially acceptable", "The data still exists to be taken"],
           "immediateEffects": [
             { "type": "control.coverage", "controlId": "ctl-dlp", "delta": 0.12 },
             { "type": "node.exposure", "nodeId": "node-data-analytics", "delta": -0.08 },

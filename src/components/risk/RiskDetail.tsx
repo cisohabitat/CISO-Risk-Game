@@ -27,6 +27,8 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   const programmes = def.treatmentProgrammeIds
     .map((id) => ({ id, def: index.programme.get(id), runtime: state.programmes.programmes[id] }))
     .filter((entry) => entry.def && entry.runtime)
+  // The programme a link would point at: the first of them under way.
+  const treating = programmes.find((entry) => entry.runtime?.status !== 'proposed')
 
   const accept = () => {
     const result = dispatch({
@@ -117,7 +119,14 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 border-t border-line pt-4">
+        {risk.reviewDue && risk.status !== 'closed' && (
+          <p className="border-t border-line pt-4 text-sm text-ink-muted text-pretty">
+            A review is a decision about this risk: accept it for a stated period, or link it to the programme
+            that treats it. Either sets the next review.
+          </p>
+        )}
+
+        <div className={cn('flex flex-wrap gap-2', !(risk.reviewDue && risk.status !== 'closed') && 'border-t border-line pt-4')}>
           {risk.status === 'emerging' && (
             <Button variant="primary" size="sm" onClick={() => dispatch({ type: 'openRisk', scenarioId: risk.id })}>
               Open formally
@@ -128,23 +137,23 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
               Accept for now
             </Button>
           )}
-          {programmes.length > 0 && risk.status !== 'closed' && (
+          {treating && risk.status !== 'closed' && (
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => {
-                const live = programmes.find((entry) => entry.runtime?.status !== 'proposed')
-                if (!live) {
-                  dispatch({ type: 'treatRisk', scenarioId: risk.id, programmeId: programmes[0]!.id })
-                  return
-                }
-                dispatch({ type: 'treatRisk', scenarioId: risk.id, programmeId: live.id })
-              }}
+              onClick={() => dispatch({ type: 'treatRisk', scenarioId: risk.id, programmeId: treating.id })}
             >
-              Link to treatment
+              Link to {treating.def!.name}
             </Button>
           )}
         </div>
+        {/* It offered "Link to treatment" and then refused: start the programme first. */}
+        {!treating && programmes.length > 0 && risk.status !== 'closed' && (
+          <p className="text-sm text-ink-muted text-pretty">
+            Treated by {programmes.map((entry) => entry.def!.name).join(' or ')}, which {programmes.length === 1 ? 'has' : 'have'} not
+            started.
+          </p>
+        )}
 
         <div>
           <SectionHeading>Give it an owner</SectionHeading>

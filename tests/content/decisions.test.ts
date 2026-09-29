@@ -131,3 +131,64 @@ describe('decision affordability', () => {
     }
   })
 })
+
+/**
+ * A figure the player has to find out must not be in the question.
+ *
+ * The retention decision offered to "cut the 190 standing readers" to every
+ * player, and 190 is what the data holdings review finds. A number that
+ * appears in a piece of evidence may only be quoted by a decision whose own
+ * opening message reveals that evidence.
+ */
+describe('decisions do not quote what the player has not found', () => {
+  // The inherited register is handed over on the first morning; its size is
+  // on the page, not waiting to be found.
+  const KNOWN_FROM_THE_START: Record<string, string[]> = { 'dec-first-week-focus': ['23'] }
+
+  it('quotes an evidence figure only when the message that opens it reveals it', () => {
+    const content = parseCampaignContent(nexoraContentRaw)
+    const figures = (text: string) => text.match(/\b\d{2,}\b/g) ?? []
+    const foundIn = new Map<string, string[]>()
+    for (const evidence of content.evidence) {
+      for (const figure of figures(`${evidence.title} ${evidence.description}`)) {
+        foundIn.set(figure, [...(foundIn.get(figure) ?? []), evidence.id])
+      }
+    }
+    const leaks: string[] = []
+    for (const decision of content.decisions) {
+      const revealed = new Set(
+        content.events
+          .filter((event) => event.decisionId === decision.id)
+          .flatMap((event) => event.effectsOnReveal ?? [])
+          .flatMap((effect) => (effect.type === 'evidence.reveal' ? [effect.evidenceId] : [])),
+      )
+      const texts = [decision.description, decision.context ?? '', ...decision.options.flatMap((o) => [o.label, o.description, ...o.visibleKnownEffects])]
+      for (const figure of texts.flatMap(figures)) {
+        const sources = foundIn.get(figure)
+        if (!sources || sources.some((id) => revealed.has(id))) continue
+        if (KNOWN_FROM_THE_START[decision.id]?.includes(figure)) continue
+        leaks.push(`${decision.id} quotes ${figure}, found by ${sources.join(', ')}`)
+      }
+    }
+    expect(leaks).toEqual([])
+  })
+})
+
+/**
+ * A programme's blocker must not be a decision the year asks anyway. The
+ * identity programme's blocker was "three executives have asked to be
+ * exempted", cleared by holding the line with the CIO; on day 90 the spine
+ * asked the same question as if it had never been answered, in 43 of 100
+ * years that started identity early, and offered to grant the exemptions.
+ */
+describe('blockers do not retell a decision', () => {
+  it('leaves executive exemptions to the decision about them', () => {
+    const content = parseCampaignContent(nexoraContentRaw)
+    expect(content.decisions.some((decision) => decision.id === 'dec-exception-request')).toBe(true)
+    for (const programme of content.programmes) {
+      for (const blocker of programme.blockers) {
+        expect(`${blocker.name} ${blocker.description}`, blocker.id).not.toMatch(/exempt|exception/i)
+      }
+    }
+  })
+})
