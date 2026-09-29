@@ -18,6 +18,18 @@ fault.
 
 ### Fixed
 
+- **The Digital MD thanked a player who had stopped her launch.** Reading an
+  after-breach year end to end: opposing the launch draws "the reason on the
+  slide is security… next time I will be going to the CIO first", and the
+  launch, when it came, drew "Thank you for how you handled the run-up". Over
+  20 years that opposed it (`launch-probe.ts`, scratch), 18 reached the
+  launch and all 18 were thanked, with her trust at a median 0.34 against
+  0.5 for a player who supported it. The thanks is now gated on the launch
+  not having been blocked, and a blocked launch gets its own letter ("later
+  than we told the market… Whether the wait is why, neither of us can
+  prove"), with the same effect on the board. After: 0 of 20 thanked, 18 of
+  20 hear the other letter. A test fails without the gate.
+
 - **The SOC said where an attempt was raised, naming where it was held.**
   "The activity we raised around X has stopped" named the step the attacker
   gave up on, which need not be where the SOC first saw them. It now says the

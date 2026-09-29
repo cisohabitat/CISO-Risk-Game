@@ -550,3 +550,22 @@ describe('the threat hunt', () => {
     }
   })
 })
+
+describe('the launch day letter', () => {
+  it('thanks the player for the run-up only if they did not stop it', () => {
+    // A player who opposed the launch heard "the reason on the slide is
+    // security" and then, at launch, "Thank you for how you handled the
+    // run-up": 18 of 20 such years.
+    const thanks = index.event.get('evt-biz-launch-success')!
+    const late = index.event.get('evt-biz-launch-after-wait')!
+    const state = newGame(index, { seed: 'launch-day' })
+    state.business.objectives['obj-platform-launch']!.status = 'achieved'
+    for (const blocked of [false, true]) {
+      if (blocked) state.flags['launch.blocked'] = true
+      expect(evaluateAll(state, index, thanks.conditions), `thanks, blocked=${blocked}`).toBe(!blocked)
+      expect(evaluateAll(state, index, late.conditions), `late, blocked=${blocked}`).toBe(blocked)
+    }
+    const oppose = index.decision.get('dec-launch-conditions')!.options.find((o) => o.id === 'opt-launch-oppose')!
+    expect(oppose.immediateEffects.some((e) => e.type === 'flag.set' && e.flag === 'launch.blocked')).toBe(true)
+  })
+})
