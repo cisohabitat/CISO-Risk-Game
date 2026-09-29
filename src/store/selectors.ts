@@ -17,7 +17,8 @@ import type {
 import { CYBER_FUNCTIONS, DAYS_PER_QUARTER, clamp01, money } from '@/game/types'
 import { consequenceBand, describeChange, exposureBand, residualBand } from '@/game/risk/bands'
 import type { IconName } from '@/components/ui/icons'
-import { optionBudgetCost } from '@/game/engine/orchestrator'
+import { imposedTake, optionBudgetCost } from '@/game/decisions/cost'
+import { evaluateCondition } from '@/game/events/conditions'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
 import { capacityBand, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
@@ -164,6 +165,8 @@ export interface OpenDecisionView {
     /** Attention the option spends this week, from its requirements. */
     focusCost?: number
     exceedsBudget: boolean
+    /** An imposed cut the year cannot cover in full: what it will actually take. */
+    takesOnly?: number
     affordable: boolean
     blockedReason?: string
   }[]
@@ -201,6 +204,8 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             blockedReason = `Not enough budget remains this year (${money(budgetCost)})`
           } else if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
             blockedReason = 'Not enough budget remains this year'
+          } else if (requirements?.condition && !evaluateCondition(state, index, requirements.condition)) {
+            blockedReason = requirements.conditionUnmet ?? 'Not open to you as the year stands'
           } else if (requirements?.focus && state.resources.focusRemaining < requirements.focus) {
             blockedReason = 'No attention left this week'
           } else if (requirements?.minTrustStakeholderId && requirements.minTrust !== undefined) {
@@ -219,6 +224,10 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             // Emergency spend is the one thing the year will let you commit
             // without the money, so the card says so before it is taken.
             exceedsBudget: budgetCost > 0 && treatment === 'emergency' && state.resources.budgetRemaining < budgetCost,
+            takesOnly:
+              treatment === 'imposed' && budgetCost > 0 && state.resources.budgetRemaining < budgetCost
+                ? imposedTake(state, option)
+                : undefined,
             affordable: !blockedReason,
             blockedReason,
           }

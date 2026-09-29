@@ -18,6 +18,30 @@ fault.
 
 ### Fixed
 
+- **The same playtest, June.**
+  - **Giving back money you did not have earned full thanks.** Finance asks
+    for £220k on day 150, or a named line worth half. Money taken from you is
+    never refused and what is not there is not taken, but the CFO's trust and
+    the cost objective moved as though the whole sum had been handed over. A
+    player who builds what the budget allows reaches the request with less
+    than £220k in 44 to 50 of 50 CISO years in every situation, so "Give it
+    up" usually gave the remainder for the whole reward; and with under £110k
+    left, the smaller named contribution cost exactly the same and earned
+    half. An imposed cut's goodwill and progress now scale with the share
+    actually given (with £60k left, both options earn the same; with nothing,
+    neither earns anything), on a lapsed deadline as well, and the card says
+    "Only £60k is left uncommitted, so that is all this gives". Its
+    "Programmes will move more slowly" was untrue in every year, since giving
+    money back touches no programme; it reads "Less is left for whatever
+    comes up later". A test fails without the scaling.
+  - **An option's condition was checked by the validator and nowhere else.**
+    Next year's priorities offered "Lead with the programmes you are
+    running" to a player running none, and made it the default if the
+    deadline lapsed. The engine now refuses an option whose condition does
+    not hold, the card says why ("You are not running a programme to lead
+    with"), and a lapse takes the first option the year allows. A test fails
+    without either half.
+
 - **The same playtest, March to May.**
   - **"Link to treatment" was offered and then refused**, "Start the
     programme before pointing a risk at it", on a risk whose only treatment

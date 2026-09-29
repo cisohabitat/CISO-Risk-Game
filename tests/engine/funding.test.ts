@@ -118,6 +118,35 @@ describe('funding', () => {
     expect(state.resources.unfundedCommitment).toBe(0)
   })
 
+  it('earns thanks for what an imposed cut actually took, not for what was asked', () => {
+    // Finance asks for £220k, and most players have less left by then. "Give
+    // it up" took what remained and earned the whole of the CFO's thanks; with
+    // under £110k left the named, smaller contribution cost the same and
+    // earned less.
+    const index = testIndex()
+    const trustAfter = (optionId: string, left: number) => {
+      const state = newGame(index, { seed: 'fund-6' })
+      const id = openDecision(state, index, 'dec-budget-reallocation')
+      state.resources.budgetRemaining = left
+      const before = state.stakeholders.stakeholders['stk-cfo']!.trust
+      const result = applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId, rationaleTagIds: ['rat-resources'] })
+      expect(result.ok).toBe(true)
+      return state.stakeholders.stakeholders['stk-cfo']!.trust - before
+    }
+    expect(trustAfter('opt-budget-give', 500)).toBeCloseTo(0.1, 5)
+    expect(trustAfter('opt-budget-give', 60)).toBeCloseTo(0.1 * (60 / 220), 5)
+    expect(trustAfter('opt-budget-give', 60)).toBeCloseTo(trustAfter('opt-budget-partial', 60), 5)
+    expect(trustAfter('opt-budget-give', 0)).toBeCloseTo(0, 5)
+
+    // And the card says so before it is chosen.
+    const state = newGame(index, { seed: 'fund-7' })
+    openDecision(state, index, 'dec-budget-reallocation')
+    state.resources.budgetRemaining = 60
+    const view = openDecisions(state, index).find((d) => d.defId === 'dec-budget-reallocation')!
+    expect(view.options.find((o) => o.id === 'opt-budget-give')!.takesOnly).toBe(60)
+    expect(view.options.find((o) => o.id === 'opt-budget-refuse')!.takesOnly).toBeUndefined()
+  })
+
   it('puts the price on the card rather than an adjective', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'fund-5' })

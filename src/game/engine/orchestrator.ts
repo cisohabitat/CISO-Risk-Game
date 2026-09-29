@@ -26,6 +26,8 @@ import { remember } from '../stakeholders/relationships'
 import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
 import { buildAnnualReview, buildQuarterReview } from '../debrief/review'
+import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
+import { evaluateCondition } from '../events/conditions'
 
 export type PlayerAction =
   | { type: 'advance'; days: number }
@@ -112,24 +114,7 @@ function spendBudget(state: GameState, amount: number): boolean {
   return true
 }
 
-/**
- * What an option costs, read from the option itself.
- *
- * The price is authored once, as the negative `budget.change` the reducer will
- * apply, so a gate derived from it cannot drift from what actually gets spent.
- * Deriving it also means every priced option is covered: none of the fifteen
- * carrying a cost had ever declared `requirements.budget`, so the affordability
- * gate was dead for decisions and the floor on `budget.change` silently ate the
- * difference — you could take £320k of emergency response with £100k left, keep
- * the whole benefit, and the missing £220k appeared nowhere.
- */
-export function optionBudgetCost(option: DecisionOptionDef): number {
-  let cost = 0
-  for (const effect of option.immediateEffects) {
-    if (effect.type === 'budget.change' && effect.amount < 0) cost -= effect.amount
-  }
-  return round2(cost)
-}
+export { optionBudgetCost }
 
 /** Why an option's cost may or may not be refused. See `budgetTreatment`. */
 export function budgetBlockReason(state: GameState, option: DecisionOptionDef): string | undefined {
@@ -196,6 +181,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
         return fail('There is not enough budget left this year for that option.')
       }
+      if (requirements?.condition && !evaluateCondition(state, index, requirements.condition)) {
+        return fail(requirements.conditionUnmet ?? 'That option is not open to you as the year stands.')
+      }
       const budgetBlocked = budgetBlockReason(state, option)
       if (budgetBlocked) return fail(budgetBlocked)
       if (requirements?.focus && state.resources.focusRemaining < requirements.focus) {
@@ -256,7 +244,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         if (id) decision.assumptionIds.push(id)
       }
 
-      applyEffects(state, option.immediateEffects, {
+      applyEffects(state, effectsAsPaid(state, option), {
         index,
         rng,
         source: `decision:${def.id}`,

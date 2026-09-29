@@ -409,6 +409,8 @@ export const decisionSchema = z.object({
         minTrustStakeholderId: id.optional(),
         minTrust: unit.optional(),
         condition: conditionSchema.optional(),
+        /** Said on the card while the condition does not hold. */
+        conditionUnmet: z.string().optional(),
       }).optional(),
       budgetTreatment: z.enum(['discretionary', 'imposed', 'emergency']).optional(),
       rationaleTagIds: z.array(id).optional(),

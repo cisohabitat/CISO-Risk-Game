@@ -19,8 +19,10 @@ import { tickAssumptions } from '../assumptions/validation'
 import { driftSectorPressure, tickThreats } from '../threats/engine'
 import { tickIncidents } from '../incidents/engine'
 import { tickEvents } from '../events/engine'
+import { evaluateCondition } from '../events/conditions'
 import { openDecision } from '../decisions/open'
 import { renderDecisionText } from '../decisions/describe'
+import { effectsAsPaid } from '../decisions/cost'
 import { pushMessage } from '../inbox/messages'
 import { recomputeUnderstanding } from '../knowledge/discovery'
 import { refreshHypothesisConfidence, refreshScenarioAssessments } from '../risk/review'
@@ -499,7 +501,13 @@ function resolveByDefault(
   if (!decision) return
   const def = index.decision.get(decision.defId)
   if (!def) return
-  const option = def.options.find((o) => o.id === def.defaultOptionId) ?? def.options[0]
+  // The default has to be one the year allows: next year's priorities
+  // defaulted to leading with the programmes you are running, for a player
+  // who had run none.
+  const open = (o: (typeof def.options)[number]) =>
+    !o.requirements?.condition || evaluateCondition(state, index, o.requirements.condition)
+  const authored = def.options.find((o) => o.id === def.defaultOptionId)
+  const option = authored && open(authored) ? authored : (def.options.find(open) ?? authored ?? def.options[0])
   if (!option) return
 
   decision.selectedOptionId = option.id
@@ -508,7 +516,7 @@ function resolveByDefault(
   state.decisions.openIds = state.decisions.openIds.filter((id) => id !== decisionId)
   state.decisions.resolvedIds.push(decisionId)
 
-  applyEffects(state, option.immediateEffects, {
+  applyEffects(state, effectsAsPaid(state, option), {
     index,
     rng,
     source: `decision-default:${def.id}`,

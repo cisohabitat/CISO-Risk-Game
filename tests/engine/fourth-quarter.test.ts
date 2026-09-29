@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
 import { openDecisions } from '@/store/selectors'
+import { openDecision } from '@/game/decisions/open'
 import { testIndex } from './helpers'
 import type { GameState } from '@/game/types'
 
@@ -136,5 +137,29 @@ describe('the fourth quarter arises from the player\'s position', () => {
     // And the programme it rests on actually finished, which is the other
     // thing a probe that never cleared a blocker made look impossible.
     expect(state.programmes.programmes[def.id]!.status).toBe('complete')
+  })
+})
+
+describe('an option the year does not allow', () => {
+  // "Lead with the programmes you are running" carried a condition that was
+  // validated and never enforced, and was also the default if the deadline
+  // lapsed: a player who had run no programme could lead with them.
+  it('is refused, says why on the card, and is not what a lapse picks', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'q4-no-programmes' })
+    expect(Object.values(state.programmes.programmes).some((p) => p.status === 'active')).toBe(false)
+    const id = openDecision(state, index, 'dec-q4-priorities')!.id
+
+    const option = openDecisions(state, index).find((d) => d.defId === 'dec-q4-priorities')!.options.find((o) => o.id === 'opt-q4-priorities-programmes')!
+    expect(option.affordable).toBe(false)
+    expect(option.blockedReason).toBe('You are not running a programme to lead with')
+    const refused = applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: 'opt-q4-priorities-programmes', rationaleTagIds: index.decision.get('dec-q4-priorities')!.rationaleTagIds?.slice(0, 1) ?? ['rat-material'] })
+    expect(refused.ok).toBe(false)
+    expect(refused.message).toBe('You are not running a programme to lead with')
+
+    runDays(state, index, 40)
+    const decision = state.decisions.decisions[id]!
+    expect(decision.resolvedByDefault).toBe(true)
+    expect(decision.selectedOptionId).not.toBe('opt-q4-priorities-programmes')
   })
 })

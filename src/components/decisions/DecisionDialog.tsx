@@ -137,6 +137,13 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                     This commits more than the year has left. The shortfall will be carried as unfunded.
                   </span>
                 )}
+                {option.takesOnly !== undefined && (
+                  <span className="mt-2 block text-sm text-band-elevated">
+                    {option.takesOnly > 0
+                      ? `Only ${money(option.takesOnly)} is left uncommitted, so that is all this gives, and it earns thanks in proportion.`
+                      : 'Nothing is left uncommitted, so this gives nothing and earns nothing.'}
+                  </span>
+                )}
                 {option.blockedReason && (
                   <span className="mt-2 block text-sm text-band-high">{option.blockedReason}</span>
                 )}

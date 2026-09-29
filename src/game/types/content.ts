@@ -340,7 +340,14 @@ export interface DecisionOptionDef {
     focus?: number
     minTrustStakeholderId?: string
     minTrust?: number
+    /**
+     * The option is open only while this holds. It was validated and never
+     * enforced, so "Lead with the programmes you are running" could be
+     * chosen by a player who had never started one.
+     */
     condition?: Condition
+    /** What the card says while the condition does not hold. */
+    conditionUnmet?: string
   }
   /**
    * How the option's own cost is funded. The cost itself is the negative
