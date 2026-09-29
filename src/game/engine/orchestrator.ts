@@ -23,6 +23,7 @@ import { createInitialState, type NewGameOptions } from './setup'
 import { canAfford, functionName, refreshCommittedCapacity } from '../team/capacity'
 import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
+import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
 import { buildAnnualReview, buildQuarterReview } from '../debrief/review'
 
@@ -84,7 +85,8 @@ export function newGame(index: ContentIndex, options: NewGameOptions): GameState
   return state
 }
 
-const FOCUS_COSTS = {
+/** What each kind of intervention costs of the player's week. Read by the screens that offer them. */
+export const FOCUS_COSTS = {
   investigation: 1,
   deepRiskReview: 2,
   executiveIntervention: 1,
@@ -152,6 +154,13 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
     // work changes. Otherwise a player could commission several investigations
     // in one day, each checked against a figure that predates the last.
     refreshCommittedCapacity(state, index)
+    // Staffing is worked out at the start of each day's delivery, so a
+    // programme started this morning read "Starved of people" and "Fragile"
+    // until tomorrow, with its teams idle. Refreshing it here changes what
+    // the screen says, not what the day computes.
+    for (const programme of Object.values(state.programmes.programmes)) {
+      if (programme.status === 'active' || programme.status === 'at-risk') programme.staffing = computeStaffing(state, index, programme)
+    }
   }
 
   switch (action.type) {

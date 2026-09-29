@@ -45,6 +45,7 @@ describe('overload acts on the function that is overloaded', () => {
     const index = testIndex()
     const state = loadIdentity('ovl-2')
     const before = functionStrain(state, 'iam')
+    const committedBefore = state.team.functions.iam!.committed
     const running = state.team.assignments.filter((a) => a.status === 'running')
     expect(running.length).toBeGreaterThan(0)
 
@@ -53,7 +54,11 @@ describe('overload acts on the function that is overloaded', () => {
     const abandoned = state.team.assignments.filter((a) => a.status === 'abandoned')
     expect(abandoned).toHaveLength(1)
     expect(abandoned[0]!.capacityPerDay.iam ?? 0).toBeGreaterThan(0)
-    expect(functionStrain(state, 'iam')).toBeLessThan(before)
+    // Strain reads at most 1, and identity starts two short, so a function
+    // this far over can still read 1 after one piece of work comes off it;
+    // what must fall is the work it is carrying.
+    expect(state.team.functions.iam!.committed).toBeLessThan(committedBefore)
+    expect(functionStrain(state, 'iam')).toBeLessThanOrEqual(before)
     // And the player is told, by the leader who owns that function.
     const notice = state.inbox.messages.find((m) => m.subject.startsWith('Pulled back:'))
     expect(notice).toBeDefined()

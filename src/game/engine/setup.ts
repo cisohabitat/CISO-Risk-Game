@@ -5,6 +5,7 @@
  */
 import type {
   ContentIndex,
+  CyberFunction,
   Difficulty,
   GameState,
   OrgEdgeState,
@@ -80,6 +81,12 @@ export interface DifficultyProfile {
    */
   showsDecisionCoaching: boolean
 }
+
+/** The two identity engineering roles every briefing names; the other three vacancies fall elsewhere. */
+const IDENTITY_VACANCIES = 2
+const OTHER_VACANCIES = 3
+/** Where those three can fall: not engineering, whose head has only the two identity roles open. */
+const VACANCY_ELSEWHERE: CyberFunction[] = ['soc', 'architecture', 'grc', 'incident-response']
 
 export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
   guided: {
@@ -234,9 +241,23 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
     iam: 3,
     'incident-response': 2,
   }
-  const vacancyPool = peopleRng.shuffle(CYBER_FUNCTIONS).slice(0, 3)
+  // The organisation arrives with five security vacancies (plan §6), two of
+  // them the identity engineering roles open for over six months. The
+  // briefing, the evidence and the recruitment decision all say so. A random
+  // draw across every function made "five" true in a third of years and gave
+  // identity no vacancy in half of them, where recruiting an identity engineer
+  // bought nothing. The other three still fall at random, but not in
+  // engineering: putting them there cut the programmes finished in a year
+  // from 0.62 to 0.37.
+  const vacancyCount: Partial<Record<CyberFunction, number>> = { iam: IDENTITY_VACANCIES }
+  for (let placed = 0; placed < OTHER_VACANCIES; ) {
+    const fn = VACANCY_ELSEWHERE[peopleRng.int(0, VACANCY_ELSEWHERE.length - 1)]!
+    if ((vacancyCount[fn] ?? 0) >= 2) continue
+    vacancyCount[fn] = (vacancyCount[fn] ?? 0) + 1
+    placed += 1
+  }
   for (const fn of CYBER_FUNCTIONS) {
-    const vacancies = vacancyPool.includes(fn) ? peopleRng.int(1, 2) : 0
+    const vacancies = vacancyCount[fn] ?? 0
     team.functions[fn] = {
       fn,
       capacity: Math.max(1, Math.round((baseCapacity[fn] ?? 3) * profile.capacityMultiplier - vacancies * 0.5)),

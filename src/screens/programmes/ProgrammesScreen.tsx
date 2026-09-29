@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, type ProgrammeView } from '@/store/selectors'
+import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 import { functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
 
 export function ProgrammesScreen() {
@@ -18,6 +19,9 @@ export function ProgrammesScreen() {
 
   const programmes = useMemo(() => (state ? programmeViews(state, index) : []), [state, index])
   if (!state) return null
+  // Refused after the click otherwise, as a toast that said nothing the card
+  // had not already had the chance to say.
+  const attentionShort = state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention
 
   const live = programmes.filter((programme) => programme.status !== 'proposed')
   const proposed = programmes.filter((programme) => programme.status === 'proposed')
@@ -181,14 +185,18 @@ export function ProgrammesScreen() {
                       variant="primary"
                       size="sm"
                       className="self-start"
-                      disabled={state.resources.budgetRemaining < programme.budgetCost}
+                      disabled={state.resources.budgetRemaining < programme.budgetCost || attentionShort}
                       onClick={() => {
                         setStarting(programme)
                         setBudget(programme.budgetCost)
                         setSponsorId('')
                       }}
                     >
-                      {state.resources.budgetRemaining < programme.budgetCost ? 'Not affordable' : 'Start this'}
+                      {state.resources.budgetRemaining < programme.budgetCost
+                        ? 'Not affordable'
+                        : attentionShort
+                          ? 'Out of attention this week'
+                          : 'Start this'}
                     </Button>
                   </CardBody>
                 </Card>

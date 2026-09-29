@@ -6,7 +6,7 @@
       "description": "The CEO wants three cyber risks in twenty-three minutes. You have an inherited backlog, a stale register and no picture of your own.",
       "context": "There is no mechanically superior answer here. Each route buys you a different kind of understanding, and you cannot have all of them first.",
       "defaultOptionId": "opt-first-register",
-      "requiresRationale": false,
+      "requiresRationale": false, "rationaleTagIds": ["rat-more-evidence", "rat-material", "rat-enables-business", "rat-exec-ownership", "rat-precedent"],
       "relatedNodeIds": [],
       "teaches": "Cyber risk cannot be understood from one data source.",
       "options": [
@@ -69,7 +69,7 @@
       "context": "You have had a morning's notice and whatever days you took since. What you say now sets expectations for the year, and she will remember whether you pretended to know more than you did.",
       "deadlineDays": 1,
       "defaultOptionId": "opt-ceo-vague",
-      "requiresRationale": false,
+      "requiresRationale": false, "rationaleTagIds": ["rat-more-evidence", "rat-material", "rat-exec-ownership", "rat-precedent", "rat-regulatory"],
       "relatedNodeIds": [],
       "teaches": "Communicating uncertainty well can build more credibility than false confidence.",
       "options": [
@@ -338,7 +338,7 @@
       "context": "Saying no costs credit. Saying yes costs capability. A smaller contribution from a named line is harder to argue for, and requires you to know your own plan well enough to name one.",
       "deadlineDays": 10,
       "defaultOptionId": "opt-budget-give",
-      "requiresRationale": true,
+      "requiresRationale": true, "rationaleTagIds": ["rat-resources", "rat-material", "rat-enables-business", "rat-exec-ownership", "rat-precedent", "rat-disproportionate", "rat-more-evidence"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-budget-give", "budgetTreatment": "imposed", "label": "Give it up", "description": "Take the cut and reprioritise.", "visibleKnownEffects": ["Programmes will move more slowly"],
@@ -497,7 +497,7 @@
       "description": "Two roles have been open for over six months. Recruitment takes about two months when it works.",
       "context": "The team is carrying the gap. That is not free, and it is not sustainable.",
       "defaultOptionId": "opt-hire-recruit",
-      "requiresRationale": false,
+      "requiresRationale": false, "rationaleTagIds": ["rat-resources", "rat-material", "rat-enables-business", "rat-precedent", "rat-reversible", "rat-more-evidence"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-hire-recruit", "label": "Recruit properly", "description": "Take the time to hire the right people.", "visibleKnownEffects": ["Two months before anyone starts", "Permanent capability"],
@@ -801,7 +801,7 @@
       "context": "Choosing is the job. Running both at half staffing is how neither gets delivered.",
       "deadlineDays": 10,
       "defaultOptionId": "opt-tradeoff-both",
-      "requiresRationale": true,
+      "requiresRationale": true, "rationaleTagIds": ["rat-material", "rat-resources", "rat-enables-business", "rat-exec-ownership", "rat-reversible", "rat-more-evidence"],
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-tradeoff-identity", "label": "Prioritise identity", "description": "Concentrate the capacity where most attack paths converge.", "visibleKnownEffects": ["Segmentation slips", "Identity delivers faster"],

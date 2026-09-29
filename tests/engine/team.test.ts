@@ -5,6 +5,8 @@ import { CYBER_FUNCTIONS } from '@/game/types'
 import { relationshipBand, supportLikelihood } from '@/game/stakeholders/relationships'
 import { computeStaffing, deliveryConfidence } from '@/game/programmes/progression'
 import { testIndex } from './helpers'
+import { applyEffects } from '@/game/engine/effects'
+import { deriveRng } from '@/game/engine/rng'
 
 describe('team and delegation', () => {
   it('bands capacity without showing a number', () => {
@@ -193,5 +195,41 @@ describe('capacity is consumed by the work that actually exists', () => {
     expect(['overloaded', 'breaking']).toContain(capacityBand(overcommitted.worst))
     // Sustained overload must cost morale, not merely register on a gauge.
     expect(overcommitted.morale).toBeLessThan(restrained.morale)
+  })
+})
+
+describe('the inherited vacancies', () => {
+  const index = testIndex()
+  it('are the five the briefing names, and recruiting fills one', () => {
+    // "Five security vacancies", "both identity engineering roles" and a
+    // recruitment decision that fills an identity role were drawn at random
+    // across every function: five in a third of years, and no identity
+    // vacancy in half, where the recruitment bought nothing.
+    for (const difficulty of ['guided', 'ciso', 'high-pressure'] as const) {
+      for (let i = 0; i < 20; i += 1) {
+        const state = newGame(index, { seed: `vacancies-${difficulty}-${i}`, difficulty })
+        const total = Object.values(state.team.functions).reduce((sum, fn) => sum + fn.vacancies, 0)
+        expect(total, `${difficulty} ${i}`).toBe(5)
+        expect(state.team.functions.iam!.vacancies, `${difficulty} ${i} identity`).toBe(2)
+      }
+    }
+    const state = newGame(index, { seed: 'vacancies-recruit' })
+    const before = state.team.functions.iam!.capacity
+    const recruit = index.decision.get('dec-hire-or-outsource')!.options.find((o) => o.id === 'opt-hire-recruit')!
+    applyEffects(state, recruit.delayedEffects!.flatMap((d) => d.effects), { index, rng: deriveRng('vacancies', 'test'), source: 'test' })
+    expect(state.team.functions.iam!.capacity).toBeGreaterThan(before)
+    expect(state.team.functions.iam!.vacancies).toBe(1)
+  })
+})
+
+describe('a programme on its first day', () => {
+  const index = testIndex()
+  it('reads as staffed when its teams have room, before the first day of delivery', () => {
+    // Staffing was worked out at the start of the next day's delivery, so a
+    // programme started with every team idle read "Starved of people".
+    const state = newGame(index, { seed: 'first-day-staffing' })
+    const def = index.programme.get('prog-identity')!
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    expect(state.programmes.programmes[def.id]!.staffing).toBeGreaterThan(0.85)
   })
 })

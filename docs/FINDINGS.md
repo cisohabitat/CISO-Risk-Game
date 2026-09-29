@@ -18,6 +18,44 @@ fault.
 
 ### Fixed
 
+- **A browser playtest of a New money year, first quarter.** Played in
+  Chromium at CISO difficulty, a few days at a time, deciding from the screen.
+  - **Recruiting an identity engineer bought nothing in half of all years.**
+    The briefing, the CEO, the evidence and the decision title all say five
+    vacancies, and the recruitment letter and option fill "both identity
+    engineering roles". Setup drew vacancies at random across every function:
+    five in 67 of 200 years, two in identity in 51, none in identity in 98,
+    where the £140k recruitment filled no vacancy and added no capacity while
+    a letter announced the new engineer. Identity now always carries the two;
+    the other three fall at random across the SOC, architecture, governance
+    and incident response. Putting all five in engineering and identity, as
+    the evidence first said, cut programmes finished per year from 0.62 to
+    0.37 in the coverage harness, so engineering is left whole: the result is
+    0.57, and starting capacity is unchanged in total at every difficulty
+    (CISO 18.46 before, 18.37 after). The evidence now says "the security
+    teams", and a test pins five vacancies, two in identity, and a recruitment
+    that adds capacity. The overload test read a strain capped at 1, which
+    identity at two short no longer drops below; it now checks that the
+    identity work carried falls.
+  - **A programme started with every team idle read "Starved of people"** and
+    "Fragile" until the next day, because staffing was only worked out at the
+    start of a day's delivery. It is refreshed whenever the live work
+    changes; the day's own computation is unchanged. A test fails without it.
+  - **Starting a programme without the attention for it was refused after
+    two clicks**, as a toast, where a card for work the budget could not pay
+    for already said "Not affordable". The card now says "Out of attention
+    this week" and cannot be pressed. A UI test fails without it.
+  - **"Your functions are at available."** The Team screen put a band into a
+    sentence it did not fit; it reads "are available", as the Briefing does.
+  - **The first two decisions offered all twelve reasons**, among them "The
+    system retires imminently" for where to start the job. Five decisions
+    that are not about a risk (the first morning, the CEO's three risks,
+    recruitment, the programme trade-off and the budget request) now offer
+    reasons that could apply.
+  - "She wants to know what the three cyber risks she should be most
+    concerned about are" reads "She wants to know the three cyber risks she
+    should be most concerned about".
+
 - **Loading the campaign on demand had its own faults, found by reviewing
   the change.** The playthrough, screenshot and guide harnesses and a soak of
   1,000 all passed after it; a line-by-line review of the commit found what
