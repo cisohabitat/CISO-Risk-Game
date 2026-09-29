@@ -4,6 +4,7 @@ import { buildAnnualReview } from '@/game/debrief/review'
 import type { GameState } from '@/game/types'
 import { testIndex } from './helpers'
 import { revealEvidence } from '@/game/knowledge/discovery'
+import { evaluateCondition } from '@/game/events/conditions'
 
 /**
  * Starting situations: the same organisation, a different year. Each is data —
@@ -111,6 +112,21 @@ describe('starting situations', () => {
     expect(report, 'the review never reported').toBeDefined()
     expect(report!.body).not.toContain(index.evidence.get('ev-ir-untested')!.title)
     expect(state.evidence.items['ev-ir-untested']).toBeUndefined()
+  })
+
+  it('does not say after an incident that recovery was never timed when it was', () => {
+    // The recovery test used to reveal the failed-test finding, which kept
+    // this line away; it now reports its own timed restore, and the tidy and
+    // after-breach years both began with a real restore behind them.
+    const line = index.incidentFamily.get('fam-ransomware')!.whatHurt.find((w) => typeof w !== 'string' && w.text === 'Recovery that had never been timed')
+    if (!line || typeof line === 'string') throw new Error('the line is gone')
+    const usual = newGame(index, { seed: 'timed', situation: 'sit-inherited-mess' })
+    expect(evaluateCondition(usual, index, line.when)).toBe(true)
+    revealEvidence(usual, index, 'ev-restore-timed', 'test')
+    expect(evaluateCondition(usual, index, line.when)).toBe(false)
+    for (const situationId of ['sit-tidy', 'sit-after-breach']) {
+      expect(evaluateCondition(newGame(index, { seed: 'timed', situation: situationId }), index, line.when), situationId).toBe(false)
+    }
   })
 
   it('does not send a message the situation contradicts', () => {

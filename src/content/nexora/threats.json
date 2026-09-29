@@ -55,7 +55,7 @@
       "regulatoryInterest": 0.6,
       "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate", "dec-inc-external"],
       "whatHelped": [{"text": "Backups that could not be reached from the compromised accounts", "when": {"kind": "control.coverageAtLeast", "controlId": "ctl-backup", "value": 0.6}}, {"text": "A rehearsed decision path", "when": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "control.coverageAtLeast", "controlId": "ctl-ir", "value": 0.6}]}}],
-      "whatHurt": [{"text": "Administrative accounts shared between environments", "when": {"kind": "control.coverageBelow", "controlId": "ctl-pam", "value": 0.6}}, {"text": "Recovery that had never been timed", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "evidence.known", "evidenceId": "ev-backup-test-failed"}]}}}]
+      "whatHurt": [{"text": "Administrative accounts shared between environments", "when": {"kind": "control.coverageBelow", "controlId": "ctl-pam", "value": 0.6}}, {"text": "Recovery that had never been timed", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "evidence.known", "evidenceId": "ev-backup-test-failed"}, {"kind": "evidence.known", "evidenceId": "ev-restore-timed"}, {"kind": "situation.is", "situationId": "sit-tidy"}, {"kind": "situation.is", "situationId": "sit-after-breach"}]}}}]
     },
     {
       "id": "fam-data-breach",

@@ -68,6 +68,13 @@ fault.
   the gated letter, which still reaches 10 of 10 years in the other two
   situations. The recovery hypothesis needs only the recovery tag, which the
   new evidence carries.
+  That change had a knock-on the tests did not see at first: a ransomware
+  incident's "Recovery that had never been timed" was kept away by the old
+  finding being known, so a player who had run the test would have been told
+  it was never timed. The line now also stays away once the timed restore is
+  known, and in the tidy and after-breach years, which began with a restore
+  behind them; a test evaluates it in each case and fails on the old
+  condition.
 
 - **The threat hunt said two things, and both were usually wrong.** Eight
   days after *Commission a focused threat hunt*, a delayed effect set the
