@@ -20,6 +20,7 @@ import { driftSectorPressure, tickThreats } from '../threats/engine'
 import { tickIncidents } from '../incidents/engine'
 import { tickEvents } from '../events/engine'
 import { openDecision } from '../decisions/open'
+import { renderDecisionText } from '../decisions/describe'
 import { pushMessage } from '../inbox/messages'
 import { recomputeUnderstanding } from '../knowledge/discovery'
 import { refreshHypothesisConfidence, refreshScenarioAssessments } from '../risk/review'
@@ -363,10 +364,12 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       if (decision) pauseReasons.add('decision-deadline')
     }
     const wording = eventWording(fired.def, state.events.firedCount?.[fired.def.id] ?? 1)
+    // The overload message comes from whoever runs the overloaded function; it
+    // was signed by the SOC head while the decision it opened named engineering.
     pushMessage(state, {
-      from: fired.def.from,
+      from: renderDecisionText(fired.def.from, state, index),
       subject: wording.title,
-      body: wording.body,
+      body: renderDecisionText(wording.body, state, index),
       type: fired.def.type,
       priority: fired.def.priority,
       decisionId: decisionRuntimeId,

@@ -94,6 +94,28 @@ describe('overload acts on the function that is overloaded', () => {
     expect(view.context).not.toContain('{{')
   })
 
+  it('is raised by whoever runs the overloaded function, not the SOC head', () => {
+    // A playtest had the SOC head write "the team is past sustainable load",
+    // then a decision about engineering, with the SOC idle.
+    const index = testIndex()
+    const state = loadIdentity('ovl-5')
+    const def = index.event.get('evt-org-team-overload')!
+    const owner = index.content.leaders.find((l) => l.functions.includes('iam'))!
+    const from = renderDecisionText(def.from, state, index)
+    const body = renderDecisionText(def.body, state, index)
+    expect(from).toBe(`${owner.name}, ${owner.role}`)
+    expect(from).not.toMatch(/Security Operations/)
+    expect(body).toMatch(/^I need to be straight with you\. Identity is running above/)
+    expect(`${from} ${body}`).not.toContain('{{')
+
+    // And in the message the player actually receives.
+    applyEffects(state, [{ type: 'event.schedule', eventId: def.id, dayOffset: 1 }], { index, rng: createRng(state.seed, 0), source: 'test' })
+    runDays(state, index, 2)
+    const message = state.inbox.messages.find((m) => m.eventId === def.id)!
+    expect(message.from).toBe(`${owner.name}, ${owner.role}`)
+    expect(message.body).not.toContain('{{')
+  })
+
   it('has no effect in the overload decision aimed at the SOC by name', () => {
     // Guards the regression this fixes: strain is computed from the most
     // pressed function, so nothing that reacts to it may assume which one.

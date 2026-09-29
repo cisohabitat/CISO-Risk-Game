@@ -171,6 +171,21 @@ export function delegationQuality(leader: LeaderRuntime, strain: number, roll: n
   return clamp01(centre + (roll - 0.5) * 2 * spread)
 }
 
+/**
+ * What the delegation dialog can honestly promise before the work starts. It
+ * used to read the leader's own workload alone, which is rarely high, so nearly
+ * every leader "had room" while team strain and morale sent the work back thin.
+ * This reads the centre of the same quality the work will be drawn from.
+ */
+export type DelegationOutlook = 'room' | 'busy' | 'partial' | 'thin'
+
+export function delegationOutlook(leader: LeaderRuntime, strain: number): DelegationOutlook {
+  const centre = delegationQuality(leader, strain, 0.5)
+  if (centre < 0.3 || leader.workload > 0.8) return 'thin'
+  if (centre < 0.5) return 'partial'
+  return leader.workload > 0.55 ? 'busy' : 'room'
+}
+
 /** Extra days a delegated assignment slips, given workload and reliability. */
 export function delegationDelayDays(leader: LeaderRuntime, strain: number, roll: number): number {
   const pressure = 0.5 * clamp01(leader.workload) + 0.5 * clamp01(strain)

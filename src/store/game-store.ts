@@ -79,21 +79,45 @@ function contentOf(index: ContentIndex | null): ContentIndex {
   return index
 }
 
-/** Autosave on the transitions that matter, never on every tick (plan §32.8). */
-function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boolean {
-  if (ticks.some((tick) => tick.shouldAutosave)) return true
-  switch (action.type) {
-    case 'resolveDecision':
-    case 'startProgramme':
-    case 'startInvestigation':
-    case 'acceptRisk':
-    case 'convertHypothesis':
-    case 'completeQuarterReview':
-    case 'finishCampaign':
-      return true
-    default:
-      return false
-  }
+/**
+ * Whether an action is worth writing to storage straight away (plan §32.8).
+ * Every action is classified here, so a new one cannot be added without
+ * deciding. The list used to name seven, and clearing a blocker, accelerating
+ * a programme, hiring or meeting an executive (budget, goodwill and attention
+ * spent) was lost with the tab until the next weekly save. Only the frequent
+ * and trivial are left to that save; advancing time is decided by its ticks.
+ */
+const SAVES_ON: Record<PlayerAction['type'], boolean> = {
+  advance: false,
+  setSpeed: false,
+  markRead: false,
+  markEvidenceRead: false,
+  resolveDecision: true,
+  startInvestigation: true,
+  createHypothesis: true,
+  attachEvidence: true,
+  detachEvidence: true,
+  convertHypothesis: true,
+  rejectHypothesis: true,
+  openRisk: true,
+  acceptRisk: true,
+  treatRisk: true,
+  escalateRisk: true,
+  startProgramme: true,
+  setProgrammeStatus: true,
+  accelerateProgramme: true,
+  resolveProgrammeBlocker: true,
+  meetStakeholder: true,
+  hire: true,
+  completeQuarterReview: true,
+  dismissPattern: true,
+  dismissTutorial: true,
+  finishCampaign: true,
+}
+
+/** Autosave on the transitions that matter, never on every tick. */
+export function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boolean {
+  return ticks.some((tick) => tick.shouldAutosave) || SAVES_ON[action.type]
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({

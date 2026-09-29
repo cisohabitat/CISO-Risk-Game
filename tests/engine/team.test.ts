@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
-import { capacityBand, delegationQuality, teamStrain, updateTeamWellbeing } from '@/game/team/capacity'
+import { capacityBand, delegationOutlook, delegationQuality, teamStrain, updateTeamWellbeing } from '@/game/team/capacity'
 import { CYBER_FUNCTIONS } from '@/game/types'
 import { relationshipBand, supportLikelihood } from '@/game/stakeholders/relationships'
 import { computeStaffing, deliveryConfidence } from '@/game/programmes/progression'
@@ -19,6 +19,18 @@ describe('team and delegation', () => {
     const rested = delegationQuality({ id: 'a', skill: 0.8, reliability: 0.8, morale: 0.8, workload: 0.1, assignmentsCompleted: 0, assignmentsLate: 0 }, 0.2, 0.5)
     const buried = delegationQuality({ id: 'a', skill: 0.8, reliability: 0.8, morale: 0.4, workload: 0.95, assignmentsCompleted: 0, assignmentsLate: 0 }, 0.95, 0.5)
     expect(buried).toBeLessThan(rested)
+  })
+
+  it('does not promise room when the team behind an idle leader will send the work back thin', () => {
+    // A playtest delegated to a leader the dialog said "has room", and the
+    // review came back thin because the team was stretched: the label read the
+    // leader's own workload, which is rarely high, and nothing else.
+    const idle = { id: 'a', skill: 0.75, reliability: 0.7, morale: 0.5, workload: 0.1, assignmentsCompleted: 0, assignmentsLate: 0 }
+    expect(delegationOutlook(idle, 0.2)).toBe('room')
+    expect(delegationQuality(idle, 0.85, 0.5)).toBeLessThan(0.5)
+    expect(delegationOutlook(idle, 0.85)).toBe('partial')
+    expect(delegationOutlook({ ...idle, morale: 0.2, skill: 0.5 }, 0.9)).toBe('thin')
+    expect(delegationOutlook({ ...idle, skill: 0.95, morale: 0.9, workload: 0.7 }, 0.2)).toBe('busy')
   })
 
   it('grinds morale down under sustained overcommitment', () => {

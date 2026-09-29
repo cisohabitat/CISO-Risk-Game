@@ -9,10 +9,12 @@
  */
 import type { ContentIndex, DecisionRuntime, GameState } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
-import { functionName, mostPressedFunction } from '../team/capacity'
+import { functionName, functionTitle, leaderForFunction, mostPressedFunction } from '../team/capacity'
 
 /**
- * `{{pressedFunction}}` is the function closest to breaking; `{{scenario}}`
+ * `{{pressedFunction}}` is the function closest to breaking and
+ * `{{pressedLeader}}` the person who runs it, for the message that raises it;
+ * `{{scenario}}`
  * is the risk scenario the decision was opened about, for a decision that is
  * authored once and fires for any of them.
  */
@@ -26,11 +28,20 @@ export function renderDecisionText(
   const scenario = runtime?.scenarioId ? index.riskScenario.get(runtime.scenarioId)?.title : undefined
   return text
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
+    .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))
+    .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
     // A quarter's paper still waiting to go in is the next meeting, whatever
     // the calendar says comes after it.
     .replaceAll('{{nextBoard}}', state.reviews.pendingQuarter !== undefined ? 'this week' : nextBoard(state.currentDay))
+}
+
+/** "Name, Role" of whoever runs the most pressed function. */
+function pressedLeader(state: GameState, index: ContentIndex): string {
+  const id = leaderForFunction(index, mostPressedFunction(state))
+  const leader = index.content.leaders.find((candidate) => candidate.id === id)
+  return leader ? `${leader.name}, ${leader.role}` : 'Your security leadership team'
 }
 
 const WEEKS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen']

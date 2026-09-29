@@ -33,8 +33,8 @@
       "id": "evt-org-team-overload",
       "type": "people",
       "title": "The team is past sustainable load",
-      "from": "Jo Mbeki, Head of Security Operations",
-      "body": "I need to be straight with you. We are running above what the team can sustain and have been for a while. If you add anything else, something already committed will slip, and I would rather choose which.",
+      "from": "{{pressedLeader}}",
+      "body": "I need to be straight with you. {{PressedFunction}} is running above what my people can sustain and has been for a while. If you add anything else, something already committed will slip, and I would rather choose which.",
       "priority": "urgent",
       "availableFromDay": 40,
       "conditions": [

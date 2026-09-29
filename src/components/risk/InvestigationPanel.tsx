@@ -10,10 +10,17 @@ import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
-import { availableCapacity } from '@/game/team/capacity'
+import { availableCapacity, delegationOutlook, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import type { InvestigationDef } from '@/game/types'
+
+const OUTLOOK: Record<DelegationOutlook, string> = {
+  room: 'Has room for this.',
+  busy: 'Busy, but could take this on.',
+  partial: 'Could take this on, but expect part of an answer.',
+  thin: 'Too stretched to do this well — expect it to slip or come back thin.',
+}
 
 export function InvestigationPanel() {
   const state = useGameStore((store) => store.state)
@@ -24,6 +31,9 @@ export function InvestigationPanel() {
 
   if (!state) return null
 
+  // What delegated work comes back with depends on the whole team, not just
+  // how busy the one person leading it is.
+  const strain = teamStrain(state)
   const running = state.team.assignments.filter((assignment) => assignment.status === 'running')
   // Coached modes point at the enquiries that speak to the biggest thing on
   // the player's list; the others get the same connection without the badge.
@@ -213,11 +223,7 @@ export function InvestigationPanel() {
                       {fits && <Badge tone="low" glyph={false}>In their area</Badge>}
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">
-                      {runtime.workload > 0.8
-                        ? 'Overloaded — expect this to slip and to come back thin.'
-                        : runtime.workload > 0.55
-                          ? 'Busy, but could take this on.'
-                          : 'Has room for this.'}
+                      {OUTLOOK[delegationOutlook(runtime, strain)]}
                     </span>
                   </span>
                 </label>

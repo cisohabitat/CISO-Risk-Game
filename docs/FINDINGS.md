@@ -18,6 +18,36 @@ fault.
 
 ### Fixed
 
+- **The same playtest, into February.**
+  - **Forming a hypothesis, clearing a blocker, accelerating, hiring or
+    meeting an executive was not saved.** Only seven actions wrote to storage
+    at once; the rest waited for the weekly save. The playtest formed three
+    hypotheses and held the line with the CIO over a blocked programme, came
+    back, and found no hypotheses and the blocker still standing. Every
+    action is now classified in a table TypeScript will not let a new one
+    miss, and only advancing time (decided by its ticks), speed, and reading
+    a message or a piece of evidence wait for the weekly save. There is one
+    save per campaign, overwritten, so saving more often loses no history. A
+    store test fails if pausing a programme or meeting an executive goes
+    unsaved.
+  - **Every leader "had room" for delegated work that came back thin.** The
+    delegation dialog read the leader's own workload, which is rarely high,
+    while the quality drawn also falls with the whole team's strain and the
+    leader's morale. Over 40 CISO years commissioning weekly to the leader in
+    the area, with identity and recovery running, the dialog said "Has room"
+    on 1,784 of 1,829 commissions and they came back thin 10% of the time
+    against 18% for "Busy". It now reads the centre of the quality the work
+    will be drawn from: "Has room" 1,287 times, thin 2%; "expect part of an
+    answer" 509, thin 29%; "too stretched" 28, thin 54%. A test pins an idle
+    leader over a stretched team not reading as having room.
+  - **The SOC head reported engineering's overload.** The decision that
+    fires on the most pressed function was fixed to name it earlier; the
+    message that opens it was still signed by Jo Mbeki, Head of Security
+    Operations, with the SOC idle and engineering burning out. It is now
+    signed by whoever runs the pressed function and names it, and the
+    evidence it reveals says "a security lead" rather than "SOC lead". A
+    test reads the delivered message.
+
 - **A browser playtest of a New money year, first quarter.** Played in
   Chromium at CISO difficulty, a few days at a time, deciding from the screen.
   - **Recruiting an identity engineer bought nothing in half of all years.**
