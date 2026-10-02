@@ -15,6 +15,8 @@ import { StartScreen } from '@/screens/start/StartScreen'
 import { visibleRisks, discoveredNodes } from '@/store/selectors'
 import { RiskScreen } from '@/screens/risk/RiskScreen'
 import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
+import { TimeControls } from '@/components/game/TimeControls'
+import { Toasts } from '@/components/game/Toasts'
 
 /**
  * What a look at every screen found, light and dark, desktop and phone:
@@ -113,7 +115,7 @@ describe('what the screens show', () => {
     const lines = screen.getAllByTestId('programme-treats')
     expect(lines.length).toBeGreaterThan(0)
     for (const line of lines) {
-      const named = line.textContent!.replace(/^Treats /, '').split('; ')
+      const named = [...line.querySelectorAll('li')].map((item) => item.textContent!.replace(/^–/, ''))
       for (const title of named) expect(visible.has(title), title).toBe(true)
     }
     expect(screen.getAllByText('Of the budget left').length).toBeGreaterThan(0)
@@ -218,5 +220,83 @@ describe('what the screens show', () => {
     const note = screen.getByRole('complementary', { name: 'How this works' })
     const headline = screen.getByRole('heading', { level: 1 })
     expect(headline.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('dates what came back, and labels the standing in sentence case', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-came-back', 'ciso')
+    useGameStore.setState((store) => {
+      const state = structuredClone(store.state!)
+      state.currentDay = 120
+      const template = state.inbox.messages[0]!
+      state.inbox.messages.unshift({ ...template, id: 'came-back', subject: 'Completed: a look at the backups', day: 111, read: false })
+      return { state }
+    })
+    render(<HomeScreen />)
+    const section = screen.getByRole('region', { name: 'Came back to you' })
+    expect(section).toHaveTextContent('22 Apr')
+    expect(section.textContent).not.toMatch(/\bday \d+/i)
+    const standing = screen.getByRole('region', { name: 'Where the organisation stands' })
+    for (const label of standing.querySelectorAll('dt')) expect(label.className).not.toMatch(/uppercase/)
+  })
+
+  it('colours the header pill by what stopped the clock', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-pill', 'ciso')
+    useGameStore.setState((store) => ({ state: { ...store.state!, pauseReasons: ['incident'] } }))
+    render(<TimeControls />)
+    const pill = screen.getByText('An incident needs you')
+    expect(pill.className).toMatch(/text-band-severe/)
+  })
+
+  it('draws the header solid, and sets document headings in the display face', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-header', 'ciso')
+    const { container, unmount } = render(
+      <AppShell>
+        <div />
+      </AppShell>,
+    )
+    expect(container.querySelector('header')!.className).not.toMatch(/bg-surface\/\d+/)
+    unmount()
+    useGameStore.setState((store) => ({ ui: { ...store.ui, selectedMessageId: store.state!.inbox.messages[0]!.id } }))
+    render(<InboxScreen />)
+    const subject = useGameStore.getState().state!.inbox.messages[0]!.subject
+    expect(screen.getByRole('heading', { level: 2, name: subject }).className).toMatch(/font-display/)
+  })
+
+  it('lists a programme\'s people in days a week', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-people', 'ciso')
+    render(<ProgrammesScreen />)
+    const lists = screen.getAllByTestId('programme-people')
+    expect(lists.length).toBeGreaterThan(0)
+    for (const list of lists) {
+      expect(list.textContent).not.toMatch(/d\/wk/)
+      for (const item of list.querySelectorAll('li')) expect(item.textContent).toMatch(/, [\d.]+ days? a week$/)
+    }
+  })
+
+  it('keeps a phone notification to two lines', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-toast-phone', 'ciso')
+    useGameStore.getState().pushToast('A notification long enough to wrap on a phone screen several times over.')
+    render(<Toasts />)
+    const text = screen.getByText(/A notification long enough/)
+    expect(text.className).toMatch(/max-lg:line-clamp-2/)
+  })
+
+  it('shows how far through the year the player is, and when the quarter closes', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-year', 'ciso')
+    const strip = (day: number) => {
+      useGameStore.setState((store) => ({ state: { ...store.state!, currentDay: day } }))
+      const { unmount } = render(
+        <AppShell>
+          <div />
+        </AppShell>,
+      )
+      const text = screen.getByTestId('year-strip-text').textContent
+      unmount()
+      return text
+    }
+    expect(strip(0)).toBe('Q1 closes in 91 days.')
+    expect(strip(100)).toBe('Q2 closes in 82 days.')
+    expect(strip(181)).toBe('Q2 closes in 1 day.')
+    expect(strip(364)).toBe('The year is over.')
   })
 })

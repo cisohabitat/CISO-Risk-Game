@@ -190,7 +190,7 @@ export default function OrgGraph({
           On a known attack path
         </li>
       </ul>
-      <div className="h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
+      <div className="relative h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
         <ReactFlow
           nodes={flowNodes}
           edges={flowEdges}
@@ -208,6 +208,14 @@ export default function OrgGraph({
           <Background gap={24} color="var(--line)" />
           <Controls showInteractive={false} />
         </ReactFlow>
+        {/* The map opens on the first two columns at a size that can be read,
+            so the next column is cut at the edge — and a card cut mid-word
+            looked broken. Faded, it reads as a map that carries on. */}
+        <div
+          aria-hidden="true"
+          data-testid="graph-edge-fade"
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-surface-2 to-transparent"
+        />
       </div>
     </div>
   )

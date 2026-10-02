@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign } from './helpers'
-import { openPreparedCampaign, prepareCampaign } from './prepared'
+import { openPreparedCampaign, prepareCampaign, SAVE_ROW } from './prepared'
 
 /**
  * What is actually in the save store, rather than what the start screen shows.
@@ -130,7 +130,7 @@ test.describe('a first year at Nexora', () => {
     // A campaign is one save, so the badge is what proves the Save campaign
     // button wrote anything: without it the autosave would answer for a button
     // that did nothing at all.
-    const resume = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-save' }).first()
+    const resume = page.getByRole('button', { name: SAVE_ROW }).filter({ hasText: 'e2e-save' }).first()
     await expect(resume, 'no save appeared to resume from').toBeVisible()
     await expect(resume, 'the save was not marked as one the player asked for').toContainText('Saved by you')
     await resume.click()
@@ -148,7 +148,7 @@ test.describe('a first year at Nexora', () => {
     const dayBefore = (await page.getByRole('banner').innerText()).split('·')[0]?.trim()
     await page.getByRole('button', { name: 'Save and close this campaign' }).click()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    await page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-close' }).first().click()
+    await page.getByRole('button', { name: SAVE_ROW }).filter({ hasText: 'e2e-close' }).first().click()
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
     expect((await page.getByRole('banner').innerText()).split('·')[0]?.trim()).toBe(dayBefore)
   })
@@ -157,7 +157,7 @@ test.describe('a first year at Nexora', () => {
     // Rolling autosave slots put one campaign on the start screen three times,
     // a row per recent day, and interleaved a second campaign with the first.
     // Nothing said those rows were the same year, so they read as several games.
-    const rows = page.getByRole('button', { name: /Day \d+/ })
+    const rows = page.getByRole('button', { name: SAVE_ROW })
     const play = async (turns: number) => {
       for (let i = 0; i < turns; i += 1) {
         const got = page.getByRole('button', { name: 'Got it' }).first()
@@ -232,9 +232,9 @@ test.describe('a first year at Nexora', () => {
 
     await page.reload()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    const rows = page.getByRole('button', { name: /Day \d+/ })
+    const rows = page.getByRole('button', { name: SAVE_ROW })
     await expect(rows, 'the three rolling autosaves are still three rows').toHaveCount(1)
-    await expect(rows.first(), 'the newest of the three did not survive').toContainText('Day 30')
+    await expect(rows.first(), 'the newest of the three did not survive').toContainText('31 January')
     const collapsed = await savedRecords(page)
     expect(collapsed.length, 'the duplicate rolling saves are still in storage').toBe(1)
     expect(collapsed[0]!.day, 'the surviving save is not the newest of the three').toBe(30)
@@ -335,7 +335,7 @@ test.describe('a first year at Nexora', () => {
     // And the Continue list says which year it was.
     await page.getByRole('button', { name: 'Save campaign' }).click()
     await page.goto('/')
-    await expect(page.getByRole('button', { name: /Day \d+ · ciso · After the breach/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /\d+ [A-Z][a-z]+ · CISO · After the breach/ })).toBeVisible()
   })
 
   test('a saved campaign can be deleted, and stays deleted', async ({ page }) => {
@@ -345,7 +345,7 @@ test.describe('a first year at Nexora', () => {
 
     await page.reload()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    const row = page.getByRole('button', { name: /Day \d+/ }).filter({ hasText: 'e2e-delete' })
+    const row = page.getByRole('button', { name: SAVE_ROW }).filter({ hasText: 'e2e-delete' })
     await expect(row.first(), 'the saved campaign did not appear to resume from').toBeVisible()
 
     // Deleting asks first, and keeping it changes nothing.
@@ -438,6 +438,8 @@ test.describe('a first year at Nexora', () => {
       for (const entry of ['Business', 'Checked', 'Taken on trust', 'On a known attack path']) {
         await expect(key.getByText(entry, { exact: true })).toBeVisible()
       }
+      // The next column is cut by the edge; the fade says the map carries on.
+      await expect(page.getByTestId('graph-edge-fade')).toBeAttached()
     }
 
     // The list view is always available, and is the default on small screens.
@@ -791,7 +793,7 @@ test.describe('a first year at Nexora', () => {
 
     // And every mark is also a sentence with its day on it.
     await page.getByText('Read the year as a list').click()
-    await expect(page.getByText(/Day \d+/).first()).toBeVisible()
+    await expect(page.getByText(/\b\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/).first()).toBeVisible()
   })
 
   test('the briefing leads with what needs an answer, not with four gauges', async ({ page }) => {

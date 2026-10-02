@@ -35,6 +35,9 @@ export async function openPreparedCampaign(page: Page, save: unknown): Promise<v
     db.close()
   }, save)
   await page.reload()
-  await page.getByRole('button', { name: /Day \d+/ }).first().click()
+  await page.getByRole('button', { name: SAVE_ROW }).first().click()
   await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
 }
+
+/** A saved campaign on the start screen, which leads with the date it reached. */
+export const SAVE_ROW = /\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) · /

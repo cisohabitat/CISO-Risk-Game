@@ -11,7 +11,7 @@ import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } fro
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { evidenceList } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
-import { evidenceSourceLabel, statusLabel } from '@/lib/formatting/labels'
+import { evidenceSourceLabel, shortDate, statusLabel } from '@/lib/formatting/labels'
 
 export function HypothesisWorkspace() {
   const state = useGameStore((store) => store.state)
@@ -221,7 +221,7 @@ export function HypothesisWorkspace() {
                     <span className="min-w-0">
                       <span className="block text-sm font-medium">{item.title}</span>
                       <span className="mt-0.5 block text-xs text-ink-faint">
-                        {evidenceSourceLabel(item.source)} · {item.confidence} confidence · day {item.day}
+                        {evidenceSourceLabel(item.source)} · {item.confidence} confidence · {shortDate(item.day)}
                       </span>
                     </span>
                   </label>

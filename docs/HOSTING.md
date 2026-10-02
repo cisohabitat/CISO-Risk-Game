@@ -28,8 +28,8 @@ it except the starting situations, which have a small chunk of their own; the
 rest is fetched as soon as the start screen is up, so starting or continuing
 does not wait on it. Moving it out took the first screen from 258.2 kB to
 176.7 kB, and moving schema validation into a module loaded only in
-development took it to 174.9 kB. It reads 179.5 kB against the 185 kB limit
-after the fixes since, the links to the player's guide and the line icons. If a deploy replaces the files while the
+development took it to 174.9 kB. It reads 180.1 kB against the 185 kB limit
+after the fixes since, the links to the player's guide, the line icons and the year strip. If a deploy replaces the files while the
 start screen is open, the page reloads once to pick up the new version. `MUST_STAY_LAZY` fails the build if
 the campaign or its loader is ever preloaded again, which one static import
 from the start screen is enough to do.

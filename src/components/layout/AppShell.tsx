@@ -13,6 +13,7 @@ import { TimeControls } from '@/components/game/TimeControls'
 import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
 import { Icon } from '@/components/ui/icons'
+import { YearStrip } from '@/components/game/YearStrip'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
@@ -48,57 +49,60 @@ export function AppShell({ children }: { children: ReactNode }) {
           <p className="font-display text-xl leading-tight">CISO: First Year</p>
           <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
         </div>
-        <ul className="scroll-area flex-1 space-y-1 p-3">
-          {DESTINATIONS.map((destination) => (
-            <li key={destination.id}>
-              <button
-                type="button"
-                onClick={() => go(destination.id)}
-                aria-current={screen === destination.id ? 'page' : undefined}
-                aria-label={destination.label}
-                className={cn(
-                  'relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
-                  screen === destination.id
-                    ? 'bg-surface-3 font-medium text-ink'
-                    : 'text-ink-muted hover:bg-surface-2 hover:text-ink',
-                )}
-              >
-                {/* Hover and selected were a 3.5% difference in lightness and
-                    one font weight apart, so resting the pointer on any item
-                    made it read as the page you were on — convincingly enough
-                    that a screenshot of the Board screen looked like a
-                    navigation bug. A bar is categorical: hover cannot make one
-                    appear. */}
-                {screen === destination.id && (
-                  <span aria-hidden="true" className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-accent" />
-                )}
-                <Icon name={destination.icon} size={17} className="text-ink-faint" />
-                <span className="flex-1">{destination.label}</span>
-                {destination.id === 'inbox' && view.unreadMessages > 0 && (
-                  // Capped: by spring an unread count reached 63, most of it
-                  // background the Briefing had already summarised, and the
-                  // number read as a backlog to clear. The inbox's own Unread
-                  // filter still has the whole list.
-                  <span className="rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums">
-                    {view.unreadMessages > 9 ? '9+' : view.unreadMessages}
-                  </span>
-                )}
-                {destination.id === 'home' && view.openDecisions > 0 && (
-                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass tabular-nums">
-                    {view.openDecisions}
-                  </span>
-                )}
-                {/* The rail badges the Briefing and the Inbox when they want
-                    you. The board paper wanted you too and said nothing. */}
-                {destination.id === 'board' && state.reviews.pendingQuarter !== undefined && (
-                  <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass">
-                    Due
-                  </span>
-                )}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="scroll-area flex-1">
+          <ul className="space-y-1 p-3">
+            {DESTINATIONS.map((destination) => (
+              <li key={destination.id}>
+                <button
+                  type="button"
+                  onClick={() => go(destination.id)}
+                  aria-current={screen === destination.id ? 'page' : undefined}
+                  aria-label={destination.label}
+                  className={cn(
+                    'relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
+                    screen === destination.id
+                      ? 'bg-surface-3 font-medium text-ink'
+                      : 'text-ink-muted hover:bg-surface-2 hover:text-ink',
+                  )}
+                >
+                  {/* Hover and selected were a 3.5% difference in lightness and
+                      one font weight apart, so resting the pointer on any item
+                      made it read as the page you were on — convincingly enough
+                      that a screenshot of the Board screen looked like a
+                      navigation bug. A bar is categorical: hover cannot make one
+                      appear. */}
+                  {screen === destination.id && (
+                    <span aria-hidden="true" className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-accent" />
+                  )}
+                  <Icon name={destination.icon} size={17} className="text-ink-faint" />
+                  <span className="flex-1">{destination.label}</span>
+                  {destination.id === 'inbox' && view.unreadMessages > 0 && (
+                    // Capped: by spring an unread count reached 63, most of it
+                    // background the Briefing had already summarised, and the
+                    // number read as a backlog to clear. The inbox's own Unread
+                    // filter still has the whole list.
+                    <span className="rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums">
+                      {view.unreadMessages > 9 ? '9+' : view.unreadMessages}
+                    </span>
+                  )}
+                  {destination.id === 'home' && view.openDecisions > 0 && (
+                    <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass tabular-nums">
+                      {view.openDecisions}
+                    </span>
+                  )}
+                  {/* The rail badges the Briefing and the Inbox when they want
+                      you. The board paper wanted you too and said nothing. */}
+                  {destination.id === 'board' && state.reviews.pendingQuarter !== undefined && (
+                    <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass">
+                      Due
+                    </span>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <YearStrip day={state.currentDay} />
+        </div>
         <div className="space-y-3 border-t border-line p-4 text-sm">
           <dl className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
@@ -144,7 +148,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface lg:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <ul className="grid grid-cols-5">
@@ -266,7 +270,7 @@ function ShellHeader() {
   const view = briefing(state, index)
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-line bg-surface">
       {/* One row on wide screens. On a phone it was three: the date, the
           save/theme controls, then the clock and a status chip, about a sixth
           of the screen, with each screen's title sliding under it. Now the

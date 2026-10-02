@@ -11,7 +11,7 @@ import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { RiskDetail } from '@/components/risk/RiskDetail'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
-import { bandTone, confidenceTone, evidenceSourceLabel, statusLabel, trendBadge } from '@/lib/formatting/labels'
+import { bandTone, confidenceTone, evidenceSourceLabel, shortDate, statusLabel, trendBadge } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
 export function RiskScreen() {
@@ -149,7 +149,7 @@ export function RiskScreen() {
                         >
                           {item.confidence} confidence
                         </Badge>
-                        <span className="text-xs text-ink-faint tabular-nums">day {item.day}</span>
+                        <span className="text-xs text-ink-faint tabular-nums">{shortDate(item.day)}</span>
                       </div>
                       <h3 className="mt-2 font-medium text-balance">{item.title}</h3>
                       <p className="mt-1 text-sm text-ink-muted text-pretty">{item.description}</p>

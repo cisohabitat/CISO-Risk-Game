@@ -4,6 +4,21 @@
  */
 import type { BandTone } from '@/components/ui/primitives'
 import type { RiskBand } from '@/game/types'
+import { formatGameDate } from '@/game/time'
+
+/**
+ * "2 Jan", for lists too narrow for the whole date. Anything the player reads
+ * is dated as the header dates it; "day 112" is the engine's word, not theirs.
+ */
+/** "1.5 days a week", as the Team screen counts capacity. */
+export function daysAWeek(days: number): string {
+  return `${days} ${days === 1 ? 'day' : 'days'} a week`
+}
+
+export function shortDate(day: number): string {
+  const { label, month } = formatGameDate(day)
+  return label.replace(month, month.slice(0, 3))
+}
 
 export function bandTone(band: RiskBand): BandTone {
   return band
@@ -154,8 +169,9 @@ export function plural(count: number, singular: string, pluralForm?: string): st
   return `${count} ${count === 1 ? singular : (pluralForm ?? `${singular}s`)}`
 }
 
+/** The year view's marks, dated as the rest of the game dates things. */
 export function dayLabel(day: number): string {
-  return `Day ${day}`
+  return shortDate(day)
 }
 
 // One map of function names, in the engine, because the engine's messages

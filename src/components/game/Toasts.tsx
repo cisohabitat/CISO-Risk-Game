@@ -38,6 +38,10 @@ export function Toasts() {
             'flex max-w-lg items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-[var(--shadow-lift)] animate-rise',
             // One at a time on a phone, where two covered a quarter of the screen.
             'max-lg:[&:not(:last-child)]:hidden',
+            // And slimmer there: a three-line notification over the list was
+            // a card of its own. Two lines at most; the rest is in the inbox
+            // or the year view, as everything a notification says must be.
+            'max-lg:px-3 max-lg:py-2 max-lg:text-xs',
             toast.tone === 'warning'
               ? 'border-band-elevated/50 bg-band-elevated-soft text-ink'
               : toast.tone === 'success'
@@ -45,7 +49,7 @@ export function Toasts() {
                 : 'border-line bg-surface text-ink',
           )}
         >
-          <span className="text-pretty">{toast.message}</span>
+          <span className="text-pretty max-lg:line-clamp-2">{toast.message}</span>
           <button
             type="button"
             onClick={() => dismissToast(toast.id)}

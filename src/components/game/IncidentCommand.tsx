@@ -13,7 +13,7 @@
 import { Button, Card, CardBody } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
-import { plural } from '@/lib/formatting/labels'
+import { plural, shortDate } from '@/lib/formatting/labels'
 
 export function IncidentCommand() {
   const state = useGameStore((store) => store.state)
@@ -56,7 +56,7 @@ export function IncidentCommand() {
       <CardBody className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 id="incident-command" className="text-lg font-semibold text-balance">
+            <h2 id="incident-command" className="font-display text-xl leading-tight text-balance">
               {incident.name}
             </h2>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
@@ -106,7 +106,7 @@ export function IncidentCommand() {
             <ol className="mt-1.5 space-y-1 text-sm">
               {incident.timeline.slice(-5).map((entry, position) => (
                 <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">Day {entry.day}</span>
+                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
                   <span className="text-ink-muted">{entry.text}</span>
                 </li>
               ))}
@@ -122,7 +122,7 @@ export function IncidentCommand() {
             <ul className="mt-1.5 space-y-1 text-sm">
               {incident.taken.map((entry, position) => (
                 <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">Day {entry.day}</span>
+                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
                   <span className="text-ink-muted">
                     {entry.title}: <span className="text-ink">{entry.option}</span>
                   </span>

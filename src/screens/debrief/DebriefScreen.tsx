@@ -10,7 +10,7 @@ import { incidentViews, yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
 import { CAMPAIGN_DAYS } from '@/game/types'
 import { objectiveStatusLabel } from '@/game/business/objectives'
-import { statusLabel } from '@/lib/formatting/labels'
+import { shortDate, statusLabel } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
 
 const BAND_TONE: Record<string, 'severe' | 'elevated' | 'moderate' | 'low'> = {
@@ -180,7 +180,7 @@ export function DebriefScreen() {
                       <Badge tone={incident.severity} >{incident.severity} consequence</Badge>
                     </div>
                     <p className="text-sm text-ink-muted">
-                      Day {incident.startedDay}
+                      {shortDate(incident.startedDay)}
                       {incident.resolvedDay !== undefined && ` to ${incident.resolvedDay}`} · {statusLabel(incident.phase)}
                       {incident.servicesAffected.length > 0 && ` · ${incident.servicesAffected.join(', ')}`}
                     </p>
@@ -249,7 +249,7 @@ export function DebriefScreen() {
                   return (
                     <li key={`${entry.decisionId}-${position}`} className="border-b border-line pb-2 last:border-0">
                       <p>
-                        <span className="tabular-nums text-ink-faint">Day {entry.day}</span>{' '}
+                        <span className="tabular-nums text-ink-faint">{shortDate(entry.day)}</span>{' '}
                         <span className="font-medium">{def?.title ?? entry.decisionId}</span>
                       </p>
                       <p className="text-ink-muted">{option?.label ?? entry.optionId}</p>

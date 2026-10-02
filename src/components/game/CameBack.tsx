@@ -6,6 +6,7 @@
 import { Button } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { cameBack } from '@/store/selectors'
+import { shortDate } from '@/lib/formatting/labels'
 
 const KIND_LABEL: Record<ReturnType<typeof cameBack>[number]['kind'], string> = {
   result: 'Enquiry returned',
@@ -34,9 +35,9 @@ export function CameBack() {
         {items.map((item) => (
           <li key={item.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm">{item.subject}</p>
+              <p className="line-clamp-2 text-sm text-pretty">{item.subject}</p>
               <p className="text-xs text-ink-faint">
-                {KIND_LABEL[item.kind]} · {item.from} · day {item.day}
+                {KIND_LABEL[item.kind]} · {item.from} · {shortDate(item.day)}
               </p>
             </div>
             <Button

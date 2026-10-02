@@ -10,6 +10,7 @@ import { useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
 import { cn } from '@/lib/utils/cn'
 import { formatGameDate } from '@/game/time'
+import { shortDate } from '@/lib/formatting/labels'
 import type { InboxMessage } from '@/game/types'
 
 const FILTERS = [
@@ -21,12 +22,6 @@ const FILTERS = [
 ] as const
 
 type Filter = (typeof FILTERS)[number]['id']
-
-/** "2 Jan": the list is narrow, and the full date is in the reading pane. */
-function shortDate(day: number): string {
-  const { label, month } = formatGameDate(day)
-  return label.replace(month, month.slice(0, 3))
-}
 
 export function InboxScreen() {
   const state = useGameStore((store) => store.state)
@@ -117,7 +112,7 @@ export function InboxScreen() {
             <Card className="md:sticky md:top-24 md:self-start">
               <CardBody>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
-                <h2 className="mt-1 text-lg font-semibold text-balance">{selected.subject}</h2>
+                <h2 className="mt-1 font-display text-xl leading-tight text-balance">{selected.subject}</h2>
                 <p className="mt-0.5 text-sm text-ink-muted">{selected.from}</p>
                 <div className="mt-4 space-y-3 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (

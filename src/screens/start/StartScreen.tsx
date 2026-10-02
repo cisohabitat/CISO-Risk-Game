@@ -10,6 +10,7 @@ import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/p
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 import { GUIDE_URL } from '@/app/navigation'
+import { formatGameDate } from '@/game/time'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -137,7 +138,9 @@ export function StartScreen() {
                     >
                       <span>
                         <span className="block font-medium">
-                          {opening === save.key ? 'Opening… ' : ''}Day {save.day} · {save.difficulty}
+                          {opening === save.key ? 'Opening… ' : ''}
+                          {formatGameDate(save.day).label} ·{' '}
+                          {DIFFICULTIES.find((mode) => mode.id === save.difficulty)?.label ?? save.difficulty}
                           {save.situationId && situationName(save.situationId) ? ` · ${situationName(save.situationId)}` : ''}
                         </span>
                         <span className="block text-sm text-ink-faint">
@@ -175,7 +178,7 @@ export function StartScreen() {
             description={
               pendingDelete === 'all'
                 ? 'Every campaign saved on this device goes. There is no undo, and a campaign cannot be exported until its year is over.'
-                : `The campaign with seed ${pendingDelete.seed} goes, at day ${pendingDelete.day}. There is no undo, and a campaign cannot be exported until its year is over.`
+                : `The campaign with seed ${pendingDelete.seed} goes, at ${formatGameDate(pendingDelete.day).label}. There is no undo, and a campaign cannot be exported until its year is over.`
             }
             footer={
               <>

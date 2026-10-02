@@ -7,7 +7,7 @@ import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } fr
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, visibleRisks, type ProgrammeView } from '@/store/selectors'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
-import { functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
+import { daysAWeek, functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
 
 export function ProgrammesScreen() {
   const state = useGameStore((store) => store.state)
@@ -177,11 +177,20 @@ export function ProgrammesScreen() {
                       <p className="mt-1 text-sm text-ink-muted text-pretty">{programme.description}</p>
                     </div>
                     <p className="flex-1 text-sm italic text-ink-faint text-pretty">{programme.rationale}</p>
+                    {/* One risk to a line. Run together with semicolons, three
+                        long titles were a paragraph nobody could scan. */}
                     {treats(programme.id).length > 0 && (
-                      <p className="text-sm text-pretty" data-testid="programme-treats">
-                        <span className="text-xs font-medium text-ink-faint">Treats </span>
-                        {treats(programme.id).map((risk) => risk.title).join('; ')}
-                      </p>
+                      <div>
+                        <p className="text-xs font-medium text-ink-faint">Treats</p>
+                        <ul className="mt-1 space-y-0.5 text-sm" data-testid="programme-treats">
+                          {treats(programme.id).map((risk) => (
+                            <li key={risk.id} className="flex gap-2">
+                              <span aria-hidden="true" className="text-ink-faint">–</span>
+                              <span className="text-pretty">{risk.title}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     )}
                     <Meter
                       label="Of the budget left"
@@ -196,11 +205,23 @@ export function ProgrammesScreen() {
                     />
                     <dl className="grid grid-cols-2 gap-3">
                       <Fact label="Runs for" value={`about ${Math.round(programme.durationDays / 30)} months`} />
-                      <Fact
-                        label="People it needs"
-                        value={programme.capacityDemand.map((demand) => `${functionLabel(demand.fn)} ${demand.days}d/wk`).join(', ')}
-                      />
                       <Fact label="Improves" value={programme.controlImpact.join(', ')} />
+                      {/* "Identity 2d/wk, Engineering 1.5d/wk" was shorthand the
+                          rest of the game never uses; the Team screen counts
+                          days a week, and so does this. */}
+                      <Fact
+                        className="col-span-2"
+                        label="People it needs"
+                        value={
+                          <ul data-testid="programme-people">
+                            {programme.capacityDemand.map((demand) => (
+                              <li key={demand.fn}>
+                                {functionLabel(demand.fn)}, {daysAWeek(demand.days)}
+                              </li>
+                            ))}
+                          </ul>
+                        }
+                      />
                     </dl>
                     <Button
                       variant="secondary"

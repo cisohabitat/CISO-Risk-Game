@@ -411,7 +411,7 @@ function Standing({
 }) {
   return (
     <div className="min-w-0">
-      <dt className="flex h-4 items-center gap-1 text-xs font-medium uppercase leading-none tracking-wider text-ink-faint">
+      <dt className="flex h-4 items-center gap-1 text-xs font-medium leading-none text-ink-faint">
         <span className="truncate">{label}</span>
         {onInfo && (
           <button

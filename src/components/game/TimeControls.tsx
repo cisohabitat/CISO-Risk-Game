@@ -14,6 +14,21 @@ const SPEEDS: { value: GameSpeed; label: string; title: string }[] = [
   { value: '4x', label: '4×', title: 'Quadruple speed' },
 ]
 
+/**
+ * The pill was grey whatever it said, so "An incident needs you" looked like a
+ * disabled control: the most urgent thing in the header read the weakest. It
+ * takes the colour of what stopped the clock.
+ */
+const PAUSE_REASON_TONE: Record<PauseReason, string> = {
+  incident: 'border-band-severe/50 bg-band-severe-soft text-band-severe',
+  'board-decision': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
+  'decision-deadline': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
+  'assumption-invalidated': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
+  'quarter-end': 'border-accent/40 bg-accent-soft text-accent-ink',
+  'year-end': 'border-accent/40 bg-accent-soft text-accent-ink',
+  player: 'border-line bg-surface-2 text-ink-muted',
+}
+
 const PAUSE_REASON_TEXT: Record<PauseReason, string> = {
   incident: 'An incident needs you',
   'board-decision': 'The board needs an answer',
@@ -96,9 +111,12 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
           // Visually hidden on a phone, where it took a row of the header and
           // repeated what the Briefing leads with; still announced.
           <span
+            data-reason={state.pauseReasons[0]}
             className={cn(
               'rounded-full border px-2.5 py-1 text-xs font-medium max-sm:sr-only',
-              blocked ? 'border-band-high/40 bg-band-high-soft text-band-high' : 'border-line bg-surface-2 text-ink-muted',
+              blocked && state.pauseReasons[0] !== 'incident'
+                ? 'border-band-high/40 bg-band-high-soft text-band-high'
+                : PAUSE_REASON_TONE[state.pauseReasons[0]!],
             )}
           >
             {PAUSE_REASON_TEXT[state.pauseReasons[0]!]}

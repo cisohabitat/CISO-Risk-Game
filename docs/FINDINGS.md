@@ -18,6 +18,44 @@ fault.
 
 ### Fixed
 
+- **A fourth look at the screens.**
+  - **The Briefing's standing strip still shouted** ("RESIDUAL EXPOSURE")
+    after every other in-card label had moved to sentence case. It matches.
+  - **Days were the engine's numbers.** "Came back to you", the evidence
+    lists, the incident log, the year view and the saved-campaign rows said
+    "day 112" or "Day 30 · ciso" beside a header reading 30 April. They show
+    dates, and a saved campaign names its mode as the start screen does.
+    "Came back" titles wrap to two lines rather than cutting off.
+  - **The header's status pill was grey whatever it said**, so "An incident
+    needs you" looked like a disabled control. It takes the colour of what
+    stopped the clock: red for an incident, amber for a decision or a failed
+    assumption, blue for a quarter's end.
+  - **The phone header and tab bar were translucent**, and page text showed
+    through them as it scrolled. They are solid.
+  - **Headings came in two faces.** Page titles were serif, the incident's
+    name, a dialog's title and an inbox message's subject bold sans. A
+    document's own title is set in the display face throughout.
+  - **The map's third column was cut mid-word** at the edge, which looked
+    broken. The edge fades, so it reads as a map that carries on.
+  - **Programme cards were walls of text.** The risks a programme treats are
+    one to a line, and the people it needs read "Identity, 2 days a week"
+    rather than "Identity 2d/wk".
+  - **A notification on a phone could run to three lines** over the list. It
+    is slimmer there and two lines at most; what it says is always somewhere
+    else too.
+  - **Nothing showed how far through the year the player was.** "Week 18 ·
+    Q2" says where you are, not what is left. The desktop rail, which had a
+    tall empty middle, carries the year as four quarters filled to today and
+    the days until this one closes.
+  - **Not done: marking a decision's foreseeable effects as gains or costs.**
+    The content does not record which is which, and many are two-edged on
+    purpose ("You own the figure from now on", "Someone may notice the number
+    moved"). Marking them would be the game telling the player which
+    consequence is good, which the decisions are written not to do.
+  Measured by six more cases in `tests/ui/visual-consistency.test.tsx`, each
+  failing with its fix reverted, and by the graph's fade and the dated save
+  rows in `tests/e2e/campaign.spec.ts`.
+
 - **A third look at the screens: the weaknesses left after the second.**
   - **A risk card carried five chips of one shape.** Residual, confidence,
     status, review and trend were all pills, so none stood out. The rating

@@ -315,7 +315,7 @@ export function Dialog({
       >
         <div className="flex items-start justify-between gap-4 border-b border-line p-4 sm:p-5">
           <div>
-            <h2 id={titleId} className="text-lg font-semibold text-balance">{title}</h2>
+            <h2 id={titleId} className="font-display text-xl leading-tight text-balance">{title}</h2>
             {description && (
               <p id={descriptionId} className="mt-1 text-sm text-ink-muted text-pretty">{description}</p>
             )}
@@ -480,9 +480,19 @@ export function SectionHeading({ children, action }: { children: ReactNode; acti
 }
 
 /** Small key/value pair used throughout the detail panels. */
-export function Fact({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
+export function Fact({
+  label,
+  value,
+  hint,
+  className,
+}: {
+  label: string
+  value: ReactNode
+  hint?: string
+  className?: string
+}) {
   return (
-    <div>
+    <div className={className}>
       <dt className="text-xs text-ink-faint">{label}</dt>
       <dd className="mt-0.5 text-sm font-medium">{value}</dd>
       {hint && <p className="mt-0.5 text-xs text-ink-faint text-pretty">{hint}</p>}
