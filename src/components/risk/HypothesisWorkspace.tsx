@@ -93,7 +93,7 @@ export function HypothesisWorkspace() {
 
                       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                          <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Supports</p>
+                          <p className="text-xs font-medium text-ink-faint">Supports</p>
                           {supporting.length === 0 ? (
                             <p className="mt-1 text-sm text-ink-faint">Nothing attached.</p>
                           ) : (
@@ -108,7 +108,7 @@ export function HypothesisWorkspace() {
                           )}
                         </div>
                         <div>
-                          <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Contradicts</p>
+                          <p className="text-xs font-medium text-ink-faint">Contradicts</p>
                           {contradicting.length === 0 ? (
                             <p className="mt-1 text-sm text-ink-faint">Nothing attached.</p>
                           ) : (

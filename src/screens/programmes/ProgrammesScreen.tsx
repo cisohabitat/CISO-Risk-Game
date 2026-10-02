@@ -111,7 +111,7 @@ export function ProgrammesScreen() {
                     )}
 
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Milestones</p>
+                      <p className="text-xs font-medium text-ink-faint">Milestones</p>
                       <ul className="mt-1 space-y-1 text-sm">
                         {programme.milestones.map((milestone) => (
                           <li key={milestone.id} className="flex gap-2">
@@ -179,7 +179,7 @@ export function ProgrammesScreen() {
                     <p className="flex-1 text-sm italic text-ink-faint text-pretty">{programme.rationale}</p>
                     {treats(programme.id).length > 0 && (
                       <p className="text-sm text-pretty" data-testid="programme-treats">
-                        <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">Treats </span>
+                        <span className="text-xs font-medium text-ink-faint">Treats </span>
                         {treats(programme.id).map((risk) => risk.title).join('; ')}
                       </p>
                     )}

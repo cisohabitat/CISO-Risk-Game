@@ -207,7 +207,7 @@ export function DebriefScreen() {
                         </ol>
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">What helped</p>
+                            <p className="text-xs font-medium text-ink-faint">What helped</p>
                             <ul className="mt-1 space-y-1 text-sm text-ink-muted">
                               {incident.reconstruction.helped.map((item, position) => (
                                 <li key={position} className="text-pretty">{item}</li>
@@ -215,7 +215,7 @@ export function DebriefScreen() {
                             </ul>
                           </div>
                           <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">What hurt</p>
+                            <p className="text-xs font-medium text-ink-faint">What hurt</p>
                             <ul className="mt-1 space-y-1 text-sm text-ink-muted">
                               {incident.reconstruction.hurt.map((item, position) => (
                                 <li key={position} className="text-pretty">{item}</li>

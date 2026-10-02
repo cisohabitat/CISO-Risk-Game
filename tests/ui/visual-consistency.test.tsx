@@ -12,7 +12,9 @@ import { InboxScreen } from '@/screens/inbox/InboxScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
 import { BoardScreen } from '@/screens/board/BoardScreen'
 import { StartScreen } from '@/screens/start/StartScreen'
-import { visibleRisks } from '@/store/selectors'
+import { visibleRisks, discoveredNodes } from '@/store/selectors'
+import { RiskScreen } from '@/screens/risk/RiskScreen'
+import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 
 /**
  * What a look at every screen found, light and dark, desktop and phone:
@@ -127,5 +129,94 @@ describe('what the screens show', () => {
     render(<StartScreen />)
     const steps = within(screen.getByRole('list', { name: 'Your year' })).getAllByRole('listitem')
     expect(steps).toHaveLength(3)
+  })
+
+  it('gives a risk card two chips for its rating and words for the rest', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-risk-cards', 'ciso')
+    useGameStore.setState((store) => {
+      const state = structuredClone(store.state!)
+      for (const scenario of Object.values(state.risks.scenarios)) scenario.nextReviewDay = 0
+      return { state }
+    })
+    render(<RiskScreen />)
+    expect(screen.getAllByText('Review due').length).toBeGreaterThan(0)
+    const lines = screen.getAllByTestId('risk-meta')
+    expect(lines.length).toBeGreaterThan(0)
+    for (const line of lines) {
+      const chips = line.parentElement!.querySelectorAll('.rounded-full')
+      // Residual and confidence, and "Assumption failed" when one has.
+      expect(chips.length).toBeLessThanOrEqual(3)
+      for (const chip of chips) expect(chip.textContent).toMatch(/residual$|confidence$|^Assumption failed$/)
+    }
+  })
+
+  it('draws the navigation and the header with line icons, not glyphs and emoji', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-icons', 'ciso')
+    const { container } = render(
+      <AppShell>
+        <div />
+      </AppShell>,
+    )
+    expect(container.textContent).not.toMatch(/[◎✉◈⬡▤◍❖◷⏏☾☀▶⏸]|\p{Extended_Pictographic}/u)
+    const rail = screen.getAllByRole('navigation', { name: 'Primary' })[0]!
+    expect(rail.querySelectorAll('svg').length).toBeGreaterThanOrEqual(8)
+  })
+
+  it('marks the rows the player has checked, not every row taken on trust', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-org', 'ciso')
+    useGameStore.setState((store) => ({ ui: { ...store.ui, graphMode: 'list' } }))
+    const { state, index } = useGameStore.getState()
+    const nodes = discoveredNodes(state!, index!)
+    const list = () => screen.getByRole('list', { name: 'Discovered systems' })
+    const { unmount } = render(<OrganisationScreen />)
+    const onTrust = nodes.filter((node) => !node.verified).length
+    expect(onTrust).toBeGreaterThan(0)
+    // Still said to a screen reader, but not drawn: the dashed row says it.
+    const trust = within(list()).getAllByText('Taken on trust')
+    expect(trust).toHaveLength(onTrust)
+    for (const chip of trust) expect(chip).toHaveClass('sr-only')
+    unmount()
+
+    const target = nodes.find((node) => !node.verified && node.confidence >= 0.6)!
+    useGameStore.setState((store) => {
+      const next = structuredClone(store.state!)
+      next.organisation.nodes[target.id]!.verified = true
+      return { state: next }
+    })
+    render(<OrganisationScreen />)
+    expect(within(list()).getAllByText('Checked').length).toBeGreaterThan(0)
+  })
+
+  it('keeps capitals for section headings, not the labels inside cards', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-labels', 'ciso')
+    for (const Screen of [TeamScreen, BoardScreen, ProgrammesScreen]) {
+      const { container, unmount } = render(<Screen />)
+      const shouting = [...container.querySelectorAll('.uppercase')].filter((element) => element.tagName !== 'H2')
+      expect(shouting.map((element) => element.textContent)).toEqual([])
+      unmount()
+    }
+  })
+
+  it('shows only the incident note while an incident runs', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-incident-note', 'guided')
+    // The first-quarter note comes first in the list and is due on day one.
+    const first = render(<Onboarding />)
+    expect(screen.getByRole('complementary', { name: 'How this works' })).not.toHaveTextContent('This was not scripted')
+    first.unmount()
+    useGameStore.setState((store) => {
+      const state = structuredClone(store.state!)
+      state.incidents.incidents['inc-test'] = { id: 'inc-test', phase: 'containment' } as never
+      return { state }
+    })
+    render(<Onboarding />)
+    expect(screen.getByRole('complementary', { name: 'How this works' })).toHaveTextContent('This was not scripted')
+  })
+
+  it('puts the note under the briefing headline', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-note-place', 'guided')
+    render(<HomeScreen />)
+    const note = screen.getByRole('complementary', { name: 'How this works' })
+    const headline = screen.getByRole('heading', { level: 1 })
+    expect(headline.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })

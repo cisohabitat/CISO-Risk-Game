@@ -51,7 +51,7 @@ export function TeamScreen() {
                     tone={capacityTone(fn.band)}
                   />
                   <p className="flex items-baseline justify-between gap-2 text-sm">
-                    <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">Morale</span>
+                    <span className="text-xs font-medium text-ink-faint">Morale</span>
                     <span>{fn.moraleLabel}</span>
                   </p>
                   <div className="mt-auto flex min-h-9 flex-wrap items-center justify-between gap-2 border-t border-line pt-3">
@@ -102,7 +102,7 @@ export function TeamScreen() {
                   </dl>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Strong on</p>
+                      <p className="text-xs font-medium text-ink-faint">Strong on</p>
                       <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
                         {leader.strengths.map((strength) => (
                           <li key={strength}>{strength}</li>
@@ -110,7 +110,7 @@ export function TeamScreen() {
                       </ul>
                     </div>
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">Watch for</p>
+                      <p className="text-xs font-medium text-ink-faint">Watch for</p>
                       <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
                         {leader.weaknesses.map((weakness) => (
                           <li key={weakness}>{weakness}</li>

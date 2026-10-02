@@ -182,7 +182,7 @@ export function Meter({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">{label}</span>
+        <span className="text-xs font-medium text-ink-faint">{label}</span>
         <span className="text-sm font-medium tabular-nums">{valueLabel}</span>
       </div>
       <div
@@ -483,7 +483,7 @@ export function SectionHeading({ children, action }: { children: ReactNode; acti
 export function Fact({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wider text-ink-faint">{label}</dt>
+      <dt className="text-xs text-ink-faint">{label}</dt>
       <dd className="mt-0.5 text-sm font-medium">{value}</dd>
       {hint && <p className="mt-0.5 text-xs text-ink-faint text-pretty">{hint}</p>}
     </div>

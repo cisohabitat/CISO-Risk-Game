@@ -47,7 +47,7 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
               </div>
 
               <div className="border-t border-accent/25 pt-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">What led here</p>
+                <p className="text-xs font-medium text-ink-faint">What led here</p>
                 <ul className="mt-1.5 space-y-1 text-sm text-ink-muted">
                   {suggestion.evidence.map((item) => (
                     <li key={item.id} className="flex gap-2 text-pretty">

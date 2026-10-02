@@ -8,6 +8,7 @@ import { Collisions } from '@/components/game/Collisions'
 import { CameBack } from '@/components/game/CameBack'
 import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
+import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
 import { bandTone, capacityTone, confidenceTone, money, plural, trendBadge } from '@/lib/formatting/labels'
@@ -67,6 +68,8 @@ export function HomeScreen() {
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
       </header>
+
+      <Onboarding className="mb-0" />
 
       <Collisions />
 

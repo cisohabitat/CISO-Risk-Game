@@ -31,6 +31,24 @@ const COLUMNS: Record<string, number> = {
   objective: 0,
 }
 
+/**
+ * Each kind of thing carries a colour on its edge, so the columns read as what
+ * they are before any label does. Families rather than ten colours: ten hues
+ * are a puzzle, and the distinction that matters is whose thing it is.
+ */
+const FAMILIES: { id: string; label: string; colour: string; types: string[] }[] = [
+  { id: 'business', label: 'Business', colour: 'var(--accent)', types: ['service', 'objective', 'application'] },
+  { id: 'identity', label: 'Identity', colour: 'var(--chart-programme)', types: ['identity'] },
+  { id: 'platform', label: 'Platform', colour: 'var(--ink-faint)', types: ['cloud-platform', 'infrastructure', 'network-zone'] },
+  { id: 'supplier', label: 'Supplier', colour: 'var(--brass)', types: ['supplier'] },
+  { id: 'data', label: 'Data', colour: 'var(--chart-enquiry)', types: ['data-set'] },
+  { id: 'control', label: 'Control', colour: 'var(--line-strong)', types: ['control'] },
+]
+
+function familyOf(type: string) {
+  return FAMILIES.find((family) => family.types.includes(type)) ?? FAMILIES[2]!
+}
+
 type OrgNodeData = {
   label: string
   type: string
@@ -46,7 +64,7 @@ function OrgNodeCard({ data }: NodeProps) {
   const critical = node.criticality === 'critical' || node.criticality === 'high'
   return (
     <div
-      className="min-w-[9.5rem] max-w-[13rem] rounded-lg border bg-surface px-3 py-2 text-left shadow-[var(--shadow-soft)]"
+      className="relative min-w-[9.5rem] max-w-[13rem] overflow-hidden rounded-lg border bg-surface py-2 pl-4 pr-3 text-left shadow-[var(--shadow-soft)]"
       style={{
         borderColor: node.onPath ? 'var(--band-high)' : critical ? 'var(--line-strong)' : 'var(--line)',
         borderWidth: node.onPath ? 2 : 1,
@@ -61,14 +79,14 @@ function OrgNodeCard({ data }: NodeProps) {
       }}
     >
       <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
-      <p className="text-[0.7rem] uppercase tracking-wider text-ink-faint">{nodeTypeLabel(node.type)}</p>
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5" style={{ background: familyOf(node.type).colour }} />
+      <p className="text-[0.7rem] text-ink-faint">{nodeTypeLabel(node.type)}</p>
       <p className="text-sm font-medium leading-snug">{node.label}</p>
       {node.onPath && <p className="mt-1 text-[0.7rem] text-band-high">on a known attack path</p>}
-      {!node.verified ? (
-        <p className="mt-1 text-[0.7rem] text-ink-faint">taken on trust</p>
-      ) : (
-        node.confidence < 0.6 && <p className="mt-1 text-[0.7rem] text-ink-faint">partly understood</p>
-      )}
+      {/* The outline says whether it was checked, and the key says what an
+          outline means; a line of words under every dashed card repeated it
+          forty times. */}
+      {node.verified && node.confidence < 0.6 && <p className="mt-1 text-[0.7rem] text-ink-faint">partly understood</p>}
       <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
     </div>
   )
@@ -148,25 +166,49 @@ export default function OrgGraph({
     [nodes],
   )
 
+  const families = FAMILIES.filter((family) => nodes.some((node) => family.types.includes(node.type)))
+
   return (
-    <div className="h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
-      <ReactFlow
-        nodes={flowNodes}
-        edges={flowEdges}
-        nodeTypes={NODE_TYPES}
-        onNodeClick={(_, node) => onSelect(node.id)}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        edgesFocusable={false}
-        fitView
-        fitViewOptions={{ nodes: opening.length > 0 ? opening : undefined, padding: 0.15, maxZoom: 1 }}
-        minZoom={0.25}
-        maxZoom={1.6}
-        proOptions={{ hideAttribution: false }}
-      >
-        <Background gap={24} color="var(--line)" />
-        <Controls showInteractive={false} />
-      </ReactFlow>
+    <div className="space-y-2">
+      <ul aria-label="Key to the map" data-testid="graph-key" className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted">
+        {families.map((family) => (
+          <li key={family.id} className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="h-3 w-1.5 rounded-sm" style={{ background: family.colour }} />
+            {family.label}
+          </li>
+        ))}
+        <li className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-3 w-5 rounded-sm border border-solid border-line-strong" />
+          Checked
+        </li>
+        <li className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-3 w-5 rounded-sm border border-dashed border-line-strong" />
+          Taken on trust
+        </li>
+        <li className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-3 w-5 rounded-sm border-2 border-band-high" />
+          On a known attack path
+        </li>
+      </ul>
+      <div className="h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
+        <ReactFlow
+          nodes={flowNodes}
+          edges={flowEdges}
+          nodeTypes={NODE_TYPES}
+          onNodeClick={(_, node) => onSelect(node.id)}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          edgesFocusable={false}
+          fitView
+          fitViewOptions={{ nodes: opening.length > 0 ? opening : undefined, padding: 0.15, maxZoom: 1 }}
+          minZoom={0.25}
+          maxZoom={1.6}
+          proOptions={{ hideAttribution: false }}
+        >
+          <Background gap={24} color="var(--line)" />
+          <Controls showInteractive={false} />
+        </ReactFlow>
+      </div>
     </div>
   )
 }

@@ -91,7 +91,7 @@ export function BoardScreen() {
                   </div>
                   <p className="text-sm italic text-ink-faint text-pretty">{person.voice}</p>
                   <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">What they care about</p>
+                    <p className="text-xs font-medium text-ink-faint">What they care about</p>
                     <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
                       {person.priorities.map((priority) => (
                         <li key={priority}>{priority}</li>
@@ -100,7 +100,7 @@ export function BoardScreen() {
                   </div>
                   {person.concerns.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">On their mind</p>
+                      <p className="text-xs font-medium text-ink-faint">On their mind</p>
                       <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
                         {person.concerns.map((concern) => (
                           <li key={concern}>{concern}</li>
@@ -110,7 +110,7 @@ export function BoardScreen() {
                   )}
                   {person.memory.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink-faint">They remember</p>
+                      <p className="text-xs font-medium text-ink-faint">They remember</p>
                       <ul className="mt-1 space-y-1 text-sm">
                         {person.memory.map((memory, position) => (
                           <li key={`${memory.day}-${position}`} className="flex gap-2">

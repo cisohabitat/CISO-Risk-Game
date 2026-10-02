@@ -148,13 +148,17 @@ export function OrganisationScreen() {
                         <Badge tone="neutral" glyph={false}>{nodeTypeLabel(node.type)}</Badge>
                         {node.criticality === 'critical' && <Badge tone="high" glyph={false}>Critical</Badge>}
                         {node.onKnownAttackPath && <Badge tone="elevated" glyph={false}>On an attack path</Badge>}
-                        {/* One knowledge badge per row: not having checked
-                            something subsumes not understanding it well. The
-                            list visibly clears as the player verifies things. */}
+                        {/* The dashed outline already says a row is taken on trust,
+                            and on day one every row carried the chip as well, so it
+                            said nothing. The chip marks the change worth seeing: a
+                            row the player has checked. Screen readers still hear
+                            which rows are taken on trust. */}
                         {!node.verified ? (
-                          <Badge tone="warning" glyph={false}>Taken on trust</Badge>
+                          <span className="sr-only">Taken on trust</span>
+                        ) : node.confidence < 0.6 ? (
+                          <Badge tone="warning" glyph={false}>Partly understood</Badge>
                         ) : (
-                          node.confidence < 0.6 && <Badge tone="warning" glyph={false}>Partly understood</Badge>
+                          <Badge tone="positive" glyph={false}>Checked</Badge>
                         )}
                       </div>
                       <p className={cn('mt-1.5 font-medium', !node.verified && 'text-ink-muted')}>{node.name}</p>

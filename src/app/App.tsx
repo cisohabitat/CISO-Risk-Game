@@ -78,7 +78,9 @@ export function App() {
       </a>
       <AppShell>
         <IncidentCommand />
-        <Onboarding />
+        {/* The Briefing places the note under its own headline, so the day's
+            first line is what the day is about rather than a lesson. */}
+        {screen !== 'home' && <Onboarding />}
         {state.finished && screen !== 'debrief' && (
           <Card className="mb-4 border-brass/50 bg-brass-soft/40">
             <CardBody className="flex flex-wrap items-center justify-between gap-3">

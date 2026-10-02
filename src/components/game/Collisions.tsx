@@ -66,7 +66,7 @@ function Race({ collision, tone }: { collision: CollisionView; tone: 'severe' | 
   return (
     <div className="space-y-1.5 rounded-lg bg-surface-2 p-3">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">The business</span>
+        <span className="text-xs font-medium text-ink-faint">The business</span>
         <span className="text-xs font-medium tabular-nums">
           {collision.daysUntilTarget === 0 ? 'today' : plural(collision.daysUntilTarget, 'day', 'days')}
         </span>
@@ -80,7 +80,7 @@ function Race({ collision, tone }: { collision: CollisionView; tone: 'severe' | 
       </div>
 
       <div className="flex items-baseline justify-between gap-2 pt-1">
-        <span className="truncate text-xs font-medium uppercase tracking-wider text-ink-faint">
+        <span className="truncate text-xs font-medium text-ink-faint">
           {collision.programmeName ?? 'No programme'}
         </span>
         <span className="text-xs font-medium">

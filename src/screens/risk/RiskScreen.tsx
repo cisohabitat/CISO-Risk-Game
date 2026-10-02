@@ -69,12 +69,37 @@ export function RiskScreen() {
                             badges read "Moderate moderate" on most of the list. */}
                         <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
                         <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge>
-                        <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
-                        {risk.reviewDue && <Badge tone="warning" glyph={false}>Review due</Badge>}
                         {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
-                        {trendBadge(risk.trend) && (
-                          <Badge tone={trendBadge(risk.trend)!.tone} glyph={false}>{trendBadge(risk.trend)!.label}</Badge>
-                        )}
+                        {/* Two chips for the rating, words for the rest. Five chips of
+                            one shape and weight on every card made none of them stand
+                            out; status, review and trend are a line of text, coloured
+                            where they ask for something. */}
+                        <span className="text-xs text-ink-faint" data-testid="risk-meta">
+                          {statusLabel(risk.status)}
+                          {risk.reviewDue && (
+                            <>
+                              {' · '}
+                              <span className="font-medium text-warning">Review due</span>
+                            </>
+                          )}
+                          {trendBadge(risk.trend) && (
+                            <>
+                              {' · '}
+                              <span
+                                className={cn(
+                                  'font-medium',
+                                  trendBadge(risk.trend)!.tone === 'positive'
+                                    ? 'text-positive'
+                                    : trendBadge(risk.trend)!.tone === 'high'
+                                      ? 'text-band-high'
+                                      : 'text-warning',
+                                )}
+                              >
+                                {trendBadge(risk.trend)!.label}
+                              </span>
+                            </>
+                          )}
+                        </span>
                       </div>
                       <h3 className="mt-2 font-medium text-balance">{risk.title}</h3>
                       <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>

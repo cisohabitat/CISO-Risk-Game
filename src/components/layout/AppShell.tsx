@@ -12,6 +12,7 @@ import { briefing } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
 import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
+import { Icon } from '@/components/ui/icons'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
@@ -71,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {screen === destination.id && (
                   <span aria-hidden="true" className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-accent" />
                 )}
-                <span aria-hidden="true" className="w-4 text-center text-base text-ink-faint">{destination.icon}</span>
+                <Icon name={destination.icon} size={17} className="text-ink-faint" />
                 <span className="flex-1">{destination.label}</span>
                 {destination.id === 'inbox' && view.unreadMessages > 0 && (
                   // Capped: by spring an unread count reached 63, most of it
@@ -101,17 +102,17 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="space-y-3 border-t border-line p-4 text-sm">
           <dl className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
-              <dt className="text-xs uppercase tracking-wider text-ink-faint">Budget left</dt>
+              <dt className="text-xs text-ink-faint">Budget left</dt>
               <dd className="font-medium tabular-nums">{money(view.budgetRemaining)}</dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
-              <dt className="text-xs uppercase tracking-wider text-ink-faint">Your week</dt>
+              <dt className="text-xs text-ink-faint">Your week</dt>
               <dd className="font-medium tabular-nums">
                 {view.focusRemaining}/{view.focusPerWeek}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
-              <dt className="text-xs uppercase tracking-wider text-ink-faint">Team</dt>
+              <dt className="text-xs text-ink-faint">Team</dt>
               <dd><Badge tone={capacityTone(view.teamCapacity)} glyph={false}>{view.teamCapacity}</Badge></dd>
             </div>
           </dl>
@@ -121,7 +122,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               Glossary
             </Button>
             <a href={GUIDE_URL} target="_blank" rel="noopener" className={buttonClass('quiet', 'sm', true, 'compact min-h-10')}>
-              Guide <span aria-hidden="true">↗</span>
+              Guide <Icon name="external" size={14} />
               <span className="sr-only">: the player's guide (opens in a new tab)</span>
             </a>
           </div>
@@ -159,8 +160,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                   screen === destination.id ? 'text-accent-ink' : 'text-ink-muted',
                 )}
               >
-                <span aria-hidden="true" className="relative text-lg leading-none">
-                  {destination.icon}
+                <span aria-hidden="true" className="relative inline-flex">
+                  <Icon name={destination.icon} size={20} />
                   {destination.id === 'inbox' && view.unreadMessages > 0 && (
                     <span className="absolute -right-2 -top-1 h-2 w-2 rounded-full bg-accent" />
                   )}
@@ -199,7 +200,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-label={destination.label}
                 className="flex w-full items-center gap-3 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left"
               >
-                <span aria-hidden="true" className="text-lg text-ink-faint">{destination.icon}</span>
+                <Icon name={destination.icon} size={20} className="text-ink-faint" />
                 <span>
                   <span className="block font-medium">{destination.label}</span>
                   <span className="block text-sm text-ink-muted">{destination.description}</span>
@@ -230,7 +231,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               rel="noopener"
               className="flex w-full items-center gap-3 rounded-lg border border-line bg-surface-2 px-4 py-3 text-left"
             >
-              <span aria-hidden="true" className="text-lg text-ink-faint">↗</span>
+              <Icon name="external" size={20} className="text-ink-faint" />
               <span>
                 <span className="block font-medium">Player's guide</span>
                 <span className="block text-sm text-ink-muted">How the screens work, in its own tab</span>
@@ -266,10 +267,12 @@ function ShellHeader() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
-      {/* One row on wide screens; on phones the clock drops to its own row so
-          the date and the save/theme controls stay readable. */}
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6 sm:py-3">
-        <div className="order-1 min-w-0 flex-1 lg:flex-none">
+      {/* One row on wide screens. On a phone it was three: the date, the
+          save/theme controls, then the clock and a status chip, about a sixth
+          of the screen, with each screen's title sliding under it. Now the
+          date has the first row and the clock and controls share the second. */}
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-2 sm:px-6 sm:py-3">
+        <div className="order-1 w-full min-w-0 sm:w-auto sm:flex-1 lg:flex-none">
           <p className="truncate text-sm font-medium">
             {view.dateLabel}
             <span className="text-ink-faint"> · {view.weekLabel} · Q{view.quarter}</span>
@@ -278,7 +281,7 @@ function ShellHeader() {
             {money(view.budgetRemaining)} left · {view.focusRemaining}/{view.focusPerWeek} attention
           </p>
         </div>
-        <div className="order-2 flex items-center gap-1 lg:order-3">
+        <div className="order-3 ml-auto flex items-center gap-1 lg:ml-0">
           <Button
             size="sm"
             variant="ghost"
@@ -286,7 +289,7 @@ function ShellHeader() {
             onClick={() => void saveManual()}
             title="Save campaign"
           >
-            <span aria-hidden="true">💾</span>
+            <Icon name="save" />
             <span className="sr-only">Save campaign</span>
           </Button>
           {/* Switching to another saved year used to need a page reload. */}
@@ -297,7 +300,7 @@ function ShellHeader() {
             onClick={() => void leaveCampaign()}
             title="Save and close this campaign"
           >
-            <span aria-hidden="true">⏏</span>
+            <Icon name="leave" />
             <span className="sr-only">Save and close this campaign</span>
           </Button>
           <Button
@@ -307,11 +310,11 @@ function ShellHeader() {
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+            <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
             <span className="sr-only">{theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}</span>
           </Button>
         </div>
-        <div className="order-3 w-full lg:order-2 lg:flex lg:w-auto lg:flex-1 lg:justify-end">
+        <div className="order-2 lg:flex lg:flex-1 lg:justify-end">
           <TimeControls compact />
         </div>
       </div>

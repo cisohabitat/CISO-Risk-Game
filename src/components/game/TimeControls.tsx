@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import type { GameSpeed, PauseReason } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
+import { Icon } from '@/components/ui/icons'
 
 const SPEEDS: { value: GameSpeed; label: string; title: string }[] = [
   { value: '1x', label: '1×', title: 'Normal speed' },
@@ -48,7 +49,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
             disabled={state.finished}
             onClick={() => dispatch({ type: 'setSpeed', speed: paused ? '1x' : 'paused' })}
           >
-            <span aria-hidden="true">{paused ? '▶' : '❚❚'}</span>
+            <Icon name={paused ? 'play' : 'pause'} size={16} />
             <span className="sr-only">{paused ? 'Resume time' : 'Pause time'}</span>
           </Button>
         </div>
@@ -60,7 +61,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
             aria-pressed={paused}
             onClick={() => dispatch({ type: 'setSpeed', speed: 'paused' })}
           >
-            <span aria-hidden="true">❚❚</span>
+            <Icon name="pause" size={16} />
             <span className="sr-only">Pause</span>
           </Button>
           {SPEEDS.map((speed) => (
@@ -92,9 +93,11 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
           arrives with its region is not reliably announced. */}
       <span role="status" data-testid="pause-reason" className="contents">
         {state.pauseReasons.length > 0 && (
+          // Visually hidden on a phone, where it took a row of the header and
+          // repeated what the Briefing leads with; still announced.
           <span
             className={cn(
-              'rounded-full border px-2.5 py-1 text-xs font-medium',
+              'rounded-full border px-2.5 py-1 text-xs font-medium max-sm:sr-only',
               blocked ? 'border-band-high/40 bg-band-high-soft text-band-high' : 'border-line bg-surface-2 text-ink-muted',
             )}
           >

@@ -102,7 +102,7 @@ export function IncidentCommand() {
 
         {incident.timeline.length > 0 && (
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">What you have been told</p>
+            <p className="text-xs font-medium text-ink-faint">What you have been told</p>
             <ol className="mt-1.5 space-y-1 text-sm">
               {incident.timeline.slice(-5).map((entry, position) => (
                 <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
@@ -116,7 +116,7 @@ export function IncidentCommand() {
 
         {incident.taken.length > 0 && (
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-ink-faint">
+            <p className="text-xs font-medium text-ink-faint">
               What you have already decided
             </p>
             <ul className="mt-1.5 space-y-1 text-sm">

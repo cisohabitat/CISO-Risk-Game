@@ -18,6 +18,42 @@ fault.
 
 ### Fixed
 
+- **A third look at the screens: the weaknesses left after the second.**
+  - **A risk card carried five chips of one shape.** Residual, confidence,
+    status, review and trend were all pills, so none stood out. The rating
+    keeps its two chips (and "Assumption failed" when one has); status,
+    review and trend are a line of text, coloured where they ask for
+    something.
+  - **The navigation was drawn in Unicode shapes and an emoji** (◎ ✉ ◈ ⬡ ▤
+    ◍ ❖ ◷, 💾 ⏏ ☾), which every system renders differently and which sat
+    beside the timeline's line icons in another style. One inline line-icon
+    set now covers the rail, the phone bar, the header and time controls.
+  - **The phone header took three rows**, the pause reason among them,
+    repeating what the Briefing leads with. It is two: the date, then the
+    controls; the reason is still announced.
+  - **Every organisation row said "Taken on trust" on day one**, so the
+    chip said nothing. The dashed outline says it; the chip now marks the
+    change worth seeing, a row the player has **Checked**.
+  - **Labels inside cards were set in spaced capitals**, the same as the
+    section headings above them, so a card shouted as loudly as the page.
+    Capitals are for section headings and mastheads; field labels are
+    sentence case.
+  - **During an incident the Briefing opened on a lesson.** The teaching note
+    sat between the incident bar and the day's headline, and in the first
+    quarter it was "start by looking" rather than the note about incidents,
+    because that came first in the list. While an incident runs only the
+    incident note shows, and on the Briefing every note sits under the
+    headline.
+  - **The graph's outlines and colours had no key**, and each dashed card
+    also said "taken on trust" underneath, forty times. A key above the map
+    explains the outlines and the attack-path border; each card carries its
+    family's colour (business, identity, platform, supplier, data), and the
+    per-card line is gone.
+  Measured by `tests/ui/visual-consistency.test.tsx` (six new cases, each
+  failing with its fix reverted) and the graph's key in
+  `tests/e2e/campaign.spec.ts`; screens photographed with `pnpm screenshots`
+  and the guide re-photographed.
+
 - **A second look at the screens.**
   - **The organisation graph was unreadable when it opened.** Fitting the
     whole estate made every label a few pixels tall, and every edge carried

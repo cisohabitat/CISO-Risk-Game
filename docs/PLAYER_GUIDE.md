@@ -260,9 +260,9 @@ Every system, supplier, network and data set, and what depends on what. Use
 **List** rather than **Graph** at first — it is far easier to read.
 
 Notice which rows are **drawn with a dashed outline and set back**: those are
-things you know exist because you were told, not because anyone checked. They
-are badged **Taken on trust** as well. On day one nearly the whole estate looks
-like that, and it resolves into solid rows as you verify things — the picture
+things you know exist because you were told, not because anyone checked. On
+day one nearly the whole estate looks like that, and it resolves into solid
+rows badged **Checked** as you verify things — the picture
 visibly sharpens as the year goes on, which is the point. The difference between *seen* and
 *verified* is the game's central idea, and the annual review scores it.
 

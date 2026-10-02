@@ -433,6 +433,11 @@ test.describe('a first year at Nexora', () => {
       await page.getByRole('button', { name: 'Graph', exact: true }).click()
       // The graph library is lazy-loaded, so give the chunk time to arrive.
       await expect(page.getByText('Nexora Pay').first()).toBeVisible({ timeout: 20_000 })
+      // The outlines and colours say something only with their key beside them.
+      const key = page.getByRole('list', { name: 'Key to the map' })
+      for (const entry of ['Business', 'Checked', 'Taken on trust', 'On a known attack path']) {
+        await expect(key.getByText(entry, { exact: true })).toBeVisible()
+      }
     }
 
     // The list view is always available, and is the default on small screens.
