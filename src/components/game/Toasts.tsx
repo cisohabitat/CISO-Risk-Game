@@ -19,7 +19,10 @@ export function Toasts() {
   // "Campaign saved" could pass in silence.
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 bottom-20 z-40 flex flex-col items-center gap-2 px-4 lg:bottom-6"
+      // A corner, not the middle of the page: centred, they sat over the
+      // cards a player had just come back to read. Above the tab bar on a
+      // phone, in the bottom-right on a desktop.
+      className="pointer-events-none fixed inset-x-0 bottom-20 z-40 flex flex-col items-center gap-2 px-4 lg:inset-x-auto lg:bottom-6 lg:right-6 lg:items-end lg:px-0"
       role="status"
       aria-live="polite"
       data-testid="toasts"
@@ -33,6 +36,8 @@ export function Toasts() {
             // meant for the page hit the toast and did nothing. Only the
             // dismiss control needs to be clickable.
             'flex max-w-lg items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-[var(--shadow-lift)] animate-rise',
+            // One at a time on a phone, where two covered a quarter of the screen.
+            'max-lg:[&:not(:last-child)]:hidden',
             toast.tone === 'warning'
               ? 'border-band-elevated/50 bg-band-elevated-soft text-ink'
               : toast.tone === 'success'

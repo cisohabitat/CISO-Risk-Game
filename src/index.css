@@ -49,6 +49,11 @@
   --band-high-soft: oklch(0.955 0.045 45);
   --band-severe: oklch(0.45 0.18 22);
   --band-severe-soft: oklch(0.945 0.05 25);
+  /* A filled alarm, for the incident bar. Its own pair because the severe band
+     doubles as label text, which in dark mode makes it a pale salmon: as a fill
+     it read as the calmest thing on the screen while an incident ran. */
+  --alarm: oklch(0.45 0.18 22);
+  --on-alarm: oklch(0.985 0.004 20);
 
   --positive: oklch(0.465 0.1 160);
   --warning: oklch(0.465 0.11 68);
@@ -105,6 +110,8 @@
   --band-high-soft: oklch(0.33 0.06 40);
   --band-severe: oklch(0.74 0.15 22);
   --band-severe-soft: oklch(0.3 0.08 22);
+  --alarm: oklch(0.5 0.18 24);
+  --on-alarm: oklch(0.985 0.004 20);
 
   --positive: oklch(0.72 0.1 162);
   --warning: oklch(0.79 0.11 72);
@@ -156,6 +163,8 @@
   --color-band-high-soft: var(--band-high-soft);
   --color-band-severe: var(--band-severe);
   --color-band-severe-soft: var(--band-severe-soft);
+  --color-alarm: var(--alarm);
+  --color-on-alarm: var(--on-alarm);
 
   --color-positive: var(--positive);
   --color-warning: var(--warning);

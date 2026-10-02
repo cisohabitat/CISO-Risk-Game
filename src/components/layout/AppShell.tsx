@@ -10,7 +10,7 @@ import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
-import { Badge, Button, Dialog } from '@/components/ui/primitives'
+import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
@@ -74,8 +74,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span aria-hidden="true" className="w-4 text-center text-base text-ink-faint">{destination.icon}</span>
                 <span className="flex-1">{destination.label}</span>
                 {destination.id === 'inbox' && view.unreadMessages > 0 && (
+                  // Capped: by spring an unread count reached 63, most of it
+                  // background the Briefing had already summarised, and the
+                  // number read as a backlog to clear. The inbox's own Unread
+                  // filter still has the whole list.
                   <span className="rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums">
-                    {view.unreadMessages}
+                    {view.unreadMessages > 9 ? '9+' : view.unreadMessages}
                   </span>
                 )}
                 {destination.id === 'home' && view.openDecisions > 0 && (
@@ -111,17 +115,16 @@ export function AppShell({ children }: { children: ReactNode }) {
               <dd><Badge tone={capacityTone(view.teamCapacity)} glyph={false}>{view.teamCapacity}</Badge></dd>
             </div>
           </dl>
-          <Button variant="quiet" size="sm" block onClick={() => openGlossary()} className="compact min-h-10">
-            Glossary
-          </Button>
-          <a
-            href={GUIDE_URL}
-            target="_blank"
-            rel="noopener"
-            className="flex min-h-10 items-center justify-center rounded-lg text-sm text-ink-muted underline-offset-2 hover:underline"
-          >
-            Player's guide<span className="sr-only"> (opens in a new tab)</span>
-          </a>
+          {/* A pair, drawn alike: the guide was bare text under a boxed button. */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="quiet" size="sm" block onClick={() => openGlossary()} className="compact min-h-10">
+              Glossary
+            </Button>
+            <a href={GUIDE_URL} target="_blank" rel="noopener" className={buttonClass('quiet', 'sm', true, 'compact min-h-10')}>
+              Guide <span aria-hidden="true">↗</span>
+              <span className="sr-only">: the player's guide (opens in a new tab)</span>
+            </a>
+          </div>
         </div>
       </nav>
 

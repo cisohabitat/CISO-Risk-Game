@@ -30,6 +30,7 @@ const EMPHASIS = new Set(
     'The four standing readings',
     'Your resources',
     'The clock',
+    'The quarter so far.',
     'attention',
     'Acting',
     'what each option will visibly cost you',

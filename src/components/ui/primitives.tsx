@@ -44,21 +44,20 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean
 }
 
-export function Button({ variant = 'secondary', size = 'md', block, className, ...props }: ButtonProps) {
-  return (
-    <button
-      type="button"
-      {...props}
-      className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-[background-color,border-color,filter,transform] duration-150',
-        'disabled:cursor-not-allowed disabled:opacity-45 active:translate-y-px',
-        BUTTON_VARIANTS[variant],
-        BUTTON_SIZES[size],
-        block && 'w-full',
-        className,
-      )}
-    />
+/** A button's look, for a link that should sit beside buttons as one of them. */
+export function buttonClass(variant: ButtonVariant = 'secondary', size: ButtonSize = 'md', block?: boolean, className?: string): string {
+  return cn(
+    'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-[background-color,border-color,filter,transform] duration-150',
+    'disabled:cursor-not-allowed disabled:opacity-45 active:translate-y-px',
+    BUTTON_VARIANTS[variant],
+    BUTTON_SIZES[size],
+    block && 'w-full',
+    className,
   )
+}
+
+export function Button({ variant = 'secondary', size = 'md', block, className, ...props }: ButtonProps) {
+  return <button type="button" {...props} className={buttonClass(variant, size, block, className)} />
 }
 
 /* ------------------------------------------------------------------ Card -- */
@@ -379,7 +378,7 @@ export function TabList({ children, label }: { children: ReactNode; label: strin
       role="tablist"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1"
+      className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"
     >
       {children}
     </div>

@@ -276,7 +276,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       // Answering clears the pause it caused.
       state.pauseReasons = state.pauseReasons.filter((r: PauseReason) => r !== 'decision-deadline')
       commit()
-      return { ok: true, message: option.label }
+      // The option's label alone ("Grant the exceptions") read, a moment after
+      // the dialog closed, as an instruction rather than a record of one.
+      return { ok: true, message: `Decided: ${def.title} — ${option.label}.` }
     }
 
     case 'startInvestigation': {

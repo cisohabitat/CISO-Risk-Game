@@ -89,7 +89,7 @@ exported to a file once its year is over, from the annual review.
 ![The Briefing](images/02-briefing.png)
 
 This is where every day starts, and it is written as a brief rather than a
-dashboard. Six things are worth finding:
+dashboard. Seven things are worth finding:
 
 **The masthead and the headline.** `CISO BRIEF · WEEK 1` at the top, and under
 it a single line counting what wants you today — *"Two things need your
@@ -106,6 +106,12 @@ real CISO argues from judgement, not from a score, and a number would invite you
 to optimise it. They are deliberately quieter than the things above them,
 because they are the state of the organisation rather than a list of things to
 do. The `?` opens a plain-language explanation.
+
+**The quarter so far.** One line under the readings, headed `SO FAR IN Q1` in the
+first quarter, counts what the quarter
+has produced: enquiries returned, programmes delivered, controls you checked
+for yourself, risks improving. A quarter of work and a quarter of nothing look
+different here long before the annual review says so.
 
 **Came back to you.** What your own actions sent back and you have not read
 yet: an enquiry that returned, a follow-up to a choice, a decision the

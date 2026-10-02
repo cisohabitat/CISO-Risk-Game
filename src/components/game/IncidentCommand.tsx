@@ -50,7 +50,7 @@ export function IncidentCommand() {
       {/* The band stays pinned while the panel scrolls with the page. The
           whole panel was sticky, and twice a player mid-incident found it
           covering the Decide control they were trying to reach. */}
-      <p className="sticky top-0 z-10 bg-[var(--band-severe)] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--surface)]">
+      <p className="sticky top-0 z-10 bg-alarm px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-on-alarm">
         Incident active · {incident.name} · {incident.phaseLabel}
       </p>
       <CardBody className="space-y-4">

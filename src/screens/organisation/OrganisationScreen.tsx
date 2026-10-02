@@ -75,7 +75,13 @@ export function OrganisationScreen() {
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
           <div className="space-y-3">
-            <div className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1" role="group" aria-label="Filter by type">
+            {/* Wraps from tablet width up. It scrolled sideways everywhere, and beside
+                the inspector it stopped at "Net" with nothing to say more followed. */}
+            <div
+              className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"
+              role="group"
+              aria-label="Filter by type"
+            >
               <Button
                 size="sm"
                 variant={filter === 'all' ? 'secondary' : 'ghost'}

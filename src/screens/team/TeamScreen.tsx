@@ -7,6 +7,7 @@ import { Badge, Button, Card, CardBody, EmptyState, Fact, Meter, SectionHeading 
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
 import { capacityTone, money, plural } from '@/lib/formatting/labels'
+import { cn } from '@/lib/utils/cn'
 
 export function TeamScreen() {
   const state = useGameStore((store) => store.state)
@@ -31,8 +32,12 @@ export function TeamScreen() {
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {view.functions.map((fn) => (
             <li key={fn.fn}>
-              <Card className="h-full">
-                <CardBody className="space-y-3">
+              {/* Every card ends on the same row, staffing on the left and the
+                  action, when there is one, on the right. The Recruit button
+                  sat beside the morale line on some cards and not others, so
+                  the grid's rows did not line up. */}
+              <Card className="flex h-full flex-col">
+                <CardBody className="flex flex-1 flex-col gap-3">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-medium">{fn.label}</h3>
                     <Badge tone={capacityTone(fn.band)} glyph={false}>{fn.band}</Badge>
@@ -44,8 +49,18 @@ export function TeamScreen() {
                     valueLabel={`${fn.committed} of ${fn.capacity} days a week`}
                     tone={capacityTone(fn.band)}
                   />
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-sm text-ink-muted">{fn.moraleLabel}</p>
+                  <p className="flex items-baseline justify-between gap-2 text-sm">
+                    <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">Morale</span>
+                    <span>{fn.moraleLabel}</span>
+                  </p>
+                  <div className="mt-auto flex min-h-9 flex-wrap items-center justify-between gap-2 border-t border-line pt-3">
+                    <p className={cn('text-sm', fn.vacancies > 0 && !fn.hiring ? 'text-band-elevated' : 'text-ink-muted')}>
+                      {fn.hiring
+                        ? 'Recruiting'
+                        : fn.vacancies > 0
+                          ? `${plural(fn.vacancies, 'vacancy', 'vacancies')} unfilled`
+                          : 'Fully staffed'}
+                    </p>
                     {fn.vacancies > 0 && (
                       <Button
                         variant="quiet"
@@ -58,9 +73,6 @@ export function TeamScreen() {
                       </Button>
                     )}
                   </div>
-                  {fn.vacancies > 0 && !fn.hiring && (
-                    <p className="text-xs text-band-elevated">{plural(fn.vacancies, 'vacancy', 'vacancies')} unfilled</p>
-                  )}
                 </CardBody>
               </Card>
             </li>

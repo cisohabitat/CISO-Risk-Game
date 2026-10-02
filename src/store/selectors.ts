@@ -25,7 +25,7 @@ import { calculateControlEffectiveness, controlBand } from '@/game/controls/effe
 import { capacityBand, functionName, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
-import { statusLabel } from '@/lib/formatting/labels'
+import { plural, statusLabel } from '@/lib/formatting/labels'
 import { unexaminedMaterial } from '@/game/knowledge/discovery'
 import { renderDecisionText } from '@/game/decisions/describe'
 import { formatGameDate } from '@/game/time'
@@ -606,6 +606,30 @@ export function recoveryConfidenceLabel(value: number): string {
   if (value < 0.36) return 'Partial'
   if (value < 0.55) return 'Reasonable'
   return 'Strong'
+}
+
+/**
+ * What the quarter has produced so far, in counts of things that happened.
+ * Progress showed only as a word changing in a chip, so a quarter of real
+ * work and a quarter of nothing looked the same until the review. These are
+ * events the player can point to, not scores.
+ */
+export function quarterProgress(state: GameState, index: ContentIndex): string[] {
+  const start = (currentQuarter(state.currentDay) - 1) * DAYS_PER_QUARTER
+  const returned = state.team.assignments.filter((a) => a.status === 'complete' && a.dueDay >= start).length
+  const delivered = Object.values(state.programmes.programmes).filter(
+    (p) => p.status === 'complete' && (p.completedDay ?? -1) >= start,
+  ).length
+  const checked = Object.values(state.controls.controls).filter(
+    (c) => (c.believed?.assessedOnDay ?? -1) >= Math.max(0, start),
+  ).length
+  const improving = visibleRisks(state, index).filter((r) => r.trend === 'improving' || r.trend === 'materially improved').length
+  return [
+    returned > 0 ? `${plural(returned, 'enquiry', 'enquiries')} returned` : undefined,
+    delivered > 0 ? `${plural(delivered, 'programme')} delivered` : undefined,
+    checked > 0 ? `${plural(checked, 'control')} checked for yourself` : undefined,
+    improving > 0 ? `${plural(improving, 'risk')} improving` : undefined,
+  ].filter((line): line is string => Boolean(line))
 }
 
 /** Recovery built since the backups were last verified. */

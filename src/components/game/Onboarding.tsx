@@ -25,22 +25,26 @@ export function Onboarding() {
   )
   if (!lesson) return null
 
+  // One quiet line above the screen, not a card. As a card it took a sixth of
+  // the screen above the briefing's own headline, beneath an incident banner,
+  // and pushed what the day was about below the fold.
   return (
-    <aside className="mb-4 rounded-[--radius-card] border border-accent/40 bg-accent-soft/40 p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="font-medium">{lesson.title}</p>
-          <p className="mt-1 text-sm text-ink-muted text-pretty">{lesson.body}</p>
-        </div>
-        <Button
-          variant="quiet"
-          size="sm"
-          className="compact min-h-9 shrink-0"
-          onClick={() => dispatch({ type: 'dismissTutorial', id: lesson.id })}
-        >
-          Got it
-        </Button>
-      </div>
+    <aside
+      aria-label="How this works"
+      className="mb-4 flex items-start gap-3 border-l-2 border-accent bg-accent-soft/30 py-2 pl-3 pr-2"
+    >
+      <p className="min-w-0 flex-1 text-sm text-pretty">
+        <span className="font-medium text-ink">{lesson.title}</span>
+        <span className="text-ink-muted">. {lesson.body}</span>
+      </p>
+      <Button
+        variant="quiet"
+        size="sm"
+        className="compact min-h-9 shrink-0"
+        onClick={() => dispatch({ type: 'dismissTutorial', id: lesson.id })}
+      >
+        Got it
+      </Button>
     </aside>
   )
 }

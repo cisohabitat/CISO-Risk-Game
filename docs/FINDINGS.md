@@ -18,6 +18,35 @@ fault.
 
 ### Fixed
 
+- **A look at every screen, desktop and phone, light and dark.** From
+  `pnpm screenshots` and the guide's pictures, read by eye.
+  - **Notifications stacked three deep over the middle of the page** after
+    decisions answered in a row, each saying only the option's label
+    ("Grant the exceptions"), which read as an instruction. They now sit in
+    the bottom-right corner on a desktop, at most two at once (one on a
+    phone, where two covered a quarter of the screen), and say "Decided:
+    <decision> — <option>."
+  - **Teaching notes were cards a sixth of the screen tall**, between the
+    incident banner and the Briefing's headline. They are one line with a
+    rule down the left, title and body in a sentence.
+  - **The dark-mode incident bar was pale salmon.** The severe band doubles
+    as label text, so in dark mode it is light; as a fill it read as the
+    calmest thing on the screen during an incident. The bar has its own
+    alarm red and text colour in both themes.
+  - **The Organisation filters stopped at "Net"** beside the inspector, with
+    nothing to say more followed. Filter and tab rows wrap from tablet width
+    up and still scroll on a phone.
+  - **A quarter of work and a quarter of nothing looked the same.** A line
+    under the four readings now counts what the quarter has produced:
+    enquiries returned, programmes delivered, controls checked for yourself,
+    risks improving, or "Nothing has come back yet."
+  - Inconsistencies: the guide link was bare text under the boxed Glossary
+    button (now a matching pair); capacity cards put Recruit beside the
+    morale line on some cards only, so rows did not line up (every card now
+    ends on a staffing line, "Fully staffed" or "2 vacancies unfilled" with
+    Recruit beside it); the inbox badge counted to 63 and now caps at "9+".
+  A UI test pins each, and fails with the old component restored.
+
 - **What was left from the New money playtest, and the recovery ceiling.**
   - **Recovery confidence never read *Reasonable*.** The reading is the
     backup control's effectiveness as last verified, a product of coverage,

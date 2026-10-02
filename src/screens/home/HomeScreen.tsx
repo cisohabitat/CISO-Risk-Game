@@ -9,7 +9,7 @@ import { CameBack } from '@/components/game/CameBack'
 import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView } from '@/store/selectors'
+import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
 import { bandTone, capacityTone, confidenceTone, money, plural, trendBadge } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
@@ -26,6 +26,7 @@ export function HomeScreen() {
   const unknown = undiscoveredCount(state)
   const programmes = programmeViews(state, index).filter((p) => p.status !== 'proposed')
   const team = teamView(state, index)
+  const progress = quarterProgress(state, index)
   const reviewsDue = visibleRisks(state, index).filter((risk) => risk.reviewDue && risk.status !== 'closed')
   const lastHighlights = state.history.entries.slice(-4).reverse()
   // Counted here as well as inside the two components, so the masthead can say
@@ -97,6 +98,14 @@ export function HomeScreen() {
             note={view.recoveryNote}
           />
         </dl>
+        {/* What the quarter has produced, so a quarter of work reads
+            differently from a quarter of nothing before the review says so. */}
+        <p className="mt-3 border-t border-line pt-3 text-sm text-ink-muted text-pretty" data-testid="quarter-progress">
+          <span className="mr-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
+            So far in Q{view.quarter}
+          </span>
+          {progress.length > 0 ? progress.join(' · ') : 'Nothing has come back yet.'}
+        </p>
       </section>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">

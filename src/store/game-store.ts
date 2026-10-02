@@ -284,7 +284,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   pushToast(message, tone = 'info') {
     toastId += 1
     const toast: Toast = { id: toastId, message, tone }
-    set((store) => ({ ui: { ...store.ui, toasts: [...store.ui.toasts, toast].slice(-3) } }))
+    // Two at most. Three stacked over the middle of the page, on top of the
+    // cards a player was about to read, after answering decisions in a row.
+    set((store) => ({ ui: { ...store.ui, toasts: [...store.ui.toasts, toast].slice(-2) } }))
   },
 
   dismissToast(id) {
