@@ -34,6 +34,8 @@ export type IconName =
   | 'play'
   | 'pause'
   | 'external'
+  | 'check'
+  | 'plus'
 
 const PATHS: Record<IconName, string> = {
   // A fork in the road: two ways out of one place.
@@ -72,6 +74,8 @@ const PATHS: Record<IconName, string> = {
   pause: 'M9 5.8v12.4M15 5.8v12.4',
   // Opens elsewhere.
   external: 'M13.4 4.6h6v6M19.4 4.6l-8.6 8.6M17.6 13.8v5.6H4.6V6.4h5.6',
+  check: 'M5 12.6l4.4 4.4L19 7.4',
+  plus: 'M12 5.4v13.2M5.4 12h13.2',
 }
 
 /** Extra shapes some icons need beyond a single path. */

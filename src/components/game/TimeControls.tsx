@@ -45,6 +45,17 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
   const advanceDays = useGameStore((store) => store.advanceDays)
   if (!state) return null
 
+  // The year over, the clock has nothing left to do. Its controls stayed: the
+  // speeds greyed, Skip ahead greyed, and pause still lit as if it were live.
+  // The banner above every screen carries the way to the review.
+  if (state.finished) {
+    return (
+      <p role="status" className="text-sm text-ink-muted" data-testid="year-over">
+        The year is over.
+      </p>
+    )
+  }
+
   const paused = state.paused || state.speed === 'paused'
   const blocked = state.decisions.openIds.some((id) => {
     const decision = state.decisions.decisions[id]

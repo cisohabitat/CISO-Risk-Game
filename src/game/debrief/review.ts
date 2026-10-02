@@ -4,7 +4,7 @@
  * The output is narrative and multi-dimensional. A single score would teach the
  * wrong lesson, so the performance band is deliberately secondary.
  */
-import { formatGameDate } from '../time'
+import { dateOf, datesOf, formatGameDate } from '../time'
 import type {
   AnnualReview,
   AnnualReviewDimension,
@@ -559,16 +559,16 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       }
       const lines = [...byFamily].map(([name, runs]) => {
         const days = runs.map((r) => r.day)
-        if (days.length === 1) return `${name} on day ${days[0]}`
+        if (days.length === 1) return `${name} on ${dateOf(days[0]!)}`
         const rest = days.slice(1)
-        const list = rest.length === 1 ? `day ${rest[0]}` : `days ${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}`
+        const list = datesOf(rest)
         // "The same weakness" only when it was the same way in. Two data
         // exposures by different routes read "the same weakness, still open"
         // here and "by a different route" in the story above it.
         const routes = new Set(runs.map((r) => r.pathId ?? 'unknown'))
         return routes.size === 1
-          ? `${name} on day ${days[0]}, and again on ${list} — the same weakness, still open`
-          : `${name} on day ${days[0]}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
+          ? `${name} on ${dateOf(days[0]!)}, and again on ${list} — the same weakness, still open`
+          : `${name} on ${dateOf(days[0]!)}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
       })
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
@@ -733,12 +733,20 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     id: 'team-sustainability',
     label: 'Team sustainability',
     band: band(sustainability),
+    // The sentence follows the rating. It chose between two lines on morale
+    // alone while the rating also weighed the load, so a team with middling
+    // morale and little on its plate was rated solid and told, in the same
+    // row, that its goodwill had run out.
     narrative:
       spent.length > 0
         ? `Your ${spent.map((fn) => functionName(fn.fn)).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
-        : morale > 0.6
-          ? 'Your team ends the year in a state where they could do this again next year.'
-          : 'Your team carried the year on goodwill that has now run out.',
+        : sustainability >= 0.52
+          ? morale > 0.6
+            ? 'Your team ends the year in a state where they could do this again next year.'
+            : 'Your team ends the year intact, with less in reserve than a second year like this one would need.'
+          : morale > 0.6
+            ? 'Your team ends the year willing but overloaded; it is the load, not the mood, that would not last.'
+            : 'Your team carried the year on goodwill that has now run out.',
     // Words rather than percentages: morale is an internal 0..1 and the game
     // does not render internal numbers.
     evidence: functions.map(
@@ -765,7 +773,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // may well remember one: a year that ran a recovery test on day 139 and
     // began relying on backups on day 275 read "without ever testing it"
     // beside "1 recovery exercise completed".
-    spots.unshift(`from day ${assumption.createdDay} you relied on "${quotedInline(assumption.statement)}" and never tested it after that; it was not true`)
+    spots.unshift(`from ${dateOf(assumption.createdDay)} you relied on "${quotedInline(assumption.statement)}" and never tested it after that; it was not true`)
   }
   dimensions.push({
     id: 'blind-spots',
@@ -791,7 +799,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         : []),
       ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
-        (a) => `"${quotedInline(a.statement)}" was relied on from day ${a.createdDay}, not tested after that, and not true`,
+        (a) => `"${quotedInline(a.statement)}" was relied on from ${dateOf(a.createdDay)}, not tested after that, and not true`,
       ),
     ],
   })
@@ -836,9 +844,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     const worst = incidents.slice().sort((a, b) => b.consequence - a.consequence)[0]
     const family = worst ? index.incidentFamily.get(worst.familyId) : undefined
     if (family && worst) {
-      narrative.push(
-        `${family.name} tested the organisation on day ${worst.startedDay}. ${worst.reconstruction?.narrative ?? ''}`.trim(),
-      )
+      // The headline, not the reconstruction. The summary ran the whole
+      // route with arrows and "What helped: …; …; What hurt: …" as one
+      // paragraph, directly above the incident section that sets the same
+      // route out as numbered steps and the same lists as two columns.
+      narrative.push(`${family.name} tested the organisation on ${dateOf(worst.startedDay)}. ${family.headline}`.trim())
       // The worst incident is narrated; the others were not mentioned at all.
       // A hand-played year with two ransomware incidents closed on a review
       // that spoke of one. The resilience evidence already groups repeats;
@@ -847,7 +857,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       if (others.length > 0) {
         const described = others.map((i) => {
           const name = index.incidentFamily.get(i.familyId)?.name ?? 'an incident'
-          if (i.familyId !== worst.familyId) return `${name} on day ${i.startedDay}`
+          if (i.familyId !== worst.familyId) return `${name} on ${dateOf(i.startedDay)}`
           // Same kind again: the route says whether it was the same door.
           const sameRoute = !i.pathId || !worst.pathId || i.pathId === worst.pathId
           // The worst is narrated first whatever its date, so "again" pointed
@@ -855,12 +865,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           // same kind of incident again on day 198".
           if (i.startedDay < worst.startedDay) {
             return sameRoute
-              ? `the same kind of incident earlier, on day ${i.startedDay}, through the same route — the weakness was still open when it came again`
-              : `the same kind of incident earlier, on day ${i.startedDay}, by a different route`
+              ? `the same kind of incident earlier, on ${dateOf(i.startedDay)}, through the same route — the weakness was still open when it came again`
+              : `the same kind of incident earlier, on ${dateOf(i.startedDay)}, by a different route`
           }
           return sameRoute
-            ? `the same kind of incident again on day ${i.startedDay}, through the same route — the same weakness, still open`
-            : `the same kind of incident again on day ${i.startedDay}, by a different route`
+            ? `the same kind of incident again on ${dateOf(i.startedDay)}, through the same route — the same weakness, still open`
+            : `the same kind of incident again on ${dateOf(i.startedDay)}, by a different route`
         })
         narrative.push(`It was not the only one: ${described.join('; ')}.`)
       }
@@ -883,7 +893,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     const again = incidents.filter((i) => i.familyId === 'fam-ransomware').sort((a, b) => a.startedDay - b.startedDay)
     narrative.push(
       again.length > 0
-        ? `You arrived after a breach, to a board asking whether it could happen again. It did: ransomware again on day ${again[0]!.startedDay}.`
+        ? `You arrived after a breach, to a board asking whether it could happen again. It did: ransomware again on ${dateOf(again[0]!.startedDay)}.`
         : incidents.length > 0
           ? 'You arrived after a breach, to a board asking whether it could happen again. Not the same way: this year\'s incidents were of other kinds.'
           : 'You arrived after a breach, to a board asking whether it could happen again. This year, it did not.',

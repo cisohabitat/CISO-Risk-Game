@@ -13,11 +13,14 @@ import { objectiveStatusLabel } from '@/game/business/objectives'
 import { shortDate, statusLabel } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
 
-const BAND_TONE: Record<string, 'severe' | 'elevated' | 'moderate' | 'low'> = {
+// A scale from bad to good, warm to cool. "Solid" borrowed the risk palette's
+// moderate, which is blue there and read here as a neutral label sitting
+// between amber "developing" and green "strong" rather than a step on the way.
+const BAND_TONE: Record<string, 'severe' | 'elevated' | 'low' | 'positive'> = {
   weak: 'severe',
   developing: 'elevated',
-  solid: 'moderate',
-  strong: 'low',
+  solid: 'low',
+  strong: 'positive',
 }
 
 export function DebriefScreen() {
@@ -181,13 +184,16 @@ export function DebriefScreen() {
                     </div>
                     <p className="text-sm text-ink-muted">
                       {shortDate(incident.startedDay)}
-                      {incident.resolvedDay !== undefined && ` to ${incident.resolvedDay}`} · {statusLabel(incident.phase)}
+                      {incident.resolvedDay !== undefined && ` to ${shortDate(incident.resolvedDay)}`} · {statusLabel(incident.phase)}
                       {incident.servicesAffected.length > 0 && ` · ${incident.servicesAffected.join(', ')}`}
                     </p>
 
                     {incident.reconstruction && (
                       <>
-                        <p className="text-pretty">{incident.reconstruction.narrative}</p>
+                        {/* What happened in a line; the route and what helped
+                            and hurt follow as steps and columns, so the prose
+                            version of them is not repeated above. */}
+                        <p className="text-pretty">{incident.headline || incident.reconstruction.narrative}</p>
                         <ol className="space-y-1 text-sm">
                           {incident.reconstruction.pathSummary.map((step, position) => (
                             <li key={step.stepId} className="flex gap-2">

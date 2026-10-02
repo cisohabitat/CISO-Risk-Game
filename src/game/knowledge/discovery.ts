@@ -6,6 +6,7 @@
 import type { ContentIndex, EvidenceState, GameState, OrganisationState } from '../types'
 import { clamp01 } from '../types'
 import { evaluateCondition } from '../events/conditions'
+import { dateOf } from '../time'
 
 export function revealNode(state: GameState, nodeId: string, confidence = 0.8, verified = false): boolean {
   const node = state.organisation.nodes[nodeId]
@@ -251,7 +252,7 @@ export function unexaminedMaterial(
     // lapsed, was called "never independently assessed" — beside the privileged
     // access review the same player ran in January.
     else if (control.believed && control.believed.assessedOnDay >= 0) {
-      names.push(`${def.name} was last assessed on day ${control.believed.assessedOnDay}, and that assurance has lapsed`)
+      names.push(`${def.name} was last assessed on ${dateOf(control.believed.assessedOnDay)}, and that assurance has lapsed`)
     } else names.push(`${def.name} was never independently assessed`)
   }
 

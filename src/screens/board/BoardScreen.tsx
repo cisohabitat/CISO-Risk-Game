@@ -4,13 +4,15 @@
  * put in front of people, not in writing a document.
  */
 import { useMemo, useState } from 'react'
-import { Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { stakeholderViews } from '@/store/selectors'
+import { stakeholderViews, visibleRisks } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/review'
 import { formatGameDate } from '@/game/time'
 import { DAYS_PER_QUARTER } from '@/game/types'
-import { plural } from '@/lib/formatting/labels'
+import { bandTone, plural } from '@/lib/formatting/labels'
+import { RISK_BAND_LABEL } from '@/game/risk/bands'
+import { Icon } from '@/components/ui/icons'
 import { Monogram, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
 
@@ -25,6 +27,13 @@ export function BoardScreen() {
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
   const availableTopics = useMemo(() => (state ? materialTopics(state, index) : []), [state, index])
+  // What the player has assessed each risk at, beside it on the agenda. Seven
+  // identical rows meant choosing what the board hears from memory of
+  // another screen.
+  const riskBands = useMemo(
+    () => new Map((state ? visibleRisks(state, index) : []).map((risk) => [`risk:${risk.id}`, risk.band])),
+    [state, index],
+  )
   // Why a risk the player can see is not on the agenda: it has not been raised.
   const emergingCount = state ? Object.values(state.risks.scenarios).filter((s) => s.status === 'emerging').length : 0
   if (!state) return null
@@ -218,7 +227,14 @@ export function BoardScreen() {
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
                         style={{ minHeight: 0 }}
                       />
-                      <span className="text-pretty">{topic.label}</span>
+                      <span className="min-w-0 flex-1 text-pretty">{topic.label}</span>
+                      {riskBands.has(topic.id) ? (
+                        <Badge tone={bandTone(riskBands.get(topic.id)!)} className="shrink-0 self-start">
+                          {RISK_BAND_LABEL[riskBands.get(topic.id)!]} residual
+                        </Badge>
+                      ) : topic.id.startsWith('incident:') ? (
+                        <Badge tone="high" glyph={false} className="shrink-0 self-start">Incident</Badge>
+                      ) : null}
                     </label>
                   )
                 })}
@@ -230,6 +246,9 @@ export function BoardScreen() {
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
               Recommendations
             </legend>
+            {/* Pills read as tags. Each says whether it is in the paper: a
+                tick when it is, a plus when it could be. */}
+            <p className="mb-2 text-sm text-ink-muted">What the paper asks the board to back. Choose any.</p>
             <div className="flex flex-wrap gap-2">
               {index.content.programmes.map((programme) => {
                 const id = `programme:${programme.id}`
@@ -243,10 +262,13 @@ export function BoardScreen() {
                       setRecommendations((current) => (active ? current.filter((value) => value !== id) : [...current, id]))
                     }
                     className={cn(
-                      'compact min-h-10 rounded-full border px-3 py-1.5 text-sm',
-                      active ? 'border-accent bg-accent-soft text-accent-ink' : 'border-line bg-surface-2 text-ink-muted',
+                      'compact inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm',
+                      active
+                        ? 'border-accent bg-accent-soft font-medium text-accent-ink'
+                        : 'border-dashed border-line-strong bg-surface text-ink-muted hover:text-ink',
                     )}
                   >
+                    <Icon name={active ? 'check' : 'plus'} size={14} />
                     {programme.shortName}
                   </button>
                 )

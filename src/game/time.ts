@@ -21,6 +21,21 @@ const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
  * and made every date after January wrong by a day or two. Nothing tested it
  * because nothing reads the string; it took looking at a screenshot.
  */
+/**
+ * "22 April": a day as the player reads it. The review and the messages said
+ * "on day 221" while every screen around them showed dates, so a player had
+ * to count from January to place an incident they had lived through.
+ */
+export function dateOf(day: number): string {
+  return formatGameDate(day).label
+}
+
+/** "22 April, 3 May and 9 June". */
+export function datesOf(days: number[]): string {
+  const labels = days.map(dateOf)
+  return labels.length <= 1 ? (labels[0] ?? '') : `${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
+}
+
 export function formatGameDate(day: number): { label: string; month: string; weekLabel: string } {
   let remaining = Math.max(0, Math.floor(day))
   let monthIndex = 0

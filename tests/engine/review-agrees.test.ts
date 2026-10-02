@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { dateOf } from '@/game/time'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
 import { effortAllocation } from '@/game/debrief/prioritisation'
@@ -228,9 +229,9 @@ describe('what the close says about two incidents', () => {
     state.incidents.incidents['inc-late'] = arranged('inc-late', 358, 0.1, 'containment', 'path-b')
     const review = buildAnnualReview(state, index)
     const story = review.narrative.join(' ')
-    expect(story).toContain(`${family.name} tested the organisation on day 358`)
-    expect(story).toContain('the same kind of incident earlier, on day 198, by a different route')
-    expect(story).not.toContain('again on day 198')
+    expect(story).toContain(`${family.name} tested the organisation on ${dateOf(358)}`)
+    expect(story).toContain(`the same kind of incident earlier, on ${dateOf(198)}, by a different route`)
+    expect(story).not.toContain(`again on ${dateOf(198)}`)
     const resilience = review.dimensions.find((d) => d.id === 'resilience')!
     expect(resilience.narrative).toContain('still running when the year was written up')
     expect(resilience.narrative).not.toMatch(/came through|before it recovered/)
@@ -270,5 +271,24 @@ describe('the budget cut agreed in a quiet autumn', () => {
     const story = buildAnnualReview(state, index).narrative.join(' ')
     expect(story).not.toContain('Nothing happened this year')
     expect(story).toContain('The year did not stay quiet')
+  })
+
+  it('says of a team what its rating says', () => {
+    // Middling morale and nothing on the team's plate: rated solid, and told in
+    // the same row that its goodwill had run out.
+    const state = newGame(index, { seed: 'team-sentence' })
+    for (const fn of Object.values(state.team.functions)) fn.morale = 0.5
+    const team = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'team-sustainability')!
+    expect(team.band).toBe('solid')
+    expect(team.narrative).not.toMatch(/goodwill/)
+    // And the other way: willing but loaded past what it has, rated below
+    // solid, is told the load will not last rather than that it is fine.
+    for (const fn of Object.values(state.team.functions)) {
+      fn.morale = 0.7
+      fn.committed = fn.capacity * 2
+    }
+    const loaded = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'team-sustainability')!
+    expect(['weak', 'developing']).toContain(loaded.band)
+    expect(loaded.narrative).toMatch(/overloaded/)
   })
 })

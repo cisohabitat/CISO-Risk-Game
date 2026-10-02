@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { dateOf } from '@/game/time'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview, buildQuarterReview, chooseHeadline, materialTopics } from '@/game/debrief/review'
 import { unexaminedMaterial } from '@/game/knowledge/discovery'
@@ -109,8 +110,20 @@ describe('reviews', () => {
     runDays(state, index, 364 - state.currentDay)
     const text = buildAnnualReview(state, index).narrative.join(' ')
     for (const incident of Object.values(state.incidents.incidents)) {
-      expect(text, `the review never mentions the incident that began on day ${incident.startedDay}`).toContain(`day ${incident.startedDay}`)
+      expect(text, `the review never mentions the incident that began on day ${incident.startedDay}`).toContain(dateOf(incident.startedDay))
     }
+  })
+
+  it('opens on what happened, and leaves the route and its lists to the reconstruction', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'rev-summary' })
+    runDays(state, index, 30)
+    const family = index.content.incidentFamilies[0]!
+    applyEffects(state, [{ type: 'incident.start', familyId: family.id }], { index, rng: createRng(state.seed, 9), source: 'test' })
+    runDays(state, index, 364 - state.currentDay)
+    const text = buildAnnualReview(state, index).narrative.join(' ')
+    expect(text).toContain(family.headline)
+    expect(text).not.toMatch(/→|What helped:|What hurt:|Little in place helped|on day \d/)
   })
 
   it('puts a risk the player raised on the board agenda, controlled or not', () => {

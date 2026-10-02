@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { useGameStore } from '@/store/game-store'
 import { HomeScreen } from '@/screens/home/HomeScreen'
 import { TeamScreen } from '@/screens/team/TeamScreen'
@@ -17,6 +17,7 @@ import { RiskScreen } from '@/screens/risk/RiskScreen'
 import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 import { TimeControls } from '@/components/game/TimeControls'
 import { Toasts } from '@/components/game/Toasts'
+import { InvestigationPanel } from '@/components/risk/InvestigationPanel'
 
 /**
  * What a look at every screen found, light and dark, desktop and phone:
@@ -298,5 +299,50 @@ describe('what the screens show', () => {
     expect(strip(100)).toBe('Q2 closes in 82 days.')
     expect(strip(181)).toBe('Q2 closes in 1 day.')
     expect(strip(364)).toBe('The year is over.')
+  })
+
+  it('shows each risk on the board agenda with its rating, and recommendations as toggles', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-agenda', 'ciso')
+    useGameStore.setState((store) => {
+      const state = structuredClone(store.state!)
+      state.reviews.pendingQuarter = 1
+      for (const scenario of Object.values(state.risks.scenarios)) scenario.status = 'open'
+      return { state }
+    })
+    const { state, index } = useGameStore.getState()
+    const risks = visibleRisks(state!, index!).filter((risk) => risk.status === 'open')
+    expect(risks.length).toBeGreaterThan(0)
+    render(<BoardScreen />)
+    fireEvent.click(screen.getByRole('button', { name: /Prepare the Q1 board paper/ }))
+    const agenda = screen.getByRole('group', { name: 'Agenda' })
+    for (const risk of risks) {
+      const row = within(agenda).getByText(risk.title).closest('label')!
+      expect(row).toHaveTextContent(/(Low|Moderate|Elevated|High|Severe) residual$/)
+    }
+    const toggle = within(screen.getByRole('group', { name: 'Recommendations' })).getAllByRole('button')[0]!
+    expect(toggle).toHaveAttribute('aria-pressed', 'false')
+    expect(toggle.className).toMatch(/border-dashed/)
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-pressed', 'true')
+    expect(toggle.className).not.toMatch(/border-dashed/)
+  })
+
+  it('stands the clock down when the year is over', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-year-over', 'ciso')
+    useGameStore.setState((store) => ({ state: { ...store.state!, finished: true, pauseReasons: ['year-end'] } }))
+    render(<TimeControls />)
+    expect(screen.getByTestId('year-over')).toHaveTextContent('The year is over.')
+    expect(screen.queryByRole('button')).toBeNull()
+  })
+
+  it('lists the risks an enquiry speaks to one to a line', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-enquiry', 'ciso')
+    render(<InvestigationPanel />)
+    const blocks = screen.getAllByTestId('speaks-to')
+    expect(blocks.length).toBeGreaterThan(0)
+    for (const block of blocks) {
+      expect(block.textContent).not.toMatch(/;/)
+      expect(block.querySelectorAll('li').length).toBeGreaterThan(0)
+    }
   })
 })

@@ -28,6 +28,7 @@ import { pushMessage } from '../inbox/messages'
 import { buildAnnualReview, buildQuarterReview } from '../debrief/review'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
+import { dateOf } from '../time'
 
 export type PlayerAction =
   | { type: 'advance'; days: number }
@@ -310,7 +311,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         refs: [assignment.id],
       })
       commit()
-      return { ok: true, message: `${def.name} commissioned. Expect a result around day ${assignment.dueDay}.` }
+      return { ok: true, message: `${def.name} commissioned. Expect a result around ${dateOf(assignment.dueDay)}.` }
     }
 
     case 'createHypothesis': {
@@ -404,7 +405,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       })
       const scenario = state.risks.scenarios[template.linkedScenarioId]
       if (scenario) {
-        scenario.notes.unshift(`Raised from a hypothesis on day ${state.currentDay}.`)
+        scenario.notes.unshift(`Raised from a hypothesis on ${dateOf(state.currentDay)}.`)
         scenario.status = 'open'
       }
       state.history.entries.push({
@@ -449,7 +450,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         refs: [action.scenarioId, ...action.rationaleTagIds],
       })
       // The owner is told, and remembers.
-      remember(state, scenario.ownerStakeholderId, `You accepted ${def?.title ?? 'a risk'} on day ${state.currentDay}.`, 'neutral')
+      remember(state, scenario.ownerStakeholderId, `You accepted ${def?.title ?? 'a risk'} on ${dateOf(state.currentDay)}.`, 'neutral')
       commit()
       return { ok: true, message: 'Risk accepted and recorded with its assumptions.' }
     }

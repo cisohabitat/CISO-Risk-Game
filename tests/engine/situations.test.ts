@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { dateOf } from '@/game/time'
 import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
 import type { GameState } from '@/game/types'
@@ -158,7 +159,7 @@ describe('the close answers the question the situation asked', () => {
       id: 'inc-again', familyId: 'fam-ransomware', startedDay: 212, consequence: 0.2, phase: 'closed', phaseEnteredDay: 240,
       resolvedDay: 240, affectedServiceIds: [], decisionsTaken: [],
     }
-    expect(review(state)).toContain('It did: ransomware again on day 212.')
+    expect(review(state)).toContain(`It did: ransomware again on ${dateOf(212)}.`)
   })
 
   it('says what the new money bought', () => {

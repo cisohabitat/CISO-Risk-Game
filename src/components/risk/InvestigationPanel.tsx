@@ -123,11 +123,22 @@ export function InvestigationPanel() {
                         {onTopConcern && <Badge tone="accent" glyph={false}>Speaks to your top concern</Badge>}
                       </div>
                       <p className="mt-1 flex-1 text-sm text-ink-muted text-pretty">{investigation.description}</p>
+                      {/* One risk to a line, as the programme cards list what
+                          they treat: run together with semicolons in the
+                          smallest type, three risk titles were unreadable. */}
                       {speaksTo.length > 0 && (
-                        <p className="mt-2 text-xs text-ink-faint">
-                          Speaks to: {speaksTo.slice(0, 3).map((r) => r.title).join('; ')}
-                          {speaksTo.length > 3 && ` and ${speaksTo.length - 3} more`}
-                        </p>
+                        <div className="mt-2" data-testid="speaks-to">
+                          <p className="text-xs text-ink-faint">Speaks to</p>
+                          <ul className="mt-0.5 space-y-0.5 text-sm text-ink-muted">
+                            {speaksTo.slice(0, 3).map((risk) => (
+                              <li key={risk.id} className="flex gap-2">
+                                <span aria-hidden="true" className="text-ink-faint">–</span>
+                                <span className="text-pretty">{risk.title}</span>
+                              </li>
+                            ))}
+                            {speaksTo.length > 3 && <li className="pl-4 text-xs text-ink-faint">and {speaksTo.length - 3} more</li>}
+                          </ul>
+                        </div>
                       )}
                       <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-faint">
                         <div className="flex gap-1">

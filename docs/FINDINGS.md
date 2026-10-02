@@ -18,6 +18,45 @@ fault.
 
 ### Fixed
 
+- **The end of the year, looked at.** The screenshot harness never reached
+  the annual review, the board paper or the enquiries; the photographed
+  playthrough does.
+  - **The review contradicted itself about the team.** On the playthrough
+    year (seed `playthrough-1`) Team sustainability was rated *solid* and
+    told, in the same row, "Your team carried the year on goodwill that has
+    now run out." The rating weighs morale and load; the sentence chose
+    between two lines on morale alone, so a team with middling morale and a
+    light load got the rating of one and the sentence of the other. The
+    sentence now follows the rating, with a line for each of the four cases
+    (intact with less in reserve; willing but overloaded). Idle years never
+    reach it — over 40 of them the identity function is always spent, which
+    has its own sentence — so it needs a player who does something, as the
+    playthrough does.
+  - **The review's opening ran the whole incident as one paragraph**: the
+    route with arrows, then "What helped: …; …; What hurt: …", directly above
+    the incident section that sets out the same route as numbered steps and
+    the same lists as two columns. The opening says what happened in a line;
+    the incident card does too, above its steps.
+  - **The engine still counted days.** "Tested the organisation on day 221",
+    "relied on from day 40", "Expect a result around day 66", "last assessed
+    on day 12" — and an incident card read "12 Aug to 240". All are dates.
+  - **Enquiry cards ran their risks together with semicolons** in the
+    smallest type. One to a line, as programme cards list theirs.
+  - **The board paper's agenda was seven identical rows**, so choosing what
+    the board hears meant remembering another screen. Each risk carries the
+    residual the player assessed it at, and an incident is marked as one.
+    The recommendations looked like tags; they show a plus until chosen and
+    a tick after.
+  - **The year-end header looked live**: speeds greyed, Skip ahead greyed,
+    pause still lit. Once the year is over it says so, and the banner on
+    every screen carries the way to the review.
+  - **The review's ratings borrowed the risk palette**, where moderate is
+    blue, so "solid" read as a neutral label between amber and green. They
+    run warm to cool: red, amber, teal, green.
+  Measured by engine tests for the opening, the dates and the team sentence,
+  three more cases in `tests/ui/visual-consistency.test.tsx`, each failing
+  with its fix reverted, and the playthrough re-photographed.
+
 - **A fourth look at the screens.**
   - **The Briefing's standing strip still shouted** ("RESIDUAL EXPOSURE")
     after every other in-card label had moved to sentence case. It matches.
