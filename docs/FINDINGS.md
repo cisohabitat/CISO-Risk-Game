@@ -18,6 +18,32 @@ fault.
 
 ### Fixed
 
+- **A second look at the screens.**
+  - **The organisation graph was unreadable when it opened.** Fitting the
+    whole estate made every label a few pixels tall, and every edge carried
+    its label, so fifty relationship names lay on top of each other. It now
+    opens on the business services and the applications under them at a
+    readable size, and labels only the selected node's edges, drawn in the
+    accent while the rest step back.
+  - **Primary blue meant nothing.** Six "Start this" buttons, an empty
+    state's suggestion and the pattern offer were drawn at the same weight
+    as Decide. Primary is now for what is waiting on the player (Decide,
+    preparing the paper, a dialog's commit); the rest are outlined.
+  - **The inbox said "d0" and "d1"** beside a header reading 2 January. It
+    shows dates.
+  - **People were text cards.** Executives and cyber leaders have a
+    monogram, and each executive's standing is a place on a five-step
+    scale from resistant to trusted as well as a word.
+  - **A programme card did not say what it was for.** It names the
+    player's own risks it treats (only risks they can see) and draws its
+    cost against the budget left.
+  - **The start screen was a form.** Three short lines above it say what a
+    year is made of.
+  - The glossary words under every risk were outlined pills competing with
+    the badges above them; they are dotted-underline links. The quarter
+    line's label no longer copies the section headings' style.
+  A UI test pins each screen change and fails with the old component.
+
 - **A look at every screen, desktop and phone, light and dark.** From
   `pnpm screenshots` and the guide's pictures, read by eye.
   - **Notifications stacked three deep over the middle of the page** after

@@ -46,7 +46,7 @@ export function HypothesisWorkspace() {
         <SectionHeading
           action={
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               className="compact min-h-9"
               disabled={templates.length === 0}

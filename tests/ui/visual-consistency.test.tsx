@@ -8,6 +8,11 @@ import { AppShell } from '@/components/layout/AppShell'
 import { Onboarding } from '@/components/game/Onboarding'
 import { quarterProgress } from '@/store/selectors'
 import { openDecision } from '@/game/decisions/open'
+import { InboxScreen } from '@/screens/inbox/InboxScreen'
+import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
+import { BoardScreen } from '@/screens/board/BoardScreen'
+import { StartScreen } from '@/screens/start/StartScreen'
+import { visibleRisks } from '@/store/selectors'
 
 /**
  * What a look at every screen found, light and dark, desktop and phone:
@@ -88,5 +93,39 @@ describe('what the screens show', () => {
       return { state }
     })
     expect(quarterProgress(useGameStore.getState().state!, index!)).toContain('1 control checked for yourself')
+  })
+
+  it('dates the inbox as the header does', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-inbox', 'ciso')
+    render(<InboxScreen />)
+    const list = screen.getByRole('list', { name: 'Messages' })
+    expect(within(list).queryByText(/^d\d+$/)).toBeNull()
+    expect(within(list).getAllByText(/^\d+ Jan$/).length).toBeGreaterThan(0)
+  })
+
+  it('says which of the player\'s risks a programme treats, and what it takes of the budget', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-programmes', 'ciso')
+    const { state, index } = useGameStore.getState()
+    const visible = new Set(visibleRisks(state!, index!).map((risk) => risk.title))
+    render(<ProgrammesScreen />)
+    const lines = screen.getAllByTestId('programme-treats')
+    expect(lines.length).toBeGreaterThan(0)
+    for (const line of lines) {
+      const named = line.textContent!.replace(/^Treats /, '').split('; ')
+      for (const title of named) expect(visible.has(title), title).toBe(true)
+    }
+    expect(screen.getAllByText('Of the budget left').length).toBeGreaterThan(0)
+  })
+
+  it('draws each executive with a monogram and a place on the trust scale', async () => {
+    await useGameStore.getState().startNewGame('ui-visual-board', 'ciso')
+    render(<BoardScreen />)
+    expect(screen.getAllByRole('img', { name: /on a scale from resistant to trusted$/ }).length).toBeGreaterThanOrEqual(4)
+  })
+
+  it('shows what a year is made of before the form', () => {
+    render(<StartScreen />)
+    const steps = within(screen.getByRole('list', { name: 'Your year' })).getAllByRole('listitem')
+    expect(steps).toHaveLength(3)
   })
 })

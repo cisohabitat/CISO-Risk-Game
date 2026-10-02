@@ -64,7 +64,7 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
 
               <div className="flex flex-wrap gap-2">
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   size="sm"
                   disabled={noAttention}
                   onClick={() =>

@@ -24,6 +24,12 @@ import { cn } from '@/lib/utils/cn'
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'quiet'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
+/**
+ * Primary is for the one thing waiting on the player: Decide, prepare the
+ * paper, commit in a dialog. Six "Start this" buttons and an empty state's
+ * suggestion drawn at the same weight as Decide made the Briefing and the
+ * Programmes screen a field of equal blue, so nothing stood out.
+ */
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-accent text-ink-inverse hover:brightness-110 border border-transparent',
   secondary: 'bg-surface-2 text-ink border border-line-strong hover:bg-surface-3',

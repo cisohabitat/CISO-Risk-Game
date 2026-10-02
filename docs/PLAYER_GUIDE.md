@@ -107,7 +107,7 @@ to optimise it. They are deliberately quieter than the things above them,
 because they are the state of the organisation rather than a list of things to
 do. The `?` opens a plain-language explanation.
 
-**The quarter so far.** One line under the readings, headed `SO FAR IN Q1` in the
+**The quarter so far.** One line under the readings, headed "So far in Q1" in the
 first quarter, counts what the quarter
 has produced: enquiries returned, programmes delivered, controls you checked
 for yourself, risks improving. A quarter of work and a quarter of nothing look

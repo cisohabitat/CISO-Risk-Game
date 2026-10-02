@@ -4,13 +4,14 @@
  * put in front of people, not in writing a document.
  */
 import { useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
+import { Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/review'
 import { formatGameDate } from '@/game/time'
 import { DAYS_PER_QUARTER } from '@/game/types'
-import { plural, relationshipTone } from '@/lib/formatting/labels'
+import { plural } from '@/lib/formatting/labels'
+import { Monogram, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
 
 export function BoardScreen() {
@@ -78,12 +79,15 @@ export function BoardScreen() {
             <li key={person.id}>
               <Card className="h-full">
                 <CardBody className="space-y-3">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <h3 className="font-medium">{person.name}</h3>
-                      <p className="text-sm text-ink-muted">{person.role}</p>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <Monogram name={person.name} />
+                      <div className="min-w-0">
+                        <h3 className="font-medium">{person.name}</h3>
+                        <p className="text-sm text-ink-muted">{person.role}</p>
+                      </div>
                     </div>
-                    <Badge tone={relationshipTone(person.band)} glyph={false}>{person.band}</Badge>
+                    <RelationshipScale band={person.band} />
                   </div>
                   <p className="text-sm italic text-ink-faint text-pretty">{person.voice}</p>
                   <div>

@@ -5,7 +5,7 @@
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { programmeViews, type ProgrammeView } from '@/store/selectors'
+import { programmeViews, visibleRisks, type ProgrammeView } from '@/store/selectors'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 import { functionLabel, money, plural, statusLabel } from '@/lib/formatting/labels'
 
@@ -18,6 +18,11 @@ export function ProgrammesScreen() {
   const [sponsorId, setSponsorId] = useState('')
 
   const programmes = useMemo(() => (state ? programmeViews(state, index) : []), [state, index])
+  // Which of the player's own risks each programme would move. A card listed
+  // cost and duration and left the player to work out what it was for. Only
+  // risks the player can see are named; the rest of the register stays hidden.
+  const risks = useMemo(() => (state ? visibleRisks(state, index) : []), [state, index])
+  const treats = (programmeId: string) => risks.filter((risk) => risk.treatmentProgrammeIds.includes(programmeId))
   if (!state) return null
   // Refused after the click otherwise, as a toast that said nothing the card
   // had not already had the chance to say.
@@ -172,8 +177,24 @@ export function ProgrammesScreen() {
                       <p className="mt-1 text-sm text-ink-muted text-pretty">{programme.description}</p>
                     </div>
                     <p className="flex-1 text-sm italic text-ink-faint text-pretty">{programme.rationale}</p>
+                    {treats(programme.id).length > 0 && (
+                      <p className="text-sm text-pretty" data-testid="programme-treats">
+                        <span className="text-xs font-medium uppercase tracking-wider text-ink-faint">Treats </span>
+                        {treats(programme.id).map((risk) => risk.title).join('; ')}
+                      </p>
+                    )}
+                    <Meter
+                      label="Of the budget left"
+                      value={programme.budgetCost}
+                      max={Math.max(1, state.resources.budgetRemaining)}
+                      valueLabel={
+                        programme.budgetCost > state.resources.budgetRemaining
+                          ? `${money(programme.budgetCost)}, more than is left`
+                          : `${money(programme.budgetCost)} of ${money(state.resources.budgetRemaining)}`
+                      }
+                      tone={programme.budgetCost > state.resources.budgetRemaining ? 'high' : 'neutral'}
+                    />
                     <dl className="grid grid-cols-2 gap-3">
-                      <Fact label="Cost" value={money(programme.budgetCost)} />
                       <Fact label="Runs for" value={`about ${Math.round(programme.durationDays / 30)} months`} />
                       <Fact
                         label="People it needs"
@@ -182,7 +203,7 @@ export function ProgrammesScreen() {
                       <Fact label="Improves" value={programme.controlImpact.join(', ')} />
                     </dl>
                     <Button
-                      variant="primary"
+                      variant="secondary"
                       size="sm"
                       className="self-start"
                       disabled={state.resources.budgetRemaining < programme.budgetCost || attentionShort}

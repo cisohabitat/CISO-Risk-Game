@@ -93,7 +93,7 @@ export default function OrgGraph({
       return {
         id: node.id,
         type: 'org',
-        position: { x: column * 240, y: row * 96 },
+        position: { x: column * 260, y: row * 96 },
         data: {
           label: node.name,
           type: node.type,
@@ -115,23 +115,38 @@ export default function OrgGraph({
         const id = `${node.id}->${dependency.id}`
         if (seen.has(id)) continue
         seen.add(id)
+        // Every edge carried its label, and fifty labels at fit-to-screen were
+        // a pile of overlapping words. Labels belong to the selected node's
+        // own edges, which are drawn in the accent; the rest step back.
+        const touches = selectedId !== undefined && (node.id === selectedId || dependency.id === selectedId)
         flowEdges.push({
           id,
           source: node.id,
           target: dependency.id,
-          label: dependency.relationship,
+          label: touches ? dependency.relationship : undefined,
           animated: false,
+          zIndex: touches ? 1 : 0,
           style: {
-            stroke: dependency.confidence < 0.6 ? 'var(--line-strong)' : 'var(--line-strong)',
+            stroke: touches ? 'var(--accent)' : 'var(--line-strong)',
+            strokeWidth: touches ? 2 : 1,
             strokeDasharray: dependency.confidence < 0.6 ? '4 4' : undefined,
+            opacity: selectedId === undefined || touches ? 1 : 0.35,
           },
-          labelStyle: { fill: 'var(--ink-faint)', fontSize: 10 },
+          labelStyle: { fill: 'var(--ink-muted)', fontSize: 11 },
           labelBgStyle: { fill: 'var(--surface)' },
         })
       }
     }
     return { flowNodes, flowEdges }
   }, [nodes, selectedId])
+
+  // Opened on what the business runs and the applications under it, at a
+  // size that can be read. Fitting the whole estate made every label a few
+  // pixels tall; the rest is a scroll or a zoom away.
+  const opening = useMemo(
+    () => nodes.filter((node) => (COLUMNS[node.type] ?? 3) <= 1).map((node) => ({ id: node.id })),
+    [nodes],
+  )
 
   return (
     <div className="h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
@@ -144,6 +159,7 @@ export default function OrgGraph({
         nodesConnectable={false}
         edgesFocusable={false}
         fitView
+        fitViewOptions={{ nodes: opening.length > 0 ? opening : undefined, padding: 0.15, maxZoom: 1 }}
         minZoom={0.25}
         maxZoom={1.6}
         proOptions={{ hideAttribution: false }}

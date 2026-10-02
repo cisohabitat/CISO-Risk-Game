@@ -35,6 +35,12 @@ function randomSeed(): string {
   return `${word}-${Math.abs(Date.now() % 99991)}`
 }
 
+const YEAR_IN_THREE = [
+  { title: 'Find out what is true', body: 'You inherit a picture. Commission the work that checks it.' },
+  { title: 'Spend a week you cannot stretch', body: 'Five actions a week and a budget that does not refill.' },
+  { title: 'Answer to the board', body: 'Every quarter, what they hear is your call, and so is what they do not.' },
+]
+
 export function StartScreen() {
   const startNewGame = useGameStore((store) => store.startNewGame)
   const loadGame = useGameStore((store) => store.loadGame)
@@ -102,6 +108,17 @@ export function StartScreen() {
             You cannot fix everything. The job is to work out what actually matters, decide what deserves your
             attention, influence people you do not control, and live with the consequences.
           </p>
+          {/* What a year is made of, before the form asks anything. The start
+              screen was a title, two paragraphs and a set of radio buttons. */}
+          <ol className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3" aria-label="Your year">
+            {YEAR_IN_THREE.map((step, position) => (
+              <li key={step.title} className="border-t-2 border-accent/60 pt-3">
+                <p className="font-display text-sm text-ink-faint">{['I', 'II', 'III'][position]}</p>
+                <p className="mt-0.5 font-medium">{step.title}</p>
+                <p className="mt-1 text-sm text-ink-muted text-pretty">{step.body}</p>
+              </li>
+            ))}
+          </ol>
         </header>
 
         {saves.length > 0 && (

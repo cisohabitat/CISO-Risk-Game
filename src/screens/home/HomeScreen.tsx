@@ -101,9 +101,7 @@ export function HomeScreen() {
         {/* What the quarter has produced, so a quarter of work reads
             differently from a quarter of nothing before the review says so. */}
         <p className="mt-3 border-t border-line pt-3 text-sm text-ink-muted text-pretty" data-testid="quarter-progress">
-          <span className="mr-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
-            So far in Q{view.quarter}
-          </span>
+          <span className="mr-2 font-medium text-ink">So far in Q{view.quarter}:</span>
           {progress.length > 0 ? progress.join(' · ') : 'Nothing has come back yet.'}
         </p>
       </section>
@@ -162,7 +160,7 @@ export function HomeScreen() {
                 title="You have not assessed any risks yet"
                 description="You inherited a register, not an understanding. Gather evidence, form a hypothesis, and turn it into something the business can decide about."
                 action={
-                  <Button variant="primary" size="sm" onClick={() => setScreen('risk')}>
+                  <Button variant="secondary" size="sm" onClick={() => setScreen('risk')}>
                     Open the risk workspace
                   </Button>
                 }
@@ -303,7 +301,7 @@ export function HomeScreen() {
                 title="No programme has started"
                 description="Controls drift downwards on their own. Nothing improves unless you fund it and staff it."
                 action={
-                  <Button variant="primary" size="sm" onClick={() => setScreen('programmes')}>
+                  <Button variant="secondary" size="sm" onClick={() => setScreen('programmes')}>
                     Review programmes
                   </Button>
                 }
