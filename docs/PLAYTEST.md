@@ -41,6 +41,11 @@ not enough. If they say "engineering is worn out" unprompted, it is.
 
 Half an hour is enough. A first year takes twenty minutes at a normal pace.
 
+The paperwork — a one-page protocol, a consent note, an observation sheet and
+the synthesis Phase 0 of `docs/ROADMAP.md` is gated on — is in
+`docs/playtest-kit/`, with how to record a session on the player's own device
+(`/?playtest`) and read it back (`pnpm session <file>`).
+
 - Give them the seed and the difficulty, nothing else. No explanation of the
   mechanics: whether the game teaches itself is one of the things under test.
 - Ask them to think aloud. Prompt with "what are you looking at?" rather than

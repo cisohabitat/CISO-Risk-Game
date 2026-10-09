@@ -79,14 +79,15 @@ phases are guesses and the cheap one has no list.
   one-page protocol, a consent note, a timed observation sheet (where they
   stopped reading, what they opened first, when they first commissioned an
   enquiry, when they first felt lost), and the post-session questions the
-  guide already lists.
+  guide already lists. **Built** — `docs/playtest-kit/`.
 - An opt-in **local** session log: the game records its own event stream
   (screen changes, decisions, commissions, pauses, lesson dismissals, with
-  the seed and day) into IndexedDB and offers it as a JSON export at the end
-  of the session. No server, no network; the player hands the file over. This
-  is the only instrumentation Phase 0 needs and it is reused by Phase 6.
+  the seed and day) in the browser's storage and offers it as a JSON export
+  at the end of the session. No server, no network; the player hands the file
+  over. This is the only instrumentation Phase 0 needs and it is reused by
+  Phase 6. **Built** — `/?playtest`, `pnpm session <file>`.
 - One report per session in `docs/playtests/`, in the existing format, plus a
-  single synthesis: a ranked list of what people stumbled on, and an answer
+  single synthesis (template: `docs/playtest-kit/SYNTHESIS.md`): a ranked list of what people stumbled on, and an answer
   (or "still open, needs N more sessions") for each of the six questions
   under "Questions only people can settle".
 

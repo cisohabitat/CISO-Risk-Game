@@ -14,6 +14,7 @@ import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
 import { Icon } from '@/components/ui/icons'
 import { YearStrip } from '@/components/game/YearStrip'
+import { RecordingControl } from '@/components/game/RecordingControl'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
@@ -130,6 +131,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="sr-only">: the player's guide (opens in a new tab)</span>
             </a>
           </div>
+          <RecordingControl className="border-t border-line pt-3" />
         </div>
       </nav>
 
@@ -243,6 +245,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </a>
           </li>
         </ul>
+        <RecordingControl className="mt-4 border-t border-line pt-3" />
       </Dialog>
     </div>
   )

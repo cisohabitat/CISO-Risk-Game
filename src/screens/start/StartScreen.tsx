@@ -10,6 +10,7 @@ import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/p
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 import { GUIDE_URL } from '@/app/navigation'
+import { setRecording, useRecording } from '@/store/session-recording'
 import { formatGameDate } from '@/game/time'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
@@ -54,6 +55,7 @@ export function StartScreen() {
   const saves = useGameStore((store) => store.ui.saves)
   const [seed, setSeed] = useState(randomSeed)
   const [difficulty, setDifficulty] = useState<Difficulty>('ciso')
+  const recording = useRecording()
   const situations = situationChoices
   const [situation, setSituation] = useState<string>(situations[0]?.id ?? 'surprise')
   // What the player has asked to delete: one campaign, or everything.
@@ -283,7 +285,7 @@ export function StartScreen() {
               arriving as the new CISO, and a first-time player asked to choose
               one before they have started is being asked about the machinery.
             */}
-            <details className="rounded-lg border border-line bg-surface-2/60 p-3">
+            <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recording || undefined}>
               <summary className="cursor-pointer text-sm font-medium">Replay settings</summary>
               <label className="mt-3 block">
                 <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
@@ -302,6 +304,25 @@ export function StartScreen() {
                   The seed fixes this world's hidden configuration: which awkward dependencies exist, how good the
                   controls really are, and what the executives are like. The same seed always produces the same Nexora.
                 </p>
+              </label>
+              {/* For playtests (docs/PLAYTEST.md). Open by default when a
+                  facilitator's link turned it on, so the player can see it. */}
+              <label className="mt-4 flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={recording}
+                  onChange={(event) => setRecording(event.target.checked)}
+                  className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
+                  style={{ minHeight: 0 }}
+                  aria-describedby="recording-help"
+                />
+                <span>
+                  <span className="block text-sm font-medium">Record this session for a playtest</span>
+                  <span id="recording-help" className="mt-0.5 block text-sm text-ink-muted text-pretty">
+                    Notes what you open and decide, and when, on this device only. Nothing is sent anywhere; you export
+                    the file and hand it over yourself. No names or typed notes are kept.
+                  </span>
+                </span>
               </label>
             </details>
 
