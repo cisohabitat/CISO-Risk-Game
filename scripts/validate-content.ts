@@ -1,17 +1,23 @@
 /**
- * `pnpm validate:content`
+ * `pnpm validate:content [--pack path/to/pack.json]`
  *
- * Schema-validates and integrity-checks the campaign bundle. Runs in CI and
- * before any release; a content error fails the build rather than shipping a
- * simulation that references ids that do not exist.
+ * Schema-validates and integrity-checks a campaign pack — Nexora by default —
+ * then holds its prose to the mechanical rules of docs/VOICE.md and reports
+ * its size against the content budget (plan §4.3). Runs in CI and before any
+ * release; a content error fails the build rather than shipping a simulation
+ * that references ids that do not exist.
  */
 import { campaignContentSchema } from '../src/lib/schemas/content'
 import { validateCampaignContent } from '../src/lib/content/validate'
-import { nexoraContentRaw } from '../src/content/nexora'
 import type { CampaignContent } from '../src/game/types'
+import { loadPack, packArgument } from './content/pack.ts'
+import { collectLines, voiceIssues } from './content/voice.ts'
+import { budgetReport } from './content/budget.ts'
 
 function main(): void {
-  const parsed = campaignContentSchema.safeParse(nexoraContentRaw)
+  const pack = loadPack(packArgument(process.argv.slice(2)).path)
+  console.log(`Pack: ${pack.name}\n`)
+  const parsed = campaignContentSchema.safeParse(pack.raw)
   if (!parsed.success) {
     console.error('Schema validation failed:\n')
     for (const issue of parsed.error.issues.slice(0, 40)) {
@@ -62,11 +68,24 @@ function main(): void {
       .join('\n'),
   )
 
-  if (errors.length > 0) {
-    console.error(`\n${errors.length} content error(s).`)
+  const { lines, ids } = collectLines(pack.raw)
+  const voice = voiceIssues(lines, ids)
+  console.log(`\nVoice (docs/VOICE.md): ${lines.length} strings`)
+  for (const issue of voice) console.error(`  error    voice:${issue.rule.padEnd(18)} ${issue.where}: ${issue.text}`)
+
+  const budget = budgetReport(content)
+  const short = budget.filter((line) => line.short)
+  console.log('\nAgainst the content budget (plan §4.3):')
+  for (const line of budget) {
+    console.log(`  ${line.short ? 'short' : 'ok   '}  ${line.what.padEnd(30)} ${String(line.has).padStart(4)} of ${line.wants}`)
+  }
+
+  const failures = errors.length + voice.length
+  if (failures > 0) {
+    console.error(`\n${errors.length} content error(s), ${voice.length} voice error(s).`)
     process.exit(1)
   }
-  console.log(`\nContent valid. ${warnings.length} warning(s).`)
+  console.log(`\nContent valid. ${warnings.length} warning(s); ${short.length} line(s) under the content budget.`)
 }
 
 main()

@@ -6,7 +6,8 @@
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
-import { nexoraContent } from '../src/content/nexora'
+import { loadPack, packArgument } from './content/pack.ts'
+import { validatedCampaign } from '../src/lib/content/validate-content'
 import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
 import type { ContentIndex, Difficulty, GameState } from '../src/game/types'
 
@@ -134,8 +135,8 @@ function play(
 }
 
 function main(): void {
-  const runs = Number(process.argv[2] ?? 60)
-  const index = buildContentIndex(nexoraContent)
+  const runs = Number(packArgument(process.argv.slice(2)).rest[0] ?? 60)
+  const index = buildContentIndex(validatedCampaign(loadPack(packArgument(process.argv.slice(2)).path).raw))
 
   const firedEvents = new Set<string>()
   const openedDecisions = new Set<string>()

@@ -28,7 +28,8 @@ src/content/nexora/
 - **Conditions are data.** Events, options and lines of enquiry gate on the
   `Condition` union, never on code. See `src/game/types/conditions.ts`.
 - **Effects are data.** Content changes the world only through `GameEffect`.
-- **Ids are checked.** `pnpm validate:content` fails on missing references,
+- **Ids are checked.** `pnpm validate:content` (on Nexora, or on any pack
+  with `--pack file.json`) fails on missing references,
   duplicate ids, impossible conditions (a tag no evidence carries), unreachable
   decisions, invalid effect targets and dependency cycles.
 - **Never expose hidden consequences.** `visibleKnownEffects` is what a CISO
@@ -280,3 +281,48 @@ only gets well into the detection programme, and the pair
 specific programmes running at once. Both are legitimately gated on particular
 play rather than unreachable, but they are worth re-checking after any change
 to the gates or to the rates that drive them.
+
+## Starting a second campaign
+
+Nexora is the only organisation, but nothing in the engine or the screens
+knows its name: a second organisation is a second pack. Phase 2 of
+`docs/ROADMAP.md` waits on Phase 0's playtests before one is written; this is
+how to write it when it is.
+
+1. **Start from a file.** `pnpm content:bundle hospital.json` writes Nexora as
+   a single pack in the shape every content script reads. Change `meta.id`,
+   `meta.title` and the organisation's name in `meta`, and keep the file
+   valid as you replace it — a pack that fails halfway is harder to finish
+   than one that never stops passing.
+2. **Point your editor at the schema.** `docs/content/campaign.schema.json` is
+   generated from the same schema the game validates with (`pnpm
+   content:schema` regenerates it, and a test fails if it falls behind). Add
+   `"$schema": "../docs/content/campaign.schema.json"` while writing and your
+   editor will check field names and shapes as you type; remove it before
+   validating.
+3. **Replace the organisation first, then everything that points at it.**
+   Nodes, edges and services; then controls, attack paths and risks that
+   name nodes; then people; then programmes, evidence, enquiries, decisions
+   and events. `pnpm validate:content --pack hospital.json` names every
+   reference that no longer resolves, every condition nothing can satisfy and
+   every decision nothing opens.
+4. **Write in the voice.** `docs/VOICE.md` is the register; the same command
+   applies its mechanical rules to every string and fails on a breach. It
+   cannot tell whether a consultant sounds like a consultant — read the
+   messages aloud.
+5. **Size it.** The same command reports the pack against the content budget
+   (plan §4.3). Short lines are warnings, not errors, but a year needs
+   roughly what Nexora has.
+6. **Check it plays.** `pnpm soak 200 --pack hospital.json` for crashes and
+   broken invariants; `pnpm coverage 60 --pack hospital.json` for what a
+   player actually reaches. Aim for the same reach as Nexora (98% of events,
+   96% of decisions).
+7. **Then put it in the game.** A pack lives beside Nexora under
+   `src/content/<id>/`, split by section the way Nexora is, with its own
+   `index.ts`; the loader and the start screen choosing between packs are the
+   last step, not the first.
+
+What the pipeline cannot check is whether the organisation teaches something
+Nexora does not. Pick a sector where the lesson differs — a hospital puts
+safety and a regulator where Nexora puts payments and growth — and ask two
+players who finished a Nexora year which lesson was new.

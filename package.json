@@ -29,7 +29,9 @@
     "play": "tsx scripts/play.ts",
     "ladder": "tsx scripts/ladder.ts",
     "guide:shots": "playwright test --config playwright.guide.config.ts --project=desktop-chromium",
-    "session": "tsx scripts/session.ts"
+    "session": "tsx scripts/session.ts",
+    "content:bundle": "tsx scripts/content-bundle.ts",
+    "content:schema": "tsx scripts/content-schema.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

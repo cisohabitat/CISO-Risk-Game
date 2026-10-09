@@ -169,22 +169,35 @@ organisation to be CISO of.
   follow to add a decision end to end, and a reference-resolution check (every
   `nodeId`, `controlId`, `stakeholderId` resolves). Measure by having
   somebody who did not build the game add one decision from the docs alone.
+  **Built:** `pnpm validate:content`, `pnpm coverage` and `pnpm soak` take
+  `--pack file.json`; validation applies the voice rules and reports the
+  pack against the content budget; `pnpm content:bundle` writes Nexora as a
+  pack to start from; `docs/content/campaign.schema.json` is the published
+  schema (`pnpm content:schema`, held current by test); `docs/CONTENT.md`
+  has the walkthrough, "Starting a second campaign". References were
+  already checked. The measure — somebody else following it — is still open.
+  The Nexora-specific content tests (claims against conditions, repeats,
+  decisions) still read Nexora only; they move to the pack when a second
+  one exists to run them on.
 - **A second organisation.** A different sector so the lessons differ — a
   regional hospital group or a water utility both put safety and regulators
   where Nexora puts payments and growth. Same engine, new pack: 30–40 nodes,
   10–14 risks, 5–6 incident families, 30+ decisions, 150+ events, its own
   executives and situations. Sized by the MVP content budget (plan §4.3),
-  which Nexora shows is enough for a year.
+  which Nexora shows is enough for a year. **Not started:** waits on Phase 0
+  and a content author.
 - **Year Two that remembers.** A finished year already leads to another;
   make the second year start from the first's estate, controls, relationships
   and open acceptances, with the review's "next year's priorities" decision
   honoured as the board's expectation. Measured with the ladder: a Year Two
   after a strong Year One should read differently from one after a weak
-  one, in the same way the three modes already do.
+  one, in the same way the three modes already do. **Not started:** a
+  mechanic change, so it waits on a playtest asking for it.
 - **Threat variety.** Incident families 5 → 8, attack paths 8 → 14, a third
   actor with a different objective (disruption rather than money). Measured
   with `scripts/efficacy.ts` so each programme still reduces what it is meant
   to, and `pnpm ladder bands` so the risk rows do not all read the same.
+  **Not started:** the threat engine is frozen until a playtest asks.
 - **Situations with weight**, if Phase 0 said they felt light: each starting
   situation gets a second decision of its own and one executive whose
   standing starts somewhere other than neutral.

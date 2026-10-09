@@ -59,6 +59,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
 | `pnpm build && pnpm size` | What does a first-time player download? |
+| `pnpm validate:content --pack <file>` | Does a pack (Nexora by default) resolve, read in the voice, and fill a year? `pnpm content:bundle` writes Nexora as a pack to start from |
 | `pnpm session <file>` | What did a playtester actually do, and when? Reads a log recorded with `/?playtest` (`docs/playtest-kit/`) |
 
 None of them answer whether the game lands: that needs people, and
