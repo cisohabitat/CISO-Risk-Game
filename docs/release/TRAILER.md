@@ -18,6 +18,6 @@ carries it. Music optional and quiet.
 | 76–86 s | The annual review masthead and headline | The year's verdict, in its own words |
 | 86–90 s | Title, and the address | "CISO: First Year" |
 
-Use seed `class-25` in CISO mode for a summer ransomware incident (see
+Use seed `class-5` in CISO mode for a summer ransomware incident (see
 `docs/educator/FACILITATOR.md`); check with `pnpm cohort` that it still
 arrives before recording.

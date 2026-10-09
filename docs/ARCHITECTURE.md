@@ -121,7 +121,7 @@ to it through the `situation.is` condition. It is recorded as
 
 ## Threats and incidents
 
-Three actors evaluate a small set of precomputed candidate attack paths rather
+Four actors evaluate a small set of precomputed candidate attack paths rather
 than searching the graph. Each day an active campaign attempts its current step;
 controls change the odds, monitoring decides whether anyone notices, and a
 capable SOC that sees activity can push the actor back out; how likely that is

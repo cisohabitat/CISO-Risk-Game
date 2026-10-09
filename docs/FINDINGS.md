@@ -18,6 +18,24 @@ fault.
 
 ### Fixed
 
+- **Three actors, eight routes and five kinds of incident were all the year
+  could throw.** A player who had seen ransomware and a data exposure had
+  seen most of what came. Added as content, with the engine unchanged:
+  - Black Tern, an actor that wants disruption rather than money;
+  - six routes, among them a wiped warehouse estate, a diverted payment and
+    a tampered checkout;
+  - three families, with their own risks, evidence and hypotheses;
+  - four response decisions, including a ransom note the board decides on
+    the CISO's recommendation, which a practitioner on the AI panel asked
+    for.
+
+  Measured:
+  - Coverage over 60 campaigns reaches every route, actor and family.
+  - Soak is clean over 1000 campaigns.
+  - The cohort table in `docs/educator/FACILITATOR.md` was re-run and its
+    facts re-pinned, because every seed's year moved.
+  - The cost is a busier intended mode, recorded in `CLAUDE.md`.
+
 - **What the AI playtest panel of 9 October found.** Four agents each played
   a whole year through a real browser, as four people
   (`docs/playtests/2026-10-09-ai-panel-synthesis.md`). The defects they could

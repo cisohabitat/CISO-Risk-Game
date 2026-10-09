@@ -1,0 +1,151 @@
+{
+  "events": [
+    {
+      "id": "evt-thr-wiper-briefing",
+      "type": "threat",
+      "title": "Warehouses wiped, and nobody asked for money",
+      "from": "Threat intelligence",
+      "body": "A group calling itself Black Tern has wiped warehouse systems at two logistics firms in the region this month. No ransom note and no demand: the point was that people noticed. Both came in through remote access appliances that were a version or two behind.",
+      "priority": "notable",
+      "availableFromDay": 50,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-sector-wiper",
+          "note": "Threat intelligence"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-net-remote",
+        "node-app-wms"
+      ],
+      "tags": [
+        "threat",
+        "disruption"
+      ]
+    },
+    {
+      "id": "evt-org-remote-appliance",
+      "type": "discovery",
+      "title": "The remote access appliance is behind",
+      "from": "Stefan Alvarez, Head of Security Architecture",
+      "body": "The remote access appliance is two major versions behind. The upgrade needs a weekend outage, and every request for one has been turned down since the spring.",
+      "priority": "notable",
+      "availableFromDay": 70,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-remote-appliance",
+          "note": "Stefan Alvarez"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-net-remote"
+      ],
+      "tags": [
+        "network",
+        "vulnerability"
+      ]
+    },
+    {
+      "id": "evt-biz-bank-details",
+      "type": "business",
+      "title": "A payment that nearly went elsewhere",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Accounts payable changed a supplier's bank details last week because an email asked them to, from the supplier's real address. We caught it only when the supplier chased the payment. Either their mailbox has someone else in it, or ours does.",
+      "priority": "notable",
+      "availableFromDay": 85,
+      "conditions": [],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-bank-detail-change",
+          "note": "Tomas Lindqvist"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-app-erp"
+      ],
+      "tags": [
+        "business",
+        "payments"
+      ]
+    },
+    {
+      "id": "evt-thr-mailbox-rule",
+      "type": "threat",
+      "title": "A rule nobody in finance set up",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "A finance mailbox forwards anything with 'invoice' in the subject to an outside address. Nobody in finance set it up. We have removed it, and we cannot yet say how long it was there.",
+      "priority": "urgent",
+      "availableFromDay": 110,
+      "conditions": [
+        {
+          "kind": "evidence.known",
+          "evidenceId": "ev-bank-detail-change"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-mailbox-rule",
+          "note": "Jo Mbeki"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-idp",
+        "node-app-erp"
+      ],
+      "tags": [
+        "detection",
+        "payments"
+      ]
+    },
+    {
+      "id": "evt-org-unsigned-releases",
+      "type": "discovery",
+      "title": "The pipeline trusts itself",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Anything that reaches the build pipeline is deployed. Nothing checks who wrote it or whether anyone reviewed it, so the pipeline's only safeguard is that nobody bad reaches it.",
+      "priority": "notable",
+      "availableFromDay": 120,
+      "conditions": [
+        {
+          "kind": "node.discovered",
+          "nodeId": "node-ci-pipeline"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-unsigned-releases",
+          "note": "Callum Reid"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-ci-pipeline",
+        "node-app-checkout"
+      ],
+      "tags": [
+        "engineering"
+      ]
+    }
+  ]
+}

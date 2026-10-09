@@ -26,7 +26,7 @@ why the same estate went two ways.
 Send a link and everyone starts on the same year:
 
 ```
-https://<where the game is hosted>/?seed=class-2&mode=ciso
+https://<where the game is hosted>/?seed=class-15&mode=ciso
 ```
 
 The start screen says the link chose the year, and shows the seed. Without
@@ -41,16 +41,18 @@ sit-after-breach`) before relying on the table.
 `pnpm cohort 30 ciso class` played thirty seeds in *The inherited mess* as a
 light, engaged year (answer what is asked, file each board paper, run the
 identity programme, commission two enquiries), and the same seeds again with
-a player who does nothing. On 9 October 2026:
+a player who does nothing. On 9 October 2026, after the threat variety
+(a disruption actor, six more routes and three more kinds of incident)
+moved every seed's year:
 
 | Seed | Played engaged | Played idle | Use it for |
 |---|---|---|---|
-| `class-6` | No incident; credible year | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. |
-| `class-4`, `class-27` | No incident; mixed year | No incident | More quiet years, for a comparison group. |
-| `class-9` | Data exposure 24 July | Data exposure 20 July | **The steady year.** The same summer incident whatever the student does: compare how ready each was. |
-| `class-25` | Ransomware 4 July, data exposure 18 July | Ransomware 16 July, data exposure 5 August | **The crisis year.** A summer ransomware either way; the difference is what was ready for it. |
-| `class-2` | Ransomware 3 April (severe) | Data exposure 20 November | **The comparison year.** The same world gives an engaged player an early ransomware and an idle one a late data exposure. Put two students' reviews side by side. |
-| `class-28` | Data exposure 29 January and 11 September | Data exposure 16 May, 6 August, 17 November | **The data year.** The same weakness, again and again: did anyone close it? |
+| `class-15` | No incident; credible year | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. |
+| `class-7`, `class-20` | One incident (platform tampering 24 March; data exposure 22 December) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? |
+| `class-5` | Ransomware 4 July (severe) | Ransomware 21 May, then data theft in June and October | **The crisis year.** Ransomware either way; the difference is what was ready for it and what followed. |
+| `class-12` | Destructive attack 27 September (severe) | Ransomware 6 August | **The disruption year.** An attacker who wants the warehouses stopped, not paid. Nothing to negotiate: what was there to fall back on? |
+| `class-21` | No incident | Payment diversion 24 April and 27 September | **The fraud year.** The same weakness twice for a player who never closed it: money sent elsewhere on instructions that looked like Nexora's own. |
+| `class-10` | Destructive attack 12 October, data exposure 27 November | Data exposure 30 May | **The comparison year.** The same world gives an engaged player two late incidents and an idle one an early data exposure. Put two students' reviews side by side. |
 
 Treat the dates as typical rather than promised: a student who plays
 differently meets a different year, which is the point. Re-run

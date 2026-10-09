@@ -41,6 +41,29 @@
       "targetPreferences": ["data platforms", "acquisition activity", "engineering pipelines"],
       "techniquePreferences": ["phishing", "persistence", "lateral-movement", "data-exfiltration"],
       "objective": "espionage"
+    },
+    {
+      "id": "actor-disrupt",
+      "name": "Black Tern",
+      "archetype": "State-aligned disruption group",
+      "motivation": "Visible disruption of payments and logistics, for political effect",
+      "description": "Works for a cause rather than a payout. Wants an outage people notice, chooses the services that make the news, and has nothing to negotiate.",
+      "capability": 0.7,
+      "persistence": 0.55,
+      "baseActivity": 0.2,
+      "variance": 0.1,
+      "targetPreferences": [
+        "payment services",
+        "logistics",
+        "public-facing platforms"
+      ],
+      "techniquePreferences": [
+        "exploit-public-app",
+        "privilege-abuse",
+        "lateral-movement",
+        "encryption-impact"
+      ],
+      "objective": "disruption"
     }
   ],
   "incidentFamilies": [
@@ -53,7 +76,7 @@
       "baseDataImpact": 0.5,
       "baseDurationDays": 12,
       "regulatoryInterest": 0.6,
-      "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate", "dec-inc-external"],
+      "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate", "dec-inc-external", "dec-inc-ransom"],
       "whatHelped": [{"text": "Backups that could not be reached from the compromised accounts", "when": {"kind": "control.coverageAtLeast", "controlId": "ctl-backup", "value": 0.6}}, {"text": "A rehearsed decision path", "when": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "control.coverageAtLeast", "controlId": "ctl-ir", "value": 0.6}]}}],
       "whatHurt": [{"text": "Administrative accounts shared between environments", "when": {"kind": "control.coverageBelow", "controlId": "ctl-pam", "value": 0.6}}, {"text": "Recovery that had never been timed", "when": {"kind": "not", "condition": {"kind": "any", "conditions": [{"kind": "flag.set", "flag": "recovery.tested"}, {"kind": "evidence.known", "evidenceId": "ev-backup-test-failed"}, {"kind": "evidence.known", "evidenceId": "ev-restore-timed"}, {"kind": "situation.is", "situationId": "sit-tidy"}, {"kind": "situation.is", "situationId": "sit-after-breach"}]}}}]
     },
@@ -108,6 +131,117 @@
       "responseDecisionIds": ["dec-inc-command", "dec-inc-isolate"],
       "whatHelped": [{"text": "The ability to cut supplier access without cutting the business", "when": {"kind": "decision.optionTaken", "decisionId": "dec-msp-access", "optionId": "opt-msp-breakglass"}}],
       "whatHurt": [{"text": "Integration accounts with more rights than the integration needed", "when": {"kind": "control.coverageBelow", "controlId": "ctl-3p-access", "value": 0.6}}]
+    },
+    {
+      "id": "fam-destructive",
+      "name": "Destructive attack",
+      "description": "An actor with no interest in money destroys what the business runs on, so that it is seen to stop.",
+      "headline": "Nexora's warehouse systems were wiped, and nobody asked for anything.",
+      "baseDisruption": 0.8,
+      "baseDataImpact": 0.1,
+      "baseDurationDays": 14,
+      "regulatoryInterest": 0.5,
+      "responseDecisionIds": [
+        "dec-inc-command",
+        "dec-inc-rebuild"
+      ],
+      "whatHelped": [
+        {
+          "text": "Backups held where the wiping accounts could not reach",
+          "when": {
+            "kind": "control.coverageAtLeast",
+            "controlId": "ctl-backup",
+            "value": 0.6
+          }
+        },
+        {
+          "text": "A manual fulfilment fallback that had been documented",
+          "when": {
+            "kind": "decision.optionTaken",
+            "decisionId": "dec-legacy-retirement",
+            "optionId": "opt-legacy-manual"
+          }
+        }
+      ],
+      "whatHurt": [
+        {
+          "text": "Administrative reach into the warehouse estate from the corporate network",
+          "when": {
+            "kind": "control.coverageBelow",
+            "controlId": "ctl-segmentation",
+            "value": 0.5
+          }
+        },
+        "Nothing to negotiate with, and so no time bought"
+      ]
+    },
+    {
+      "id": "fam-payment-fraud",
+      "name": "Payment diversion",
+      "description": "A compromised account sends Nexora's money somewhere it should not go.",
+      "headline": "Nexora paid somebody else, on instructions that looked like its own.",
+      "baseDisruption": 0.15,
+      "baseDataImpact": 0.25,
+      "baseDurationDays": 6,
+      "regulatoryInterest": 0.3,
+      "responseDecisionIds": [
+        "dec-inc-command",
+        "dec-inc-recall"
+      ],
+      "whatHelped": [
+        {
+          "text": "A second factor on the accounts that move money",
+          "when": {
+            "kind": "control.coverageAtLeast",
+            "controlId": "ctl-mfa",
+            "value": 0.7
+          }
+        }
+      ],
+      "whatHurt": [
+        {
+          "text": "Bank detail changes accepted on the strength of an email",
+          "when": {
+            "kind": "control.coverageBelow",
+            "controlId": "ctl-email",
+            "value": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "fam-service-tampering",
+      "name": "Customer platform tampering",
+      "description": "An actor changes what customers see or send, through the platform's own release process.",
+      "headline": "Customers used a Nexora checkout that Nexora had not written.",
+      "baseDisruption": 0.5,
+      "baseDataImpact": 0.45,
+      "baseDurationDays": 7,
+      "regulatoryInterest": 0.6,
+      "responseDecisionIds": [
+        "dec-inc-command",
+        "dec-inc-statement"
+      ],
+      "whatHelped": [
+        {
+          "text": "A cloud estate whose configuration was checked rather than trusted",
+          "when": {
+            "kind": "programme.status",
+            "programmeId": "prog-cloud",
+            "status": "complete"
+          }
+        }
+      ],
+      "whatHurt": [
+        {
+          "text": "A pipeline that deployed whatever reached it",
+          "when": {
+            "kind": "control.coverageBelow",
+            "controlId": "ctl-cloud-posture",
+            "value": 0.5
+          }
+        }
+      ]
     }
   ],
   "attackPaths": [
@@ -224,6 +358,319 @@
         { "id": "step-cm-1", "nodeId": "node-cloud-dev", "technique": "exploit-public-app", "narrative": "A test environment exposed to the internet is taken over.", "difficulty": 0.15, "controlIds": ["ctl-vuln", "ctl-cloud-posture"] },
         { "id": "step-cm-2", "nodeId": "node-cloud-prod", "technique": "lateral-movement", "narrative": "The peering link carries the actor into the production tenancy.", "difficulty": 0.4, "controlIds": ["ctl-segmentation", "ctl-cloud-posture", "ctl-logging"] },
         { "id": "step-cm-3", "nodeId": "node-data-pii", "technique": "data-exfiltration", "narrative": "Customer records are copied out through cloud storage.", "difficulty": 0.35, "controlIds": ["ctl-dlp", "ctl-cloud-posture"] }
+      ]
+    },
+    {
+      "id": "path-disrupt-wiper",
+      "name": "Through the remote access appliance to the warehouses",
+      "summary": "An unpatched appliance at the edge, an identity platform that trusts it, and administrative reach into the warehouse estate.",
+      "actorAffinity": {
+        "actor-disrupt": 1,
+        "actor-ransom": 0.3
+      },
+      "attractiveness": 0.5,
+      "impactedServiceIds": [
+        "svc-orders"
+      ],
+      "incidentFamilyId": "fam-destructive",
+      "steps": [
+        {
+          "id": "step-wiper-1",
+          "nodeId": "node-net-remote",
+          "technique": "exploit-public-app",
+          "narrative": "A published flaw in the remote access appliance gives a foothold at the edge.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-vuln",
+            "ctl-mfa"
+          ]
+        },
+        {
+          "id": "step-wiper-2",
+          "nodeId": "node-idp",
+          "technique": "privilege-abuse",
+          "narrative": "Sessions taken from the appliance are traded for administrative identities.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-pam",
+            "ctl-mfa",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-wiper-3",
+          "nodeId": "node-mgmt-server",
+          "technique": "lateral-movement",
+          "narrative": "The jump servers give reach into the warehouse estate.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-segmentation",
+            "ctl-edr",
+            "ctl-pam"
+          ]
+        },
+        {
+          "id": "step-wiper-4",
+          "nodeId": "node-app-wms",
+          "technique": "encryption-impact",
+          "narrative": "The warehouse systems are wiped, with no note left behind.",
+          "difficulty": 0.3,
+          "controlIds": [
+            "ctl-backup",
+            "ctl-edr",
+            "ctl-segmentation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "path-disrupt-platform",
+      "name": "Through the build pipeline to the checkout",
+      "summary": "An engineer's laptop, a pipeline that deploys whatever it is given, and a checkout customers trust.",
+      "actorAffinity": {
+        "actor-disrupt": 1,
+        "actor-credential": 0.4,
+        "actor-espionage": 0.2
+      },
+      "attractiveness": 0.45,
+      "impactedServiceIds": [
+        "svc-platform",
+        "svc-payments"
+      ],
+      "incidentFamilyId": "fam-service-tampering",
+      "steps": [
+        {
+          "id": "step-tamper-1",
+          "nodeId": "node-dev-workstations",
+          "technique": "phishing",
+          "narrative": "An engineer installs a package that does more than it says.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-email",
+            "ctl-edr"
+          ]
+        },
+        {
+          "id": "step-tamper-2",
+          "nodeId": "node-ci-pipeline",
+          "technique": "persistence",
+          "narrative": "A change is slipped into the pipeline's own configuration.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-cloud-posture",
+            "ctl-pam",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-tamper-3",
+          "nodeId": "node-app-checkout",
+          "technique": "privilege-abuse",
+          "narrative": "The next release ships the actor's code to every customer.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-cloud-posture",
+            "ctl-logging",
+            "ctl-vuln"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "path-finance-mailbox",
+      "name": "Through a finance mailbox to a supplier payment",
+      "summary": "A phished finance user, a mailbox rule nobody set, and bank details changed on an email.",
+      "actorAffinity": {
+        "actor-credential": 1,
+        "actor-ransom": 0.2
+      },
+      "attractiveness": 0.5,
+      "impactedServiceIds": [
+        "svc-corporate"
+      ],
+      "incidentFamilyId": "fam-payment-fraud",
+      "steps": [
+        {
+          "id": "step-fraud-1",
+          "nodeId": "node-endpoints",
+          "technique": "phishing",
+          "narrative": "A finance user signs in to a page that only looks like Nexora's.",
+          "difficulty": 0.3,
+          "controlIds": [
+            "ctl-email",
+            "ctl-edr"
+          ]
+        },
+        {
+          "id": "step-fraud-2",
+          "nodeId": "node-idp",
+          "technique": "privilege-abuse",
+          "narrative": "The stolen session sets a quiet forwarding rule on the mailbox.",
+          "difficulty": 0.3,
+          "controlIds": [
+            "ctl-mfa",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-fraud-3",
+          "nodeId": "node-app-erp",
+          "technique": "privilege-abuse",
+          "narrative": "A supplier's bank details are changed, on the strength of an email from the supplier.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-pam",
+            "ctl-logging"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "path-hr-supplier-fraud",
+      "name": "Through the HR provider to payroll",
+      "summary": "A breached HR supplier, staff passwords reused at work, and payroll details nobody checks twice.",
+      "actorAffinity": {
+        "actor-credential": 0.8
+      },
+      "attractiveness": 0.4,
+      "impactedServiceIds": [
+        "svc-corporate"
+      ],
+      "incidentFamilyId": "fam-payment-fraud",
+      "steps": [
+        {
+          "id": "step-payroll-1",
+          "nodeId": "node-sup-hr",
+          "technique": "supplier-remote-access",
+          "narrative": "Staff credentials taken from the HR provider's breach are tried at Nexora.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-3p-access"
+          ]
+        },
+        {
+          "id": "step-payroll-2",
+          "nodeId": "node-idp",
+          "technique": "credential-stuffing",
+          "narrative": "Reused passwords open accounts that never enrolled a second factor.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-mfa"
+          ]
+        },
+        {
+          "id": "step-payroll-3",
+          "nodeId": "node-app-erp",
+          "technique": "privilege-abuse",
+          "narrative": "Salary payments are redirected to accounts the staff do not own.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-pam",
+            "ctl-logging"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "path-backup-ransom",
+      "name": "Through a forgotten service account to the backups",
+      "summary": "A service account nobody owns, a backup platform administered with the same rights, and production with nothing left to restore from.",
+      "actorAffinity": {
+        "actor-ransom": 1,
+        "actor-disrupt": 0.4
+      },
+      "attractiveness": 0.5,
+      "impactedServiceIds": [
+        "svc-payments",
+        "svc-platform"
+      ],
+      "incidentFamilyId": "fam-ransomware",
+      "steps": [
+        {
+          "id": "step-backup-1",
+          "nodeId": "node-svc-accounts",
+          "technique": "privilege-abuse",
+          "narrative": "An old service account's password, unchanged in years, still works.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-pam",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-backup-2",
+          "nodeId": "node-backup",
+          "technique": "privilege-abuse",
+          "narrative": "The same rights administer the backups, which are deleted first.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-pam",
+            "ctl-backup",
+            "ctl-segmentation"
+          ]
+        },
+        {
+          "id": "step-backup-3",
+          "nodeId": "node-cloud-prod",
+          "technique": "encryption-impact",
+          "narrative": "Production is encrypted with nothing behind it to restore from.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-backup",
+            "ctl-edr",
+            "ctl-cloud-posture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "path-kestrel-espionage",
+      "name": "Through Kestrel to the deal room",
+      "summary": "An acquisition that arrived already compromised, a flat corporate network, and the finance system where deals are modelled.",
+      "actorAffinity": {
+        "actor-espionage": 1,
+        "actor-ransom": 0.2
+      },
+      "attractiveness": 0.4,
+      "impactedServiceIds": [
+        "svc-corporate"
+      ],
+      "incidentFamilyId": "fam-data-theft",
+      "steps": [
+        {
+          "id": "step-kestrel-1",
+          "nodeId": "node-acq-kestrel",
+          "technique": "persistence",
+          "narrative": "Access planted at Kestrel before the deal survives the integration.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-edr",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-kestrel-2",
+          "nodeId": "node-net-corp",
+          "technique": "lateral-movement",
+          "narrative": "The corporate network does not tell Kestrel's machines from Nexora's.",
+          "difficulty": 0.35,
+          "controlIds": [
+            "ctl-segmentation",
+            "ctl-edr",
+            "ctl-logging"
+          ]
+        },
+        {
+          "id": "step-kestrel-3",
+          "nodeId": "node-app-erp",
+          "technique": "data-exfiltration",
+          "narrative": "Deal models and forecasts leave a little at a time.",
+          "difficulty": 0.4,
+          "controlIds": [
+            "ctl-dlp",
+            "ctl-logging"
+          ]
+        }
       ]
     }
   ]

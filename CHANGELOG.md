@@ -10,6 +10,12 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- **More kinds of attack:**
+  - an actor that wants an outage rather than a payment;
+  - six new routes in;
+  - three new kinds of incident (a wiped warehouse estate, a diverted
+    payment, a tampered checkout);
+  - a ransom demand that goes to the board with your recommendation.
 - From the same panel:
   - The board's reading of each paper stays in the inbox.
   - Money that comes back says where it came from.

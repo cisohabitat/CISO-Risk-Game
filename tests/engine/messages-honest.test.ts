@@ -152,9 +152,12 @@ describe('messages about controls', () => {
 
 describe('reports the player has already overtaken', () => {
   it('does not have a colleague discover a finding the player already holds', () => {
-    // The recovery test enquiry guarantees the same evidence as the message in
-    // which Jo "went looking for the last recovery test report".
-    for (const seed of ['overtaken-1', 'overtaken-2']) {
+    // The recovery test enquiry can turn up the same evidence as the message
+    // in which Jo "went looking for the last recovery test report". A partial
+    // result finds only some of what it could, so the seeds are ones where it
+    // does: overtaken-2 stopped being one when the threat variety moved every
+    // seed's draws.
+    for (const seed of ['overtaken-1', 'overtaken-3']) {
       const state = newGame(index, { seed })
       applyAction(state, index, {
         type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id,

@@ -125,12 +125,38 @@ been fixed and moved to `docs/FINDINGS.md`.
   for. Whether the back half *feels* like the year building is the playtest
   question in `docs/PLAYTEST.md`.
 
-- **Third-party is still the weakest programme, by the owner's choice.** Over
-  150 seeds second-half incidents read identity 0.51, detection 0.54,
-  segmentation 0.60, cloud 0.65, third-party 0.65 against 0.73 idle; recovery
-  acts on consequence (worst 0.33 to 0.23), not on count. Third-party's effect
-  on its own routes is larger, but attackers it turns away try elsewhere. The
-  owner chose to leave that as the lesson rather than strengthen it.
+- **Attackers turned away try elsewhere, and now there is more elsewhere.**
+  This was third-party's weakness, kept as the lesson by the owner's choice.
+  Since the threat variety it is every programme's, measured over 150 CISO
+  seeds as second-half incidents against 0.77 idle:
+
+  | Programme | Second-half incidents |
+  |---|---|
+  | Identity | 0.60 |
+  | Detection | 0.68 |
+  | Third-party | 0.71 |
+  | Cloud | 0.74 |
+  | Recovery | 0.85 |
+  | Segmentation | 0.86 |
+
+  On their own routes, each still cuts what it targets:
+  - segmentation halves destructive attacks (0.11 to 0.05) and legacy
+    outages;
+  - detection cuts the backup route from 0.08 to 0.02;
+  - cloud cuts platform tampering;
+  - recovery acts on consequence (worst 0.35 to 0.28), not on count.
+
+  Detection did most to lower the count before the variety (−30% of all
+  incidents). Now it does −10%: disrupting a campaign sends the actor to one
+  of fourteen routes rather than eight.
+
+- **The threat variety made the intended mode busier.** Over 30 seeds the
+  ladder's incidents went from 0.50 / 0.60 / 1.23 to 0.47 / 0.93 / 1.43
+  (guided, CISO, high pressure). Guided and CISO now separate where they
+  barely did. The risk rows read low more often, 15% of weekly rows against
+  7%, and the board pack calls 17% of open risks material, against 27%. The
+  three new scenarios start mostly below the others. Whether a CISO year
+  with nearly one incident is the right weight is a playtest question.
 
 - **Starting situations are new and light.** Four exist (the usual opening,
   after the breach, new money, a tidy inheritance). Over 100 CISO seeds each,
@@ -171,9 +197,12 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 184.1 kB against a 185 kB limit (it was 258.2
-  against 260), and content no longer adds to it. The campaign chunk has its
-  own budget, 90 kB with about 15 kB to spare, and is fetched while the start
+  The first screen waits on 180.4 kB against a 185 kB limit (it was 258.2
+  against 260; the annual review now loads with the review screen), and
+  content no longer adds to it. The campaign chunk has its own budget, 90 kB,
+  and after Year Two and the threat variety it is 88.2 kB: the next sizeable
+  piece of content needs the budget raised deliberately or the chunk split.
+  It is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
   to 7.7 s). The cost is one round trip for somebody who presses Begin
   within a few seconds on a very slow link: 2.8 s of waiting a second after
