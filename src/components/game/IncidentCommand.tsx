@@ -30,6 +30,8 @@ export function IncidentCommand() {
 
   return (
     <Card
+      // Keyed by the incident, so a new one arrives rather than appearing.
+      key={incident.id}
       // Sticky while the incident runs. It sat at the top of a scrolling page,
       // so a player who had scrolled down had nothing but a pill in the header
       // telling them the organisation was in crisis — which is the opposite of
@@ -41,7 +43,7 @@ export function IncidentCommand() {
       // A solid bar rather than a tint. The severe "soft" token is nearly white
       // in light mode, so a tinted card read quieter than the teaching note
       // under it — the wrong way round when the organisation is in crisis.
-      className="mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
+      className="animate-arrive mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
       role="region"

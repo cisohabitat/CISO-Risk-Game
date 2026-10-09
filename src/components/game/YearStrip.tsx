@@ -27,7 +27,7 @@ export function YearStrip({ day }: { day: number }) {
             <div key={q}>
               <div className="h-1.5 overflow-hidden rounded-full bg-surface-3">
                 <div
-                  className={q === quarter && !over ? 'h-full bg-accent' : 'h-full bg-line-strong'}
+                  className={`h-full transition-[width] duration-700 ease-out ${q === quarter && !over ? 'bg-accent' : 'bg-line-strong'}`}
                   style={{ width: `${filled * 100}%` }}
                 />
               </div>

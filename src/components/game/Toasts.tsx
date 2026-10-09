@@ -26,6 +26,7 @@ export function Toasts() {
       role="status"
       aria-live="polite"
       data-testid="toasts"
+      data-print="hide"
     >
       {toasts.map((toast) => (
         <div

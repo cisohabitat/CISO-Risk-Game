@@ -94,6 +94,14 @@ export function DebriefScreen() {
         <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
       </header>
 
+      {/* The review is the document a player might take to their own board;
+          it prints as one, without the game around it. */}
+      <div className="flex justify-end" data-print="hide">
+        <Button variant="quiet" size="sm" onClick={() => window.print()}>
+          Print or save as PDF
+        </Button>
+      </div>
+
       <Card>
         <CardBody className="space-y-3">
           {review.narrative.map((paragraph, position) => (
@@ -121,7 +129,7 @@ export function DebriefScreen() {
             before a single sentence is read. */}
         <ul className="divide-y divide-line border-y border-line">
           {review.dimensions.map((dimension) => (
-            <li key={dimension.id}>
+            <li key={dimension.id} className="print-keep">
               <div className="grid grid-cols-1 gap-x-4 gap-y-1.5 py-4 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
                 <div className="flex flex-wrap items-center gap-2 sm:block">
                   <h3 className="font-medium leading-tight">{dimension.label}</h3>
@@ -175,7 +183,7 @@ export function DebriefScreen() {
           <SectionHeading><span id="incidents">Incident reconstruction</span></SectionHeading>
           <ul className="space-y-3">
             {incidents.map((incident) => (
-              <li key={incident.id}>
+              <li key={incident.id} className="print-keep">
                 <Card>
                   <CardBody className="space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">

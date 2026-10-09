@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils/cn'
 import { Icon } from '@/components/ui/icons'
 import { YearStrip } from '@/components/game/YearStrip'
 import { RecordingControl } from '@/components/game/RecordingControl'
+import { SoundToggle } from '@/components/game/SoundToggle'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
@@ -40,10 +41,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     /* On wide screens the rail stays put and only the content pane scrolls;
        on small screens the page scrolls normally under a fixed bottom bar. */
-    <div className="flex min-h-[100dvh] flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:flex-row lg:overflow-hidden">
+    <div className="print-flow flex min-h-[100dvh] flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:flex-row lg:overflow-hidden">
       {/* Desktop rail */}
       <nav
         aria-label="Primary"
+        data-print="hide"
         className="hidden shrink-0 border-r border-line bg-surface lg:flex lg:h-full lg:w-60 lg:flex-col xl:w-64"
       >
         <div className="border-b border-line px-5 py-5">
@@ -82,7 +84,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                     // background the Briefing had already summarised, and the
                     // number read as a backlog to clear. The inbox's own Unread
                     // filter still has the whole list.
-                    <span className="rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums">
+                    // Keyed by the count, so it pops once when mail arrives.
+                    <span
+                      key={view.unreadMessages}
+                      className="animate-pop rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums"
+                    >
                       {view.unreadMessages > 9 ? '9+' : view.unreadMessages}
                     </span>
                   )}
@@ -131,16 +137,17 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="sr-only">: the player's guide (opens in a new tab)</span>
             </a>
           </div>
+          <SoundToggle className="compact min-h-9" />
           <RecordingControl className="border-t border-line pt-3" />
         </div>
       </nav>
 
-      <div className="flex min-w-0 flex-1 flex-col lg:h-full lg:overflow-hidden">
+      <div className="print-flow flex min-w-0 flex-1 flex-col lg:h-full lg:overflow-hidden">
         <ShellHeader />
         <main
           id="main"
           tabIndex={-1}
-          className="scroll-area flex-1 pb-24 outline-none lg:pb-8"
+          className="print-flow scroll-area flex-1 pb-24 outline-none lg:pb-8"
           aria-label={current?.label ?? 'Game'}
         >
           <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">{children}</div>
@@ -150,6 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Primary"
+        data-print="hide"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface lg:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
@@ -169,7 +177,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span aria-hidden="true" className="relative inline-flex">
                   <Icon name={destination.icon} size={20} />
                   {destination.id === 'inbox' && view.unreadMessages > 0 && (
-                    <span className="absolute -right-2 -top-1 h-2 w-2 rounded-full bg-accent" />
+                    <span key={view.unreadMessages} className="animate-pop absolute -right-2 -top-1 h-2 w-2 rounded-full bg-accent" />
                   )}
                   {destination.id === 'home' && view.openDecisions > 0 && (
                     <span className="absolute -right-2 -top-1 h-2 w-2 rounded-full bg-brass" />
@@ -245,6 +253,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </a>
           </li>
         </ul>
+        <SoundToggle className="mt-4" />
         <RecordingControl className="mt-4 border-t border-line pt-3" />
       </Dialog>
     </div>
@@ -273,7 +282,7 @@ function ShellHeader() {
   const view = briefing(state, index)
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-surface">
+    <header className="sticky top-0 z-20 border-b border-line bg-surface" data-print="hide">
       {/* One row on wide screens. On a phone it was three: the date, the
           save/theme controls, then the clock and a status chip, about a sixth
           of the screen, with each screen's title sliding under it. Now the

@@ -275,6 +275,25 @@
   .animate-fade {
     animation: fade 180ms ease-out;
   }
+  /* Motion that carries news (docs/ROADMAP.md, Phase 3): something arrived.
+     Each plays once, when the thing it marks appears, and never on a loop. */
+  .animate-arrive {
+    animation: arrive 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .animate-pop {
+    animation: pop 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@keyframes arrive {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 
 @keyframes rise {
@@ -299,4 +318,67 @@
 /* An incident makes the shell visibly tense without becoming a cartoon. */
 :root[data-incident='true'] {
   --paper: color-mix(in oklch, var(--paper) 94%, var(--band-severe));
+}
+
+/*
+ * Paper. The annual review is the document a player might take to their own
+ * board (docs/ROADMAP.md, Phase 3), so it prints as one: black on white
+ * whatever the theme, without the game around it, and without controls that
+ * do nothing on paper. The shell scrolls inside its own box on a desktop, and
+ * a browser prints only what such a box shows, so the boxes let go.
+ */
+@media print {
+  :root,
+  :root[data-theme='dark'],
+  :root[data-incident='true'] {
+    --paper: #fff;
+    --surface: #fff;
+    --surface-2: #fff;
+    --surface-3: #f2f2f2;
+    --ink: #000;
+    --ink-muted: #222;
+    --ink-faint: #444;
+    --line: #bbb;
+    --line-strong: #777;
+    --shadow-soft: none;
+    --shadow-lift: none;
+    /* The light theme's colours, so a review printed from the dark theme does
+       not carry dark pills onto white paper. */
+    --accent: oklch(0.52 0.12 250);
+    --accent-soft: oklch(0.93 0.035 250);
+    --accent-ink: oklch(0.32 0.1 250);
+    --band-low: oklch(0.465 0.09 175);
+    --band-low-soft: oklch(0.945 0.03 175);
+    --band-moderate: oklch(0.46 0.08 235);
+    --band-moderate-soft: oklch(0.945 0.025 230);
+    --band-elevated: oklch(0.465 0.1 70);
+    --band-elevated-soft: oklch(0.955 0.045 80);
+    --band-high: oklch(0.47 0.15 38);
+    --band-high-soft: oklch(0.955 0.045 45);
+    --band-severe: oklch(0.45 0.18 22);
+    --band-severe-soft: oklch(0.945 0.05 25);
+    --positive: oklch(0.465 0.1 160);
+    --warning: oklch(0.465 0.11 68);
+    --danger: oklch(0.47 0.18 24);
+    --chart-enquiry: oklch(0.47 0.11 150);
+    --chart-board: oklch(0.52 0.12 250);
+    --chart-programme: oklch(0.5 0.15 340);
+  }
+  [data-print='hide'],
+  main button,
+  main summary {
+    display: none !important;
+  }
+  .print-flow {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .print-keep {
+    break-inside: avoid;
+  }
+  @page {
+    margin: 18mm 16mm;
+  }
 }

@@ -225,19 +225,32 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   system stack; a restrained illustration style for the eight executives and
   four leaders, replacing monograms — faces change how "Marianne will
   remember" lands; a mark for the game itself. Dark mode designed, not
-  derived.
+  derived. **Not started:** needs an illustrator and a type designer, and
+  the first screen has 3.5 kB of its budget left; fonts and portraits will
+  need the budget revised on purpose.
 - **Motion with a purpose.** The day advancing, a message arriving, a
   decision's deadline closing, the incident bar appearing: each gets one
   deliberate transition, all honouring `prefers-reduced-motion`. No
-  decoration that does not carry information.
+  decoration that does not carry information. **Built:** an incident
+  arrives, the unread count pops when mail comes, a new decision rises into
+  the list, and the year strip fills; all still under reduced motion
+  (`tests/e2e/presentation.spec.ts`).
 - **Documents as documents.** The board paper rendered as the paper the
   committee would hold; the annual review exportable as a PDF a player could
   show their own board; the inbox message as a memo with letterhead. The
   game's conceit is that you are reading your organisation's paperwork — the
-  screens should look like it.
+  screens should look like it. **Review built:** **Print or save as PDF**
+  sets the annual review on white without the shell, in light colours from
+  either theme, rows kept whole across pages (`tests/e2e/print.spec.ts`
+  checks the PDF runs to several pages). The board paper and the memo
+  letterhead are not started.
 - **Sound, optional.** A small palette: the clock, a message, the incident
   bar, the quarter closing, the review. Off by default, muted on first run, a
   single toggle in the header. Never the only channel for information.
+  **Built:** synthesised cues (no audio files) for mail, a decision falling
+  due, an incident, a quarter closing and the year's end; off until turned
+  on, from the rail or More rather than the header, which has no room on a
+  phone; loaded only when on.
 - **Loading and empty states** given the same care as the screens: the
   campaign chunk fetch, "Drawing the dependency map…", the first morning
   before anything has come back.

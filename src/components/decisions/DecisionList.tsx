@@ -25,7 +25,7 @@ export function DecisionList({ limit, quiet = false }: { limit?: number; quiet?:
   return (
     <ul className="space-y-3">
       {shown.map((decision) => (
-        <li key={decision.id}>
+        <li key={decision.id} className="animate-rise">
           <Card className={decision.urgent ? 'border-band-high/50' : undefined}>
             <CardBody className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0 flex-1">

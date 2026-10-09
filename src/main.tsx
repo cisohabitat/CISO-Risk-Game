@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { App } from '@/app/App'
 import { useGameStore } from '@/store/game-store'
 import { resumeRecording } from '@/store/session-recording'
+import { resumeSound } from '@/lib/sound/sound-setting'
 import './index.css'
 
 // Theme preference is restored before first paint where storage allows it.
@@ -19,6 +20,8 @@ try {
 
 // A playtest session keeps recording across reloads until it is turned off.
 resumeRecording()
+// Sound stays on across reloads for a player who turned it on.
+resumeSound()
 
 // A deploy replaces the hashed files that an open page would fetch next, so
 // the campaign it has not loaded yet no longer exists at the address it knows.
