@@ -277,9 +277,11 @@ function ShellHeader() {
       {/* One row on wide screens. On a phone it was three: the date, the
           save/theme controls, then the clock and a status chip, about a sixth
           of the screen, with each screen's title sliding under it. Now the
-          date has the first row and the clock and controls share the second. */}
+          date shares the first row with save, leave and theme, and the clock
+          has the second — at 320px the three icons had wrapped onto a row of
+          their own beneath it, a quarter of the screen. */}
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-2 sm:px-6 sm:py-3">
-        <div className="order-1 w-full min-w-0 sm:w-auto sm:flex-1 lg:flex-none">
+        <div className="order-1 min-w-0 flex-1 lg:flex-none">
           <p className="truncate text-sm font-medium">
             {view.dateLabel}
             <span className="text-ink-faint"> · {view.weekLabel} · Q{view.quarter}</span>
@@ -288,7 +290,7 @@ function ShellHeader() {
             {money(view.budgetRemaining)} left · {view.focusRemaining}/{view.focusPerWeek} attention
           </p>
         </div>
-        <div className="order-3 ml-auto flex items-center gap-1 lg:ml-0">
+        <div className="order-2 flex shrink-0 items-center gap-1 sm:order-3 sm:ml-auto lg:ml-0" data-testid="header-tools">
           <Button
             size="sm"
             variant="ghost"
@@ -321,7 +323,7 @@ function ShellHeader() {
             <span className="sr-only">{theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}</span>
           </Button>
         </div>
-        <div className="order-2 lg:flex lg:flex-1 lg:justify-end">
+        <div className="order-3 w-full sm:order-2 sm:w-auto lg:flex lg:flex-1 lg:justify-end" data-testid="header-clock">
           <TimeControls compact />
         </div>
       </div>

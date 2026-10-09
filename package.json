@@ -20,7 +20,7 @@
     "test:e2e": "playwright test",
     "check": "pnpm typecheck && pnpm lint && pnpm validate:content && pnpm test && vite build && pnpm size",
     "test:e2e:local": "playwright test --project=desktop-chromium --project=tablet-portrait --project=tablet-landscape --project=phone --project=phone-320",
-    "screenshots": "playwright test --config playwright.screenshots.config.ts --project=desktop-chromium --project=phone",
+    "screenshots": "playwright test --config playwright.screenshots.config.ts --project=desktop-chromium --project=phone --project=phone-320",
     "soak": "tsx scripts/soak.ts",
     "test:e2e:live": "playwright test --config playwright.live.config.ts",
     "coverage": "tsx scripts/coverage.ts",

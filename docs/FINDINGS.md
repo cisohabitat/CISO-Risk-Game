@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **At 320px the header took a quarter of the screen.** Photographed for the
+  first time at that width (the gallery had photographed 393px and the
+  desktop), the header had wrapped to three rows — the date, the clock, and
+  save, leave and theme on a row of their own — 162px of a 640px screen
+  before the briefing began. On a phone the three icons now share the date's
+  row and the clock has the second: 121px. Held by
+  `tests/e2e/first-session.spec.ts` on every device profile, which fails at
+  154px with the old layout restored. `pnpm screenshots` now photographs the
+  start screen, and every screen at 320px.
+
 - **The end of the year, looked at.** The screenshot harness never reached
   the annual review, the board paper or the enquiries; the photographed
   playthrough does.

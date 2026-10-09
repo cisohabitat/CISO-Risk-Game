@@ -115,22 +115,33 @@ two scarce resources are and why the risk list is ordered the way it is.
 - Act on the Phase 0 stumble list, highest first. Expect this to be text and
   affordances rather than mechanics: where the first morning points, what the
   briefing's headline says when nothing is waiting, what a risk card's words
-  mean, what "Commission" will cost before it is pressed.
+  mean, what "Commission" will cost before it is pressed. **Waiting on
+  Phase 0** — there is no stumble list yet.
 - A **voice guide** (`docs/VOICE.md`): the organisation's register, what the
   game never says (scores, "you should"), how executives and leaders differ
   in tone, how a consequence is phrased so it reads as the player's own choice
   coming back. Then a full text pass over every authored line — 38 decisions,
   176 events, 18 enquiries, the review's sentences — against it. The content
   tests that already forbid claims a condition does not check stay the gate.
+  **Guide built** (`docs/VOICE.md`), with its mechanical half enforced on
+  every authored string and lesson by `tests/content/voice.test.ts`: British
+  spelling, no exclamation marks, no ids or day numbers in prose, and no
+  praise, prescription, scores or hacker cliché in the game's own voice. The
+  2,261 strings passed as written; the read-aloud half of the pass still
+  needs a writer.
 - Decide the mode names on evidence ("Guided" versus "Supported" is an open
-  question; do not rename on one person's word).
+  question; do not rename on one person's word). **Waiting on Phase 0.**
 - Resolve the June gap *only if* players said the back half felt like more
   of the same: one decision arising from the player's own position in early
   summer, authored like the four late-year follow-ups, measured with
   `pnpm coverage 60` and the per-month decision counts in `CLAUDE.md`.
+  **Waiting on Phase 0.**
 - First-session flow on a phone: the start screen, the first decision dialog
   and the first briefing at 320 px, reviewed with the same rigour as desktop
-  (`pnpm screenshots` already photographs both).
+  (`pnpm screenshots` already photographs both). **Done:** the gallery now
+  photographs the start screen and every screen at 320 px; the header, which
+  had wrapped to three rows (162 px) there, is two (121 px), held by
+  `tests/e2e/first-session.spec.ts`.
 
 **Measures.** Re-run Phase 0's protocol with four fresh newcomers after the
 pass; Q1 unaided completion should move, and the stumble list should be

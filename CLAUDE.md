@@ -187,6 +187,8 @@ text the game no longer uses. Ask a playtester to leave it until after their
 session — whether the game teaches itself is one of the things under test.
 
 Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring),
+`docs/VOICE.md` (how the game speaks; `tests/content/voice.test.ts` enforces
+its mechanical rules on every authored string),
 `docs/HOSTING.md` (the release gate), `docs/PLAYTEST.md` (the question the
 harnesses cannot answer), `docs/FINDINGS.md` (everything found so far, and
 how each was closed) and `docs/ROADMAP.md` (the phased plan to AAA, and the

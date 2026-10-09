@@ -14,7 +14,6 @@ test.describe('screenshots', () => {
     // A seed that reaches an incident, so the gallery includes the screen most
     // likely to look wrong. Roughly a quarter of campaigns never have one, and
     // the default seed was one of them.
-    await startCampaign(page, 'gallery-incident')
     const shot = async (name: string) => {
       // Park the pointer off every control first. Playwright leaves it where it
       // last clicked, so the gallery was photographing a hover state: the Board
@@ -24,6 +23,11 @@ test.describe('screenshots', () => {
       await page.waitForTimeout(120)
       await page.screenshot({ path: `screenshots/${testInfo.project.name}-${name}.png`, fullPage: false })
     }
+    // The first screen a newcomer sees, which the gallery used to skip.
+    await page.goto('/')
+    await page.getByRole('heading', { name: 'CISO: First Year' }).waitFor()
+    await shot('00-start')
+    await startCampaign(page, 'gallery-incident')
     await shot('01-briefing')
     await page.getByRole('button', { name: 'Decide' }).first().click()
     await page.getByRole('dialog').waitFor()
