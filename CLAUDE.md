@@ -80,6 +80,12 @@ Further simulation is now more likely to make the game worse than better unless
 a human playtest asks for it. `docs/PLAYTEST.md` covers what a session is for and
 what not to change on one player's word.
 
+**`docs/ROADMAP.md` is the plan from here to a AAA year**, in eight phases
+with a gate on each. Phase 0 is human playtesting, and the later phases (a
+second organisation, presentation, localisation, offline, telemetry) do not
+start until it reports. Work the phase whose gate is open; when a phase
+closes, update its scorecard there and this paragraph.
+
 ## Known weaknesses
 
 Measured, not yet fixed. Ranked. Everything that used to sit here about the
@@ -181,5 +187,6 @@ session — whether the game teaches itself is one of the things under test.
 
 Then `docs/ARCHITECTURE.md` (how it is built), `docs/CONTENT.md` (authoring),
 `docs/HOSTING.md` (the release gate), `docs/PLAYTEST.md` (the question the
-harnesses cannot answer) and `docs/FINDINGS.md` (everything found so far, and
-how each was closed).
+harnesses cannot answer), `docs/FINDINGS.md` (everything found so far, and
+how each was closed) and `docs/ROADMAP.md` (the phased plan to AAA, and the
+scorecard of where each pillar stands).
