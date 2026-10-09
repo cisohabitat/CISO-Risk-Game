@@ -31,7 +31,8 @@
     "guide:shots": "playwright test --config playwright.guide.config.ts --project=desktop-chromium",
     "session": "tsx scripts/session.ts",
     "content:bundle": "tsx scripts/content-bundle.ts",
-    "content:schema": "tsx scripts/content-schema.ts"
+    "content:schema": "tsx scripts/content-schema.ts",
+    "strings": "tsx scripts/strings.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

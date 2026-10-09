@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils/cn'
 import { GUIDE_URL } from '@/app/navigation'
 import { setRecording, useRecording } from '@/store/session-recording'
 import { formatGameDate } from '@/game/time'
+import { savedAtLabel } from '@/lib/formatting/saved-at'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -146,7 +147,7 @@ export function StartScreen() {
                           {save.situationId && situationName(save.situationId) ? ` · ${situationName(save.situationId)}` : ''}
                         </span>
                         <span className="block text-sm text-ink-faint">
-                          seed {save.seed} · saved {new Date(save.savedAtIso).toLocaleString()}
+                          seed {save.seed} · saved {savedAtLabel(save.savedAtIso)}
                         </span>
                       </span>
                       {save.savedByPlayer && <Badge tone="neutral" glyph={false}>Saved by you</Badge>}

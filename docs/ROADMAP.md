@@ -279,14 +279,25 @@ language.
   (NVDA on Windows, VoiceOver on iOS), one with a keyboard-only user, one
   with a player using 200% text scaling. Fix what they find; record each in
   `docs/FINDINGS.md`. The organisation graph needs an equivalent that is not
-  "use the list" but a navigable dependency walk.
+  "use the list" but a navigable dependency walk. **Walk built:** following
+  a dependency in the inspector moves focus to the system it arrives at (a
+  screen reader announces it), and a trail of the route walked offers each
+  step back; picking from the list or graph starts a new walk. The sessions
+  with people are not started.
 - **Reduced motion and colour independence** proven, not assumed: every
   band already carries a glyph; check it on a deuteranopia simulation and
-  in the board paper's new badges.
+  in the board paper's new badges. **Checked by reading:** every band badge
+  carries a word and a height glyph (▁▃▅▆█), graph cards print their type,
+  and the timeline's lanes are labelled; no badge depends on hue.
 - **String extraction.** Every UI string into a message catalogue; every
   authored content string keyed so a pack can carry a second locale file.
   Dates, money and plurals through `Intl`. A pseudo-locale build in CI that
-  fails if a hard-coded English string reaches a screen.
+  fails if a hard-coded English string reaches a screen. **Measured, not
+  built:** `pnpm strings` counts about 30,000 words — 80% content, 13%
+  engine sentences, 7% screens — and `docs/LOCALISATION.md` sets out the
+  order of work. A translation of content is a translated pack through the
+  Phase 2 pipeline. The save list's time, which used the browser's locale,
+  now uses the interface's.
 - **One real second language** as proof of the pipeline, chosen by where the
   audience is (the guide, the content and the UI together — the content is
   the large part, about 3,000 authored sentences for Nexora). A native-speaking

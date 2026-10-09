@@ -60,6 +60,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 | `pnpm validate:content --pack <file>` | Does a pack (Nexora by default) resolve, read in the voice, and fill a year? `pnpm content:bundle` writes Nexora as a pack to start from |
+| `pnpm strings` | How much English would a translation replace, and where does it live? (`docs/LOCALISATION.md`) |
 | `pnpm session <file>` | What did a playtester actually do, and when? Reads a log recorded with `/?playtest` (`docs/playtest-kit/`) |
 
 None of them answer whether the game lands: that needs people, and
@@ -151,7 +152,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 182.1 kB against a 185 kB limit (it was 258.2
+  The first screen waits on 182.4 kB against a 185 kB limit (it was 258.2
   against 260), and content no longer adds to it. The campaign chunk has its
   own budget, 90 kB with about 15 kB to spare, and is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
