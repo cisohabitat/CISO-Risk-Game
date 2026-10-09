@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews, visibleRisks } from '@/store/selectors'
-import { materialTopics } from '@/game/debrief/review'
+import { materialTopics } from '@/game/debrief/quarter'
 import { formatGameDate } from '@/game/time'
 import { DAYS_PER_QUARTER } from '@/game/types'
 import { bandTone, plural } from '@/lib/formatting/labels'
@@ -148,6 +148,7 @@ export function BoardScreen() {
                         variant="quiet"
                         size="sm"
                         className="compact min-h-9"
+                        aria-label={`${approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}: ${person.name}`}
                         onClick={() => dispatch({ type: 'meetStakeholder', stakeholderId: person.id, approach })}
                       >
                         {approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}

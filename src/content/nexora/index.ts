@@ -21,6 +21,7 @@ import organisationEvents from './events/organisation.json'
 import consequenceEvents from './events/consequences.json'
 import fourthQuarterEvents from './events/fourth-quarter.json'
 import situationEvents from './events/situations.json'
+import yearTwoEvents from './events/year-two.json'
 import situations from './situations.json'
 import type { CampaignContent } from '@/game/types'
 
@@ -51,6 +52,7 @@ export const nexoraContentRaw: unknown = {
     ...consequenceEvents.events,
     ...fourthQuarterEvents.events,
     ...situationEvents.events,
+    ...yearTwoEvents.events,
   ],
   rationaleTags: risks.rationaleTags,
   assumptions: risks.assumptions,

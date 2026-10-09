@@ -45,7 +45,9 @@ export function OrganisationScreen() {
               : 'Nothing remains hidden.'}
           </p>
         </div>
-        <div className="flex items-center gap-1 rounded-lg border border-line bg-surface-2 p-1">
+        {/* A phone always shows the list, so the toggle has nothing to switch
+            there: it read "Graph", pressed, over a list. */}
+        <div className="hidden items-center gap-1 rounded-lg border border-line bg-surface-2 p-1 sm:flex">
           <Button
             size="sm"
             variant={graphMode === 'list' ? 'primary' : 'ghost'}

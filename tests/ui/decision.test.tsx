@@ -54,6 +54,6 @@ describe('taking a decision', () => {
     render(<DecisionDialog decisionId={requiring} onClose={() => {}} />)
     const dialog = screen.getByRole('dialog')
     await user.click(within(dialog).getAllByRole('radio')[0]!)
-    expect(within(dialog).getByRole('button', { name: /Record why first/ })).toBeDisabled()
+    expect(within(dialog).getByRole('button', { name: /Record why first/ })).toHaveAttribute('aria-disabled', 'true')
   })
 })

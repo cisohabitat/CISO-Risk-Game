@@ -16,7 +16,7 @@ import { buildContentIndex } from '../src/game/engine/content-index'
 import { applyAction, newGame, runDays } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
 import { patternSuggestions } from '../src/store/selectors'
-import { materialTopics } from '../src/game/debrief/review'
+import { finishYear, materialTopics } from '../src/game/debrief/review'
 import { consequenceBand } from '../src/game/risk/bands'
 import { formatGameDate } from '../src/game/time'
 import type { Difficulty, GameState } from '../src/game/types'
@@ -66,7 +66,7 @@ function engagedYear(state: GameState): void {
       const leader = index.content.leaders[next % index.content.leaders.length]!.id
       if (applyAction(state, index, { type: 'startInvestigation', investigationId: enquiries[next]!, leaderId: leader }).ok) next += 1
     }
-    if (state.currentDay >= 363) applyAction(state, index, { type: 'finishCampaign' })
+    if (state.currentDay >= 363) finishYear(state, index)
     else runDays(state, index, 1)
   }
 }

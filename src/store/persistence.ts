@@ -63,6 +63,8 @@ export interface SaveSummary {
   difficulty: string
   /** The starting situation, if the campaign began in one. */
   situationId?: string
+  /** Which year of the job; absent on a first year. */
+  year?: number
   savedAtIso: string
   savedByPlayer: boolean
   schemaVersion: number
@@ -194,6 +196,7 @@ export async function listSaves(): Promise<SaveSummary[]> {
         day: migrated.state.currentDay,
         difficulty: migrated.state.difficulty,
         situationId: migrated.state.situationId,
+        ...(migrated.state.year ? { year: migrated.state.year } : {}),
         savedAtIso: migrated.savedAtIso,
         savedByPlayer: migrated.savedByPlayer,
         schemaVersion: migrated.schemaVersion,

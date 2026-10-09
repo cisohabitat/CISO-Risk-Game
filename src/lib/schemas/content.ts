@@ -42,6 +42,11 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('incident.noneWithin'), days: z.number().int().positive() }),
     z.object({ kind: z.literal('situation.is'), situationId: z.string() }),
     z.object({ kind: z.literal('incident.resolvedCountAtLeast'), value: z.number().int() }),
+    z.object({ kind: z.literal('campaign.yearAtLeast'), year: z.number().int().min(1) }),
+    z.object({ kind: z.literal('lastYear.optionTaken'), decisionId: id, optionId: id }),
+    z.object({ kind: z.literal('lastYear.dimensionBand'), dimensionId: id, band: z.enum(['weak', 'developing', 'solid', 'strong']) }),
+    z.object({ kind: z.literal('lastYear.incidentsAtLeast'), value: z.number().int().min(0) }),
+    z.object({ kind: z.literal('risk.acceptedCountAtLeast'), value: z.number().int().min(1) }),
     z.object({ kind: z.literal('evidence.known'), evidenceId: id }),
     z.object({ kind: z.literal('evidence.tagKnown'), tag: z.string() }),
     z.object({ kind: z.literal('evidence.countAtLeast'), value: z.number().int() }),
@@ -169,6 +174,7 @@ export const objectiveSchema = z.object({
   dependencyNodeIds: z.array(id),
   ownerStakeholderId: id,
   value: unit,
+  year: z.number().int().min(1).optional(),
 })
 
 export const stakeholderSchema = z.object({

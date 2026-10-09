@@ -250,10 +250,29 @@ export function buildReconstruction(
   if (incident.commandActivated) helped.push('Incident command was stood up early')
   else hurt.push('Incident command was never formally stood up')
   if (incident.externalSupport) helped.push('External response support was brought in')
-  if (incident.detectionDay !== undefined && incident.detectionDay - incident.startedDay <= 1) {
-    helped.push('The activity was detected almost immediately')
+  // Detection is read from when the intrusion began, not from when it reached
+  // the business. "Detected almost immediately" sat beside three weak
+  // signals, a month apart, on the exact route the reconstruction then drew
+  // (AI veteran playtest, 2026-10-09): the incident was seen at once, the
+  // intrusion behind it was not acted on.
+  const campaign = incident.campaignId ? state.threats.campaigns.find((c) => c.id === incident.campaignId) : undefined
+  const ranFor = campaign ? incident.startedDay - campaign.startedDay : 0
+  const warnings = incident.campaignId
+    ? Object.keys(state.flags).filter((flag) => flag.startsWith(`signal.${incident.campaignId}.`)).length
+    : 0
+  const weeks = Math.max(1, Math.round(ranFor / 7))
+  // First, because the lists are cut at six and the narrative reads three:
+  // how long it ran unseen is the line the year turns on.
+  if (ranFor > 7 && warnings > 0) {
+    hurt.unshift(
+      `The intrusion raised ${warnings === 1 ? 'a warning' : `${warnings} warnings`} over ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business, and none of them was followed up`,
+    )
+  } else if (ranFor > 7) {
+    hurt.unshift(`The intrusion was under way for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business, and nothing saw it`)
+  } else if (incident.detectionDay !== undefined && incident.detectionDay - incident.startedDay <= 1) {
+    helped.unshift('The activity was detected almost immediately')
   } else if (incident.detectionDay !== undefined && incident.detectionDay - incident.startedDay > 5) {
-    hurt.push('The activity ran for several days before anyone noticed')
+    hurt.unshift('The activity ran for several days before anyone noticed')
   }
 
   const relatedAssumptions = Object.values(state.assumptions.assumptions)

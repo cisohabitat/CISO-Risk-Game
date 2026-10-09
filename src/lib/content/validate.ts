@@ -409,6 +409,7 @@ function checkCondition(
       break
     case 'decision.optionTaken':
     case 'decision.resolved':
+    case 'lastYear.optionTaken':
       ref(registry.decision, condition.decisionId, 'missing-decision')
       break
     case 'event.fired':

@@ -23,6 +23,7 @@ import { useGameClock } from '@/components/game/useGameClock'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
 import { Button, Card, CardBody } from '@/components/ui/primitives'
+import { yearWord } from '@/game/time'
 
 // The year view is opened a few times a year and read once at the close, so
 // it stays out of what the first screen waits for. It is fetched in the
@@ -55,7 +56,7 @@ export function App() {
   }, [incidentRunning])
 
   useEffect(() => {
-    if (state?.finished && !state.reviews.annual) finishCampaign()
+    if (state?.finished && !state.reviews.annual) void finishCampaign()
   }, [state?.finished, state?.reviews.annual, finishCampaign, state])
 
   // The campaign screens read the content; they are shown only once both the
@@ -82,10 +83,14 @@ export function App() {
         {/* The Briefing places the note under its own headline, so the day's
             first line is what the day is about rather than a lesson. */}
         {screen !== 'home' && <Onboarding />}
-        {state.finished && screen !== 'debrief' && (
+        {/* Only once the review is written: while it loads, the year's end
+            is already on its way to the review screen, and a banner that
+            appeared for a moment and vanished under the pointer was worse
+            than none. */}
+        {state.finished && state.reviews.annual && screen !== 'debrief' && (
           <Card className="mb-4 border-brass/50 bg-brass-soft/40">
             <CardBody className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-pretty">Your first year is over. The review is written.</p>
+              <p className="text-pretty">Your {yearWord(state.year)} year is over. The review is written.</p>
               <Button variant="primary" onClick={() => useGameStore.getState().setScreen('debrief')}>
                 Read the annual review
               </Button>

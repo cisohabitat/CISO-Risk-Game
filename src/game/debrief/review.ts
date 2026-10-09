@@ -4,14 +4,12 @@
  * The output is narrative and multi-dimensional. A single score would teach the
  * wrong lesson, so the performance band is deliberately secondary.
  */
-import { dateOf, datesOf, formatGameDate } from '../time'
+import { dateOf, datesOf, formatGameDate, yearWord } from '../time'
 import type {
   AnnualReview,
   AnnualReviewDimension,
   ContentIndex,
-  GameEffect,
   GameState,
-  QuarterReviewState,
   ReasoningLine,
 } from '../types'
 import { clamp01, money } from '../types'
@@ -19,155 +17,13 @@ import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledg
 import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { effortAllocation } from './prioritisation'
 import { unexaminedAssumptions } from '../assumptions/validation'
-import { compareBands, consequenceBand, residualBand } from '../risk/bands'
+import { residualBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
-export interface QuarterReviewInput {
-  quarter: number
-  topics: string[]
-  recommendations: string[]
-  communicateUncertainty: boolean
-}
-
-export interface QuarterReviewOutput extends QuarterReviewState {
-  effects: GameEffect[]
-}
+export { buildQuarterReview, materialTopics, type QuarterReviewInput, type QuarterReviewOutput } from './quarter'
 
 function sentenceCase(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
-/** Material topics the board should have heard about this quarter. */
-export function materialTopics(state: GameState, index: ContentIndex): { id: string; label: string; material: boolean }[] {
-  const out: { id: string; label: string; material: boolean }[] = []
-  for (const scenario of Object.values(state.risks.scenarios)) {
-    if (scenario.status === 'closed' || scenario.status === 'emerging') continue
-    const def = index.riskScenario.get(scenario.id)
-    if (!def) continue
-    // Materiality read in bands rather than against a number picked out of the
-    // middle of one. Residual alone said nothing was material in 78% of board
-    // packs for a player who investigated, decided and raised — more often
-    // than for one who did nothing, because their own work pushed residual
-    // under the bar and took the risk off the agenda. "Choose material
-    // topics" (plan §28.7) needs something to choose between.
-    const residual = residualBand(scenario.lastAssessed?.residual ?? 0)
-    const consequence = consequenceBand(scenario.lastAssessed?.consequence ?? 0)
-    const material =
-      compareBands(residual, 'high') >= 0 ||
-      // A severe-consequence risk you believe you have controlled is exactly
-      // what a board needs to know you are relying on.
-      compareBands(consequence, 'high') >= 0 ||
-      // Accepting risk is done on the organisation's behalf, so the
-      // organisation hears about it.
-      scenario.status === 'accepted'
-    out.push({ id: `risk:${scenario.id}`, label: def.title, material })
-  }
-  for (const incident of Object.values(state.incidents.incidents)) {
-    const family = index.incidentFamily.get(incident.familyId)
-    if (!family) continue
-    // Two incidents of one family made two identical lines, which reads as a
-    // duplicate rather than as the point. The date tells them apart.
-    out.push({
-      id: `incident:${incident.id}`,
-      label: `${family.name} (incident, from ${formatGameDate(incident.startedDay).label})`,
-      material: true,
-    })
-  }
-  for (const assumption of Object.values(state.assumptions.assumptions)) {
-    if (assumption.status !== 'invalidated') continue
-    out.push({ id: `assumption:${assumption.id}`, label: `Assumption failed: ${assumption.statement}`, material: true })
-  }
-  for (const programme of Object.values(state.programmes.programmes)) {
-    if (programme.status !== 'at-risk') continue
-    const def = index.programme.get(programme.id)
-    if (def) out.push({ id: `programme:${programme.id}`, label: `${def.name} is off track`, material: false })
-  }
-  const strain = teamStrain(state)
-  if (strain > 0.85) {
-    out.push({ id: 'team:capacity', label: 'The cyber team is beyond sustainable load', material: true })
-  }
-  return out
-}
-
-export function buildQuarterReview(
-  state: GameState,
-  index: ContentIndex,
-  input: QuarterReviewInput,
-): QuarterReviewOutput {
-  const topics = materialTopics(state, index)
-  const materialIds = topics.filter((t) => t.material).map((t) => t.id)
-  const covered = materialIds.filter((id) => input.topics.includes(id))
-  const missed = materialIds.filter((id) => !input.topics.includes(id))
-  const noise = input.topics.filter((id) => !materialIds.includes(id))
-
-  const effects: GameEffect[] = []
-  let reaction: string
-
-  const coverage = materialIds.length === 0 ? 1 : covered.length / materialIds.length
-
-  if (missed.length > 0) {
-    // Surprising the board with a known material risk is the classic failure.
-    effects.push({ type: 'board.confidence', delta: -0.06 * missed.length })
-    // "One material item was not on the agenda" without saying which was
-    // feedback nobody could act on; the third observed playthrough asked
-    // twice. Name them.
-    const names = missed.map((id) => topics.find((t) => t.id === id)?.label ?? id)
-    reaction = `The board accepted the papers, but ${names.length === 1 ? 'one material item was' : `${names.length} material items were`} not on the agenda: ${names.join('; ')}. They will find out another way.`
-  } else if (input.topics.length === 0 && materialIds.length === 0) {
-    // A paper with nothing in it. Nothing was missed, so it is not the failure
-    // above, but "coverage" of an empty agenda is not coverage: measured over
-    // 20 campaigns, a player who raised nothing all year took three empty
-    // papers to the board, was credited the full bump each time, and ended
-    // the year at 0.62 confidence against 0.64 for one who raised and covered
-    // everything. The board heard nothing and asks when it will.
-    reaction = 'The board notes that nothing has yet been assessed. The chair asks what the quarter found, and when they will hear what it means.'
-  } else if (noise.length > 2) {
-    effects.push({ type: 'board.confidence', delta: -0.02 })
-    // It said which items were missing but not which were surplus, so a
-    // player who had covered everything could not tell what to leave out.
-    const surplus = noise.map((id) => topics.find((t) => t.id === id)?.label ?? id)
-    reaction = `The board sat through a long list. ${surplus.slice(0, -1).join(', ')} and ${surplus.at(-1)} did not need its time this quarter; the chair asks for fewer, sharper items next time.`
-  } else {
-    effects.push({ type: 'board.confidence', delta: 0.05 + 0.05 * coverage })
-    reaction = 'The board follows the argument and supports the direction you set out.'
-  }
-
-  if (input.communicateUncertainty) {
-    // Honest uncertainty, communicated well, builds durable credibility.
-    const understanding = state.organisation.understanding['overall'] ?? 0
-    if (understanding < 0.5) {
-      effects.push({ type: 'board.confidence', delta: 0.03 })
-      reaction += ' Your candour about what you do not yet know lands well.'
-    } else {
-      effects.push({ type: 'board.confidence', delta: 0.02 })
-    }
-  }
-
-  for (const recommendationId of input.recommendations) {
-    if (recommendationId.startsWith('programme:')) {
-      const programmeId = recommendationId.slice('programme:'.length)
-      const def = index.programme.get(programmeId)
-      if (def?.preferredSponsorId) {
-        effects.push({
-          type: 'stakeholder.trust',
-          stakeholderId: def.preferredSponsorId,
-          delta: 0.03,
-          reason: `You recommended ${def.name} to the board.`,
-        })
-      }
-    }
-  }
-
-  return {
-    quarter: input.quarter,
-    day: state.currentDay,
-    topicsChosen: input.topics,
-    recommendationIds: input.recommendations,
-    uncertaintyCommunicated: input.communicateUncertainty,
-    boardReaction: reaction,
-    completed: true,
-    effects,
-  }
 }
 
 /**
@@ -298,6 +154,8 @@ function missedStanding(state: GameState, index: ContentIndex, scenarioId: strin
 
 export function buildAnnualReview(state: GameState, index: ContentIndex): AnnualReview {
   const dimensions: AnnualReviewDimension[] = []
+  // A year that followed another did not begin with an arrival.
+  const laterYear = (state.year ?? 1) > 1
 
   // 1. Risk understanding.
   const understanding = state.organisation.understanding['overall'] ?? 0
@@ -443,7 +301,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       ]
       // Named, because "you prioritised badly" is not a finding a player can do
       // anything with. The biggest thing nobody went near is.
-      if (effort.missed) lines.push(`${effort.missed.title} was among the largest risks you inherited, and nothing you did went near it`)
+      if (effort.missed) {
+        lines.push(
+          `${effort.missed.title} was among the largest risks ${laterYear ? 'the year began with' : 'you inherited'}, and nothing you did went near it`,
+        )
+      }
       return lines
     })(),
   })
@@ -615,9 +477,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   // 4. Programme execution.
-  const programmes = Object.values(state.programmes.programmes)
-  const started = programmes.filter((p) => p.status !== 'proposed')
-  const completed = programmes.filter((p) => p.status === 'complete')
+  const started = programmesThisYear(state)
+  const completed = started.filter((p) => p.status === 'complete')
   const execution = clamp01(started.length === 0 ? 0 : (completed.length + 0.4 * (started.length - completed.length)) / started.length)
   dimensions.push({
     id: 'programme-execution',
@@ -625,7 +486,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     band: band(execution),
     narrative:
       started.length === 0
-        ? 'You started no capability programme. Nexora ends the year with the controls it had when you arrived, minus drift.'
+        ? `You started no capability programme. Nexora ends the year with the controls it had ${laterYear ? 'in January' : 'when you arrived'}, minus drift.`
         : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion.`,
     evidence: started.map((p) => {
       const def = index.programme.get(p.id)
@@ -656,16 +517,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         return `No business objective was missed, and ${pending === 1 ? 'one was' : `${pending} were`} still in delivery when the year was written up.`
       }
       const missed = failed === 1 ? 'One business objective was missed.' : `${failed} business objectives were missed.`
-      const built = Object.values(state.programmes.programmes).some((p) => p.status !== 'proposed')
+      const built = programmesThisYear(state).length > 0
       return built
         ? `${missed} Security programmes you chose to run were part of the pressure on ${failed === 1 ? 'it' : 'them'}.`
         : `${missed} None of it was friction you imposed: you ran no security programme.`
     })(),
     evidence: (() => {
-      const lines = index.content.objectives.map((def) => {
-        const runtime = state.business.objectives[def.id]
-        return `${def.name}: ${runtime?.status ?? 'unknown'}`
-      })
+      const lines = index.content.objectives
+        .filter((def) => state.business.objectives[def.id])
+        .map((def) => `${def.name}: ${state.business.objectives[def.id]!.status}`)
       // Money committed beyond the year. It used to disappear into the floor on
       // `budget.change`, which left a player who spent their reserve and then
       // took unfunded emergency support indistinguishable from one who had
@@ -743,7 +603,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         : sustainability >= 0.52
           ? morale > 0.6
             ? 'Your team ends the year in a state where they could do this again next year.'
-            : 'Your team ends the year intact, with less in reserve than a second year like this one would need.'
+            : `Your team ends the year intact, with less in reserve than ${laterYear ? 'another' : 'a second'} year like this one would need.`
           : morale > 0.6
             ? 'Your team ends the year willing but overloaded; it is the load, not the mood, that would not last.'
             : 'Your team carried the year on goodwill that has now run out.',
@@ -806,8 +666,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
 
   const overall = dimensions.reduce((sum, d) => sum + bandValue(d.band), 0) / dimensions.length
   const headline = chooseHeadline(dimensions, incidents.length > 0)
-  const performanceBand =
-    overall > 0.78 ? 'Exceptional first year' : overall > 0.6 ? 'Credible first year' : overall > 0.42 ? 'Mixed first year' : 'Difficult first year'
+  const ordinal = yearWord(state.year)
+  const performanceBand = `${overall > 0.78 ? 'Exceptional' : overall > 0.6 ? 'Credible' : overall > 0.42 ? 'Mixed' : 'Difficult'} ${ordinal} year`
 
   const worstRisk = Object.values(state.risks.scenarios)
     .filter((s) => s.lastAssessed)
@@ -821,10 +681,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const engaged =
     Object.values(state.decisions.decisions).some((d) => d.resolvedDay !== undefined && !d.resolvedByDefault) ||
     state.team.assignments.length > 0 ||
-    Object.values(state.programmes.programmes).some((p) => p.status !== 'proposed')
+    programmesThisYear(state).length > 0
+  // A later year opens on what the year before it left.
+  const lastYear = previousYearLine(state)
+  if (lastYear) narrative.push(lastYear)
   narrative.push(
     understandingScore > 0.55
-      ? 'You spent your first months finding out how Nexora actually works rather than reacting to the inherited backlog.'
+      ? laterYear
+        ? 'You kept checking how Nexora actually works rather than resting on what you established last year.'
+        : 'You spent your first months finding out how Nexora actually works rather than reacting to the inherited backlog.'
       : engaged
         ? 'You worked what was in front of you, and much of how the organisation fits together was never verified.'
         : 'You let the year run without you, and much of how the organisation fits together was never verified.',
@@ -977,6 +842,33 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
 }
 
 /**
+ * Programmes that are this year's work: everything started, less what an
+ * earlier year finished. A programme carried over unfinished is this year's
+ * to deliver.
+ */
+export function programmesThisYear(state: GameState): GameState['programmes']['programmes'][string][] {
+  return Object.values(state.programmes.programmes).filter(
+    (p) => p.status !== 'proposed' && !(p.status === 'complete' && (p.completedDay ?? 0) < 0),
+  )
+}
+
+const COUNT_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+const countWord = (n: number) => COUNT_WORDS[n] ?? String(n)
+const plural = (n: number, word: string) => `${countWord(n)} ${word}${n === 1 ? '' : 's'}`
+
+/** How this year compares with the one before it, when there was one. */
+function previousYearLine(state: GameState): string | undefined {
+  const last = state.previousYears?.at(-1)
+  if (!last) return undefined
+  const incidents = state.incidents.order.length
+  const papers = state.reviews.quarters.filter((q) => q.completed).length
+  return [
+    `Last year the review called it a ${last.performanceBand.toLowerCase()}: "${quotedInline(last.headline)}"`,
+    `It had ${plural(last.incidents, 'incident')} and ${plural(last.papersWritten, 'board paper')}; this one had ${incidents === 0 ? 'none' : countWord(incidents)} and ${papers === 0 ? 'none' : countWord(papers)}.`,
+  ].join('. ')
+}
+
+/**
  * The closing line describes the shape of the year, not its average.
  *
  * Two players can end on the same overall band having run completely different
@@ -1122,4 +1014,15 @@ function situationDecisionLine(state: GameState): string | undefined {
     }
   }
   return undefined
+}
+
+/**
+ * Closes a year and writes its review. The `finishCampaign` action only closes
+ * it: the review is the largest part of the engine and only the year's end
+ * needs it, so the store loads this module with the review screen rather
+ * than with the first screen, and calls this.
+ */
+export function finishYear(state: GameState, index: ContentIndex): void {
+  state.finished = true
+  state.reviews.annual = buildAnnualReview(state, index)
 }

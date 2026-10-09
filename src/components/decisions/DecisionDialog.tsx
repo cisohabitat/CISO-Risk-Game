@@ -61,7 +61,17 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           <Button variant="quiet" onClick={onClose}>
             Not yet
           </Button>
-          <Button variant="primary" disabled={!optionId || !selected?.affordable || needsRationale} onClick={submit}>
+          {/* Waiting for a reason, the button stays reachable and says what
+              it waits for: disabled, Tab skipped it, and a keyboard player
+              never heard why the decision would not commit. Pressed, it
+              takes them to the reasons. */}
+          <Button
+            variant="primary"
+            disabled={!optionId || !selected?.affordable}
+            aria-disabled={needsRationale || undefined}
+            aria-describedby={needsRationale ? 'decision-why' : undefined}
+            onClick={needsRationale ? () => document.querySelector<HTMLElement>('#decision-why-reasons button')?.focus() : submit}
+          >
             {needsRationale ? 'Record why first' : 'Commit to this'}
           </Button>
         </>
@@ -153,14 +163,14 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         </fieldset>
 
         <div>
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
-            Why? {decision.requiresRationale ? '' : '(optional)'}
+          <p id="decision-why" className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+            Why? {decision.requiresRationale ? '(at least one reason)' : '(optional)'}
           </p>
           <p className="mb-2 text-sm text-ink-muted">
             Pick the reasons that actually apply. They are the governance basis of the decision, not a score, and the
             annual review reads them back against what happened.
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div id="decision-why-reasons" className="flex flex-wrap gap-2">
             {rationaleTags.map((tag) => {
               const active = tags.includes(tag.id)
               return (

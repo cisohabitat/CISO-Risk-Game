@@ -11,7 +11,7 @@ import { PatternNotice } from '@/components/risk/PatternNotice'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
-import { bandTone, capacityTone, confidenceTone, money, plural, trendBadge } from '@/lib/formatting/labels'
+import { bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
@@ -25,7 +25,11 @@ export function HomeScreen() {
   const view = briefing(state, index)
   const concerns = topConcerns(state, index, 3)
   const unknown = undiscoveredCount(state)
-  const programmes = programmeViews(state, index).filter((p) => p.status !== 'proposed')
+  // What this year is building: a programme an earlier year finished is on
+  // the Programmes screen, not under "building".
+  const programmes = programmeViews(state, index).filter(
+    (p) => p.status !== 'proposed' && !(p.status === 'complete' && (state.programmes.programmes[p.id]?.completedDay ?? 0) < 0),
+  )
   const team = teamView(state, index)
   const progress = quarterProgress(state, index)
   const reviewsDue = visibleRisks(state, index).filter((risk) => risk.reviewDue && risk.status !== 'closed')
@@ -40,9 +44,13 @@ export function HomeScreen() {
   // cards — so nothing looked more important than anything else and the whole
   // thing read as a dashboard. The brief leads with what needs an answer; the
   // standing picture is below it, unboxed, where it belongs.
+  // A blocked programme waits on the player too. Blockers reached a playtester
+  // only through the inbox and a board paper line, never here.
+  const blocked = programmeViews(state, index).filter((p) => p.blockers.length > 0 && (p.status === 'active' || p.status === 'at-risk'))
   const wantsYou =
     view.openDecisions +
     (state.reviews.pendingQuarter !== undefined ? 1 : 0) +
+    blocked.length +
     pressing.length +
     patterns.length
 
@@ -53,7 +61,7 @@ export function HomeScreen() {
       <header className="border-b border-line pb-3">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-faint">
-            CISO brief · {view.weekLabel}
+            CISO brief · {view.yearLabel ? `${view.yearLabel} · ` : ''}{view.weekLabel}
           </p>
           <p className="text-xs uppercase tracking-[0.18em] text-ink-faint">
             {index.content.meta.organisation} · Internal
@@ -139,7 +147,24 @@ export function HomeScreen() {
                 </CardBody>
               </Card>
             )}
-            <DecisionList limit={4} quiet={state.reviews.pendingQuarter !== undefined} />
+            {blocked.map((programme) => (
+              <Card key={programme.id} className="mb-3 border-band-elevated/40">
+                <CardBody className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-balance">{programme.name} is blocked</p>
+                    <p className="mt-0.5 text-sm text-ink-muted text-pretty">{programme.blockers[0]!.name}</p>
+                  </div>
+                  <Button variant="secondary" size="sm" aria-label={`See what clears it: ${programme.name}`} onClick={() => setScreen('programmes')}>
+                    See what clears it
+                  </Button>
+                </CardBody>
+              </Card>
+            ))}
+            <DecisionList
+              limit={4}
+              quiet={state.reviews.pendingQuarter !== undefined || blocked.length > 0}
+              elsewhere={pressing.length + patterns.length > 0}
+            />
           </section>
 
           {/* What the player's own actions sent back. The first observed
@@ -380,7 +405,7 @@ export function HomeScreen() {
                   <ul className="space-y-2 text-sm text-ink-muted">
                     {lastHighlights.map((entry, position) => (
                       <li key={`${entry.day}-${position}`} className="flex gap-2">
-                        <span className="shrink-0 tabular-nums text-ink-faint">d{entry.day}</span>
+                        <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
                         <span className="text-pretty">{entry.summary}</span>
                       </li>
                     ))}

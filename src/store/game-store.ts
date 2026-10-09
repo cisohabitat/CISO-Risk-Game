@@ -7,8 +7,7 @@ import { create } from 'zustand'
 import { produce } from 'immer'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
-import { applyAction, newGame } from '@/game/engine/orchestrator'
-import { buildAnnualReview } from '@/game/debrief/review'
+import { applyAction, beginNextYear, newGame } from '@/game/engine/orchestrator'
 import {
   clearSaves,
   deleteCampaign,
@@ -76,9 +75,11 @@ interface GameStore {
   pushToast: (message: string, tone?: Toast['tone']) => void
   dismissToast: (id: number) => void
   openGlossary: (term?: string) => void
-  finishCampaign: () => void
+  finishCampaign: () => Promise<void>
   /** Saves and closes the campaign, back to the start screen. */
   leaveCampaign: () => Promise<void>
+  /** The year after a finished one, as a campaign of its own; the finished year's save stays as it was. */
+  beginNextYear: () => Promise<void>
 }
 
 let toastId = 0
@@ -366,16 +367,29 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set((store) => ({ ui: { ...store.ui, glossaryOpen: true, glossaryTerm: term } }))
   },
 
-  finishCampaign() {
+  async finishCampaign() {
+    // The review loads with the year's end, not with the first screen.
+    const { finishYear } = await import('@/game/debrief/review')
     const { state } = get()
-    if (!state) return
+    if (!state || state.reviews.annual) return
     const index = contentOf(get().index)
-    const next = produce(state, (draft) => {
-      draft.finished = true
-      draft.reviews.annual = buildAnnualReview(draft, index)
-    })
+    const next = produce(state, (draft) => finishYear(draft, index))
     set({ state: next, ui: { ...get().ui, screen: 'debrief' } })
     void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
+  },
+
+  async beginNextYear() {
+    const { state, index } = get()
+    if (!state?.finished || !state.reviews.annual) return
+    const content = contentOf(index)
+    const next = beginNextYear(content, state)
+    set({ state: next, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    try {
+      await saveSafely(next, content, {}, (message) => get().pushToast(message, 'warning'))
+      await get().refreshSaves()
+    } catch {
+      set((store) => ({ ui: { ...store.ui, storageWarning: 'Progress cannot be saved on this device.' } }))
+    }
   },
 
   // A finished year had no way out: the start screen only shows when no

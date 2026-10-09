@@ -11,7 +11,7 @@ import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 import { GUIDE_URL } from '@/app/navigation'
 import { setRecording, useRecording } from '@/store/session-recording'
-import { formatGameDate } from '@/game/time'
+import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
 import { readSeedLink } from '@/lib/seed-link'
 
@@ -148,6 +148,7 @@ export function StartScreen() {
                           {formatGameDate(save.day).label} ·{' '}
                           {DIFFICULTIES.find((mode) => mode.id === save.difficulty)?.label ?? save.difficulty}
                           {save.situationId && situationName(save.situationId) ? ` · ${situationName(save.situationId)}` : ''}
+                          {(save.year ?? 1) > 1 ? ` · ${yearWord(save.year)} year` : ''}
                         </span>
                         <span className="block text-sm text-ink-faint">
                           seed {save.seed} · saved {savedAtLabel(save.savedAtIso)}

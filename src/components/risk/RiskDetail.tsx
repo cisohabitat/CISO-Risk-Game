@@ -2,7 +2,8 @@
  * A risk scenario, and what the CISO can do about it: treat it, accept it with
  * recorded assumptions, or give it to an executive to own (plan §12.3, §13).
  */
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { detailIsBelowTheList } from '@/lib/layout/stacked'
 import { Badge, Button, Card, CardBody, Dialog, Fact, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
@@ -19,6 +20,15 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   const [tags, setTags] = useState<string[]>([])
   const [assumptions, setAssumptions] = useState<string[]>([])
   const [days, setDays] = useState(90)
+  const panel = useRef<HTMLElement>(null)
+
+  // Under the list on a phone, a chosen risk's detail was after every card,
+  // and choosing one seemed to do nothing. Go to it.
+  useEffect(() => {
+    if (!detailIsBelowTheList()) return
+    panel.current?.focus({ preventScroll: true })
+    panel.current?.scrollIntoView?.({ block: 'start' })
+  }, [risk.id])
 
   if (!state) return null
   const def = index.riskScenario.get(risk.id)
@@ -46,7 +56,8 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   }
 
   return (
-    <Card className="lg:sticky lg:top-24">
+    <section ref={panel} tabIndex={-1} aria-label={def.title} className="outline-none lg:sticky lg:top-24">
+    <Card>
       <CardBody className="space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-wrap gap-2">
@@ -129,7 +140,9 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
         <div className={cn('flex flex-wrap gap-2', !(risk.reviewDue && risk.status !== 'closed') && 'border-t border-line pt-4')}>
           {risk.status === 'emerging' && (
             <Button variant="primary" size="sm" onClick={() => dispatch({ type: 'openRisk', scenarioId: risk.id })}>
-              Open formally
+              {/* One verb for one act: the board paper says a risk is raised,
+                  and this said "open", which a playtester did not connect. */}
+              Raise as a risk scenario
             </Button>
           )}
           {(risk.status === 'open' || risk.status === 'emerging') && (
@@ -266,5 +279,6 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
         </div>
       </Dialog>
     </Card>
+    </section>
   )
 }

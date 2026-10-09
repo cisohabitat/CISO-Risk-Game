@@ -9,6 +9,7 @@
       "priority": "notable",
       "availableFromDay": 18,
       "conditions": [
+        { "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } },
         {
           "kind": "team.vacancyOpen"
         }
@@ -335,7 +336,7 @@
       "body": "The number people keep quoting at you is real. It is also close to meaningless: about a third sit on an isolated development cluster with no inbound routes and no real data.\n\nEleven of them are on internet-facing services. Those are the ones I would look at.",
       "priority": "notable",
       "availableFromDay": 8,
-      "conditions": [],
+      "conditions": [{ "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } }],
       "weight": 18,
       "pinned": false,
       "oncePerCampaign": true,
@@ -890,7 +891,7 @@
       "type": "programme",
       "title": "Two tools doing the same job",
       "from": "Nadia Farrell, Director of Procurement and Supplier Management",
-      "body": "We appear to be paying for two products that do broadly the same thing, bought by different teams eighteen months apart.",
+      "body": "We were paying for two products that do broadly the same thing, bought by different teams eighteen months apart. I have cancelled the one fewer people use, and the £90k comes back to the cyber budget this year.",
       "priority": "routine",
       "availableFromDay": 135,
       "conditions": [],

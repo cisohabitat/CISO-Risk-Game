@@ -44,6 +44,16 @@ export type Condition =
   /** The year began in this starting situation. */
   | { kind: 'situation.is'; situationId: string }
   | { kind: 'incident.resolvedCountAtLeast'; value: number }
+  /** This is at least the given year of the job: 2 for a year that follows another. */
+  | { kind: 'campaign.yearAtLeast'; year: number }
+  /** Last year, the player answered this decision with this option. */
+  | { kind: 'lastYear.optionTaken'; decisionId: string; optionId: string }
+  /** Last year's review put this dimension in this band. */
+  | { kind: 'lastYear.dimensionBand'; dimensionId: string; band: string }
+  /** Last year had at least this many incidents. */
+  | { kind: 'lastYear.incidentsAtLeast'; value: number }
+  /** At least this many risks are currently carried under an acceptance. */
+  | { kind: 'risk.acceptedCountAtLeast'; value: number }
   | { kind: 'evidence.known'; evidenceId: string }
   | { kind: 'evidence.tagKnown'; tag: string }
   | { kind: 'evidence.countAtLeast'; value: number }

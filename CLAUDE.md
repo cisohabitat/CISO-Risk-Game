@@ -46,15 +46,16 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 | Command | Answers |
 |---|---|
-| `pnpm soak 1000` | Does it crash or break an invariant over many campaigns? |
-| `pnpm coverage 60` | Which authored content does a player actually reach? |
+| `pnpm soak 1000` | Does it crash or break an invariant over many campaigns? (`--years 2` plays each on into a second year) |
+| `pnpm coverage 60` | Which authored content does a player actually reach? (`--years 2` counts what only a later year says) |
 | `pnpm tsx scripts/tune.ts 25` | Do different play styles produce different outcomes? |
 | `pnpm screenshots` | What do the screens currently look like? |
 | `pnpm playthrough` | One campaign played end to end, photographed as it goes |
 | `pnpm play` | A year played by hand, a decision at a time — what does it *say*? |
+| `pnpm tsx scripts/playtest-driver.ts <port> <w>x<h> <dist> <out>` | A browser an AI playtester plays turn by turn, through the interface only (`docs/PLAYTEST.md`, "AI playtests") |
 | `pnpm ladder sweep 15` | Does one philosophy produce three different years? |
 | `pnpm ladder bands 8` | What do the risk rows actually read, and how often? |
-| `pnpm ladder transcript ciso [seed] [situation]` | Everything one year says, in full — messages, decisions, the close |
+| `pnpm ladder transcript ciso [seed] [situation]` | Everything one year says, in full — messages, decisions, the close (`--years 2` prints the second) |
 | `pnpm tsx scripts/efficacy.ts 150` | Does each programme reduce what it is meant to? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
 | `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
@@ -81,7 +82,9 @@ end-to-end suite is serving. Do not run the two at once; finish one first.
 **The feature set is complete and the major systems are frozen.** The remaining
 work is playtesting, tightening and rewriting unclear text — not new mechanics.
 Further simulation is now more likely to make the game worse than better unless
-a human playtest asks for it. `docs/PLAYTEST.md` covers what a session is for and
+a human playtest asks for it. The owner lifted the freeze once, on 9 October
+2026, for two things from `docs/ROADMAP.md` Phase 2: a second year that
+remembers the first (`src/game/engine/next-year.ts`), and threat variety. `docs/PLAYTEST.md` covers what a session is for and
 what not to change on one player's word.
 
 **`docs/ROADMAP.md` is the plan from here to a AAA year**, in eight phases
@@ -99,8 +102,10 @@ Measured, not yet fixed. Ranked. Everything that used to sit here about the
 risk bands, executive patience, the noise dial and the board's standing has
 been fixed and moved to `docs/FINDINGS.md`.
 
-- **Almost nobody has played this.** Five playtest reports in
-  `docs/playtests/` are an AI driving a browser. The owner has played one year
+- **Almost nobody has played this.** Nine playtest reports in
+  `docs/playtests/` are an AI driving a browser; the four of the 9 October
+  panel and their synthesis list what was fixed from them and what needs
+  people or authored content. The owner has played one year
   and it felt right, but a designer cannot say whether the game teaches itself.
   Whether somebody who does not know the subject finishes feeling they learned
   something is still open; `docs/PLAYTEST.md` is how to ask a person.
@@ -139,6 +144,16 @@ been fixed and moved to `docs/FINDINGS.md`.
   less than it seemed), the review's answer to the situation's question and a
   closing line on how its decision was answered. Whether that is enough to
   make a second year feel different is a playtest question.
+
+- **A second year runs busier than a first.** A first year opens on a quiet
+  spell: attacker interest starts at 0.20 and settles over the year towards
+  how exposed Nexora looks, about 0.4–0.6 by December. A second year starts
+  where the first left it. On the ladder's builder over 15 seeds, CISO
+  incidents read 0.73 in the first year and 1.07 in the second, high pressure
+  1.20 and 1.47; guided falls, 0.40 to 0.27. What the first year built still
+  shows: over 30 CISO seeds, a second year after a strong first has 1.10
+  incidents against 1.83 after an idle one. Whether the quiet opening of a
+  first year should repeat is left for a playtest to ask.
 
 - **Objectives missed does not read as difficulty, and should not be read
   that way.** The ladder's business row is confounded by how much the player

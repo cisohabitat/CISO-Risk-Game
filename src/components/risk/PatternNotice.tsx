@@ -75,7 +75,10 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
                     })
                   }
                 >
-                  Form the hypothesis
+                  {/* Its cost on the button, as decisions show theirs: two
+                      playtesters spent a week's attention on these without
+                      knowing they cost any. */}
+                  Form the hypothesis<span className="font-normal opacity-80"> · 1 attention</span>
                 </Button>
                 <Button
                   variant="quiet"

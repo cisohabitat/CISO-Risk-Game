@@ -13,9 +13,12 @@
  *
  *   pnpm ladder <mode> [seed] [measured|ambitious]
  *   pnpm ladder sweep <runs> [measured|ambitious]
+ *
+ * `--years 2` plays the same philosophy into a second year that follows the
+ * first (src/game/engine/next-year.ts) and reports, or prints, that year.
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
-import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
+import { newGame, applyAction, runDays, beginNextYear } from '../src/game/engine/orchestrator'
 import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, briefing, teamView, visibleRisks } from '../src/store/selectors'
@@ -26,6 +29,9 @@ import { capacityBand, teamStrain } from '../src/game/team/capacity'
 import type { Difficulty, GameState } from '../src/game/types'
 
 const index = buildContentIndex(nexoraContent)
+// `--years N` is read off the end, so the positional arguments stay where they were.
+const yearsAt = process.argv.indexOf('--years')
+const YEARS = yearsAt > 0 ? Math.max(1, Number(process.argv.splice(yearsAt, 2)[1] ?? 1)) : 1
 let SEED = process.argv[3] ?? 'ladder'
 /** A starting situation for `transcript`, or none for the usual opening. */
 let SITUATION: string | undefined
@@ -65,6 +71,16 @@ const CHOICE: [RegExp, RegExp, string][] = [
   [/acceptance has run out/i, /Look at it again/i, 'rat-more-evidence'],
   [/outgrown its recovery design/i, /Fund a resilience redesign/i, 'rat-material'],
   [/budget after a quiet year/i, /Make the case/i, 'rat-material'],
+  // A second year, in the same voice: finish before starting, look before
+  // lifting, enforce what was promised, test recovery, tell the regulator
+  // what is true, assess before signing, and name who decides.
+  [/What this year is for/i, /Finish what is half-built/i, 'rat-resources'],
+  [/Kestrel boundary, again/i, /scoped review/i, 'rat-more-evidence'],
+  [/Switching enforcement on/i, /next week/i, 'rat-material'],
+  [/production restore test/i, /Take the window/i, 'rat-more-evidence'],
+  [/send the regulator/i, /as written/i, 'rat-regulatory'],
+  [/customer service assistant/i, /assessment/i, 'rat-regulatory'],
+  [/seventy-two hours/i, /named decision-maker/i, 'rat-regulatory'],
 ]
 // What this CISO wants to build, in order of conviction, and what to examine.
 // Real ids. This list once held `prog-recovery`, which does not exist, so
@@ -80,8 +96,16 @@ const LEADERS: Record<string, string> = {
 
 type Appetite = 'measured' | 'ambitious'
 
-function play(difficulty: Difficulty, appetite: Appetite) {
-  const state: GameState = newGame(index, { seed: SEED, difficulty, situation: SITUATION })
+function play(difficulty: Difficulty, appetite: Appetite, years = YEARS): ReturnType<typeof playYear> {
+  let out = playYear(appetite, newGame(index, { seed: SEED, difficulty, situation: SITUATION }))
+  for (let year = 2; year <= years; year += 1) {
+    out.state.reviews.annual = out.review
+    out = playYear(appetite, beginNextYear(index, out.state))
+  }
+  return out
+}
+
+function playYear(appetite: Appetite, state: GameState) {
   const log: string[] = []
   const refused: string[] = []
   let wantedProgramme = 0
@@ -197,6 +221,10 @@ function play(difficulty: Difficulty, appetite: Appetite) {
 
     // Build, but not everything: one programme at a time, next only once the
     // last is properly under way.
+    // A programme an earlier year started is not started again.
+    while (wantedProgramme < PROGRAMMES.length && state.programmes.programmes[PROGRAMMES[wantedProgramme]!]?.status !== 'proposed') {
+      wantedProgramme += 1
+    }
     if (wantedProgramme < PROGRAMMES.length && day > 20) {
       const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active')
       const ready = appetite === 'ambitious' ? true : live.length === 0 || (live.length === 1 && live[0]!.progress > 0.55)
@@ -327,7 +355,7 @@ if (process.argv[2] === 'transcript') {
   SEED = process.argv[4] ?? 'transcript'
   SITUATION = process.argv[5]
   const out = play(mode, 'measured')
-  console.log(`# ${mode} · seed ${SEED}${SITUATION ? ` · ${SITUATION}` : ''}\n`)
+  console.log(`# ${mode} · seed ${SEED}${SITUATION ? ` · ${SITUATION}` : ''}${YEARS > 1 ? ` · year ${YEARS}` : ''}\n`)
   console.log('## Messages\n')
   for (const m of out.state.inbox.messages) {
     console.log(`d${m.day} [${m.priority}] ${m.from} — ${m.subject}${m.eventId ? `  {${m.eventId}}` : ''}`)

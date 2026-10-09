@@ -18,6 +18,81 @@ fault.
 
 ### Fixed
 
+- **What the AI playtest panel of 9 October found.** Four agents each played
+  a whole year through a real browser, as four people
+  (`docs/playtests/2026-10-09-ai-panel-synthesis.md`). The defects they could
+  quote and reproduce are fixed. The worst were two keyboard faults:
+  - Space on a button inside a decision dialog started the clock, so a
+    decision lapsed while the dialog was open.
+  - → on the Risk tabs skipped a month per press.
+
+  Neither shortcut now fires from a dialog or a focused control. Held by
+  `tests/ui/panel-2026-10-09.test.tsx`, which fails with the fix removed.
+  Also fixed:
+  - focus now moves to a new screen;
+  - the dependency map's lines no longer read as internal ids;
+  - on a phone, choosing a card takes the player to its detail;
+  - the commission dialog counts the work a lead already holds, and held by
+    `tests/engine/panel-2026-10-09.test.ts`;
+  - the reconstruction times detection from the intrusion, not the impact;
+  - the board's reading of each paper is kept in the inbox;
+  - budget rises now say where the money came from;
+  - attention costs show on the buttons that spend attention;
+  - a hypothesis says it is a draft;
+  - a few governance roles are corrected.
+
+  What needs authored content or a person is listed in the synthesis and
+  left.
+
+- **A finished year led to another that forgot it.** "Start another year"
+  went back to the start screen and a new Nexora, so nothing a player built,
+  learned or promised reached a second year. A finished year now leads to
+  the next one at the same organisation (`src/game/engine/next-year.ts`).
+  The estate and what the player found carry over, and so do the controls,
+  the programmes (finished ones stay finished; running ones keep running,
+  already paid for), the people with their trust settled a fifth of the way
+  back, the team rested, and every risk accepted to the date it was given,
+  with its assumptions. The inbox, decisions, incidents, board papers, the
+  business's plans and the budget start again. The budget is set on the line
+  the autumn agreed: a fifth less after accepting the cut, a tenth after
+  offering a named line, less any unfunded emergency spend. Anything the
+  first year already said is not said again. Thirty-five new messages, seven
+  of them carrying a decision, open the year and answer last autumn's choices
+  through new `lastYear.*` conditions; the business has five plans of its own
+  for the year; and the review compares the year with the one before. Measured over 30 CISO seeds, with the same engaged second year
+  after each kind of first:
+
+  | | After a strong first year | After an idle one |
+  |---|---|---|
+  | Board standing on the first morning | 0.66 | 0.33 |
+  | Incidents | 1.10 | 1.83 |
+  | Worst consequence | 0.26 | 0.41 |
+  | Objectives missed | 0.07 | 2.13 |
+  | Reviews reading "credible" | 20 of 30 | 16 of 30 |
+
+  Other checks:
+  - Soak: 300 campaigns over two years, with no crash and no invariant
+    failure.
+  - Coverage over two years reaches all 45 decisions.
+  - A first year is unchanged: the cohort facts pinned in
+    `tests/engine/cohort.test.ts` still hold.
+  - Held by `tests/engine/next-year.test.ts` and
+    `tests/e2e/next-year.spec.ts`. The tests fail when the first year's
+    events stop carrying, and when a later year's plans leak into the
+    first.
+- **First-year messages could arrive in a second year.** The second year's
+  transcript (`pnpm ladder transcript ciso y2-test --years 2`) had the CEO
+  announcing the Nordic payments partner in June of year two, a year after
+  the Nordic entry it belonged to. A message the first year never sent is
+  free to arrive later, and four were about the first year's own plans: the
+  Nordic partner, the Kestrel diligence window, the two identity roles "six
+  months open" and the 6,283 vulnerabilities everyone quotes at a new CISO.
+  They now wait only in a first year (`campaign.yearAtLeast`).
+- **A new screen opened at the last one's scroll.** Nothing reset the
+  scroll between screens, so the second year opened halfway down the
+  Briefing, under the review it had been begun from. Every screen now opens
+  at its top.
+
 - **One save per campaign was one copy, and nothing checked it.** Every write
   replaced the campaign's only save, so a write that caught the game in a
   broken state would have replaced the last good one, and the next load would

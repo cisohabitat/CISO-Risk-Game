@@ -26,7 +26,7 @@ evidence rather than hope, that this is happening. Concretely:
 | **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. | **Unknown.** A voice guide holds every string; the 320px first session is fixed; whether it teaches still needs people. |
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
 | **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; still one organisation; Q3 and June unchanged. |
-| **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B−.** Seed links and a shareable year give a reason to compare and come back; still one organisation and no Year Two that remembers. |
+| **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
 | **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound and a printable review; no identity yet (type, portraits). |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |
 | **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. | **D.** Sized (`pnpm strings`: about 30,000 words) and planned (`docs/LOCALISATION.md`); nothing translated. |
@@ -191,8 +191,23 @@ organisation to be CISO of.
   and open acceptances, with the review's "next year's priorities" decision
   honoured as the board's expectation. Measured with the ladder: a Year Two
   after a strong Year One should read differently from one after a weak
-  one, in the same way the three modes already do. **Not started:** a
-  mechanic change, so it waits on a playtest asking for it.
+  one, in the same way the three modes already do. **Built** (9 October
+  2026, at the owner's request, ahead of a playtest asking for it):
+  - "Begin your second year" on the review starts the next year from the
+    finished one (`src/game/engine/next-year.ts`).
+  - Carried over: the estate, controls, programmes, relationships, the team
+    and open acceptances.
+  - The budget follows the autumn decision.
+  - Thirty-five messages and seven decisions answer last year through
+    `lastYear.*` conditions, including the board's priorities, adopted in
+    January and checked at half-time.
+  - `pnpm ladder`, `pnpm soak` and `pnpm coverage` take `--years 2`.
+
+  Measured over 30 CISO seeds with the same second year after each kind of
+  first: board standing 0.66 against 0.33 on the first morning, incidents
+  1.10 against 1.83, objectives missed 0.07 against 2.13
+  (`docs/FINDINGS.md`). Whether a second year *feels* different is still a
+  playtest question.
 - **Threat variety.** Incident families 5 → 8, attack paths 8 → 14, a third
   actor with a different objective (disruption rather than money). Measured
   with `scripts/efficacy.ts` so each programme still reduces what it is meant

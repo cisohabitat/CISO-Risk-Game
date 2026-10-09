@@ -69,6 +69,8 @@ export interface BusinessObjectiveDef {
   ownerStakeholderId: string
   /** Business value delivered when achieved, used by the annual review. */
   value: number
+  /** The year of the job the business plans this for. Omitted: the first. */
+  year?: number
 }
 
 export interface StakeholderDef {

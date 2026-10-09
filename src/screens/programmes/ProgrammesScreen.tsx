@@ -93,10 +93,17 @@ export function ProgrammesScreen() {
                             <li key={blocker.id}>
                               <p className="text-sm font-medium">{blocker.name}</p>
                               <p className="mt-0.5 text-sm text-ink-muted text-pretty">{blocker.description}</p>
+                              {/* Refused after the click, with £20k left and a
+                                  £120k price on the button. Decisions already
+                                  disable what the year cannot pay for. */}
                               <Button
                                 variant="secondary"
                                 size="sm"
                                 className="compact mt-2 min-h-9"
+                                disabled={
+                                  (blocker.budget ?? 0) > state.resources.budgetRemaining ||
+                                  (blocker.focus ?? 0) > state.resources.focusRemaining
+                                }
                                 onClick={() =>
                                   dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id })
                                 }
@@ -104,6 +111,11 @@ export function ProgrammesScreen() {
                                 {blocker.resolution}
                                 {blocker.budget ? ` (${money(blocker.budget)})` : ''}
                               </Button>
+                              {(blocker.budget ?? 0) > state.resources.budgetRemaining && (
+                                <p className="mt-1 text-xs text-band-elevated">
+                                  Costs {money(blocker.budget ?? 0)}, more than the {money(Math.max(0, state.resources.budgetRemaining))} left this year.
+                                </p>
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -227,6 +239,13 @@ export function ProgrammesScreen() {
                       variant="secondary"
                       size="sm"
                       className="self-start"
+                      aria-label={`${
+                        state.resources.budgetRemaining < programme.budgetCost
+                          ? 'Not affordable'
+                          : attentionShort
+                            ? 'Out of attention this week'
+                            : 'Start this'
+                      }: ${programme.name}`}
                       disabled={state.resources.budgetRemaining < programme.budgetCost || attentionShort}
                       onClick={() => {
                         setStarting(programme)
@@ -248,7 +267,9 @@ export function ProgrammesScreen() {
         </section>
       )}
 
-      {starting && (
+      {starting && (() => {
+        const fundingMax = Math.min(starting.budgetCost, Math.round(state.resources.budgetRemaining))
+        return (
         <Dialog
           open
           onClose={() => setStarting(undefined)}
@@ -268,10 +289,15 @@ export function ProgrammesScreen() {
               </span>
               <input
                 type="range"
-                min={Math.round(starting.budgetCost * 0.5)}
-                max={Math.min(starting.budgetCost, Math.round(state.resources.budgetRemaining))}
+                // Steps counted down from the most it can have, so the top
+                // of the range is reachable: from a minimum of £425k in £10k
+                // steps the slider stopped at £845k of £850k, and a keyboard
+                // could never fund the programme fully again once it moved.
+                min={fundingMax - 10 * Math.floor((fundingMax - Math.round(starting.budgetCost * 0.5)) / 10)}
+                max={fundingMax}
                 step={10}
                 value={budget}
+                aria-valuetext={`${money(budget)} of ${money(starting.budgetCost)}`}
                 onChange={(event) => setBudget(Number(event.target.value))}
                 className="w-full accent-[var(--accent)]"
                 style={{ minHeight: 0 }}
@@ -289,12 +315,15 @@ export function ProgrammesScreen() {
                 Executive sponsor
               </legend>
               <select
+                aria-label="Executive sponsor"
                 value={sponsorId}
                 onChange={(event) => setSponsorId(event.target.value)}
                 className="w-full rounded-lg border border-line bg-surface-2 px-3 py-2.5 text-base"
               >
                 <option value="">Default sponsor</option>
-                {index.content.stakeholders.map((person) => (
+                {/* A sponsor is an executive. The chair of the committee that
+                    oversees the programme cannot also sponsor it. */}
+                {index.content.stakeholders.filter((person) => person.id !== 'stk-board').map((person) => (
                   <option key={person.id} value={person.id}>
                     {person.name} — {person.shortRole}
                   </option>
@@ -311,7 +340,8 @@ export function ProgrammesScreen() {
             </p>
           </div>
         </Dialog>
-      )}
+        )
+      })()}
     </div>
   )
 }

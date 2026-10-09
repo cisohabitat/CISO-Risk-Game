@@ -98,6 +98,7 @@
       "priority": "urgent",
       "availableFromDay": 300,
       "conditions": [
+        { "kind": "not", "condition": { "kind": "situation.is", "situationId": "sit-after-breach" } },
         {
           "kind": "incident.none"
         },

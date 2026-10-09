@@ -36,6 +36,14 @@ export function datesOf(days: number[]): string {
   return labels.length <= 1 ? (labels[0] ?? '') : `${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
 }
 
+const YEAR_WORDS = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
+
+/** "second": which year of the job this is, as the game says it. */
+export function yearWord(year: number | undefined): string {
+  const n = Math.max(1, Math.floor(year ?? 1))
+  return YEAR_WORDS[n - 1] ?? `${n}th`
+}
+
 export function formatGameDate(day: number): { label: string; month: string; weekLabel: string } {
   let remaining = Math.max(0, Math.floor(day))
   let monthIndex = 0

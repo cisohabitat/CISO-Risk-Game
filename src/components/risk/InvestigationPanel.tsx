@@ -10,7 +10,7 @@ import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
-import { availableCapacity, delegationOutlook, delegationQuality, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
+import { availableCapacity, delegationOutlook, delegationQuality, leaderAsAssigned, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import type { InvestigationDef } from '@/game/types'
@@ -162,13 +162,14 @@ export function InvestigationPanel() {
                             ? 'The team it needs has no spare capacity.'
                             : noFocus
                               ? 'No attention left this week.'
-                              : 'Not enough budget remains.'}
+                              : `Costs ${money(investigation.budgetCost)}, more than the ${money(Math.max(0, state.resources.budgetRemaining))} left this year.`}
                         </p>
                       )}
                       <Button
                         variant="secondary"
                         size="sm"
                         className="mt-3 self-start"
+                        aria-label={`Commission: ${investigation.name}`}
                         disabled={short || noFocus || noBudget}
                         onClick={() => {
                           setChosen(investigation)
@@ -177,8 +178,8 @@ export function InvestigationPanel() {
                           // delegated work does not read.
                           const best = [...index.content.leaders].sort(
                             (a, b) =>
-                              delegationQuality(state.team.leaders[b.id]!, strain, 0.5) -
-                              delegationQuality(state.team.leaders[a.id]!, strain, 0.5),
+                              delegationQuality(leaderAsAssigned(state, state.team.leaders[b.id]!, investigation.capacityPerDay), strain, 0.5) -
+                              delegationQuality(leaderAsAssigned(state, state.team.leaders[a.id]!, investigation.capacityPerDay), strain, 0.5),
                           )[0]
                           setLeaderId(best?.id ?? '')
                         }}
@@ -213,7 +214,7 @@ export function InvestigationPanel() {
           <fieldset className="space-y-2">
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Delegate to</legend>
             {index.content.leaders.map((leader) => {
-              const runtime = state.team.leaders[leader.id]!
+              const runtime = leaderAsAssigned(state, state.team.leaders[leader.id]!, chosen?.capacityPerDay)
               return (
                 <label
                   key={leader.id}

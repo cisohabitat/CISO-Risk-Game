@@ -205,6 +205,61 @@
       "dependencyNodeIds": ["node-svc-corporate"],
       "ownerStakeholderId": "stk-cfo",
       "value": 0.1
+    },
+    {
+      "id": "obj-y2-partner-api",
+      "name": "Open the platform to partners",
+      "description": "Let merchants and partners build on the customer platform through a published interface, by the summer.",
+      "targetDay": 210,
+      "importance": "critical",
+      "dependencyNodeIds": ["node-svc-platform", "node-app-portal"],
+      "ownerStakeholderId": "stk-digital",
+      "value": 0.3,
+      "year": 2
+    },
+    {
+      "id": "obj-y2-legacy-exit",
+      "name": "Switch off the legacy data centre",
+      "description": "Move or retire what is left in the legacy data centre and close it.",
+      "targetDay": 290,
+      "importance": "high",
+      "dependencyNodeIds": ["node-dc-legacy", "node-cloud-prod"],
+      "ownerStakeholderId": "stk-cio",
+      "value": 0.25,
+      "year": 2
+    },
+    {
+      "id": "obj-y2-kestrel",
+      "name": "Bring Kestrel onto Nexora's systems",
+      "description": "Move Kestrel Digital's customers and staff onto Nexora's platforms and land the synergy savings.",
+      "targetDay": 240,
+      "importance": "high",
+      "dependencyNodeIds": ["node-acq-kestrel", "node-net-corp"],
+      "ownerStakeholderId": "stk-cfo",
+      "value": 0.2,
+      "year": 2
+    },
+    {
+      "id": "obj-y2-assistant",
+      "name": "Put an assistant on every service desk",
+      "description": "Roll out an AI assistant to every customer service agent by the autumn.",
+      "targetDay": 270,
+      "importance": "medium",
+      "dependencyNodeIds": ["node-app-crm", "node-svc-corporate"],
+      "ownerStakeholderId": "stk-coo",
+      "value": 0.15,
+      "year": 2
+    },
+    {
+      "id": "obj-y2-cost",
+      "name": "Hold technology costs flat",
+      "description": "Keep the technology and operations cost base where it ended last year, with volumes up.",
+      "targetDay": 330,
+      "importance": "medium",
+      "dependencyNodeIds": ["node-svc-corporate"],
+      "ownerStakeholderId": "stk-cfo",
+      "value": 0.1,
+      "year": 2
     }
   ]
 }

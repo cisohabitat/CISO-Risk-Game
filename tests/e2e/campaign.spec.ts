@@ -264,7 +264,7 @@ test.describe('a first year at Nexora', () => {
       if (await got.isVisible().catch(() => false)) await got.click()
       const ceo = page.getByText('The CEO wants your three risks').first()
       if (await ceo.isVisible().catch(() => false)) break
-      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')
@@ -276,7 +276,7 @@ test.describe('a first year at Nexora', () => {
       }
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }
-    await page.getByRole('button', { name: /^Decide$/ }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     const decision = page.getByRole('dialog', { name: 'The CEO wants your three risks' })
     await expect(decision).toBeVisible()
     await decision.getByRole('button', { name: 'Ransomware' }).click()
@@ -302,7 +302,7 @@ test.describe('a first year at Nexora', () => {
         return { tag: el?.tagName, id: el?.id, text: (el?.textContent ?? '').trim().slice(0, 40), inDialog: Boolean(el?.closest('[role=dialog]')) }
       })
 
-    const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+    const decide = page.getByRole('button', { name: /^Decide: / }).first()
     await decide.focus()
     await page.keyboard.press('Enter')
     const dialog = page.getByRole('dialog')
@@ -380,7 +380,7 @@ test.describe('a first year at Nexora', () => {
     await startCampaign(page, 'e2e-dialog')
     const got = page.getByRole('button', { name: 'Got it' }).first()
     if (await got.isVisible().catch(() => false)) await got.click()
-    await page.getByRole('button', { name: /^Decide$/ }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
     // The panel rises into place; measure it once it has arrived.
@@ -450,8 +450,10 @@ test.describe('a first year at Nexora', () => {
       await expect(page.getByTestId('graph-edge-fade')).toBeAttached()
     }
 
-    // The list view is always available, and is the default on small screens.
-    await page.getByRole('button', { name: 'List', exact: true }).click()
+    // The list view is always available, and is all a phone shows, so the
+    // toggle is only offered where there is a graph to toggle to.
+    if (width >= 640) await page.getByRole('button', { name: 'List', exact: true }).click()
+    else await expect(page.getByRole('button', { name: 'Graph', exact: true })).toBeHidden()
     const list = page.getByRole('list', { name: 'Discovered systems' })
     await expect(list.getByText('Nexora Pay').first()).toBeVisible()
     await expect(list.getByText('Business service').first()).toBeVisible()
@@ -494,6 +496,9 @@ test.describe('a first year at Nexora', () => {
         await banner.click()
         break
       }
+      // The review loads with the year's end, so for a moment the clock says
+      // the year is over before the review is there to read.
+      if (await page.getByTestId('year-over').isVisible().catch(() => false)) break
 
       // Answer anything blocking, then keep moving.
       const decide = page.getByRole('button', { name: 'Decide' }).first()
@@ -522,8 +527,8 @@ test.describe('a first year at Nexora', () => {
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }
 
+    await expect(page.getByText('How the year is read')).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText('Annual review').first()).toBeVisible()
-    await expect(page.getByText('How the year is read')).toBeVisible()
     await expect(page.getByText('What the business achieved')).toBeVisible()
 
     // A finished year used to have no way out short of reloading the page.
@@ -673,7 +678,7 @@ test.describe('a first year at Nexora', () => {
       const got = page.getByRole('button', { name: 'Got it' })
       if (await got.isVisible().catch(() => false)) { await got.click(); continue }
       if (await page.getByText(/board paper is due/i).isVisible().catch(() => false)) { found = true; break }
-      const decide = page.getByRole('button', { name: /^Decide$/ })
+      const decide = page.getByRole('button', { name: /^Decide: / })
       if (await decide.first().isVisible().catch(() => false)) {
         await decide.first().click()
         await page.getByRole('radio').first().check()
@@ -722,7 +727,7 @@ test.describe('a first year at Nexora', () => {
     // the eighty options carry one; the first few decisions may not.
     let found = false
     for (let i = 0; i < 40 && !found; i += 1) {
-      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')
@@ -749,7 +754,7 @@ test.describe('a first year at Nexora', () => {
     await startCampaign(page, 'e2e-coach') // the start screen defaults to CISO
     let sawNote = false
     for (let i = 0; i < 25 && !sawNote; i += 1) {
-      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')
@@ -769,7 +774,7 @@ test.describe('a first year at Nexora', () => {
     await startCampaign(page, 'e2e-year')
 
     for (let i = 0; i < 6; i += 1) {
-      const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')

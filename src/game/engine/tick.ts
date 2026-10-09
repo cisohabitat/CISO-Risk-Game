@@ -256,7 +256,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
         : 'An assumption behind a past decision no longer holds',
       body: invalidated.wasNeverTrue
         ? `${invalidated.statement}\n\n${invalidated.reason}\n\nNothing has changed. We simply had not checked, and the decisions that rested on it were taken on a belief rather than on evidence. They need revisiting.`
-        : `${invalidated.statement}\n\n${invalidated.reason}\n\nThe decisions and risks that relied on it need reassessment.`,
+        : `${invalidated.statement}\n\n${invalidated.reason}\n\nThe decisions and risks that relied on it need reassessment. Risk, Assumptions shows which they are.`,
       type: 'assumption',
       priority: 'urgent',
       pinned: true,

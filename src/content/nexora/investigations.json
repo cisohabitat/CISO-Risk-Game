@@ -2,7 +2,7 @@
   "investigations": [
     {
       "id": "inv-service-review", "theme": "business-impact", "name": "Critical business service review", "description": "Sit with the service owners and establish what the business actually cannot lose, and what each service depends on.",
-      "workingNarrative": "Your architecture lead is working through the service owners one by one.",
+      "workingNarrative": "The team is working through the service owners one by one.",
       "functions": ["architecture", "grc"], "capacityPerDay": { "architecture": 1, "grc": 0.5 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-launch-pressure"], "possibleEvidenceIds": ["ev-cardholder-scope", "ev-shadow-integration"],
       "revealsNodeIds": ["node-app-wms", "node-app-portal"], "revealsEdgeIds": ["edge-orders-wms", "edge-platform-pii"], "assessesControlIds": [],

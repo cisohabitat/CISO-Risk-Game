@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { detailIsBelowTheList } from '@/lib/layout/stacked'
 import { Badge, Card, CardBody, Fact, SectionHeading } from '@/components/ui/primitives'
 import type { DiscoveredNodeView } from '@/store/selectors'
 import { controlBandTone, nodeTypeLabel } from '@/lib/formatting/labels'
@@ -29,7 +30,8 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
     const walked = walkingTo === node.id
     setShown(node.id)
     setWalkingTo(undefined)
-    setArrived(walked)
+    // Picked from a list it sits under, the panel is off screen: go to it.
+    setArrived(walked || detailIsBelowTheList())
     setTrail((current) => {
       if (!walked) return [{ id: node.id, name: node.name }]
       const at = current.findIndex((step) => step.id === node.id)
@@ -77,7 +79,8 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
           <div className="flex flex-wrap gap-2">
             <Badge tone="neutral" glyph={false}>{nodeTypeLabel(node.type)}</Badge>
             <Badge tone={node.criticality === 'critical' ? 'high' : node.criticality === 'high' ? 'elevated' : 'neutral'} glyph={false}>
-              {node.criticality} criticality
+              {/* "critical criticality" said the word twice. */}
+              {node.criticality === 'critical' ? 'Critical' : `${node.criticality.charAt(0).toUpperCase()}${node.criticality.slice(1)} importance`}
             </Badge>
             {node.onKnownAttackPath && <Badge tone="high" glyph={false}>On a known attack path</Badge>}
           </div>

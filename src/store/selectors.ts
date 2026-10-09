@@ -28,7 +28,7 @@ import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/p
 import { plural, statusLabel } from '@/lib/formatting/labels'
 import { unexaminedMaterial } from '@/game/knowledge/discovery'
 import { renderDecisionText } from '@/game/decisions/describe'
-import { formatGameDate } from '@/game/time'
+import { formatGameDate, yearWord } from '@/game/time'
 
 export { formatGameDate }
 
@@ -202,7 +202,8 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
           const treatment = option.budgetTreatment ?? 'discretionary'
           let blockedReason: string | undefined
           if (treatment === 'discretionary' && budgetCost > 0 && state.resources.budgetRemaining < budgetCost) {
-            blockedReason = `Not enough budget remains this year (${money(budgetCost)})`
+            // "(£90k)" read as what was left, to a playtester with £50k left.
+            blockedReason = `Costs ${money(budgetCost)}, more than the ${money(Math.max(0, state.resources.budgetRemaining))} left this year`
           } else if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
             blockedReason = 'Not enough budget remains this year'
           } else if (requirements?.condition && !evaluateCondition(state, index, requirements.condition)) {
@@ -501,7 +502,14 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
                   ? 'Steady'
                   : 'Energised',
         vacancies: runtime.vacancies,
-        hiring: (runtime.hiringDaysRemaining ?? 0) > 0,
+        // A hire a decision already paid for is a hire under way: the Team
+        // screen offered to recruit the same identity role again after
+        // "Recruit properly", and a playtester nearly paid for it twice.
+        hiring:
+          (runtime.hiringDaysRemaining ?? 0) > 0 ||
+          state.pendingEffects.some((pending) =>
+            pending.effects.some((effect) => effect.type === 'team.vacancyFilled' && effect.fn === runtime.fn),
+          ),
       }
     }),
     leaders: index.content.leaders.map((def) => {
@@ -537,6 +545,8 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
 export interface BriefingView {
   dateLabel: string
   weekLabel: string
+  /** "Second year", on a year that followed another; absent on the first. */
+  yearLabel?: string
   quarter: number
   budgetRemaining: number
   budgetTotal: number
@@ -661,6 +671,7 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
   return {
     dateLabel: date.label,
     weekLabel: date.weekLabel,
+    ...((state.year ?? 1) > 1 ? { yearLabel: `${yearWord(state.year).replace(/^./, (c) => c.toUpperCase())} year` } : {}),
     quarter: currentQuarter(state.currentDay),
     budgetRemaining: Math.round(state.resources.budgetRemaining),
     budgetTotal: state.resources.budgetTotal,

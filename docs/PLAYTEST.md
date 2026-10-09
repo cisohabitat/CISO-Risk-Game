@@ -241,6 +241,45 @@ Put them in front of players rather than deciding from a desk.
   year; the designer, so it cannot say whether the game teaches itself. The
   question of whether a newcomer finishes having learned something is still
   open.
+- `playtests/2026-10-09-ai-panel-*.md`, with a synthesis. Four AI agents, as
+  four people, each played a whole year:
+  - a newcomer from IT operations;
+  - a teacher on a phone;
+  - a CISO of fifteen years, on high pressure after a breach;
+  - a keyboard and screen-reader user, simulated.
+
+  They played through the browser driver below, on one frozen build, with
+  recording on. The keyboard session found Space starting the clock inside
+  a decision dialog and → on the Risk tabs skipping a month. Both were real,
+  and both are fixed. The synthesis lists every finding as fixed or not, and
+  why. None of it is human evidence.
+
+## AI playtests
+
+`scripts/playtest-driver.ts` gives an AI agent a browser it can play turn by
+turn, as a person would.
+
+```
+pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <built dist> <outdir>
+curl -s -X POST localhost:<port> -d '{"do":"read"}'
+```
+
+It serves the build itself, with clean URLs, on `<port> + 1000`. It answers
+these commands:
+
+- `read`: the page as its accessibility tree;
+- `shot`: a screenshot;
+- `click` and `check`: by role and name;
+- `fill`: by label;
+- `press`: a key;
+- `focused`: what has focus;
+- `download`: for exporting the session log.
+
+It has no command that reads game state, so an agent knows what a player
+would know. Copy `dist` somewhere of its own first, so the build under test
+cannot change while code changes beside it. Read each agent's exported log
+with `pnpm session`. An AI session is a hypothesis about a person, and never
+counts toward the human gate.
 
 ## What not to change on playtest feedback alone
 

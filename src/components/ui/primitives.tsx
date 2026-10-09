@@ -384,7 +384,10 @@ export function TabList({ children, label }: { children: ReactNode; label: strin
       role="tablist"
       aria-label={label}
       onKeyDown={onKeyDown}
-      className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"
+      // Wrapped rather than scrolled on a phone: scrolled, the last tabs sat
+      // off the right edge with nothing to say they were there, and a
+      // playtester looking for the enquiries tried three other screens first.
+      className="-mx-1 flex flex-wrap gap-1 px-1 pb-1"
     >
       {children}
     </div>
@@ -412,6 +415,10 @@ export function Tab({ value, children, count }: { value: string; children: React
       )}
     >
       {children}
+      {count !== undefined && count > 0 && (
+        // A pause before the number, for a screen reader: it read "Evidence2".
+        <span className="sr-only">, </span>
+      )}
       {count !== undefined && count > 0 && (
         <span className="ml-2 rounded-full bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent-ink tabular-nums">
           {count}

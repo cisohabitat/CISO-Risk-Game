@@ -312,6 +312,9 @@ export function createInitialState(index: ContentIndex, options: NewGameOptions)
 
   const business: GameState['business'] = { objectives: {}, serviceHealth: {}, outageDays: {} }
   for (const def of content.objectives) {
+    // A later year's plans are not this year's. Skipped before the draw, so
+    // adding one changes nothing about the first year of any seed.
+    if ((def.year ?? 1) !== 1) continue
     business.objectives[def.id] = {
       id: def.id,
       progress: clamp01(worldRng.range(0.02, 0.12)),

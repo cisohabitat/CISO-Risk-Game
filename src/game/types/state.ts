@@ -540,6 +540,29 @@ export interface PendingEffect {
   source: string
 }
 
+/**
+ * What a finished year leaves for the next one to remember: how it was
+ * judged, what was chosen, and what it cost. The world itself carries over in
+ * the state; this is the part only the review and the choices knew.
+ */
+export interface YearRecord {
+  year: number
+  gameId: string
+  headline: string
+  performanceBand: string
+  /** Each review dimension's band, by dimension id. */
+  dimensions: Record<string, AnnualReviewDimension['band']>
+  incidents: number
+  papersWritten: number
+  objectivesMet: number
+  objectivesTotal: number
+  budgetTotal: number
+  /** The starting situation the year began in, if it was the first. */
+  situationId?: string
+  /** The option taken on each decision the year answered, by decision definition id. */
+  decisions: Record<string, string>
+}
+
 export interface GameState {
   schemaVersion: number
   gameId: string
@@ -549,6 +572,13 @@ export interface GameState {
   difficulty: Difficulty
   /** The starting situation the year began in, if the content offers any. */
   situationId?: string
+  /**
+   * Which year of the job this is. Absent on a first year, and on every save
+   * written before a year could follow another.
+   */
+  year?: number
+  /** The years before this one, oldest first. Absent on a first year. */
+  previousYears?: YearRecord[]
   createdAtIso: string
   currentDay: number
   speed: GameSpeed

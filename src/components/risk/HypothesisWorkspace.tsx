@@ -6,6 +6,7 @@
  * Evidence the game considers contradictory is attached as such automatically,
  * so the player has to confront it rather than quietly ignore it.
  */
+import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -132,7 +133,7 @@ export function HypothesisWorkspace() {
                             className="compact min-h-9"
                             onClick={() => dispatch({ type: 'convertHypothesis', hypothesisId: hypothesis.id })}
                           >
-                            Raise as a risk scenario
+                            Raise as a risk scenario<span className="font-normal opacity-80"> · {FOCUS_COSTS.deepRiskReview} attention</span>
                           </Button>
                           <Button
                             variant="quiet"

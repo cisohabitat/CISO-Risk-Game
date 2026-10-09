@@ -121,8 +121,11 @@ export default function OrgGraph({
           verified: node.verified,
         } satisfies OrgNodeData,
         selected: node.id === selectedId,
+        // Named for a screen reader as it is for the eye.
+        ariaLabel: `${node.name}, ${nodeTypeLabel(node.type).toLowerCase()}`,
       }
     })
+    const names = new Map(nodes.map((node) => [node.id, node.name]))
 
     const known = new Set(nodes.map((node) => node.id))
     const seen = new Set<string>()
@@ -142,6 +145,10 @@ export default function OrgGraph({
           source: node.id,
           target: dependency.id,
           label: touches ? dependency.relationship : undefined,
+          // The library names an edge by its ids ("Edge from node-svc-payments
+          // to node-app-paygw"), which put internal identifiers in front of a
+          // screen reader thirty times over.
+          ariaLabel: `${node.name} depends on ${names.get(dependency.id) ?? 'another system'}`,
           animated: false,
           zIndex: touches ? 1 : 0,
           style: {

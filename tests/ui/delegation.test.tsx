@@ -32,7 +32,7 @@ describe('choosing who leads an enquiry', () => {
     expect(best.id).toBe(target.id)
 
     render(<InvestigationPanel />)
-    fireEvent.click(screen.getAllByRole('button', { name: 'Commission' })[0]!)
+    fireEvent.click(screen.getAllByRole('button', { name: /^Commission: / })[0]!)
     const chosen = screen.getAllByRole('radio').find((radio) => (radio as HTMLInputElement).checked) as HTMLInputElement
     expect(chosen.value).toBe(target.id)
     expect(screen.queryByText('In their area')).toBeNull()

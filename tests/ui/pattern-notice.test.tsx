@@ -32,7 +32,7 @@ describe('the pattern notice', () => {
     expect(state.resources.focusRemaining).toBeGreaterThan(0)
 
     render(<PatternNotice />)
-    expect(screen.getByRole('button', { name: 'Form the hypothesis' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /^Form the hypothesis/ })).toBeEnabled()
     expect(screen.queryByText('No attention left this week.')).toBeNull()
   })
 
@@ -44,7 +44,7 @@ describe('the pattern notice', () => {
     }))
 
     render(<PatternNotice />)
-    expect(screen.getByRole('button', { name: 'Form the hypothesis' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /^Form the hypothesis/ })).toBeDisabled()
     expect(screen.getByText('No attention left this week.')).toBeVisible()
   })
 })

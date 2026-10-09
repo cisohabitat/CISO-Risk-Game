@@ -5,7 +5,7 @@
  * Tablet and desktop: a persistent rail, a wider header and room for context.
  * The same screens are reachable everywhere; only the presentation changes.
  */
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing } from '@/store/selectors'
@@ -26,6 +26,23 @@ export function AppShell({ children }: { children: ReactNode }) {
   const setScreen = useGameStore((store) => store.setScreen)
   const openGlossary = useGameStore((store) => store.openGlossary)
   const [moreOpen, setMoreOpen] = useState(false)
+  const gameId = state?.gameId
+
+  // A screen opens at its top, and focus moves to it. Moving between screens
+  // kept the last one's scroll, so a second year opened halfway down the
+  // Briefing; and focus stayed on the button that was pressed, so a screen
+  // reader never heard that the screen had changed (AI keyboard playtest,
+  // 2026-10-09). The main region is named for its screen, so arriving on it
+  // says which one this is. Not on the first screen, which the player has
+  // only just arrived at.
+  const arrived = useRef(false)
+  useEffect(() => {
+    const main = document.getElementById('main')
+    main?.scrollTo?.(0, 0)
+    if (!/jsdom/.test(navigator.userAgent)) window.scrollTo(0, 0)
+    if (arrived.current && !document.querySelector('[role="dialog"]')) main?.focus({ preventScroll: true })
+    arrived.current = true
+  }, [screen, gameId])
 
   if (!state) return null
   const view = briefing(state, index)
@@ -293,7 +310,13 @@ function ShellHeader() {
         <div className="order-1 min-w-0 flex-1 lg:flex-none">
           <p className="truncate text-sm font-medium">
             {view.dateLabel}
-            <span className="text-ink-faint"> · {view.weekLabel} · Q{view.quarter}</span>
+            <span className="text-ink-faint">
+              {' · '}
+              {/* On a phone the line has room for the date and the week; the
+                  Briefing's masthead says which year it is. */}
+              {view.yearLabel && <span className="hidden sm:inline">{view.yearLabel} · </span>}
+              {view.weekLabel} · Q{view.quarter}
+            </span>
           </p>
           <p className="truncate text-xs text-ink-faint lg:hidden">
             {money(view.budgetRemaining)} left · {view.focusRemaining}/{view.focusPerWeek} attention

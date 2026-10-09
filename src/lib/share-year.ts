@@ -6,6 +6,7 @@
  */
 import type { AnnualReview, Difficulty } from '@/game/types'
 import { seedLinkUrl } from './seed-link'
+import { yearWord } from '@/game/time'
 
 const MODE_NAME: Record<Difficulty, string> = { guided: 'Guided', ciso: 'CISO', 'high-pressure': 'High pressure' }
 
@@ -17,19 +18,20 @@ export interface SharedYear {
 
 export function shareYear(
   review: Pick<AnnualReview, 'headline' | 'performanceBand' | 'dimensions'>,
-  year: { organisation: string; seed: string; mode: Difficulty; situationId?: string; situationName?: string },
+  year: { organisation: string; seed: string; mode: Difficulty; situationId?: string; situationName?: string; number?: number },
   origin: string,
 ): SharedYear {
   const url = seedLinkUrl(origin, { seed: year.seed, mode: year.mode, situation: year.situationId })
   const opening = [MODE_NAME[year.mode], year.situationName].filter(Boolean).join(', ')
   const text = [
-    `My first year as CISO of ${year.organisation} (${opening}):`,
+    `My ${yearWord(year.number)} year as CISO of ${year.organisation} (${opening}):`,
     `"${review.headline}"`,
     review.performanceBand,
     '',
     ...review.dimensions.map((dimension) => `${dimension.label}: ${dimension.band}`),
     '',
-    `Play the same year: ${url}`,
+    // A link opens a first year; a later one is only reached by playing it.
+    (year.number ?? 1) > 1 ? `Play the same first year: ${url}` : `Play the same year: ${url}`,
   ].join('\n')
   return { title: `CISO: First Year — ${review.headline}`, text, url }
 }

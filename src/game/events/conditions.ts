@@ -133,6 +133,16 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       )
     case 'incident.resolvedCountAtLeast':
       return Object.values(state.incidents.incidents).filter((i) => i.phase === 'closed').length >= condition.value
+    case 'campaign.yearAtLeast':
+      return (state.year ?? 1) >= condition.year
+    case 'lastYear.optionTaken':
+      return state.previousYears?.at(-1)?.decisions[condition.decisionId] === condition.optionId
+    case 'lastYear.dimensionBand':
+      return state.previousYears?.at(-1)?.dimensions[condition.dimensionId] === condition.band
+    case 'lastYear.incidentsAtLeast':
+      return (state.previousYears?.at(-1)?.incidents ?? -1) >= condition.value
+    case 'risk.acceptedCountAtLeast':
+      return Object.values(state.risks.scenarios).filter((s) => s.status === 'accepted').length >= condition.value
     case 'evidence.known':
       return Boolean(state.evidence.items[condition.evidenceId])
     case 'evidence.tagKnown':

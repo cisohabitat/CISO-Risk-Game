@@ -90,7 +90,7 @@ test.describe('accessibility', () => {
 
       // Give the lanes something to draw before auditing them.
       for (let i = 0; i < 5; i += 1) {
-        const decide = page.getByRole('button', { name: /^Decide$/ }).first()
+        const decide = page.getByRole('button', { name: /^Decide: / }).first()
         if (await decide.isVisible().catch(() => false)) {
           await decide.click()
           const dialog = page.getByRole('dialog')

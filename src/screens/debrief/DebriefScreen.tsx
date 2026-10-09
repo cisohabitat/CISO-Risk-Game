@@ -10,6 +10,7 @@ import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentViews, yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
 import { CAMPAIGN_DAYS } from '@/game/types'
+import { yearWord } from '@/game/time'
 import { objectiveStatusLabel } from '@/game/business/objectives'
 import { shortDate, statusLabel } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
@@ -29,12 +30,15 @@ export function DebriefScreen() {
   const index = useCampaignIndex()
   const finishCampaign = useGameStore((store) => store.finishCampaign)
   const leaveCampaign = useGameStore((store) => store.leaveCampaign)
+  const beginNextYear = useGameStore((store) => store.beginNextYear)
   const pushToast = useGameStore((store) => store.pushToast)
   const [sharing, setSharing] = useState<SharedYear>()
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
   if (!state) return null
+  // A later year keeps the opening of the first, so the link it shares opens that.
+  const openingSituation = state.situationId ?? state.previousYears?.[0]?.situationId
   const review = state.reviews.annual
 
   const download = () => {
@@ -71,7 +75,7 @@ export function DebriefScreen() {
             <p className="text-pretty">
               The annual review is written on the last day. You can close the year out early if you would rather read it now.
             </p>
-            <Button variant="primary" onClick={finishCampaign}>
+            <Button variant="primary" onClick={() => void finishCampaign()}>
               Write up the year now
             </Button>
           </CardBody>
@@ -125,8 +129,9 @@ export function DebriefScreen() {
                 organisation: index.content.meta.organisation,
                 seed: state.seed,
                 mode: state.difficulty,
-                situationId: state.situationId,
-                situationName: state.situationId ? index.situation.get(state.situationId)?.name : undefined,
+                situationId: openingSituation,
+                situationName: openingSituation ? index.situation.get(openingSituation)?.name : undefined,
+                number: state.year,
               },
               window.location.origin,
             )
@@ -212,7 +217,9 @@ export function DebriefScreen() {
           <CardBody>
             <ul className="space-y-2">
               {index.content.objectives.map((objective) => {
-                const runtime = state.business.objectives[objective.id]!
+                // The business's plans are a year's own: last year's are not this one's.
+                const runtime = state.business.objectives[objective.id]
+                if (!runtime) return null
                 return (
                   <li key={objective.id} className="flex flex-wrap items-center justify-between gap-2">
                     <span>{objective.name}</span>
@@ -379,10 +386,21 @@ export function DebriefScreen() {
         <SectionHeading><span id="another-year">Another year</span></SectionHeading>
         <Card>
           <CardBody className="space-y-3">
-            <p className="text-sm text-ink-muted text-pretty">{anotherYear(state.situationId, index.content.situations ?? [])}</p>
+            {state.finished && (
+              <p className="text-sm text-pretty">
+                Your {yearWord((state.year ?? 1) + 1)} year begins where this one ends: the same Nexora, the same
+                people, what you built and what you left, and the risks you chose to carry.
+              </p>
+            )}
+            <p className="text-sm text-ink-muted text-pretty">{anotherYear(openingSituation, index.content.situations ?? [])}</p>
             <div className="flex flex-wrap gap-2">
               {state.finished && (
-                <Button variant="primary" onClick={() => void leaveCampaign()}>Start another year</Button>
+                <Button variant="primary" onClick={() => void beginNextYear()}>
+                  Begin your {yearWord((state.year ?? 1) + 1)} year
+                </Button>
+              )}
+              {state.finished && (
+                <Button variant="secondary" onClick={() => void leaveCampaign()}>Start another year</Button>
               )}
               <Button variant="secondary" onClick={download}>Export this campaign</Button>
             </div>

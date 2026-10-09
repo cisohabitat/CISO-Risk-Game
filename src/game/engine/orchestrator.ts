@@ -25,10 +25,10 @@ import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
 import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
-import { buildAnnualReview, buildQuarterReview } from '../debrief/review'
+import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
-import { dateOf } from '../time'
+import { dateOf, yearWord } from '../time'
 
 export type PlayerAction =
   | { type: 'advance'; days: number }
@@ -87,6 +87,8 @@ export function newGame(index: ContentIndex, options: NewGameOptions): GameState
   tickDay(state, index)
   return state
 }
+
+export { beginNextYear } from './next-year'
 
 /** What each kind of intervention costs of the player's week. Read by the screens that offer them. */
 export const FOCUS_COSTS = {
@@ -350,7 +352,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         refs: [id],
       })
       commit()
-      return { ok: true, message: 'Hypothesis recorded.' }
+      // A hypothesis is a draft. Two playtesters formed eight between them,
+      // raised none, and the board never heard of the one their incident
+      // later took.
+      return { ok: true, message: 'Hypothesis recorded as a draft. The board hears of it once you raise it as a risk scenario, under Risk, Hypotheses.' }
     }
 
     case 'attachEvidence': {
@@ -530,7 +535,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       state.history.entries.push({
         day: state.currentDay,
         kind: 'programme-started',
-        summary: `Started ${def.name} with ${budget}k.`,
+        summary: `Started ${def.name} with ${money(budget)}.`,
         refs: [def.id],
       })
       commit()
@@ -705,6 +710,17 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       state.reviews.quarters.push(review)
       state.reviews.pendingQuarter = undefined
       applyEffects(state, review.effects, { index, rng, source: 'board' })
+      // The committee's reading of the paper, kept. It came only as a toast,
+      // gone in a moment: the one lesson the first quarter's board gives, and
+      // a playtester who looked away lost it (AI panel, 2026-10-09).
+      pushMessage(state, {
+        from: 'Sir Alan Whitcombe, Chair, Board Risk Committee',
+        subject: `The committee on your Q${action.quarter} paper`,
+        body: review.boardReaction,
+        type: 'board',
+        priority: 'notable',
+        relatedNodeIds: [],
+      })
       state.pauseReasons = state.pauseReasons.filter((r: PauseReason) => r !== 'quarter-end')
       commit()
       return { ok: true, message: review.boardReaction }
@@ -722,9 +738,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
     }
 
     case 'finishCampaign': {
+      // Closes the year. The review is written by `finishYear`
+      // (src/game/debrief/review.ts), which loads with the review screen.
       state.finished = true
-      state.reviews.annual = buildAnnualReview(state, index)
-      return { ok: true, message: 'Your first year is complete.' }
+      return { ok: true, message: `Your ${yearWord(state.year)} year is complete.` }
     }
 
     default: {

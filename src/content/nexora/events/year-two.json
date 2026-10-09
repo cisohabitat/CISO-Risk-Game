@@ -1,0 +1,1084 @@
+{
+  "events": [
+    {
+      "id": "evt-y2-opening",
+      "type": "executive",
+      "title": "A year in",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "A year ago I gave you twenty-three minutes and asked for three risks. This time I have an hour and a different question: what will be true in December that is not true now, and what are you leaving alone to get it?\n\nThe committee has your review. So do I.",
+      "priority": "critical",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 100,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "spine"
+      ],
+      "decisionId": "dec-y2-focus"
+    },
+    {
+      "id": "evt-y2-budget-cut",
+      "type": "executive",
+      "title": "A fifth less, as agreed",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Next year's plan went to the board with a fifth less for cyber, as you agreed in the autumn. That is the line you have. If the year asks for more, the conversation starts from what you said then.",
+      "priority": "notable",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-next-year-budget",
+          "optionId": "opt-q4-budget-accept"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "budget"
+      ]
+    },
+    {
+      "id": "evt-y2-budget-held",
+      "type": "executive",
+      "title": "The line held",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The cyber line held, on the argument you made in the autumn. I said I would hold you to it, so here it is in writing: in October I will ask what the money bought that a fifth less would not have.",
+      "priority": "notable",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-next-year-budget",
+          "optionId": "opt-q4-budget-hold"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "budget"
+      ]
+    },
+    {
+      "id": "evt-y2-budget-trimmed",
+      "type": "executive",
+      "title": "The line you named",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The line you offered back has gone, and the rest of the cyber budget stands. It was the easiest conversation I had about next year's plan, because I could say what we were giving up.",
+      "priority": "notable",
+      "availableFromDay": 1,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-next-year-budget",
+          "optionId": "opt-q4-budget-trim"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "budget"
+      ]
+    },
+    {
+      "id": "evt-y2-budget-owed",
+      "type": "executive",
+      "title": "Last year's emergency spend, paid",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "Last year you committed money beyond the cyber line for emergency support. It has been paid, out of this year's line, which is smaller by that much. I am telling you so that nobody is surprised in March.",
+      "priority": "notable",
+      "availableFromDay": 2,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "flag.set",
+          "flag": "year.owed"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "budget"
+      ]
+    },
+    {
+      "id": "evt-y2-priorities-risks",
+      "type": "board",
+      "title": "Your three risks, adopted",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The committee adopted the three risks you named as this year's priorities. In July I will ask what has moved on each, and I will ask it in front of the CFO.",
+      "priority": "notable",
+      "availableFromDay": 20,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-priorities",
+          "optionId": "opt-q4-priorities-risks"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ]
+    },
+    {
+      "id": "evt-y2-priorities-programmes",
+      "type": "board",
+      "title": "Your delivery plan, adopted",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The committee adopted your delivery plan as this year's priorities. In July I will ask what each programme is for, in terms the committee can test rather than dates it can only note.",
+      "priority": "notable",
+      "availableFromDay": 20,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-priorities",
+          "optionId": "opt-q4-priorities-programmes"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ]
+    },
+    {
+      "id": "evt-y2-priorities-unknowns",
+      "type": "board",
+      "title": "Your three questions, adopted",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "The committee adopted your three questions as this year's priorities, which is not something it has done before. In July I will ask which of them you can now answer, and how you know.",
+      "priority": "notable",
+      "availableFromDay": 20,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-priorities",
+          "optionId": "opt-q4-priorities-unknowns"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ]
+    },
+    {
+      "id": "evt-y2-priorities-heard",
+      "type": "board",
+      "title": "The priorities, at half-time",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "Half the year, and the committee has heard about its priorities in your papers this year. It can see what moved and what did not, which is what it asked for in January.",
+      "priority": "notable",
+      "availableFromDay": 185,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-risks"
+            },
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-programmes"
+            },
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-unknowns"
+            }
+          ]
+        },
+        {
+          "kind": "review.papersWrittenAtLeast",
+          "value": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "board.confidence",
+          "delta": 0.03
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": 0.03,
+          "reason": "The committee heard about its priorities all year."
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-priorities-unheard",
+      "type": "board",
+      "title": "The priorities, unheard",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "Half the year, and the committee has heard little about the priorities it adopted from you in January. I would like that put right before October, in a paper rather than a corridor.",
+      "priority": "urgent",
+      "availableFromDay": 185,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "any",
+          "conditions": [
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-risks"
+            },
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-programmes"
+            },
+            {
+              "kind": "lastYear.optionTaken",
+              "decisionId": "dec-q4-priorities",
+              "optionId": "opt-q4-priorities-unknowns"
+            }
+          ]
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "review.papersWrittenAtLeast",
+            "value": 2
+          }
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "board.confidence",
+          "delta": -0.03
+        },
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-board",
+          "delta": -0.04,
+          "reason": "The committee heard little this year about the priorities it took from you."
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-acceptances",
+      "type": "assumption",
+      "title": "Last year's acceptances still stand",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Some of the risks you accepted last year are still accepted, to the dates you gave them, and the assumptions you recorded with them came across too. When each date arrives it will come back to you, as it would have in December.",
+      "priority": "notable",
+      "availableFromDay": 9,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "risk.acceptedCountAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "governance"
+      ]
+    },
+    {
+      "id": "evt-y2-team-left",
+      "type": "people",
+      "title": "Two resignations after the winter",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Two of the analysts who carried last winter have resigned. Their notice runs to the end of next month, and neither post is easy to fill. I would rather you heard it from me than from the vacancy list.",
+      "priority": "urgent",
+      "availableFromDay": 24,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.dimensionBand",
+          "dimensionId": "team-sustainability",
+          "band": "weak"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "team"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "capacity.change",
+          "fn": "soc",
+          "delta": -1
+        },
+        {
+          "type": "team.morale",
+          "delta": -0.04
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-team-stayed",
+      "type": "people",
+      "title": "Everyone came back",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Everyone who was here in December is here in January. That is less usual than it sounds after a year like the last one, and the team knows you noticed what it cost.",
+      "priority": "routine",
+      "availableFromDay": 24,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.dimensionBand",
+          "dimensionId": "team-sustainability",
+          "band": "strong"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "team"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "team.morale",
+          "delta": 0.03
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-kestrel",
+      "type": "executive",
+      "title": "The Kestrel boundary, in January",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "You held the Kestrel boundary through peak trading. It is the first week of January, as I said it would be, and the synergy number is still waiting on it.",
+      "priority": "urgent",
+      "availableFromDay": 4,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-kestrel-release",
+          "optionId": "opt-q4-kestrel-hold"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-acq-kestrel"
+      ],
+      "tags": [
+        "year-two",
+        "acquisition"
+      ],
+      "decisionId": "dec-y2-kestrel"
+    },
+    {
+      "id": "evt-y2-identity-january",
+      "type": "programme",
+      "title": "Enforcement after peak",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Enforcement was promised for after peak trading, and peak is over. The exception list grew by forty while we waited. I can switch enforcement on next week if you want it on.",
+      "priority": "urgent",
+      "availableFromDay": 5,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-identity-enforce",
+          "optionId": "opt-q4-identity-after"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-idp"
+      ],
+      "tags": [
+        "year-two",
+        "identity"
+      ],
+      "decisionId": "dec-y2-identity"
+    },
+    {
+      "id": "evt-y2-identity-voluntary",
+      "type": "programme",
+      "title": "A year of voluntary enrolment",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "The second factor has been voluntary since the autumn. The accounts that never enrolled are the accounts the alerts keep tracing back to, and the list of them is not getting shorter on its own.",
+      "priority": "notable",
+      "availableFromDay": 30,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-identity-enforce",
+          "optionId": "opt-q4-identity-optional"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-idp"
+      ],
+      "tags": [
+        "year-two",
+        "identity"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "control.exceptions",
+          "controlId": "ctl-mfa",
+          "delta": 0.03
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-restore",
+      "type": "executive",
+      "title": "The restore test, in January",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "You deferred the production restore test to January. It is January. I can give you four hours of payments on a Sunday morning this month; after that the window closes until the spring.",
+      "priority": "urgent",
+      "availableFromDay": 12,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-recovery-window",
+          "optionId": "opt-q4-recovery-defer"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-backup"
+      ],
+      "tags": [
+        "year-two",
+        "recovery"
+      ],
+      "decisionId": "dec-y2-restore"
+    },
+    {
+      "id": "evt-y2-corvus-old-paper",
+      "type": "supplier",
+      "title": "Corvus, on last year's paper",
+      "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+      "body": "Corvus is in its first quarter on the contract you renewed unchanged. Its engineers still hold standing access, and the account list has grown by six since renewal. None of that breaches the contract, which is the point I would make about the contract.",
+      "priority": "notable",
+      "availableFromDay": 38,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-corvus-terms",
+          "optionId": "opt-q4-corvus-renew"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-sup-msp"
+      ],
+      "tags": [
+        "year-two",
+        "supplier"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "node.exposure",
+          "nodeId": "node-sup-msp",
+          "delta": 0.04
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-corvus-handover",
+      "type": "supplier",
+      "title": "Two providers, six weeks",
+      "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+      "body": "The tender closed and the new provider starts in March. For six weeks both Corvus and its replacement will hold access while the handover runs, and Corvus has less reason than ever to be careful with it.",
+      "priority": "notable",
+      "availableFromDay": 30,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-corvus-terms",
+          "optionId": "opt-q4-corvus-tender"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-sup-msp",
+        "node-net-remote"
+      ],
+      "tags": [
+        "year-two",
+        "supplier"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "node.exposure",
+          "nodeId": "node-net-remote",
+          "delta": 0.03
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-corvus-terms-used",
+      "type": "supplier",
+      "title": "Corvus had to ask",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "Corvus needed emergency access at the weekend and, for the first time, had to ask for it. It took eleven minutes, it was logged, and it was closed when they were done. Schedule four did what it says.",
+      "priority": "routine",
+      "availableFromDay": 60,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.optionTaken",
+          "decisionId": "dec-q4-corvus-terms",
+          "optionId": "opt-q4-corvus-terms"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-sup-msp"
+      ],
+      "tags": [
+        "year-two",
+        "supplier"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "control.operational",
+          "controlId": "ctl-3p-access",
+          "delta": 0.03
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-audit-return",
+      "type": "executive",
+      "title": "The auditors start where they stopped",
+      "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "The auditors are back in March for privileged access, and they are starting from the note they wrote in December: that management's account of the programme was ahead of production. They will test everything we say this time.",
+      "priority": "urgent",
+      "availableFromDay": 45,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "event.fired",
+          "eventId": "evt-con-audit-overstated"
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-pam"
+      ],
+      "tags": [
+        "year-two",
+        "audit"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "board.confidence",
+          "delta": -0.02
+        },
+        {
+          "type": "stakeholder.concern",
+          "stakeholderId": "stk-cfo",
+          "concern": "The privileged access audit finding"
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-regulator",
+      "type": "business",
+      "title": "The regulator asks about last year",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "The regulator has written about last year's incidents. They want the post-incident review and evidence that its actions were completed, by the end of next month. What we send will be read alongside what we told them at the time.",
+      "priority": "urgent",
+      "availableFromDay": 50,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        },
+        {
+          "kind": "lastYear.incidentsAtLeast",
+          "value": 1
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "regulatory"
+      ],
+      "decisionId": "dec-y2-regulator"
+    },
+    {
+      "id": "evt-y2-ai-assistant",
+      "type": "business",
+      "title": "An assistant on every desk",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Customer service wants an AI assistant on every agent's desktop by the autumn. It reads the case history, the order record and the customer's messages, and drafts the reply. The supplier's terms say our data is not used to train their model. I would like your view before I sign.",
+      "priority": "urgent",
+      "availableFromDay": 60,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-data-pii",
+        "node-app-crm"
+      ],
+      "tags": [
+        "year-two",
+        "business",
+        "data"
+      ],
+      "decisionId": "dec-y2-ai-assistant"
+    },
+    {
+      "id": "evt-y2-q1-close",
+      "type": "board",
+      "title": "A quarter into the second year",
+      "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
+      "body": "A quarter in. The committee knows you now, which changes what it will accept: less benefit of the doubt than last year, and less patience with surprises. It also listens more closely, which you can use.",
+      "priority": "routine",
+      "availableFromDay": 88,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "board"
+      ]
+    },
+    {
+      "id": "evt-y2-reporting-rule",
+      "type": "business",
+      "title": "Seventy-two hours",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "New rules come into force in October: a significant incident must be reported to the regulator within seventy-two hours of our knowing about it. Our process today takes about a week to reach a decision, because nobody is sure whose decision it is.",
+      "priority": "urgent",
+      "availableFromDay": 140,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "regulatory"
+      ],
+      "decisionId": "dec-y2-reporting"
+    },
+    {
+      "id": "evt-y2-legacy-switchoff",
+      "type": "business",
+      "title": "The last of the legacy data centre",
+      "from": "Dev Raghunathan, Chief Information Officer",
+      "body": "We can switch off the legacy data centre in September if the systems still in it move or go. Two of them support despatch, and the people who understood them have left. I am not asking for anything yet; I am telling you where the risk will be in August.",
+      "priority": "notable",
+      "availableFromDay": 170,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-dc-legacy",
+        "node-app-wms"
+      ],
+      "tags": [
+        "year-two",
+        "business",
+        "legacy"
+      ]
+    },
+    {
+      "id": "evt-y2-peak-trading",
+      "type": "business",
+      "title": "Peak trading, again",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "Peak trading starts next month and the change freeze with it. Security changes are not automatically exempt this year either, but I will hear a case for any that cannot wait.",
+      "priority": "notable",
+      "availableFromDay": 270,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "business",
+        "operations"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "operationalTolerance",
+          "delta": -0.1
+        }
+      ]
+    },
+    {
+      "id": "evt-y2-year-end-notice",
+      "type": "executive",
+      "title": "Your second year review",
+      "from": "Marianne Okafor, Chief Executive",
+      "body": "Your second year is nearly up. I will want to know what is true now that was not true last January, what you chose to leave alone, and what you would do with a third.",
+      "priority": "notable",
+      "availableFromDay": 350,
+      "conditions": [
+        {
+          "kind": "campaign.yearAtLeast",
+          "year": 2
+        }
+      ],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "spine",
+        "board"
+      ]
+    },
+    {
+      "id": "evt-con-y2-focus-finish",
+      "type": "programme",
+      "title": "Nothing new until it lands",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "Holding new work back until the running programmes land has done what you meant it to: the team has stopped switching between things. It has also meant saying no to two requests the CIO thought were small.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-focus-people",
+      "type": "people",
+      "title": "What the team year bought",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "The training budget has gone where you said it would, and the people who were close to leaving in December have stayed. The work has moved more slowly while we did it, and the executive has noticed that too.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-ai-pasted",
+      "type": "discovery",
+      "title": "What the assistant was told",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "An agent pasted a customer's full card number into the assistant to ask what it was. The supplier keeps prompts for thirty days for quality review, so that card number now sits in a log we do not control. It will not be the only one.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-data-cardholder"
+      ],
+      "tags": [
+        "year-two",
+        "consequence",
+        "data"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "node.exposure",
+          "nodeId": "node-data-cardholder",
+          "delta": 0.03
+        }
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-ai-assessed",
+      "type": "discovery",
+      "title": "The assessment narrowed the assistant",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "The data protection assessment found the assistant could read closed-account records as well as live ones. The scope was narrowed before go-live, and the supplier's prompt log is now switched off for our tenancy.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [
+        "node-data-pii"
+      ],
+      "tags": [
+        "year-two",
+        "consequence",
+        "data"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "node.exposure",
+          "nodeId": "node-data-pii",
+          "delta": -0.02
+        }
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-ai-pilot",
+      "type": "business",
+      "title": "What the pilot showed",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "The pilot team closed cases faster, and found two things nobody expected: the assistant quotes old refund policy, and agents paste in more than they need to. Both are fixable before the wider roll-out, which is now later than I wanted.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "consequence"
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-regulator-summary",
+      "type": "business",
+      "title": "The regulator wants the whole review",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "The regulator has written back about the summary we sent. They would like the full post-incident review, and they asked, politely, why we chose to summarise it. I have no good answer to that second question.",
+      "priority": "urgent",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "consequence",
+        "regulatory"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "stakeholder.trust",
+          "stakeholderId": "stk-legal",
+          "delta": -0.04,
+          "reason": "The regulator asked for the review you had summarised."
+        },
+        {
+          "type": "board.confidence",
+          "delta": -0.02
+        }
+      ],
+      "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-y2-reporting-tested",
+      "type": "business",
+      "title": "Seventy-two hours, tested",
+      "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+      "body": "We ran the new reporting process against last year's incident as an exercise. A decision in thirty-one hours, with the person who makes it named in advance. I would rather find that out in an exercise than in October.",
+      "priority": "routine",
+      "availableFromDay": 0,
+      "conditions": [],
+      "weight": 30,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "relatedNodeIds": [],
+      "tags": [
+        "year-two",
+        "consequence",
+        "regulatory"
+      ],
+      "effectsOnReveal": [
+        {
+          "type": "control.operational",
+          "controlId": "ctl-ir",
+          "delta": 0.03
+        }
+      ],
+      "scheduledOnly": true
+    }
+  ]
+}

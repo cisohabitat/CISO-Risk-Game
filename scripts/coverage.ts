@@ -3,9 +3,13 @@
  *
  * Grading aid: tells us which authored content a player actually encounters and
  * which mechanics ever fire, rather than which ones exist.
+ *
+ * `--years 2` plays each campaign on into the year that follows it, so the
+ * content only a later year can reach is counted.
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
-import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
+import { newGame, runDays, applyAction, beginNextYear } from '../src/game/engine/orchestrator'
+import { finishYear } from '../src/game/debrief/review'
 import { loadPack, packArgument } from './content/pack.ts'
 import { validatedCampaign } from '../src/lib/content/validate-content'
 import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
@@ -34,12 +38,13 @@ function play(
   engaged: boolean,
   concurrentProgrammes: boolean,
   optionOffset: number,
+  start?: GameState,
 ): GameState {
-  const state = newGame(index, { seed, difficulty, situation: 'surprise' })
+  const state = start ?? newGame(index, { seed, difficulty, situation: 'surprise' })
   const commissioned: Record<string, number> = {}
   const order = programmeOrder(index, concurrentProgrammes)
   let programmeIndex = 0
-  for (let day = 0; day < 364; day += 1) {
+  for (let day = state.currentDay; day < 364; day += 1) {
     for (const decisionId of [...state.decisions.openIds]) {
       const runtime = state.decisions.decisions[decisionId]
       const def = runtime ? index.decision.get(runtime.defId) : undefined
@@ -122,6 +127,10 @@ function play(
       // Concurrent runs start the contending pair back to back so they are
       // genuinely live together; the rest keep the spaced-out order.
       const interval = concurrentProgrammes && programmeIndex < 2 ? 10 : 40
+      // A programme an earlier year started is not started again.
+      while (programmeIndex < order.length && state.programmes.programmes[order[programmeIndex]!]?.status !== 'proposed') {
+        programmeIndex += 1
+      }
       if (day % interval === 0 && programmeIndex < order.length) {
         const def = index.programme.get(order[programmeIndex]!)
         if (def && applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok) {
@@ -135,8 +144,11 @@ function play(
 }
 
 function main(): void {
-  const runs = Number(packArgument(process.argv.slice(2)).rest[0] ?? 60)
-  const index = buildContentIndex(validatedCampaign(loadPack(packArgument(process.argv.slice(2)).path).raw))
+  const args = process.argv.slice(2)
+  const yearsAt = args.indexOf('--years')
+  const years = yearsAt >= 0 ? Math.max(1, Number(args.splice(yearsAt, 2)[1] ?? 1)) : 1
+  const runs = Number(packArgument(args).rest[0] ?? 60)
+  const index = buildContentIndex(validatedCampaign(loadPack(packArgument(args).path).raw))
 
   const firedEvents = new Set<string>()
   const openedDecisions = new Set<string>()
@@ -157,7 +169,15 @@ function main(): void {
 
   for (let i = 0; i < runs; i += 1) {
     const engaged = i % 2 === 0
-    const state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0, i)
+    let state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0, i)
+    for (let year = 2; year <= years; year += 1) {
+      // What the earlier year reached counts too; the later year's state only keeps its events.
+      for (const runtime of Object.values(state.decisions.decisions)) openedDecisions.add(runtime.defId)
+      for (const campaign of state.threats.campaigns) { usedPaths.add(campaign.pathId); usedActors.add(campaign.actorId) }
+      for (const incident of Object.values(state.incidents.incidents)) usedFamilies.add(incident.familyId)
+      finishYear(state, index)
+      state = play(index, `cov-${i}`, DIFFICULTIES[i % 3]!, engaged, i % 4 === 0, i, beginNextYear(index, state))
+    }
 
     for (const id of state.events.firedEventIds) firedEvents.add(id)
     for (const runtime of Object.values(state.decisions.decisions)) openedDecisions.add(runtime.defId)
@@ -185,7 +205,7 @@ function main(): void {
   }
 
   const pct = (used: number, total: number) => `${used}/${total} (${Math.round((used / total) * 100)}%)`
-  console.log(`\n${runs} campaigns (half engaged, half decision-only)\n`)
+  console.log(`\n${runs} campaigns${years > 1 ? `, ${years} years each` : ''} (half engaged, half decision-only)\n`)
   console.log('CONTENT REACHED')
   console.log('  events fired        ', pct(firedEvents.size, index.content.events.length))
   console.log('  decisions opened    ', pct(openedDecisions.size, index.content.decisions.length))

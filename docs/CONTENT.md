@@ -18,6 +18,7 @@ src/content/nexora/
 ├─ investigations.json  lines of enquiry, glossary
 ├─ decisions.json       decisions and their options
 └─ events/              the conditional event pool, split by theme
+                        (year-two.json: what only a later year says)
 ```
 
 `src/content/nexora/index.ts` assembles the bundle;
@@ -186,6 +187,40 @@ receive "the last restore test was abandoned" — and guard it with
 `{ "kind": "not", "condition": { "kind": "situation.is", ... } }`, which is a
 closing guard and leaves the message paced. If the situation poses a question,
 answer it in the annual review from state.
+
+## Writing for a later year
+
+A finished year can lead to the next one at the same Nexora
+(`src/game/engine/next-year.ts`). The world carries over. These start again:
+
+- the inbox;
+- the decisions;
+- the incidents;
+- the board papers;
+- the budget;
+- the business's plans.
+
+Anything the first year already said is not said again: fired events carry,
+so a `oncePerCampaign` event fires once across all the years.
+
+- **Gate later-year content** on `{ "kind": "campaign.yearAtLeast", "year": 2 }`
+  (`events/year-two.json`). Every event there carries it.
+- **Answer last year's choices** with `lastYear.optionTaken` (a decision
+  definition and an option). Decisions do not carry, so `decision.optionTaken`
+  only ever reads this year. `lastYear.dimensionBand` reads last year's review,
+  and `lastYear.incidentsAtLeast` its incident count. `event.fired` still
+  works across years, because fired events carry.
+- **Give the business its plans for the year** in `people.json` with
+  `"year": 2`. A first year never builds them, and a later year builds only
+  its own.
+- **Guard first-year content** that would be untrue later with
+  `{ "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } }`.
+  A message the first year never sent is free to arrive in the second. One
+  that is about the first year's own plans, or that greets a new arrival, is
+  the kind to guard: the Nordic partner and the Kestrel diligence window
+  both were.
+- **Read the second year whole**: `pnpm ladder transcript ciso <seed> --years 2`.
+  To measure it, use `pnpm coverage 60 --years 2` and `pnpm soak 300 --years 2`.
 
 ## Adding an assumption
 

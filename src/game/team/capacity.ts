@@ -179,6 +179,23 @@ export function delegationQuality(leader: LeaderRuntime, strain: number, roll: n
  */
 export type DelegationOutlook = 'room' | 'busy' | 'partial' | 'thin'
 
+/**
+ * A leader as the next assignment will find them. Workload follows the work
+ * a leader holds over a few days, so three enquiries handed to one lead on
+ * the same morning were each promised "Has room for this" and all came back
+ * thin because he had too much on (AI phone playtest, 2026-10-09). What they
+ * already hold counts from the moment it is given.
+ */
+export function leaderAsAssigned(
+  state: GameState,
+  leader: LeaderRuntime,
+  adding: Partial<Record<string, number>> = {},
+): LeaderRuntime {
+  // The work being offered counts too: the outlook is for after it is given.
+  const extra = Object.values(adding).reduce<number>((sum, amount) => sum + (amount ?? 0), 0) / 5
+  return { ...leader, workload: Math.max(leader.workload, clamp01(leaderLoad(state, leader.id) + extra)) }
+}
+
 export function delegationOutlook(leader: LeaderRuntime, strain: number): DelegationOutlook {
   const centre = delegationQuality(leader, strain, 0.5)
   if (centre < 0.3 || leader.workload > 0.8) return 'thin'

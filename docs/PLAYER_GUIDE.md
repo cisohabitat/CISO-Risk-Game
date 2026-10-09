@@ -171,8 +171,9 @@ Monday, or spend the week on something else.
 
 Decisions are the spine of the game. Each gives you a situation, several real
 options, and — importantly — **what each option will visibly cost you**. There
-is usually no correct answer. The first decision of the game says so outright:
-*"There is no mechanically superior answer here."*
+is usually no correct answer. The first decision of the game puts it this way:
+*"Each route buys you a different kind of understanding, and you cannot have all
+of them first."*
 
 Three things to understand:
 
@@ -383,10 +384,22 @@ There is no winning. A good first year is one where the trade-offs you made were
 the ones you would defend — and the review is designed to show you where they
 were not.
 
-At the foot of the review, **Start another year** takes you back to the start
-screen, where the finished year stays in the list. A second year is worth
-starting from a different situation: each has its own budget, its own threat
-and a decision the others never see.
+At the foot of the review, the first button begins your second year, at the
+same Nexora. Carried over:
+
+- what you found;
+- what you built;
+- the people, and how they think of you;
+- the risks you chose to carry, to the dates you gave them.
+
+The budget is the one the autumn agreed. The executives remember what you
+decided last year, and the board holds you to the priorities you gave it.
+The review then compares the two years.
+
+**Start another year** takes you back to the start screen instead, where the
+finished year stays in the list. A fresh year is worth starting from a
+different situation: each has its own budget, its own threat and a decision
+the others never see.
 
 ---
 

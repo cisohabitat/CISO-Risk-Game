@@ -65,7 +65,7 @@ test.describe('player guide', () => {
     await dismissNote(page)
     await shot(page, '02-briefing')
 
-    await page.getByRole('button', { name: /^Decide$/ }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await page.getByRole('dialog').getByRole('radio').first().check()
     await shot(page, '03-decision')
