@@ -9,7 +9,19 @@ import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import { applyAction, newGame } from '@/game/engine/orchestrator'
 import { buildAnnualReview } from '@/game/debrief/review'
-import { clearSaves, deleteCampaign, listSaves, readSave, type SaveKey, type SaveSummary, writeCampaign } from './persistence'
+import {
+  clearSaves,
+  deleteCampaign,
+  gameIdOfKey,
+  listSaves,
+  readBackup,
+  readSave,
+  type SaveKey,
+  type SaveSummary,
+  writeCampaign,
+} from './persistence'
+import { reportProblem } from './problems'
+import { formatGameDate } from '@/game/time'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -115,6 +127,41 @@ const SAVES_ON: Record<PlayerAction['type'], boolean> = {
   finishCampaign: true,
 }
 
+/**
+ * The engine's own invariants, loaded with the first save rather than with the
+ * first screen. A state that fails them is a defect, and writing it would
+ * replace the last good save of the campaign with a broken one.
+ */
+async function brokenRules(state: GameState, index: ContentIndex): Promise<string[]> {
+  const { checkInvariants } = await import('@/game/engine/invariants')
+  return checkInvariants(state, index).map((violation) => `${violation.rule}: ${violation.detail}`)
+}
+
+let refusedThisSession = false
+
+/**
+ * Write the campaign, unless it is broken (docs/ROADMAP.md, Phase 5). The
+ * player is told once; the save they already have is kept.
+ */
+async function saveSafely(
+  state: GameState,
+  index: ContentIndex,
+  options: { savedByPlayer?: boolean } = {},
+  tell: (message: string) => void = () => {},
+): Promise<boolean> {
+  const broken = await brokenRules(state, index)
+  if (broken.length > 0) {
+    reportProblem({ kind: 'save-refused', detail: `day ${state.currentDay}: ${broken.slice(0, 3).join('; ')}` })
+    if (!refusedThisSession) {
+      refusedThisSession = true
+      tell('Something in the campaign went wrong, so this moment was not saved. Your last save is kept.')
+    }
+    return false
+  }
+  await writeCampaign(state, index.content.meta.title, options)
+  return true
+}
+
 /** Autosave on the transitions that matter, never on every tick. */
 export function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boolean {
   return ticks.some((tick) => tick.shouldAutosave) || SAVES_ON[action.type]
@@ -168,7 +215,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     })
     set({ state, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined } })
     try {
-      await writeCampaign(state, index.content.meta.title)
+      await saveSafely(state, index)
       await get().refreshSaves()
     } catch {
       set((store) => ({ ui: { ...store.ui, storageWarning: 'Progress cannot be saved on this device.' } }))
@@ -176,21 +223,44 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   async loadGame(key) {
+    let index: ContentIndex
     try {
-      const state = await readSave(key)
-      if (!state) return false
-      try {
-        await get().ensureCampaign()
-      } catch {
-        get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
-        return false
-      }
-      set({ state, ui: { ...get().ui, screen: 'home' } })
-      return true
-    } catch (error) {
-      get().pushToast(error instanceof Error ? error.message : 'That save could not be loaded.', 'warning')
+      index = await get().ensureCampaign()
+    } catch {
+      get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
       return false
     }
+    let state: GameState | undefined
+    let failure: unknown
+    try {
+      state = await readSave(key)
+      if (state && (await brokenRules(state, index)).length > 0) {
+        failure = new Error('The save failed its own checks.')
+        state = undefined
+      }
+    } catch (error) {
+      failure = error
+    }
+    // A save that will not open, or opens broken, falls back to the one
+    // before it, and says so rather than losing the year.
+    if (!state && failure) {
+      const gameId = gameIdOfKey(key)
+      const backup = gameId ? await readBackup(gameId).catch(() => undefined) : undefined
+      if (backup && (await brokenRules(backup, index)).length === 0) {
+        reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
+        set({ state: backup, ui: { ...get().ui, screen: 'home' } })
+        get().pushToast(
+          `That save was damaged, so the campaign opened from the one before it, on ${formatGameDate(backup.currentDay).label}.`,
+          'warning',
+        )
+        return true
+      }
+      get().pushToast(failure instanceof Error ? failure.message : 'That save could not be loaded.', 'warning')
+      return false
+    }
+    if (!state) return false
+    set({ state, ui: { ...get().ui, screen: 'home' } })
+    return true
   },
 
   async loadImported(state) {
@@ -202,8 +272,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return false
     }
     set({ state, ui: { ...get().ui, screen: 'home' } })
-    void writeCampaign(state, index.content.meta.title, { savedByPlayer: true })
-    void get().refreshSaves()
+    void saveSafely(state, index, { savedByPlayer: true }, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     return true
   },
 
@@ -239,9 +308,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   async saveManual() {
     const { state, index } = get()
     if (!state) return
-    await writeCampaign(state, contentOf(index).content.meta.title, { savedByPlayer: true })
+    const saved = await saveSafely(state, contentOf(index), { savedByPlayer: true }, (message) => get().pushToast(message, 'warning'))
     await get().refreshSaves()
-    get().pushToast('Campaign saved.', 'success')
+    if (saved) get().pushToast('Campaign saved.', 'success')
   },
 
   dispatch(action) {
@@ -263,7 +332,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (result.message) get().pushToast(result.message, 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
-      void writeCampaign(next, index.content.meta.title).then(() => get().refreshSaves())
+      void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     }
     return result
   },
@@ -306,7 +375,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       draft.reviews.annual = buildAnnualReview(draft, index)
     })
     set({ state: next, ui: { ...get().ui, screen: 'debrief' } })
-    void writeCampaign(next, index.content.meta.title)
+    void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
   },
 
   // A finished year had no way out: the start screen only shows when no
@@ -315,7 +384,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { state, index } = get()
     if (state) {
       try {
-        await writeCampaign(state, contentOf(index).content.meta.title)
+        await saveSafely(state, contentOf(index))
       } catch {
         // Already saved when the year closed; leaving is still allowed.
       }

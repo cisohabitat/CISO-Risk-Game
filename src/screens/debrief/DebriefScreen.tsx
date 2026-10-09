@@ -73,6 +73,21 @@ export function DebriefScreen() {
             </Button>
           </CardBody>
         </Card>
+
+        {/* Export was only offered once the year was over, so a campaign
+            deleted or lost with the browser's data mid-year could not be kept
+            anywhere. A copy can be taken at any point (docs/ROADMAP.md,
+            Phase 5); importing it resumes the year from here. */}
+        <Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-3">
+            <p className="min-w-0 flex-1 text-sm text-ink-muted text-pretty">
+              Keep a copy of this campaign as a file, to bring back on another device or after clearing this browser.
+            </p>
+            <Button variant="secondary" onClick={download}>
+              Export this campaign
+            </Button>
+          </CardBody>
+        </Card>
       </div>
     )
   }

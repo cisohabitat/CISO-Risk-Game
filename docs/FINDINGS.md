@@ -18,6 +18,24 @@ fault.
 
 ### Fixed
 
+- **One save per campaign was one copy, and nothing checked it.** Every write
+  replaced the campaign's only save, so a write that caught the game in a
+  broken state would have replaced the last good one, and the next load would
+  have opened the broken year. Now each forward write keeps the save before
+  as a backup; a save that will not open, or that fails the engine's own
+  invariants, opens from the backup with a note saying so; and the store will
+  not write a state that fails the invariants at all. Held by
+  `tests/e2e/save-recovery.spec.ts` (a save damaged in IndexedDB, then
+  reopened) and `tests/ui/save-guard.test.tsx`.
+- **A screen that threw blanked the whole page.** No error boundary stood
+  between a screen and the root, so an exception while drawing one took the
+  rail, the header and the campaign's way out with it. Each screen now has
+  its own boundary, keyed by screen, with a way to another one.
+- **A campaign could not be exported until its year was over**, and the
+  delete dialog said so — so a mid-year campaign deleted, or lost with the
+  browser's data, could not be kept anywhere. Export is on **Your year** at
+  any point, and the dialog says where.
+
 - **At 320px the header took a quarter of the screen.** Photographed for the
   first time at that width (the gallery had photographed 393px and the
   desktop), the header had wrapped to three rows — the date, the clock, and

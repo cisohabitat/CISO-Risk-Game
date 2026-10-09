@@ -4,6 +4,7 @@ import { App } from '@/app/App'
 import { useGameStore } from '@/store/game-store'
 import { resumeRecording } from '@/store/session-recording'
 import { resumeSound } from '@/lib/sound/sound-setting'
+import { reportProblem } from '@/store/problems'
 import './index.css'
 
 // Theme preference is restored before first paint where storage allows it.
@@ -22,6 +23,16 @@ try {
 resumeRecording()
 // Sound stays on across reloads for a player who turned it on.
 resumeSound()
+
+// Errors nothing else caught, into the same channel as a refused save, so a
+// playtest's log says what failed and when.
+window.addEventListener('error', (event) => {
+  reportProblem({ kind: 'uncaught', detail: `${event.message} (${event.filename?.split('/').pop() ?? '?'}:${event.lineno})` })
+})
+window.addEventListener('unhandledrejection', (event) => {
+  const reason: unknown = event.reason
+  reportProblem({ kind: 'uncaught', detail: reason instanceof Error ? `${reason.name}: ${reason.message}` : String(reason) })
+})
 
 // A deploy replaces the hashed files that an open page would fetch next, so
 // the campaign it has not loaded yet no longer exists at the address it knows.

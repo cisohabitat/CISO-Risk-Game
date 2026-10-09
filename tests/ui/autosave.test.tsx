@@ -22,21 +22,25 @@ describe('what the player does is saved when they do it', () => {
     written.count = 0
   })
 
-  it('saves after pausing a programme, meeting an executive or clearing a blocker', () => {
+  // Saves are checked before they are written (Phase 5), so the write lands a
+  // moment after the action rather than within it.
+  it('saves after pausing a programme, meeting an executive or clearing a blocker', async () => {
     const store = useGameStore.getState()
     expect(store.dispatch({ type: 'startProgramme', programmeId: 'prog-identity', budget: 850 }).ok).toBe(true)
+    await vi.waitFor(() => expect(written.count).toBe(1))
     written.count = 0
     expect(store.dispatch({ type: 'setProgrammeStatus', programmeId: 'prog-identity', status: 'paused' }).ok).toBe(true)
-    expect(written.count).toBe(1)
+    await vi.waitFor(() => expect(written.count).toBe(1))
     const stakeholderId = useGameStore.getState().index!.content.stakeholders[0]!.id
     expect(store.dispatch({ type: 'meetStakeholder', stakeholderId, approach: 'listen' }).ok).toBe(true)
-    expect(written.count).toBe(2)
+    await vi.waitFor(() => expect(written.count).toBe(2))
   })
 
-  it('leaves reading a message to the weekly save', () => {
+  it('leaves reading a message to the weekly save', async () => {
     const state = useGameStore.getState().state!
     const messageId = state.inbox.messages[0]!.id
     useGameStore.getState().dispatch({ type: 'markRead', messageId })
+    await new Promise((resolve) => setTimeout(resolve, 50))
     expect(written.count).toBe(0)
   })
 })

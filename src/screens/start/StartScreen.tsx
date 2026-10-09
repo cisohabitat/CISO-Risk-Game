@@ -180,8 +180,8 @@ export function StartScreen() {
             title={pendingDelete === 'all' ? 'Delete every saved campaign?' : 'Delete this campaign?'}
             description={
               pendingDelete === 'all'
-                ? 'Every campaign saved on this device goes. There is no undo, and a campaign cannot be exported until its year is over.'
-                : `The campaign with seed ${pendingDelete.seed} goes, at ${formatGameDate(pendingDelete.day).label}. There is no undo, and a campaign cannot be exported until its year is over.`
+                ? 'Every campaign saved on this device goes. There is no undo; to keep one, open it and export it from Your year first.'
+                : `The campaign with seed ${pendingDelete.seed} goes, at ${formatGameDate(pendingDelete.day).label}. There is no undo; to keep it, open it and export it from Your year first.`
             }
             footer={
               <>
@@ -347,7 +347,7 @@ export function StartScreen() {
 
             <Disclosure summary="Import a saved campaign">
               <p className="mb-3 text-pretty">
-                Campaigns can be exported to a JSON file from the debrief screen and brought back here — useful if you
+                A campaign can be exported to a file from Your year, at any point in the year, and brought back here — useful if you
                 clear your browser data or move device.
               </p>
               <input

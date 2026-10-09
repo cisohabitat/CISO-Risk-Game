@@ -322,16 +322,32 @@ cheap phone.
   behaviour was tested on iOS (§32.12); test it: a Playwright profile that
   installs, goes offline, resumes a saved year, and then takes an update
   without losing the campaign. The existing "page reloads once to pick up the
-  new version" behaviour becomes the update prompt.
+  new version" behaviour becomes the update prompt. **Not started:** iOS
+  Safari cannot be tested from here (the browser suite runs Chromium only in
+  this environment), and the plan forbids aggressive caching until it is.
 - **Save integrity.** Versioned save migrations with a test per version;
   corruption detection with recovery to the last good autosave; export and
   import at any time, not only after year end; an "every save must reproduce
-  its own future" determinism test on real exported saves.
+  its own future" determinism test on real exported saves. **Built:** each
+  write that moves the year on keeps the previous save as a backup; a save
+  that will not open, or opens failing the engine's invariants, opens from
+  the backup and says so; the store refuses to write a state that fails the
+  invariants, tells the player once, and keeps the save they have; export is
+  offered from **Your year** at any point, not only after the review. The
+  migrations and the resume-from-save determinism tests already existed.
 - **Low-end performance.** A budget on a Moto G-class Android profile: start
   screen under 4 s on Fast 3G, a day tick under 16 ms, the graph under 2 s to
-  first paint. Measured in CI, not by hand.
+  first paint. Measured in CI, not by hand. **Built, for the CPU:** a day
+  costs 0.17 ms in the engine (budget 2 ms); under a 4× slower CPU the start
+  screen is ready in about 650 ms (budget 3 s) and a thirty-day skip draws in
+  80–520 ms (median budget 600 ms). The network leg is not throttled in CI —
+  the local server does not compress — so `pnpm size` and the Slow 3G figures
+  stand for it. The graph's first paint is not yet measured.
 - **Client-side crash capture**, opt-in, to a local log the player can export
-  — the same channel as the Phase 0 session log.
+  — the same channel as the Phase 0 session log. **Built:** refused saves,
+  recoveries, screens that fail to draw and uncaught errors go to one local
+  channel, which the playtest log records. A screen that throws no longer
+  blanks the page: it shows what happened and a way to another screen.
 - **Optional cloud sync** (plan Phase 8) only if Phase 0 or Phase 6 shows
   players losing campaigns across devices. If built: a backend with row-level
   security, sync on checkpoints, local always authoritative, nothing required

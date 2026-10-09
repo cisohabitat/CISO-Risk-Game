@@ -5,6 +5,7 @@
  */
 import { Suspense, lazy, useEffect } from 'react'
 import { AppShell } from '@/components/layout/AppShell'
+import { ScreenBoundary } from '@/components/layout/ScreenBoundary'
 import { StartScreen } from '@/screens/start/StartScreen'
 import { HomeScreen } from '@/screens/home/HomeScreen'
 import { InboxScreen } from '@/screens/inbox/InboxScreen'
@@ -91,18 +92,26 @@ export function App() {
             </CardBody>
           </Card>
         )}
-        {screen === 'home' && <HomeScreen />}
-        {screen === 'inbox' && <InboxScreen />}
-        {screen === 'risk' && <RiskScreen />}
-        {screen === 'organisation' && <OrganisationScreen />}
-        {screen === 'programmes' && <ProgrammesScreen />}
-        {screen === 'team' && <TeamScreen />}
-        {screen === 'board' && <BoardScreen />}
-        {screen === 'debrief' && (
-          <Suspense fallback={<p role="status" className="text-sm text-ink-muted">Opening your year…</p>}>
-            <DebriefScreen />
-          </Suspense>
-        )}
+        {/* Keyed by screen, so leaving a screen that failed clears the failure.
+            The briefing is the way out unless it is the briefing that failed. */}
+        <ScreenBoundary
+          key={screen}
+          leaveLabel={screen === 'home' ? 'Open the inbox' : 'Back to the briefing'}
+          onLeave={() => useGameStore.getState().setScreen(screen === 'home' ? 'inbox' : 'home')}
+        >
+          {screen === 'home' && <HomeScreen />}
+          {screen === 'inbox' && <InboxScreen />}
+          {screen === 'risk' && <RiskScreen />}
+          {screen === 'organisation' && <OrganisationScreen />}
+          {screen === 'programmes' && <ProgrammesScreen />}
+          {screen === 'team' && <TeamScreen />}
+          {screen === 'board' && <BoardScreen />}
+          {screen === 'debrief' && (
+            <Suspense fallback={<p role="status" className="text-sm text-ink-muted">Opening your year…</p>}>
+              <DebriefScreen />
+            </Suspense>
+          )}
+        </ScreenBoundary>
       </AppShell>
       {openDecisionId && (
         <DecisionDialog decisionId={openDecisionId} onClose={() => setUi({ openDecisionId: undefined })} />

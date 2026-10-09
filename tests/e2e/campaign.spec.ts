@@ -172,8 +172,15 @@ test.describe('a first year at Nexora', () => {
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
     await expect(rows, 'one campaign is listed more than once').toHaveCount(1)
     await expect(rows.first()).toContainText('e2e-one')
+    // One save per campaign, and since Phase 5 the save before it kept as a
+    // single backup — never a row of rolling slots.
     const afterOne = await savedRecords(page)
-    expect(afterOne.length, `one campaign wrote ${afterOne.length} saves: ${afterOne.map((r) => r.key).join(', ')}`).toBe(1)
+    type Saved = Awaited<ReturnType<typeof savedRecords>>
+    const savesOf = (records: Saved) => records.filter((record) => record.key.startsWith('campaign:'))
+    const backupsOf = (records: Saved) => records.filter((record) => record.key.startsWith('backup:'))
+    expect(savesOf(afterOne).length, `one campaign wrote ${afterOne.length} records: ${afterOne.map((r) => r.key).join(', ')}`).toBe(1)
+    expect(backupsOf(afterOne).length).toBeLessThanOrEqual(1)
+    expect(afterOne.length - savesOf(afterOne).length - backupsOf(afterOne).length, 'records that are neither a save nor a backup').toBe(0)
 
     // A second campaign is a second row, and does not disturb the first.
     await startCampaign(page, 'e2e-two')
@@ -184,8 +191,9 @@ test.describe('a first year at Nexora', () => {
     await expect(rows.filter({ hasText: 'e2e-one' })).toHaveCount(1)
     await expect(rows.filter({ hasText: 'e2e-two' })).toHaveCount(1)
     const afterTwo = await savedRecords(page)
-    expect(afterTwo.length, 'two campaigns are not two saves').toBe(2)
-    expect(new Set(afterTwo.map((record) => record.gameId)).size, 'the two saves are of the same campaign').toBe(2)
+    expect(savesOf(afterTwo).length, 'two campaigns are not two saves').toBe(2)
+    expect(backupsOf(afterTwo).length).toBeLessThanOrEqual(2)
+    expect(new Set(savesOf(afterTwo).map((record) => record.gameId)).size, 'the two saves are of the same campaign').toBe(2)
   })
 
   test('saves from the rolling-slot era collapse to one per campaign', async ({ page }) => {

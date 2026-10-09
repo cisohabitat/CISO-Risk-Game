@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGameStore } from '@/store/game-store'
 import { beginFresh, installSessionLog, sessionLogJson, type SessionLog } from '@/store/session-log'
 import { isRecording, setRecording } from '@/store/session-recording'
+import { reportProblem } from '@/store/problems'
 
 /**
  * Phase 0 of docs/ROADMAP.md: a playtest needs a record of what the player did
@@ -74,5 +75,12 @@ describe('the playtest session log', () => {
     const before = events().length
     useGameStore.getState().setScreen('board')
     expect(events()).toHaveLength(before)
+  })
+
+  it('records what went wrong beside what the player was doing', () => {
+    const quiet = vi.spyOn(console, 'error').mockImplementation(() => {})
+    reportProblem({ kind: 'save-refused', detail: 'day 40: day-in-range' })
+    expect(events().at(-1)).toMatchObject({ kind: 'error', problem: 'save-refused', detail: 'day 40: day-in-range', day: 1 })
+    quiet.mockRestore()
   })
 })

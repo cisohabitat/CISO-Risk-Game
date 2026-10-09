@@ -79,8 +79,10 @@ Come back later and a **Continue** list sits above that. Each campaign is one
 save, kept at the day you last reached, so there is one row per year you have
 played, newest first. Pick one to carry on. Each has a **Delete** beside it,
 and once you have more than one campaign there is a control to delete them all.
-Both ask before they do it, because there is no undo: a campaign can only be
-exported to a file once its year is over, from the annual review.
+Both ask before they do it, because there is no undo. To keep a copy, open
+the campaign and use **Export this campaign** on **Your year**, at any point in
+the year; the file comes back through **Import a saved campaign**. If a save is
+ever damaged, the game opens the campaign from the save before it and says so.
 
 ---
 

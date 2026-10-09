@@ -13,6 +13,7 @@
 import { useGameStore } from './game-store'
 import type { PlayerAction } from '@/game/engine/orchestrator'
 import { isRecording } from './session-recording'
+import { onProblem } from './problems'
 
 const KEY = 'ciso-session-log'
 const LIMIT = 20_000
@@ -95,6 +96,10 @@ export function installSessionLog(): void {
       return result
     },
   })
+
+  // What went wrong, in the same file as what the player was doing when it
+  // did: a refused save, a screen that failed, an uncaught error.
+  onProblem((problem) => record('error', { problem: problem.kind, detail: problem.detail.slice(0, 300) }))
 
   let previous = useGameStore.getState()
   if (previous.state) record('campaign', campaignOf(previous.state))

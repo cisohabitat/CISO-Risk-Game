@@ -35,6 +35,26 @@ function isCampaignKey(key: unknown): boolean {
   return typeof key === 'string' && key.startsWith('campaign:')
 }
 
+/**
+ * The campaign's previous save, kept when a new one replaces it. One save per
+ * campaign meant one copy: a write that caught the game in a broken state
+ * replaced the only good one. The backup is the save before, so a campaign
+ * that will not open can open from there (docs/ROADMAP.md, Phase 5).
+ */
+export function backupKey(gameId: string): SaveKey {
+  return `backup:${gameId}`
+}
+
+function isBackupKey(key: unknown): boolean {
+  return typeof key === 'string' && key.startsWith('backup:')
+}
+
+/** The campaign a save key belongs to, read from the key itself. */
+export function gameIdOfKey(key: SaveKey): string | undefined {
+  const match = /^(?:campaign|backup):(.+)$/.exec(key)
+  return match?.[1]
+}
+
 export interface SaveSummary {
   key: SaveKey
   gameId: string
@@ -77,7 +97,7 @@ async function collapseLegacySaves(db: IDBPDatabase): Promise<void> {
   const tx = db.transaction(STORE, 'readwrite')
   const store = tx.objectStore(STORE)
   const records = (await store.getAll()) as StoredSave[]
-  const legacy = records.filter((record) => !isCampaignKey(record.slot) && record.state?.gameId)
+  const legacy = records.filter((record) => !isCampaignKey(record.slot) && !isBackupKey(record.slot) && record.state?.gameId)
   if (legacy.length === 0) {
     await tx.done
     return
@@ -130,7 +150,22 @@ export async function writeCampaign(
 ): Promise<void> {
   if (!storageAvailable()) return
   const db = await getDb()
-  await db.put(STORE, toRecord(state, campaignTitle, savedByPlayer))
+  const key = campaignKey(state.gameId)
+  const tx = db.transaction(STORE, 'readwrite')
+  const store = tx.objectStore(STORE)
+  // The save being replaced becomes the backup when the year has moved on
+  // since it; a second save of the same day replaces only the save.
+  const existing = (await store.get(key)) as StoredSave | undefined
+  if (existing && existing.state?.currentDay < state.currentDay) {
+    await store.put({ ...existing, slot: backupKey(state.gameId) })
+  }
+  await store.put(toRecord(state, campaignTitle, savedByPlayer))
+  await tx.done
+}
+
+/** The campaign's previous save, if one was kept. */
+export async function readBackup(gameId: string): Promise<GameState | undefined> {
+  return readSave(backupKey(gameId))
 }
 
 export async function readSave(key: SaveKey): Promise<GameState | undefined> {
