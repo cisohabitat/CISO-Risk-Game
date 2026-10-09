@@ -66,25 +66,42 @@ footer { max-width: 46rem; margin: 0 auto; padding: 0 16px 48px; color: var(--fa
 }
 `
 
-export function renderGuidePage(markdown: string, imageUrl?: (src: string) => string): string {
+/** What a published page is called, and whether it lists its sections. */
+export interface PageMeta {
+  label: string
+  description: string
+  contents: boolean
+}
+
+export const GUIDE_META: PageMeta = {
+  label: "Player's guide",
+  description: 'How to play CISO: First Year: the screens, the two scarce resources, and what a sane first year looks like.',
+  contents: true,
+}
+
+export function renderGuidePage(markdown: string, imageUrl?: (src: string) => string, meta: PageMeta = GUIDE_META): string {
   const guide = renderGuide(markdown, imageUrl)
   const title = guide.title.replace(/<[^>]+>/g, '')
-  const contents = guide.sections.map((section) => `<li><a href="#${section.id}">${section.text}</a></li>`).join('')
+  const contents = meta.contents
+    ? `<nav class="contents" aria-labelledby="contents-title"><h2 id="contents-title">Contents</h2><ol>${guide.sections
+        .map((section) => `<li><a href="#${section.id}">${section.text}</a></li>`)
+        .join('')}</ol></nav>`
+    : ''
   return `<!doctype html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Player's guide · CISO: First Year</title>
-<meta name="description" content="How to play CISO: First Year: the screens, the two scarce resources, and what a sane first year looks like.">
+<title>${meta.label} · CISO: First Year</title>
+<meta name="description" content="${meta.description}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>${STYLES}</style>
 </head>
 <body>
-<header class="bar"><div><a href="/">← Back to the game</a><span>Player's guide</span></div></header>
+<header class="bar"><div><a href="/">← Back to the game</a><span>${meta.label}</span></div></header>
 <main>
 <h1>${title}</h1>
-<nav class="contents" aria-labelledby="contents-title"><h2 id="contents-title">Contents</h2><ol>${contents}</ol></nav>
+${contents}
 ${guide.html}
 </main>
 <footer><a href="/">Back to the game</a></footer>

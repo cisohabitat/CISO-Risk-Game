@@ -85,10 +85,13 @@ a human playtest asks for it. `docs/PLAYTEST.md` covers what a session is for an
 what not to change on one player's word.
 
 **`docs/ROADMAP.md` is the plan from here to a AAA year**, in eight phases
-with a gate on each. Phase 0 is human playtesting, and the later phases (a
-second organisation, presentation, localisation, offline, telemetry) do not
-start until it reports. Work the phase whose gate is open; when a phase
-closes, update its scorecard there and this paragraph.
+with a gate on each. The engineering that needs no people has been done in
+every phase (October 2026) and each phase records what is built and what is
+not started; the scorecard there has a before and after column. What remains
+needs people — playtesters, assistive-technology users, an illustrator, a
+translator — and Phase 0's gate, human playtesting, is still the one that
+opens the rest. Release material is in `docs/release/` and `CHANGELOG.md`;
+cutting a release follows `docs/release/RELEASING.md`.
 
 ## Known weaknesses
 

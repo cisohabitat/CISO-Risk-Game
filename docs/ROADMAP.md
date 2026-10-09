@@ -20,18 +20,18 @@ want a second one, and tell someone else about it — on a phone, offline, with
 a screen reader, in their own language — and that the team can see, from
 evidence rather than hope, that this is happening. Concretely:
 
-| Pillar | AAA means | Where the game is now |
-|---|---|---|
-| **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. |
-| **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. |
-| **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. |
-| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. |
-| **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. |
-| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. |
-| **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. |
-| **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. |
-| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. |
-| **Live** | The team can see what players do and tune from it | **None.** No telemetry, no crash reporting, no release cadence beyond CI. |
+| Pillar | AAA means | 9 October 2026, before | After the engineering of Phases 0–7 |
+|---|---|---|---|
+| **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. | **D.** Unchanged: the kit to ask people is built (session log, protocol, synthesis); nobody has been asked yet. |
+| **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. | **Unknown.** A voice guide holds every string; the 320px first session is fixed; whether it teaches still needs people. |
+| **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
+| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; still one organisation; Q3 and June unchanged. |
+| **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B−.** Seed links and a shareable year give a reason to compare and come back; still one organisation and no Year Two that remembers. |
+| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound and a printable review; no identity yet (type, portraits). |
+| **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |
+| **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. | **D.** Sized (`pnpm strings`: about 30,000 words) and planned (`docs/LOCALISATION.md`); nothing translated. |
+| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play; 184.1 kB of 185. |
+| **Live** | The team can see what players do and tune from it | **None.** No telemetry, no crash reporting, no release cadence beyond CI. | **D.** Crash capture to a local log, `pnpm session` across many logs and a monthly cadence; no telemetry, no release yet. |
 
 The two weakest rows — evidence and localisation — are the ones no amount of
 further building fixes. That is why Phase 0 is people, and why the roadmap is
@@ -414,11 +414,21 @@ one educator cohort's completion rate.
 press kit, a support path, and the definition of done below met.
 
 **Deliverables.** A landing page at the root that is not the start screen
-(the start screen stays one click away); a 90-second trailer cut from the
-photographed playthrough; a press kit with the identity assets; an
-accessibility statement; a support address and a known-issues page generated
-from `docs/FINDINGS.md`'s open section; a release cadence (monthly, with
-notes); listing on a games storefront that accepts browser titles.
+(the start screen stays one click away) — **changed:** the root stays the
+start screen, because the plan puts a player in the game within sixty
+seconds (§6); `/about` is the page to send people to, built from
+`docs/release/ABOUT.md` with a fact sheet, screenshots and known
+limitations, and linked from the start screen's foot; a 90-second trailer cut from the
+photographed playthrough (**shot list written**, `docs/release/TRAILER.md`;
+not cut); a press kit with the identity assets (**the About page and
+`docs/release/STORE.md` serve for now**; no identity assets exist); an
+accessibility statement (**published at `/accessibility`**, saying what is
+checked and what is not); a support address and a known-issues page generated
+from `docs/FINDINGS.md`'s open section (**the repository's issue tracker,
+which is public, and Known limitations on `/about`**, written by hand); a release cadence (monthly, with
+notes — **`CHANGELOG.md` and `docs/release/RELEASING.md`**; no version
+tagged); listing on a games storefront that accepts browser titles (**copy
+written**; publishing it is the owner's call).
 
 **Definition of AAA-done.** Every row of the table at the top at A or A−,
 with the evidence row's grade earned by at least thirty recorded human

@@ -383,6 +383,11 @@ export function StartScreen() {
           </a>
           .
         </p>
+        <p className="mt-3 text-center text-sm text-ink-muted">
+          <a href="/about" className="underline underline-offset-2">About this game</a>
+          <span aria-hidden="true"> · </span>
+          <a href="/accessibility" className="underline underline-offset-2">Accessibility</a>
+        </p>
         <p className="mt-3 text-center text-sm text-ink-faint text-pretty">
           Nexora Group is fictional. Any resemblance to your own organisation is a coincidence you should probably act on.
         </p>
