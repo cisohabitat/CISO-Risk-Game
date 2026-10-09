@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatSummary, summariseSession } from '../../scripts/session/summary.ts'
+import { aggregateSessions, formatSummary, summariseSession } from '../../scripts/session/summary.ts'
 import type { SessionLog } from '../../src/store/session-log'
 
 /** `pnpm session` reads a playtest log as the measures Phase 0 asks for. */
@@ -61,5 +61,13 @@ describe('reading a session log', () => {
     expect(text).toContain('Campaign: seed p-1, ciso')
     expect(text).toContain('First enquiry:      day 1, 6 min in')
     expect(text).toContain('First programme:    never')
+  })
+
+  it('reads many sessions as one table', () => {
+    const idle = summariseSession({ ...log, events: log.events.slice(0, 2) })
+    const text = aggregateSessions([summary, idle])
+    expect(text).toContain('2 sessions')
+    expect(text).toContain('Took a decision:       1 of 2, median 2 min in')
+    expect(text).toContain('First skip ahead:      median day 1')
   })
 })

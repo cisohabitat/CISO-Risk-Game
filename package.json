@@ -32,7 +32,8 @@
     "session": "tsx scripts/session.ts",
     "content:bundle": "tsx scripts/content-bundle.ts",
     "content:schema": "tsx scripts/content-schema.ts",
-    "strings": "tsx scripts/strings.ts"
+    "strings": "tsx scripts/strings.ts",
+    "cohort": "tsx scripts/cohort.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.6",

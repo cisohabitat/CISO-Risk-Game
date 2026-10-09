@@ -3,8 +3,9 @@
  * the output is narrative: the optional performance band never replaces it.
  * Incident reconstructions live here too, alongside the decisions that shaped them.
  */
-import { useMemo } from 'react'
-import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
+import { useMemo, useState } from 'react'
+import { Badge, Button, Card, CardBody, Dialog, SectionHeading } from '@/components/ui/primitives'
+import { sendYear, shareYear, type SharedYear } from '@/lib/share-year'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentViews, yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
@@ -28,6 +29,8 @@ export function DebriefScreen() {
   const index = useCampaignIndex()
   const finishCampaign = useGameStore((store) => store.finishCampaign)
   const leaveCampaign = useGameStore((store) => store.leaveCampaign)
+  const pushToast = useGameStore((store) => store.pushToast)
+  const [sharing, setSharing] = useState<SharedYear>()
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
@@ -111,11 +114,46 @@ export function DebriefScreen() {
 
       {/* The review is the document a player might take to their own board;
           it prints as one, without the game around it. */}
-      <div className="flex justify-end" data-print="hide">
+      <div className="flex flex-wrap justify-end gap-2" data-print="hide">
+        <Button
+          variant="quiet"
+          size="sm"
+          onClick={() => {
+            const shared = shareYear(
+              review,
+              {
+                organisation: index.content.meta.organisation,
+                seed: state.seed,
+                mode: state.difficulty,
+                situationId: state.situationId,
+                situationName: state.situationId ? index.situation.get(state.situationId)?.name : undefined,
+              },
+              window.location.origin,
+            )
+            void sendYear(shared).then((outcome) => {
+              if (outcome === 'copied') pushToast('Your year is copied, with a link to play the same one.', 'success')
+              if (outcome === 'failed') setSharing(shared)
+            })
+          }}
+        >
+          Share this year
+        </Button>
         <Button variant="quiet" size="sm" onClick={() => window.print()}>
           Print or save as PDF
         </Button>
       </div>
+      {/* Where the browser allows neither the share sheet nor the clipboard,
+          the text is shown to copy by hand. */}
+      <Dialog open={sharing !== undefined} onClose={() => setSharing(undefined)} title="Share this year" description="Copy this and send it.">
+        <textarea
+          readOnly
+          value={sharing?.text ?? ''}
+          rows={14}
+          aria-label="Your year, to copy"
+          className="w-full rounded-lg border border-line bg-surface-2 p-3 font-mono text-sm"
+          onFocus={(event) => event.currentTarget.select()}
+        />
+      </Dialog>
 
       <Card>
         <CardBody className="space-y-3">

@@ -13,6 +13,7 @@ import { GUIDE_URL } from '@/app/navigation'
 import { setRecording, useRecording } from '@/store/session-recording'
 import { formatGameDate } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
+import { readSeedLink } from '@/lib/seed-link'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -54,11 +55,13 @@ export function StartScreen() {
   const refreshSaves = useGameStore((store) => store.refreshSaves)
   const pushToast = useGameStore((store) => store.pushToast)
   const saves = useGameStore((store) => store.ui.saves)
-  const [seed, setSeed] = useState(randomSeed)
-  const [difficulty, setDifficulty] = useState<Difficulty>('ciso')
-  const recording = useRecording()
   const situations = situationChoices
-  const [situation, setSituation] = useState<string>(situations[0]?.id ?? 'surprise')
+  // A shared year: the start screen opens on what the link asked for.
+  const [link] = useState(() => readSeedLink(window.location.search, situations.map((choice) => choice.id)))
+  const [seed, setSeed] = useState(() => link.seed ?? randomSeed())
+  const [difficulty, setDifficulty] = useState<Difficulty>(link.mode ?? 'ciso')
+  const recording = useRecording()
+  const [situation, setSituation] = useState<string>(link.situation ?? situations[0]?.id ?? 'surprise')
   // What the player has asked to delete: one campaign, or everything.
   const [pendingDelete, setPendingDelete] = useState<SaveSummary | 'all' | undefined>()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -214,6 +217,12 @@ export function StartScreen() {
               <p className="mt-1 text-sm text-ink-muted">
                 No account, no sign-in. Your campaign is saved on this device.
               </p>
+              {link.seed && (
+                <p className="mt-2 rounded-lg border border-accent/40 bg-accent-soft/40 p-3 text-sm text-pretty" data-testid="shared-year">
+                  This link opens a particular year, seed <span className="font-medium">{link.seed}</span>: the same
+                  Nexora for everyone who opens it. Change anything below to play a different one.
+                </p>
+              )}
             </div>
 
             <fieldset>
@@ -286,7 +295,7 @@ export function StartScreen() {
               arriving as the new CISO, and a first-time player asked to choose
               one before they have started is being asked about the machinery.
             */}
-            <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recording || undefined}>
+            <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recording || Boolean(link.seed) || undefined}>
               <summary className="cursor-pointer text-sm font-medium">Replay settings</summary>
               <label className="mt-3 block">
                 <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">

@@ -112,3 +112,43 @@ export function formatSummary(summary: SessionSummary): string {
   ]
   return lines.join('\n')
 }
+
+/**
+ * Many sessions at once, for the tuning cadence in docs/PLAYTEST.md: the
+ * middle of each measure across the logs, so a month's playtests read as one
+ * table rather than a pile of files. Telemetry without a server.
+ */
+export function aggregateSessions(summaries: SessionSummary[]): string {
+  const median = (values: number[]) => {
+    if (values.length === 0) return undefined
+    const sorted = [...values].sort((a, b) => a - b)
+    return sorted[Math.floor((sorted.length - 1) / 2)]
+  }
+  const firstMinutes = (name: keyof SessionSummary['firsts']) => {
+    const reached = summaries.map((summary) => summary.firsts[name]).filter((hit): hit is { day: number; minutes: number } => hit !== null)
+    const middle = median(reached.map((hit) => hit.minutes))
+    return `${reached.length} of ${summaries.length}${middle === undefined ? '' : `, median ${middle} min in`}`
+  }
+  const screenTotals = new Map<string, number>()
+  for (const summary of summaries) for (const screen of summary.screens) screenTotals.set(screen.screen, (screenTotals.get(screen.screen) ?? 0) + screen.minutes)
+  const totalMinutes = [...screenTotals.values()].reduce((sum, minutes) => sum + minutes, 0) || 1
+  const firstSkips = summaries.map((summary) => summary.skips[0]?.day).filter((day): day is number => day !== undefined)
+  return [
+    `${summaries.length} sessions`,
+    `Finished the year:     ${summaries.filter((summary) => summary.finishedYear).length} of ${summaries.length}`,
+    `Median minutes played: ${median(summaries.map((summary) => summary.minutesPlayed)) ?? 0}`,
+    `Median day reached:    ${median(summaries.map((summary) => summary.dayReached)) ?? 0}`,
+    '',
+    `Took a decision:       ${firstMinutes('decision')}`,
+    `Commissioned enquiry:  ${firstMinutes('enquiry')}`,
+    `Started a programme:   ${firstMinutes('programme')}`,
+    `Filed a board paper:   ${firstMinutes('boardPaper')}`,
+    `First skip ahead:      ${firstSkips.length === 0 ? 'never' : `median day ${median(firstSkips)}`}`,
+    `Opened the glossary:   ${summaries.filter((summary) => summary.glossary.length > 0).length} of ${summaries.length}`,
+    '',
+    'Share of time by screen:',
+    ...[...screenTotals]
+      .sort((a, b) => b[1] - a[1])
+      .map(([screen, minutes]) => `  ${screen.padEnd(14)} ${String(Math.round((minutes / totalMinutes) * 100)).padStart(3)}%`),
+  ].join('\n')
+}

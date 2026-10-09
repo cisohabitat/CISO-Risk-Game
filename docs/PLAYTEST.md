@@ -119,6 +119,25 @@ acting on a single reading — a fifteen-seed balance run, a probe that counted 
 wrong thing, a pattern notice that turned into a backlog. One player's confusion
 is a hypothesis; two players' identical confusion is a defect.
 
+## Tuning from what players do
+
+Phase 6 of `docs/ROADMAP.md`, without a server. Once a month, while there
+are people playing:
+
+1. Collect the month's session logs (recorded with `/?playtest`) into one
+   folder.
+2. `pnpm session logs/*.json` prints each session and then the middle of each
+   measure across them: how many finished, minutes to the first decision and
+   enquiry, the day of the first skip ahead, where the time went.
+3. Pick **one** thing the table and the observation sheets agree on. Not two:
+   a month's change has to be attributable.
+4. Change it, measure it with the harness that fits (`CLAUDE.md`), and record
+   it in `docs/FINDINGS.md` with the month's figures beside it.
+5. Next month's table says whether it moved.
+
+What not to change on this evidence is the same as for a single session, in
+the section below: a median across five people is still five people.
+
 ## Questions only people can settle
 
 Everything under this heading is on the list because measuring it has already

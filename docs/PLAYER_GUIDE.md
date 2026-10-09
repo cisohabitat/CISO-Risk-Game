@@ -376,6 +376,8 @@ dimensions, each with a band and a sentence explaining it:
 Plus a narrative, and the section that reckons with every reason you recorded.
 **Print or save as PDF** sets the review out as a document, on white and
 without the game around it, if you want to keep it or show it to somebody.
+**Share this year** sends the headline and the band on each dimension, with a
+link that opens the same year — the same Nexora — for whoever receives it.
 
 There is no winning. A good first year is one where the trade-offs you made were
 the ones you would defend — and the review is designed to show you where they

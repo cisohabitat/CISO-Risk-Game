@@ -374,21 +374,30 @@ reasons to come back and bring others.
   quarter reached, decisions taken, enquiries commissioned, incidents met,
   review band. A dashboard answering the questions the harnesses answer today
   but for real players: where years stop, which decisions are never taken,
-  whether Q3 is still quiet.
+  whether Q3 is still quiet. **Not started:** it needs a collection endpoint
+  the static game does not have, and consent copy. Until then `pnpm session`
+  reads many playtest logs at once and prints the same measures across them.
 - **A tuning cadence.** Monthly: read the dashboard, pick one finding,
   change it, measure with the harness that fits, record it in
   `docs/FINDINGS.md`. The same discipline the project has used from a desk,
-  fed by people.
+  fed by people. **Written:** "Tuning from what players do" in
+  `docs/PLAYTEST.md`, on the session logs.
 - **A shareable year.** The annual review as a card the player can share — a
   headline, a band per dimension, the seed — without a score, because there
   is no score. A "play this seed" link so two people can compare years.
 - **Educator mode.** The audience includes people teaching this: a
   facilitator's pack with a cohort of fixed seeds, a debrief question set per
   quarter, and a classroom start page. The `/guide` plugin is the publishing
-  path. Measured by one course running it.
+  path. Measured by one course running it. **Written:**
+  `docs/educator/FACILITATOR.md` — a ninety-minute session, questions for
+  each quarter and after the review, and a cohort of seeds characterised by
+  `pnpm cohort` under an engaged and an idle policy, the idle facts pinned by
+  `tests/engine/cohort.test.ts`. The course is not run.
 - **Content packs as a format.** The second organisation proved the pipeline;
   publish the pack schema and the linter so others can author one. Packs load
-  from a URL or a file; the game stays static.
+  from a URL or a file; the game stays static. **Not started:** the schema
+  and the linter are published (Phase 2), but there is no second pack to
+  load; loading one in the game waits until there is.
 
 **Measures.** Telemetry consent rate; Year Two start rate; seed-link usage;
 one educator cohort's completion rate.

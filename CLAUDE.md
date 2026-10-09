@@ -61,7 +61,8 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm build && pnpm size` | What does a first-time player download? |
 | `pnpm validate:content --pack <file>` | Does a pack (Nexora by default) resolve, read in the voice, and fill a year? `pnpm content:bundle` writes Nexora as a pack to start from |
 | `pnpm strings` | How much English would a translation replace, and where does it live? (`docs/LOCALISATION.md`) |
-| `pnpm session <file>` | What did a playtester actually do, and when? Reads a log recorded with `/?playtest` (`docs/playtest-kit/`) |
+| `pnpm session <file> [more…]` | What did a playtester actually do, and when? Reads logs recorded with `/?playtest` (`docs/playtest-kit/`); several at once give the medians across them |
+| `pnpm cohort 30 ciso class` | Which seed gives a class which year? (`docs/educator/FACILITATOR.md`) |
 
 None of them answer whether the game lands: that needs people, and
 `docs/PLAYTEST.md` is how to ask them.
@@ -152,7 +153,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 183.7 kB against a 185 kB limit (it was 258.2
+  The first screen waits on 184.1 kB against a 185 kB limit (it was 258.2
   against 260), and content no longer adds to it. The campaign chunk has its
   own budget, 90 kB with about 15 kB to spare, and is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
