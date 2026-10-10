@@ -452,6 +452,9 @@ If you want a plan for your first playthrough:
 | `G` | Glossary |
 | `Esc` | Close a dialog |
 
+**Shortcut keys**, beside **Sound** at the bottom left (under **More** on a
+phone), turns the single-key shortcuts off if they get in your way.
+
 The **Glossary** (bottom left, or `G`) has two halves. The first defines the
 words the game uses in its own way, such as *residual exposure* or *dwell
 time*. The second defines the words the field uses that the game borrows,

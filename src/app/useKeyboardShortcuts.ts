@@ -8,6 +8,7 @@
  * behind it. None of them now fires from a dialog or from a focused control.
  */
 import { useEffect } from 'react'
+import { shortcutsEnabled } from '@/lib/settings/shortcuts'
 import { useGameStore, type Screen } from '@/store/game-store'
 
 const SCREEN_KEYS: Record<string, Screen> = {
@@ -47,6 +48,7 @@ export function useKeyboardShortcuts(): void {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (!shortcutsEnabled()) return
       if (isTyping(event.target) || event.metaKey || event.ctrlKey || event.altKey) return
       if (belongsElsewhere(event.target, event.key)) return
       const store = useGameStore.getState()

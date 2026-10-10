@@ -197,7 +197,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 181.4 kB against a 185 kB limit (it was 258.2
+  The first screen waits on 181.7 kB against a 185 kB limit (it was 258.2
   against 260; the annual review now loads with the review screen), and
   content no longer adds to it. The campaign chunk has its own budget, 90 kB,
   and after Year Two and the threat variety it is 88.6 kB: the next sizeable

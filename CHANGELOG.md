@@ -23,6 +23,7 @@ The game as it stands after the roadmap's engineering phases
 - **Meetings say what was said.** Listening goes through the person's own
   plan for the year, the systems it rests on and the worst risk you hold
   that reaches it. The note stays in the inbox.
+- **Shortcut keys can be turned off**, beside Sound (WCAG 2.1.4).
 - **Returned enquiries say what they reached:** the systems they mapped, the
   dependencies they traced, the controls they assessed, and what they
   confirmed.

@@ -189,10 +189,10 @@ engineering.
   multi-day payments outage.** The rating is the assessment of what the
   player knows, which is the model working as intended. Whether to show a
   rating before the player has looked is for a person to judge.
-- **Single-key shortcuts cannot be turned off** (WCAG 2.1.4). They no longer
-  fire from controls or dialogs, which removes the harm the keyboard session
-  found. A setting to turn them off is still owed, and only a real
-  screen-reader user can say whether it is needed.
+- **Single-key shortcuts could not be turned off** (WCAG 2.1.4). They no
+  longer fire from controls or dialogs, and a **Shortcut keys** button
+  beside Sound now turns them off. Whether they should start off for a
+  screen-reader user is for a real one to say.
 
 ## What the panel cannot say
 

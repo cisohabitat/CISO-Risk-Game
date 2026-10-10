@@ -18,6 +18,13 @@ fault.
 
 ### Fixed
 
+- **The single-key shortcuts could not be turned off** (WCAG 2.1.4). The
+  accessibility statement said so, and the 9 October keyboard session owed
+  it. A **Shortcut keys** button beside Sound now turns them off, and the
+  choice is kept in the browser (`src/lib/settings/shortcuts.ts`). Its
+  accessible description lists the keys. Held by
+  `tests/ui/shortcuts-setting.test.tsx`, which fails with the guard removed.
+
 - **Executive meetings said nothing in particular.** "Listen" returned
   "talks you through what is actually keeping them up at night", without
   saying what. "Brief" said they "ask a sharper question", without the

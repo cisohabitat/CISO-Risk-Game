@@ -24,7 +24,8 @@ The game's automated browser tests run before every release.
   belong to the page: they do nothing while a dialog is open or a control has
   focus, so Space presses a button and the arrows move between tabs. Dialogs
   keep focus inside them and return it when they close. Changing screen moves
-  focus to the new one.
+  focus to the new one. **Shortcut keys** (beside Sound) turns the
+  single-key shortcuts off, and the choice is kept.
 - **Nothing is said by colour alone.** Every rating carries a word, and risk
   ratings a height mark as well (▁▃▅▆█). The dependency map has a key, and
   every box on it names what it is.
@@ -46,11 +47,10 @@ The game's automated browser tests run before every release.
   assistive-technology users are planned and have not happened.
 - **Zoom and text scaling** beyond the 320-pixel layout have not been tested
   on their own.
-- **The shortcut list is not shown inside the game**, only in the guide, and
-  **the single-key shortcuts cannot yet be turned off** (WCAG 2.1.4). They no
-  longer act from inside a dialog or a control, which was where an AI
-  keyboard session found them harmful, but a screen-reader user in browse
-  mode may still meet them.
+- **The shortcut list is not shown on screen inside the game**, only in the
+  guide; the Shortcut keys button reads it to a screen reader. Whether a
+  screen-reader user in browse mode wants the shortcuts on or off by default
+  needs one to say.
 - **Only English** is available.
 - **The dependency map** is a drawing; the list view is the accessible way
   through the same information.

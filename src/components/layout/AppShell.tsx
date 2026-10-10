@@ -16,6 +16,7 @@ import { Icon } from '@/components/ui/icons'
 import { YearStrip } from '@/components/game/YearStrip'
 import { RecordingControl } from '@/components/game/RecordingControl'
 import { SoundToggle } from '@/components/game/SoundToggle'
+import { ShortcutsToggle } from '@/components/game/ShortcutsToggle'
 import { money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
@@ -155,6 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </a>
           </div>
           <SoundToggle className="compact min-h-9" />
+          <ShortcutsToggle className="compact min-h-9" />
           <RecordingControl className="border-t border-line pt-3" />
         </div>
       </nav>
@@ -271,6 +273,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </li>
         </ul>
         <SoundToggle className="mt-4" />
+        <ShortcutsToggle className="mt-2" />
         <RecordingControl className="mt-4 border-t border-line pt-3" />
       </Dialog>
     </div>
