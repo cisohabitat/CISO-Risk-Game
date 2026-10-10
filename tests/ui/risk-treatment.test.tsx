@@ -30,8 +30,16 @@ describe('treating a risk from its detail', () => {
     unmount()
 
     expect(store.dispatch({ type: 'startProgramme', programmeId: programme.id, budget: programme.budgetCost }).ok).toBe(true)
-    render(<RiskDetail risk={risk} onClose={() => {}} />)
+    const second = render(<RiskDetail risk={risk} onClose={() => {}} />)
     expect(screen.getByRole('button', { name: `Link to ${programme.name}` })).toBeTruthy()
+    second.unmount()
+
+    // Once linked, it says so rather than offering a button that does nothing more.
+    expect(store.dispatch({ type: 'treatRisk', scenarioId: risk.id, programmeId: programme.id }).ok).toBe(true)
+    const linked = visibleRisks(useGameStore.getState().state!, index).find((r) => r.id === risk.id)!
+    render(<RiskDetail risk={linked} onClose={() => {}} />)
+    expect(screen.queryByRole('button', { name: /^Link to/ })).toBeNull()
+    expect(screen.getByText(`Linked to ${programme.name}.`)).toBeTruthy()
   })
 
   it('says what a review asks for when one is due', async () => {

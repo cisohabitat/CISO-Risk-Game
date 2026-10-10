@@ -13,6 +13,7 @@ import { applyDrift } from '../controls/effectiveness'
 import { maintainedControlIds, tickProgrammes } from '../programmes/progression'
 import { recoverServiceHealth, tickObjectives } from '../business/objectives'
 import { tickAssignments } from '../team/assignments'
+import { enquiryFindings } from '../team/findings'
 import { refreshCommittedCapacity, updateTeamWellbeing } from '../team/capacity'
 import { tickRelationships } from '../stakeholders/relationships'
 import { tickAssumptions } from '../assumptions/validation'
@@ -206,17 +207,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     // Say what came back, not only how well. Every enquiry in a year read end
     // to end reported "answered part of the question and raised others" and
     // nothing else; the findings were on another screen.
-    const found = completed.evidenceIds
-      .filter((id) => !state.evidence.items[id])
-      .map((id) => index.evidence.get(id)?.title)
-      .filter((title): title is string => Boolean(title))
-    const already = completed.evidenceIds.length - found.length
-    const findings =
-      found.length > 0
-        ? ` What came back: ${found.join('; ')}.${already > 0 ? ` It also confirmed ${already === 1 ? 'one thing' : `${already} things`} you already had.` : ''}`
-        : completed.evidenceIds.length > 0
-          ? ' It confirmed what you already had, and found nothing new.'
-          : ''
+    const findings = enquiryFindings(state, index, completed)
     pushMessage(state, {
       from: leader ? `${leader.name}, ${leader.role}` : 'Cyber team',
       subject: `Completed: ${completed.title}`,
@@ -255,7 +246,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
         ? 'Something you relied on was never the case'
         : 'An assumption behind a past decision no longer holds',
       body: invalidated.wasNeverTrue
-        ? `${invalidated.statement}\n\n${invalidated.reason}\n\nNothing has changed. We simply had not checked, and the decisions that rested on it were taken on a belief rather than on evidence. They need revisiting.`
+        ? `${invalidated.statement}\n\n${invalidated.reason}\n\nNothing has changed: this is how it always was, and it has only now come to light. The decisions that rested on it were taken on a belief rather than on evidence. They need revisiting.`
         : `${invalidated.statement}\n\n${invalidated.reason}\n\nThe decisions and risks that relied on it need reassessment. Risk, Assumptions shows which they are.`,
       type: 'assumption',
       priority: 'urgent',

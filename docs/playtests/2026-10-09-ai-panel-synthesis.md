@@ -74,9 +74,9 @@ Ranked by how many of the four players hit each problem.
 | Attention costs are hidden on "Form the hypothesis" and "Raise as a risk scenario" | 3 | Yes | Both buttons show the cost, as decision options already do |
 | The board's verdict on a paper is a toast that vanishes | 3 | Yes | The chair's reading of each paper is kept in the inbox as "The committee on your Q*n* paper" |
 | A hypothesis looks finished but stays a draft; "Open formally", "Raise" and "raised" read as three different acts | 2 | Yes | The result says it is a draft and where to raise it; one verb, "Raise as a risk scenario", throughout |
-| Enquiry results are generic ("confirmed what you already had") | 3 | No | Needs authored findings per enquiry and outcome. Content work, left for a human playtest to confirm it matters |
+| Enquiry results are generic ("confirmed what you already had") | 3 | Partly | A returned enquiry now says which systems it mapped, how many dependencies it traced, which controls it assessed, and names what it confirmed. Authored findings per enquiry and outcome are still content work |
 | The incident has little CISO work in it | 2 | Partly | The reconstruction's "detected almost immediately" was wrong and is fixed (below). The thin incident itself needs authored response decisions (regulator, acquirer, insurer, ransom); not started |
-| Executive meetings return the same stock lines | 2 | No | Needs authored replies per person and approach |
+| Executive meetings return the same stock lines | 2 | Partly | Listening or briefing now goes through the person's own plan for the year, the systems it rests on that the player has found, and the worst risk the player holds that reaches it. What was said is kept in the inbox and on the card. Authored replies per person are still content work |
 | Team burnout never recovers, and the screens disagree about load | 2 | Partly | A hire a decision already paid for now reads "Recruiting", so the screen no longer offers to pay for it twice. How morale recovers is a balance question for a person |
 | The budget runs out in March and only the review says so | 2 | Partly | A locked option now reads "Costs £90k, more than the £50k left this year" instead of "(£90k)". An earlier warning is a design question |
 
@@ -173,11 +173,13 @@ engineering.
 
   This is the largest piece of work the panel points at. The veteran's "Would
   I use it to train a deputy?" answer turns on it.
-- **Enquiry results are generic, and some contradict what the player
-  established**, e.g. "I have not tested it" after the player's own review
-  had tested it. That needs authored findings and conditions on prior
-  evidence.
-- **Executive meetings are stock lines.**
+- **Enquiry results are generic.** They now say what the work reached
+  (systems, dependencies, controls, what was confirmed), but not an authored
+  finding per enquiry. Fenella's "I have not tested it" after the player's own
+  review had disproved the claim is fixed: that player now gets a version
+  that says so.
+- **Executive meetings draw on the person's plan and the player's register**,
+  not on authored replies per person.
 - **Many real events have no response**: finance credential resets, public
   buckets, a shadow project. The week offers enquiries, programmes and
   meetings, and no "act now" lever. That is a design question.

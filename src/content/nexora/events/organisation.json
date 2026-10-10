@@ -155,7 +155,55 @@
       "body": "Corvus has returned the annual assurance questionnaire fully compliant, including enforced multi-factor authentication for all privileged access.\n\nI would like to believe it. I have not tested it.",
       "priority": "routine",
       "availableFromDay": 30,
-      "conditions": [],
+      "conditions": [
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "evidence.known",
+            "evidenceId": "ev-msp-no-mfa"
+          }
+        },
+        {
+          "kind": "event.notFired",
+          "eventId": "evt-org-supplier-questionnaire-known"
+        }
+      ],
+      "weight": 12,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "effectsOnReveal": [
+        {
+          "type": "evidence.reveal",
+          "evidenceId": "ev-supplier-questionnaire-clean",
+          "note": "Supplier assurance"
+        }
+      ],
+      "relatedNodeIds": [
+        "node-sup-msp"
+      ],
+      "tags": [
+        "supplier",
+        "assurance"
+      ]
+    },
+    {
+      "id": "evt-org-supplier-questionnaire-known",
+      "type": "supplier",
+      "title": "Corvus returns a clean questionnaire",
+      "from": "Fenella Osei, Head of Cyber Risk and Governance",
+      "body": "Corvus has returned the annual assurance questionnaire fully compliant, including enforced multi-factor authentication for all privileged access.\n\nOur own review found the opposite: their engineers' remote access accepts a password alone. I have asked them which of the two answers they would like to stand behind.",
+      "priority": "routine",
+      "availableFromDay": 30,
+      "conditions": [
+        {
+          "kind": "evidence.known",
+          "evidenceId": "ev-msp-no-mfa"
+        },
+        {
+          "kind": "event.notFired",
+          "eventId": "evt-org-supplier-questionnaire"
+        }
+      ],
       "weight": 12,
       "pinned": false,
       "oncePerCampaign": true,

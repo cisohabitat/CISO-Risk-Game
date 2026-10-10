@@ -60,3 +60,40 @@ describe('the reconstruction', () => {
     expect(rebuilt.hurt.join(' ')).toContain('raised 2 warnings over 7 weeks before it reached the business')
   })
 })
+
+describe('what an enquiry says it found', () => {
+  it('names systems, dependencies and controls it reached, not only evidence', async () => {
+    const { enquiryFindings } = await import('@/game/team/findings')
+    const state = newGame(index, { seed: 'panel-findings' })
+    const node = Object.values(state.organisation.nodes).find((n) => n.exists && !n.discovered)!
+    const words = enquiryFindings(state, index, {
+      evidenceIds: [], nodeIds: [node.id], edgeIds: [], controlIds: ['ctl-backup'],
+    })
+    expect(words).toContain(`It found a system you had not mapped: ${index.node.get(node.id)!.name}.`)
+    expect(words).toContain('It assessed backup and recovery')
+    expect(words).not.toContain('found nothing new')
+  })
+
+  it('names what it confirmed when nothing else came back', async () => {
+    const { enquiryFindings } = await import('@/game/team/findings')
+    const state = newGame(index, { seed: 'panel-findings' })
+    const known = 'ev-legacy-inventory'
+    state.evidence.items[known] = { id: known, discoveredDay: 1, sourceLabel: 'test', read: true, archived: false, linkedHypothesisIds: [] }
+    const words = enquiryFindings(state, index, { evidenceIds: [known], nodeIds: [], edgeIds: [], controlIds: [] })
+    expect(words).toBe(` It confirmed what you already had (${index.evidence.get(known)!.title}) and found nothing new.`)
+  })
+})
+
+describe('messages that contradict what the player established', () => {
+  it('does not say Corvus’s claim is untested once the player’s own review has disproved it', async () => {
+    const { evaluateCondition } = await import('@/game/events/conditions')
+    const state = newGame(index, { seed: 'panel-corvus' })
+    const ready = (id: string) =>
+      index.content.events.find((e) => e.id === id)!.conditions.every((c) => evaluateCondition(state, index, c))
+    expect(ready('evt-org-supplier-questionnaire')).toBe(true)
+    expect(ready('evt-org-supplier-questionnaire-known')).toBe(false)
+    state.evidence.items['ev-msp-no-mfa'] = { id: 'ev-msp-no-mfa', discoveredDay: 1, sourceLabel: 'test', read: true, archived: false, linkedHypothesisIds: [] }
+    expect(ready('evt-org-supplier-questionnaire')).toBe(false)
+    expect(ready('evt-org-supplier-questionnaire-known')).toBe(true)
+  })
+})

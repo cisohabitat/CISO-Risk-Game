@@ -29,6 +29,10 @@ export interface AssignmentTickResult {
     quality: number
     summary: string
     evidenceIds: string[]
+    /** Systems, dependencies and controls the work reached, as queued. */
+    nodeIds: string[]
+    edgeIds: string[]
+    controlIds: string[]
   }[]
   delayed: { assignmentId: string; title: string; days: number }[]
 }
@@ -171,9 +175,13 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
       // Work the player commissioned: this is knowledge they established.
       result.effects.push({ type: 'node.reveal', nodeId, confidence: clamp01(0.45 + 0.55 * quality), verified: true })
     }
+    const edgeIds: string[] = []
     for (const edgeId of def.revealsEdgeIds) {
       // A thin review can miss a dependency entirely.
-      if (quality > 0.35 || rng.chance(0.4)) result.effects.push({ type: 'edge.reveal', edgeId, verified: true })
+      if (quality > 0.35 || rng.chance(0.4)) {
+        edgeIds.push(edgeId)
+        result.effects.push({ type: 'edge.reveal', edgeId, verified: true })
+      }
     }
     const assesses = quality > 0.3
     if (assesses) for (const controlId of def.assessesControlIds) result.effects.push({ type: 'control.assess', controlId })
@@ -197,6 +205,9 @@ export function tickAssignments(state: GameState, index: ContentIndex, rng: Rng)
       quality,
       summary: assignment.resultSummary,
       evidenceIds,
+      nodeIds: def.revealsNodeIds,
+      edgeIds,
+      controlIds: assesses ? def.assessesControlIds : [],
     })
   }
 

@@ -150,7 +150,8 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
               Accept for now
             </Button>
           )}
-          {treating && risk.status !== 'closed' && (
+          {/* Linking a risk already linked did nothing a player could see (harbour-87524, day 91). */}
+          {treating && risk.status !== 'closed' && risk.status !== 'treated' && (
             <Button
               variant="secondary"
               size="sm"
@@ -160,6 +161,9 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
             </Button>
           )}
         </div>
+        {treating && risk.status === 'treated' && (
+          <p className="text-sm text-ink-muted text-pretty">Linked to {treating.def!.name}.</p>
+        )}
         {/* It offered "Link to treatment" and then refused: start the programme first. */}
         {!treating && programmes.length > 0 && risk.status !== 'closed' && (
           <p className="text-sm text-ink-muted text-pretty">

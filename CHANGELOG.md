@@ -18,6 +18,14 @@ The game as it stands after the roadmap's engineering phases
   - Follow-up messages say what the test, the HR provider and the launch
     conditions actually came to.
   - An enquiry that traced a risk's route counts as having gone near it.
+  - A risk already linked to its programme says so instead of offering the
+    link again.
+- **Meetings say what was said.** Listening goes through the person's own
+  plan for the year, the systems it rests on and the worst risk you hold
+  that reaches it. The note stays in the inbox.
+- **Returned enquiries say what they reached:** the systems they mapped, the
+  dependencies they traced, the controls they assessed, and what they
+  confirmed.
 - **More kinds of attack:**
   - an actor that wants an outage rather than a payment;
   - six new routes in;

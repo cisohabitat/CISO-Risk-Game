@@ -18,6 +18,46 @@ fault.
 
 ### Fixed
 
+- **Executive meetings said nothing in particular.** "Listen" returned
+  "talks you through what is actually keeping them up at night", without
+  saying what. "Brief" said they "ask a sharper question", without the
+  question. Both were kept only as a toast. Raised by two of the 9 October
+  panel and by harbour-87524 ("What did Helen actually tell me?").
+  - **Fix:** `src/game/stakeholders/meeting.ts` draws on three things the
+    game already holds:
+    - the person's own business objective for the year;
+    - the systems it rests on that the player has discovered;
+    - the worst risk the player holds whose systems include one of those.
+
+    Someone who owns no objective names their latest concern. The meeting
+    leaves a read note in the inbox, and the card's memory says what was
+    asked about. No undiscovered system is named.
+  - **Held by:** `tests/engine/meetings.test.ts`. The test fails with the
+    discovered filter removed.
+- **Enquiries that mapped systems or tested controls reported "found nothing
+  new".** Only evidence was counted, so due diligence that mapped an estate
+  read as empty.
+  - **Fix:** `src/game/team/findings.ts` reports what the work reached, read
+    before its effects apply:
+    - systems it mapped for the first time;
+    - dependencies it traced;
+    - controls it assessed;
+    - what it confirmed, by name.
+  - **Held by:** `tests/engine/panel-2026-10-09.test.ts`.
+- **Fenella called Corvus's MFA claim untested after the player's review had
+  disproved it.** "I would like to believe it. I have not tested it." arrived
+  after "Provider access does not enforce second factor" was already known.
+  - **Fix:** that version now needs the finding to be unknown. A sibling
+    message, with the same evidence effect, says the player's own review found
+    the opposite.
+  - **Held by:** the same test file, which fails with the condition removed.
+- **The never-true assumption message said "We simply had not checked".**
+  That was unfair to a player whose own review is what surfaced it. It now
+  says nothing has changed, and that this is how it always was.
+- **"Link to …" stayed on a risk already linked.** Pressing it again
+  succeeded and changed nothing a player could see (harbour-87524, day 91).
+  The risk now reads "Linked to …". Held by `tests/ui/risk-treatment.test.tsx`.
+
 - **Carrying a known recovery gap recorded the opposite as an assumption.**
   The day-275 option "Carry it until next year's plan" attached "Backups
   recover critical services within business tolerance." The decision had

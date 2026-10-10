@@ -23,6 +23,7 @@ import { createInitialState, type NewGameOptions } from './setup'
 import { canAfford, functionName, refreshCommittedCapacity } from '../team/capacity'
 import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
+import { meetingAccount } from '../stakeholders/meeting'
 import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
 import { buildQuarterReview } from '../debrief/quarter'
@@ -624,34 +625,23 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         return fail('You have no attention left this week.')
       }
       const effects: GameEffect[] = []
-      let message: string
+      // Pressing works when trust is already there and costs you when it is not.
+      const receptive = person.trust > 0.55
+      const account = meetingAccount(state, index, def.id, action.approach, receptive)
       switch (action.approach) {
         case 'listen':
-          effects.push({ type: 'stakeholder.trust', stakeholderId: def.id, delta: 0.05, reason: 'You asked what mattered to them.' })
-          message = `${def.name} talks you through what is actually keeping them up at night.`
+          effects.push({ type: 'stakeholder.trust', stakeholderId: def.id, delta: 0.05, reason: account.memory })
           break
         case 'brief':
           effects.push(
-            { type: 'stakeholder.trust', stakeholderId: def.id, delta: 0.03, reason: 'You briefed them in their own terms.' },
+            { type: 'stakeholder.trust', stakeholderId: def.id, delta: 0.03, reason: account.memory },
             { type: 'stakeholder.understanding', stakeholderId: def.id, delta: 0.07 },
           )
-          message = `${def.name} follows the argument and asks a sharper question than last time.`
           break
-        default: {
-          // Pressing works when trust is already there and costs you when it is not.
-          const receptive = person.trust > 0.55
-          effects.push({
-            type: 'stakeholder.trust',
-            stakeholderId: def.id,
-            delta: receptive ? 0.02 : -0.06,
-            reason: 'You pushed them hard on a security commitment.',
-          })
+        default:
+          effects.push({ type: 'stakeholder.trust', stakeholderId: def.id, delta: receptive ? 0.02 : -0.06, reason: account.memory })
           effects.push({ type: 'operationalTolerance', delta: receptive ? 0.03 : -0.03 })
-          message = receptive
-            ? `${def.name} agrees to move, on the understanding you will not do this every week.`
-            : `${def.name} pushes back hard. You have spent credit you did not have.`
           break
-        }
       }
       applyEffects(state, effects, { index, rng, source: 'meeting' })
       state.history.entries.push({
@@ -660,8 +650,18 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         summary: `Met ${def.name} (${action.approach}).`,
         refs: [def.id],
       })
+      // What was said, kept where the player can find it again. It came only
+      // as a toast, and a toast is gone before the next screen.
+      pushMessage(state, {
+        from: `${def.name}, ${def.role}`,
+        subject: `Your meeting with ${def.name}`,
+        body: account.message,
+        type: def.id === 'stk-board' ? 'board' : 'executive',
+        priority: 'routine',
+        relatedNodeIds: [],
+      }).read = true
       commit()
-      return { ok: true, message }
+      return { ok: true, message: account.message }
     }
 
     case 'hire': {
