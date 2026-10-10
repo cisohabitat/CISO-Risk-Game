@@ -254,6 +254,14 @@ Put them in front of players rather than deciding from a desk.
   and both are fixed. The synthesis lists every finding as fixed or not, and
   why. None of it is human evidence.
 
+- `playtests/2026-10-09-ai-harbour-87524.md`: an assistant played one CISO
+  year on the live site and filled in the observation sheet. Its strongest
+  disagreement with the review was real. Choosing to carry a recovery gap
+  the decision itself called out of tolerance recorded the opposite as an
+  assumption, and the review counted it against the player. That is fixed,
+  along with an unnamed "a risk" escalation and three messages that said a
+  result had arrived without giving it. Not human evidence.
+
 ## AI playtests
 
 `scripts/playtest-driver.ts` gives an AI agent a browser it can play turn by

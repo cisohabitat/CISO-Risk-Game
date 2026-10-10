@@ -642,7 +642,12 @@ export function quarterProgress(state: GameState, index: ContentIndex): string[]
   ].filter((line): line is string => Boolean(line))
 }
 
-/** Recovery built since the backups were last verified. */
+/**
+ * Recovery built since the backups were last verified. The programme's own
+ * restore milestone is not the player's check: "not yet verified by a restore"
+ * sat beside a milestone named "Restore tested outside production", and two
+ * playtesters asked how both could be true.
+ */
 function recoveryNote(state: GameState, index: ContentIndex): string | undefined {
   const verifiedOn = state.controls.controls['ctl-backup']?.believed?.assessedOnDay ?? -Infinity
   const builtSince = index.content.programmes.some((def) => {
@@ -650,7 +655,7 @@ function recoveryNote(state: GameState, index: ContentIndex): string | undefined
     if (runtime?.status !== 'complete' || (runtime.completedDay ?? -Infinity) <= verifiedOn) return false
     return def.milestones.some((milestone) => milestone.controlEffects?.some((effect) => effect.controlId === 'ctl-backup'))
   })
-  return builtSince ? 'Built, not yet verified by a restore' : undefined
+  return builtSince ? 'Built, but you have not checked recovery yourself since' : undefined
 }
 
 export function briefing(state: GameState, index: ContentIndex): BriefingView {

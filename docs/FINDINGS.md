@@ -18,6 +18,44 @@ fault.
 
 ### Fixed
 
+- **Carrying a known recovery gap recorded the opposite as an assumption.**
+  The day-275 option "Carry it until next year's plan" attached "Backups
+  recover critical services within business tolerance." The decision had
+  just said the restore exceeds tolerance. The assumption then surfaced as
+  "Was never true", and the review counted it against the player's
+  reasons. Found by the assistant-operated session on seed harbour-87524
+  (`docs/playtests/2026-10-09-ai-harbour-87524.md`).
+  - **Fix:** the option now records `asm-platform-holds`, "The customer
+    platform does not go down before its recovery is re-planned." Its rule,
+    `platform-not-lost`, fails only while an incident has the platform
+    down. Priya's "nothing broke" letter is withheld if it did break.
+  - **Measured:** over 60 ladder CISO years, the backup assumption was
+    recorded on 13 of 13 carries before the fix, and on none of 11 after.
+  - **Held by:** `tests/engine/playtest-harbour-87524.test.ts`, which fails
+    with the old assumption put back.
+- **"The board has never seen: a risk".** Fenella's escalation needed only
+  two open risks. After a Q1 paper had covered every live risk, it still
+  fired, and the decision named "a risk".
+  - **Fix:** a new condition, `risk.unreportedAtLeast`, gates it. That
+    condition and the decision text read the same helper,
+    `src/game/risk/unreported.ts`.
+  - **Held by:** the same test file, which fails with the condition removed.
+- **"Nothing you did went near it" after an enquiry that traced the route.**
+  A cloud configuration review exposed the peering from non-production into
+  production. The review still said nothing had gone near that risk.
+  - **Fix:** a completed enquiry whose revealed dependency joins two of a
+    risk's own systems now counts as going near it. The score is unchanged,
+    because commitments still drive it.
+  - **Held by:** the same test file, which fails with the clause removed.
+- **Reports that arrived without their contents.** "The assumed-breach test
+  report is in", "The HR provider has answered our questions", and "the
+  launch conditions were honoured" each said a result had arrived without
+  giving it. Each now says what was found or agreed.
+- **"Built, not yet verified by a restore" beside a milestone named
+  "Restore tested outside production".** Two AI players asked how both
+  could be true. The line now reads "Built, but you have not checked
+  recovery yourself since".
+
 - **Three actors, eight routes and five kinds of incident were all the year
   could throw.** A player who had seen ransomware and a data exposure had
   seen most of what came. Added as content, with the engine unchanged:

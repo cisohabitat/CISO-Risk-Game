@@ -366,6 +366,13 @@
         {
           "kind": "flag.set",
           "flag": "platform.resilience-carried"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "assumption.invalidated",
+            "assumptionId": "asm-platform-holds"
+          }
         }
       ],
       "weight": 20,

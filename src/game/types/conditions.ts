@@ -61,6 +61,8 @@ export type Condition =
   | { kind: 'review.papersWrittenAtLeast'; value: number }
   | { kind: 'risk.scenarioStatus'; scenarioId: string; status: string }
   | { kind: 'risk.openCountAtLeast'; value: number }
+  /** Live, assessed risks that no filed quarterly paper has covered. */
+  | { kind: 'risk.unreportedAtLeast'; value: number }
   | { kind: 'assumption.invalidated'; assumptionId: string }
   | { kind: 'team.capacityBandAtLeast'; band: string }
   | { kind: 'team.moraleBelow'; value: number }

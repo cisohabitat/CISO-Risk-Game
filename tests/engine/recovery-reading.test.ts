@@ -42,7 +42,7 @@ describe('recovery confidence', () => {
     expect(state.programmes.programmes['prog-ransomware']!.status).toBe('complete')
 
     const built = briefing(state, index)
-    expect(built.recoveryNote).toBe('Built, not yet verified by a restore')
+    expect(built.recoveryNote).toBe('Built, but you have not checked recovery yourself since')
 
     applyEffects(state, [{ type: 'control.assess', controlId: 'ctl-backup' }], { index, rng: createRng(state.seed, 0), source: 'test' })
     const verified = briefing(state, index)

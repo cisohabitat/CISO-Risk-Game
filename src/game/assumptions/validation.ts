@@ -98,6 +98,19 @@ export const VALIDATION_RULES: Record<string, ValidationRule> = {
     revealedBy: { kind: 'control-assessed', controlId: 'ctl-backup' },
   },
 
+  // A risk carried knowingly. The bet is not that recovery is fine — the
+  // decision has just said it is not — but that nothing takes the platform
+  // down before the recovery is re-planned.
+  'platform-not-lost': {
+    evaluate: (state) =>
+      Object.values(state.incidents.incidents).some(
+        (incident) => incident.phase !== 'closed' && incident.affectedServiceIds.includes('svc-platform'),
+      )
+        ? { holds: false, reason: 'The customer platform has gone down before its recovery was re-planned.' }
+        : { holds: true },
+    revealedBy: { kind: 'time', days: 1 },
+  },
+
   'retirement-before-q4': {
     evaluate: (state) => {
       const retirement = state.flags['legacy.retirementDay']

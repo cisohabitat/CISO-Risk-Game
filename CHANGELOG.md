@@ -10,6 +10,14 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- From a played year on seed harbour-87524:
+  - Carrying the platform's recovery gap no longer records that backups
+    recover within tolerance, the very thing the decision said was false.
+  - The warning about a risk the board has not seen now waits until there
+    is one, and names it.
+  - Follow-up messages say what the test, the HR provider and the launch
+    conditions actually came to.
+  - An enquiry that traced a risk's route counts as having gone near it.
 - **More kinds of attack:**
   - an actor that wants an outage rather than a payment;
   - six new routes in;

@@ -203,6 +203,27 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
     }
     for (const id of aimedAt(index, { nodeIds })) addressed.add(id)
   }
+  // So does an enquiry that traced a dependency between a risk's systems.
+  // A cloud configuration review that exposed the peering from non-production
+  // into production was followed by "Non-production environment as a route
+  // into production ... nothing you did went near it" (AI playtest,
+  // harbour-87524): the enquiry counts its systems, not its dependencies.
+  for (const assignment of state.team.assignments) {
+    if (assignment.status !== 'complete') continue
+    const def = index.investigation.get(assignment.refId)
+    if (!def) continue
+    const ends = new Set<string>()
+    for (const edgeId of def.revealsEdgeIds ?? []) {
+      const edge = index.edge.get(edgeId)
+      if (edge) {
+        ends.add(edge.from)
+        ends.add(edge.to)
+      }
+    }
+    for (const scenario of index.content.riskScenarios) {
+      if (scenario.triggerNodeIds.filter((id) => ends.has(id)).length >= 2) addressed.add(scenario.id)
+    }
+  }
 
   const missed = ranked.find((s) => !addressed.has(s.id) && s.materiality > 0)
 

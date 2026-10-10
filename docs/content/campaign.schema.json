@@ -8788,6 +8788,25 @@
           "properties": {
             "kind": {
               "type": "string",
+              "const": "risk.unreportedAtLeast"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
               "const": "assumption.invalidated"
             },
             "assumptionId": {

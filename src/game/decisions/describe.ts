@@ -10,6 +10,7 @@
 import type { ContentIndex, DecisionRuntime, GameState } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
 import { functionName, functionTitle, leaderForFunction, mostPressedFunction } from '../team/capacity'
+import { unreportedScenarios } from '../risk/unreported'
 
 /**
  * `{{pressedFunction}}` is the function closest to breaking and
@@ -67,10 +68,6 @@ export function nextBoard(day: number): string {
  * playthrough could not work out what it had left off.
  */
 function unseenRisk(state: GameState, index: ContentIndex): string | undefined {
-  const reported = new Set(state.reviews.quarters.filter((review) => review.completed).flatMap((review) => review.topicsChosen))
-  const candidates = Object.values(state.risks.scenarios)
-    .filter((s) => s.status !== 'emerging' && s.status !== 'closed' && !reported.has(`risk:${s.id}`))
-    .sort((a, b) => (b.lastAssessed?.residual ?? 0) - (a.lastAssessed?.residual ?? 0))
-  const top = candidates[0]
+  const top = unreportedScenarios(state)[0]
   return top ? index.riskScenario.get(top.id)?.title : undefined
 }
