@@ -631,3 +631,20 @@ describe('the close after a production restore', () => {
     }
   })
 })
+
+describe('the stalled-programme reminder', () => {
+  it('names the programme and what is blocking it', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'stalled-named' })
+    const def = index.programme.get('prog-identity')!
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    state.programmes.programmes[def.id]!.blockers.push({ id: def.blockers[0]!.id, startedDay: state.currentDay, resolved: false })
+    const event = index.content.events.find((e) => e.id === 'evt-org-programme-blocked')!
+    for (const body of [event.body, ...(event.variants ?? []).map((v) => v.body)]) {
+      const text = renderDecisionText(body, state, index)
+      expect(text.toLowerCase()).toContain('the identity uplift programme')
+      expect(text).toContain(def.blockers[0]!.name)
+      expect(text).not.toMatch(/one of your programmes|\{\{/i)
+    }
+  })
+})

@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **"A programme has stalled" arrived five times in a second year, word for
+  word, and never said which programme.** Found by reading
+  `pnpm ladder transcript ciso y2-scan --years 2`, in which the supplier
+  programme sat blocked from day 48.
+  - **Fix:** two tokens, `{{blockedProgramme}}` and `{{blocker}}`, now name
+    the programme blocked longest and what is blocking it. Two variants mean
+    a repeat no longer reads identically.
+  - **Held by:** `tests/engine/messages-honest.test.ts`, which fails with the
+    old body put back.
+
 - **The single-key shortcuts could not be turned off** (WCAG 2.1.4). The
   accessibility statement said so, and the 9 October keyboard session owed
   it. A **Shortcut keys** button beside Sound now turns them off, and the

@@ -33,6 +33,9 @@ export function renderDecisionText(
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
+    .replaceAll('{{blockedProgramme}}', longestBlocked(state, index)?.programme ?? 'one of your programmes')
+    .replaceAll('{{BlockedProgramme}}', capitalise(longestBlocked(state, index)?.programme ?? 'one of your programmes'))
+    .replaceAll('{{blocker}}', longestBlocked(state, index)?.blocker ?? 'a blocker')
     // A quarter's paper still waiting to go in is the next meeting, whatever
     // the calendar says comes after it.
     .replaceAll('{{nextBoard}}', state.reviews.pendingQuarter !== undefined ? 'this week' : nextBoard(state.currentDay))
@@ -71,3 +74,27 @@ function unseenRisk(state: GameState, index: ContentIndex): string | undefined {
   const top = unreportedScenarios(state)[0]
   return top ? index.riskScenario.get(top.id)?.title : undefined
 }
+
+/**
+ * The programme blocked longest, and what is blocking it. "A programme has
+ * stalled" said "One of your programmes" five times in one second year, word
+ * for word, and never which.
+ */
+function longestBlocked(state: GameState, index: ContentIndex): { programme: string; blocker: string } | undefined {
+  let found: { programme: string; blocker: string; since: number } | undefined
+  for (const runtime of Object.values(state.programmes.programmes)) {
+    if (runtime.status !== 'active' && runtime.status !== 'at-risk') continue
+    const def = index.programme.get(runtime.id)
+    for (const blocker of runtime.blockers) {
+      if (blocker.resolved || (found && found.since <= blocker.startedDay)) continue
+      const name = def?.blockers.find((candidate) => candidate.id === blocker.id)?.name
+      if (!def || !name) continue
+      // "the identity uplift programme": the full name reads as a title, not as a noun in a sentence.
+      const short = def.shortName.charAt(0).toLowerCase() + def.shortName.slice(1)
+      found = { programme: `the ${/programme$/.test(short) ? short : `${short} programme`}`, blocker: name, since: blocker.startedDay }
+    }
+  }
+  return found
+}
+
+const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
