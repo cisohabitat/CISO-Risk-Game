@@ -34,14 +34,16 @@ describe('what the playtest found', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'pt-recruit' })
     runDays(state, index, 2)
+    const hires = (fn: string) =>
+      state.pendingEffects.filter((p) => p.effects.some((e) => e.type === 'team.vacancyFilled' && e.fn === fn)).length
     for (const fn of Object.keys(state.team.functions)) {
       const runtime = state.team.functions[fn as keyof typeof state.team.functions]!
-      while (runtime.vacancies > 0 && (runtime.hiringDaysRemaining ?? 0) <= 0) {
+      while (runtime.vacancies > hires(fn)) {
         const r = applyAction(state, index, { type: 'hire', fn: fn as never })
         if (!r.ok) break
       }
     }
-    const stillOpen = Object.values(state.team.functions).some((f) => f.vacancies > 0 && (f.hiringDaysRemaining ?? 0) <= 0)
+    const stillOpen = Object.entries(state.team.functions).some(([fn, f]) => f.vacancies > hires(fn))
     expect(stillOpen, 'could not recruit for every vacancy on day 2, so the case is not arranged').toBe(false)
     runDays(state, index, 60)
     expect(state.events.firedEventIds).not.toContain('evt-org-vacancy-pressure')

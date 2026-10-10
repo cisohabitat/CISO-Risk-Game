@@ -44,7 +44,7 @@
     { "id": "node-data-analytics", "type": "data-set", "name": "Behavioural Data Lake", "description": "Pooled behavioural data. Contractually restricted, technically accessible.", "criticality": "high", "knownAtStart": false, "exposure": 0.4, "weakness": 0.6, "tags": ["data", "privacy"] },
     { "id": "node-data-hr", "type": "data-set", "name": "Employee Records", "description": "Payroll and HR data for all markets.", "criticality": "medium", "knownAtStart": true, "exposure": 0.3, "weakness": 0.4, "tags": ["privacy"] },
 
-    { "id": "node-acq-kestrel", "type": "application", "name": "Kestrel Digital (acquisition)", "description": "The acquisition target's technology estate. Due diligence covered finance thoroughly and technology briefly.", "criticality": "medium", "knownAtStart": false, "exposure": 0.7, "weakness": 0.75, "tags": ["acquisition", "unknown"] }
+    { "id": "node-acq-kestrel", "type": "application", "name": "Kestrel Digital (acquisition)", "description": "Kestrel Digital's own technology estate. Due diligence on the acquisition covered finance thoroughly and technology briefly.", "criticality": "medium", "knownAtStart": false, "exposure": 0.7, "weakness": 0.75, "tags": ["acquisition", "unknown"] }
   ],
   "edges": [
     { "id": "edge-payments-paygw", "from": "node-svc-payments", "to": "node-app-paygw", "type": "depends_on", "description": "Payment processing runs on the in-house gateway.", "knownAtStart": true, "variantWeight": 1, "tags": ["payments"] },

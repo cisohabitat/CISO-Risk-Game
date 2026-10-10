@@ -297,7 +297,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ...(resolved.length > 0 ? [`${withRationale} of ${resolved.length} decisions you took carried a recorded rationale`] : []),
         lapsed === 0
           ? `You answered all ${resolved.length} of the decisions put to you`
-          : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and were taken by default`,
+          : `${lapsed} decision${lapsed === 1 ? '' : 's'} lapsed and ${lapsed === 1 ? 'was' : 'were'} taken by default`,
       ]
       // Named, because "you prioritised badly" is not a finding a player can do
       // anything with. The biggest thing nobody went near is.

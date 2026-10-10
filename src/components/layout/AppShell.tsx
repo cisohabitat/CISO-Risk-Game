@@ -17,7 +17,7 @@ import { YearStrip } from '@/components/game/YearStrip'
 import { RecordingControl } from '@/components/game/RecordingControl'
 import { SoundToggle } from '@/components/game/SoundToggle'
 import { ShortcutsToggle } from '@/components/game/ShortcutsToggle'
-import { money } from '@/lib/formatting/labels'
+import { attentionLeft, money } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -137,7 +137,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Your week</dt>
               <dd className="font-medium tabular-nums">
-                {view.focusRemaining}/{view.focusPerWeek}
+                {attentionLeft(view.focusRemaining, view.focusPerWeek, true)}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
@@ -322,7 +322,7 @@ function ShellHeader() {
             </span>
           </p>
           <p className="truncate text-xs text-ink-faint lg:hidden">
-            {money(view.budgetRemaining)} left · {view.focusRemaining}/{view.focusPerWeek} attention
+            {money(view.budgetRemaining)} left · {attentionLeft(view.focusRemaining, view.focusPerWeek, true)} attention
           </p>
         </div>
         <div className="order-2 flex shrink-0 items-center gap-1 sm:order-3 sm:ml-auto lg:ml-0" data-testid="header-tools">

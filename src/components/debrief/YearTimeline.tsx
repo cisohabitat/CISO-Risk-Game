@@ -69,7 +69,7 @@ function Lane({ lane }: { lane: TimelineLane }) {
           >
             <span className="sr-only">
               {span.label}: {dayLabel(span.fromDay)} to {dayLabel(span.toDay)}
-              {span.complete ? ', completed' : ', still running at year end'}
+              , {span.ending}
             </span>
           </span>
         ))}
@@ -141,7 +141,7 @@ export function YearTimeline({ lanes }: { lanes: TimelineLane[] }) {
             const rows = [
               ...lane.spans.map((s) => ({
                 day: s.fromDay,
-                text: `${s.label} — started ${dayLabel(s.fromDay)}, ${s.complete ? `completed ${dayLabel(s.toDay)}` : 'still running at year end'}`,
+                text: `${s.label} — started ${dayLabel(s.fromDay)}, ${s.complete ? `completed ${dayLabel(s.toDay)}` : s.ending}`,
               })),
               ...lane.marks.map((m) => ({
                 day: m.day,

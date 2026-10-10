@@ -28,7 +28,9 @@ export function ProgrammesScreen() {
   // had not already had the chance to say.
   const attentionShort = state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention
 
-  const live = programmes.filter((programme) => programme.status !== 'proposed')
+  // Finished in an earlier year: not "Under way" in this one.
+  const live = programmes.filter((programme) => programme.status !== 'proposed' && !programme.finishedEarlier)
+  const earlier = programmes.filter((programme) => programme.finishedEarlier)
   const proposed = programmes.filter((programme) => programme.status === 'proposed')
   const totalCost = proposed.reduce((sum, programme) => sum + programme.budgetCost, 0)
 
@@ -52,6 +54,12 @@ export function ProgrammesScreen() {
           {money(totalCost)}, so this is a choice rather than a plan.
         </p>
       </div>
+
+      {earlier.length > 0 && (
+        <p className="text-sm text-ink-muted text-pretty">
+          Delivered in an earlier year: {earlier.map((programme) => programme.name).join(', ')}.
+        </p>
+      )}
 
       {live.length > 0 && (
         <section aria-labelledby="live">

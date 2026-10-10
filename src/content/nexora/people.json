@@ -6,11 +6,13 @@
       "role": "Chief Executive",
       "shortRole": "CEO",
       "priorities": ["Growth in the new market", "A clean acquisition", "No surprises at the board"],
+      "laterPriorities": ["Partners on the platform", "Kestrel paying for itself", "No surprises at the board"],
       "baseCyberUnderstanding": 0.35,
       "baseRiskTolerance": 0.55,
       "baseTrust": 0.5,
       "variance": 0.12,
       "activeConcerns": ["Whether cyber risk is being overstated or understated", "The cost line for security"],
+      "laterConcerns": ["Whether the second year shows for the first year's money", "A clean partner launch"],
       "voice": "Direct, impatient with abstraction, unforgiving of being surprised."
     },
     {
@@ -19,11 +21,13 @@
       "role": "Chief Information Officer",
       "shortRole": "CIO",
       "priorities": ["Platform launch on schedule", "Cloud migration completion", "Keeping engineering productive"],
+      "laterPriorities": ["Legacy data centre switched off", "Keeping engineering productive"],
       "baseCyberUnderstanding": 0.7,
       "baseRiskTolerance": 0.6,
       "baseTrust": 0.45,
       "variance": 0.14,
       "activeConcerns": ["Security slowing delivery", "Who owns the legacy estate"],
+      "laterConcerns": ["Switching off the legacy data centre on time", "Security slowing delivery"],
       "voice": "Technically fluent, protective of delivery dates, argues in trade-offs."
     },
     {
@@ -37,6 +41,7 @@
       "baseTrust": 0.5,
       "variance": 0.12,
       "activeConcerns": ["Anything that stops despatch", "Legacy warehouse platform reliability"],
+      "laterConcerns": ["Peak trading without an outage", "The assistant on the service desk"],
       "voice": "Practical, sceptical of anything that adds process to operations."
     },
     {
@@ -45,11 +50,13 @@
       "role": "Chief Financial Officer",
       "shortRole": "CFO",
       "priorities": ["Cost discipline", "Acquisition completion", "Audit and regulatory standing"],
+      "laterPriorities": ["Cost discipline", "Synergy savings from Kestrel", "Audit and regulatory standing"],
       "baseCyberUnderstanding": 0.25,
       "baseRiskTolerance": 0.35,
       "baseTrust": 0.42,
       "variance": 0.13,
       "activeConcerns": ["Unbudgeted security spend", "The external audit finding on privileged access"],
+      "laterConcerns": ["Holding technology costs flat", "The Kestrel synergy savings"],
       "voice": "Numerate, wants the business case, respects a clearly bounded ask."
     },
     {
@@ -58,11 +65,13 @@
       "role": "Managing Director, Digital",
       "shortRole": "Digital MD",
       "priorities": ["Platform launch", "Customer experience", "Release velocity"],
+      "laterPriorities": ["Partner access to the platform", "Customer experience", "Release velocity"],
       "baseCyberUnderstanding": 0.4,
       "baseRiskTolerance": 0.7,
       "baseTrust": 0.4,
       "variance": 0.15,
       "activeConcerns": ["Anything that delays the launch", "Friction in the customer journey"],
+      "laterConcerns": ["Opening the platform to partners on time", "Friction in the customer journey"],
       "voice": "Fast, commercially driven, treats security conditions as negotiable."
     },
     {
@@ -76,6 +85,7 @@
       "baseTrust": 0.48,
       "variance": 0.1,
       "activeConcerns": ["Whether management knows what it does not know", "Repeat audit findings"],
+      "laterConcerns": ["Whether last year's priorities moved", "Repeat audit findings"],
       "voice": "Measured, forensic, allergic to reassurance without evidence."
     },
     {
@@ -89,6 +99,7 @@
       "baseTrust": 0.5,
       "variance": 0.12,
       "activeConcerns": ["Reopening supplier contracts mid-term", "The SOC contract renewal"],
+      "laterConcerns": ["Supplier terms that hold in an emergency", "Renewals that arrive unread"],
       "voice": "Contractual, helpful when the ask is specific, resistant to open-ended demands."
     },
     {
@@ -102,6 +113,7 @@
       "baseTrust": 0.55,
       "variance": 0.1,
       "activeConcerns": ["Undocumented processing in the data lake", "Breach notification readiness"],
+      "laterConcerns": ["The seventy-two-hour reporting rule", "What the assistant can read"],
       "voice": "Careful, precise, an ally when the facts are straight."
     }
   ],
@@ -230,8 +242,8 @@
     },
     {
       "id": "obj-y2-kestrel",
-      "name": "Bring Kestrel onto Nexora's systems",
-      "description": "Move Kestrel Digital's customers and staff onto Nexora's platforms and land the synergy savings.",
+      "name": "Move Kestrel's customers onto Nexora's platforms",
+      "description": "Last year joined the two companies; this year moves Kestrel Digital's customers and staff off Kestrel's own systems and onto Nexora's, and lands the synergy savings.",
       "targetDay": 240,
       "importance": "high",
       "dependencyNodeIds": ["node-acq-kestrel", "node-net-corp"],

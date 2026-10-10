@@ -78,7 +78,7 @@ export function IncidentCommand() {
                 setScreen('inbox')
               }}
             >
-              Open the response log
+              Read the latest incident message
             </Button>
           )}
         </div>

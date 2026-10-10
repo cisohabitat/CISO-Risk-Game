@@ -18,6 +18,57 @@ fault.
 
 ### Fixed
 
+- **The second year forgot what the first had done.** Two AI agents played
+  a second year through the browser for the first time, each from a first
+  year played by the engine (`docs/playtests/2026-10-10-ai-year-two-*.md`).
+  - **The evidence carried as if new.** The first year's evidence opened the
+    second dated "1 Jan". It included findings the first year had fixed or
+    outlived ("Exploit published … this week", "Platform launch date is
+    fixed and public"), and enquiries then "confirmed" them.
+  - **Kestrel was integrated twice.**
+  - **"Last year's incident" after a year with none.**
+  - **"Finish what is half-built" with nothing running.**
+  - **Last year's finished programme sat "Under way",** and the second year's
+    record dated it "1 Jan to 1 Jan".
+  - **The incident reconstruction blamed retention the first year
+    enforced,** because `decision.optionTaken` read only the current year.
+  - **Executives still worried about the launch.**
+
+  **Fixed:**
+  - Carried evidence is dated "last year" and read. What is stale under
+    `staleWhen` is dropped; nine first-year-only findings now go stale from
+    year two. A finding found again becomes this year's.
+  - Three first-year-only enquiries are gated.
+  - `decision.optionTaken` and `decision.resolved` read the previous years'
+    records.
+  - The second Kestrel objective is a stage of its own.
+  - The wording that assumed a state now holds whatever the state.
+  - Stakeholders carry `laterConcerns` and `laterPriorities`.
+  - Over 20 CISO second years, "confirmed what you already had" went from 22
+    to 0, "half-built" from 60 to 0, first-year-only facts from 20 to 0 and
+    "Bring Kestrel onto" from 20 to 0.
+
+  **Held by:** `tests/engine/year-two-playtest.test.ts` and
+  `tests/engine/next-year.test.ts`. Each test fails with its fix reverted.
+- **Found in the same two sessions, not specific to the second year.**
+  - **The hiring countdown.** `hiringDaysRemaining` was set to sixty and never
+    counted down, so a team read "Recruiting" for the rest of the year.
+    Recruiting is now read from the pending hire (`hiringUnderWay`).
+  - **A resignation** only cut capacity, leaving "Fully staffed". It is now
+    `team.departure`, which also opens a post.
+  - **The wrong sender.** `leaderForFunction` found architecture before
+    engineering, so engineering's overload came from the head of
+    architecture.
+  - **The board** counted a closed incident, already in two papers, as
+    missing from the third.
+  - **Re-accepting a risk on the Risk screen** left its renewal decision
+    open, and it lapsed to "Let it sit on the open register", undoing the
+    acceptance.
+  - **New programme blockers did not stop the clock.**
+  - **"6 of 5 left".**
+
+  All except the last are held by the same file.
+
 - **"A programme has stalled" arrived five times in a second year, word for
   word, and never said which programme.** Found by reading
   `pnpm ladder transcript ciso y2-scan --years 2`, in which the supplier

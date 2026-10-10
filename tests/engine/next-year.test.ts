@@ -7,6 +7,12 @@ import { buildAnnualReview, finishYear, programmesThisYear } from '@/game/debrie
 import { evaluateCondition } from '@/game/events/conditions'
 import { CAMPAIGN_DAYS, type GameState } from '@/game/types'
 import { testIndex } from './helpers'
+import { applyEffects } from '@/game/engine/effects'
+import { createRng } from '@/game/engine/rng'
+
+function applyEffectsForTest(state: GameState, evidenceId: string): void {
+  applyEffects(state, [{ type: 'evidence.reveal', evidenceId }], { index: testIndex(), rng: createRng(state.seed, 1), source: 'test' })
+}
 
 /**
  * A year that follows another (src/game/engine/next-year.ts): the same
@@ -73,8 +79,31 @@ describe('a year that follows another', () => {
     for (const [id, control] of Object.entries(first.controls.controls)) {
       expect(carriedOver.controls.controls[id]!.coverage, id).toBe(control.coverage)
     }
-    expect(Object.keys(carriedOver.evidence.items).sort()).toEqual(Object.keys(first.evidence.items).sort())
     expect(Object.keys(carriedOver.risks.scenarios).sort()).toEqual(Object.keys(first.risks.scenarios).sort())
+  })
+
+  it('carries last year’s evidence as last year’s, without what only described the year the player arrived', () => {
+    // A second year opened with all 49 of the first year's findings dated
+    // "1 Jan" and unread, among them "Exploit published … this week" and
+    // "Platform launch date is fixed and public" (second-year AI playtest).
+    const kept = Object.keys(carriedOver.evidence.items)
+    expect(kept.length).toBeGreaterThan(0)
+    expect(kept.length).toBeLessThan(Object.keys(first.evidence.items).length)
+    for (const id of kept) {
+      expect(first.evidence.items[id], id).toBeDefined()
+      expect(carriedOver.evidence.items[id]!.read, id).toBe(true)
+      expect(carriedOver.evidence.items[id]!.discoveredDay, id).toBeLessThan(0)
+    }
+    for (const id of ['ev-launch-pressure', 'ev-exploit-available', 'ev-audit-stale-register', 'ev-kestrel-unknown']) {
+      if (first.evidence.items[id]) expect(kept, id).not.toContain(id)
+    }
+    expect(carriedOver.evidence.order.sort()).toEqual([...kept].sort())
+    // An enquiry that finds one again this year makes it this year's.
+    const again = kept[0]!
+    const year = JSON.parse(JSON.stringify(carriedOver)) as GameState
+    applyEffectsForTest(year, again)
+    expect(year.evidence.items[again]!.discoveredDay).toBe(year.currentDay)
+    expect(year.evidence.order[0]).toBe(again)
   })
 
   it('keeps what was built, and does not count it as this year’s work', () => {

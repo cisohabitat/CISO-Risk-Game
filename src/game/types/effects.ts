@@ -56,6 +56,8 @@ export type GameEffect =
   | { type: 'leader.morale'; leaderId: string; delta: number }
   | { type: 'leader.confidence'; leaderId: string; delta: number }
   | { type: 'team.vacancyFilled'; fn: CyberFunction }
+  /** Somebody leaves: a day a week less, and a post to fill. */
+  | { type: 'team.departure'; fn: FunctionTarget }
   | { type: 'incident.start'; familyId: string; pathId?: string; actorId?: string }
   | { type: 'incident.containment'; delta: number }
   /** Formal incident command is stood up on the live incident; the reconstruction reads it. */

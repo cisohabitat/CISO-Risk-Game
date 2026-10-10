@@ -6,7 +6,7 @@
 import type { CampaignStage, Condition, ContentIndex, GameState } from '../types'
 import { CAMPAIGN_STAGES, clamp01 } from '../types'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
-import { teamStrain } from '../team/capacity'
+import { hiringUnderWay, teamStrain } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
 
 export function evaluateCondition(state: GameState, index: ContentIndex, condition: Condition): boolean {
@@ -92,7 +92,7 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     case 'assumption.anyRecorded':
       return Object.values(state.assumptions.assumptions).some((a) => a.status !== 'invalidated')
     case 'team.vacancyOpen':
-      return Object.values(state.team.functions).some((fn) => fn.vacancies > 0 && (fn.hiringDaysRemaining ?? 0) <= 0)
+      return Object.entries(state.team.functions).some(([id, fn]) => fn.vacancies > 0 && !hiringUnderWay(state, id))
     case 'stakeholder.trustBelow': {
       const stakeholder = state.stakeholders.stakeholders[condition.stakeholderId]
       return stakeholder ? stakeholder.trust < condition.value : false
@@ -187,13 +187,21 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       return state.resources.budgetRemaining >= condition.value
     case 'objective.status':
       return state.business.objectives[condition.objectiveId]?.status === condition.status
+    // A choice made in an earlier year still stands. The second-year
+    // reconstruction blamed "Data held longer than the retention policy
+    // allowed" on a player who had enforced the policy the year before,
+    // because only this year's decisions were read.
     case 'decision.optionTaken':
-      return Object.values(state.decisions.decisions).some(
-        (d) => d.defId === condition.decisionId && d.selectedOptionId === condition.optionId,
+      return (
+        Object.values(state.decisions.decisions).some(
+          (d) => d.defId === condition.decisionId && d.selectedOptionId === condition.optionId,
+        ) || (state.previousYears ?? []).some((year) => year.decisions[condition.decisionId] === condition.optionId)
       )
     case 'decision.resolved':
-      return Object.values(state.decisions.decisions).some(
-        (d) => d.defId === condition.decisionId && d.resolvedDay !== undefined,
+      return (
+        Object.values(state.decisions.decisions).some(
+          (d) => d.defId === condition.decisionId && d.resolvedDay !== undefined,
+        ) || (state.previousYears ?? []).some((year) => year.decisions[condition.decisionId] !== undefined)
       )
     case 'event.fired':
       return state.events.firedEventIds.includes(condition.eventId)

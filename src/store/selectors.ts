@@ -22,7 +22,7 @@ import { imposedTake, optionBudgetCost } from '@/game/decisions/cost'
 import { evaluateCondition } from '@/game/events/conditions'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
-import { capacityBand, functionName, functionStrain, functionTitle, moraleLabel, teamStrain } from '@/game/team/capacity'
+import { capacityBand, functionName, functionStrain, functionTitle, hiringUnderWay, moraleLabel, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { plural, statusLabel } from '@/lib/formatting/labels'
@@ -373,6 +373,8 @@ export interface ProgrammeView {
   description: string
   rationale: string
   status: string
+  /** Delivered in an earlier year of the campaign. */
+  finishedEarlier: boolean
   progressPercent: number
   budgetCost: number
   budgetAllocated: number
@@ -397,6 +399,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
       description: def.description,
       rationale: def.rationale,
       status: runtime.status,
+      finishedEarlier: runtime.status === 'complete' && (runtime.completedDay ?? 0) < 0,
       progressPercent: Math.round(runtime.progress * 100),
       budgetCost: def.budgetCost,
       budgetAllocated: runtime.budgetAllocated,
@@ -505,11 +508,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         // A hire a decision already paid for is a hire under way: the Team
         // screen offered to recruit the same identity role again after
         // "Recruit properly", and a playtester nearly paid for it twice.
-        hiring:
-          (runtime.hiringDaysRemaining ?? 0) > 0 ||
-          state.pendingEffects.some((pending) =>
-            pending.effects.some((effect) => effect.type === 'team.vacancyFilled' && effect.fn === runtime.fn),
-          ),
+        hiring: hiringUnderWay(state, runtime.fn),
       }
     }),
     leaders: index.content.leaders.map((def) => {
@@ -721,7 +720,7 @@ export function stakeholderViews(state: GameState, index: ContentIndex) {
       name: def.name,
       role: def.role,
       shortRole: def.shortRole,
-      priorities: def.priorities,
+      priorities: (state.year ?? 1) > 1 && def.laterPriorities ? def.laterPriorities : def.priorities,
       voice: def.voice,
       band: relationshipBand(runtime.trust),
       understanding:
@@ -1157,6 +1156,8 @@ export interface TimelineSpan {
   toDay: number
   label: string
   complete: boolean
+  /** "completed", "still running", or "still running at year end". */
+  ending: string
 }
 
 export interface TimelineLane {
@@ -1200,12 +1201,17 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
   const spans: TimelineSpan[] = []
   for (const runtime of Object.values(state.programmes.programmes)) {
     if (runtime.startedDay === undefined) continue
+    // A programme finished in an earlier year is that year's. A second year's
+    // record read "Identity uplift: 1 Jan to 1 Jan, completed".
+    if (runtime.completedDay !== undefined && runtime.completedDay < 0) continue
     const def = index.programme.get(runtime.id)
+    const complete = runtime.status === 'complete'
     spans.push({
       fromDay: runtime.startedDay,
       toDay: runtime.completedDay ?? state.currentDay,
       label: def?.shortName ?? runtime.id,
-      complete: runtime.status === 'complete',
+      complete,
+      ending: complete ? 'completed' : state.finished ? 'still running at year end' : 'still running',
     })
   }
   const completed = spans.filter((s) => s.complete).length

@@ -33,6 +33,7 @@ export function renderDecisionText(
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
+    .replaceAll('{{acceptedRisks}}', acceptedRisks(state, index))
     .replaceAll('{{blockedProgramme}}', longestBlocked(state, index)?.programme ?? 'one of your programmes')
     .replaceAll('{{BlockedProgramme}}', capitalise(longestBlocked(state, index)?.programme ?? 'one of your programmes'))
     .replaceAll('{{blocker}}', longestBlocked(state, index)?.blocker ?? 'a blocker')
@@ -98,3 +99,12 @@ function longestBlocked(state: GameState, index: ContentIndex): { programme: str
 }
 
 const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+
+/** The risks standing accepted, by name: "Some of the risks you accepted" named none. */
+function acceptedRisks(state: GameState, index: ContentIndex): string {
+  const titles = Object.values(state.risks.scenarios)
+    .filter((scenario) => scenario.status === 'accepted')
+    .map((scenario) => index.riskScenario.get(scenario.id)?.title)
+    .filter((title): title is string => Boolean(title))
+  return titles.length > 0 ? titles.join('; ') : 'none, as it turns out'
+}

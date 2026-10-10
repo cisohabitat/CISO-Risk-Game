@@ -188,6 +188,10 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     })
   }
   for (const blocker of programmeResult.newBlockers) {
+    // Skip ahead ran past blockers, and two second-year playtesters first
+    // heard of one from the reminder a week later. A blocker waits on the
+    // player, so the clock stops for it as it does for a decision.
+    pauseReasons.add('programme-blocked')
     const programme = index.programme.get(blocker.programmeId)
     highlights.push(`${programme?.shortName ?? blocker.programmeId} has hit a blocker: ${blocker.name}.`)
     pushMessage(state, {

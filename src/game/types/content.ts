@@ -85,6 +85,10 @@ export interface StakeholderDef {
   /** Seeded variation applied to the three base values (± this amount). */
   variance: number
   activeConcerns: string[]
+  /** What is on their mind once a year has passed: the first year's worries were about plans that are now done. */
+  laterConcerns?: string[]
+  /** What they care about after the first year, where the first year's plans are done. */
+  laterPriorities?: string[]
   voice: string
 }
 

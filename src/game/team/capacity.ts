@@ -88,7 +88,12 @@ export function mostPressedFunction(state: GameState): CyberFunction {
 
 /** The leader who owns a function, if the campaign gives it one. */
 export function leaderForFunction(index: ContentIndex, fn: CyberFunction): string | undefined {
-  return index.content.leaders.find((leader) => leader.functions.includes(fn))?.id
+  // The leader whose own function it is comes first. Architecture also
+  // covers engineering, and was found first, so engineering's overload
+  // arrived from the head of architecture saying "my people" (second-year
+  // AI playtest).
+  const leaders = index.content.leaders
+  return (leaders.find((leader) => leader.functions[0] === fn) ?? leaders.find((leader) => leader.functions.includes(fn)))?.id
 }
 
 /** Free capacity in a function, in effort-days per week. */
@@ -285,4 +290,16 @@ export function leaderLoad(state: GameState, leaderId: string): number {
     for (const amount of Object.values(assignment.capacityPerDay)) total += amount ?? 0
   }
   return clamp01(total / 5)
+}
+
+/**
+ * Whether a hire is on its way into the function, whether the Team screen or
+ * a decision paid for it. Read from the hire itself, which joins on a set day: a countdown set to sixty and never counted down
+ * left a team "Recruiting" six months after "about two months" (second-year
+ * AI playtest).
+ */
+export function hiringUnderWay(state: GameState, fn: string): boolean {
+  return state.pendingEffects.some((pending) =>
+    pending.effects.some((effect) => effect.type === 'team.vacancyFilled' && effect.fn === fn),
+  )
 }

@@ -16,7 +16,7 @@ import type { ContentIndex, GameState, YearRecord } from '../types'
 import { CAMPAIGN_DAYS, clamp01 } from '../types'
 import { DIFFICULTY_PROFILES } from './setup'
 import { deriveRng } from './rng'
-import { recomputeUnderstanding } from '../knowledge/discovery'
+import { evidenceIsStale, recomputeUnderstanding } from '../knowledge/discovery'
 import { assessScenario } from '../risk/calculations'
 import { refreshCommittedCapacity } from '../team/capacity'
 import { tickDay } from './tick'
@@ -135,7 +135,17 @@ export function createNextYear(index: ContentIndex, previous: GameState): GameSt
   for (const item of Object.values(state.evidence.items)) {
     item.discoveredDay = shift(item.discoveredDay)
     item.expiresOnDay = shiftOptional(item.expiresOnDay)
+    // Last year's findings are not this morning's news.
+    item.read = true
   }
+  // What the year made untrue goes: a programme fixed it, or it only ever
+  // described the year the player arrived ("Exploit published … this week",
+  // "Platform launch date is fixed and public"). A second year opened with all
+  // of them, dated "1 Jan" (second-year AI playtest).
+  for (const id of Object.keys(state.evidence.items)) {
+    if (evidenceIsStale(state, index, id)) delete state.evidence.items[id]
+  }
+  state.evidence.order = state.evidence.order.filter((id) => state.evidence.items[id])
 
   // An acceptance rests on what was assumed when it was made, so those
   // assumptions carry with it. The rest belonged to last year's decisions.
@@ -161,6 +171,11 @@ export function createNextYear(index: ContentIndex, previous: GameState): GameSt
     const base = index.stakeholder.get(person.id)?.baseTrust ?? 0.5
     person.trust = clamp01(person.trust + (base - person.trust) * TRUST_SETTLES)
     person.memory = person.memory.slice(-5).map((m) => ({ ...m, day: shift(m.day) }))
+    // Last year's worries were about last year's plans. "Anything that
+    // delays the launch" stayed on Priya's card after the launch (second-year
+    // AI playtest).
+    const later = index.stakeholder.get(person.id)?.laterConcerns
+    if (later) person.concerns = later.slice(0, 3)
   }
   const board = state.stakeholders
   board.boardConfidence = clamp01(board.boardConfidence + (0.5 - board.boardConfidence) * TRUST_SETTLES)

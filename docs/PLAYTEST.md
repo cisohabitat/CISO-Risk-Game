@@ -262,6 +262,14 @@ Put them in front of players rather than deciding from a desk.
   along with an unnamed "a risk" escalation and three messages that said a
   result had arrived without giving it. Not human evidence.
 
+- `playtests/2026-10-10-ai-year-two-*.md`, with a synthesis. Two AI agents,
+  a practitioner and a lecturer, played the first second years through the
+  browser, each from a first year played by the engine. Both found the
+  second year forgetting the first: last year's evidence re-issued as new,
+  Kestrel integrated twice, "last year's incident" after a year with none.
+  Those, and a hiring countdown that never counted down, are fixed. Not
+  human evidence.
+
 ## AI playtests
 
 `scripts/playtest-driver.ts` gives an AI agent a browser it can play turn by

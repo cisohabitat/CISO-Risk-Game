@@ -10,6 +10,20 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- **A second year that knows what the first did.** From two AI playthroughs
+  of the second year:
+  - Last year's evidence reads as last year's, and what the first year fixed
+    or outlived is gone.
+  - Kestrel is not integrated twice.
+  - Nothing mentions an incident or a programme that did not exist.
+  - Executives have this year's worries.
+  - Last year's finished work is not "Under way".
+- **Team fixes:**
+  - "Recruiting" ends when the hire joins.
+  - A resignation opens a post.
+  - Overload comes from the head of the team that is overloaded.
+- **A new programme blocker stops the clock,** like a decision does.
+- **Re-accepting a risk on the Risk screen** answers its renewal decision.
 - From a played year on seed harbour-87524:
   - Carrying the platform's recovery gap no longer records that backups
     recover within tolerance, the very thing the decision said was false.

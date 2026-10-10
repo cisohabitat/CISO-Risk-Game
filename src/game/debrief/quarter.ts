@@ -47,20 +47,30 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
       scenario.status === 'accepted'
     out.push({ id: `risk:${scenario.id}`, label: def.title, material })
   }
+  // An incident or a failed assumption is news once. Reported in a paper and
+  // over, it no longer has to be on every agenda: the third quarter's
+  // committee said it "will find out another way" about an incident the
+  // player had put in two papers already (second-year AI playtest).
+  const reported = new Set(state.reviews.quarters.filter((q) => q.completed).flatMap((q) => q.topicsChosen))
   for (const incident of Object.values(state.incidents.incidents)) {
     const family = index.incidentFamily.get(incident.familyId)
     if (!family) continue
+    const told = reported.has(`incident:${incident.id}`) && incident.phase === 'closed'
     // Two incidents of one family made two identical lines, which reads as a
     // duplicate rather than as the point. The date tells them apart.
     out.push({
       id: `incident:${incident.id}`,
       label: `${family.name} (incident, from ${formatGameDate(incident.startedDay).label})`,
-      material: true,
+      material: !told,
     })
   }
   for (const assumption of Object.values(state.assumptions.assumptions)) {
     if (assumption.status !== 'invalidated') continue
-    out.push({ id: `assumption:${assumption.id}`, label: `Assumption failed: ${assumption.statement}`, material: true })
+    out.push({
+      id: `assumption:${assumption.id}`,
+      label: `Assumption failed: ${assumption.statement}`,
+      material: !reported.has(`assumption:${assumption.id}`),
+    })
   }
   for (const programme of Object.values(state.programmes.programmes)) {
     if (programme.status !== 'at-risk') continue

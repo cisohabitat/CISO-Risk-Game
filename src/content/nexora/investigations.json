@@ -127,7 +127,7 @@
       "guaranteedEvidenceIds": ["ev-kestrel-unknown"], "possibleEvidenceIds": ["ev-shadow-integration"],
       "revealsNodeIds": ["node-acq-kestrel"], "revealsEdgeIds": ["edge-kestrel-corp"], "assessesControlIds": [],
       "tags": ["acquisition", "third-party"], "repeatable": false,
-      "requiresCondition": { "kind": "day.after", "day": 60 }
+      "requiresCondition": { "kind": "all", "conditions": [{ "kind": "day.after", "day": 60 }, { "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } }] }
     },
     {
       "id": "inv-risk-register-review", "theme": "team-governance", "name": "Review the inherited risk register", "description": "Work out which of the 23 inherited entries describe anything that is still true.",
@@ -135,7 +135,8 @@
       "functions": ["grc"], "capacityPerDay": { "grc": 1 }, "durationDays": 10, "focusCost": 1, "budgetCost": 0,
       "guaranteedEvidenceIds": ["ev-audit-stale-register"], "possibleEvidenceIds": ["ev-audit-repeat-finding", "ev-priv-recert-overdue"],
       "revealsNodeIds": [], "revealsEdgeIds": [], "assessesControlIds": [],
-      "tags": ["governance"], "repeatable": false
+      "tags": ["governance"], "repeatable": false,
+      "requiresCondition": { "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } }
     },
     {
       "id": "inv-hr-supplier-check", "theme": "identity-supplier", "name": "Check exposure to the HR provider incident", "description": "Establish whether People Cloud's incident touched Nexora's employee data.",
@@ -144,7 +145,7 @@
       "guaranteedEvidenceIds": ["ev-hr-saas-breach-notice"], "possibleEvidenceIds": [],
       "revealsNodeIds": [], "revealsEdgeIds": ["edge-hr-data"], "assessesControlIds": [],
       "tags": ["supplier", "privacy"], "repeatable": false,
-      "requiresCondition": { "kind": "event.fired", "eventId": "evt-org-hr-provider-incident" }
+      "requiresCondition": { "kind": "all", "conditions": [{ "kind": "event.fired", "eventId": "evt-org-hr-provider-incident" }, { "kind": "not", "condition": { "kind": "campaign.yearAtLeast", "year": 2 } }] }
     }
   ],
   "glossary": [

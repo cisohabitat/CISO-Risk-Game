@@ -27,8 +27,10 @@ const lowerFirst = (name: string) => (/^[A-Z][a-z]/.test(name) ? name.charAt(0).
 export function enquiryFindings(state: GameState, index: ContentIndex, reach: EnquiryReach): string {
   const titles = (ids: string[]) =>
     ids.map((id) => index.evidence.get(id)?.title).filter((title): title is string => Boolean(title))
-  const found = titles(reach.evidenceIds.filter((id) => !state.evidence.items[id]))
-  const confirmed = titles(reach.evidenceIds.filter((id) => state.evidence.items[id]))
+  // Last year's findings, dated before this year began, come back as this year's.
+  const known = (id: string) => (state.evidence.items[id]?.discoveredDay ?? -1) >= 0
+  const found = titles(reach.evidenceIds.filter((id) => !known(id)))
+  const confirmed = titles(reach.evidenceIds.filter(known))
   const systems = reach.nodeIds
     .filter((id) => state.organisation.nodes[id]?.exists && !state.organisation.nodes[id]?.discovered)
     .map((id) => index.node.get(id)?.name)

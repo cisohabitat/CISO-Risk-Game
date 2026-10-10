@@ -11,7 +11,7 @@ import { PatternNotice } from '@/components/risk/PatternNotice'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
-import { bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge } from '@/lib/formatting/labels'
+import { attentionLeft, bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
@@ -260,9 +260,9 @@ export function HomeScreen() {
                 />
                 <Meter
                   label="Your week"
-                  value={view.focusRemaining}
+                  value={Math.min(view.focusRemaining, view.focusPerWeek)}
                   max={view.focusPerWeek}
-                  valueLabel={`${view.focusRemaining} of ${view.focusPerWeek} left`}
+                  valueLabel={attentionLeft(view.focusRemaining, view.focusPerWeek)}
                   tone={view.focusRemaining === 0 ? 'high' : 'accent'}
                 />
                 {/*

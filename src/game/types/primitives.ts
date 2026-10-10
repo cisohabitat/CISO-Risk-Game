@@ -143,6 +143,7 @@ export type PauseReason =
   | 'board-decision'
   | 'decision-deadline'
   | 'assumption-invalidated'
+  | 'programme-blocked'
   | 'quarter-end'
   | 'year-end'
   | 'player'

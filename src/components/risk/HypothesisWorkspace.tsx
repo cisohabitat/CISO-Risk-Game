@@ -127,13 +127,21 @@ export function HypothesisWorkspace() {
 
                       {canConvert && (
                         <div className="mt-4 flex flex-wrap gap-2">
+                          {/* Short of attention it said nothing and did nothing a
+                              reader of the page could see (second-year AI playtest). */}
                           <Button
                             variant="primary"
                             size="sm"
                             className="compact min-h-9"
+                            aria-disabled={state.resources.focusRemaining < FOCUS_COSTS.deepRiskReview || undefined}
                             onClick={() => dispatch({ type: 'convertHypothesis', hypothesisId: hypothesis.id })}
                           >
-                            Raise as a risk scenario<span className="font-normal opacity-80"> · {FOCUS_COSTS.deepRiskReview} attention</span>
+                            Raise as a risk scenario
+                            <span className="font-normal opacity-80">
+                              {state.resources.focusRemaining < FOCUS_COSTS.deepRiskReview
+                                ? ` · needs ${FOCUS_COSTS.deepRiskReview} attention, ${state.resources.focusRemaining} left this week`
+                                : ` · ${FOCUS_COSTS.deepRiskReview} attention`}
+                            </span>
                           </Button>
                           <Button
                             variant="quiet"

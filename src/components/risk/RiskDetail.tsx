@@ -37,8 +37,19 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   const programmes = def.treatmentProgrammeIds
     .map((id) => ({ id, def: index.programme.get(id), runtime: state.programmes.programmes[id] }))
     .filter((entry) => entry.def && entry.runtime)
-  // The programme a link would point at: the first of them under way.
-  const treating = programmes.find((entry) => entry.runtime?.status !== 'proposed')
+  // The programme a link would point at: one running now before one already
+  // finished. Two second-year playtesters could link supplier ransomware only
+  // to last year's finished identity programme, never to the ransomware
+  // programme they had just started.
+  const running = (status?: string) => status === 'active' || status === 'at-risk'
+  const treating =
+    programmes.find((entry) => running(entry.runtime?.status)) ??
+    programmes.find((entry) => entry.runtime?.status !== 'proposed')
+  // What it was last linked to, as the risk's own notes record it.
+  const linkedTo =
+    risk.status === 'treated'
+      ? runtime?.notes.find((note) => note.startsWith('Treatment: '))?.slice('Treatment: '.length, -1)
+      : undefined
 
   const accept = () => {
     const result = dispatch({
@@ -151,7 +162,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
             </Button>
           )}
           {/* Linking a risk already linked did nothing a player could see (harbour-87524, day 91). */}
-          {treating && risk.status !== 'closed' && risk.status !== 'treated' && (
+          {treating && risk.status !== 'closed' && treating.def!.name !== linkedTo && (
             <Button
               variant="secondary"
               size="sm"
@@ -161,9 +172,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
             </Button>
           )}
         </div>
-        {treating && risk.status === 'treated' && (
-          <p className="text-sm text-ink-muted text-pretty">Linked to {treating.def!.name}.</p>
-        )}
+        {linkedTo && <p className="text-sm text-ink-muted text-pretty">Linked to {linkedTo}.</p>}
         {/* It offered "Link to treatment" and then refused: start the programme first. */}
         {!treating && programmes.length > 0 && risk.status !== 'closed' && (
           <p className="text-sm text-ink-muted text-pretty">

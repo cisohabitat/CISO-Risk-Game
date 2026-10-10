@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { detailIsBelowTheList } from '@/lib/layout/stacked'
 import { Badge, Card, CardBody, Fact, SectionHeading } from '@/components/ui/primitives'
 import type { DiscoveredNodeView } from '@/store/selectors'
+import { useGameStore } from '@/store/game-store'
 import { controlBandTone, nodeTypeLabel } from '@/lib/formatting/labels'
 
 interface Step {
@@ -19,6 +20,7 @@ interface Step {
  */
 export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; onSelect: (id: string) => void }) {
   const heading = useRef<HTMLHeadingElement>(null)
+  const laterYear = useGameStore((store) => (store.state?.year ?? 1) > 1)
   const [walkingTo, setWalkingTo] = useState<string>()
   const [shown, setShown] = useState(node.id)
   const [trail, setTrail] = useState<Step[]>([{ id: node.id, name: node.name }])
@@ -87,7 +89,13 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
           <h2 ref={heading} tabIndex={-1} className="mt-2 font-display text-xl leading-tight text-balance outline-none" data-testid="inspector-heading">
             {node.name}
           </h2>
-          <p className="mt-1 text-sm text-ink-muted text-pretty">{node.description}</p>
+          {/* The description is the estate as the player found it. In a later
+              year it read as current: "Last full restore test was 14 months
+              ago" after a restore in January (second-year AI playtest). */}
+          <p className="mt-1 text-sm text-ink-muted text-pretty">
+            {laterYear && <span className="font-medium">When you arrived: </span>}
+            {node.description}
+          </p>
         </div>
 
         {!node.verified ? (

@@ -457,6 +457,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       })
       // The owner is told, and remembers.
       remember(state, scenario.ownerStakeholderId, `You accepted ${def?.title ?? 'a risk'} on ${dateOf(state.currentDay)}.`, 'neutral')
+      answeredOnRiskScreen(state, action.scenarioId, 'opt-renewal-renew', action.rationaleTagIds)
       commit()
       return { ok: true, message: 'Risk accepted and recorded with its assumptions.' }
     }
@@ -470,6 +471,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       scenario.status = 'treated'
       scenario.nextReviewDay = state.currentDay + 60
       scenario.notes.unshift(`Treatment: ${index.programme.get(action.programmeId)?.name ?? action.programmeId}.`)
+      answeredOnRiskScreen(state, action.scenarioId, 'opt-renewal-reassess', [])
       return { ok: true, message: 'Risk linked to its treatment programme.' }
     }
 
@@ -670,7 +672,6 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (fn.vacancies <= 0) return fail('There is no open vacancy in that team.')
       const cost = 120
       if (!spendBudget(state, cost)) return fail('There is not enough budget to recruit.')
-      fn.hiringDaysRemaining = 60
       state.pendingEffects.push({
         id: `hire-${action.fn}-${state.currentDay}`,
         day: state.currentDay + 60,
@@ -768,4 +769,25 @@ export function residualExposureAverage(state: GameState): number {
     .filter((v): v is number => typeof v === 'number')
   if (values.length === 0) return 0
   return clamp01(values.reduce((sum, v) => sum + v, 0) / values.length)
+}
+
+/**
+ * An acceptance that has run out can be answered on the Risk screen as well
+ * as by its decision. A player who re-accepted there was later told the
+ * decision had lapsed to "Let it sit on the open register", which also undid
+ * the acceptance (second-year AI playtest). What they did on the Risk screen
+ * is recorded as their answer, and the decision closes.
+ */
+function answeredOnRiskScreen(state: GameState, scenarioId: string, optionId: string, rationaleTagIds: string[]): void {
+  for (const id of [...state.decisions.openIds]) {
+    const decision = state.decisions.decisions[id]
+    if (!decision || decision.defId !== 'dec-acceptance-renewal' || decision.scenarioId !== scenarioId) continue
+    decision.selectedOptionId = optionId
+    decision.resolvedDay = state.currentDay
+    decision.rationaleTagIds = rationaleTagIds
+    decision.note = 'Answered on the Risk screen.'
+    state.decisions.openIds = state.decisions.openIds.filter((open) => open !== id)
+    state.decisions.resolvedIds.push(id)
+    state.history.decisionsLog.push({ day: state.currentDay, decisionId: id, optionId, rationaleTagIds })
+  }
 }

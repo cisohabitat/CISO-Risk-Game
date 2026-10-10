@@ -62,8 +62,20 @@ export function revealEvidence(
 ): boolean {
   const def = index.evidence.get(evidenceId)
   if (!def) return false
-  if (state.evidence.items[evidenceId]) return false
+  const existing = state.evidence.items[evidenceId]
+  if (existing && existing.discoveredDay >= 0) return false
   if (evidenceIsStale(state, index, evidenceId)) return false
+  if (existing) {
+    // Found again this year: last year's finding, still true, is this year's
+    // evidence now (second-year AI playtest: it read "1 Jan" and an enquiry
+    // "confirmed what you already had").
+    existing.discoveredDay = state.currentDay
+    existing.sourceLabel = sourceLabel
+    existing.read = false
+    existing.expiresOnDay = def.expiresAfterDays ? state.currentDay + def.expiresAfterDays : undefined
+    state.evidence.order = [evidenceId, ...state.evidence.order.filter((id) => id !== evidenceId)]
+    return true
+  }
   state.evidence.items[evidenceId] = {
     id: evidenceId,
     discoveredDay: state.currentDay,

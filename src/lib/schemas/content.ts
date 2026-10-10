@@ -115,6 +115,7 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('leader.morale'), leaderId: id, delta: z.number() }),
   z.object({ type: z.literal('leader.confidence'), leaderId: id, delta: z.number() }),
   z.object({ type: z.literal('team.vacancyFilled'), fn: cyberFunction }),
+  z.object({ type: z.literal('team.departure'), fn: functionTarget }),
   z.object({ type: z.literal('incident.start'), familyId: id, pathId: id.optional(), actorId: id.optional() }),
   z.object({ type: z.literal('incident.containment'), delta: z.number() }),
   z.object({ type: z.literal('incident.command') }),
@@ -189,6 +190,8 @@ export const stakeholderSchema = z.object({
   baseTrust: unit,
   variance: unit,
   activeConcerns: z.array(z.string()),
+  laterConcerns: z.array(z.string()).optional(),
+  laterPriorities: z.array(z.string()).optional(),
   voice: z.string(),
 })
 

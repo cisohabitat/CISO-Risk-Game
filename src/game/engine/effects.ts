@@ -397,6 +397,16 @@ export function applyEffect(
       if (leader) leader.reliability = clamp01(leader.reliability + effect.delta)
       break
     }
+    // A resignation that only took capacity left the function reading "Fully
+    // staffed" with nothing to recruit (second-year AI playtest).
+    case 'team.departure': {
+      const fn = state.team.functions[resolveFunction(state, effect.fn)]
+      if (fn && fn.capacity >= 1) {
+        fn.capacity = round2(fn.capacity - 1)
+        fn.vacancies += 1
+      }
+      break
+    }
     case 'team.vacancyFilled': {
       const fn = state.team.functions[effect.fn]
       if (fn && fn.vacancies > 0) {

@@ -261,6 +261,7 @@ export interface FunctionRuntime {
   committed: number
   morale: number
   vacancies: number
+  /** No longer written: a hire under way is read from the pending hire (`hiringUnderWay`). Kept so older saves load. */
   hiringDaysRemaining?: number
   /** Short-lived unplanned load on top of committed work; decays daily. */
   surge?: number

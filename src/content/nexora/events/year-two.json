@@ -29,7 +29,7 @@
       "type": "executive",
       "title": "A fifth less, as agreed",
       "from": "Tomas Lindqvist, Chief Financial Officer",
-      "body": "Next year's plan went to the board with a fifth less for cyber, as you agreed in the autumn. That is the line you have. If the year asks for more, the conversation starts from what you said then.",
+      "body": "This year's plan went to the board with a fifth less for cyber, as you agreed in the autumn. That is the line you have. If the year asks for more, the conversation starts from what you said then.",
       "priority": "notable",
       "availableFromDay": 1,
       "conditions": [
@@ -85,7 +85,7 @@
       "type": "executive",
       "title": "The line you named",
       "from": "Tomas Lindqvist, Chief Financial Officer",
-      "body": "The line you offered back has gone, and the rest of the cyber budget stands. It was the easiest conversation I had about next year's plan, because I could say what we were giving up.",
+      "body": "The line you offered back has gone, and the rest of the cyber budget stands. It was the easiest conversation I had about this year's plan, because I could say what we were giving up.",
       "priority": "notable",
       "availableFromDay": 1,
       "conditions": [
@@ -345,7 +345,7 @@
       "type": "assumption",
       "title": "Last year's acceptances still stand",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "Some of the risks you accepted last year are still accepted, to the dates you gave them, and the assumptions you recorded with them came across too. When each date arrives it will come back to you, as it would have in December.",
+      "body": "Some of the risks you accepted last year are still accepted, to the dates you gave them: {{acceptedRisks}}. Anything you recorded as assumed in accepting them came across too. When each date arrives it will come back to you, as it would have in December.",
       "priority": "notable",
       "availableFromDay": 9,
       "conditions": [
@@ -370,9 +370,9 @@
     {
       "id": "evt-y2-team-left",
       "type": "people",
-      "title": "Two resignations after the winter",
-      "from": "Jo Mbeki, Head of Security Operations",
-      "body": "Two of the analysts who carried last winter have resigned. Their notice runs to the end of next month, and neither post is easy to fill. I would rather you heard it from me than from the vacancy list.",
+      "title": "A resignation after the winter",
+      "from": "{{pressedLeader}}",
+      "body": "Somebody in {{pressedFunction}} who carried last winter has resigned. The notice runs to the end of next month, and the post is not easy to fill. I would rather you heard it from me than from the vacancy list.",
       "priority": "urgent",
       "availableFromDay": 24,
       "conditions": [
@@ -396,9 +396,8 @@
       ],
       "effectsOnReveal": [
         {
-          "type": "capacity.change",
-          "fn": "soc",
-          "delta": -1
+          "type": "team.departure",
+          "fn": "most-pressed"
         },
         {
           "type": "team.morale",
@@ -806,7 +805,7 @@
       "type": "business",
       "title": "Seventy-two hours",
       "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
-      "body": "New rules come into force in October: a significant incident must be reported to the regulator within seventy-two hours of our knowing about it. Our process today takes about a week to reach a decision, because nobody is sure whose decision it is.",
+      "body": "New rules come into force in October: a significant incident must be reported to the regulator within seventy-two hours of our knowing about it. Nobody is sure whose decision it is, so nobody can say how long one would take.",
       "priority": "urgent",
       "availableFromDay": 140,
       "conditions": [
@@ -830,7 +829,7 @@
       "type": "business",
       "title": "The last of the legacy data centre",
       "from": "Dev Raghunathan, Chief Information Officer",
-      "body": "We can switch off the legacy data centre in September if the systems still in it move or go. Two of them support despatch, and the people who understood them have left. I am not asking for anything yet; I am telling you where the risk will be in August.",
+      "body": "We can switch off the legacy data centre in October, as planned, if the systems still in it move or go. Two of them support despatch, and the people who understood them have left. I am not asking for anything yet; I am telling you where the risk will be in September.",
       "priority": "notable",
       "availableFromDay": 170,
       "conditions": [
@@ -911,7 +910,7 @@
       "type": "programme",
       "title": "Nothing new until it lands",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "Holding new work back until the running programmes land has done what you meant it to: the team has stopped switching between things. It has also meant saying no to two requests the CIO thought were small.",
+      "body": "Holding new work back until what is running lands has done what you meant it to: the team has stopped switching between things. It has also meant saying no to two requests the CIO thought were small.",
       "priority": "routine",
       "availableFromDay": 0,
       "conditions": [],
@@ -1058,7 +1057,7 @@
       "type": "business",
       "title": "Seventy-two hours, tested",
       "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
-      "body": "We ran the new reporting process against last year's incident as an exercise. A decision in thirty-one hours, with the person who makes it named in advance. I would rather find that out in an exercise than in October.",
+      "body": "We ran the new reporting process against an exercise incident. A decision in thirty-one hours, with the person who makes it named in advance. I would rather find that out in an exercise than in October.",
       "priority": "routine",
       "availableFromDay": 0,
       "conditions": [],

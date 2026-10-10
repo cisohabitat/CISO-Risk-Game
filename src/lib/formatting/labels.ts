@@ -10,12 +10,28 @@ import { formatGameDate } from '@/game/time'
  * "2 Jan", for lists too narrow for the whole date. Anything the player reads
  * is dated as the header dates it; "day 112" is the engine's word, not theirs.
  */
+const YEAR_LENGTH = 365
+
+/**
+ * "4 of 5 left", or "5 of 5 left, and 1 extra" when a decision has given the
+ * week more than it holds: "6 of 5 left" read as a fault.
+ */
+export function attentionLeft(remaining: number, perWeek: number, short = false): string {
+  if (remaining <= perWeek) return short ? `${remaining}/${perWeek}` : `${remaining} of ${perWeek} left`
+  const extra = remaining - perWeek
+  return short ? `${perWeek}/${perWeek} +${extra}` : `${perWeek} of ${perWeek} left, and ${extra} extra`
+}
+
 /** "1.5 days a week", as the Team screen counts capacity. */
 export function daysAWeek(days: number): string {
   return `${days} ${days === 1 ? 'day' : 'days'} a week`
 }
 
 export function shortDate(day: number): string {
+  // A second year keeps the first's dates, counted back from its own start.
+  // They read "1 Jan" when the calendar was clamped at zero, so last year's
+  // evidence looked like this morning's (second-year AI playtest).
+  if (day < 0) return day >= -YEAR_LENGTH ? 'last year' : 'earlier'
   const { label, month } = formatGameDate(day)
   return label.replace(month, month.slice(0, 3))
 }
