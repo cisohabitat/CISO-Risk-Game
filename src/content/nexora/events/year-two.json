@@ -348,13 +348,14 @@
       "body": "Some of the risks you accepted last year are still accepted, to the dates you gave them: {{acceptedRisks}}. Anything you recorded as assumed in accepting them came across too. When each date arrives it will come back to you, as it would have in December.",
       "priority": "notable",
       "availableFromDay": 9,
+      "availableUntilDay": 45,
       "conditions": [
         {
           "kind": "campaign.yearAtLeast",
           "year": 2
         },
         {
-          "kind": "risk.acceptedCountAtLeast",
+          "kind": "risk.carriedAcceptedAtLeast",
           "value": 1
         }
       ],

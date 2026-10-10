@@ -23,6 +23,11 @@ The game as it stands after the roadmap's engineering phases
   - A resignation opens a post.
   - Overload comes from the head of the team that is overloaded.
 - **A new programme blocker stops the clock,** like a decision does.
+- From a second-year re-test:
+  - Blockers and findings the first year already settled stay settled.
+  - Last year's acceptances are only the ones that came across.
+  - A keen team stays keen over the new year.
+  - The pause banner clears when its reason does.
 - **Re-accepting a risk on the Risk screen** answers its renewal decision.
 - From a played year on seed harbour-87524:
   - Carrying the platform's recovery gap no longer records that backups

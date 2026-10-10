@@ -143,9 +143,9 @@
           "controlEffects": [{ "controlId": "ctl-3p-access", "coverage": 0.15 }] }
       ],
       "blockers": [
-        { "id": "blk-3p-contract", "name": "Contract does not permit the change", "description": "The managed service contract does not oblige the provider to change how its engineers connect.", "chancePerDay": 0.005, "progressMultiplier": 0.45,
+        { "id": "blk-3p-contract", "name": "Contract does not permit the change", "description": "The managed service contract does not oblige the provider to change how its engineers connect.", "chancePerDay": 0.005, "progressMultiplier": 0.45, "unlessCondition": { "kind": "any", "conditions": [{ "kind": "decision.optionTaken", "decisionId": "dec-q4-corvus-terms", "optionId": "opt-q4-corvus-terms" }]},
           "resolution": { "label": "Reopen the contract through procurement", "focus": 1, "budget": 60, "stakeholderId": "stk-procurement", "description": "Procurement reopens the schedule; the provider prices the change." } },
-        { "id": "blk-3p-ops", "name": "Out-of-hours cover at risk", "description": "Removing standing access would leave night operations unable to respond quickly.", "chancePerDay": 0.004, "progressMultiplier": 0.6,
+        { "id": "blk-3p-ops", "name": "Out-of-hours cover at risk", "description": "Removing standing access would leave night operations unable to respond quickly.", "chancePerDay": 0.004, "progressMultiplier": 0.6, "unlessCondition": { "kind": "any", "conditions": [{ "kind": "decision.optionTaken", "decisionId": "dec-msp-access", "optionId": "opt-msp-breakglass" }, { "kind": "decision.optionTaken", "decisionId": "dec-q4-corvus-terms", "optionId": "opt-q4-corvus-terms" }]},
           "resolution": { "label": "Design a break-glass path", "focus": 1, "description": "A monitored break-glass route preserves night cover without standing rights." } }
       ]
     },

@@ -3,7 +3,8 @@ import { applyAction, beginNextYear, newGame, runDays } from '@/game/engine/orch
 import { applyEffects } from '@/game/engine/effects'
 import { createRng } from '@/game/engine/rng'
 import { finishYear } from '@/game/debrief/review'
-import { materialTopics } from '@/game/debrief/quarter'
+import { buildQuarterReview, materialTopics } from '@/game/debrief/quarter'
+import { effortAllocation } from '@/game/debrief/prioritisation'
 import { openDecision } from '@/game/decisions/open'
 import { evaluateCondition } from '@/game/events/conditions'
 import { hiringUnderWay, leaderForFunction } from '@/game/team/capacity'
@@ -158,5 +159,91 @@ describe('the words around the year', () => {
     expect(attentionLeft(3, 5)).toBe('3 of 5 left')
     expect(attentionLeft(6, 5)).toBe('5 of 5 left, and 1 extra')
     expect(attentionLeft(6, 5, true)).toBe('5/5 +1')
+  })
+})
+
+/**
+ * What the second-year re-test found on the fixed build
+ * (docs/playtests/2026-10-10-ai-year-two-retest.md), held.
+ */
+describe('a second year that holds to what the first decided', () => {
+  const yearRecord = (decisions: Record<string, string>) =>
+    ({ year: 1, gameId: 'g', headline: '', performanceBand: '', dimensions: {}, incidents: 0, papersWritten: 3, objectivesMet: 5, objectivesTotal: 5, budgetTotal: 1000, decisions })
+
+  it('does not block the supplier programme on a contract the first year already rewrote', () => {
+    const state = newGame(index, { seed: 'y2-contract' })
+    state.year = 2
+    state.previousYears = [yearRecord({ 'dec-q4-corvus-terms': 'opt-q4-corvus-terms' })]
+    const def = index.programme.get('prog-thirdparty')!
+    expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    const chances = def.blockers.map((blocker) => blocker.chancePerDay)
+    for (const blocker of def.blockers) blocker.chancePerDay = 0.5
+    try {
+      runDays(state, index, 30)
+    } finally {
+      def.blockers.forEach((blocker, i) => (blocker.chancePerDay = chances[i]!))
+    }
+    const raised = state.programmes.programmes['prog-thirdparty']!.blockers.map((b) => b.id)
+    expect(raised).not.toContain('blk-3p-contract')
+    expect(raised).not.toContain('blk-3p-ops')
+  })
+
+  it('does not report as found what the first year fixed', async () => {
+    const { evidenceIsStale } = await import('@/game/knowledge/discovery')
+    const state = newGame(index, { seed: 'y2-stale' })
+    expect(evidenceIsStale(state, index, 'ev-msp-standing-access')).toBe(false)
+    state.previousYears = [yearRecord({ 'dec-msp-access': 'opt-msp-remove', 'dec-cardholder-scope': 'opt-card-disclose', 'dec-legacy-retirement': 'opt-legacy-isolate' })]
+    for (const id of ['ev-msp-standing-access', 'ev-cardholder-scope', 'ev-legacy-routable']) {
+      expect(evidenceIsStale(state, index, id), id).toBe(true)
+    }
+  })
+
+  it('names only acceptances that came across from last year', async () => {
+    const { carriedAcceptances } = await import('@/game/risk/carried')
+    const state = JSON.parse(JSON.stringify(secondYear('y2-carried'))) as GameState
+    const scenarioId = Object.keys(state.risks.scenarios)[0]!
+    expect(applyAction(state, index, { type: 'acceptRisk', scenarioId, rationaleTagIds: ['rat-within-tolerance'], days: 90, assumptionDefIds: [] }).ok).toBe(true)
+    expect(carriedAcceptances(state).map((s) => s.id)).not.toContain(scenarioId)
+  })
+
+  it('reads this year’s retirement plan for the retirement assumption', async () => {
+    const { evaluateAssumption } = await import('@/game/assumptions/validation')
+    const state = secondYear('y2-retire')
+    expect(state.business.objectives['obj-y2-legacy-exit']!.targetDay).toBeGreaterThan(273)
+    expect(evaluateAssumption(state, index, 'retirement-before-q4')?.holds).toBe(false)
+  })
+
+  it('does not lower a keen team’s morale over the new year', () => {
+    const first = newGame(index, { seed: 'y2-morale' })
+    runDays(first, index, CAMPAIGN_DAYS)
+    first.team.functions.soc!.morale = 0.9
+    finishYear(first, index)
+    const second = beginNextYear(index, first)
+    expect(second.team.functions.soc!.morale).toBeGreaterThanOrEqual(0.85)
+  })
+
+  it('counts a risk the player raised as something they went near', () => {
+    const state = newGame(index, { seed: 'y2-raised' })
+    const materiality = state.risks.initialMateriality!
+    for (const id of Object.keys(materiality)) materiality[id] = id === 'risk-payment-scope' ? 0.9 : 0.01
+    const target = effortAllocation(state, index).missed?.id
+    expect(target).toBe('risk-payment-scope')
+    state.history.entries.push({ day: 280, kind: 'risk-opened', summary: 'raised', refs: [target!] })
+    expect(effortAllocation(state, index).missed?.id).not.toBe(target)
+  })
+
+  it('lists what the board did not need without capitals in the middle of a sentence', () => {
+    const state = newGame(index, { seed: 'y2-board-list' })
+    runDays(state, index, 3)
+    // Every open risk, as non-material: their titles are what the list joins.
+    for (const scenario of Object.values(state.risks.scenarios)) {
+      scenario.status = 'open'
+      scenario.lastAssessed = { ...(scenario.lastAssessed ?? { day: 3 }), residual: 0.05, consequence: 0.05 } as typeof scenario.lastAssessed
+    }
+    const topics = materialTopics(state, index).filter((t) => !t.material).map((t) => t.id)
+    expect(topics.length).toBeGreaterThanOrEqual(3)
+    const review = buildQuarterReview(state, index, { quarter: 1, topics, recommendations: [], communicateUncertainty: true })
+    expect(review.boardReaction).toMatch(/did not need its time this quarter: /)
+    expect(review.boardReaction).not.toMatch(/ and [A-Z]/)
   })
 })

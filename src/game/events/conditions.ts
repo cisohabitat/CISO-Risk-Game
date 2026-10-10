@@ -8,6 +8,7 @@ import { CAMPAIGN_STAGES, clamp01 } from '../types'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { hiringUnderWay, teamStrain } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
+import { carriedAcceptances } from '../risk/carried'
 
 export function evaluateCondition(state: GameState, index: ContentIndex, condition: Condition): boolean {
   switch (condition.kind) {
@@ -157,6 +158,8 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     case 'risk.openCountAtLeast':
       return Object.values(state.risks.scenarios).filter((s) => s.status === 'open' || s.status === 'treated').length >=
         condition.value
+    case 'risk.carriedAcceptedAtLeast':
+      return carriedAcceptances(state).length >= condition.value
     case 'risk.unreportedAtLeast':
       return unreportedScenarios(state).length >= condition.value
     case 'assumption.invalidated':

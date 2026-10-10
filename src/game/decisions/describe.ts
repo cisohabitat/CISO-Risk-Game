@@ -11,6 +11,7 @@ import type { ContentIndex, DecisionRuntime, GameState } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
 import { functionName, functionTitle, leaderForFunction, mostPressedFunction } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
+import { carriedAcceptances } from '../risk/carried'
 
 /**
  * `{{pressedFunction}}` is the function closest to breaking and
@@ -102,8 +103,7 @@ const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1
 
 /** The risks standing accepted, by name: "Some of the risks you accepted" named none. */
 function acceptedRisks(state: GameState, index: ContentIndex): string {
-  const titles = Object.values(state.risks.scenarios)
-    .filter((scenario) => scenario.status === 'accepted')
+  const titles = carriedAcceptances(state)
     .map((scenario) => index.riskScenario.get(scenario.id)?.title)
     .filter((title): title is string => Boolean(title))
   return titles.length > 0 ? titles.join('; ') : 'none, as it turns out'

@@ -63,6 +63,8 @@ export type Condition =
   | { kind: 'risk.openCountAtLeast'; value: number }
   /** Live, assessed risks that no filed quarterly paper has covered. */
   | { kind: 'risk.unreportedAtLeast'; value: number }
+  /** Acceptances carried from an earlier year and not renewed this year. */
+  | { kind: 'risk.carriedAcceptedAtLeast'; value: number }
   | { kind: 'assumption.invalidated'; assumptionId: string }
   | { kind: 'team.capacityBandAtLeast'; band: string }
   | { kind: 'team.moraleBelow'; value: number }

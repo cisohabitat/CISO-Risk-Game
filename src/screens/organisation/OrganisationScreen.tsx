@@ -165,6 +165,7 @@ export function OrganisationScreen() {
                       </div>
                       <p className={cn('mt-1.5 font-medium', !node.verified && 'text-ink-muted')}>{node.name}</p>
                       <p className={cn('mt-0.5 line-clamp-2 text-sm text-pretty', node.verified ? 'text-ink-muted' : 'text-ink-faint')}>
+                        {(state?.year ?? 1) > 1 && <span className="font-medium">When you arrived: </span>}
                         {node.description}
                       </p>
                       {node.dependencies.length > 0 && (

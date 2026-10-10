@@ -11,6 +11,7 @@ import type {
   CyberFunction,
   EvidenceDef,
   GameState,
+  PauseReason,
   HypothesisTemplateDef,
   InboxMessage,
   RiskBand,
@@ -1361,4 +1362,32 @@ export function enquirySpeaksTo(state: GameState, index: ContentIndex, investiga
     if (byNode || byControl) out.push({ id: scenario.id, title: scenario.title })
   }
   return out
+}
+
+/**
+ * What stopped the clock, as far as it still holds. The banner read "An
+ * incident needs you" after the incident had closed, beside "Nothing is
+ * waiting on you today", and "A programme is blocked" after the blocker was
+ * cleared (AI second-year re-test): the reasons are kept until the clock runs
+ * again, and the banner should not outlive them.
+ */
+export function livePauseReasons(state: GameState): PauseReason[] {
+  return state.pauseReasons.filter((reason) => {
+    switch (reason) {
+      case 'incident':
+        return Object.values(state.incidents.incidents).some((incident) => incident.phase !== 'closed')
+      case 'programme-blocked':
+        return Object.values(state.programmes.programmes).some(
+          (programme) =>
+            (programme.status === 'active' || programme.status === 'at-risk') && programme.blockers.some((b) => !b.resolved),
+        )
+      case 'decision-deadline':
+      case 'board-decision':
+        return state.decisions.openIds.length > 0
+      case 'quarter-end':
+        return state.reviews.pendingQuarter !== undefined
+      default:
+        return true
+    }
+  })
 }

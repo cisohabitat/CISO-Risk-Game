@@ -2005,6 +2005,9 @@
                   "minimum": 0,
                   "maximum": 1
                 },
+                "unlessCondition": {
+                  "$ref": "#/$defs/__schema0"
+                },
                 "resolution": {
                   "type": "object",
                   "properties": {
@@ -8966,6 +8969,25 @@
             "kind": {
               "type": "string",
               "const": "risk.unreportedAtLeast"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "risk.carriedAcceptedAtLeast"
             },
             "value": {
               "type": "integer",

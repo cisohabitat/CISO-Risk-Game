@@ -3,6 +3,7 @@
  * meaningful event". The simulation pauses itself for anything material.
  */
 import { Button } from '@/components/ui/primitives'
+import { livePauseReasons } from '@/store/selectors'
 import { useGameStore } from '@/store/game-store'
 import type { GameSpeed, PauseReason } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
@@ -46,6 +47,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
   const dispatch = useGameStore((store) => store.dispatch)
   const advanceDays = useGameStore((store) => store.advanceDays)
   if (!state) return null
+  const reasons = livePauseReasons(state)
 
   // The year over, the clock has nothing left to do. Its controls stayed: the
   // speeds greyed, Skip ahead greyed, and pause still lit as if it were live.
@@ -120,19 +122,19 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
       {/* Always present, for the same reason as the toasts: a status that
           arrives with its region is not reliably announced. */}
       <span role="status" data-testid="pause-reason" className="contents">
-        {state.pauseReasons.length > 0 && (
+        {reasons.length > 0 && (
           // Visually hidden on a phone, where it took a row of the header and
           // repeated what the Briefing leads with; still announced.
           <span
-            data-reason={state.pauseReasons[0]}
+            data-reason={reasons[0]}
             className={cn(
               'rounded-full border px-2.5 py-1 text-xs font-medium max-sm:sr-only',
-              blocked && state.pauseReasons[0] !== 'incident'
+              blocked && reasons[0] !== 'incident'
                 ? 'border-band-high/40 bg-band-high-soft text-band-high'
-                : PAUSE_REASON_TONE[state.pauseReasons[0]!],
+                : PAUSE_REASON_TONE[reasons[0]!],
             )}
           >
-            {PAUSE_REASON_TEXT[state.pauseReasons[0]!]}
+            {PAUSE_REASON_TEXT[reasons[0]!]}
           </span>
         )}
       </span>

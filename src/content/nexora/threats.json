@@ -84,7 +84,7 @@
       "id": "fam-data-breach",
       "name": "Customer data exposure",
       "description": "Customer records leave the estate through an internet-facing weakness.",
-      "headline": "Customer records left Nexora through a door nobody had looked at recently.",
+      "headline": "Customer records left Nexora by a route that was left open.",
       "baseDisruption": 0.35,
       "baseDataImpact": 0.85,
       "baseDurationDays": 9,

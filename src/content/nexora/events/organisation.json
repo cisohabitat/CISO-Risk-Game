@@ -35,7 +35,7 @@
       "type": "people",
       "title": "The team is past sustainable load",
       "from": "{{pressedLeader}}",
-      "body": "I need to be straight with you. {{PressedFunction}} is running above what my people can sustain and has been for a while. If you add anything else, something already committed will slip, and I would rather choose which.",
+      "body": "I need to be straight with you. {{PressedFunction}} is running above what my people can sustain. If you add anything else, something already committed will slip, and I would rather choose which.",
       "priority": "urgent",
       "availableFromDay": 40,
       "conditions": [

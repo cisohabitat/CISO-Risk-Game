@@ -7,6 +7,7 @@ import type { ContentIndex, GameEffect, GameState, ProgrammeRuntime } from '../t
 import { clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
 import { computeCommitted } from '../team/capacity'
+import { evaluateCondition } from '../events/conditions'
 
 export interface ProgrammeTickResult {
   effects: GameEffect[]
@@ -51,7 +52,13 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     for (const blocker of def.blockers) {
       if (programme.blockers.some((b) => b.id === blocker.id)) continue
       const exposureToBlockers = 0.5 + 0.5 * (1 - programme.staffing)
-      if (rng.chance(blocker.chancePerDay * exposureToBlockers)) {
+      // A blocker some earlier choice has already removed does not arise: a
+      // second year was blocked by "The managed service contract does not
+      // oblige the provider…" after the first wrote the terms into the
+      // contract (AI second-year re-test). The draw is still made, so the
+      // rest of the year's draws do not move.
+      const drawn = rng.chance(blocker.chancePerDay * exposureToBlockers)
+      if (drawn && !(blocker.unlessCondition && evaluateCondition(state, index, blocker.unlessCondition))) {
         programme.blockers.push({ id: blocker.id, startedDay: state.currentDay, resolved: false })
         programme.status = 'at-risk'
         result.newBlockers.push({

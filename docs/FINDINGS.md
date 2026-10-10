@@ -18,6 +18,44 @@ fault.
 
 ### Fixed
 
+- **What the second-year re-test found on the fixed build**
+  (`docs/playtests/2026-10-10-ai-year-two-retest.md`). Held by
+  `tests/engine/year-two-playtest.test.ts` unless noted; each test fails with
+  its fix reverted.
+  - **Supplier blockers the first year had already dealt with.** The contract
+    blocker and the out-of-hours blocker arose after year one wrote the
+    access terms into the Corvus contract. Blockers now take an
+    `unlessCondition`, and the draw is still made, so later draws do not
+    move.
+  - **Evidence the first year fixed came back as new.** Standing provider
+    accounts after their removal, cardholder data outside scope after the
+    fix, legacy routing after isolation, and "Incident response plan has
+    never been exercised" after an incident. Each now goes stale on the
+    choice or the incident that settled it.
+  - **"Last year's acceptances still stand" named a risk accepted the day
+    before.** There is a new condition, `risk.carriedAcceptedAtLeast`, and a
+    token that lists only acceptances carried over (`src/game/risk/carried.ts`).
+  - **The retirement assumption never failed in year two.** It read last
+    year's flag, which was dated before the year began. It now reads the
+    second year's switch-off plan.
+  - **Morale fell at the new year.** The new-year rest pulled "energised"
+    down to "Steady". It now only lifts.
+  - **"Nothing you did went near it" about a risk the player raised.**
+    Raising, accepting or escalating a risk now counts.
+  - **The board's long-list reaction** joined capitalised titles mid-sentence
+    ("…and A destructive attack"). It came from the chair, writing of "the
+    chair". It is now a list after a colon, from the committee.
+  - **The pause banner outlived its reason.** It said "An incident needs you"
+    after the incident closed. It shows only reasons that still hold
+    (`livePauseReasons`). Held by `tests/ui/visual-consistency.test.tsx`.
+  - **Not tested:**
+    - "has been for a while" is gone from the overload message;
+    - "and raised others" is gone from middling enquiries;
+    - the risk tab counts what it lists;
+    - assumptions are dated;
+    - the breach headline no longer claims nobody had looked;
+    - the organisation list carries "When you arrived:".
+
 - **The second year forgot what the first had done.** Two AI agents played
   a second year through the browser for the first time, each from a first
   year played by the engine (`docs/playtests/2026-10-10-ai-year-two-*.md`).

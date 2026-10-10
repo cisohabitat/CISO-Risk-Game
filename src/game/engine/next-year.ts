@@ -184,13 +184,16 @@ export function createNextYear(index: ContentIndex, previous: GameState): GameSt
   // The team comes back from the break: the same people, rested, with the
   // work that was running stopped and the hiring still in hand.
   state.team.assignments = []
+  // Rest lifts a tired team; it does not flatten a keen one. Pulling both
+  // ways turned "energised" in December into "Steady" on 2 January (AI
+  // second-year re-test).
   for (const fn of Object.values(state.team.functions)) {
-    fn.morale = clamp01(fn.morale + (0.62 - fn.morale) * MORALE_RECOVERS)
+    if (fn.morale < 0.62) fn.morale = clamp01(fn.morale + (0.62 - fn.morale) * MORALE_RECOVERS)
     fn.surge = 0
   }
   for (const leader of Object.values(state.team.leaders)) {
     const base = index.leader.get(leader.id)?.baseMorale ?? 0.6
-    leader.morale = clamp01(leader.morale + (base - leader.morale) * MORALE_RECOVERS)
+    if (leader.morale < base) leader.morale = clamp01(leader.morale + (base - leader.morale) * MORALE_RECOVERS)
     leader.workload = 0.35
     leader.assignmentsCompleted = 0
     leader.assignmentsLate = 0

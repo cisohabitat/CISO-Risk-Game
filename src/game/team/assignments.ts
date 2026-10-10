@@ -236,7 +236,8 @@ export function thinBecause(index: ContentIndex, leader: LeaderRuntime, strain: 
 
 function summariseQuality(def: InvestigationDef, quality: number, because: string): string {
   if (quality < 0.3) return `${def.name} came back thin — ${because}, and the picture is incomplete.`
-  if (quality < 0.55) return `${def.name} answered part of the question and raised others.`
+  // "and raised others" was said whether or not anything was raised.
+  if (quality < 0.55) return `${def.name} answered part of the question.`
   if (quality < 0.78) return `${def.name} produced a solid, usable picture.`
   return `${def.name} was thorough: the team went further than asked.`
 }

@@ -113,8 +113,15 @@ export const VALIDATION_RULES: Record<string, ValidationRule> = {
 
   'retirement-before-q4': {
     evaluate: (state) => {
-      const retirement = state.flags['legacy.retirementDay']
-      if (typeof retirement !== 'number') return { holds: true }
+      // This year's date. A later year carries last year's flag dated before
+      // it began, which always "held": the assumption stayed "Needs review"
+      // all of a second year whose switch-off was planned for October (AI
+      // second-year re-test). Then the plan is the second year's objective.
+      const flag = state.flags['legacy.retirementDay']
+      const exit = state.business.objectives['obj-y2-legacy-exit']
+      const retirement =
+        typeof flag === 'number' && flag >= 0 ? flag : exit && exit.status !== 'achieved' ? exit.targetDay : undefined
+      if (retirement === undefined) return { holds: true }
       return retirement <= 273
         ? { holds: true }
         : { holds: false, reason: 'The retirement date has moved beyond the end of Q3.' }

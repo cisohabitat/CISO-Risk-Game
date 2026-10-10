@@ -203,6 +203,14 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
     }
     for (const id of aimedAt(index, { nodeIds })) addressed.add(id)
   }
+  // So does raising, accepting or escalating the risk itself: "Cardholder
+  // data … nothing you did went near it" was said to a player who raised it
+  // as a scenario in October (AI second-year re-test).
+  for (const entry of state.history.entries) {
+    if (entry.kind !== 'risk-opened' && entry.kind !== 'risk-accepted' && entry.kind !== 'escalation') continue
+    const scenarioId = entry.refs?.[0]
+    if (scenarioId && index.riskScenario.has(scenarioId)) addressed.add(scenarioId)
+  }
   // So does an enquiry that traced a dependency between a risk's systems.
   // A cloud configuration review that exposed the peering from non-production
   // into production was followed by "Non-production environment as a route

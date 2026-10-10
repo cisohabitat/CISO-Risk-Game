@@ -37,7 +37,9 @@ export function RiskScreen() {
 
       <Tabs value={tab} onChange={setTab}>
         <TabList label="Risk workspace">
-          <Tab value="risks" count={risks.filter((risk) => risk.status === 'open').length}>Risk scenarios</Tab>
+          {/* The count is what the tab lists: it counted open risks only, and
+              read 11 over a list of 13 to 15 (AI second-year re-test). */}
+          <Tab value="risks" count={risks.length}>Risk scenarios</Tab>
           <Tab value="evidence" count={unreadEvidence}>Evidence</Tab>
           <Tab value="hypotheses">Hypotheses</Tab>
           <Tab value="investigate">Investigate</Tab>
@@ -207,7 +209,7 @@ export function RiskScreen() {
                         {assumption.status === 'invalidated' && !assumption.heldWhenRecorded && (
                           <Badge tone="severe" glyph={false}>Was never true</Badge>
                         )}
-                        <span className="text-xs text-ink-faint tabular-nums">recorded day {assumption.createdDay}</span>
+                        <span className="text-xs text-ink-faint tabular-nums">recorded {shortDate(assumption.createdDay)}</span>
                       </div>
                       <p className="mt-2 font-medium text-pretty">{assumption.statement}</p>
                       {assumption.invalidationReason && (

@@ -121,7 +121,9 @@ export function buildQuarterReview(
     // It said which items were missing but not which were surplus, so a
     // player who had covered everything could not tell what to leave out.
     const surplus = noise.map((id) => topics.find((t) => t.id === id)?.label ?? id)
-    reaction = `The board sat through a long list. ${surplus.slice(0, -1).join(', ')} and ${surplus.at(-1)} did not need its time this quarter; the chair asks for fewer, sharper items next time.`
+    // A list of titles, each capitalised: "…and A destructive attack … did not
+    // need its time" read as a slip (AI second-year re-test).
+    reaction = `The board sat through a long list. These did not need its time this quarter: ${surplus.join('; ')}. The chair asks for fewer, sharper items next time.`
   } else {
     effects.push({ type: 'board.confidence', delta: 0.05 + 0.05 * coverage })
     reaction = 'The board follows the argument and supports the direction you set out.'

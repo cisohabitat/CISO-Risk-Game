@@ -54,6 +54,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('risk.scenarioStatus'), scenarioId: id, status: z.string() }),
     z.object({ kind: z.literal('risk.openCountAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('risk.unreportedAtLeast'), value: z.number().int() }),
+    z.object({ kind: z.literal('risk.carriedAcceptedAtLeast'), value: z.number().int() }),
     z.object({ kind: z.literal('assumption.invalidated'), assumptionId: id }),
     z.object({ kind: z.literal('team.capacityBandAtLeast'), band: z.string() }),
     z.object({ kind: z.literal('team.moraleBelow'), value: unit }),
@@ -273,6 +274,7 @@ export const programmeSchema = z.object({
       description: z.string(),
       chancePerDay: z.number().min(0).max(0.5),
       progressMultiplier: unit,
+      unlessCondition: conditionSchema.optional(),
       resolution: z.object({
         label: z.string(),
         budget: z.number().optional(),

@@ -242,10 +242,21 @@ describe('what the screens show', () => {
 
   it('colours the header pill by what stopped the clock', async () => {
     await useGameStore.getState().startNewGame('ui-visual-pill', 'ciso')
-    useGameStore.setState((store) => ({ state: { ...store.state!, pauseReasons: ['incident'] } }))
-    render(<TimeControls />)
+    const live = { id: 'inc-ui', familyId: 'fam-ransomware', startedDay: 1, phase: 'containment', phaseEnteredDay: 1 } as never
+    useGameStore.setState((store) => ({
+      state: { ...store.state!, pauseReasons: ['incident'], incidents: { ...store.state!.incidents, incidents: { 'inc-ui': live } } },
+    }))
+    const { unmount } = render(<TimeControls />)
     const pill = screen.getByText('An incident needs you')
     expect(pill.className).toMatch(/text-band-severe/)
+    unmount()
+    // Once the incident is over, the pill does not say it still needs you
+    // (AI second-year re-test: beside "Nothing is waiting on you today").
+    useGameStore.setState((store) => ({
+      state: { ...store.state!, incidents: { ...store.state!.incidents, incidents: { 'inc-ui': { ...live, phase: 'closed' } } } },
+    }))
+    render(<TimeControls />)
+    expect(screen.queryByText('An incident needs you')).toBeNull()
   })
 
   it('draws the header solid, and sets document headings in the display face', async () => {

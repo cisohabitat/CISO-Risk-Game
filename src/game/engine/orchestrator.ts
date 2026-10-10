@@ -715,7 +715,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       // gone in a moment: the one lesson the first quarter's board gives, and
       // a playtester who looked away lost it (AI panel, 2026-10-09).
       pushMessage(state, {
-        from: 'Sir Alan Whitcombe, Chair, Board Risk Committee',
+        // The reading speaks of "the chair" and "the board"; from the chair
+        // himself it read as him writing about himself.
+        from: 'Board Risk Committee',
         subject: `The committee on your Q${action.quarter} paper`,
         body: review.boardReaction,
         type: 'board',

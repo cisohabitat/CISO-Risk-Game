@@ -163,6 +163,8 @@ export interface ProgrammeBlockerDef {
   chancePerDay: number
   /** Progress multiplier while unresolved. */
   progressMultiplier: number
+  /** It does not arise while this holds: an earlier choice already dealt with it. */
+  unlessCondition?: Condition
   resolution: {
     label: string
     budget?: number
