@@ -23,6 +23,16 @@ The game as it stands after the roadmap's engineering phases
   - A resignation opens a post.
   - Overload comes from the head of the team that is overloaded.
 - **A new programme blocker stops the clock,** like a decision does.
+- From a first year after the breach, played on a tablet:
+  - A review due on a linked risk can be done.
+  - Assumptions under review can be reaffirmed.
+  - Meetings and the board paper show what they cost.
+  - The board paper says what the committee counts as material.
+  - The commission dialog says why it expects thin work.
+  - A resignation lands on the team that was pushed.
+  - "Write up the year now" asks first.
+  - On a tablet, the header keeps its date and budget, and choosing a
+    system takes you to its detail.
 - From a second-year re-test:
   - Blockers and findings the first year already settled stay settled.
   - Last year's acceptances are only the ones that came across.

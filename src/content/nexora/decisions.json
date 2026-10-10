@@ -88,7 +88,7 @@
             { "type": "event.schedule", "eventId": "evt-con-ceo-confident-tested", "dayOffset": 110 }
           ],
           "delayedEffects": [ { "dayOffset": 45, "effects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.06, "reason": "Your day-one risks turned out not to be the ones that mattered." } ], "note": "The CEO has noticed your opening risks have quietly changed." } ] },
-        { "id": "opt-ceo-defer", "label": "Ask for four weeks before answering", "description": "Tell her you will not guess, and come back with something defensible.", "visibleKnownEffects": ["Buys you time", "She has a board meeting in three weeks"],
+        { "id": "opt-ceo-defer", "label": "Ask for four weeks before answering", "description": "Tell her you will not guess, and come back with something defensible.", "visibleKnownEffects": ["Buys you time", "She reports to the board at the end of March"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.04, "reason": "You would not give her anything on day one." },
             { "type": "focus.change", "amount": 1 },

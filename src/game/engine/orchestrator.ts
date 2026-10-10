@@ -20,7 +20,7 @@ import { applyEffects, recordAssumption } from './effects'
 import { tickDay, type TickResult } from './tick'
 export type { TickResult }
 import { createInitialState, type NewGameOptions } from './setup'
-import { canAfford, functionName, refreshCommittedCapacity } from '../team/capacity'
+import { canAfford, functionName, mostPressedFunction, refreshCommittedCapacity } from '../team/capacity'
 import { startInvestigation } from '../team/assignments'
 import { remember } from '../stakeholders/relationships'
 import { meetingAccount } from '../stakeholders/meeting'
@@ -53,6 +53,7 @@ export type PlayerAction =
   | { type: 'hire'; fn: CyberFunction }
   | { type: 'markRead'; messageId: string }
   | { type: 'markEvidenceRead'; evidenceId: string }
+  | { type: 'reaffirmAssumption'; assumptionId: string }
   | { type: 'completeQuarterReview'; quarter: number; topics: string[]; recommendations: string[]; communicateUncertainty: boolean }
   | { type: 'dismissPattern'; templateId: string }
   | { type: 'dismissTutorial'; id: string }
@@ -255,11 +256,18 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         decisionId: action.decisionId,
         linkedScenarioId: decision.scenarioId,
       })
+      // "The function closest to breaking" means the one the decision was
+      // about, so it is fixed when the choice is made. Resolved forty-five
+      // days later, a push-through on engineering cost the SOC a person (AI
+      // tablet playtest).
+      const pressed = mostPressedFunction(state)
+      const pin = (effect: GameEffect): GameEffect =>
+        'fn' in effect && effect.fn === 'most-pressed' ? ({ ...effect, fn: pressed } as GameEffect) : effect
       for (const delayed of option.delayedEffects ?? []) {
         state.pendingEffects.push({
           id: `pending-${action.decisionId}-${delayed.dayOffset}`,
           day: state.currentDay + delayed.dayOffset,
-          effects: delayed.effects,
+          effects: delayed.effects.map(pin),
           note: delayed.note,
           source: `decision:${def.id}`,
         })
@@ -356,7 +364,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       // A hypothesis is a draft. Two playtesters formed eight between them,
       // raised none, and the board never heard of the one their incident
       // later took.
-      return { ok: true, message: 'Hypothesis recorded as a draft. The board hears of it once you raise it as a risk scenario, under Risk, Hypotheses.' }
+      return { ok: true, message: 'Hypothesis recorded as a draft. Raise it as a risk scenario, under Risk, Hypotheses, to put it on the register; the board hears of it in a paper.' }
     }
 
     case 'attachEvidence': {
@@ -690,6 +698,24 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const message = state.inbox.messages.find((m) => m.id === action.messageId)
       if (message) message.read = true
       return { ok: true, message: '' }
+    }
+
+    // "Needs review" had no action behind it from May to December (AI tablet
+    // playtest). Reviewing at your desk can only reaffirm: what breaks is
+    // flagged as it breaks, and what was never true waits for an enquiry that
+    // tests it, which the reply says.
+    case 'reaffirmAssumption': {
+      const assumption = state.assumptions.assumptions[action.assumptionId]
+      if (!assumption || assumption.status === 'invalidated') return fail('That assumption is not under review.')
+      if (!spendFocus(state, FOCUS_COSTS.escalation)) return fail('You have no attention left this week.')
+      assumption.status = 'valid'
+      assumption.reviewedDay = state.currentDay
+      assumption.nextReviewDay = state.currentDay + 60
+      commit()
+      return {
+        ok: true,
+        message: 'Reaffirmed. Nothing you can see says otherwise; an enquiry that tests it is what would.',
+      }
     }
 
     case 'markEvidenceRead': {

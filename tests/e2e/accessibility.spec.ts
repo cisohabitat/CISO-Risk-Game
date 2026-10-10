@@ -72,6 +72,7 @@ test.describe('accessibility', () => {
         await audit(screen)
       }
       await page.getByRole('button', { name: 'Write up the year now' }).click()
+      await page.getByRole('button', { name: 'End the year and write it up' }).click()
       await expect(page.getByText('How the year is read')).toBeVisible()
       await audit('Annual review')
     })

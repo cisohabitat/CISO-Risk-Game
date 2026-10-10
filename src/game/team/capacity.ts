@@ -208,6 +208,19 @@ export function delegationOutlook(leader: LeaderRuntime, strain: number): Delega
   return leader.workload > 0.55 ? 'busy' : 'room'
 }
 
+/**
+ * Why the outlook is what it is, in the dialog's words. "Too stretched to do
+ * this well" was said of every lead while the Team screen gave each of them
+ * "Workload: Has room": the cause was the team's strain or the lead's morale,
+ * not their own load (AI tablet playtest).
+ */
+export function outlookBecause(leader: LeaderRuntime, strain: number): string {
+  if (leader.workload > 0.55) return 'Too much else on'
+  if (capacityBand(strain) !== 'available' && capacityBand(strain) !== 'committed') return 'The team as a whole is stretched'
+  if (leader.morale < 0.45) return 'Running low'
+  return 'Not their strongest ground'
+}
+
 /** Extra days a delegated assignment slips, given workload and reliability. */
 export function delegationDelayDays(leader: LeaderRuntime, strain: number, roll: number): number {
   const pressure = 0.5 * clamp01(leader.workload) + 0.5 * clamp01(strain)

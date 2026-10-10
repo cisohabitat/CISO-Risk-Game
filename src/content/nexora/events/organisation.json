@@ -865,7 +865,7 @@
         "programme"
       ],
       "variants": [
-        { "title": "Still blocked", "body": "{{BlockedProgramme}} is stuck again: {{blocker}}. It crawls rather than stops, which is why nobody is shouting about it yet." },
+        { "title": "Still blocked", "body": "{{BlockedProgramme}} is still stuck: {{blocker}}. It crawls rather than stops, which is why nobody is shouting about it yet." },
         { "title": "Blocked, and nobody has cleared it", "body": "{{blocker}} is holding up {{blockedProgramme}}. Every week it stays there is a week of the plan we do not get back." }
       ]
     },

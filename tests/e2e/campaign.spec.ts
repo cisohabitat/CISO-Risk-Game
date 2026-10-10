@@ -562,6 +562,7 @@ test.describe('a first year at Nexora', () => {
       if (process.env.PHONE_SHOTS) await page.screenshot({ path: `test-results/mid-${info.project.name}-${screen}.png`, fullPage: true })
     }
     await page.getByRole('button', { name: 'Write up the year now' }).click()
+    await page.getByRole('button', { name: 'End the year and write it up' }).click()
     await expect(page.getByText('How the year is read')).toBeVisible()
     await expectNoHorizontalScroll(page)
     const offscreen = await offscreenControls(page)

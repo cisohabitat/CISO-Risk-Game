@@ -247,9 +247,10 @@ recovery and response, team and governance — and each says which of the risks
 on your list it speaks to. Each line of enquiry shows how long it takes, what
 it costs and which of your four leaders you are giving it to. **Who you choose matters**: their skill,
 their current workload, their morale and how stretched the whole team is all
-shape what comes back. The dialog says what to expect before you choose — *Has
-room for this*, *expect part of an answer*, or *too stretched to do this well*
-— and when work comes back thin, it says why. A thin answer is not a clean bill
+shape what comes back. The dialog says what to expect before you choose, and
+why — *Has room for this*, or a reason such as *The team as a whole is
+stretched* followed by *expect part of an answer* — and when work comes back
+thin, it says why. A thin answer is not a clean bill
 of health.
 
 This is the main way the *Checked for yourself* bar moves, and it is the thing

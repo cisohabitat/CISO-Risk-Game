@@ -10,7 +10,7 @@ import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
-import { availableCapacity, delegationOutlook, delegationQuality, leaderAsAssigned, teamStrain, type DelegationOutlook } from '@/game/team/capacity'
+import { availableCapacity, delegationOutlook, delegationQuality, leaderAsAssigned, teamStrain, type DelegationOutlook, outlookBecause } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import type { InvestigationDef } from '@/game/types'
@@ -18,8 +18,13 @@ import type { InvestigationDef } from '@/game/types'
 const OUTLOOK: Record<DelegationOutlook, string> = {
   room: 'Has room for this.',
   busy: 'Busy, but could take this on.',
-  partial: 'Could take this on, but expect part of an answer.',
-  thin: 'Too stretched to do this well — expect it to slip or come back thin.',
+  partial: 'expect part of an answer.',
+  thin: 'expect it to slip or come back thin.',
+}
+
+/** The outlook with its reason, where the reason is what holds it back. */
+function outlookText(outlook: DelegationOutlook, because: string): string {
+  return outlook === 'partial' || outlook === 'thin' ? `${because}: ${OUTLOOK[outlook]}` : OUTLOOK[outlook]
 }
 
 export function InvestigationPanel() {
@@ -238,7 +243,7 @@ export function InvestigationPanel() {
                       <span className="text-sm text-ink-muted">{leader.role}</span>
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">
-                      {OUTLOOK[delegationOutlook(runtime, strain)]}
+                      {outlookText(delegationOutlook(runtime, strain), outlookBecause(runtime, strain))}
                     </span>
                   </span>
                 </label>

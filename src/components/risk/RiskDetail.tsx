@@ -50,6 +50,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
     risk.status === 'treated'
       ? runtime?.notes.find((note) => note.startsWith('Treatment: '))?.slice('Treatment: '.length, -1)
       : undefined
+  const linkedProgramme = linkedTo ? programmes.find((entry) => entry.def!.name === linkedTo && entry.runtime?.status !== 'proposed') : undefined
 
   const accept = () => {
     const result = dispatch({
@@ -173,6 +174,19 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
           )}
         </div>
         {linkedTo && <p className="text-sm text-ink-muted text-pretty">Linked to {linkedTo}.</p>}
+        {/* A review due on a linked risk had nothing to press: the panel asked
+            for "accept it … or link it" and the link was already made (AI
+            tablet playtest). Confirming the link is the review. */}
+        {linkedProgramme && risk.reviewDue && risk.status !== 'closed' && (
+          <Button
+            variant="secondary"
+            size="sm"
+            className="compact min-h-9"
+            onClick={() => dispatch({ type: 'treatRisk', scenarioId: risk.id, programmeId: linkedProgramme.id })}
+          >
+            Confirm it stays with {linkedProgramme.def!.shortName}
+          </Button>
+        )}
         {/* It offered "Link to treatment" and then refused: start the programme first. */}
         {!treating && programmes.length > 0 && risk.status !== 'closed' && (
           <p className="text-sm text-ink-muted text-pretty">

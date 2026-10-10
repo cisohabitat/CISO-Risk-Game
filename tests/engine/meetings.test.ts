@@ -24,6 +24,8 @@ describe('executive meetings', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'meetings' })
     runDays(state, index, 5)
+    // An empty register, so the only risk that can be named is the one raised below.
+    state.risks.scenarios = {}
     const before = applyAction(state, index, { type: 'meetStakeholder', stakeholderId: 'stk-digital', approach: 'brief' })
     expect(before.message).toContain('None on your register does yet')
     expect(applyAction(state, index, { type: 'openRisk', scenarioId: 'risk-platform-tampering' }).ok).toBe(true)
@@ -43,5 +45,23 @@ describe('executive meetings', () => {
     expect(note.body).toBe(result.message)
     expect(note.read).toBe(true)
     expect(state.stakeholders.stakeholders['stk-coo']!.memory.at(-1)?.summary).toMatch(/^You asked about /)
+  })
+})
+
+describe('what is on the register', () => {
+  it('counts inherited risks not yet assessed, and the services a risk would hit', () => {
+    // Tomas said "Nothing on your register reaches it" of Kestrel beside an
+    // inherited acquisition risk he owned (AI tablet playtest).
+    const index = testIndex()
+    const state = newGame(index, { seed: 'meetings-register' })
+    runDays(state, index, 5)
+    const kestrel = state.risks.scenarios['risk-acquisition-integration']
+    if (kestrel) kestrel.status = 'emerging'
+    else {
+      const def = index.riskScenario.get('risk-acquisition-integration')!
+      state.risks.scenarios[def.id] = { ...Object.values(state.risks.scenarios)[0]!, id: def.id, status: 'emerging' }
+    }
+    const result = applyAction(state, index, { type: 'meetStakeholder', stakeholderId: 'stk-cfo', approach: 'listen' })
+    expect(result.message).toContain(index.riskScenario.get('risk-acquisition-integration')!.title)
   })
 })

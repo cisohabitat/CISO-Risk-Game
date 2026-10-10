@@ -10,6 +10,7 @@ import { discoveredNodes, undiscoveredCount } from '@/store/selectors'
 import { NodeInspector } from '@/components/organisation/NodeInspector'
 import { nodeTypeLabel, plural } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
+import { detailIsBelowTheList } from '@/lib/layout/stacked'
 
 const OrgGraph = lazy(() => import('@/components/organisation/OrgGraph'))
 
@@ -29,6 +30,20 @@ export function OrganisationScreen() {
   const unknown = undiscoveredCount(state)
   const filtered = filter === 'all' ? nodes : nodes.filter((node) => node.type === filter)
   const selected = nodes.find((node) => node.id === selectedNodeId)
+
+  // Where the detail sits under the list or the graph, take the player to it.
+  // The inspector did this only when the selection changed, so the first pick
+  // on a 768px tablet left the detail behind the bottom bar and the tap seemed
+  // to do nothing (AI tablet playtest).
+  const pick = (id: string) => {
+    setUi({ selectedNodeId: id })
+    if (!detailIsBelowTheList()) return
+    requestAnimationFrame(() => {
+      const heading = document.querySelector<HTMLElement>('[data-testid="inspector-heading"]')
+      heading?.scrollIntoView({ block: 'start' })
+      heading?.focus({ preventScroll: true })
+    })
+  }
   const types = Array.from(new Set(nodes.map((node) => node.type))).sort(
     (a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b),
   )
@@ -120,7 +135,7 @@ export function OrganisationScreen() {
                 <OrgGraph
                   nodes={filtered}
                   selectedId={selectedNodeId}
-                  onSelect={(id) => setUi({ selectedNodeId: id })}
+                  onSelect={pick}
                 />
               </Suspense>
             </div>
@@ -131,7 +146,7 @@ export function OrganisationScreen() {
                   <li key={node.id}>
                     <button
                       type="button"
-                      onClick={() => setUi({ selectedNodeId: node.id })}
+                      onClick={() => pick(node.id)}
                       aria-current={selectedNodeId === node.id ? 'true' : undefined}
                       className={cn(
                         'w-full rounded-lg border bg-surface p-3 text-left transition-colors',

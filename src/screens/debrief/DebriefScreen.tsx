@@ -33,6 +33,7 @@ export function DebriefScreen() {
   const beginNextYear = useGameStore((store) => store.beginNextYear)
   const pushToast = useGameStore((store) => store.pushToast)
   const [sharing, setSharing] = useState<SharedYear>()
+  const [closingEarly, setClosingEarly] = useState(false)
   const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
@@ -75,7 +76,9 @@ export function DebriefScreen() {
             <p className="text-pretty">
               The annual review is written on the last day. You can close the year out early if you would rather read it now.
             </p>
-            <Button variant="primary" onClick={() => void finishCampaign()}>
+            {/* A primary button from the first day, one tap from ending the
+                year (AI tablet playtest). It asks first. */}
+            <Button variant="secondary" onClick={() => setClosingEarly(true)}>
               Write up the year now
             </Button>
           </CardBody>
@@ -95,6 +98,29 @@ export function DebriefScreen() {
             </Button>
           </CardBody>
         </Card>
+
+        <Dialog
+          open={closingEarly}
+          onClose={() => setClosingEarly(false)}
+          title="End the year now?"
+          description="The year closes today and the review is written. What is still running stops, and the year cannot be reopened."
+          footer={
+            <>
+              <Button variant="quiet" onClick={() => setClosingEarly(false)}>Keep playing</Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setClosingEarly(false)
+                  void finishCampaign()
+                }}
+              >
+                End the year and write it up
+              </Button>
+            </>
+          }
+        >
+          {null}
+        </Dialog>
       </div>
     )
   }

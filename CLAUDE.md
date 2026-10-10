@@ -102,7 +102,7 @@ Measured, not yet fixed. Ranked. Everything that used to sit here about the
 risk bands, executive patience, the noise dial and the board's standing has
 been fixed and moved to `docs/FINDINGS.md`.
 
-- **Almost nobody has played this.** Twelve playtest reports in
+- **Almost nobody has played this.** Fourteen playtest reports in
   `docs/playtests/` are an AI driving a browser; the four of the 9 October
   panel and their synthesis list what was fixed from them and what needs
   people or authored content. The owner has played one year
@@ -197,7 +197,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first screen waits on 182.9 kB against a 185 kB limit (it was 258.2
+  The first screen waits on 183.5 kB against a 185 kB limit (it was 258.2
   against 260; the annual review now loads with the review screen), and
   content no longer adds to it. The campaign chunk has its own budget, 90 kB,
   and after Year Two and the threat variety it is 89.3 kB: the next sizeable

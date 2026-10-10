@@ -115,6 +115,10 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     if (programme.progress >= 1) {
       programme.status = 'complete'
       programme.completedDay = state.currentDay
+      // Delivered is delivered: a blocker the programme crawled past is over
+      // with it, and listing it after delivery read as still in the way (AI
+      // tablet playtest).
+      for (const blocker of programme.blockers) blocker.resolved = true
       result.completed.push(programme.id)
     }
   }

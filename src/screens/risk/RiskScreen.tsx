@@ -13,6 +13,7 @@ import { RiskDetail } from '@/components/risk/RiskDetail'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { bandTone, confidenceTone, evidenceSourceLabel, shortDate, statusLabel, trendBadge } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
+import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 
 export function RiskScreen() {
   const state = useGameStore((store) => store.state)
@@ -214,6 +215,19 @@ export function RiskScreen() {
                       <p className="mt-2 font-medium text-pretty">{assumption.statement}</p>
                       {assumption.invalidationReason && (
                         <p className="mt-1 text-sm text-band-high text-pretty">{assumption.invalidationReason}</p>
+                      )}
+                      {assumption.status === 'uncertain' && (
+                        <div className="mt-3">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="compact min-h-9"
+                            onClick={() => dispatch({ type: 'reaffirmAssumption', assumptionId: assumption.id })}
+                          >
+                            Still holds, as far as you can see
+                            <span className="font-normal opacity-80"> · {FOCUS_COSTS.escalation} attention</span>
+                          </Button>
+                        </div>
                       )}
                       {assumption.linkedScenarioIds.length > 0 && (
                         <p className="mt-2 text-xs text-ink-faint">

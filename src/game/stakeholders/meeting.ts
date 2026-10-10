@@ -44,10 +44,23 @@ function agendaFor(state: GameState, index: ContentIndex, stakeholderId: string)
     .filter((id) => state.organisation.nodes[id]?.discovered)
     .map((id) => index.node.get(id)?.name)
     .filter((name): name is string => Boolean(name))
-  // The worst risk the player holds whose own systems include one the plan rests on.
+  // The worst risk on the register whose own systems, or the services it
+  // would hit, include one the plan rests on. Inherited risks not yet
+  // assessed are on the register too: Tomas said "Nothing on your register
+  // reaches it" beside an inherited acquisition risk he owned (AI tablet
+  // playtest).
+  const serviceNode = new Map(index.content.services.map((service) => [service.id, service.nodeId]))
+  const reaches = (scenarioId: string) => {
+    const def = index.riskScenario.get(scenarioId)
+    if (!def) return false
+    return (
+      def.triggerNodeIds.some((id) => depends.has(id)) ||
+      def.affectedServiceIds.some((id) => depends.has(serviceNode.get(id) ?? ''))
+    )
+  }
   const held = Object.values(state.risks.scenarios)
-    .filter((s) => s.status !== 'emerging' && s.status !== 'closed')
-    .filter((s) => index.riskScenario.get(s.id)?.triggerNodeIds.some((id) => depends.has(id)))
+    .filter((s) => s.status !== 'closed')
+    .filter((s) => reaches(s.id))
     .sort((a, b) => (b.lastAssessed?.residual ?? 0) - (a.lastAssessed?.residual ?? 0))[0]
   return {
     goal: def.name.charAt(0).toLowerCase() + def.name.slice(1),

@@ -123,12 +123,14 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
           arrives with its region is not reliably announced. */}
       <span role="status" data-testid="pause-reason" className="contents">
         {reasons.length > 0 && (
-          // Visually hidden on a phone, where it took a row of the header and
-          // repeated what the Briefing leads with; still announced.
+          // Visually hidden below the desktop layout, where it took a row of
+          // the header and repeated what the Briefing leads with; still
+          // announced. On a 768px tablet it squeezed the date and budget to
+          // "8 Febru…" and "£1.7m le…" whenever it showed (AI tablet playtest).
           <span
             data-reason={reasons[0]}
             className={cn(
-              'rounded-full border px-2.5 py-1 text-xs font-medium max-sm:sr-only',
+              'rounded-full border px-2.5 py-1 text-xs font-medium max-lg:sr-only',
               blocked && reasons[0] !== 'incident'
                 ? 'border-band-high/40 bg-band-high-soft text-band-high'
                 : PAUSE_REASON_TONE[reasons[0]!],

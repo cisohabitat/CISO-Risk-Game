@@ -18,6 +18,40 @@ fault.
 
 ### Fixed
 
+- **What the AI tablet playtest found in a first year after the breach**
+  (`docs/playtests/2026-10-10-ai-tablet-after-breach.md`). Held by
+  `tests/engine/tablet-playtest.test.ts` and `tests/engine/meetings.test.ts`
+  unless noted; each test fails with its fix reverted.
+  - **A review due on a linked risk had nothing to press.** Confirming the
+    link is now the review. Not tested.
+  - **"Needs review" on an assumption had no action.** New action:
+    `reaffirmAssumption`, for one attention point. The reply says a desk
+    review cannot test what was never true.
+  - **"Nothing on your register reaches it" beside an inherited risk.** A
+    meeting now reads the whole register, inherited risks included, and the
+    services a risk would hit.
+  - **A push-through on engineering cost the SOC a person.** The resignation
+    came 45 days later and read the most-pressed team at that point. It is
+    now pinned to the team that was pressed when the decision was taken.
+  - **A delivered programme still listed its blocker.** Delivery now clears
+    it. "Stuck again" now reads "still stuck".
+  - **The commission dialog blamed leads who had room.** "Too stretched to
+    do this well" was said of every lead, while the Team screen showed each
+    with room. The dialog now gives the reason: the team's strain, the lead's
+    own load, their morale, or ground that is not their strongest.
+  - **Not tested:**
+    - The board paper now says what the committee counts as material.
+    - Meetings and the paper show their attention cost.
+    - The hypothesis toast no longer says the board hears of a risk as soon
+      as it is raised.
+    - "She has a board meeting in three weeks" now reads "end of March".
+  - **Tablet layout, 768×1024:**
+    - The pause pill no longer squeezes the header below the desktop layout.
+    - Picking a system in the graph now takes the player to its detail.
+      Measured with Playwright: the heading moved from y=948, behind the
+      bottom bar, to y=590.
+    - "Write up the year now" is a secondary button and asks first.
+
 - **What the second-year re-test found on the fixed build**
   (`docs/playtests/2026-10-10-ai-year-two-retest.md`). Held by
   `tests/engine/year-two-playtest.test.ts` unless noted; each test fails with

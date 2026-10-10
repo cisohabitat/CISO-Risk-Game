@@ -270,6 +270,17 @@ Put them in front of players rather than deciding from a desk.
   Those, and a hiring countdown that never counted down, are fixed. Not
   human evidence.
 
+- `playtests/2026-10-10-ai-year-two-retest.md` and
+  `playtests/2026-10-10-ai-tablet-after-breach.md`. A verification round on
+  the fixed build:
+  - an auditor re-played a second year, and found the first year's settled
+    choices coming undone (supplier blockers, fixed findings);
+  - a non-specialist played a first year after the breach on a tablet, and
+    found reviews with nothing to press and a commission dialog blaming
+    leads who had room.
+
+  Both sets of fixes are in `FINDINGS.md`. Not human evidence.
+
 ## AI playtests
 
 `scripts/playtest-driver.ts` gives an AI agent a browser it can play turn by

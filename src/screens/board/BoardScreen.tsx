@@ -15,6 +15,7 @@ import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { Icon } from '@/components/ui/icons'
 import { Monogram, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
+import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 
 export function BoardScreen() {
   const state = useGameStore((store) => store.state)
@@ -63,6 +64,7 @@ export function BoardScreen() {
         {pendingQuarter !== undefined && (
           <Button variant="primary" onClick={() => setPreparing(true)}>
             Prepare the Q{pendingQuarter} board paper
+            <span className="font-normal opacity-80"> · {FOCUS_COSTS.boardPreparation} attention</span>
           </Button>
         )}
       </div>
@@ -148,10 +150,12 @@ export function BoardScreen() {
                         variant="quiet"
                         size="sm"
                         className="compact min-h-9"
-                        aria-label={`${approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}: ${person.name}`}
+                        aria-label={`${approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}: ${person.name}, ${FOCUS_COSTS.executiveIntervention} attention`}
                         onClick={() => dispatch({ type: 'meetStakeholder', stakeholderId: person.id, approach })}
                       >
                         {approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}
+                        {/* Every meeting spends attention and no button said so (AI tablet playtest). */}
+                        <span className="font-normal opacity-80"> · {FOCUS_COSTS.executiveIntervention} attention</span>
                       </Button>
                     ))}
                   </div>
@@ -185,7 +189,7 @@ export function BoardScreen() {
         onClose={() => setPreparing(false)}
         size="lg"
         title={`Board paper: quarter ${pendingQuarter ?? ''}`}
-        description="Pick what the committee sees. They will find out about the rest another way."
+        description="Pick what the committee sees. It expects every risk rated high or with a high consequence, every risk accepted on its behalf, any incident or failed assumption it has not yet been told about, and a team past its limit. The rest is your call."
         footer={
           <>
             <Button variant="quiet" onClick={() => setPreparing(false)}>Cancel</Button>
