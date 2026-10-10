@@ -83,8 +83,10 @@ marked otherwise.
   once. Per-state wording is content work.
 - **No decisions from October to December** in one year. The quiet back half
   is already a known weakness in `CLAUDE.md`.
-- **Leaders' "Watch for" lines are static** ("Two vacancies in his team" once
-  they are filled).
+- **Leaders' "Watch for" lines were static** ("Two vacancies in his team" once
+  they were filled). Fixed afterwards: the two lines that described a state
+  ("Two vacancies in his team", "Inherited a stale risk register") are now
+  traits that stay true.
 
 ## Measured
 

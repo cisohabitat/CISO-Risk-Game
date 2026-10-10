@@ -151,7 +151,7 @@
       "baseReliability": 0.82,
       "baseMorale": 0.62,
       "strengths": ["Supplier assurance", "Regulatory engagement", "Turning findings into decisions"],
-      "weaknesses": ["Limited technical depth", "Inherited a stale risk register"],
+      "weaknesses": ["Limited technical depth", "Slow to retire entries from the register"],
       "variance": 0.1
     },
     {
@@ -163,7 +163,7 @@
       "baseReliability": 0.55,
       "baseMorale": 0.48,
       "strengths": ["Identity engineering", "Automation", "Getting things shipped"],
-      "weaknesses": ["Two vacancies in his team", "Optimistic about timelines"],
+      "weaknesses": ["Covers his team's gaps himself", "Optimistic about timelines"],
       "variance": 0.15
     }
   ],
