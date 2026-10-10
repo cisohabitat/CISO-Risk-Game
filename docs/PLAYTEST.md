@@ -268,9 +268,15 @@ Put them in front of players rather than deciding from a desk.
 turn, as a person would.
 
 ```
-pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <built dist> <outdir>
+pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <built dist> <outdir> [save.json]
 curl -s -X POST localhost:<port> -d '{"do":"read"}'
 ```
+
+A save written by `pnpm tsx scripts/prepare-campaign.ts <seed> year-end` can
+be given last. It is put in the browser's save store before the agent starts,
+so the agent can open it from the start screen and play a second year
+without driving a first one. Say so in the report: the first year was played
+by the engine, not by the agent.
 
 It serves the build itself, with clean URLs, on `<port> + 1000`. It answers
 these commands:

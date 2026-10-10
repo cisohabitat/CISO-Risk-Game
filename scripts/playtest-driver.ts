@@ -1,5 +1,5 @@
 /**
- * `pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <dist> <outdir>`
+ * `pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <dist> <outdir> [save.json]`
  *
  * A browser an AI playtester can play turn by turn (docs/PLAYTEST.md, "AI
  * playtests"). It serves a built copy of the game itself (clean URLs, like
@@ -21,6 +21,11 @@
  *
  * It plays the interface only: there is no command to read game state, so a
  * playtester knows what a player would know.
+ *
+ * A save written by `scripts/prepare-campaign.ts` can be given as the last
+ * argument. It is put in the browser's save store before the agent starts, as
+ * the end-to-end suite does, so a playtester can begin from a point months in
+ * — a year's end, to play the second year — and open it from the start screen.
  */
 import { createServer } from 'node:http'
 import { readFile, stat } from 'node:fs/promises'
@@ -28,7 +33,7 @@ import { existsSync } from 'node:fs'
 import { extname, join } from 'node:path'
 import { chromium } from '@playwright/test'
 
-const [portArg = '4301', size = '1440x900', dist = 'dist', outdir = '/tmp/playtest'] = process.argv.slice(2)
+const [portArg = '4301', size = '1440x900', dist = 'dist', outdir = '/tmp/playtest', saveFile] = process.argv.slice(2)
 const port = Number(portArg)
 const [width, height] = size.split('x').map(Number) as [number, number]
 const sitePort = port + 1000
@@ -61,6 +66,26 @@ const browser = await chromium.launch(existsSync(LOCAL_CHROMIUM) ? { executableP
 const context = await browser.newContext({ viewport: { width, height }, acceptDownloads: true })
 const page = await context.newPage()
 let shots = 0
+
+if (saveFile) {
+  const record: unknown = JSON.parse(await readFile(saveFile, 'utf8'))
+  await page.goto(`http://localhost:${sitePort}/`)
+  await page.getByRole('heading', { name: 'CISO: First Year' }).waitFor()
+  await page.evaluate(async (save) => {
+    const db: IDBDatabase = await new Promise((resolve, reject) => {
+      const open = indexedDB.open('ciso-first-year')
+      open.onsuccess = () => resolve(open.result)
+      open.onerror = () => reject(open.error)
+    })
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction('saves', 'readwrite')
+      tx.objectStore('saves').put(save)
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+    db.close()
+  }, record)
+}
 
 type Command = { do: string; [key: string]: unknown }
 
