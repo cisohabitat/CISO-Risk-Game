@@ -61,6 +61,9 @@ Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
 Follow the repository instructions and keep documentation consistent with the
 implementation and release workflow.
 
+Completed, verified changes are committed and pushed directly to `main` without
+an additional confirmation, following the owner's standing instruction.
+
 Before pushing, run `pnpm check`; UI changes also require
 `pnpm test:e2e:local`. Before deploying, require both `pnpm check` and the full
 `pnpm test:e2e` suite to pass for the exact revision being deployed. Run them

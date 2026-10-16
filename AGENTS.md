@@ -34,6 +34,8 @@ changes.
 
 ## Verification and deployment
 
+- Commit and push completed, verified changes directly to `main` without asking
+  for confirmation. This is the owner's standing instruction for future work.
 - Before pushing, run `pnpm check`: typecheck, lint, content validation, unit
   tests, production build and bundle size budget.
 - For UI changes, also run `pnpm test:e2e:local`.
