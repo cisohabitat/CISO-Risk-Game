@@ -13,7 +13,7 @@ import { DAYS_PER_QUARTER } from '@/game/types'
 import { bandTone, plural } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { Icon } from '@/components/ui/icons'
-import { Monogram, RelationshipScale } from '@/components/game/Person'
+import { PersonPortrait, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 
@@ -92,7 +92,7 @@ export function BoardScreen() {
                 <CardBody className="space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
-                      <Monogram name={person.name} />
+                      <PersonPortrait id={person.id} name={person.name} />
                       <div className="min-w-0">
                         <h3 className="font-medium">{person.name}</h3>
                         <p className="text-sm text-ink-muted">{person.role}</p>

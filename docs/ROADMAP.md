@@ -27,7 +27,7 @@ evidence rather than hope, that this is happening. Concretely:
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
 | **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 216 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
 | **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
-| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound and a printable review; no identity yet (type, portraits). |
+| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, a printable review, twelve editorial portraits and a Nexora mark; commissioned type and human art review remain open. |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |
 | **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. | **D.** Sized (`pnpm strings`: about 30,000 words) and planned (`docs/LOCALISATION.md`); nothing translated. |
 | **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play; 184.1 kB of 185. |
@@ -261,9 +261,13 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   system stack; a restrained illustration style for the eight executives and
   four leaders, replacing monograms — faces change how "Marianne will
   remember" lands; a mark for the game itself. Dark mode designed, not
-  derived. **Not started:** needs an illustrator and a type designer, and
-  the first screen has 3.5 kB of its budget left; fonts and portraits will
-  need the budget revised on purpose.
+  derived. **Partly built:** twelve AI-generated editorial portraits now replace
+  monograms on Board and Team, with the sender's portrait in named messages.
+  A geometric Nexora mark appears at arrival, in the rail and on correspondence.
+  The shared 80,460-byte WebP atlas loads lazily; names and initials fallbacks
+  remain text. See `src/assets/art/README.md`. The commissioned type pairing
+  and human art review are still open. The first-screen budget remains 185 kB;
+  portraits are a separate image download after arrival, not part of that budget.
 - **Motion with a purpose.** The day advancing, a message arriving, a
   decision's deadline closing, the incident bar appearing: each gets one
   deliberate transition, all honouring `prefers-reduced-motion`. No

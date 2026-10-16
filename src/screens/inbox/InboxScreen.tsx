@@ -6,7 +6,9 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
+import { PersonPortrait } from '@/components/game/Person'
+import { NexoraMark } from '@/components/game/NexoraMark'
 import { Terms } from '@/components/game/Terms'
 import { cn } from '@/lib/utils/cn'
 import { formatGameDate } from '@/game/time'
@@ -24,6 +26,7 @@ const FILTERS = [
 type Filter = (typeof FILTERS)[number]['id']
 
 export function InboxScreen() {
+  const index = useCampaignIndex()
   const state = useGameStore((store) => store.state)
   const dispatch = useGameStore((store) => store.dispatch)
   const setUi = useGameStore((store) => store.setUi)
@@ -49,6 +52,9 @@ export function InboxScreen() {
   }, [state, filter])
 
   const selected = messages.find((message) => message.id === selectedId) ?? messages[0]
+  const sender = selected && [...index.content.stakeholders, ...index.content.leaders].find(
+    (person) => selected.from === person.name || selected.from.startsWith(`${person.name},`),
+  )
 
   useEffect(() => {
     if (selected && !selected.read) dispatch({ type: 'markRead', messageId: selected.id })
@@ -111,9 +117,16 @@ export function InboxScreen() {
           {selected && (
             <Card className="md:sticky md:top-24 md:self-start">
               <CardBody>
+                <div className="mb-4 flex items-center gap-2 border-b border-line pb-3">
+                  <NexoraMark className="h-7 w-7" />
+                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink-faint">Nexora Group</span>
+                </div>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
                 <h2 className="mt-1 font-display text-xl leading-tight text-balance">{selected.subject}</h2>
-                <p className="mt-0.5 text-sm text-ink-muted">{selected.from}</p>
+                <div className="mt-3 flex items-center gap-3">
+                  {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} />}
+                  <p className="text-sm text-ink-muted">{selected.from}</p>
+                </div>
                 <div className="mt-4 space-y-3 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (
                     <p key={position} className="whitespace-pre-line leading-relaxed">

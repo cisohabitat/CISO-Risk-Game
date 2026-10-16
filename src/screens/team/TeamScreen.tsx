@@ -8,7 +8,7 @@ import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
 import { capacityTone, money, plural } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
-import { Monogram } from '@/components/game/Person'
+import { PersonPortrait } from '@/components/game/Person'
 
 export function TeamScreen() {
   const state = useGameStore((store) => store.state)
@@ -89,7 +89,7 @@ export function TeamScreen() {
               <Card className="h-full">
                 <CardBody className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <Monogram name={leader.name} />
+                    <PersonPortrait id={leader.id} name={leader.name} />
                     <div className="min-w-0">
                       <h3 className="font-medium">{leader.name}</h3>
                       <p className="text-sm text-ink-muted">{leader.role}</p>

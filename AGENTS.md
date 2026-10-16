@@ -13,6 +13,16 @@ changes.
   configuration. Update related documentation when those contracts change.
 - Report only checks actually run and results actually measured.
 
+## Artwork
+
+- Portraits live in `src/assets/art/nexora-people.webp`; their character mapping
+  and initials fallback live in `src/components/game/Person.tsx`. Preserve the
+  atlas order documented in `src/assets/art/README.md` when replacing artwork.
+- Keep portraits decorative beside readable names, with lazy loading and a
+  working fallback. Never use a face or its colour to convey trust or risk.
+- Keep image downloads out of the start screen. Measure artwork separately
+  from the JavaScript budget and review desktop, 320px and both themes.
+
 ## Verification and deployment
 
 - Before pushing, run `pnpm check`: typecheck, lint, content validation, unit

@@ -168,6 +168,18 @@ asks one decision the others never see, and is answered in the annual review.
 The review ends with a way into another year, and the start screen keeps every
 year played.
 
+## Artwork
+
+Nexora has a geometric company mark and twelve AI-generated editorial portraits:
+eight executives and four cyber leaders. Faces appear on Board and Team cards
+and beside messages from named characters. Names and relationship labels remain
+readable text; missing artwork falls back to initials.
+
+The portraits share one 80,460-byte WebP atlas, loaded lazily when people appear.
+It is not requested by the start screen. The company mark is inline SVG and
+follows the light and dark theme. Artwork sources, character order and replacement
+instructions are documented in [`src/assets/art/README.md`](src/assets/art/README.md).
+
 ## Hosting
 
 The production build is a static application: no server rendering, no API

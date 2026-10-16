@@ -14,6 +14,7 @@ import { setRecording, useRecording } from '@/store/session-recording'
 import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
 import { readSeedLink } from '@/lib/seed-link'
+import { NexoraMark } from '@/components/game/NexoraMark'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -104,6 +105,13 @@ export function StartScreen() {
     <div className="min-h-[100dvh] bg-paper">
       <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
         <header className="mb-8">
+          <div className="mb-6 flex items-center gap-3">
+            <NexoraMark />
+            <div className="border-l border-line-strong pl-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-muted">Nexora Group</p>
+              <p className="mt-0.5 text-xs text-ink-faint">Office of the CISO</p>
+            </div>
+          </div>
           <p className="text-xs uppercase tracking-[0.24em] text-ink-faint">A cyber risk strategy game</p>
           <h1 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">CISO: First Year</h1>
           <p className="mt-4 max-w-2xl text-lg text-ink-muted text-pretty">

@@ -14,6 +14,7 @@ import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
 import { Icon } from '@/components/ui/icons'
 import { YearStrip } from '@/components/game/YearStrip'
+import { NexoraMark } from '@/components/game/NexoraMark'
 import { RecordingControl } from '@/components/game/RecordingControl'
 import { SoundToggle } from '@/components/game/SoundToggle'
 import { ShortcutsToggle } from '@/components/game/ShortcutsToggle'
@@ -66,9 +67,12 @@ export function AppShell({ children }: { children: ReactNode }) {
         data-print="hide"
         className="hidden shrink-0 border-r border-line bg-surface lg:flex lg:h-full lg:w-60 lg:flex-col xl:w-64"
       >
-        <div className="border-b border-line px-5 py-5">
-          <p className="font-display text-xl leading-tight">CISO: First Year</p>
-          <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
+        <div className="flex items-center gap-3 border-b border-line px-5 py-5">
+          <NexoraMark />
+          <div>
+            <p className="font-display text-xl leading-tight">CISO: First Year</p>
+            <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
+          </div>
         </div>
         <div className="scroll-area flex-1">
           <ul className="space-y-1 p-3">

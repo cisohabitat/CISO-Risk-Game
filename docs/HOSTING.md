@@ -183,6 +183,19 @@ preloads, which is how it spent a while being fetched by every first-time
 player despite the `lazy()` around it. `pnpm size` now prints `first load` or
 `on demand` beside each chunk, which is the thing to read.
 
+## Portrait assets
+
+The twelve character portraits share `src/assets/art/nexora-people.webp`, a
+720 × 960 atlas of 80,460 bytes. Vite gives it a hashed asset URL, so the existing
+immutable asset caching applies. It is loaded by lazy images on Board, Team
+and messages from named characters, with a single cached download. The start
+screen does not request it; `tests/e2e/art.spec.ts` checks that boundary.
+
+`pnpm size` measures JavaScript and stylesheet critical paths, so the image's
+80,460 bytes are additional to the reported first-load budget when the player
+first sees a portrait. No budget was raised for this art pass. The inline SVG
+company mark follows the existing theme tokens and needs no image request.
+
 ## Commercial use
 
 Vercel Hobby is for personal, non-commercial projects. If this is deployed as a
