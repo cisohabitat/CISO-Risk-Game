@@ -821,7 +821,7 @@ test.describe('a first year at Nexora', () => {
     // The four standing readings are one strip of definitions, not four cards.
     const standing = page.getByRole('region', { name: 'Where the organisation stands' })
     await expect(standing).toBeVisible()
-    for (const label of ['Residual exposure', 'Board confidence', 'Team capacity', 'Recovery confidence']) {
+    for (const label of ['Residual exposure', 'Board confidence', 'Unallocated capacity', 'Recovery confidence']) {
       await expect(standing.getByText(label, { exact: true })).toBeVisible()
     }
 

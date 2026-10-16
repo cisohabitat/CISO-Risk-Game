@@ -305,6 +305,8 @@ export interface InboxMessage {
   decisionId?: string
   relatedNodeIds: string[]
   eventId?: string
+  /** Provenance for a visible SOC signal; never displayed as hidden campaign truth. */
+  signalCampaignId?: string
 }
 
 export interface InboxState {
@@ -398,6 +400,8 @@ export interface IncidentRuntime {
   resolvedDay?: number
   /** Assembled at debrief: what helped / hurt, drawn from actual world state. */
   reconstruction?: {
+    assessedDay?: number
+    warningMessageIds?: string[]
     pathSummary: { stepId: string; nodeName: string; narrative: string; controlNames: string[]; wasBlocked: boolean }[]
     helped: string[]
     hurt: string[]

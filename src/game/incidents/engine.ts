@@ -265,7 +265,7 @@ export function buildReconstruction(
   // how long it ran unseen is the line the year turns on.
   if (ranFor > 7 && warnings > 0) {
     hurt.unshift(
-      `The intrusion raised ${warnings === 1 ? 'a warning' : `${warnings} warnings`} over ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business, and none of them was followed up`,
+      `The intrusion ran for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business. It raised ${warnings === 1 ? 'a warning' : `${warnings} warnings`}, and none of them was followed up`,
     )
   } else if (ranFor > 7) {
     hurt.unshift(`The intrusion was under way for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business, and nothing saw it`)
@@ -296,6 +296,10 @@ export function buildReconstruction(
     .join(' ')
 
   return {
+    assessedDay: state.currentDay,
+    warningMessageIds: incident.campaignId
+      ? state.inbox.messages.filter((message) => message.signalCampaignId === incident.campaignId && message.day <= incident.startedDay).map((message) => message.id)
+      : [],
     pathSummary,
     helped: helped.concat(authoredLines(state, index, family?.whatHelped)).slice(0, 6),
     hurt: hurt.concat(authoredLines(state, index, family?.whatHurt)).slice(0, 6),

@@ -29,10 +29,13 @@ export function DecisionList({
         description={
           // "Nothing needs an answer" sat under "5 things need your
           // attention", counting patterns and collisions further down.
-          elsewhere
+          state.finished
+            ? 'The year is over. Revisit your messages or read the annual review in Your year.'
+            : elsewhere
             ? 'Nothing needs an answer today. What else wants you is further down this page.'
             : 'Nothing needs an answer from you right now. Advance time, or go and find out something you do not yet know.'
         }
+        action={state.finished ? <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('debrief')}>Open Your year</Button> : undefined}
       />
     )
   }

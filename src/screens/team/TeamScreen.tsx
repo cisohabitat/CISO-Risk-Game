@@ -26,6 +26,7 @@ export function TeamScreen() {
           Your functions are <strong>{view.strainBand}</strong>{view.healthClause ? <>, but {view.healthClause}</> : null}. Delegated work competes with programme delivery for
           the same people.
         </p>
+        <p className="mt-2 text-sm text-ink-muted">Capacity describes room for work; morale describes its accumulated cost. Pause programmes to release their people, let delegated work finish, or recruit into vacancies where the budget allows. Recovery is slower than burnout.</p>
       </div>
 
       <section aria-labelledby="functions">
@@ -54,6 +55,11 @@ export function TeamScreen() {
                     <span className="text-xs font-medium text-ink-faint">Morale</span>
                     <span>{fn.moraleLabel}</span>
                   </p>
+                  <p className="text-sm text-ink-muted">{fn.recoveryNote}</p>
+                  <div className="text-sm">
+                    <p className="text-xs font-medium text-ink-faint">Current commitments</p>
+                    {fn.workload.length > 0 ? <ul className="mt-1 list-inside list-disc text-ink-muted">{fn.workload.map((work, position) => <li key={position}>{work}</li>)}</ul> : <p className="mt-1 text-ink-muted">No programme or delegated work running.</p>}
+                  </div>
                   <div className="mt-auto flex min-h-9 flex-wrap items-center justify-between gap-2 border-t border-line pt-3">
                     <p className={cn('text-sm', fn.vacancies > 0 && !fn.hiring ? 'text-band-elevated' : 'text-ink-muted')}>
                       {fn.hiring
@@ -80,6 +86,8 @@ export function TeamScreen() {
           ))}
         </ul>
       </section>
+
+      <Button variant="secondary" onClick={() => useGameStore.getState().setScreen('programmes')}>Review programme workload</Button>
 
       <section aria-labelledby="leaders">
         <SectionHeading><span id="leaders">Cyber leadership</span></SectionHeading>

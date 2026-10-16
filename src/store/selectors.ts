@@ -23,7 +23,7 @@ import { imposedTake, optionBudgetCost } from '@/game/decisions/cost'
 import { evaluateCondition } from '@/game/events/conditions'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
-import { capacityBand, functionName, functionStrain, functionTitle, hiringUnderWay, moraleLabel, teamStrain } from '@/game/team/capacity'
+import { capacityBand, nextFunctionMorale, functionName, functionStrain, functionTitle, hiringUnderWay, moraleLabel, teamStrain } from '@/game/team/capacity'
 import { boardConfidenceLabel, relationshipBand } from '@/game/stakeholders/relationships'
 import { deliveryConfidence, deliveryConfidenceLabel } from '@/game/programmes/progression'
 import { plural, statusLabel } from '@/lib/formatting/labels'
@@ -454,6 +454,8 @@ export interface TeamView {
     moraleLabel: string
     vacancies: number
     hiring: boolean
+    workload: string[]
+    recoveryNote: string
   }[]
   leaders: {
     id: string
@@ -510,6 +512,17 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         // screen offered to recruit the same identity role again after
         // "Recruit properly", and a playtester nearly paid for it twice.
         hiring: hiringUnderWay(state, runtime.fn),
+        workload: [
+          ...Object.values(state.programmes.programmes)
+            .filter((programme) => (programme.status === 'active' || programme.status === 'at-risk') && (index.programme.get(programme.id)?.capacityDemand[fn] ?? 0) > 0)
+            .map((programme) => index.programme.get(programme.id)!.name),
+          ...state.team.assignments.filter((assignment) => assignment.status === 'running' && (assignment.capacityPerDay[fn] ?? 0) > 0).map((assignment) => assignment.title),
+          ...(runtime.surge ? ['Unplanned work (fades over time)'] : []),
+        ],
+        recoveryNote: state.finished ? 'Year-end snapshot; morale no longer changes this year.'
+          : nextFunctionMorale(state, fn) > runtime.morale ? 'Recovering slowly at the current workload. Sustained relief takes time.'
+            : nextFunctionMorale(state, fn) < runtime.morale ? 'Morale is declining at the current workload and staffing. Reduce commitments or fill vacancies.'
+              : 'Morale is holding at the current workload and staffing. More capacity alone does not mean recovery.',
       }
     }),
     leaders: index.content.leaders.map((def) => {

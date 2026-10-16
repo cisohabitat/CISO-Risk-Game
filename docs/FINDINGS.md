@@ -18,6 +18,34 @@ fault.
 
 ### Fixed
 
+- **Unread could consume an entire backlog and fail to render** (16 October
+  2026 AI-assisted playtest, seed `nexora-48260`). Selecting Unread made its
+  default message read; removing that message selected the next one, repeating
+  until React's update-depth guard fired. A 120-message regression reproduced
+  the failure for All and Threat transitions, in-year and after year-end; all
+  four cases failed before the fix. Membership now stays stable until Unread is
+  selected again. Empty lists keep the illustrated recovery action. See
+  `tests/ui/inbox.test.tsx` and `tests/e2e/inbox.spec.ts`.
+
+- **Incident critique blurred intrusion duration and warning lead time.** The
+  quoted weeks were measured from campaign start, not the first warning. The
+  text now names intrusion duration explicitly. New SOC messages retain
+  campaign provenance so debriefs can link the exact pre-impact warning;
+  similar subjects or nodes are never guessed into a link for older saves.
+  Reconstructions are available in Your year as soon as assembled, and label
+  estate-wide control condition at debrief separately from unrecorded
+  intrusion-time or route-specific condition. The legacy `wasBlocked` field
+  remains for save compatibility; the UI no longer implies it proves a route
+  was blocked. See `tests/engine/incidents.test.ts` and
+  `tests/ui/playtest-followup.test.tsx`.
+
+- **Year-end advice and sustainability guidance lacked an actionable state.**
+  The empty decision panel now offers the annual review after the year ends.
+  Team lists current commitments and conditional recovery direction, using the
+  same morale rule as the daily reducer, including vacancy pressure. No balance
+  thresholds, recovery rates or difficulty settings changed. Human evidence
+  about comprehension and inbox fatigue is still needed.
+
 - **What the AI tablet playtest found in a first year after the breach**
   (`docs/playtests/2026-10-10-ai-tablet-after-breach.md`). Held by
   `tests/engine/tablet-playtest.test.ts` and `tests/engine/meetings.test.ts`

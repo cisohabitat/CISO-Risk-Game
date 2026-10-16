@@ -276,6 +276,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       type: 'threat',
       priority: signal.strength === 'clear' ? 'urgent' : 'routine',
       relatedNodeIds: [signal.nodeId],
+      signalCampaignId: signal.campaignId,
     })
     if (signal.strength === 'clear') highlights.push('The SOC has confirmed suspicious activity.')
   }

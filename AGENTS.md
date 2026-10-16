@@ -12,6 +12,13 @@ changes.
 - Keep the two files consistent with the implementation, CI and hosting
   configuration. Update related documentation when those contracts change.
 - Report only checks actually run and results actually measured.
+- Unread-filter membership must stay stable while messages are opened; never
+  let marking one read recursively select and consume the next unread message.
+- Incident warning links require recorded signal provenance. Do not infer an
+  exact warning from similar wording, dates or nodes in an older save. Date
+  reconstruction assessments and keep closed routes hidden until debrief.
+- Team recovery guidance must use the same daily morale rule as the engine,
+  including vacancies. Describe conditional direction, not a promised deadline.
 
 ## Artwork
 

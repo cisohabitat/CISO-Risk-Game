@@ -102,12 +102,21 @@ headline. Ignore it long enough and the organisation decides without you, which
 is recorded and counts against you at the end of the year.
 
 **The four standing readings**, in a strip below the headline: residual
-exposure, board confidence, team capacity and recovery confidence. They are
+exposure, board confidence, unallocated capacity and recovery confidence. They are
 words — *Moderate*, *Neutral*, *Limited* — never numbers. That is deliberate: a
 real CISO argues from judgement, not from a score, and a number would invite you
 to optimise it. They are deliberately quieter than the things above them,
 because they are the state of the organisation rather than a list of things to
 do. The `?` opens a plain-language explanation.
+
+Unallocated capacity is room for work, not a measure of recovery from burnout.
+Open Team to see each function's commitments and morale. Its recovery note
+describes what current workload and vacancies permit; it does not promise a
+date. Pausing a programme releases its people, delegated work releases them
+when it finishes, and recruiting can relieve vacancy pressure if you can afford it.
+
+In the Inbox, Unread keeps its list stable while you open messages. Select
+Unread again to refresh it; opening one message does not read the rest.
 
 **The quarter so far.** One line under the readings, headed "So far in Q1" in the
 first quarter, counts what the quarter
@@ -354,6 +363,11 @@ It is worth opening well before December. It is the quickest way to see whether
 you have actually been doing anything — a year with one busy lane and five empty
 ones is telling you something while there is still time to change it. **Read the
 year as a list** underneath gives every mark with its date.
+
+Once an incident has been debriefed, its reconstruction is available here too.
+The control assessment is dated to that debrief, not to the intrusion's start.
+Where an exact earlier SOC warning was retained, open it directly from the
+reconstruction. Older saves and messages that have aged out may lack that link.
 
 ---
 

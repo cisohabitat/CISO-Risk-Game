@@ -57,7 +57,7 @@ describe('the reconstruction', () => {
     } as IncidentRuntime
     const rebuilt = buildReconstruction(state, index, incident)
     expect(rebuilt.helped).not.toContain('The activity was detected almost immediately')
-    expect(rebuilt.hurt.join(' ')).toContain('raised 2 warnings over 7 weeks before it reached the business')
+    expect(rebuilt.hurt.join(' ')).toContain('ran for 7 weeks before it reached the business. It raised 2 warnings')
   })
 })
 

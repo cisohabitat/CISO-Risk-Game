@@ -198,6 +198,21 @@ License); body copy keeps the system sans-serif stack. The first-visit budget
 now counts fonts as well as JavaScript and CSS, with a 220 KiB limit. Font
 sources and licensing are in [`src/assets/fonts/README.md`](src/assets/fonts/README.md).
 
+Unread keeps its message list stable while you read it; select Unread again
+to refresh the list. Opening one message leaves the rest unread. At year-end,
+the empty decision panel points to the annual review instead of advancing time.
+
+Closed incident reconstructions are available in **Your year** before the
+annual review. New SOC signals retain exact provenance for dated links back to
+their messages. Older saves and messages that aged out show an explicit
+limitation. Control descriptions refer to the incident-debrief assessment,
+not a recorded intrusion-time or per-route control snapshot.
+
+The Briefing labels room for work as **Unallocated capacity**. Team separates
+this from morale, lists current programme, delegated and unplanned commitments,
+and explains whether current staffing and workload allow slow recovery. These
+are conditional daily directions, not historical trends or guaranteed dates.
+
 ## Hosting
 
 The production build is a static application: no server rendering, no API

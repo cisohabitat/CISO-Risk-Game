@@ -96,7 +96,7 @@ export function HomeScreen() {
           />
           <Standing label="Board confidence" value={view.boardConfidence} tone="accent" />
           <Standing
-            label="Team capacity"
+            label="Unallocated capacity"
             value={view.teamCapacity}
             tone={capacityTone(view.teamCapacity)}
             note={view.teamHealthNote}
@@ -283,6 +283,7 @@ export function HomeScreen() {
                     ? `There is more of Nexora you have not seen: ${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} remain undiscovered.`
                     : 'You have brought the whole estate into view.'}
                 </p>
+                {team.healthNote && <p className="mt-2 text-sm text-ink-muted">Available capacity does not mean morale has recovered. Open Team to see current commitments, recovery conditions, and ways to relieve strain.</p>}
               </CardBody>
             </Card>
           </section>

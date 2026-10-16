@@ -3,8 +3,27 @@ import { newGame, runDays, applyAction } from '@/game/engine/orchestrator'
 import { createIncident } from '@/game/incidents/create'
 import { buildReconstruction } from '@/game/incidents/engine'
 import { testIndex } from './helpers'
+import { pushMessage } from '@/game/inbox/messages'
 
 describe('incident engine', () => {
+  it('retains exact pre-impact warning provenance and the reconstruction date', () => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'warning-links' })
+    createIncident(state, index, { familyId: 'fam-ransomware', pathId: 'path-msp-ransom' })
+    const incident = Object.values(state.incidents.incidents)[0]!
+    incident.campaignId = 'campaign-a'
+    incident.startedDay = 20
+    state.currentDay = 10
+    const warning = pushMessage(state, { from: 'Sentinel SOC', subject: 'Signal', body: 'Check this', type: 'threat', signalCampaignId: 'campaign-a' })
+    pushMessage(state, { from: 'Sentinel SOC', subject: 'Other intrusion', body: 'Other signal', type: 'threat', signalCampaignId: 'campaign-b' })
+    state.currentDay = 25
+    pushMessage(state, { from: 'Sentinel SOC', subject: 'After impact', body: 'Later signal', type: 'threat', signalCampaignId: 'campaign-a' })
+    state.currentDay = 30
+    const reconstruction = buildReconstruction(state, index, incident)
+    expect(reconstruction.warningMessageIds).toEqual([warning.id])
+    expect(reconstruction.assessedDay).toBe(30)
+  })
+
   it('runs an incident through every phase to closure', () => {
     const index = testIndex()
     const state = newGame(index, { seed: 'inc-1' })

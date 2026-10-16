@@ -13,6 +13,7 @@ export interface MessageDraft {
   decisionId?: string
   relatedNodeIds?: string[]
   eventId?: string
+  signalCampaignId?: string
   pinned?: boolean
 }
 
@@ -31,6 +32,7 @@ export function pushMessage(state: GameState, draft: MessageDraft): InboxMessage
     decisionId: draft.decisionId,
     relatedNodeIds: draft.relatedNodeIds ?? [],
     eventId: draft.eventId,
+    signalCampaignId: draft.signalCampaignId,
   }
   state.inbox.messages.unshift(message)
   // Keep the inbox bounded: old routine traffic ages out, open decisions never do.

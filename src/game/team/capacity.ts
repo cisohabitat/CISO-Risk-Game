@@ -276,16 +276,22 @@ export function moraleLabel(morale: number): string {
  * and recovery is slower than the decline, which is what makes over-delegation
  * a real strategic cost rather than a free action.
  */
+export function nextFunctionMorale(state: GameState, fn: CyberFunction): number {
+  const runtime = state.team.functions[fn]
+  if (!runtime) return 0
+  const strain = functionStrain(state, fn)
+  const workloadChange = strain > 0.7 ? -0.006 * (1 + (strain - 0.7) * 5) : strain < 0.5 ? 0.0012 : 0
+  // Preserve the daily reducer's clamp before applying the vacancy penalty.
+  return clamp01(clamp01(runtime.morale + workloadChange) - 0.0015 * runtime.vacancies)
+}
+
 export function updateTeamWellbeing(state: GameState): void {
   for (const fn of CYBER_FUNCTIONS) {
     const runtime = state.team.functions[fn]
     if (!runtime) continue
-    const strain = functionStrain(state, fn)
     // Grinding down is faster than recovering, which is what makes sustained
     // overload a decision with a cost rather than a temporary inconvenience.
-    if (strain > 0.7) runtime.morale = clamp01(runtime.morale - 0.006 * (1 + (strain - 0.7) * 5))
-    else if (strain < 0.5) runtime.morale = clamp01(runtime.morale + 0.0012)
-    if (runtime.vacancies > 0) runtime.morale = clamp01(runtime.morale - 0.0015 * runtime.vacancies)
+    runtime.morale = nextFunctionMorale(state, fn)
   }
   for (const leader of Object.values(state.team.leaders)) {
     const target = clamp01(leaderLoad(state, leader.id))

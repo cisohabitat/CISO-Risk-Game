@@ -32,13 +32,20 @@ export function InboxScreen() {
   const setUi = useGameStore((store) => store.setUi)
   const selectedId = useGameStore((store) => store.ui.selectedMessageId)
   const [filter, setFilter] = useState<Filter>('all')
+  // Freeze membership on entry: marking the open message read must not select
+  // and mark the next one, recursively consuming the player's whole backlog.
+  const [unreadIds, setUnreadIds] = useState<string[]>([])
+  const changeFilter = (next: Filter) => {
+    if (next === 'unread') setUnreadIds(state?.inbox.messages.filter((message) => !message.read).map((message) => message.id) ?? [])
+    setFilter(next)
+  }
 
   const messages = useMemo(() => {
     if (!state) return []
     return state.inbox.messages.filter((message) => {
       switch (filter) {
         case 'unread':
-          return !message.read
+          return unreadIds.includes(message.id)
         case 'decisions':
           return message.decisionId !== undefined && state.decisions.openIds.includes(message.decisionId)
         case 'threat':
@@ -49,7 +56,7 @@ export function InboxScreen() {
           return true
       }
     })
-  }, [state, filter])
+  }, [state, filter, unreadIds])
 
   const selected = messages.find((message) => message.id === selectedId) ?? messages[0]
   const sender = selected && [...index.content.stakeholders, ...index.content.leaders].find(
@@ -70,9 +77,11 @@ export function InboxScreen() {
           label="Filter messages"
           value={filter}
           options={FILTERS.map((item) => ({ id: item.id, label: item.label }))}
-          onChange={setFilter}
+          onChange={changeFilter}
         />
       </div>
+
+      {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}
 
       {messages.length === 0 ? (
         <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"

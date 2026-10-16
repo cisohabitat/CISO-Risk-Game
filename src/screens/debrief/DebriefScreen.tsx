@@ -7,15 +7,15 @@ import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, SectionHeading } from '@/components/ui/primitives'
 import { sendYear, shareYear, type SharedYear } from '@/lib/share-year'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { incidentViews, yearTimeline } from '@/store/selectors'
+import { yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
 import { CAMPAIGN_DAYS } from '@/game/types'
 import { yearWord } from '@/game/time'
 import { objectiveStatusLabel } from '@/game/business/objectives'
-import { shortDate, statusLabel } from '@/lib/formatting/labels'
+import { shortDate } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
 import { NexoraMark } from '@/components/game/NexoraMark'
-import { IncidentIllustration } from '@/components/game/IncidentIllustration'
+import { IncidentHistory } from '@/components/game/IncidentHistory'
 
 // A scale from bad to good, warm to cool. "Solid" borrowed the risk palette's
 // moderate, which is blue there and read here as a neutral label sitting
@@ -36,7 +36,6 @@ export function DebriefScreen() {
   const pushToast = useGameStore((store) => store.pushToast)
   const [sharing, setSharing] = useState<SharedYear>()
   const [closingEarly, setClosingEarly] = useState(false)
-  const incidents = useMemo(() => (state ? incidentViews(state, index) : []), [state, index])
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
   if (!state) return null
@@ -85,6 +84,8 @@ export function DebriefScreen() {
             </Button>
           </CardBody>
         </Card>
+
+        <IncidentHistory />
 
         {/* Export was only offered once the year was over, so a campaign
             deleted or lost with the browser's data mid-year could not be kept
@@ -268,75 +269,7 @@ export function DebriefScreen() {
         </Card>
       </section>
 
-      {incidents.length > 0 && (
-        <section aria-labelledby="incidents">
-          <SectionHeading><span id="incidents">Incident reconstruction</span></SectionHeading>
-          <ul className="space-y-3">
-            {incidents.map((incident) => (
-              <li key={incident.id} className="print-keep">
-                <Card>
-                  <CardBody className="space-y-3">
-                    <IncidentIllustration name={incident.name} className="mb-4 w-full max-w-sm" />
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="font-medium">{incident.name}</h3>
-                      <Badge tone={incident.severity} >{incident.severity} consequence</Badge>
-                    </div>
-                    <p className="text-sm text-ink-muted">
-                      {shortDate(incident.startedDay)}
-                      {incident.resolvedDay !== undefined && ` to ${shortDate(incident.resolvedDay)}`} · {statusLabel(incident.phase)}
-                      {incident.servicesAffected.length > 0 && ` · ${incident.servicesAffected.join(', ')}`}
-                    </p>
-
-                    {incident.reconstruction && (
-                      <>
-                        {/* What happened in a line; the route and what helped
-                            and hurt follow as steps and columns, so the prose
-                            version of them is not repeated above. */}
-                        <p className="text-pretty">{incident.headline || incident.reconstruction.narrative}</p>
-                        <ol className="space-y-1 text-sm">
-                          {incident.reconstruction.pathSummary.map((step, position) => (
-                            <li key={step.stepId} className="flex gap-2">
-                              <span className="shrink-0 tabular-nums text-ink-faint">{position + 1}.</span>
-                              <span>
-                                <span className="font-medium">{step.nodeName}</span>
-                                <span className="text-ink-muted"> — {step.narrative}</span>
-                                {step.controlNames.length > 0 && (
-                                  <span className="block text-xs text-ink-faint">
-                                    Controls on this step: {step.controlNames.join(', ')}
-                                    {step.wasBlocked ? ' (operating well)' : ''}
-                                  </span>
-                                )}
-                              </span>
-                            </li>
-                          ))}
-                        </ol>
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                          <div>
-                            <p className="text-xs font-medium text-ink-faint">What helped</p>
-                            <ul className="mt-1 space-y-1 text-sm text-ink-muted">
-                              {incident.reconstruction.helped.map((item, position) => (
-                                <li key={position} className="text-pretty">{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium text-ink-faint">What hurt</p>
-                            <ul className="mt-1 space-y-1 text-sm text-ink-muted">
-                              {incident.reconstruction.hurt.map((item, position) => (
-                                <li key={position} className="text-pretty">{item}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </CardBody>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <IncidentHistory />
 
       {state.history.decisionsLog.length > 0 && (
         <section aria-labelledby="decisions-log">
