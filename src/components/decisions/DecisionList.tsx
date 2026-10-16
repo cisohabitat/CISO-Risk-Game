@@ -1,6 +1,6 @@
 import { Badge, Button, Card, CardBody, EmptyState } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { openDecisions } from '@/store/selectors'
+import { incidentCommand, openDecisions } from '@/store/selectors'
 
 export function DecisionList({
   limit,
@@ -22,20 +22,27 @@ export function DecisionList({
 
   if (shown.length === 0) {
     // Beside a board paper that is due, "nothing needs an answer" is untrue.
-    if (quiet) return null
+    const activeIncident = !state.finished && incidentCommand(state, index)
+    if (quiet && !activeIncident) return null
     return (
       <EmptyState
-        title="No decision is open"
+        title={activeIncident ? 'No response decision is open yet' : 'No decision is open'}
         description={
           // "Nothing needs an answer" sat under "5 things need your
           // attention", counting patterns and collisions further down.
           state.finished
             ? 'The year is over. Revisit your messages or read the annual review in Your year.'
+            : activeIncident
+              ? 'An incident is active. Review the response journal and latest update while the response continues.'
             : elsewhere
             ? 'Nothing needs an answer today. What else wants you is further down this page.'
             : 'Nothing needs an answer from you right now. Advance time, or go and find out something you do not yet know.'
         }
-        action={state.finished ? <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('debrief')}>Open Your year</Button> : undefined}
+        action={state.finished ? <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('debrief')}>Open Your year</Button> : activeIncident ? <Button variant="secondary" size="sm" onClick={() => {
+          const journal = document.getElementById('incident-command')
+          journal?.focus({ preventScroll: true })
+          journal?.scrollIntoView({ block: 'start' })
+        }}>Review the active incident</Button> : undefined}
       />
     )
   }

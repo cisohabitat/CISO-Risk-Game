@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
-import { briefing } from '@/store/selectors'
+import { briefing, teamWellbeingNotes } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
 import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
@@ -48,6 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (!state) return null
   const view = briefing(state, index)
+  const wellbeing = teamWellbeingNotes(state)
   const primary = DESTINATIONS.filter((destination) => destination.primary)
   const secondary = DESTINATIONS.filter((destination) => !destination.primary)
   const current = destinationFor(screen)
@@ -145,8 +146,17 @@ export function AppShell({ children }: { children: ReactNode }) {
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
-              <dt className="text-xs text-ink-faint">Team</dt>
+              <dt className="text-xs text-ink-faint">Workload capacity</dt>
               <dd><Badge tone={capacityTone(view.teamCapacity)} glyph={false}>{view.teamCapacity}</Badge></dd>
+            </div>
+            <div className="space-y-1" data-testid="team-wellbeing-summary">
+              <dt className="text-xs text-ink-faint">Team wellbeing</dt>
+              <dd>
+                <button type="button" onClick={() => go('team')} className="min-h-11 w-full rounded-lg border border-line px-2 py-1.5 text-left text-xs hover:bg-surface-2">
+                  {wellbeing.length > 0 ? wellbeing.map((note) => <span key={note} className="block">{note}</span>) : 'All functions holding up or better'}
+                  <span className="mt-1 block text-ink-faint">Review workload and recovery →</span>
+                </button>
+              </dd>
             </div>
           </dl>
           {/* A pair, drawn alike: the guide was bare text under a boxed button. */}
@@ -228,6 +238,12 @@ export function AppShell({ children }: { children: ReactNode }) {
       </nav>
 
       <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
+        <div className="mb-4 rounded-lg border border-line p-3 text-sm">
+          <p>Workload capacity: {view.teamCapacity}</p>
+          <p className="mt-2 font-medium">Team wellbeing</p>
+          {wellbeing.length > 0 ? wellbeing.map((note) => <p key={note} className="text-ink-muted">{note}</p>) : <p className="text-ink-muted">All functions holding up or better</p>}
+          <Button variant="quiet" size="sm" className="mt-2" onClick={() => go('team')}>Review workload and recovery</Button>
+        </div>
         <ul className="space-y-2">
           {secondary.map((destination) => (
             <li key={destination.id}>

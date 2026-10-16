@@ -2,6 +2,11 @@ import { expect, type Page } from '@playwright/test'
 
 export async function startCampaign(page: Page, seed = 'e2e-seed'): Promise<void> {
   await page.goto('/')
+  await beginCampaign(page, seed)
+}
+
+/** Begin on an already-open start screen without interrupting its preload. */
+export async function beginCampaign(page: Page, seed = 'e2e-seed'): Promise<void> {
   await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
   // The seed is a replay tool, folded away so a first-time player is not asked
   // about the machinery before they have started. A player who wants a

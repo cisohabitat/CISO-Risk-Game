@@ -326,6 +326,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     pushMessage(state, {
       from: 'Incident response',
       subject: `${family?.name ?? 'Incident'}: ${transition.phase}`,
+      incidentId: transition.incidentId,
       body: transition.note,
       type: 'incident',
       priority: transition.phase === 'closed' ? 'notable' : 'critical',

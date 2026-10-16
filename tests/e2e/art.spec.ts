@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
+import { beginCampaign, expectNoHorizontalScroll, goTo } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 test('portraits load with people rather than with the start screen', async ({ page }) => {
@@ -19,7 +19,7 @@ test('portraits load with people rather than with the start screen', async ({ pa
   expect(fonts.length).toBeGreaterThan(0)
   for (const font of fonts) expect(new URL(font).origin).toBe(new URL(page.url()).origin)
 
-  await startCampaign(page, 'e2e-art')
+  await beginCampaign(page, 'e2e-art')
   await goTo(page, 'Board')
   const executive = page.getByRole('heading', { name: 'Marianne Okafor', exact: true }).locator('..').locator('..')
   const portrait = executive.locator('img')

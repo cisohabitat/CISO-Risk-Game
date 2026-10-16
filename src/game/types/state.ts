@@ -307,6 +307,8 @@ export interface InboxMessage {
   eventId?: string
   /** Provenance for a visible SOC signal; never displayed as hidden campaign truth. */
   signalCampaignId?: string
+  /** Exact provenance for a visible response-phase update. */
+  incidentId?: string
 }
 
 export interface InboxState {

@@ -33,6 +33,18 @@ export function IncidentHistory() {
                       {incident.servicesAffected.length > 0 && ` · ${incident.servicesAffected.join(', ')}`}
                     </p>
 
+                    <details className="rounded-lg border border-line p-3">
+                      <summary className="cursor-pointer text-sm font-medium">Response journal and recorded choices</summary>
+                      <div className="mt-3 space-y-3 text-sm">
+                        {incident.updates.length > 0 ? <ol className="response-timeline">{incident.updates.map((message) => <li key={message.id}>
+                          <p className="text-ink-muted">{shortDate(message.day)} · {message.body}</p>
+                          <Button variant="quiet" size="sm" onClick={() => openMessage(message.id)}>Open phase update: {message.subject}</Button>
+                        </li>)}</ol> : <p className="text-ink-muted">No linked phase updates remain in this save.</p>}
+                        {incident.responseChoices.length > 0 ? <ul className="space-y-2">{incident.responseChoices.map((choice, position) => <li key={position}>{shortDate(choice.day)} · {choice.title}: <strong>{choice.option}</strong></li>)}</ul> : <p className="text-ink-muted">No response choices were recorded.</p>}
+                        <p className="text-xs text-ink-faint">These are the recorded updates and choices. They do not measure what an alternative decision would have changed.</p>
+                      </div>
+                    </details>
+
                     {incident.reconstruction && (
                       <>
                         {/* What happened in a line; the route and what helped

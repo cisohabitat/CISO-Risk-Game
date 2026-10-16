@@ -60,7 +60,7 @@ export function IncidentCommand() {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <p className="document-kicker mb-2">Response journal</p>
-            <h2 id="incident-command" className="font-display text-xl leading-tight text-balance">
+            <h2 id="incident-command" tabIndex={-1} className="scroll-mt-36 font-display text-xl leading-tight text-balance">
               {incident.name}
             </h2>
             <p className="mt-1 text-sm text-ink-muted text-pretty">

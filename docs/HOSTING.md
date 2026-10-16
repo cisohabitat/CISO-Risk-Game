@@ -210,7 +210,7 @@ screen. Empty-state illustrations use inline SVG. The first-visit budget is
 font URLs in the entry CSS and counts WOFF2 at its file size. Body copy needs no
 font download. The font licence ships at `/fonts/Newsreader-OFL.txt`.
 
-The playtest follow-up reads 210.2 KiB against the same 220 KiB limit.
+The playtest follow-ups read 210.9 KiB against the same 220 KiB limit.
 
 The approximately 25 KiB increase over the first portrait pass combines the
 font and the new visual markup/styles. No new throttled startup-time claim is

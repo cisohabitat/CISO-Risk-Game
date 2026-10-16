@@ -80,7 +80,7 @@ export function BoardScreen() {
               <div className="flex items-center gap-3"><NexoraMark /><p className="document-kicker">Board Risk Committee</p></div>
               <span className="font-display text-3xl text-ink-muted">Q{pendingQuarter}</span>
             </div>
-            <p className="font-medium">The risk committee meets this quarter.</p>
+            <p className="font-medium">Q{pendingQuarter} results, presented during Q{Math.min(4, pendingQuarter + 1)}.</p>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
               Choose what goes in front of them. Leaving out something material does more damage than bringing bad news.
             </p>
@@ -208,10 +208,12 @@ export function BoardScreen() {
             <div><p className="document-kicker">Nexora Group</p><p className="mt-2 font-display text-2xl">Board Risk Committee</p><p className="mt-1 text-sm text-ink-muted">Management paper · {formatGameDate(state.currentDay).label}</p></div>
             <span aria-hidden="true" className="font-display text-5xl text-ink-faint">Q{pendingQuarter}</span>
           </header>
+          <p className="text-sm text-ink-muted">This paper reports Q{pendingQuarter} results during Q{Math.min(4, (pendingQuarter ?? 0) + 1)}. The date above is when you prepare it; the submission deadline is shown on the committee card.</p>
           {availableTopics.length === 0 ? (
             <EmptyState
-              title="You have nothing to report"
-              description="You have not assessed a risk, run an incident or had an assumption fail. That is itself something the board may ask about."
+              title="No agenda topics are eligible yet"
+              description="The agenda draws on raised risks, incidents, failed assumptions, off-track programmes and a team beyond its workload limit. Completed checks and low morale alone do not add an agenda item. Programme recommendations remain available below. Open Risk to assess or raise a risk for the paper."
+              action={<Button variant="secondary" size="sm" onClick={() => { setPreparing(false); useGameStore.getState().setScreen('risk') }}>Review risks for the paper</Button>}
             />
           ) : (
             <fieldset>

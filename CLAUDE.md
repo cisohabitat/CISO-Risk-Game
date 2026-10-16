@@ -202,7 +202,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The first visit is budgeted at about 210.2 KiB against a 220 KiB limit including
+  The first visit is budgeted at about 210.9 KiB against a 220 KiB limit including
   the self-hosted display font (the first portrait pass was 184.1 kB against
   185 for JS/CSS; the annual review loads with the review screen), and
   content no longer adds to it. The campaign chunk has its own budget, 90 kB,

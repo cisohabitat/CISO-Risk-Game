@@ -165,6 +165,12 @@ export function HomeScreen() {
               quiet={state.reviews.pendingQuarter !== undefined || blocked.length > 0}
               elsewhere={pressing.length + patterns.length > 0}
             />
+            {!state.finished && Object.values(state.incidents.incidents).some((incident) => incident.reconstruction) && (
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-y border-line py-3 text-sm">
+                <p>An incident debrief is available, including its recorded response choices.</p>
+                <Button variant="secondary" size="sm" onClick={() => setScreen('debrief')}>Review incident recap</Button>
+              </div>
+            )}
           </section>
 
           {/* What the player's own actions sent back. The first observed

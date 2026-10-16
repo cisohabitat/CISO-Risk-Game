@@ -326,10 +326,12 @@ job.
 The pack in the picture holds the four risks this player raised during the
 quarter. The line above them counts the ones still *emerging*: the board hears
 only about risks you have raised, and you raise an emerging one from the Risk
-screen. An early pack can also be empty, if you have not yet assessed a risk,
-had an assumption fail or run an incident. The game does not pretend otherwise
-— it says so, and points out that having nothing to report is itself something
-the board may ask about.
+screen. An early agenda can be empty. Its topics come from raised risks,
+incidents, failed assumptions, off-track programmes and a team beyond its
+workload limit. Completed checks and low morale alone do not add a topic.
+Programme recommendations remain available, and the empty agenda offers a
+route to Risk. Q1 results are presented during Q2: the paper's quarter is the
+reporting period, not its preparation date or submission deadline.
 
 ---
 
@@ -350,6 +352,11 @@ Note what the bar shows — *containment*, *recovery*, *affected services* — a
 what it does not: the attack path. You only ever see what your own people have
 actually told you.
 
+If no response decision is open, the empty decision panel still acknowledges
+the incident. Its action returns focus to the response journal. Once a debrief
+is available, the Briefing links to a recap in Your year; it does not force a
+new clock pause.
+
 ---
 
 ## Watching your own year
@@ -368,6 +375,8 @@ Once an incident has been debriefed, its reconstruction is available here too.
 The control assessment is dated to that debrief, not to the intrusion's start.
 Where an exact earlier SOC warning was retained, open it directly from the
 reconstruction. Older saves and messages that have aged out may lack that link.
+The expandable response journal also shows recorded choices and exactly linked
+phase updates where retained. It does not estimate alternative outcomes.
 
 ---
 

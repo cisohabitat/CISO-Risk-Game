@@ -213,6 +213,18 @@ this from morale, lists current programme, delegated and unplanned commitments,
 and explains whether current staffing and workload allow slow recovery. These
 are conditional daily directions, not historical trends or guaranteed dates.
 
+The desktop rail and mobile More menu separate workload capacity from wellbeing,
+name every struggling function, and link to workload and recovery guidance.
+During an active incident, an empty decision list directs keyboard focus back
+to the response journal. Closed incident recaps include recorded choices and
+exactly linked phase updates where retained, without changing Skip ahead pauses
+or estimating outcomes for choices the player did not make.
+
+Board papers identify the reporting quarter and the following presentation
+quarter. An empty agenda explains its eligibility rules, keeps programme
+recommendations available, and links to Risk. Low morale and completed checks
+alone do not create an agenda item; eligibility and scoring are unchanged.
+
 ## Hosting
 
 The production build is a static application: no server rendering, no API

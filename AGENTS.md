@@ -19,6 +19,13 @@ changes.
   reconstruction assessments and keep closed routes hidden until debrief.
 - Team recovery guidance must use the same daily morale rule as the engine,
   including vacancies. Describe conditional direction, not a promised deadline.
+- Empty decision states must acknowledge an active incident and offer a
+  keyboard-accessible route to its journal, even when other work is due.
+- Keep workload capacity separate from wellbeing in compact summaries. Name
+  all struggling functions; a spare-capacity badge cannot stand for morale.
+- Board eligibility copy must match `materialTopics`, including workload
+  strain rather than morale alone. Label the reporting quarter separately
+  from the preparation date and submission window.
 
 ## Artwork
 
@@ -46,6 +53,8 @@ changes.
 - Before pushing, run `pnpm check`: typecheck, lint, content validation, unit
   tests, production build and bundle size budget.
 - For UI changes, also run `pnpm test:e2e:local`.
+- Browser tests that already opened the start screen should use
+  `beginCampaign` rather than navigate again during the campaign preload.
 - Before deploying any revision, require `pnpm check` and the full
   `pnpm test:e2e` suite to pass for that exact revision. CI provides Chromium
   and WebKit coverage. Run the commands sequentially because both rebuild

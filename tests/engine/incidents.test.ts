@@ -41,6 +41,9 @@ describe('incident engine', () => {
     expect(seen.has('recovery')).toBe(true)
     expect(incident.reconstruction).toBeDefined()
     expect(incident.resolvedDay).toBeDefined()
+    const phaseUpdates = state.inbox.messages.filter((message) => message.incidentId === incident.id)
+    expect(phaseUpdates.length).toBeGreaterThan(0)
+    expect(phaseUpdates.every((message) => message.type === 'incident')).toBe(true)
   })
 
   it('produces a materially different outcome when the controls were better', () => {

@@ -615,6 +615,12 @@ export function teamHealthClause(state: GameState): string | undefined {
   return worst && `${functionName(worst.fn)} is ${moraleLabel(worst.morale).toLowerCase()}`
 }
 
+/** Compact summaries name every struggling function, not just the worst one. */
+export function teamWellbeingNotes(state: GameState): string[] {
+  return CYBER_FUNCTIONS.filter((fn) => (state.team.functions[fn]?.morale ?? 1) < 0.45)
+    .map((fn) => `${functionTitle(fn)} ${moraleLabel(state.team.functions[fn]!.morale).toLowerCase()}`)
+}
+
 /**
  * Recovery confidence in words, from the backup control as the player last
  * verified it. The cuts were 0.30 / 0.55 / 0.78, and the product the reading
@@ -776,6 +782,13 @@ export function incidentViews(state: GameState, index: ContentIndex) {
           .map((serviceId) => index.service.get(serviceId)?.name)
           .filter((name): name is string => Boolean(name)),
         reconstruction: incident.reconstruction,
+        updates: state.inbox.messages.filter((message) => message.incidentId === incident.id).toSorted((a, b) => a.day - b.day),
+        responseChoices: incident.decisionsTaken.flatMap((entry) => {
+          const runtime = state.decisions.decisions[entry.decisionId]
+          const def = runtime ? index.decision.get(runtime.defId) : undefined
+          const option = def?.options.find((candidate) => candidate.id === entry.optionId)
+          return def && option ? [{ day: entry.day, title: def.title, option: option.label }] : []
+        }),
         severity: consequenceBand(incident.consequence),
       }
     })

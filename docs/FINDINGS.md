@@ -18,6 +18,23 @@ fault.
 
 ### Fixed
 
+- **An active incident could sit beside a reassuring empty decision state**
+  (second AI-assisted report, `kestrel-32734`, 16 October 2026). The empty state
+  now names the active response and returns keyboard focus to its journal.
+  Closed recaps retain response choices and link phase messages by incident
+  provenance, not approximate dates or matching subjects. No new mandatory
+  pauses or counterfactual loss estimates were added.
+
+- **Compact team and Board summaries dropped important distinctions.** The
+  rail and mobile More menu now separate workload capacity from wellbeing and
+  name all struggling functions. Board papers distinguish reporting and
+  presentation quarters; an empty agenda lists the categories accepted by
+  `materialTopics`, preserves recommendations and routes to Risk. Morale alone
+  remains distinct from the workload strain that creates a Board topic.
+  Targeted UI regressions cover the incident focus route, multiple struggling
+  functions and empty-paper eligibility. This is usability guidance from one
+  AI report, not new evidence for changing balance.
+
 - **Unread could consume an entire backlog and fail to render** (16 October
   2026 AI-assisted playtest, seed `nexora-48260`). Selecting Unread made its
   default message read; removing that message selected the next one, repeating
