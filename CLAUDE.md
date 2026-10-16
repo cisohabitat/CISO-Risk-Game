@@ -6,6 +6,11 @@ simulation runs in the browser and there is no server component.
 
 ## Working agreements
 
+- Follow [AGENTS.md](AGENTS.md). Keep `AGENTS.md` and `README.md` updated in
+  every change set. Before deployment, require `pnpm check` and the full
+  `pnpm test:e2e` suite to pass for the exact revision being deployed. If tests
+  fail or cannot run, leave deployment pending.
+
 - **Push straight to `main`.** Commit and push without asking. Keep the feature
   branch in sync when one is in play.
 - Run `pnpm check` (typecheck, lint, content validation, unit tests, build and

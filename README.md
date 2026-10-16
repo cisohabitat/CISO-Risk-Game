@@ -55,6 +55,25 @@ Other commands:
 | `pnpm playthrough` | One campaign played end to end in a browser, photographed as it goes |
 | `pnpm guide:shots` | Regenerate the pictures in `docs/PLAYER_GUIDE.md` from the running game |
 
+## Contributor requirements
+
+Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
+Follow the repository instructions and keep documentation consistent with the
+implementation and release workflow.
+
+Before pushing, run `pnpm check`; UI changes also require
+`pnpm test:e2e:local`. Before deploying, require both `pnpm check` and the full
+`pnpm test:e2e` suite to pass for the exact revision being deployed. Run them
+sequentially because both rebuild `dist/`. CI runs the full browser suite,
+including WebKit; a local Chromium-only run does not replace that release gate.
+If checks cannot run or fail, deployment stays pending.
+
+Vercel runs `pnpm check` as its build command, blocking the hosted build on
+typecheck, lint, content, unit test, build or size failures. Browser tests run
+separately in CI: confirm both CI jobs pass before deploying or promoting.
+After deployment, run `BASE_URL=<deployment-url> pnpm test:e2e:live` and complete
+the release gate in [`docs/HOSTING.md`](docs/HOSTING.md).
+
 ## How it is put together
 
 ```

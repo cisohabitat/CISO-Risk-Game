@@ -53,7 +53,7 @@ describe('deployment configuration', () => {
   it('builds static output with the expected commands', () => {
     expect(vercelConfig.framework).toBe('vite')
     expect(vercelConfig.outputDirectory).toBe('dist')
-    expect(vercelConfig.buildCommand).toBe('pnpm build')
+    expect(vercelConfig.buildCommand).toBe('pnpm check')
     expect(vercelConfig.installCommand).toContain('--frozen-lockfile')
   })
 

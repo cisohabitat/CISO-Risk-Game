@@ -69,7 +69,7 @@ Browser
 ```text
 Framework preset:  Vite
 Install command:   pnpm install --frozen-lockfile
-Build command:     pnpm build
+Build command:     pnpm check
 Output directory:  dist
 Node.js:           22.x or 24.x (build only — nothing runs at request time)
 ```
@@ -99,6 +99,17 @@ constraints above are therefore asserted in `tests/content/deployment.test.ts`
 rather than written into the file as comments.
 
 ## Release gate
+
+Before deployment or promotion, `pnpm check` and the full `pnpm test:e2e`
+suite must pass for the exact revision being released. Run them sequentially:
+both rebuild `dist/`. A failed or unavailable check leaves deployment pending.
+Vercel runs `pnpm check` during its build, so failing checks block that build.
+Browser tests run separately in CI; confirm both CI jobs pass before deployment
+or promotion. The local Chromium-only suite is useful during development but
+does not replace full browser coverage before a release.
+
+Keep `AGENTS.md`, `README.md` and these instructions current when the release
+workflow changes.
 
 A build is not release-ready unless all of the following hold:
 
