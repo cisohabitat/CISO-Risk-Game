@@ -30,13 +30,14 @@ export function initials(name: string): string {
 }
 
 /** Decorative beside the person's visible name; initials survive a missing image or a custom campaign. */
-export function PersonPortrait({ id, name, className }: { id: string; name: string; className?: string }) {
+export function PersonPortrait({ id, name, size = 'small', className }: { id: string; name: string; size?: 'small' | 'large'; className?: string }) {
   const position = PORTRAITS[id]
   return (
     <span
       aria-hidden="true"
       className={cn(
-        'relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line-strong bg-surface-2 font-display text-sm text-ink-muted',
+        'relative flex shrink-0 items-center justify-center overflow-hidden border border-line-strong bg-surface-2 font-display text-ink-muted',
+        size === 'large' ? 'h-20 w-20 rounded-2xl text-xl sm:h-24 sm:w-24' : 'h-12 w-12 rounded-full text-sm',
         className,
       )}
     >

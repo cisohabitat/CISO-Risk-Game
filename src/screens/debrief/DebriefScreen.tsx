@@ -14,6 +14,8 @@ import { yearWord } from '@/game/time'
 import { objectiveStatusLabel } from '@/game/business/objectives'
 import { shortDate, statusLabel } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
+import { NexoraMark } from '@/components/game/NexoraMark'
+import { IncidentIllustration } from '@/components/game/IncidentIllustration'
 
 // A scale from bad to good, warm to cool. "Solid" borrowed the risk palette's
 // moderate, which is blue there and read here as a neutral label sitting
@@ -126,16 +128,20 @@ export function DebriefScreen() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="annual-report space-y-8">
       {/* The payoff for a whole year should not look like another screen. It
           is set as the report it is: a masthead, a rule, and the verdict in
           the display face with room around it. */}
-      <header className="border-y-2 border-ink py-6 text-center sm:py-8">
+      <header className="report-cover border-y-2 border-ink py-8 text-center sm:py-12">
+        <div className="mb-6 flex items-center justify-between border-b border-line pb-4 text-left">
+          <div className="flex items-center gap-3"><NexoraMark /><span className="document-kicker">Office of the CISO</span></div>
+          <span className="document-kicker">Year {String(state.year ?? 1).padStart(2, '0')}</span>
+        </div>
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
           {index.content.meta.organisation} · Annual review
           {state.situationId && index.situation.get(state.situationId) && ` · ${index.situation.get(state.situationId)!.name}`}
         </p>
-        <h1 className="mx-auto mt-4 max-w-[26ch] font-display text-3xl leading-tight text-balance sm:text-4xl">
+        <h1 className="mx-auto mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl">
           {review.headline}
         </h1>
         <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
@@ -186,16 +192,14 @@ export function DebriefScreen() {
         />
       </Dialog>
 
-      <Card>
-        <CardBody className="space-y-3">
+      <article className="report-narrative space-y-4">
           {review.narrative.map((paragraph, position) => (
             <p key={position} className="text-pretty leading-relaxed">
               {paragraph}
             </p>
           ))}
           <p className="border-t border-line pt-3 text-pretty">{review.businessOutcome}</p>
-        </CardBody>
-      </Card>
+      </article>
 
       <section aria-labelledby="the-year">
         <SectionHeading><span id="the-year">Your year, day by day</span></SectionHeading>
@@ -272,6 +276,7 @@ export function DebriefScreen() {
               <li key={incident.id} className="print-keep">
                 <Card>
                   <CardBody className="space-y-3">
+                    <IncidentIllustration name={incident.name} className="mb-4 w-full max-w-sm" />
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <h3 className="font-medium">{incident.name}</h3>
                       <Badge tone={incident.severity} >{incident.severity} consequence</Badge>

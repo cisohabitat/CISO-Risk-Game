@@ -27,10 +27,10 @@ evidence rather than hope, that this is happening. Concretely:
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
 | **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 216 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
 | **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
-| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, a printable review, twelve editorial portraits and a Nexora mark; commissioned type and human art review remain open. |
+| **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, an editorial review, twelve larger portraits, a Nexora mark, self-hosted display typography, distinct document layouts, incident scenes and illustrated empty states; human art review remains open. |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |
 | **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. | **D.** Sized (`pnpm strings`: about 30,000 words) and planned (`docs/LOCALISATION.md`); nothing translated. |
-| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play; 184.1 kB of 185. |
+| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play; approximately 209.3 KiB of 220, now including the self-hosted font. |
 | **Live** | The team can see what players do and tune from it | **None.** No telemetry, no crash reporting, no release cadence beyond CI. | **D.** Crash capture to a local log, `pnpm session` across many logs and a monthly cadence; no telemetry, no release yet. |
 
 The two weakest rows — evidence and localisation — are the ones no amount of
@@ -266,8 +266,13 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   A geometric Nexora mark appears at arrival, in the rail and on correspondence.
   The shared 80,460-byte WebP atlas loads lazily; names and initials fallbacks
   remain text. See `src/assets/art/README.md`. The commissioned type pairing
-  and human art review are still open. The first-screen budget remains 185 kB;
-  portraits are a separate image download after arrival, not part of that budget.
+  and human art review are still open. The editorial pass adds self-hosted
+  Newsreader with system sans-serif body text, larger directory portraits,
+  committee papers, an editorial annual review, correspondence layouts, compact
+  routine records, illustrated empty states and four restrained incident scenes.
+  Its first-visit budget is 220 KiB including the display font; portraits and
+  incident scenes remain separate lazy image downloads. A custom commissioned
+  typeface is still optional future work.
 - **Motion with a purpose.** The day advancing, a message arriving, a
   decision's deadline closing, the incident bar appearing: each gets one
   deliberate transition, all honouring `prefers-reduced-motion`. No
@@ -282,8 +287,11 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   screens should look like it. **Review built:** **Print or save as PDF**
   sets the annual review on white without the shell, in light colours from
   either theme, rows kept whole across pages (`tests/e2e/print.spec.ts`
-  checks the PDF runs to several pages). The board paper and the memo
-  letterhead are not started.
+  checks the PDF runs to several pages). **Editorial layouts built:** committee
+  mastheads and dated management papers, a correspondence reader with ruled
+  message rows, an annual-review cover and readable narrative column, and a
+  response journal drawn from the incident's actual dated messages. Decorative
+  incident scenes are omitted from print and the review cover prints white.
 - **Sound, optional.** A small palette: the clock, a message, the incident
   bar, the quarter closing, the review. Off by default, muted on first run, a
   single toggle in the header. Never the only channel for information.
@@ -293,7 +301,9 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   phone; loaded only when on.
 - **Loading and empty states** given the same care as the screens: the
   campaign chunk fetch, "Drawing the dependency map…", the first morning
-  before anything has come back.
+  before anything has come back. **Empty states built:** small thematic vector
+  vignettes for research, correspondence, people and maps, with explanations
+  and contextual next actions. No additional image download.
 
 **Measures.** `pnpm screenshots` and `pnpm guide:shots` re-reviewed on every
 change; axe still clean; the size budget revised *on purpose* with the
@@ -461,7 +471,8 @@ seconds (§6); `/about` is the page to send people to, built from
 limitations, and linked from the start screen's foot; a 90-second trailer cut from the
 photographed playthrough (**shot list written**, `docs/release/TRAILER.md`;
 not cut); a press kit with the identity assets (**the About page and
-`docs/release/STORE.md` serve for now**; no identity assets exist); an
+`docs/release/STORE.md` serve for now**; the in-game identity exists but a
+separate press kit has not been assembled); an
 accessibility statement (**published at `/accessibility`**, saying what is
 checked and what is not); a support address and a known-issues page generated
 from `docs/FINDINGS.md`'s open section (**the repository's issue tracker,

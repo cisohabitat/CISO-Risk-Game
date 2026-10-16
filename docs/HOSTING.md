@@ -28,8 +28,15 @@ it except the starting situations, which have a small chunk of their own; the
 rest is fetched as soon as the start screen is up, so starting or continuing
 does not wait on it. Moving it out took the first screen from 258.2 kB to
 176.7 kB, and moving schema validation into a module loaded only in
-development took it to 174.9 kB. It reads 184.1 kB against the 185 kB limit
-after the fixes since, the links to the player's guide, the line icons, the year strip, the playtest and sound switches (their code loads only when switched on) the per-screen error boundary and the seed-link reader. If a deploy replaces the files while the
+development took it to 174.9 kB. The first portrait pass read 184.1 kB against
+the 185 kB JavaScript/CSS limit. The editorial pass reads about 209.3 KiB against
+a 220 KiB limit that also counts the 23,756-byte self-hosted Newsreader font.
+The font uses optional display and keeps the system serif fallback on a slow
+connection. The increase is deliberate: a distinctive display face and clearer
+document layouts, with font transfers now included rather than hidden from the
+budget. The earlier 184.1 kB included the player's guide links, line icons,
+year strip, optional playtest and sound switches, the per-screen error boundary
+and seed-link reader. If a deploy replaces the files while the
 start screen is open, the page reloads once to pick up the new version. `MUST_STAY_LAZY` fails the build if
 the campaign or its loader is ever preloaded again, which one static import
 from the start screen is enough to do.
@@ -191,10 +198,22 @@ immutable asset caching applies. It is loaded by lazy images on Board, Team
 and messages from named characters, with a single cached download. The start
 screen does not request it; `tests/e2e/art.spec.ts` checks that boundary.
 
-`pnpm size` measures JavaScript and stylesheet critical paths, so the image's
+`pnpm size` measures JavaScript, stylesheet and font critical paths, so the image's
 80,460 bytes are additional to the reported first-load budget when the player
-first sees a portrait. No budget was raised for this art pass. The inline SVG
+first sees a portrait. The original portrait pass did not raise a budget. The inline SVG
 company mark follows the existing theme tokens and needs no image request.
+
+The editorial pass adds the 123,886-byte `nexora-incidents.webp` atlas. It is
+requested only where an incident illustration is rendered, never on the start
+screen. Empty-state illustrations use inline SVG. The first-visit budget is
+220 KiB including the self-hosted display face; `scripts/size-budget.ts` follows
+font URLs in the entry CSS and counts WOFF2 at its file size. Body copy needs no
+font download. The font licence ships at `/fonts/Newsreader-OFL.txt`.
+
+The approximately 25 KiB increase over the first portrait pass combines the
+font and the new visual markup/styles. No new throttled startup-time claim is
+made; the asset loading boundary, responsive layouts and both themes are checked
+in the browser suite.
 
 ## Commercial use
 

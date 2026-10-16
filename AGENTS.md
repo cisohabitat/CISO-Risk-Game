@@ -22,6 +22,15 @@ changes.
   working fallback. Never use a face or its colour to convey trust or risk.
 - Keep image downloads out of the start screen. Measure artwork separately
   from the JavaScript budget and review desktop, 320px and both themes.
+- Incident illustrations are decorative and may use only the public incident
+  name and response phase. Keep response controls prominent and preserve the
+  factual timeline in readable text.
+- Newsreader is self-hosted under the SIL Open Font License in
+  `src/assets/fonts/`. Keep the licence with the deployed font. The first-visit
+  budget includes stylesheet font URLs; do not replace it with a remote font.
+- Use larger portraits for people directories, document layouts for papers and
+  reviews, and compact rows for routine records. Empty-state illustrations
+  remain decorative beside a clear explanation and a useful next action.
 
 ## Verification and deployment
 

@@ -34,3 +34,21 @@ Run `pnpm check` and `pnpm test:e2e:local` after changes. Browser coverage in
 `tests/e2e/art.spec.ts` checks that the start screen never requests the atlas
 and that it loads on the people screens. Full browser coverage remains required
 before deployment, as set out in the root `AGENTS.md`.
+
+## Incident scenes
+
+`nexora-incidents.webp` is a 960 × 640 atlas (123,886 bytes) with two columns and
+two rows. The four scenes are service interruption, information exposure,
+containment and recovery, in that order. Generated with OpenAI image generation
+on 16 October 2026; encoded as WebP at quality 79. The warm editorial palette
+matches the portraits. No real person's image was supplied as a reference.
+
+`IncidentIllustration` selects a decorative scene using only the already-visible
+incident name and phase. It never reads the hidden attack path. The scene is
+not evidence about a particular affected service. It loads lazily, stays compact
+beside live response controls, and appears again with reconstruction notes.
+Keep dates, impact, response status and decisions as text.
+
+Empty-state vignettes in `src/components/ui/EmptyIllustration.tsx` are inline
+SVGs for research, correspondence, people and maps. They add no image download
+and follow the existing light and dark theme tokens.

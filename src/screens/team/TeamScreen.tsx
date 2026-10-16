@@ -86,12 +86,12 @@ export function TeamScreen() {
         <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {view.leaders.map((leader) => (
             <li key={leader.id}>
-              <Card className="h-full">
+              <Card className="person-dossier h-full">
                 <CardBody className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <PersonPortrait id={leader.id} name={leader.name} />
+                    <PersonPortrait id={leader.id} name={leader.name} size="large" />
                     <div className="min-w-0">
-                      <h3 className="font-medium">{leader.name}</h3>
+                      <h3 className="font-display text-xl leading-tight">{leader.name}</h3>
                       <p className="text-sm text-ink-muted">{leader.role}</p>
                     </div>
                   </div>
@@ -133,15 +133,16 @@ export function TeamScreen() {
         <SectionHeading><span id="delegated">Delegated work</span></SectionHeading>
         {view.assignments.length === 0 ? (
           <EmptyState
+            illustration="people"
             title="Nothing delegated right now"
             description="You cannot do all of this yourself. Commission work from the Risk screen and choose who leads it."
+            action={<Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('risk')}>Open Risk</Button>}
           />
         ) : (
           <ul className="space-y-2">
             {view.assignments.map((assignment) => (
               <li key={assignment.id}>
-                <Card>
-                  <CardBody className="flex flex-wrap items-center justify-between gap-3">
+                <div className="record-row flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-medium">{assignment.title}</p>
                       <p className="text-sm text-ink-muted">Led by {assignment.leaderName}</p>
@@ -149,8 +150,7 @@ export function TeamScreen() {
                     <Badge tone="neutral" glyph={false}>
                       {assignment.daysRemaining <= 0 ? 'Due today' : `${assignment.daysRemaining}d left`}
                     </Badge>
-                  </CardBody>
-                </Card>
+                </div>
               </li>
             ))}
           </ul>

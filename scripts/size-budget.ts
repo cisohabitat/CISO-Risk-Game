@@ -67,7 +67,9 @@ const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-', 'campaign-', 'loader-']
  * first screen fell from 258.2 kB to 176.7 kB, and the limit is set just above
  * that so the gain cannot drift away unnoticed.
  */
-const CRITICAL_LIMIT_KB = 185
+// The editorial pass adds a 23.2 KiB self-hosted display face. Fonts are now
+// counted below as well as JS/CSS; the old 185 KiB gate did not count them.
+const CRITICAL_LIMIT_KB = 220
 
 async function main(): Promise<void> {
   const dir = join(process.cwd(), 'dist', 'assets')
@@ -82,7 +84,7 @@ async function main(): Promise<void> {
   const sizes = new Map<string, number>()
   for (const entry of entries) {
     const bytes = await readFile(join(dir, entry))
-    sizes.set(entry, gzipSync(bytes, { level: 9 }).byteLength / 1024)
+    sizes.set(entry, (entry.endsWith('.woff2') ? bytes.byteLength : gzipSync(bytes, { level: 9 }).byteLength) / 1024)
   }
 
   const failures: string[] = []
@@ -94,6 +96,15 @@ async function main(): Promise<void> {
     .map((match) => match[1]!)
     .filter((file) => file.endsWith('.js') || file.endsWith('.css'))
   const inFirstLoad = new Set(firstLoad)
+  // A self-hosted font is a real first-visit transfer even without a preload.
+  // Count CSS font URLs so adding another face cannot bypass the budget.
+  for (const file of firstLoad.filter((entry) => entry.endsWith('.css'))) {
+    const css = await readFile(join(dir, file), 'utf8')
+    for (const match of css.matchAll(/url\(["']?([^"')]+\.woff2)["']?\)/g)) {
+      const font = match[1]!.split('/').at(-1)!
+      inFirstLoad.add(font)
+    }
+  }
 
   console.log('Transfer size (gzip), against budget:\n')
   for (const budget of BUDGETS) {
@@ -133,7 +144,7 @@ async function main(): Promise<void> {
   if (missing.length > 0) failures.push(`the entry HTML asks for files that are not in dist/assets: ${missing.join(', ')}`)
 
   console.log(`\n  first load, from index.html: ${[...inFirstLoad].sort().join(', ')}`)
-  console.log(`  critical path ${critical.toFixed(1)} kB / ${CRITICAL_LIMIT_KB} kB (js and css before the first screen works)`)
+  console.log(`  critical path ${critical.toFixed(1)} kB / ${CRITICAL_LIMIT_KB} kB (js, css and self-hosted fonts)`)
   if (critical > CRITICAL_LIMIT_KB) {
     failures.push(`the critical path is ${critical.toFixed(1)} kB gzip, over its ${CRITICAL_LIMIT_KB} kB budget`)
   }

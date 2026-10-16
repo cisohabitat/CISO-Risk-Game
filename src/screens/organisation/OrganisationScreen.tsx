@@ -87,6 +87,7 @@ export function OrganisationScreen() {
       {nodes.length === 0 ? (
         <EmptyState
           title="You cannot see the organisation yet"
+          illustration="map"
           description="Nexora's architecture is not documented anywhere you can trust. Commission an architecture review, or talk to the people who run the services."
         />
       ) : (

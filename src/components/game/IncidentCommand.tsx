@@ -14,6 +14,7 @@ import { Button, Card, CardBody } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
 import { plural, shortDate } from '@/lib/formatting/labels'
+import { IncidentIllustration } from './IncidentIllustration'
 
 export function IncidentCommand() {
   const state = useGameStore((store) => store.state)
@@ -57,7 +58,8 @@ export function IncidentCommand() {
       </p>
       <CardBody className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
+            <p className="document-kicker mb-2">Response journal</p>
             <h2 id="incident-command" className="font-display text-xl leading-tight text-balance">
               {incident.name}
             </h2>
@@ -67,6 +69,7 @@ export function IncidentCommand() {
               {incident.detectedDay === undefined && ' · not yet confirmed detected'}
             </p>
           </div>
+          <IncidentIllustration name={incident.name} phase={incident.phaseLabel} className="w-24 shrink-0 sm:w-40" />
           {incident.awaiting.length === 0 && (
             <Button
               variant="secondary"
@@ -105,9 +108,9 @@ export function IncidentCommand() {
         {incident.timeline.length > 0 && (
           <div>
             <p className="text-xs font-medium text-ink-faint">What you have been told</p>
-            <ol className="mt-1.5 space-y-1 text-sm">
+            <ol className="response-timeline mt-3 text-sm">
               {incident.timeline.slice(-5).map((entry, position) => (
-                <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
+                <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
                   <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
                   <span className="text-ink-muted">{entry.text}</span>
                 </li>

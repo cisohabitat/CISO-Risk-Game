@@ -75,10 +75,11 @@ export function InboxScreen() {
       </div>
 
       {messages.length === 0 ? (
-        <EmptyState title="Nothing here" description="No messages match this filter yet." />
+        <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"
+          action={<Button variant="secondary" size="sm" onClick={() => filter === 'all' ? useGameStore.getState().setScreen('home') : setFilter('all')}>{filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <ul className="space-y-2" aria-label="Messages">
+          <ul className="divide-y divide-line border-y border-line" aria-label="Messages">
             {messages.slice(0, 60).map((message) => (
               <li key={message.id}>
                 <button
@@ -86,10 +87,10 @@ export function InboxScreen() {
                   onClick={() => setUi({ selectedMessageId: message.id })}
                   aria-current={selected?.id === message.id ? 'true' : undefined}
                   className={cn(
-                    'w-full rounded-lg border p-3 text-left transition-colors',
+                    'w-full border-l-2 px-3 py-4 text-left transition-colors',
                     selected?.id === message.id
                       ? 'border-accent bg-accent-soft/30'
-                      : 'border-line bg-surface hover:border-line-strong',
+                      : 'border-transparent hover:bg-surface-2',
                   )}
                 >
                   <div className="flex items-baseline justify-between gap-2">
@@ -115,7 +116,7 @@ export function InboxScreen() {
           </ul>
 
           {selected && (
-            <Card className="md:sticky md:top-24 md:self-start">
+            <Card className="correspondence md:sticky md:top-24 md:self-start">
               <CardBody>
                 <div className="mb-4 flex items-center gap-2 border-b border-line pb-3">
                   <NexoraMark className="h-7 w-7" />
@@ -127,7 +128,7 @@ export function InboxScreen() {
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} />}
                   <p className="text-sm text-ink-muted">{selected.from}</p>
                 </div>
-                <div className="mt-4 space-y-3 text-pretty">
+                <div className="correspondence-body mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (
                     <p key={position} className="whitespace-pre-line leading-relaxed">
                       {paragraph}

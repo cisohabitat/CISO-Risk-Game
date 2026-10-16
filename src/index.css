@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 600;
+  font-display: optional;
+  src: url('./assets/fonts/newsreader-display.woff2') format('woff2');
+}
+
 /*
  * Visual language (plan §30): a premium enterprise strategy game. Restrained
  * palette, strong typography, clear data hierarchy. Deliberately not a stock
@@ -171,7 +179,7 @@
   --color-danger: var(--danger);
 
   --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Georgia', ui-serif, serif;
+  --font-display: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', 'Georgia', ui-serif, serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'JetBrains Mono', monospace;
 
   --shadow-soft: var(--shadow-soft);
@@ -315,6 +323,79 @@
   }
 }
 
+/* Editorial surfaces share the theme, but each has its own reading rhythm. */
+.document-kicker {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.committee-brief, .correspondence {
+  border-top: 3px solid var(--brass);
+  box-shadow: var(--shadow-soft);
+}
+.board-paper { padding: 0.25rem 0; }
+.correspondence > div { padding: clamp(1rem, 2.5vw, 2rem); }
+.correspondence-body {
+  max-width: 68ch;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+.correspondence-body > p:first-child { color: var(--ink); }
+.correspondence-body > p, .report-narrative > p { line-height: 1.8; }
+.person-dossier { border-top: 2px solid var(--line-strong); }
+.record-row {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.report-cover {
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  background: linear-gradient(160deg, var(--brass-soft), var(--surface) 68%);
+}
+.report-narrative {
+  max-width: 70ch;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+.report-narrative > p:first-child {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.incident-art {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+.response-timeline > li {
+  position: relative;
+  margin-left: 0.25rem;
+  padding: 0 0 0.9rem 1rem;
+  border-left: 1px solid var(--line-strong);
+}
+.response-timeline > li::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  left: -0.22rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--brass);
+}
+.empty-state {
+  border-block: 1px solid var(--line);
+  background: linear-gradient(150deg, var(--surface), var(--surface-2));
+}
+
 /* An incident makes the shell visibly tense without becoming a cartoon. */
 :root[data-incident='true'] {
   --paper: color-mix(in oklch, var(--paper) 94%, var(--band-severe));
@@ -378,6 +459,8 @@
   .print-keep {
     break-inside: avoid;
   }
+  .report-cover { background: white; }
+  .incident-art { display: none; }
   @page {
     margin: 18mm 16mm;
   }

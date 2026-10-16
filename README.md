@@ -180,6 +180,21 @@ It is not requested by the start screen. The company mark is inline SVG and
 follows the light and dark theme. Artwork sources, character order and replacement
 instructions are documented in [`src/assets/art/README.md`](src/assets/art/README.md).
 
+The people directories use larger portraits. Board papers have a committee
+masthead, Inbox messages use a correspondence layout, and the annual review
+uses an editorial cover and reading column. Routine messages, assignments and
+past board meetings use compact rows. Empty states have small vector vignettes
+and contextual next actions.
+
+Four restrained incident scenes appear with the response journal and incident
+reconstructions. They are decorative; dates, decisions and response status stay
+in text. Their shared 123,886-byte image loads only when shown.
+
+Headings use self-hosted Newsreader Semibold (23,756 bytes, SIL Open Font
+License); body copy keeps the system sans-serif stack. The first-visit budget
+now counts fonts as well as JavaScript and CSS, with a 220 KiB limit. Font
+sources and licensing are in [`src/assets/fonts/README.md`](src/assets/fonts/README.md).
+
 ## Hosting
 
 The production build is a static application: no server rendering, no API

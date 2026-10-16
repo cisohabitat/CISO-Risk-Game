@@ -16,6 +16,7 @@ import { Icon } from '@/components/ui/icons'
 import { PersonPortrait, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
+import { NexoraMark } from '@/components/game/NexoraMark'
 
 export function BoardScreen() {
   const state = useGameStore((store) => store.state)
@@ -60,7 +61,10 @@ export function BoardScreen() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display text-2xl leading-tight">Board and executives</h1>
+        <div>
+          <p className="document-kicker">Nexora Group · Governance</p>
+          <h1 className="mt-2 font-display text-3xl leading-tight">Board and executives</h1>
+        </div>
         {pendingQuarter !== undefined && (
           <Button variant="primary" onClick={() => setPreparing(true)}>
             Prepare the Q{pendingQuarter} board paper
@@ -70,8 +74,12 @@ export function BoardScreen() {
       </div>
 
       {pendingQuarter !== undefined && (
-        <Card className="border-brass/50 bg-brass-soft/40">
+        <Card className="committee-brief">
           <CardBody>
+            <div className="mb-4 flex items-center justify-between gap-3 border-b border-line pb-3">
+              <div className="flex items-center gap-3"><NexoraMark /><p className="document-kicker">Board Risk Committee</p></div>
+              <span className="font-display text-3xl text-ink-muted">Q{pendingQuarter}</span>
+            </div>
             <p className="font-medium">The risk committee meets this quarter.</p>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
               Choose what goes in front of them. Leaving out something material does more damage than bringing bad news.
@@ -88,13 +96,13 @@ export function BoardScreen() {
         <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {people.map((person) => (
             <li key={person.id}>
-              <Card className="h-full">
+              <Card className="person-dossier h-full">
                 <CardBody className="space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
-                      <PersonPortrait id={person.id} name={person.name} />
+                      <PersonPortrait id={person.id} name={person.name} size="large" />
                       <div className="min-w-0">
-                        <h3 className="font-medium">{person.name}</h3>
+                        <h3 className="font-display text-xl leading-tight">{person.name}</h3>
                         <p className="text-sm text-ink-muted">{person.role}</p>
                       </div>
                     </div>
@@ -172,12 +180,10 @@ export function BoardScreen() {
           <ul className="space-y-2">
             {state.reviews.quarters.map((quarter) => (
               <li key={quarter.quarter}>
-                <Card>
-                  <CardBody>
+                <div className="record-row sm:grid sm:grid-cols-[8rem_1fr] sm:gap-4">
                     <p className="font-medium">Quarter {quarter.quarter}</p>
                     <p className="mt-1 text-sm text-ink-muted text-pretty">{quarter.boardReaction}</p>
-                  </CardBody>
-                </Card>
+                </div>
               </li>
             ))}
           </ul>
@@ -197,7 +203,11 @@ export function BoardScreen() {
           </>
         }
       >
-        <div className="space-y-5">
+        <div className="board-paper space-y-5">
+          <header className="flex items-start justify-between gap-4 border-b-2 border-ink pb-5">
+            <div><p className="document-kicker">Nexora Group</p><p className="mt-2 font-display text-2xl">Board Risk Committee</p><p className="mt-1 text-sm text-ink-muted">Management paper · {formatGameDate(state.currentDay).label}</p></div>
+            <span aria-hidden="true" className="font-display text-5xl text-ink-faint">Q{pendingQuarter}</span>
+          </header>
           {availableTopics.length === 0 ? (
             <EmptyState
               title="You have nothing to report"

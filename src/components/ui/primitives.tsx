@@ -18,6 +18,7 @@ import {
   type ReactNode,
 } from 'react'
 import { cn } from '@/lib/utils/cn'
+import { EmptyIllustration } from './EmptyIllustration'
 
 /* ---------------------------------------------------------------- Button -- */
 
@@ -467,10 +468,11 @@ export function Disclosure({ summary, children, defaultOpen = false }: { summary
 
 /* ----------------------------------------------------------------- Empty -- */
 
-export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
+export function EmptyState({ title, description, action, illustration }: { title: string; description: string; action?: ReactNode; illustration?: 'research' | 'inbox' | 'people' | 'map' }) {
   return (
-    <div className="rounded-[--radius-card] border border-dashed border-line-strong bg-surface-2 px-5 py-8 text-center">
-      <p className="font-medium">{title}</p>
+    <div className="empty-state px-5 py-8 text-center sm:py-10">
+      <EmptyIllustration kind={illustration} />
+      <p className="font-display text-xl">{title}</p>
       <p className="mx-auto mt-1 max-w-md text-sm text-ink-muted text-pretty">{description}</p>
       {action && <div className="mt-4 flex justify-center">{action}</div>}
     </div>
