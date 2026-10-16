@@ -259,6 +259,14 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* A long wellbeing summary must not collapse the menu to zero height on
+     short desktop windows. Use one rail scroller instead of trapped children. */
+  @media (min-width: 64rem) and (max-height: 48rem) {
+    .sidebar-rail { overflow-y: auto; overscroll-behavior-y: contain; }
+    .sidebar-rail > div { flex-shrink: 0; }
+    .sidebar-menu { flex: none; overflow: visible; }
+  }
+
   /* A dialog never outgrows the screen. `dvh` tracks the browser chrome on a
      phone; the `vh` line before it is for browsers that do not know `dvh`,
      which would otherwise drop the cap and push the footer off the bottom. */

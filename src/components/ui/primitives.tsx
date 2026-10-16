@@ -527,7 +527,7 @@ export function SegmentedControl<T extends string>({
   onChange: (value: T) => void
 }) {
   return (
-    <div role="group" aria-label={label} className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
+    <div role="group" aria-label={label} className="-mx-1 flex gap-1 overflow-x-auto overscroll-x-contain px-1 pb-1">
       {options.map((option) => {
         const selected = option.id === value
         return (

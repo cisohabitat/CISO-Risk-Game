@@ -18,6 +18,22 @@ fault.
 
 ### Fixed
 
+- **The main pane trapped wheel scrolling on narrow layouts.** A day-200
+  tablet-portrait regression found that wheel input over the full-height main
+  pane left both it and the page at scroll position zero. Its overflow and
+  overscroll containment now apply only at the desktop breakpoint; narrower
+  layouts let the page scroll. The screen-scrolling regression exercises real
+  wheel input, which the earlier programmatic reachability probe missed.
+  Inbox and Organisation filter rows had the same trap; they now contain only
+  horizontal overscroll, with wheel regressions over the filters themselves.
+
+- **A long wellbeing summary could hide desktop navigation.** At 1366×480,
+  all six struggling functions left the rail menu with zero height. The whole
+  rail now scrolls at desktop heights up to 768px, keeping its menu and bottom
+  controls reachable. Restoring the old flex rules reproduces the collapse.
+  The browser regression covers Chromium and WebKit; the broader viewport
+  audit and its limits are recorded in [SCROLLING_REVIEW.md](SCROLLING_REVIEW.md).
+
 - **An active incident could sit beside a reassuring empty decision state**
   (second AI-assisted report, `kestrel-32734`, 16 October 2026). The empty state
   now names the active response and returns keyboard focus to its journal.

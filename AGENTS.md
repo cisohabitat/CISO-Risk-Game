@@ -55,6 +55,14 @@ changes.
 - For UI changes, also run `pnpm test:e2e:local`.
 - Browser tests that already opened the start screen should use
   `beginCampaign` rather than navigate again during the campaign preload.
+- Scroll checks must cover vertical reachability as well as horizontal
+  overflow, and exercise real wheel input rather than only `scrollIntoView`.
+  Keep main-pane overflow and overscroll containment desktop-only so narrow
+  layouts can scroll the page. Horizontal filter strips must contain only
+  horizontal overscroll and let vertical gestures reach their parent scroller.
+  Preserve the single scrolling desktop rail at
+  heights up to 768px; a long wellbeing summary must not collapse the navigation menu. Run
+  `tests/e2e/scrolling.spec.ts` for screen navigation and short-rail regressions.
 - Before deploying any revision, require `pnpm check` and the full
   `pnpm test:e2e` suite to pass for that exact revision. CI provides Chromium
   and WebKit coverage. Run the commands sequentially because both rebuild

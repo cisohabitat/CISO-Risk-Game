@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <nav
         aria-label="Primary"
         data-print="hide"
-        className="hidden shrink-0 border-r border-line bg-surface lg:flex lg:h-full lg:w-60 lg:flex-col xl:w-64"
+        className="sidebar-rail hidden shrink-0 border-r border-line bg-surface lg:flex lg:h-full lg:w-60 lg:flex-col xl:w-64"
       >
         <div className="flex items-center gap-3 border-b border-line px-5 py-5">
           <NexoraMark />
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
           </div>
         </div>
-        <div className="scroll-area flex-1">
+        <div className="sidebar-menu scroll-area flex-1">
           <ul className="space-y-1 p-3">
             {DESTINATIONS.map((destination) => (
               <li key={destination.id}>
@@ -180,7 +180,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main
           id="main"
           tabIndex={-1}
-          className="print-flow scroll-area flex-1 pb-24 outline-none lg:pb-8"
+          className="print-flow flex-1 pb-24 outline-none lg:overflow-y-auto lg:overscroll-contain lg:pb-8"
           aria-label={current?.label ?? 'Game'}
         >
           <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">{children}</div>

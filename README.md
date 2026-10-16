@@ -249,6 +249,20 @@ that cannot download it should use `pnpm test:e2e:local`.
 
 ## Accessibility
 
+Phone and tablet portrait layouts scroll the page naturally; desktop layouts
+use a separate scrolling content pane. Scroll containment applies only to the
+desktop pane so it cannot trap page scrolling on narrower screens.
+Horizontal filter rows also pass vertical scroll input through to the page or
+content pane.
+
+At short desktop heights (768px and below), the whole navigation rail scrolls
+so every destination and bottom control remains reachable, including when the
+wellbeing summary lists every function. The browser suite checks vertical
+scrolling, the final control on each main screen and scroll reset on navigation,
+alongside horizontal overflow.
+See the [scrolling review](docs/SCROLLING_REVIEW.md) for the viewport matrix,
+populated states and review limits.
+
 Targets WCAG 2.2 AA: keyboard navigable throughout, semantic landmarks, visible
 focus, 44px touch targets, 16px body input text, no hover-only information,
 motion that respects `prefers-reduced-motion`, textual equivalents for the

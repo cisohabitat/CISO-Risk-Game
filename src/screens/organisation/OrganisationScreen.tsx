@@ -96,7 +96,7 @@ export function OrganisationScreen() {
             {/* Wraps from tablet width up. It scrolled sideways everywhere, and beside
                 the inspector it stopped at "Net" with nothing to say more followed. */}
             <div
-              className="scroll-area -mx-1 flex gap-1 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"
+              className="-mx-1 flex gap-1 overflow-x-auto overscroll-x-contain px-1 pb-1 sm:flex-wrap sm:overflow-visible"
               role="group"
               aria-label="Filter by type"
             >
