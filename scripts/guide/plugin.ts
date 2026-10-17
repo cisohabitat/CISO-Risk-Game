@@ -8,6 +8,7 @@ import { readFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import type { Plugin } from 'vite'
 import { GUIDE_META, renderGuidePage, type PageMeta } from './page.ts'
+import { buildInfo } from '../build-info.ts'
 
 export const GUIDE_SOURCE = 'docs/PLAYER_GUIDE.md'
 
@@ -19,6 +20,11 @@ export const GUIDE_SOURCE = 'docs/PLAYER_GUIDE.md'
  */
 export const PAGES: { source: string; out: string; meta: PageMeta }[] = [
   { source: GUIDE_SOURCE, out: 'guide.html', meta: GUIDE_META },
+  {
+    source: 'CHANGELOG.md',
+    out: 'release-notes.html',
+    meta: { label: 'Release notes', description: 'Changes and release history for CISO: First Year.', contents: true },
+  },
   {
     source: 'docs/release/ABOUT.md',
     out: 'about.html',
@@ -40,10 +46,20 @@ export function guidePage(root: string = process.cwd()): Plugin {
     name: 'player-guide',
     apply: 'build',
     async generateBundle() {
+      const info = buildInfo(root)
+      const repo = 'https://github.com/cisohabitat/CISO-Risk-Game'
       const urls = new Map<string, string>()
       for (const page of PAGES) {
         const source = join(root, page.source)
-        const markdown = await readFile(source, 'utf8')
+        let markdown = await readFile(source, 'utf8')
+        if (page.out === 'about.html') {
+          markdown += `\n\n## Release and build\n\nVersion **${info.version}**.\n\nBuilt **${info.builtAt}** (UTC).\n\nCommit: ${info.commit ? `[${info.commit.slice(0, 7)}](${repo}/commit/${info.commit})` : 'unavailable in this source archive'}.\n\n[Release notes](/release-notes) · [GitHub releases and downloads](${repo}/releases)\n`
+        }
+        if (page.out === 'release-notes.html') {
+          markdown = markdown.replace(/^# Changelog/, '# Release notes')
+          markdown = markdown.replace(/\]\((docs\/[^)]+)\)/g, `](${repo}/blob/main/$1)`)
+          markdown = markdown.replace('# Release notes', `# Release notes\n\n[GitHub releases and downloads](${repo}/releases). Unreleased changes describe the current development build; a named release is published separately. `)
+        }
         for (const match of markdown.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
           const src = match[1]!
           const path = join(dirname(source), src)

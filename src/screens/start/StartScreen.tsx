@@ -14,6 +14,7 @@ import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
 import { readSeedLink } from '@/lib/seed-link'
 import { StartHero } from './StartHero'
+import { APP_VERSION, RELEASE_NOTES_URL } from '@/lib/release'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -383,6 +384,10 @@ export function StartScreen() {
         </Card>
 
         <p className="mt-3 text-center text-sm text-ink-muted">
+          <a href="/about#release-and-build" className="underline underline-offset-2">v{APP_VERSION}</a>
+          <span aria-hidden="true"> · </span>
+          <a href={RELEASE_NOTES_URL} className="underline underline-offset-2">Release notes</a>
+          <span aria-hidden="true"> · </span>
           <a href="/about" className="underline underline-offset-2">About this game</a>
           <span aria-hidden="true"> · </span>
           <a href="/accessibility" className="underline underline-offset-2">Accessibility</a>

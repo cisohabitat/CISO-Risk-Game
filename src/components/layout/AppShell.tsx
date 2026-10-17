@@ -169,6 +169,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="sr-only">: the player's guide (opens in a new tab)</span>
             </a>
           </div>
+          <a href="/about#release-and-build" target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center rounded-lg text-center text-xs text-ink-muted underline underline-offset-2">
+            About and build details<span className="sr-only"> (opens in a new tab)</span>
+          </a>
           <SoundToggle className="compact min-h-9" />
           <ShortcutsToggle className="compact min-h-9" />
           <RecordingControl className="border-t border-line pt-3" />
@@ -292,6 +295,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             </a>
           </li>
         </ul>
+        <a href="/about#release-and-build" target="_blank" rel="noopener" className="mt-4 block min-h-11 py-3 text-sm text-ink-muted underline underline-offset-2">
+          About and build details<span className="sr-only"> (opens in a new tab)</span>
+        </a>
         <SoundToggle className="mt-4" />
         <ShortcutsToggle className="mt-2" />
         <RecordingControl className="mt-4 border-t border-line pt-3" />

@@ -116,6 +116,8 @@ The game as it stands after the roadmap's engineering phases
   animation. See `/accessibility`.
 
 ### Presentation
+- The title footer shows the version and links to release notes. About includes
+  the build date and commit, and opens from the in-game menu without interrupting play.
 - One line-icon set, sentence-case labels, a key on the dependency map, a
   year strip, ratings on the board paper's agenda, and motion only where
   something arrives.

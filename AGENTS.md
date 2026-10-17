@@ -60,6 +60,12 @@ changes.
 
 ## Verification and deployment
 
+- The start footer reads its version from `package.json`; `/release-notes`
+  is built from `CHANGELOG.md`. About shows build-time UTC date and the public
+  commit SHA (Vercel/CI metadata or local Git), never arbitrary environment data.
+  Keep About reachable from the desktop rail and mobile menu without leaving play.
+  Named GitHub releases and downloadable site archives follow `docs/release/RELEASING.md`.
+
 - Commit and push completed, verified changes directly to `main` without asking
   for confirmation. This is the owner's standing instruction for future work.
 - Before pushing, run `pnpm check`: typecheck, lint, content validation, unit

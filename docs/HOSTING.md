@@ -1,5 +1,14 @@
 # Hosting
 
+The build publishes `/release-notes` from `CHANGELOG.md`, beside `/about` and
+`/guide`. About's **Release and build** section records the package version,
+UTC build time, and public commit SHA from Vercel, GitHub Actions or local Git.
+An archive built without Git explicitly reports that its commit is unavailable.
+After deployment, check the About commit matches the revision being verified.
+Only these public fields are rendered; no credentials or other environment
+values are shipped. Named releases and site ZIPs follow
+`docs/release/RELEASING.md` independently of ordinary main deployments.
+
 ## Build size
 
 `pnpm build && pnpm size` prints the transfer size of every chunk against a

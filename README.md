@@ -22,6 +22,13 @@ discover what matters, form and test hypotheses, prioritise scarce attention,
 influence people you do not control, build capability over months, and live with
 delayed consequences.
 
+The title-screen footer shows the version and links to [release notes](https://ciso-risk-game.vercel.app/release-notes).
+About lists the build's UTC timestamp and linked commit ID, and is also available
+from the in-game rail or mobile menu in a separate tab. The version comes from
+`package.json`, the notes from `CHANGELOG.md`; build provenance is generated
+automatically. GitHub Releases holds named releases and downloadable static site
+archives when a release is cut; ordinary pushes remain development builds.
+
 ## Running it
 
 ```bash
