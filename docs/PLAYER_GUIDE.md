@@ -39,8 +39,15 @@ three things and did them.
 
 ![The start screen](images/01-start.png)
 
-Pick a difficulty and press **Begin your first day**. If you are new, the
-differences that matter are:
+Press **Begin your first year** to play immediately on CISO difficulty with
+the inherited mess. **Continue campaign** resumes your latest saved year.
+To choose a different difficulty or starting situation, follow **Campaign
+options** below the title screen, then press **Begin your first day**.
+Shared-year links already select the seed, mode and situation they name.
+
+![Campaign options](images/01c-options.png)
+
+If you are new, the differences that matter are:
 
 | | What changes |
 |---|---|
@@ -73,9 +80,11 @@ The game saves constantly to your own browser. There is no account and nothing
 is sent anywhere. The **⏏** beside the save button at the top saves and closes
 the campaign you are in, back to this screen.
 
-![Returning: one row per campaign](images/01b-continue.png)
+![Returning: resume your latest campaign](images/01b-continue.png)
 
-Come back later and a **Continue** list sits above that. Each campaign is one
+Come back later and **Continue campaign** resumes your latest save directly.
+**Saved campaigns** jumps to the **Continue** list below the title screen.
+Each campaign is one
 save, kept at the day you last reached, so there is one row per year you have
 played, newest first. Pick one to carry on. Each has a **Delete** beside it,
 and once you have more than one campaign there is a control to delete them all.

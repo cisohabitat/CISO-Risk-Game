@@ -9,12 +9,11 @@ import { situationChoices, situationName } from '@/lib/content/situations'
 import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
-import { GUIDE_URL } from '@/app/navigation'
 import { setRecording, useRecording } from '@/store/session-recording'
 import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
 import { readSeedLink } from '@/lib/seed-link'
-import { NexoraMark } from '@/components/game/NexoraMark'
+import { StartHero } from './StartHero'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
@@ -79,6 +78,9 @@ export function StartScreen() {
       setOpening(undefined)
     }
   }
+  const latestSave = saves[0]
+  const begin = () => void open('new', () => startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined))
+  const savingUnavailable = !storageAvailable()
 
   useEffect(() => {
     void refreshSaves()
@@ -103,28 +105,23 @@ export function StartScreen() {
 
   return (
     <div className="min-h-[100dvh] bg-paper">
-      <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
-        <header className="mb-8">
-          <div className="mb-6 flex items-center gap-3">
-            <NexoraMark />
-            <div className="border-l border-line-strong pl-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-muted">Nexora Group</p>
-              <p className="mt-0.5 text-xs text-ink-faint">Office of the CISO</p>
-            </div>
-          </div>
-          <p className="text-xs uppercase tracking-[0.24em] text-ink-faint">A cyber risk strategy game</p>
-          <h1 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">CISO: First Year</h1>
-          <p className="mt-4 max-w-2xl text-lg text-ink-muted text-pretty">
-            You have just been made Chief Information Security Officer of Nexora Group. You have inherited 6,283 critical
-            vulnerabilities, a risk register nobody trusts, four transformation programmes and a CEO who wants three
-            answers in twenty-three minutes.
+      <StartHero
+        disabled={opening !== undefined}
+        beginning={opening === 'new'}
+        continuing={Boolean(latestSave && opening === latestSave.key)}
+        onBegin={begin}
+        onContinue={latestSave ? () => void open(latestSave.key, () => loadGame(latestSave.key)) : undefined}
+        resumeLabel={latestSave ? `Latest save · ${formatGameDate(latestSave.day).label} · ${latestSave.seed}` : undefined}
+        savingUnavailable={savingUnavailable}
+      />
+      <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+        <section className="mb-10" aria-labelledby="your-first-year">
+          <h2 id="your-first-year" className="font-display text-2xl">Your first year at Nexora</h2>
+          <p className="mt-3 text-ink-muted text-pretty">
+            You inherit 6,283 critical vulnerabilities, a risk register nobody trusts, four transformation programmes
+            and a CEO who wants three answers in twenty-three minutes. You cannot fix everything. The job is to
+            work out what matters, influence people you do not control, and live with the consequences.
           </p>
-          <p className="mt-3 max-w-2xl text-ink-muted text-pretty">
-            You cannot fix everything. The job is to work out what actually matters, decide what deserves your
-            attention, influence people you do not control, and live with the consequences.
-          </p>
-          {/* What a year is made of, before the form asks anything. The start
-              screen was a title, two paragraphs and a set of radio buttons. */}
           <ol className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3" aria-label="Your year">
             {YEAR_IN_THREE.map((step, position) => (
               <li key={step.title} className="border-t-2 border-accent/60 pt-3">
@@ -134,10 +131,10 @@ export function StartScreen() {
               </li>
             ))}
           </ol>
-        </header>
+        </section>
 
         {saves.length > 0 && (
-          <Card className="mb-6">
+          <Card id="saved-campaigns" className="mb-6 scroll-mt-6">
             <CardBody>
               <h2 className="font-medium">Continue</h2>
               <ul className="mt-3 space-y-2">
@@ -219,7 +216,7 @@ export function StartScreen() {
           </Dialog>
         )}
 
-        <Card>
+        <Card id="campaign-options" className="scroll-mt-6">
           <CardBody className="space-y-6">
             <div>
               <h2 className="font-medium">Start a new year</h2>
@@ -349,14 +346,14 @@ export function StartScreen() {
               variant="primary"
               size="lg"
               block
-              onClick={() => void open('new', () => startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined))}
+              onClick={begin}
               disabled={opening !== undefined}
               aria-busy={opening === 'new'}
             >
               {opening === 'new' ? 'Opening the campaign…' : 'Begin your first day'}
             </Button>
 
-            {!storageAvailable() && (
+            {savingUnavailable && (
               <p className="rounded-lg border border-band-elevated/40 bg-band-elevated-soft/50 p-3 text-sm">
                 This browser will not let the game store data, so your campaign cannot be saved. You can still play a
                 full year in this tab.
@@ -385,13 +382,6 @@ export function StartScreen() {
           </CardBody>
         </Card>
 
-        <p className="mt-8 text-center text-sm text-ink-muted text-pretty">
-          The game teaches itself as you go. If you would rather read first, there is a{' '}
-          <a href={GUIDE_URL} target="_blank" rel="noopener" className="text-accent-ink underline underline-offset-2">
-            player's guide<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          .
-        </p>
         <p className="mt-3 text-center text-sm text-ink-muted">
           <a href="/about" className="underline underline-offset-2">About this game</a>
           <span aria-hidden="true"> · </span>

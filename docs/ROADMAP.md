@@ -270,7 +270,9 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   Newsreader with system sans-serif body text, larger directory portraits,
   committee papers, an editorial annual review, correspondence layouts, compact
   routine records, illustrated empty states and four restrained incident scenes.
-  Its first-visit budget is 220 KiB including the display font; portraits and
+  Its code/CSS/font budget is 220 KiB including the display font; the approved
+  illustrated title screen adds one responsive scene with rendering budgets of
+  350 KiB desktop and 320 KiB phone (450/410 KiB including campaign prefetch). Portraits and
   incident scenes remain separate lazy image downloads. A custom commissioned
   typeface is still optional future work.
 - **Motion with a purpose.** The day advancing, a message arriving, a

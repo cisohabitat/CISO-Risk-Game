@@ -18,6 +18,14 @@ fault.
 
 ### Fixed
 
+- **A returning player's title copy moved onto bright artwork at 320px.**
+  Percentage-based scene shading did not follow the extra Continue controls.
+  The heading and actions now carry their own mobile gradients. A conservative
+  pixel sample across the complete tagline and introduction boxes in the
+  reproduced 320×640 returning-player state measured about 10.5:1 and
+  14.4:1 minimum contrast respectively. Axe alone missed the photo-background issue;
+  review both new and returning states when changing this layout.
+
 - **The main pane trapped wheel scrolling on narrow layouts.** A day-200
   tablet-portrait regression found that wheel input over the full-height main
   pane left both it and the page at scroll position zero. Its overflow and

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { goTo, startCampaign } from './helpers'
+import { beginCampaign, goTo, startCampaign } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 /**
@@ -59,9 +59,12 @@ test.describe('player guide', () => {
 
     await page.goto('/')
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    await page.locator('.start-scene img').evaluate((image: HTMLImageElement) => image.decode())
     await shot(page, '01-start')
+    await page.getByRole('link', { name: 'Campaign options', exact: true }).click()
+    await shot(page, '01c-options')
 
-    await startCampaign(page, SEED)
+    await beginCampaign(page, SEED)
     await dismissNote(page)
     await shot(page, '02-briefing')
 
@@ -92,7 +95,8 @@ test.describe('player guide', () => {
     await startCampaign(page, `${SEED}-b`)
     await page.reload()
     await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
-    await expect(page.getByText('Continue')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Continue campaign', exact: true })).toBeVisible()
+    await page.locator('.start-scene img').evaluate((image: HTMLImageElement) => image.decode())
     await shot(page, '01b-continue')
   })
 

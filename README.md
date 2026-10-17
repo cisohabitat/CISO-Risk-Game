@@ -173,6 +173,22 @@ year played.
 
 ## Artwork
 
+The start screen uses the approved Singapore office scene, with separate
+desktop and phone compositions. **Begin your first year** starts immediately
+using the current/default options; **Continue campaign** resumes the latest
+save when one exists. **Campaign options** leads to difficulty, starting
+situation, Replay settings and import; **Saved campaigns** leads to the recent
+save list. These controls remain accessible HTML over a dark fallback, so an
+unavailable image never prevents play. This replaces the original opening
+layout without adding an extra splash step.
+
+Only one title scene downloads per viewport: 119.2 KiB on desktop or 75.7 KiB
+on phones below 640px. `pnpm size` separately enforces scene limits (135/90 KiB)
+and rendering limits including code, CSS and fonts (350/320 KiB). The complete
+visit also includes the background campaign prefetch, with limits of
+450/410 KiB; this prefetch does not block the title screen's controls.
+Portrait and incident artwork still loads only when its screen needs it.
+
 Nexora has a geometric company mark and twelve AI-generated editorial portraits:
 eight executives and four cyber leaders. Faces appear on Board and Team cards
 and beside messages from named characters. Names and relationship labels remain

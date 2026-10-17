@@ -1,4 +1,24 @@
-# Nexora character art
+# Nexora artwork
+
+## Illustrated title screen
+
+`start-desktop.webp` (1600×900, 122,046 bytes) and `start-mobile.webp`
+(720×1281, 77,514 bytes) are decorative office scenes generated with OpenAI
+image generation on 17 October 2026 from the owner's approved title-screen
+mockup. They depict a fictional CISO overlooking Singapore; they do not imply
+an official affiliation or change the fictional Nexora campaign setting.
+Sources remain in the session's generated-image library. Assets are resized
+and encoded as WebP at quality 76; they contain no interface text.
+
+`StartHero` selects one scene with `<picture>` at the 640px breakpoint. It uses
+an empty image alt, a permanent navy fallback and readable HTML copy/buttons.
+The artwork never gates starting or resuming. Do not preload both variants.
+`scripts/size-budget.ts` enforces each encoded image size and the complete
+first-visit transfer, while the existing 220 KiB code/CSS/font gate stays in
+place. Browser tests cover responsive selection, direct play, resume and image
+failure. Keep character and incident atlases deferred as before.
+
+## Character portraits
 
 `nexora-people.webp` is a 720 × 960 image with three columns and four rows of
 square portraits, without gutters. It is 80,460 bytes. The source was generated

@@ -34,8 +34,17 @@ changes.
   atlas order documented in `src/assets/art/README.md` when replacing artwork.
 - Keep portraits decorative beside readable names, with lazy loading and a
   working fallback. Never use a face or its colour to convey trust or risk.
-- Keep image downloads out of the start screen. Measure artwork separately
-  from the JavaScript budget and review desktop, 320px and both themes.
+- Keep portrait and incident atlases out of the start screen. The owner's
+  approved illustrated title screen uses one responsive, decorative WebP scene;
+  keep all text and controls in HTML and preserve play when the image fails.
+  Enforce scene and complete first-visit limits in `scripts/size-budget.ts`.
+  Review desktop, 320px, both themes, direct start, latest-save resume and options.
+- Check text contrast against the actual photo with Continue and storage notices
+  present. Axe cannot measure photo backgrounds. Keep mobile shading anchored
+  to the heading and actions, rather than percentages of the entire scene.
+- The hero starts the selected/default campaign immediately, with no splash
+  step. Campaign options, Replay settings, import and saved-campaign management
+  remain below it. Keep those existing routes and shared-seed selections intact.
 - Incident illustrations are decorative and may use only the public incident
   name and response phase. Keep response controls prominent and preserve the
   factual timeline in readable text.

@@ -205,12 +205,19 @@ company mark follows the existing theme tokens and needs no image request.
 
 The editorial pass adds the 123,886-byte `nexora-incidents.webp` atlas. It is
 requested only where an incident illustration is rendered, never on the start
-screen. Empty-state illustrations use inline SVG. The first-visit budget is
+screen. Empty-state illustrations use inline SVG. The code/CSS/font budget is
 220 KiB including the self-hosted display face; `scripts/size-budget.ts` follows
 font URLs in the entry CSS and counts WOFF2 at its file size. Body copy needs no
 font download. The font licence ships at `/fonts/Newsreader-OFL.txt`.
 
-The playtest follow-ups read 210.9 KiB against the same 220 KiB limit.
+The playtest follow-ups read 210.9 KiB against the same 220 KiB code/CSS/font limit.
+The approved illustrated title screen adds one responsive WebP: 119.2 KiB for
+desktop or 75.7 KiB for phones below 640px. `pnpm size` now also enforces 135/90
+KiB image limits and 350/320 KiB rendering limits. Including the background
+campaign prefetch, the complete visit has 450/410 KiB limits, so this additional
+download is explicit. Text and play controls render independently of the image,
+and a failed scene leaves a readable navy fallback. Portrait and incident atlases
+remain deferred. No new throttled network startup-time claim is made.
 
 The approximately 25 KiB increase over the first portrait pass combines the
 font and the new visual markup/styles. No new throttled startup-time claim is

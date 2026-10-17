@@ -71,6 +71,14 @@ const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-', 'campaign-', 'loader-']
 // counted below as well as JS/CSS; the old 185 KiB gate did not count them.
 const CRITICAL_LIMIT_KB = 220
 
+// The approved illustrated start screen adds one responsive decorative image.
+// Account for it explicitly; neither variant may silently grow, and phones
+// must not pay for the desktop scene. Browser coverage checks that selection.
+const START_ART = [
+  { name: 'start-desktop-', limit: 135, renderLimit: 350, visitLimit: 450 },
+  { name: 'start-mobile-', limit: 90, renderLimit: 320, visitLimit: 410 },
+]
+
 async function main(): Promise<void> {
   const dir = join(process.cwd(), 'dist', 'assets')
   let entries: string[]
@@ -147,6 +155,28 @@ async function main(): Promise<void> {
   console.log(`  critical path ${critical.toFixed(1)} kB / ${CRITICAL_LIMIT_KB} kB (js, css and self-hosted fonts)`)
   if (critical > CRITICAL_LIMIT_KB) {
     failures.push(`the critical path is ${critical.toFixed(1)} kB gzip, over its ${CRITICAL_LIMIT_KB} kB budget`)
+  }
+
+  console.log('\n  Title artwork (encoded bytes, one responsive scene per visit):')
+  // ensureCampaign also warms these lazy chunks while the title is visible.
+  // They are not render-blocking, but they still contribute to the visit.
+  const prefetch = [...sizes.entries()]
+    .filter(([file]) => /^(campaign|loader)-.*\.js$/.test(file) && !inFirstLoad.has(file))
+    .reduce((sum, [, size]) => sum + size, 0)
+  for (const art of START_ART) {
+    const file = entries.find((entry) => entry.startsWith(art.name) && entry.endsWith('.webp'))
+    if (!file) {
+      failures.push(`missing ${art.name}*.webp title artwork`)
+      continue
+    }
+    const size = (await readFile(join(dir, file))).byteLength / 1024
+    const total = critical + size
+    const visit = total + prefetch
+    console.log(`  ${file}: ${size.toFixed(1)} KiB / ${art.limit} KiB; rendering ${total.toFixed(1)} KiB / ${art.renderLimit} KiB`)
+    console.log(`    with ${prefetch.toFixed(1)} KiB background campaign prefetch: ${visit.toFixed(1)} KiB / ${art.visitLimit} KiB`)
+    if (size > art.limit) failures.push(`${file} exceeds its ${art.limit} KiB artwork budget`)
+    if (total > art.renderLimit) failures.push(`${art.name} rendering exceeds its ${art.renderLimit} KiB budget`)
+    if (visit > art.visitLimit) failures.push(`${art.name} visit including prefetch exceeds its ${art.visitLimit} KiB budget`)
   }
 
   if (failures.length > 0) {
