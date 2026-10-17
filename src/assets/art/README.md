@@ -72,3 +72,21 @@ Keep dates, impact, response status and decisions as text.
 Empty-state vignettes in `src/components/ui/EmptyIllustration.tsx` are inline
 SVGs for research, correspondence, people and maps. They add no image download
 and follow the existing light and dark theme tokens.
+
+## Office through the year
+
+`nexora-office.webp` is a 2172 × 724, two-column atlas (151,600 bytes),
+with morning on the left and blue hour on the right. Generated with OpenAI image
+generation on 17 October 2026; encoded as WebP at quality 76, with the original
+retained in the session image library. It depicts an empty fictional CISO office
+overlooking Singapore. The setting is decorative and does not alter Nexora’s
+campaign canon or imply an affiliation.
+
+`OfficeScene` crops one half in CSS. Briefing quarter treatments use calendar-only
+colour filters; the annual closing scene is neutral for all outcomes. Never use
+these treatments to reveal a risk, incident, morale or performance state. Keep
+all captions and outcomes in HTML on solid backgrounds. The same cached atlas
+serves both scenes, loads lazily after play begins, and is hidden in print.
+`scripts/size-budget.ts` enforces the separate 160 KiB asset limit. Browser checks
+cover title-screen exclusion, calendar selection, sender identity, journeys and
+closing artwork; the existing full responsive and accessibility suite still runs.

@@ -36,6 +36,19 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+The working screens have distinct document styles: a morning Briefing,
+correspondence in the Inbox, committee papers on Board and a response room for
+incidents. Programme delivery paths distinguish completed milestones from the
+next milestone, with paused/blocked status and intervention controls visible.
+Important messages give known senders larger portraits, full names and roles;
+unknown senders retain their original text.
+
+A decorative office scene below the Briefing’s urgent work changes light with
+the public quarter. The annual review pairs its recorded business outcome with
+the same office at blue hour. These scenes do not encode success, risk or morale.
+The 148.0 KiB atlas loads after play begins, within a separate 160 KiB limit;
+all text and controls work if it fails, and printed reviews omit the artwork.
+
 Active incidents put response decisions before the latest public update. Earlier
 updates and recorded response choices expand on demand. Committing a decision
 leaves a dismissible receipt of the chosen option and actual immediate budget,

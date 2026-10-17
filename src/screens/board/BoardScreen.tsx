@@ -59,7 +59,7 @@ export function BoardScreen() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="governance-workspace space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="document-kicker">Nexora Group · Governance</p>

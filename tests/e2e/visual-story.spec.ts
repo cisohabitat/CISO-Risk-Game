@@ -1,0 +1,52 @@
+import { expect, test } from '@playwright/test'
+import { beginCampaign, expectNoHorizontalScroll, goTo } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
+
+test('office atmosphere stays out of the title and follows the calendar through the close', async ({ page }) => {
+  const requests: string[] = []
+  page.on('request', (request) => { if (request.url().includes('nexora-office-')) requests.push(request.url()) })
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+  expect(requests).toHaveLength(0)
+  await beginCampaign(page, 'e2e-office')
+  const office = page.getByRole('complementary', { name: 'Your office through the year' })
+  await office.scrollIntoViewIfNeeded()
+  await expect(office).toContainText('Year 1 · Q1')
+  await expect.poll(() => office.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0)
+  await openPreparedCampaign(page, prepareCampaign('e2e-office-q3', 'day:200'))
+  await expect(office).toContainText('Year 1 · Q3')
+  await expect(office.locator('.office-scene')).toHaveAttribute('data-quarter', '3')
+  await openPreparedCampaign(page, prepareCampaign('e2e-office-close', 'year-end'))
+  await expect(page.getByRole('heading', { name: 'How the year is read' })).toBeVisible()
+  const closing = page.locator('.closing-scene img')
+  await closing.scrollIntoViewIfNeeded()
+  await expect.poll(() => closing.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0)
+  expect(new Set(requests).size).toBe(1)
+  await expectNoHorizontalScroll(page)
+})
+
+test('important correspondence gives the named sender a readable portrait and role', async ({ page }) => {
+  await page.goto('/')
+  await beginCampaign(page, 'e2e-correspondence')
+  await goTo(page, 'Inbox')
+  const signature = page.locator('.sender-signature')
+  await signature.scrollIntoViewIfNeeded()
+  await expect(signature).toContainText('Marianne Okafor')
+  await expect(signature).toContainText('Chief Executive')
+  expect((await signature.locator('img').locator('..').boundingBox())!.width).toBeGreaterThanOrEqual(80)
+  await expectNoHorizontalScroll(page)
+})
+
+test('programme journeys keep milestones and intervention controls reachable', async ({ page }) => {
+  await openPreparedCampaign(page, prepareCampaign('e2e-delivery-path', 'board'))
+  await goTo(page, 'Programmes')
+  const journey = page.getByRole('region', { name: /delivery journey/ }).first()
+  await expect(journey).toBeVisible()
+  await expect(journey.getByRole('listitem')).not.toHaveCount(0)
+  const row = page.locator('.programme-row').filter({ has: journey })
+  await row.getByRole('button', { name: 'Pause', exact: true }).click()
+  await expect(journey).toContainText('Delivery paused')
+  await row.getByRole('button', { name: /^Milestones/ }).click()
+  await expect(row.getByRole('button', { name: 'Resume', exact: true })).toBeVisible()
+  await expectNoHorizontalScroll(page)
+})

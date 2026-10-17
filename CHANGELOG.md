@@ -10,6 +10,14 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Working screens have clearer identities, from morning Briefing to committee
+  papers and incident response. Important correspondence has larger named sender
+  portraits with full roles.
+- Programme delivery paths distinguish completed milestones, the next milestone
+  and paused/blocked delivery, while keeping intervention controls available.
+- Office light changes with the quarter, and a neutral blue-hour closing scene
+  accompanies the annual review’s recorded business outcome. Artwork is optional
+  and excluded from printed reviews.
 - Incident response decisions now precede the journal, with earlier updates
   and recorded response choices available on demand.
 - Decision receipts confirm the chosen option, immediate resource changes and

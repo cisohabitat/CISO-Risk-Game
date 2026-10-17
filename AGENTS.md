@@ -32,6 +32,20 @@ changes.
 
 ## Artwork
 
+- Preserve screen identity without moving urgent work behind decorative content:
+  Briefing uses a newspaper masthead, Inbox correspondence, Board a committee
+  paper and incidents a response room. Office artwork follows the public quarter
+  only, never risk, morale, performance or weather inferred from the simulation.
+- Programme delivery journeys read recorded milestone completion. Name the first
+  outstanding milestone as “Next milestone”, not a promised delivery date. Keep
+  paused/blocked status, blockers and interventions outside optional details.
+- Important message portraits use recorded priority/type and known sender IDs.
+  Keep full names and roles readable; preserve unknown sender text without
+  inventing a portrait or role. Initials remain the image-failure fallback.
+- The office atlas is deferred until play, has a 160 KiB encoded-size budget and
+  uses a neutral closing scene for every annual outcome. Keep narrative in HTML,
+  retain a useful image-failure fallback, and omit decorative scenes from print.
+
 - Incident response actions precede journal history. Keep the latest public
   update visible and earlier updates/recorded choices expandable, preserving
   the journal focus target and every pending response route.

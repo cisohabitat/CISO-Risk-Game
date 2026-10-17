@@ -77,6 +77,8 @@ export function InboxScreen() {
     (person) => selected.from === person.name || selected.from.startsWith(`${person.name},`),
   )
 
+  const important = selected && (selected.priority === 'urgent' || selected.priority === 'critical' || selected.type === 'executive' || selected.type === 'board')
+
   useEffect(() => {
     if (selected && !selected.read) dispatch({ type: 'markRead', messageId: selected.id })
   }, [selected, dispatch])
@@ -84,7 +86,7 @@ export function InboxScreen() {
   if (!state) return null
 
   return (
-    <div className="space-y-4">
+    <div className="correspondence-workspace space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><p className="document-kicker">Nexora Group · Correspondence</p><h1 className="mt-2 font-display text-3xl leading-tight">Inbox</h1></div>
         <SegmentedControl
@@ -152,10 +154,12 @@ export function InboxScreen() {
                   <Icon name={MESSAGE_KIND[selected.type].icon} size={16} />{MESSAGE_KIND[selected.type].label}
                 </p>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
-                <h2 className="mt-1 font-display text-xl leading-tight text-balance">{selected.subject}</h2>
-                <div className="mt-3 flex items-center gap-3">
-                  {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} />}
-                  <p className="text-sm text-ink-muted">{selected.from}</p>
+                <h2 className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
+                <div className="sender-signature mt-4 flex items-center gap-3">
+                  {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}
+                  <div className="min-w-0 text-sm">
+                    {sender ? <><p className="font-semibold text-ink">{sender.name}</p><p className="mt-1 text-ink-muted">{sender.role}</p>{selected.from !== sender.name && selected.from !== `${sender.name}, ${sender.role}` && <p className="mt-1 text-xs text-ink-faint">{selected.from}</p>}</> : <p className="text-ink-muted">{selected.from}</p>}
+                  </div>
                 </div>
                 <div className="correspondence-body mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (

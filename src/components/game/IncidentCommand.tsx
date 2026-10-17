@@ -33,7 +33,7 @@ export function IncidentCommand() {
     <Card
       // Keyed by the incident, so a new one arrives rather than appearing.
       key={incident.id}
-      className="animate-arrive mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
+      className="response-room animate-arrive mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
       role="region"

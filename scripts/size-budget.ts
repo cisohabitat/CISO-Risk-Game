@@ -179,6 +179,15 @@ async function main(): Promise<void> {
     if (visit > art.visitLimit) failures.push(`${art.name} visit including prefetch exceeds its ${art.visitLimit} KiB budget`)
   }
 
+  const office = entries.find((entry) => entry.startsWith('nexora-office-') && entry.endsWith('.webp'))
+  if (!office) failures.push('missing deferred office artwork')
+  else {
+    const size = (await readFile(join(dir, office))).byteLength / 1024
+    console.log(`\n  Office atlas (after play begins): ${size.toFixed(1)} KiB / 160 KiB`)
+    if (size > 160) failures.push('office atlas exceeds its 160 KiB budget')
+    if (html.includes(office)) failures.push('office atlas must not be fetched by the title screen')
+  }
+
   if (failures.length > 0) {
     console.error(`\n${failures.length} budget failure(s):`)
     for (const failure of failures) console.error(`  ${failure}`)

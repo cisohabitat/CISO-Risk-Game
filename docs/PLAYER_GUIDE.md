@@ -571,3 +571,21 @@ During an incident, answer the response decisions near the top of the journal.
 The latest update remains visible; expand **Earlier updates** or **What you have
 already decided** for the record. On Programmes, expand **Milestones** for delivery
 detail. On Team, expand **Strengths and watch points** in a leader’s dossier.
+
+### The year at your desk
+
+Below the Briefing’s urgent work, the office scene changes light with the
+quarter. It is a calendar cue, not a rating of your performance. The annual
+review shows the same office at blue hour beside the actual business outcome.
+These scenes disappear when you print the review.
+
+On Programmes, **Delivery path** shows completed milestones and the next
+milestone. Delivery can be paused or blocked; the path does not promise a
+completion date. Expand **Milestones** for the detail, and use the intervention
+controls alongside it. Important Inbox correspondence gives known senders a
+larger portrait, their name and full role. The message remains readable if a
+portrait cannot load.
+
+![The office in the second quarter](images/02c-office.png)
+
+![An active programme’s recorded delivery path](images/06d-delivery.png)

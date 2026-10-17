@@ -2,6 +2,7 @@
  * Programme portfolio (plan §28.5). Programmes take months, need people as well
  * as money, and hit blockers that money cannot clear.
  */
+import { ProgrammeJourney } from '@/components/programmes/ProgrammeJourney'
 import { useMemo, useState } from 'react'
 import { Badge, Button, Dialog, Disclosure, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -46,7 +47,7 @@ export function ProgrammesScreen() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="portfolio-workspace space-y-6">
       <div>
         <p className="document-kicker">Nexora Group · Delivery portfolio</p>
         <h1 className="mt-2 font-display text-3xl leading-tight">Programmes</h1>
@@ -133,6 +134,7 @@ export function ProgrammesScreen() {
                       </div>
                     )}
 
+                    <ProgrammeJourney programme={programme} />
                     <Disclosure summary={`Milestones · ${programme.milestones.filter((milestone) => milestone.complete).length} of ${programme.milestones.length} complete`}>
                       <ul className="mt-1 space-y-1 text-sm">
                         {programme.milestones.map((milestone) => (
@@ -140,7 +142,7 @@ export function ProgrammesScreen() {
                             <span aria-hidden="true" className={milestone.complete ? 'text-positive' : 'text-ink-faint'}>
                               {milestone.complete ? '✓' : '○'}
                             </span>
-                            <span className={milestone.complete ? '' : 'text-ink-muted'}>{milestone.name}</span>
+                            <span><span className="font-medium">{milestone.name}</span><span className="mt-1 block text-ink-muted">{milestone.description}</span></span>
                           </li>
                         ))}
                       </ul>

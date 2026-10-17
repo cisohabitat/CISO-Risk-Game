@@ -6,6 +6,7 @@ import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
+import { QuarterOffice } from '@/components/game/QuarterOffice'
 import { CameBack } from '@/components/game/CameBack'
 import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
@@ -59,7 +60,7 @@ export function HomeScreen() {
     <div className="space-y-6">
       {/* A brief has a masthead. It costs nothing and it tells the player what
           kind of document they are reading. */}
-      <header className="border-b border-line pb-3">
+      <header className="morning-brief border-b border-line pb-3">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-faint">
             CISO brief · {view.yearLabel ? `${view.yearLabel} · ` : ''}{view.weekLabel}
@@ -141,6 +142,8 @@ export function HomeScreen() {
 
       {/* The moment something clicks should find the player, not wait on a tab. */}
       <PatternNotice />
+
+      <QuarterOffice quarter={view.quarter} year={state.year ?? 1} />
 
       {/* The standing picture. One strip, four readings, no borders: these are
           the state of the organisation, not four things to do. */}

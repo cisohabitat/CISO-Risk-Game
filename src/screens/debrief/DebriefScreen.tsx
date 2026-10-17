@@ -14,6 +14,7 @@ import { yearWord } from '@/game/time'
 import { objectiveStatusLabel } from '@/game/business/objectives'
 import { shortDate } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
+import { OfficeScene } from '@/components/game/OfficeScene'
 import { NexoraMark } from '@/components/game/NexoraMark'
 import { IncidentHistory } from '@/components/game/IncidentHistory'
 import { ReviewMoments } from '@/components/debrief/ReviewMoments'
@@ -140,18 +141,23 @@ export function DebriefScreen() {
           <div className="flex items-center gap-3"><NexoraMark /><span className="document-kicker">Office of the CISO</span></div>
           <span className="document-kicker">Year {String(state.year ?? 1).padStart(2, '0')}</span>
         </div>
-        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
-          {index.content.meta.organisation} · Annual review
-          {state.situationId && index.situation.get(state.situationId) && ` · ${index.situation.get(state.situationId)!.name}`}
-        </p>
-        <h1 className="mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">
-          {review.headline}
-        </h1>
-        <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
-        <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
-        <div className="mt-6 border-t border-line-strong pt-5">
-          <p className="document-kicker">At the close</p>
-          <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-pretty sm:text-lg">{review.businessOutcome}</p>
+        <div className="report-opening grid items-center gap-6 md:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)]">
+          <div className="min-w-0">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-ink-faint">
+              {index.content.meta.organisation} · Annual review
+              {state.situationId && index.situation.get(state.situationId) && ` · ${index.situation.get(state.situationId)!.name}`}
+            </p>
+            <h1 className="mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">
+              {review.headline}
+            </h1>
+            <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
+            <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
+            <div className="mt-6 border-t border-line-strong pt-5">
+              <p className="document-kicker">At the close</p>
+              <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-pretty sm:text-lg">{review.businessOutcome}</p>
+            </div>
+          </div>
+          <OfficeScene closing className="closing-scene" />
         </div>
       </header>
 

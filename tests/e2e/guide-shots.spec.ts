@@ -182,4 +182,16 @@ test.describe('player guide', () => {
     await shot(page, '08b-quarter-recap')
   })
 
+  test('the office through the year and an active delivery path', async ({ page }) => {
+    await openPreparedCampaign(page, prepareCampaign('e2e-delivery-path', 'board'))
+    await dismissNote(page)
+    const office = page.getByRole('complementary', { name: 'Your office through the year' })
+    await office.scrollIntoViewIfNeeded()
+    await office.locator('img').evaluate((image: HTMLImageElement) => image.decode())
+    await shot(page, '02c-office')
+    await goTo(page, 'Programmes')
+    await page.getByRole('region', { name: /delivery journey/ }).first().scrollIntoViewIfNeeded()
+    await shot(page, '06d-delivery')
+  })
+
 })
