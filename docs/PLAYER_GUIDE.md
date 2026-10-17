@@ -589,3 +589,20 @@ portrait cannot load.
 ![The office in the second quarter](images/02c-office.png)
 
 ![An active programme’s recorded delivery path](images/06d-delivery.png)
+
+### Reading and comparing work
+
+On phones, selecting a message brings its reader into view. **Back to messages**
+returns you to the selected row, including its keyboard focus. The Unread list
+keeps the same membership as you read. Returning to Inbox opens the retained
+message without consuming the rest of the backlog.
+
+Risk cards align residual risk, confidence, owner and next review beneath the
+risk statement. On Programmes, work is grouped as **Running**, **Paused**,
+**Blocked** or **Completed**. Blocked means a recorded blocker is unresolved;
+an at-risk badge by itself does not place work in that group. Pausing or resuming
+a programme keeps the same control focused as the row moves.
+
+Budget, attention and recorded milestone changes receive a brief neutral
+highlight. It does not predict a consequence or pause the clock. Loading an
+existing value stays quiet, as does a reduced-motion preference.

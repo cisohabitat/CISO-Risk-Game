@@ -1,9 +1,11 @@
+import { useChangeHighlight } from '@/components/ui/useChangeHighlight'
 import type { ProgrammeView } from '@/store/selectors'
 
 /** A delivery sequence, not a forecast: completion comes from the public record. */
 export function ProgrammeJourney({ programme }: { programme: ProgrammeView }) {
+  const highlight = useChangeHighlight<HTMLElement>(programme.milestones.filter((milestone) => milestone.complete).map((milestone) => milestone.id).join('|'))
   const next = programme.status === 'complete' ? -1 : programme.milestones.findIndex((milestone) => !milestone.complete)
-  return <section aria-label={`${programme.shortName} delivery journey`} className="programme-journey">
+  return <section ref={highlight} aria-label={`${programme.shortName} delivery journey`} className="programme-journey">
     <div className="flex flex-wrap items-baseline justify-between gap-2">
       <h4 className="document-kicker">Delivery path</h4>
       <p className="text-xs text-ink-muted">{programme.status === 'complete' ? 'Delivery complete' : programme.status === 'paused' ? 'Delivery paused' : programme.blockers.length > 0 ? 'Delivery blocked' : 'Delivery in progress'}</p>

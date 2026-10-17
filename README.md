@@ -36,6 +36,18 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+On phones, selecting an Inbox message moves to its reader; **Back to messages**
+returns focus and position to the selected row. Returning to Inbox retains the
+selected message. Unread membership remains stable while you read. Risk cards
+align residual risk, confidence, owner and next review. Programme lists separate
+Running, Paused, Blocked and Completed work, with controls retaining focus when
+a row changes group. An at-risk badge alone does not mean delivery is blocked.
+
+Long correspondence, evidence and review text use consistent reading widths and
+paragraph spacing. A short neutral highlight marks actual budget/attention or
+recorded milestone changes. Loading a save does not replay it, and reduced-motion
+preferences suppress it. These refinements change presentation only.
+
 The working screens have distinct document styles: a morning Briefing,
 correspondence in the Inbox, committee papers on Board and a response room for
 incidents. Programme delivery paths distinguish completed milestones from the

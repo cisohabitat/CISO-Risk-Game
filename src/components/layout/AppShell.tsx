@@ -6,6 +6,7 @@
  * The same screens are reachable everywhere; only the presentation changes.
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { ChangeHighlight } from '@/components/ui/ChangeHighlight'
 import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, teamWellbeingNotes } from '@/store/selectors'
@@ -137,12 +138,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <dl className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Budget left</dt>
-              <dd className="font-medium tabular-nums">{money(view.budgetRemaining)}</dd>
+              <dd className="font-medium tabular-nums"><ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)}</ChangeHighlight></dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Your week</dt>
               <dd className="font-medium tabular-nums">
-                {attentionLeft(view.focusRemaining, view.focusPerWeek, true)}
+                <ChangeHighlight key={`${state.gameId}:attention`} value={view.focusRemaining}>{attentionLeft(view.focusRemaining, view.focusPerWeek, true)}</ChangeHighlight>
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-2">
@@ -348,7 +349,7 @@ function ShellHeader() {
             </span>
           </p>
           <p className="truncate text-xs text-ink-faint lg:hidden">
-            {money(view.budgetRemaining)} left · {attentionLeft(view.focusRemaining, view.focusPerWeek, true)} attention
+            <ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)} left</ChangeHighlight> · <ChangeHighlight key={`${state.gameId}:attention`} value={view.focusRemaining}>{attentionLeft(view.focusRemaining, view.focusPerWeek, true)} attention</ChangeHighlight>
           </p>
         </div>
         <div className="order-2 flex shrink-0 items-center gap-1 sm:order-3 sm:ml-auto lg:ml-0" data-testid="header-tools">

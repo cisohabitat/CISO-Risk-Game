@@ -14,6 +14,7 @@ import {
   useRef,
   useState,
   type ButtonHTMLAttributes,
+  type ComponentPropsWithRef,
   type HTMLAttributes,
   type ReactNode,
 } from 'react'
@@ -69,7 +70,7 @@ export function Button({ variant = 'secondary', size = 'md', block, className, .
 
 /* ------------------------------------------------------------------ Card -- */
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+export function Card({ className, ...props }: ComponentPropsWithRef<'div'>) {
   return (
     <div
       {...props}

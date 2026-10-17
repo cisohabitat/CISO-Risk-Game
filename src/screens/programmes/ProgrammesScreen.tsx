@@ -33,6 +33,11 @@ export function ProgrammesScreen() {
   const live = programmes.filter((programme) => programme.status !== 'proposed' && !programme.finishedEarlier)
   const earlier = programmes.filter((programme) => programme.finishedEarlier)
   const proposed = programmes.filter((programme) => programme.status === 'proposed')
+  const groupOf = (programme: ProgrammeView) => programme.status === 'complete' ? 'Completed' : programme.status === 'paused' ? 'Paused' : programme.blockers.length > 0 ? 'Blocked' : 'Running'
+  const groupedLive = ['Running', 'Paused', 'Blocked', 'Completed'].flatMap((label) => {
+    const entries = live.filter((programme) => groupOf(programme) === label)
+    return entries.map((programme, position) => ({ programme, label: position === 0 ? label : undefined, count: entries.length }))
+  })
   const totalCost = proposed.reduce((sum, programme) => sum + programme.budgetCost, 0)
 
   const start = () => {
@@ -64,11 +69,11 @@ export function ProgrammesScreen() {
       )}
 
       {live.length > 0 && (
-        <section aria-labelledby="live">
-          <SectionHeading><span id="live">Under way</span></SectionHeading>
+        <section aria-label="Delivery portfolio">
           <ul className="divide-y divide-line border-y border-line">
-            {live.map((programme) => (
+            {groupedLive.map(({ programme, label, count }) => (
               <li key={programme.id}>
+                {label && <h2 className="portfolio-divider"><span>{label}</span>{' '}<span className="text-sm font-normal tabular-nums text-ink-muted">{count} {count === 1 ? 'programme' : 'programmes'}</span></h2>}
                 <article className="programme-row grid gap-5 py-6 lg:grid-cols-2 lg:gap-8">
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-2">

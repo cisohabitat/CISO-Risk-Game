@@ -4,7 +4,7 @@
  *
  * Mobile shows a list that pushes to a reader; tablet and desktop show both.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { PersonPortrait } from '@/components/game/Person'
@@ -45,6 +45,11 @@ export function InboxScreen() {
   const dispatch = useGameStore((store) => store.dispatch)
   const setUi = useGameStore((store) => store.setUi)
   const selectedId = useGameStore((store) => store.ui.selectedMessageId)
+  const reader = useRef<HTMLDivElement>(null)
+  const heading = useRef<HTMLHeadingElement>(null)
+  const list = useRef<HTMLUListElement>(null)
+  const lastOpened = useRef<string | undefined>(undefined)
+  const [readingRequest, setReadingRequest] = useState(0)
   const [filter, setFilter] = useState<Filter>('all')
   // Freeze membership on entry: marking the open message read must not select
   // and mark the next one, recursively consuming the player's whole backlog.
@@ -83,6 +88,22 @@ export function InboxScreen() {
     if (selected && !selected.read) dispatch({ type: 'markRead', messageId: selected.id })
   }, [selected, dispatch])
 
+  useEffect(() => {
+    if ((!selectedId && readingRequest === 0) || !window.matchMedia?.('(max-width: 767px)')?.matches) return
+    const frame = window.requestAnimationFrame(() => {
+      reader.current?.scrollIntoView?.({ block: 'start' })
+      heading.current?.focus({ preventScroll: true })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [selectedId, readingRequest])
+
+  const backToMessages = () => {
+    const buttons = list.current?.querySelectorAll<HTMLButtonElement>('button[data-message-id]')
+    const target = Array.from(buttons ?? []).find((button) => button.dataset.messageId === (lastOpened.current ?? selected?.id)) ?? buttons?.[0]
+    target?.scrollIntoView?.({ block: 'center' })
+    target?.focus({ preventScroll: true })
+  }
+
   if (!state) return null
 
   return (
@@ -104,12 +125,18 @@ export function InboxScreen() {
           action={<Button variant="secondary" size="sm" onClick={() => filter === 'all' ? useGameStore.getState().setScreen('home') : setFilter('all')}>{filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <ul className="divide-y divide-line border-y border-line" aria-label="Messages">
+          <ul ref={list} className="divide-y divide-line border-y border-line" aria-label="Messages">
             {messages.slice(0, 60).map((message) => (
               <li key={message.id}>
                 <button
                   type="button"
-                  onClick={() => setUi({ selectedMessageId: message.id })}
+                  data-message-id={message.id}
+                  aria-controls="message-reader"
+                  onClick={() => {
+                    lastOpened.current = message.id
+                    setUi({ selectedMessageId: message.id })
+                    setReadingRequest((request) => request + 1)
+                  }}
                   aria-current={selected?.id === message.id ? 'true' : undefined}
                   className={cn(
                     'w-full border-l-2 px-3 py-4 text-left transition-colors',
@@ -144,8 +171,9 @@ export function InboxScreen() {
           </ul>
 
           {selected && (
-            <Card className={`correspondence message-reader message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
+            <Card id="message-reader" ref={reader} className={`correspondence message-reader scroll-mt-36 message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
               <CardBody>
+                <div className="mb-4 md:hidden"><Button variant="secondary" size="sm" onClick={backToMessages}>Back to messages</Button></div>
                 <div className="mb-4 flex items-center gap-2 border-b border-line pb-3">
                   <NexoraMark className="h-7 w-7" />
                   <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink-faint">Nexora Group</span>
@@ -154,7 +182,7 @@ export function InboxScreen() {
                   <Icon name={MESSAGE_KIND[selected.type].icon} size={16} />{MESSAGE_KIND[selected.type].label}
                 </p>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
-                <h2 className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
+                <h2 ref={heading} tabIndex={-1} className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
                 <div className="sender-signature mt-4 flex items-center gap-3">
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}
                   <div className="min-w-0 text-sm">
@@ -180,6 +208,7 @@ export function InboxScreen() {
                     Take the decision
                   </Button>
                 )}
+                <div className="mt-5 border-t border-line pt-4 md:hidden"><Button variant="quiet" size="sm" onClick={backToMessages}>Back to messages</Button></div>
               </CardBody>
             </Card>
           )}

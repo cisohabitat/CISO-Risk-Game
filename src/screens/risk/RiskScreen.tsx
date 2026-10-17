@@ -70,11 +70,15 @@ export function RiskScreen() {
                         selectedScenarioId === risk.id ? 'border-accent' : 'border-line hover:border-line-strong',
                       )}
                     >
-                      <div className="flex flex-wrap items-center gap-2">
-                        {/* Worded as the briefing and the detail word them: two bare
-                            badges read "Moderate moderate" on most of the list. */}
-                        <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
-                        <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge>
+                      <h3 className="font-medium text-balance">{risk.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
+                      <div className="risk-comparison-grid mt-3">
+                        <div><p className="comparison-label">Residual risk</p><Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge></div>
+                        <div><p className="comparison-label">Confidence</p><Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge></div>
+                        <div><p className="comparison-label">Owner</p><p className="text-sm">{risk.ownerName}</p></div>
+                        <div><p className="comparison-label">Next review</p><p className={cn('text-sm', risk.reviewDue && 'font-medium text-warning')}>{risk.reviewDue ? 'Due now' : `in ${risk.daysUntilReview} days`}</p></div>
+                      </div>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
                         {risk.hasInvalidatedAssumption && <Badge tone="high" glyph={false}>Assumption failed</Badge>}
                         {/* Two chips for the rating, words for the rest. Five chips of
                             one shape and weight on every card made none of them stand
@@ -107,12 +111,7 @@ export function RiskScreen() {
                           )}
                         </span>
                       </div>
-                      <h3 className="mt-2 font-medium text-balance">{risk.title}</h3>
-                      <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
-                      <p className="mt-2 text-xs text-ink-faint">
-                        Owned by {risk.ownerName}
-                        {risk.affectedServices.length > 0 && ` · ${risk.affectedServices.join(', ')}`}
-                      </p>
+                      {risk.affectedServices.length > 0 && <p className="mt-2 text-xs text-ink-faint">Services: {risk.affectedServices.join(', ')}</p>}
                     </button>
                   </li>
                 ))}
@@ -158,7 +157,7 @@ export function RiskScreen() {
                         <span className="text-xs text-ink-faint tabular-nums">{shortDate(item.day)}</span>
                       </div>
                       <h3 className="mt-2 font-medium text-balance">{item.title}</h3>
-                      <p className="mt-1 text-sm text-ink-muted text-pretty">{item.description}</p>
+                      <p className="reading-copy mt-2 text-sm text-ink-muted text-pretty">{item.description}</p>
                       {item.affectedNames.length > 0 && (
                         <p className="mt-2 text-xs text-ink-faint">Relates to {item.affectedNames.join(', ')}</p>
                       )}

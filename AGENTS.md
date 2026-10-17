@@ -32,6 +32,20 @@ changes.
 
 ## Artwork
 
+- At widths below 768px, explicit or retained Inbox selections move to the reader
+  after shell navigation has settled. Back to messages restores the selected
+  row’s focus and position. Do not hide or rebuild the frozen Unread membership.
+- Risk cards compare the same four public facts: residual band, confidence,
+  owner and next review. Keep statement and title ahead of the fact grid; retain
+  the existing review selector and qualitative bands.
+- Programme status groups use actual unresolved blockers, not the at-risk badge
+  alone. Keep rows keyed under one list so regrouping preserves controls and
+  focus. Paused work still exposes blockers, and completed work stays visible.
+- Change highlights are a single neutral pulse for observed resource or recorded
+  milestone changes. Do not pulse on mounting, load, unchanged values or theme
+  changes. Respect reduced motion, including preference changes mid-animation;
+  never add clock pauses, inferred causation or simulation effects.
+
 - Preserve screen identity without moving urgent work behind decorative content:
   Briefing uses a newspaper masthead, Inbox correspondence, Board a committee
   paper and incidents a response room. Office artwork follows the public quarter

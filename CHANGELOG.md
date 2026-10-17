@@ -10,6 +10,13 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Phone Inbox selections move to the reader, with Back to messages restoring the
+  selected row. Returning to Inbox retains the selected message.
+- Risk cards align four comparable facts. Programme status groups keep running,
+  paused, blocked and completed work distinct while preserving control focus.
+- Long messages, evidence and reviews have more consistent reading widths and
+  spacing. Actual resource and milestone changes receive a brief neutral
+  highlight; loading and reduced-motion settings keep the view quiet.
 - Working screens have clearer identities, from morning Briefing to committee
   papers and incident response. Important correspondence has larger named sender
   portraits with full roles.

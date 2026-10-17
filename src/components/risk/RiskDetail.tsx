@@ -84,7 +84,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
 
         <div>
           <h2 className="text-lg font-semibold text-balance">{risk.title}</h2>
-          <p className="mt-1 text-sm text-ink-muted text-pretty">{risk.statement}</p>
+          <p className="reading-copy mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
           <Terms text={`${risk.title} ${risk.statement}`} className="mt-2" />
           {risk.trend && (
             <p className="mt-2 text-sm text-ink-muted">
