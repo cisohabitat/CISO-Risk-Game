@@ -32,6 +32,12 @@ changes.
 
 ## Artwork
 
+- Keep the Briefing's action area ahead of standing metrics in DOM and visual
+  order. Its lead decision follows the existing deadline sort; board papers and
+  programme blockers retain their own routes. Review highlights are a sample
+  of recorded choices, not inferred causes or a ranking of importance. Preserve
+  fewer-choice and older-save fallbacks, keyboard access, and print readability.
+
 - Portraits live in `src/assets/art/nexora-people.webp`; their character mapping
   and initials fallback live in `src/components/game/Person.tsx`. Preserve the
   atlas order documented in `src/assets/art/README.md` when replacing artwork.

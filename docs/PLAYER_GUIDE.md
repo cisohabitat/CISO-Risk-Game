@@ -102,6 +102,11 @@ ever damaged, the game opens the campaign from the save before it and says so.
 This is where every day starts, and it is written as a brief rather than a
 dashboard. Seven things are worth finding:
 
+The action area comes before the standing metrics. Its first decision gets
+more room and a stronger heading; it is the earliest due, not a recommendation
+about which option to take. Board papers and programme blockers keep their
+own actions here.
+
 **The masthead and the headline.** `CISO BRIEF · WEEK 1` at the top, and under
 it a single line counting what wants you today — *"Two things need your
 attention."* If it says nothing is waiting, nothing is: you can run the clock.
@@ -393,8 +398,15 @@ phase updates where retained. It does not estimate alternative outcomes.
 
 ![The annual review](images/10-review.png)
 
-On 31 December you get an annual review. It is not a score. It is eight
-dimensions, each with a band and a sentence explaining it:
+On 31 December you get an annual review. It is not a score.
+
+The cover opens with the business outcome. Below the narrative, a selection of
+your recorded choices recalls the beginning, middle and end of the year.
+It shows fewer when you recorded fewer, and leaves the section out if there
+are none. These are memories of what you chose, not claims that a particular
+choice caused an outcome. The full judgement log and timeline follow.
+
+The review assesses eight dimensions, each with a band and a sentence explaining it:
 
 | Dimension | What it asks |
 |---|---|

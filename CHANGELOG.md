@@ -116,6 +116,9 @@ The game as it stands after the roadmap's engineering phases
   animation. See `/accessibility`.
 
 ### Presentation
+- The Briefing puts decisions before standing metrics and gives its next
+  decision more visual emphasis. The annual review has a stronger cover and
+  a chronological selection of recorded choices.
 - The title footer shows the version and links to release notes. About includes
   the build date and commit, and opens from the in-game menu without interrupting play.
 - One line-icon set, sentence-case labels, a key on the dependency map, a

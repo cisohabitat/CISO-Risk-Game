@@ -16,6 +16,7 @@ import { shortDate } from '@/lib/formatting/labels'
 import { YearTimeline } from '@/components/debrief/YearTimeline'
 import { NexoraMark } from '@/components/game/NexoraMark'
 import { IncidentHistory } from '@/components/game/IncidentHistory'
+import { ReviewMoments } from '@/components/debrief/ReviewMoments'
 
 // A scale from bad to good, warm to cool. "Solid" borrowed the risk palette's
 // moderate, which is blue there and read here as a neutral label sitting
@@ -133,7 +134,8 @@ export function DebriefScreen() {
       {/* The payoff for a whole year should not look like another screen. It
           is set as the report it is: a masthead, a rule, and the verdict in
           the display face with room around it. */}
-      <header className="report-cover border-y-2 border-ink py-8 text-center sm:py-12">
+      <header className="report-cover relative isolate overflow-hidden border-y-2 border-ink py-6 sm:py-10">
+        <span className="report-year" aria-hidden="true">{String(state.year ?? 1).padStart(2, '0')}</span>
         <div className="mb-6 flex items-center justify-between border-b border-line pb-4 text-left">
           <div className="flex items-center gap-3"><NexoraMark /><span className="document-kicker">Office of the CISO</span></div>
           <span className="document-kicker">Year {String(state.year ?? 1).padStart(2, '0')}</span>
@@ -142,11 +144,15 @@ export function DebriefScreen() {
           {index.content.meta.organisation} · Annual review
           {state.situationId && index.situation.get(state.situationId) && ` · ${index.situation.get(state.situationId)!.name}`}
         </p>
-        <h1 className="mx-auto mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl">
+        <h1 className="mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">
           {review.headline}
         </h1>
         <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
         <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
+        <div className="mt-6 border-t border-line-strong pt-5">
+          <p className="document-kicker">At the close</p>
+          <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-pretty sm:text-lg">{review.businessOutcome}</p>
+        </div>
       </header>
 
       {/* The review is the document a player might take to their own board;
@@ -199,8 +205,9 @@ export function DebriefScreen() {
               {paragraph}
             </p>
           ))}
-          <p className="border-t border-line pt-3 text-pretty">{review.businessOutcome}</p>
       </article>
+
+      <ReviewMoments />
 
       <section aria-labelledby="the-year">
         <SectionHeading><span id="the-year">Your year, day by day</span></SectionHeading>

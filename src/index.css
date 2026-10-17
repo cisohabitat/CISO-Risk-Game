@@ -362,6 +362,23 @@
   padding-inline: clamp(1rem, 4vw, 2.5rem);
   background: linear-gradient(160deg, var(--brass-soft), var(--surface) 68%);
 }
+.report-year {
+  position: absolute;
+  right: -0.02em;
+  bottom: -0.18em;
+  z-index: -1;
+  color: var(--ink);
+  opacity: 0.045;
+  font: 600 clamp(12rem, 35vw, 26rem)/1 var(--font-display);
+  pointer-events: none;
+}
+.decision-lead {
+  border-inline-start: 4px solid var(--accent);
+  background: linear-gradient(120deg, color-mix(in oklch, var(--accent-soft) 40%, var(--surface)), var(--surface));
+}
+.decision-lead-urgent {
+  border-inline-start-color: var(--band-high);
+}
 .report-narrative {
   max-width: 70ch;
   margin-inline: auto;
@@ -468,6 +485,7 @@
     break-inside: avoid;
   }
   .report-cover { background: white; }
+  .report-year { display: none; }
   .incident-art { display: none; }
   @page {
     margin: 18mm 16mm;

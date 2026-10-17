@@ -79,6 +79,61 @@ export function HomeScreen() {
 
       <Onboarding className="mb-0" />
 
+      <section aria-labelledby="decisions">
+        <SectionHeading>
+          <span id="decisions">Waiting on you</span>
+        </SectionHeading>
+        {/* The quarterly board paper only ever appeared on the Board
+            screen. A player working from the Briefing — where the game
+            puts them, and where this section tells them what needs an
+            answer — could play a whole year, take every decision in good
+            time, and still be told at the close that they prepared none of
+            the four. "Nothing is waiting on you" was being shown with a
+            board paper outstanding. */}
+        {state.reviews.pendingQuarter !== undefined && (
+          <Card className="mb-3 border-accent/40 bg-accent-soft/25">
+            <CardBody className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium text-balance">
+                  The Q{state.reviews.pendingQuarter} board paper is due
+                </p>
+                <p className="mt-0.5 text-sm text-ink-muted text-pretty">
+                  What the board hears about this quarter, and what they do not, is your call.
+                </p>
+              </div>
+              <Button variant="primary" size="sm" onClick={() => setScreen('board')}>
+                Prepare it
+              </Button>
+            </CardBody>
+          </Card>
+        )}
+        {blocked.map((programme) => (
+          <Card key={programme.id} className="mb-3 border-band-elevated/40">
+            <CardBody className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium text-balance">{programme.name} is blocked</p>
+                <p className="mt-0.5 text-sm text-ink-muted text-pretty">{programme.blockers[0]!.name}</p>
+              </div>
+              <Button variant="secondary" size="sm" aria-label={`See what clears it: ${programme.name}`} onClick={() => setScreen('programmes')}>
+                See what clears it
+              </Button>
+            </CardBody>
+          </Card>
+        ))}
+        <DecisionList
+          limit={4}
+          emphasizeFirst={state.reviews.pendingQuarter === undefined && blocked.length === 0}
+          quiet={state.reviews.pendingQuarter !== undefined || blocked.length > 0}
+          elsewhere={pressing.length + patterns.length > 0}
+        />
+        {!state.finished && Object.values(state.incidents.incidents).some((incident) => incident.reconstruction) && (
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-y border-line py-3 text-sm">
+            <p>An incident debrief is available, including its recorded response choices.</p>
+            <Button variant="secondary" size="sm" onClick={() => setScreen('debrief')}>Review incident recap</Button>
+          </div>
+        )}
+      </section>
+
       <Collisions />
 
       {/* The moment something clicks should find the player, not wait on a tab. */}
@@ -119,60 +174,6 @@ export function HomeScreen() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
         <div className="space-y-6">
-          <section aria-labelledby="decisions">
-            <SectionHeading>
-              <span id="decisions">Waiting on you</span>
-            </SectionHeading>
-            {/* The quarterly board paper only ever appeared on the Board
-                screen. A player working from the Briefing — where the game
-                puts them, and where this section tells them what needs an
-                answer — could play a whole year, take every decision in good
-                time, and still be told at the close that they prepared none of
-                the four. "Nothing is waiting on you" was being shown with a
-                board paper outstanding. */}
-            {state.reviews.pendingQuarter !== undefined && (
-              <Card className="mb-3 border-accent/40 bg-accent-soft/25">
-                <CardBody className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-medium text-balance">
-                      The Q{state.reviews.pendingQuarter} board paper is due
-                    </p>
-                    <p className="mt-0.5 text-sm text-ink-muted text-pretty">
-                      What the board hears about this quarter, and what they do not, is your call.
-                    </p>
-                  </div>
-                  <Button variant="primary" size="sm" onClick={() => setScreen('board')}>
-                    Prepare it
-                  </Button>
-                </CardBody>
-              </Card>
-            )}
-            {blocked.map((programme) => (
-              <Card key={programme.id} className="mb-3 border-band-elevated/40">
-                <CardBody className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-medium text-balance">{programme.name} is blocked</p>
-                    <p className="mt-0.5 text-sm text-ink-muted text-pretty">{programme.blockers[0]!.name}</p>
-                  </div>
-                  <Button variant="secondary" size="sm" aria-label={`See what clears it: ${programme.name}`} onClick={() => setScreen('programmes')}>
-                    See what clears it
-                  </Button>
-                </CardBody>
-              </Card>
-            ))}
-            <DecisionList
-              limit={4}
-              quiet={state.reviews.pendingQuarter !== undefined || blocked.length > 0}
-              elsewhere={pressing.length + patterns.length > 0}
-            />
-            {!state.finished && Object.values(state.incidents.incidents).some((incident) => incident.reconstruction) && (
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-y border-line py-3 text-sm">
-                <p>An incident debrief is available, including its recorded response choices.</p>
-                <Button variant="secondary" size="sm" onClick={() => setScreen('debrief')}>Review incident recap</Button>
-              </div>
-            )}
-          </section>
-
           {/* What the player's own actions sent back. The first observed
               playtest followed this screen and Skip ahead, and missed a thin
               enquiry result, an unraised hypothesis and a successful follow-up

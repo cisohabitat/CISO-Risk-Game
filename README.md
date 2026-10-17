@@ -29,6 +29,13 @@ from the in-game rail or mobile menu in a separate tab. The version comes from
 automatically. GitHub Releases holds named releases and downloadable static site
 archives when a release is cut; ordinary pushes remain development builds.
 
+The Briefing puts **Waiting on you** before the standing metrics, with the
+earliest-due decision given more visual emphasis. The annual review opens with
+the business outcome and highlights up to three recorded choices from the
+beginning, middle and end of the year. These are a chronological sample, not
+a score or a claim about which choices caused the outcome. The full timeline,
+judgement log, sharing and printable review remain available.
+
 ## Running it
 
 ```bash

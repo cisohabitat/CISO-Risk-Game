@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
+import type { GameState } from '../../src/game/types'
 
 /**
  * Phase 3 of docs/ROADMAP.md: sound is silent until asked for, and motion
@@ -40,4 +42,29 @@ test('motion stops when the system asks for none', async ({ page }) => {
   )
   expect(durations.length).toBeGreaterThan(0)
   for (const duration of durations) expect(duration).toBeLessThan(0.01)
+})
+
+test('the annual cover and choice highlights reflect the recorded year', async ({ page }) => {
+  const save = prepareCampaign('review-moments', 'year-end') as { state: GameState }
+  await openPreparedCampaign(page, save)
+  const cover = page.locator('.report-cover')
+  await expect(cover.getByText('At the close', { exact: true })).toBeVisible()
+  const moments = page.getByRole('region', { name: 'Choices from your year', exact: true })
+  await expect(moments.locator('ol > li')).toHaveCount(3)
+  await expect(moments.getByRole('heading', { name: 'Where do you start?', exact: true })).toBeVisible()
+  await expect(moments).toContainText('You chose: Start with the business services')
+  // The highlights summarise real judgements, not a newly invented score.
+  const log = page.getByRole('region', { name: 'The judgements you made', exact: true })
+  await expect(log).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Print or save as PDF' })).toBeVisible()
+
+  // Older saves may have a review without a full decision log. Do not invent
+  // highlights to fill the layout, or repeat the same choice three times.
+  save.state.history.decisionsLog = save.state.history.decisionsLog.slice(0, 1)
+  await openPreparedCampaign(page, save)
+  await expect(moments.locator('ol > li')).toHaveCount(1)
+  save.state.history.decisionsLog = []
+  await openPreparedCampaign(page, save)
+  await expect(moments).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'How the year is read', exact: true })).toBeVisible()
 })

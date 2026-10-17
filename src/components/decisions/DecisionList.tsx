@@ -6,11 +6,14 @@ export function DecisionList({
   limit,
   quiet = false,
   elsewhere = false,
+  emphasizeFirst = false,
 }: {
   limit?: number
   quiet?: boolean
   /** Other things want the player further down the page. */
   elsewhere?: boolean
+  /** The Briefing gives the earliest-due decision visual priority. */
+  emphasizeFirst?: boolean
 }) {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
@@ -49,13 +52,14 @@ export function DecisionList({
 
   return (
     <ul className="space-y-3">
-      {shown.map((decision) => (
+      {shown.map((decision, position) => (
         <li key={decision.id} className="animate-rise">
-          <Card className={decision.urgent ? 'border-band-high/50' : undefined}>
-            <CardBody className="flex flex-wrap items-start justify-between gap-3">
+          <Card className={emphasizeFirst && position === 0 ? `decision-lead ${decision.urgent ? 'decision-lead-urgent' : ''}` : decision.urgent ? 'border-band-high/50' : undefined}>
+            <CardBody className={emphasizeFirst && position === 0 ? 'flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between' : 'flex flex-wrap items-start justify-between gap-3'}>
               <div className="min-w-0 flex-1">
+                {emphasizeFirst && position === 0 && <p className="document-kicker mb-2">Next decision</p>}
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-medium text-balance">{decision.title}</h3>
+                  <h3 className={emphasizeFirst && position === 0 ? 'font-display text-2xl leading-tight text-balance' : 'font-medium text-balance'}>{decision.title}</h3>
                   {decision.daysRemaining !== undefined && (
                     <Badge tone={decision.urgent ? 'high' : 'neutral'} glyph={false}>
                       {decision.daysRemaining <= 0
@@ -69,8 +73,9 @@ export function DecisionList({
               {/* Named for its decision: a list read button by button was
                   "Decide, Decide, Decide". */}
               <Button
-                variant="primary"
+                variant={emphasizeFirst && position > 0 ? 'secondary' : 'primary'}
                 size="sm"
+                className={emphasizeFirst && position === 0 ? 'w-full shrink-0 sm:w-auto' : undefined}
                 aria-label={`Decide: ${decision.title}`}
                 onClick={() => setUi({ openDecisionId: decision.id })}
               >

@@ -821,6 +821,11 @@ test.describe('a first year at Nexora', () => {
     // The four standing readings are one strip of definitions, not four cards.
     const standing = page.getByRole('region', { name: 'Where the organisation stands' })
     await expect(standing).toBeVisible()
+    const waiting = page.getByRole('region', { name: 'Waiting on you', exact: true })
+    expect(await waiting.evaluate((element) => Boolean(element.compareDocumentPosition(document.querySelector('[aria-label="Where the organisation stands"]')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true)
+    await expect(waiting.getByText('Next decision', { exact: true })).toBeVisible()
+    const firstAction = waiting.getByRole('button', { name: /^Decide:/ }).first()
+    await expect(firstAction).toBeInViewport()
     for (const label of ['Residual exposure', 'Board confidence', 'Unallocated capacity', 'Recovery confidence']) {
       await expect(standing.getByText(label, { exact: true })).toBeVisible()
     }
