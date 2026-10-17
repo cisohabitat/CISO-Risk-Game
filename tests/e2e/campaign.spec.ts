@@ -448,6 +448,10 @@ test.describe('a first year at Nexora', () => {
       }
       // The next column is cut by the edge; the fade says the map carries on.
       await expect(page.getByTestId('graph-edge-fade')).toBeAttached()
+      const selected = page.locator('.react-flow__node').filter({ has: page.getByText('Nexora Pay', { exact: true }) })
+      await selected.click()
+      await expect(selected.getByText('Selected system', { exact: true })).toBeVisible()
+      await expect(page.locator('.react-flow__edge-path[marker-end]').first()).toBeAttached()
     }
 
     // The list view is always available, and is all a phone shows, so the

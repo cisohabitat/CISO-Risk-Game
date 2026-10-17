@@ -358,6 +358,42 @@
   padding: 1rem 0;
   border-bottom: 1px solid var(--line);
 }
+.paper-number {
+  display: inline-block;
+  margin-inline-end: 0.65rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+}
+.decision-context {
+  border-inline-start: 3px solid var(--brass);
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+.decision-option:has(input:checked) {
+  box-shadow: inset 3px 0 var(--accent);
+}
+.message-kind { color: var(--ink-muted); }
+.message-kind-alert { color: var(--band-high); }
+.message-kind-evidence { color: var(--chart-enquiry); }
+.message-kind-personal { color: var(--accent-ink); }
+.message-reader { border-top-width: 3px; }
+.message-reader-alert { border-top-color: var(--band-high); }
+.message-reader-evidence { border-top-color: var(--chart-enquiry); }
+.message-reader-personal { border-top-color: var(--accent); }
+.org-node-selected {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  background: var(--accent-soft);
+}
+.org-node-related { background: var(--surface-2); }
+.react-flow .react-flow__controls-button {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.react-flow .react-flow__controls-button:hover { background: var(--surface-2); }
+.react-flow .react-flow__controls-button svg { fill: currentColor; }
+.react-flow .react-flow__attribution { background: var(--surface); z-index: 11; }
+.react-flow .react-flow__attribution a { color: var(--ink-muted); }
 .report-cover {
   padding-inline: clamp(1rem, 4vw, 2.5rem);
   background: linear-gradient(160deg, var(--brass-soft), var(--surface) 68%);

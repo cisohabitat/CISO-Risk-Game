@@ -71,8 +71,12 @@ test.describe('player guide', () => {
     await page.getByRole('button', { name: /^Decide: / }).first().click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await page.getByRole('dialog').getByRole('radio').first().check()
+    await page.getByRole('dialog').locator('.scroll-area').evaluate((element) => { element.scrollTop = 0 })
     await shot(page, '03-decision')
     await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
+
+    await goTo(page, 'Inbox')
+    await shot(page, '03b-inbox')
 
     await goTo(page, 'Risk')
     await shot(page, '04-risk')
@@ -83,6 +87,11 @@ test.describe('player guide', () => {
     await page.getByRole('button', { name: 'List', exact: true }).first().click().catch(() => undefined)
     await page.waitForTimeout(400)
     await shot(page, '06-organisation')
+
+    await goTo(page, 'Programmes')
+    await shot(page, '06b-programmes')
+    await goTo(page, 'Team')
+    await shot(page, '06c-team')
 
     // The Continue list, which a player only sees on their second visit: one
     // row per campaign, each with its own Delete. Two campaigns, because the

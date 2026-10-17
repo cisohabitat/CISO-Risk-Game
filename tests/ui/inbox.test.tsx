@@ -26,7 +26,7 @@ describe('reading an unread backlog', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Unread', exact: true }))
         expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Signal 1')
         expect(useGameStore.getState().state!.inbox.messages.filter((m) => !m.read)).toHaveLength(118)
-        fireEvent.click(within(screen.getByRole('list', { name: 'Messages' })).getByRole('button', { name: /Signal 2 / }))
+        fireEvent.click(within(screen.getByRole('list', { name: 'Messages' })).getByRole('button', { name: /Signal 2\b/ }))
         expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Signal 2')
         expect(useGameStore.getState().state!.inbox.messages.filter((m) => !m.read)).toHaveLength(117)
       })

@@ -116,6 +116,8 @@ The game as it stands after the roadmap's engineering phases
   animation. See `/accessibility`.
 
 ### Presentation
+- Clearer decision papers and Board submissions, typed Inbox messages,
+  stronger map selection and dependency arrows, and quieter Team and Programme rows.
 - The Briefing puts decisions before standing metrics and gives its next
   decision more visual emphasis. The annual review has a stronger cover and
   a chronological selection of recorded choices.

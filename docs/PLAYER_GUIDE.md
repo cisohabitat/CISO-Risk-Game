@@ -190,6 +190,10 @@ Monday, or spend the week on something else.
 
 ## Decisions
 
+The paper separates the situation, your options and the reasons you record.
+Known costs sit together under each option; known effects are listed separately.
+They describe what you can foresee, not every consequence that may follow.
+
 ![A decision](images/03-decision.png)
 
 Decisions are the spine of the game. Each gives you a situation, several real
@@ -223,6 +227,17 @@ whatever sounds best.
 ---
 
 ## Finding out what is actually true
+
+### Reading your inbox
+
+![The Inbox](images/03b-inbox.png)
+
+Each message has a type label and icon, so a personal message, evidence update
+and incident update are easier to distinguish. Priority is still stated in
+words when a message is notable, urgent or critical. Opening a message in
+Unread does not consume the rest of that list; select Unread again to refresh it.
+
+### The risk workspace
 
 ![The Risk workspace](images/04-risk.png)
 
@@ -286,12 +301,32 @@ new players most often skip. Do not skip it.
 Every system, supplier, network and data set, and what depends on what. Use
 **List** rather than **Graph** at first — it is far easier to read.
 
+In the graph, select a system to outline it and highlight its direct links.
+Arrows point from that system to the things it depends on. These are links
+you have discovered; the graph does not reveal the estate you have not found.
+
 Notice which rows are **drawn with a dashed outline and set back**: those are
 things you know exist because you were told, not because anyone checked. On
 day one nearly the whole estate looks like that, and it resolves into solid
 rows badged **Checked** as you verify things — the picture
 visibly sharpens as the year goes on, which is the point. The difference between *seen* and
 *verified* is the game's central idea, and the annual review scores it.
+
+---
+
+## Programmes and people
+
+![The programme portfolio](images/06b-programmes.png)
+
+Programmes are set out in rows: what the work is for on one side, and its cost,
+people and delivery details on the other. On a phone those columns stack.
+Work under way keeps its blockers, milestones and intervention buttons visible.
+
+![The Team screen](images/06c-team.png)
+
+Each function has a row showing capacity, staffing, morale and commitments.
+Capacity and morale answer different questions. Recruitment stays with the
+staffing details, while recovery guidance stays beside morale.
 
 ---
 
@@ -314,6 +349,11 @@ take it.
 ---
 
 ## The board, every quarter
+
+The paper groups agenda evidence, programme recommendations and a submission
+summary. Before taking it to the board, check the selected-topic and
+recommendation counts and whether you acknowledged uncertainty. The summary
+reflects your selections; it does not certify that the paper is complete.
 
 ![The board paper](images/08-board.png)
 

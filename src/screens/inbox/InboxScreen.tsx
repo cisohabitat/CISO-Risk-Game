@@ -14,6 +14,20 @@ import { cn } from '@/lib/utils/cn'
 import { formatGameDate } from '@/game/time'
 import { shortDate } from '@/lib/formatting/labels'
 import type { InboxMessage } from '@/game/types'
+import { Icon, type IconName } from '@/components/ui/icons'
+
+const MESSAGE_KIND: Record<InboxMessage['type'], { label: string; icon: IconName; style: string }> = {
+  business: { label: 'Business update', icon: 'briefing', style: 'routine' },
+  threat: { label: 'Threat update', icon: 'risk', style: 'alert' },
+  programme: { label: 'Programme update', icon: 'programme', style: 'routine' },
+  people: { label: 'People update', icon: 'team', style: 'personal' },
+  supplier: { label: 'Supplier update', icon: 'organisation', style: 'routine' },
+  executive: { label: 'Executive message', icon: 'inbox', style: 'personal' },
+  board: { label: 'Board correspondence', icon: 'board', style: 'personal' },
+  discovery: { label: 'Evidence update', icon: 'enquiry', style: 'evidence' },
+  incident: { label: 'Incident update', icon: 'incident', style: 'alert' },
+  assumption: { label: 'Assumption update', icon: 'assumption', style: 'evidence' },
+}
 
 const FILTERS = [
   { id: 'all', label: 'All' },
@@ -72,7 +86,7 @@ export function InboxScreen() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-display text-2xl leading-tight">Inbox</h1>
+        <div><p className="document-kicker">Nexora Group · Correspondence</p><h1 className="mt-2 font-display text-3xl leading-tight">Inbox</h1></div>
         <SegmentedControl
           label="Filter messages"
           value={filter}
@@ -102,6 +116,9 @@ export function InboxScreen() {
                       : 'border-transparent hover:bg-surface-2',
                   )}
                 >
+                  <p className={`message-kind message-kind-${MESSAGE_KIND[message.type].style} mb-2 flex items-center gap-2 text-xs font-medium`}>
+                    <Icon name={MESSAGE_KIND[message.type].icon} size={14} />{MESSAGE_KIND[message.type].label}
+                  </p>
                   <div className="flex items-baseline justify-between gap-2">
                     <span className={cn('truncate text-sm', message.read ? 'text-ink-muted' : 'font-semibold')}>
                       {message.from}
@@ -110,7 +127,7 @@ export function InboxScreen() {
                         reading 2 January read as a mistake. */}
                     <span className="shrink-0 text-xs tabular-nums text-ink-faint">{shortDate(message.day)}</span>
                   </div>
-                  <p className={cn('mt-0.5 truncate', message.read ? 'text-ink-muted' : 'font-medium')}>
+                  <p className={cn('mt-1 line-clamp-2 leading-snug text-pretty', message.read ? 'text-ink-muted' : 'font-medium')}>
                     {message.subject}
                   </p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -125,12 +142,15 @@ export function InboxScreen() {
           </ul>
 
           {selected && (
-            <Card className="correspondence md:sticky md:top-24 md:self-start">
+            <Card className={`correspondence message-reader message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
               <CardBody>
                 <div className="mb-4 flex items-center gap-2 border-b border-line pb-3">
                   <NexoraMark className="h-7 w-7" />
                   <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink-faint">Nexora Group</span>
                 </div>
+                <p className={`message-kind message-kind-${MESSAGE_KIND[selected.type].style} mb-3 flex items-center gap-2 text-xs font-medium`}>
+                  <Icon name={MESSAGE_KIND[selected.type].icon} size={16} />{MESSAGE_KIND[selected.type].label}
+                </p>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
                 <h2 className="mt-1 font-display text-xl leading-tight text-balance">{selected.subject}</h2>
                 <div className="mt-3 flex items-center gap-3">
@@ -174,6 +194,6 @@ function PriorityBadge({ message }: { message: InboxMessage }) {
     case 'notable':
       return <Badge tone="moderate" glyph={false}>Notable</Badge>
     default:
-      return <Badge tone="neutral" glyph={false}>{message.type}</Badge>
+      return null
   }
 }

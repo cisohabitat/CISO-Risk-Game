@@ -32,6 +32,17 @@ changes.
 
 ## Artwork
 
+- Decision papers separate context, option costs, known effects and rationale;
+  never present hidden outcomes as foreseeable effects. Board submission counts
+  must reflect the selected agenda, recommendations and uncertainty control.
+- Inbox type labels and icons come from recorded message types; do not infer
+  investigation provenance or incident severity from wording. Preserve stable
+  Unread membership. Map highlights use only the displayed, discovered nodes
+  and their direct links; arrows point toward dependencies. Keep node text
+  readable and retain the list/inspector keyboard route.
+- Team function and programme rows retain morale, vacancies, staffing, costs,
+  blockers and actions when stacked at 320px. Keep people portraits in dossiers.
+
 - Keep the Briefing's action area ahead of standing metrics in DOM and visual
   order. Its lead decision follows the existing deadline sort; board papers and
   programme blockers retain their own routes. Review highlights are a sample

@@ -59,7 +59,7 @@ describe('what the screens show', () => {
     expect(within(note).getByRole('button', { name: 'Got it' })).toBeInTheDocument()
   })
 
-  it('ends every capacity card on a staffing line', async () => {
+  it('keeps staffing visible for every function', async () => {
     await useGameStore.getState().startNewGame('ui-visual-team', 'ciso')
     render(<TeamScreen />)
     const cards = screen.getAllByText(/^(Fully staffed|\d+ vacanc(y|ies) unfilled|Recruiting)$/)

@@ -36,6 +36,14 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Decision papers separate the situation, options, costs, known effects and
+reasons. Board papers group agenda evidence, recommendations and a live
+submission summary. Inbox messages carry explicit type labels and icons.
+The organisation map outlines the selected system and its directly connected
+neighbours, with arrows pointing to dependencies. Team functions and programme
+portfolios use quieter rows that stack on phones, keeping costs, staffing,
+morale, blockers and actions visible.
+
 ## Running it
 
 ```bash

@@ -9,6 +9,7 @@ import {
   Controls,
   Handle,
   Position,
+  MarkerType,
   ReactFlow,
   type Edge,
   type Node,
@@ -57,6 +58,8 @@ type OrgNodeData = {
   confidence: number
   /** Established by the player's own work, rather than inherited or overheard. */
   verified: boolean
+  selected: boolean
+  related: boolean
 }
 
 function OrgNodeCard({ data }: NodeProps) {
@@ -64,24 +67,24 @@ function OrgNodeCard({ data }: NodeProps) {
   const critical = node.criticality === 'critical' || node.criticality === 'high'
   return (
     <div
-      className="relative min-w-[9.5rem] max-w-[13rem] overflow-hidden rounded-lg border bg-surface py-2 pl-4 pr-3 text-left shadow-[var(--shadow-soft)]"
+      className={`org-node relative min-w-[9.5rem] max-w-[13rem] overflow-hidden rounded-lg border bg-surface py-2 pl-4 pr-3 text-left shadow-[var(--shadow-soft)] ${node.selected ? 'org-node-selected' : node.related ? 'org-node-related' : ''}`}
       style={{
-        borderColor: node.onPath ? 'var(--band-high)' : critical ? 'var(--line-strong)' : 'var(--line)',
-        borderWidth: node.onPath ? 2 : 1,
+        borderColor: node.onPath ? 'var(--band-high)' : node.related ? 'var(--accent)' : critical ? 'var(--line-strong)' : 'var(--line)',
+        borderWidth: node.onPath || node.related ? 2 : 1,
         // Solid once the player has checked it themselves, dashed while it is
-        // still somebody else's word. Confidence was already dimming the card,
-        // but confidence and having checked are different things — an
+        // still somebody else's word. Keep the text fully opaque: confidence
+        // and having checked are different things — an
         // inherited entry can arrive confident and wrong — and only one of
         // them is the thing this game is about. The estate resolves from
         // outlines into architecture as the year goes on.
         borderStyle: node.verified ? 'solid' : 'dashed',
-        opacity: (node.verified ? 0.72 : 0.5) + node.confidence * 0.28,
       }}
     >
       <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5" style={{ background: familyOf(node.type).colour }} />
       <p className="text-[0.7rem] text-ink-faint">{nodeTypeLabel(node.type)}</p>
       <p className="text-sm font-medium leading-snug">{node.label}</p>
+      {node.selected && <p className="mt-1 text-[0.7rem] font-semibold text-accent-ink">Selected system</p>}
       {node.onPath && <p className="mt-1 text-[0.7rem] text-band-high">on a known attack path</p>}
       {/* The outline says whether it was checked, and the key says what an
           outline means; a line of words under every dashed card repeated it
@@ -104,6 +107,16 @@ export default function OrgGraph({
   onSelect: (id: string) => void
 }) {
   const { flowNodes, flowEdges } = useMemo(() => {
+    const known = new Set(nodes.map((node) => node.id))
+    const connected = new Set<string>()
+    for (const node of nodes) {
+      for (const dependency of node.dependencies) {
+        if (known.has(dependency.id) && (node.id === selectedId || dependency.id === selectedId)) {
+          connected.add(node.id)
+          connected.add(dependency.id)
+        }
+      }
+    }
     const perColumn: Record<number, number> = {}
     const flowNodes: Node[] = nodes.map((node) => {
       const column = COLUMNS[node.type] ?? 3
@@ -111,7 +124,7 @@ export default function OrgGraph({
       return {
         id: node.id,
         type: 'org',
-        position: { x: column * 260, y: row * 96 },
+        position: { x: column * 280, y: row * 120 },
         data: {
           label: node.name,
           type: node.type,
@@ -119,6 +132,8 @@ export default function OrgGraph({
           onPath: node.onKnownAttackPath,
           confidence: node.confidence,
           verified: node.verified,
+          selected: node.id === selectedId,
+          related: connected.has(node.id) && node.id !== selectedId,
         } satisfies OrgNodeData,
         selected: node.id === selectedId,
         // Named for a screen reader as it is for the eye.
@@ -127,7 +142,6 @@ export default function OrgGraph({
     })
     const names = new Map(nodes.map((node) => [node.id, node.name]))
 
-    const known = new Set(nodes.map((node) => node.id))
     const seen = new Set<string>()
     const flowEdges: Edge[] = []
     for (const node of nodes) {
@@ -150,14 +164,15 @@ export default function OrgGraph({
           // screen reader thirty times over.
           ariaLabel: `${node.name} depends on ${names.get(dependency.id) ?? 'another system'}`,
           animated: false,
+          markerEnd: { type: MarkerType.ArrowClosed, color: touches ? 'var(--accent)' : 'var(--line-strong)', width: 16, height: 16 },
           zIndex: touches ? 1 : 0,
           style: {
             stroke: touches ? 'var(--accent)' : 'var(--line-strong)',
-            strokeWidth: touches ? 2 : 1,
+            strokeWidth: touches ? 3 : 1.25,
             strokeDasharray: dependency.confidence < 0.6 ? '4 4' : undefined,
             opacity: selectedId === undefined || touches ? 1 : 0.35,
           },
-          labelStyle: { fill: 'var(--ink-muted)', fontSize: 11 },
+          labelStyle: { fill: 'var(--ink)', fontSize: 12 },
           labelBgStyle: { fill: 'var(--surface)' },
         })
       }
@@ -169,11 +184,20 @@ export default function OrgGraph({
   // size that can be read. Fitting the whole estate made every label a few
   // pixels tall; the rest is a scroll or a zoom away.
   const opening = useMemo(
-    () => nodes.filter((node) => (COLUMNS[node.type] ?? 3) <= 1).map((node) => ({ id: node.id })),
+    () => {
+      const rows: Record<number, number> = {}
+      return nodes.filter((node) => {
+        const column = COLUMNS[node.type] ?? 3
+        if (column > 1) return false
+        rows[column] = (rows[column] ?? 0) + 1
+        return rows[column] <= 3
+      }).map((node) => ({ id: node.id }))
+    },
     [nodes],
   )
 
   const families = FAMILIES.filter((family) => nodes.some((node) => family.types.includes(node.type)))
+  const selected = nodes.find((node) => node.id === selectedId)
 
   return (
     <div className="space-y-2">
@@ -184,6 +208,10 @@ export default function OrgGraph({
             {family.label}
           </li>
         ))}
+        <li className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-3 w-5 rounded-sm border-2 border-accent outline outline-1 outline-offset-2 outline-accent" />
+          Selected system
+        </li>
         <li className="flex items-center gap-1.5">
           <span aria-hidden="true" className="h-3 w-5 rounded-sm border border-solid border-line-strong" />
           Checked
@@ -197,6 +225,7 @@ export default function OrgGraph({
           On a known attack path
         </li>
       </ul>
+      <p className="text-xs leading-relaxed text-ink-muted">Arrows point from a system to what it depends on. {selected ? `Selected: ${selected.name}. Its direct links are highlighted.` : 'Select a system to highlight its direct links.'}</p>
       <div className="relative h-[28rem] w-full overflow-hidden rounded-[--radius-card] border border-line bg-surface-2 sm:h-[34rem]">
         <ReactFlow
           nodes={flowNodes}

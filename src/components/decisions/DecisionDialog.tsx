@@ -77,10 +77,13 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         </>
       }
     >
-      <div className="space-y-5">
-        <p className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-ink-muted text-pretty">
-          {decision.context}
-        </p>
+      <div className="decision-paper space-y-6">
+        <section aria-labelledby="decision-context" className="decision-context">
+          <h3 id="decision-context" className="document-kicker mb-2"><span aria-hidden="true" className="paper-number">01</span>The situation</h3>
+          <p className="text-sm leading-relaxed text-ink-muted text-pretty">
+            {decision.context}
+          </p>
+        </section>
         <Terms
           text={`${decision.title} ${decision.description} ${decision.context} ${decision.options.map((o) => `${o.label} ${o.description}`).join(' ')}`}
         />
@@ -93,15 +96,16 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           </p>
         )}
 
-        <fieldset className="space-y-2">
+        <fieldset className="space-y-3">
           <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+            <span aria-hidden="true" className="paper-number">02</span>
             Your options
           </legend>
           {decision.options.map((option) => (
             <label
               key={option.id}
               className={cn(
-                'flex cursor-pointer gap-3 rounded-lg border p-3 transition-colors',
+                'decision-option flex cursor-pointer gap-3 rounded-lg border p-4 transition-colors',
                 optionId === option.id ? 'border-accent bg-accent-soft/40' : 'border-line bg-surface-2 hover:border-line-strong',
                 !option.affordable && 'opacity-60',
               )}
@@ -117,8 +121,10 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                 style={{ minHeight: 0 }}
               />
               <span className="min-w-0 flex-1">
-                <span className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="font-medium">{option.label}</span>
+                <span className="block font-display text-xl leading-tight text-balance">{option.label}</span>
+                <span className="mt-2 block text-sm leading-relaxed text-ink-muted text-pretty">{option.description}</span>
+                {(option.budgetCost !== undefined || option.focusCost !== undefined) && <span className="decision-costs mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-y border-line py-2">
+                  <span className="text-xs font-medium text-ink-faint">Cost</span>
                   {/* A price the organisation already knows is not part of the
                       uncertainty. "Expensive" told the player nothing they could
                       weigh against the budget bar on the same screen. */}
@@ -130,17 +136,19 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                   {option.focusCost !== undefined && (
                     <span className="text-sm tabular-nums text-ink-faint">{option.focusCost} attention</span>
                   )}
-                </span>
-                <span className="mt-0.5 block text-sm text-ink-muted text-pretty">{option.description}</span>
+                </span>}
                 {option.visibleKnownEffects.length > 0 && (
-                  <ul className="mt-2 space-y-1">
-                    {option.visibleKnownEffects.map((effect) => (
-                      <li key={effect} className="flex gap-2 text-sm text-ink-faint">
-                        <span aria-hidden="true">·</span>
-                        <span className="text-pretty">{effect}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-3">
+                    <p className="text-xs font-medium text-ink-faint">Known effects</p>
+                    <ul className="mt-2 space-y-1">
+                      {option.visibleKnownEffects.map((effect) => (
+                        <li key={effect} className="flex gap-2 text-sm text-ink-faint">
+                          <span aria-hidden="true">·</span>
+                          <span className="text-pretty">{effect}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 {option.exceedsBudget && (
                   <span className="mt-2 block text-sm text-band-elevated">
@@ -162,8 +170,9 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           ))}
         </fieldset>
 
-        <div>
+        <section aria-labelledby="decision-why" className="border-t-2 border-line-strong pt-5">
           <p id="decision-why" className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+            <span aria-hidden="true" className="paper-number">03</span>
             Why? {decision.requiresRationale ? '(at least one reason)' : '(optional)'}
           </p>
           <p className="mb-2 text-sm text-ink-muted">
@@ -200,7 +209,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
               className="w-full resize-y rounded-lg border border-line bg-surface-2 p-3 text-base placeholder:text-ink-faint"
             />
           </label>
-        </div>
+        </section>
 
         {decision.teaches && (
           <p className="rounded-lg border border-brass/40 bg-brass-soft/60 p-3 text-sm">

@@ -3,7 +3,7 @@
  * as money, and hit blockers that money cannot clear.
  */
 import { useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, visibleRisks, type ProgrammeView } from '@/store/selectors'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
@@ -48,7 +48,8 @@ export function ProgrammesScreen() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl leading-tight">Programmes</h1>
+        <p className="document-kicker">Nexora Group · Delivery portfolio</p>
+        <h1 className="mt-2 font-display text-3xl leading-tight">Programmes</h1>
         <p className="text-sm text-ink-muted text-pretty">
           {money(state.resources.budgetRemaining)} of cyber budget remains. Everything still on the table would cost{' '}
           {money(totalCost)}, so this is a choice rather than a plan.
@@ -64,14 +65,14 @@ export function ProgrammesScreen() {
       {live.length > 0 && (
         <section aria-labelledby="live">
           <SectionHeading><span id="live">Under way</span></SectionHeading>
-          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <ul className="divide-y divide-line border-y border-line">
             {live.map((programme) => (
               <li key={programme.id}>
-                <Card className={programme.status === 'at-risk' ? 'border-band-elevated/50' : undefined}>
-                  <CardBody className="space-y-3">
+                <article className="programme-row grid gap-5 py-6 lg:grid-cols-2 lg:gap-8">
+                  <div className="space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
-                        <h3 className="font-medium">{programme.name}</h3>
+                        <h3 className="font-display text-xl leading-tight text-balance">{programme.name}</h3>
                         <p className="text-sm text-ink-muted">
                           {programme.sponsorName ? `Sponsored by ${programme.sponsorName}` : 'No executive sponsor'}
                         </p>
@@ -93,6 +94,8 @@ export function ProgrammesScreen() {
                       <Fact label="Delivery confidence" value={programme.confidenceLabel} />
                     </dl>
 
+                  </div>
+                  <div className="space-y-4">
                     {programme.blockers.length > 0 && (
                       <div className="rounded-lg border border-band-elevated/40 bg-band-elevated-soft/50 p-3">
                         <p className="text-sm font-medium">Blocked</p>
@@ -176,8 +179,8 @@ export function ProgrammesScreen() {
                         </Button>
                       </div>
                     )}
-                  </CardBody>
-                </Card>
+                  </div>
+                </article>
               </li>
             ))}
           </ul>
@@ -187,16 +190,18 @@ export function ProgrammesScreen() {
       {proposed.length > 0 && (
         <section aria-labelledby="proposed">
           <SectionHeading><span id="proposed">On the table</span></SectionHeading>
-          <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <ul className="divide-y divide-line border-y border-line">
             {proposed.map((programme) => (
               <li key={programme.id}>
-                <Card className="h-full">
-                  <CardBody className="flex h-full flex-col space-y-3">
+                <article className="programme-row grid gap-5 py-6 lg:grid-cols-2 lg:gap-8">
+                  <div className="space-y-3">
                     <div>
-                      <h3 className="font-medium">{programme.name}</h3>
+                      <h3 className="font-display text-xl leading-tight text-balance">{programme.name}</h3>
                       <p className="mt-1 text-sm text-ink-muted text-pretty">{programme.description}</p>
                     </div>
                     <p className="flex-1 text-sm italic text-ink-faint text-pretty">{programme.rationale}</p>
+                  </div>
+                  <div className="space-y-4">
                     {/* One risk to a line. Run together with semicolons, three
                         long titles were a paragraph nobody could scan. */}
                     {treats(programme.id).length > 0 && (
@@ -267,8 +272,8 @@ export function ProgrammesScreen() {
                           ? 'Out of attention this week'
                           : 'Start this'}
                     </Button>
-                  </CardBody>
-                </Card>
+                  </div>
+                </article>
               </li>
             ))}
           </ul>

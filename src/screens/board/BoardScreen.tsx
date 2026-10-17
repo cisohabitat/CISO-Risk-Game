@@ -203,7 +203,7 @@ export function BoardScreen() {
           </>
         }
       >
-        <div className="board-paper space-y-5">
+        <div className="board-paper space-y-6">
           <header className="flex items-start justify-between gap-4 border-b-2 border-ink pb-5">
             <div><p className="document-kicker">Nexora Group</p><p className="mt-2 font-display text-2xl">Board Risk Committee</p><p className="mt-1 text-sm text-ink-muted">Management paper · {formatGameDate(state.currentDay).label}</p></div>
             <span aria-hidden="true" className="font-display text-5xl text-ink-faint">Q{pendingQuarter}</span>
@@ -217,7 +217,8 @@ export function BoardScreen() {
             />
           ) : (
             <fieldset>
-              <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Agenda</legend>
+              <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint"><span aria-hidden="true" className="paper-number">01</span>Agenda</legend>
+              <p className="mb-3 text-sm text-ink-muted">Evidence for the committee to consider.</p>
               {emergingCount > 0 && (
                 <p className="mb-3 text-sm text-ink-muted">
                   {plural(emergingCount, 'risk is', 'risks are')} emerging and not on the agenda: the board hears about
@@ -231,8 +232,8 @@ export function BoardScreen() {
                     <label
                       key={topic.id}
                       className={cn(
-                        'flex cursor-pointer gap-3 rounded-lg border p-3 text-sm',
-                        active ? 'border-accent bg-accent-soft/30' : 'border-line bg-surface-2',
+                        'board-agenda-row flex cursor-pointer flex-wrap gap-3 border-b border-line px-2 py-4 text-sm',
+                        active ? 'bg-accent-soft/30' : 'hover:bg-surface-2',
                       )}
                     >
                       <input
@@ -244,7 +245,7 @@ export function BoardScreen() {
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
                         style={{ minHeight: 0 }}
                       />
-                      <span className="min-w-0 flex-1 text-pretty">{topic.label}</span>
+                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}</span>
                       {riskBands.has(topic.id) ? (
                         <Badge tone={bandTone(riskBands.get(topic.id)!)} className="shrink-0 self-start">
                           {RISK_BAND_LABEL[riskBands.get(topic.id)!]} residual
@@ -261,6 +262,7 @@ export function BoardScreen() {
 
           <fieldset>
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+              <span aria-hidden="true" className="paper-number">02</span>
               Recommendations
             </legend>
             {/* Pills read as tags. Each says whether it is in the paper: a
@@ -293,7 +295,7 @@ export function BoardScreen() {
             </div>
           </fieldset>
 
-          <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-surface-2 p-3">
+          <label className="flex cursor-pointer items-start gap-3 border-y border-line bg-surface-2 p-4">
             <input
               type="checkbox"
               checked={uncertainty}
@@ -308,6 +310,15 @@ export function BoardScreen() {
               </span>
             </span>
           </label>
+          <section aria-labelledby="paper-submission" className="paper-submission border-t-2 border-ink pt-5">
+            <h3 id="paper-submission" className="document-kicker"><span aria-hidden="true" className="paper-number">03</span>Your submission</h3>
+            <dl className="mt-4 grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
+              <div><dt className="text-ink-faint">Agenda topics</dt><dd className="mt-1 font-medium">{topics.length} selected</dd></div>
+              <div><dt className="text-ink-faint">Programme recommendations</dt><dd className="mt-1 font-medium">{recommendations.length} selected</dd></div>
+              <div><dt className="text-ink-faint">Uncertainty</dt><dd className="mt-1 font-medium">{uncertainty ? 'Explicitly acknowledged' : 'Not acknowledged'}</dd></div>
+            </dl>
+            <p className="mt-4 text-xs text-ink-muted">Prepared by the Office of the CISO · For committee consideration</p>
+          </section>
         </div>
       </Dialog>
     </div>

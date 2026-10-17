@@ -54,7 +54,7 @@ for (const theme of ['light', 'dark']) {
         } else {
           await expect(list.getByRole('button')).toHaveCount(60)
           const next = previous === 'All' ? 2 : 4
-          await list.getByRole('button', { name: new RegExp(`Audit signal ${next} `) }).click()
+          await list.getByRole('button', { name: new RegExp(`Audit signal ${next}\\b`) }).click()
           await expect(page.getByRole('heading', { name: `Audit signal ${next}`, exact: true })).toBeVisible()
           await expect(list.getByRole('button')).toHaveCount(60)
         }
