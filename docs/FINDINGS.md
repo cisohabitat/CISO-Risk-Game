@@ -18,6 +18,14 @@ fault.
 
 ### Fixed
 
+- **A delayed initial save could overwrite newer autosaves.** Hosted browser
+  testing found a day-one primary record beside a day-two backup after rapid
+  Skip ahead actions. Validation loads asynchronously, so saves could reach
+  persistence out of request order. The store now queues validation and writes
+  together; errors reject the requesting operation without poisoning later
+  saves. A controlled slow-write regression failed before the fix and covers
+  ordered completion and recovery after a rejected write.
+
 - **A returning player's title copy moved onto bright artwork at 320px.**
   Percentage-based scene shading did not follow the extra Continue controls.
   The heading and actions now carry their own mobile gradients. A conservative

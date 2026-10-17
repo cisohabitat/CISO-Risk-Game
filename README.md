@@ -61,6 +61,10 @@ Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
 Follow the repository instructions and keep documentation consistent with the
 implementation and release workflow.
 
+Save validation and writes run in request order, so a slow initial save cannot
+overwrite a newer autosave after rapid actions. A failed write still reports
+its error and permits subsequent saves.
+
 Completed, verified changes are committed and pushed directly to `main` without
 an additional confirmation, following the owner's standing instruction.
 

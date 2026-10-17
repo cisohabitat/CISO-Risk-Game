@@ -26,6 +26,9 @@ changes.
 - Board eligibility copy must match `materialTopics`, including workload
   strain rather than morale alone. Label the reporting quarter separately
   from the preparation date and submission window.
+- Serialize save validation and persistence in request order, including the
+  initial save. A delayed invariant import or disk write must not overwrite
+  newer progress. A rejected save must still allow later saves to proceed.
 
 ## Artwork
 

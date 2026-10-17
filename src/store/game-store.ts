@@ -140,12 +140,22 @@ async function brokenRules(state: GameState, index: ContentIndex): Promise<strin
 }
 
 let refusedThisSession = false
+let pendingSave: Promise<void> = Promise.resolve()
+
+/** Validation imports and disk writes must retain the order of player actions.
+ * A slow initial save otherwise can land after newer autosaves and roll back
+ * the primary record. A failed operation rejects its caller, not the queue. */
+function saveSafely(...args: Parameters<typeof saveSnapshot>): Promise<boolean> {
+  const queued = pendingSave.then(() => saveSnapshot(...args))
+  pendingSave = queued.then(() => undefined, () => undefined)
+  return queued
+}
 
 /**
  * Write the campaign, unless it is broken (docs/ROADMAP.md, Phase 5). The
  * player is told once; the save they already have is kept.
  */
-async function saveSafely(
+async function saveSnapshot(
   state: GameState,
   index: ContentIndex,
   options: { savedByPlayer?: boolean } = {},
