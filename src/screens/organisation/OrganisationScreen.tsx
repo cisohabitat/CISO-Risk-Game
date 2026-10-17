@@ -4,7 +4,7 @@
  * an option. Both views show exactly what the player has discovered and no more.
  */
 import { Suspense, lazy, useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, EmptyState, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, EmptyState, LoadingState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { discoveredNodes, undiscoveredCount } from '@/store/selectors'
 import { NodeInspector } from '@/components/organisation/NodeInspector'
@@ -52,7 +52,8 @@ export function OrganisationScreen() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl leading-tight">Organisation</h1>
+          <p className="document-kicker mb-2">Nexora Group</p>
+          <h1 className="font-display text-3xl leading-tight">Organisation</h1>
           <p className="text-sm text-ink-muted">
             {plural(nodes.length, 'system')} discovered.{' '}
             {unknown.nodes + unknown.edges > 0
@@ -128,9 +129,7 @@ export function OrganisationScreen() {
             <div className={cn(graphMode === 'graph' ? 'hidden sm:block' : 'hidden')}>
               <Suspense
                 fallback={
-                  <div className="flex h-[28rem] items-center justify-center rounded-[--radius-card] border border-line bg-surface-2 text-sm text-ink-muted">
-                    Drawing the dependency map…
-                  </div>
+                  <div className="grid h-[28rem] items-center"><LoadingState label="Drawing the dependency map…" /></div>
                 }
               >
                 <OrgGraph

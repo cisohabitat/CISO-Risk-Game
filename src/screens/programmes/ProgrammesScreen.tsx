@@ -3,7 +3,7 @@
  * as money, and hit blockers that money cannot clear.
  */
 import { useMemo, useState } from 'react'
-import { Badge, Button, Dialog, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Dialog, Disclosure, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, visibleRisks, type ProgrammeView } from '@/store/selectors'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
@@ -133,8 +133,7 @@ export function ProgrammesScreen() {
                       </div>
                     )}
 
-                    <div>
-                      <p className="text-xs font-medium text-ink-faint">Milestones</p>
+                    <Disclosure summary={`Milestones · ${programme.milestones.filter((milestone) => milestone.complete).length} of ${programme.milestones.length} complete`}>
                       <ul className="mt-1 space-y-1 text-sm">
                         {programme.milestones.map((milestone) => (
                           <li key={milestone.id} className="flex gap-2">
@@ -145,7 +144,7 @@ export function ProgrammesScreen() {
                           </li>
                         ))}
                       </ul>
-                    </div>
+                    </Disclosure>
 
                     {programme.status !== 'complete' && (
                       <div className="flex flex-wrap gap-2 border-t border-line pt-3">

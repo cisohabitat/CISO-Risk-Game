@@ -598,3 +598,16 @@
   .start-links a { font-size: 12px; }
   .start-caption { display: none; }
 }
+
+/* Recorded feedback reads as a paper, with no overlay over response controls. */
+.feedback-paper {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.quarter-paper { border-inline-start-color: var(--brass); }
+@media (min-width: 640px) { .feedback-paper { padding: 1.25rem; } }

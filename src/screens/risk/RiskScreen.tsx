@@ -34,7 +34,10 @@ export function RiskScreen() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-2xl leading-tight">Risk</h1>
+      <header>
+        <p className="document-kicker mb-2">Risk register</p>
+        <h1 className="font-display text-3xl leading-tight">Risk</h1>
+      </header>
 
       <Tabs value={tab} onChange={setTab}>
         <TabList label="Risk workspace">

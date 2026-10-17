@@ -10,7 +10,7 @@
  * Everything shown comes from what the player has been told. The attack path is
  * hidden truth and does not appear here.
  */
-import { Button, Card, CardBody } from '@/components/ui/primitives'
+import { Button, Card, CardBody, Disclosure } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
 import { plural, shortDate } from '@/lib/formatting/labels'
@@ -33,17 +33,6 @@ export function IncidentCommand() {
     <Card
       // Keyed by the incident, so a new one arrives rather than appearing.
       key={incident.id}
-      // Sticky while the incident runs. It sat at the top of a scrolling page,
-      // so a player who had scrolled down had nothing but a pill in the header
-      // telling them the organisation was in crisis — which is the opposite of
-      // what "normal management has stopped" should feel like.
-      // Loud on purpose. At a third opacity it read quieter than the teaching
-      // note sitting under it, which is the wrong way round when the
-      // organisation is in crisis: a full-strength band, a heavier border and a
-      // rule down the left so it is the first thing the eye lands on.
-      // A solid bar rather than a tint. The severe "soft" token is nearly white
-      // in light mode, so a tinted card read quieter than the teaching note
-      // under it — the wrong way round when the organisation is in crisis.
       className="animate-arrive mb-4 overflow-hidden border-band-severe/60 shadow-[var(--shadow-lift)]"
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
@@ -86,57 +75,6 @@ export function IncidentCommand() {
           )}
         </div>
 
-        {/*
-          The operational state, in words. Containment is a 0..1 number
-          internally and never appears as one: the player is told where the
-          response has got to, not given a percentage to optimise.
-        */}
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-          <span className="text-ink-muted">
-            <span className="text-ink-faint">Containment:</span> {incident.containmentLabel}
-          </span>
-          <span className="text-ink-muted">
-            <span className="text-ink-faint">Recovery:</span> {incident.recoveryLabel}
-          </span>
-          {incident.servicesAffected.length > 0 && (
-            <span className="text-ink-muted">
-              <span className="text-ink-faint">Services:</span> {incident.servicesAffected.join(', ')}
-            </span>
-          )}
-        </div>
-
-        {incident.timeline.length > 0 && (
-          <div>
-            <p className="text-xs font-medium text-ink-faint">What you have been told</p>
-            <ol className="response-timeline mt-3 text-sm">
-              {incident.timeline.slice(-5).map((entry, position) => (
-                <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
-                  <span className="text-ink-muted">{entry.text}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
-
-        {incident.taken.length > 0 && (
-          <div>
-            <p className="text-xs font-medium text-ink-faint">
-              What you have already decided
-            </p>
-            <ul className="mt-1.5 space-y-1 text-sm">
-              {incident.taken.map((entry, position) => (
-                <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
-                  <span className="text-ink-muted">
-                    {entry.title}: <span className="text-ink">{entry.option}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {incident.awaiting.length > 0 && (
           <div className="rounded-lg border border-band-severe/50 bg-surface p-3">
             <p className="text-sm font-medium">
@@ -153,6 +91,63 @@ export function IncidentCommand() {
             </ul>
           </div>
         )}
+
+        {/*
+          The operational state, in words. Containment is a 0..1 number
+          internally and never appears as one: the player is told where the
+          response has got to, not given a percentage to optimise.
+        */}
+        <div className="grid gap-3 border-y border-line py-3 text-sm sm:grid-cols-3">
+          <span className="text-ink-muted">
+            <span className="mb-1 block text-xs text-ink-faint">Containment:</span> {incident.containmentLabel}
+          </span>
+          <span className="text-ink-muted">
+            <span className="mb-1 block text-xs text-ink-faint">Recovery:</span> {incident.recoveryLabel}
+          </span>
+          {incident.servicesAffected.length > 0 && (
+            <span className="text-ink-muted">
+              <span className="mb-1 block text-xs text-ink-faint">Services:</span> {incident.servicesAffected.join(', ')}
+            </span>
+          )}
+        </div>
+
+        {incident.timeline.length > 0 && (
+          <div>
+            <p className="text-xs font-medium text-ink-faint">What you have been told</p>
+            <ol className="response-timeline mt-3 text-sm">
+              {incident.timeline.slice(-1).map((entry, position) => (
+                <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
+                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                  <span className="text-ink-muted">{entry.text}</span>
+                </li>
+              ))}
+            </ol>
+            {incident.timeline.length > 1 && <div className="mt-3"><Disclosure summary={`Earlier updates (${incident.timeline.length - 1})`}>
+              <ol className="response-timeline space-y-3">
+                {incident.timeline.slice(0, -1).map((entry, position) => <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
+                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                  <span>{entry.text}</span>
+                </li>)}
+              </ol>
+            </Disclosure></div>}
+          </div>
+        )}
+
+        {incident.taken.length > 0 && (
+          <Disclosure summary={`What you have already decided (${incident.taken.length})`}>
+            <ul className="mt-1.5 space-y-1 text-sm">
+              {incident.taken.map((entry, position) => (
+                <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
+                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                  <span className="text-ink-muted">
+                    {entry.title}: <span className="text-ink">{entry.option}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Disclosure>
+        )}
+
       </CardBody>
     </Card>
   )

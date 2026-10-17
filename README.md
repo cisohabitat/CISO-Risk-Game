@@ -36,6 +36,18 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Active incidents put response decisions before the latest public update. Earlier
+updates and recorded response choices expand on demand. Committing a decision
+leaves a dismissible receipt of the chosen option and actual immediate budget,
+attention and unfunded-commitment changes, newly added evidence, and links to new
+messages. Later
+consequences still arrive through the Inbox; the receipt does not predict them.
+Played quarter boundaries add a Briefing recap of recorded choices, completed
+programmes, the board paper and current outstanding work. These panels do not
+pause time, change saves or reappear when loading a campaign. Programme
+milestones and leadership notes expand separately from always-visible actions,
+staffing and wellbeing. Optional feedback loading failures leave play available.
+
 Decision papers separate the situation, options, costs, known effects and
 reasons. Board papers group agenda evidence, recommendations and a live
 submission summary. Inbox messages carry explicit type labels and icons.

@@ -29,7 +29,7 @@ test.describe('screenshots', () => {
     await shot('00-start')
     await startCampaign(page, 'gallery-incident')
     await shot('01-briefing')
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     await page.getByRole('dialog').waitFor()
     await page.waitForTimeout(400)
     await shot('02-decision')
@@ -68,7 +68,7 @@ test.describe('screenshots', () => {
         await shot('13-incident-command')
         break
       }
-      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')

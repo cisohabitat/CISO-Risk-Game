@@ -17,12 +17,13 @@ import { BoardScreen } from '@/screens/board/BoardScreen'
 import { DecisionDialog } from '@/components/decisions/DecisionDialog'
 import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
+import { CampaignFeedback } from '@/components/game/CampaignFeedback'
 import { IncidentCommand } from '@/components/game/IncidentCommand'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
-import { Button, Card, CardBody } from '@/components/ui/primitives'
+import { Button, Card, CardBody, LoadingState } from '@/components/ui/primitives'
 import { yearWord } from '@/game/time'
 
 // The year view is opened a few times a year and read once at the close, so
@@ -80,6 +81,7 @@ export function App() {
       </a>
       <AppShell>
         <IncidentCommand />
+        <CampaignFeedback kind="decision" />
         {/* The Briefing places the note under its own headline, so the day's
             first line is what the day is about rather than a lesson. */}
         {screen !== 'home' && <Onboarding />}
@@ -112,7 +114,7 @@ export function App() {
           {screen === 'team' && <TeamScreen />}
           {screen === 'board' && <BoardScreen />}
           {screen === 'debrief' && (
-            <Suspense fallback={<p role="status" className="text-sm text-ink-muted">Opening your year…</p>}>
+            <Suspense fallback={<LoadingState label="Opening your year…" />}>
               <DebriefScreen />
             </Suspense>
           )}

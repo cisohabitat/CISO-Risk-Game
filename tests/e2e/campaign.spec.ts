@@ -37,7 +37,7 @@ test.describe('a first year at Nexora', () => {
 
     // The opening decision is waiting on the briefing screen.
     await expect(page.getByRole('heading', { name: 'Where do you start?' })).toBeVisible()
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
@@ -71,7 +71,7 @@ test.describe('a first year at Nexora', () => {
     for (let i = 0; i < 25; i += 1) {
       if (await page.getByRole('tabpanel').getByText(/confidence/i).first().isVisible().catch(() => false)) break
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
-      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const open = page.getByRole('dialog')
@@ -505,7 +505,7 @@ test.describe('a first year at Nexora', () => {
       if (await page.getByTestId('year-over').isVisible().catch(() => false)) break
 
       // Answer anything blocking, then keep moving.
-      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')
@@ -596,7 +596,7 @@ test.describe('a first year at Nexora', () => {
 
   test('a toast is dismissable without swallowing the page under it', async ({ page }) => {
     await startCampaign(page, 'e2e-toast')
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     const dialog = page.getByRole('dialog')
     await dialog.getByRole('radio').first().check()
     await dialog.getByRole('button', { name: /Commit to this/ }).click()
@@ -713,13 +713,13 @@ test.describe('a first year at Nexora', () => {
 
   test('a dialog can always be closed', async ({ page }) => {
     await startCampaign(page, 'e2e-dialog')
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
     await dialog.getByRole('button', { name: 'Close' }).click()
     await expect(dialog).toBeHidden()
 
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(page.getByRole('dialog')).toBeHidden()
@@ -849,7 +849,7 @@ test.describe('a first year at Nexora', () => {
         found = true
         break
       }
-      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')

@@ -5,6 +5,7 @@
 import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
+import { CampaignFeedback } from '@/components/game/CampaignFeedback'
 import { CameBack } from '@/components/game/CameBack'
 import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
@@ -133,6 +134,8 @@ export function HomeScreen() {
           </div>
         )}
       </section>
+
+      <CampaignFeedback kind="quarter" />
 
       <Collisions />
 

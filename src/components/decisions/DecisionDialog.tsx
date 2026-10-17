@@ -46,7 +46,19 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       rationaleTagIds: tags,
       note: note.trim() || undefined,
     })
-    if (result.ok) onClose()
+    if (result.ok) {
+      const after = useGameStore.getState().state
+      if (after && selected) useGameStore.getState().setUi({ decisionReceipt: {
+        gameId: after.gameId, year: after.year ?? 1, day: after.currentDay,
+        title: decision.title, choice: selected.label,
+        budgetChange: after.resources.budgetRemaining - state.resources.budgetRemaining,
+        attentionChange: after.resources.focusRemaining - state.resources.focusRemaining,
+        unfundedChange: after.resources.unfundedCommitment - state.resources.unfundedCommitment,
+        evidenceIds: after.evidence.order.filter((id) => !state.evidence.items[id]),
+        messageIds: after.inbox.messages.filter((message) => !state.inbox.messages.some((before) => before.id === message.id)).map((message) => message.id),
+      } })
+      onClose()
+    }
   }
 
   return (

@@ -5,6 +5,7 @@
  */
 import { create } from 'zustand'
 import { produce } from 'immer'
+import { DAYS_PER_QUARTER } from '@/game/types'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import { applyAction, beginNextYear, newGame } from '@/game/engine/orchestrator'
@@ -30,7 +31,29 @@ export interface Toast {
   tone: 'info' | 'success' | 'warning'
 }
 
+export interface DecisionReceipt {
+  gameId: string
+  year: number
+  day: number
+  title: string
+  choice: string
+  budgetChange: number
+  attentionChange: number
+  unfundedChange: number
+  messageIds: string[]
+  evidenceIds: string[]
+}
+
+export interface QuarterTransition {
+  gameId: string
+  year: number
+  quarter: number
+}
+
 export interface UiState {
+  /** Ephemeral confirmations, never written into a campaign save. */
+  decisionReceipt?: DecisionReceipt
+  quarterTransition?: QuarterTransition
   screen: Screen
   selectedNodeId?: string
   selectedScenarioId?: string
@@ -225,7 +248,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameId: `game-${seed}-${Date.now().toString(36)}`,
       createdAtIso: new Date().toISOString(),
     })
-    set({ state, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined } })
+    set({ state, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined } })
     try {
       await saveSafely(state, index)
       await get().refreshSaves()
@@ -260,7 +283,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const backup = gameId ? await readBackup(gameId).catch(() => undefined) : undefined
       if (backup && (await brokenRules(backup, index)).length === 0) {
         reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
-        set({ state: backup, ui: { ...get().ui, screen: 'home' } })
+        set({ state: backup, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
         get().pushToast(
           `That save was damaged, so the campaign opened from the one before it, on ${formatGameDate(backup.currentDay).label}.`,
           'warning',
@@ -271,7 +294,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return false
     }
     if (!state) return false
-    set({ state, ui: { ...get().ui, screen: 'home' } })
+    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
     return true
   },
 
@@ -283,7 +306,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
       return false
     }
-    set({ state, ui: { ...get().ui, screen: 'home' } })
+    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
     void saveSafely(state, index, { savedByPlayer: true }, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     return true
   },
@@ -340,7 +363,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return result
     }
 
-    set({ state: next, lastTicks: result.ticks ?? [] })
+    const quarter = Math.min(4, Math.floor(next.currentDay / DAYS_PER_QUARTER) + 1)
+    const previousQuarter = Math.min(4, Math.floor(state.currentDay / DAYS_PER_QUARTER) + 1)
+    set({ state: next, lastTicks: result.ticks ?? [], ui: {
+      ...get().ui,
+      ...(quarter > previousQuarter && !next.finished ? {
+        quarterTransition: { gameId: next.gameId, year: next.year ?? 1, quarter },
+      } : {}),
+    } })
     if (result.message) get().pushToast(result.message, 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
@@ -394,7 +424,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state?.finished || !state.reviews.annual) return
     const content = contentOf(index)
     const next = beginNextYear(content, state)
-    set({ state: next, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
     try {
       await saveSafely(next, content, {}, (message) => get().pushToast(message, 'warning'))
       await get().refreshSaves()
@@ -414,7 +444,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         // Already saved when the year closed; leaving is still allowed.
       }
     }
-    set({ state: null, lastTicks: [], ui: { ...get().ui, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    set({ state: null, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
     await get().refreshSaves()
   },
 }))

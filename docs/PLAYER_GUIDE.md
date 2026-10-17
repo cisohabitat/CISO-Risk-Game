@@ -552,3 +552,22 @@ know them beforehand.
 *Screens in this guide are generated from the running game by `pnpm guide:shots`
 and may differ slightly from your campaign — the organisation's hidden
 configuration varies with the seed.*
+
+### Reading the latest changes
+
+After committing a choice, a dismissible receipt confirms the option and any
+immediate resource changes. Expand new messages to read the organisation’s
+reply. Later effects still arrive through the Inbox.
+
+![A decision receipt showing the recorded choice](images/03c-receipt.png)
+
+When you play into a new quarter, the Briefing places a recap below **Waiting on
+you**. It summarises recorded choices, programmes completed and the prior board
+paper, then points to current commitments. Loading a save does not replay it.
+
+![A quarter recap on the Briefing](images/08b-quarter-recap.png)
+
+During an incident, answer the response decisions near the top of the journal.
+The latest update remains visible; expand **Earlier updates** or **What you have
+already decided** for the record. On Programmes, expand **Milestones** for delivery
+detail. On Team, expand **Strengths and watch points** in a leader’s dossier.

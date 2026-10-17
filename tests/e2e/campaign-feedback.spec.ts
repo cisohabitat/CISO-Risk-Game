@@ -1,0 +1,42 @@
+import AxeBuilder from '@axe-core/playwright'
+import { expect, test } from '@playwright/test'
+import { expectNoHorizontalScroll, startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
+
+test('a committed choice leaves a readable, dismissible receipt', async ({ page }) => {
+  await startCampaign(page, 'e2e-feedback')
+  await page.getByRole('button', { name: /^Decide: / }).first().click()
+  const dialog = page.getByRole('dialog')
+  await dialog.getByRole('radio').first().check()
+  await dialog.getByRole('button', { name: 'More evidence is required' }).click()
+  await dialog.getByRole('button', { name: 'Commit to this', exact: true }).click()
+  await expect(dialog).toBeHidden()
+  const receipt = page.getByRole('region', { name: /Where do you start\?/ })
+  await expect(receipt.getByRole('heading', { name: /Where do you start\?/ })).toBeVisible()
+  await expect(receipt.getByRole('heading', { level: 2 })).toBeInViewport()
+  await expect(receipt.getByRole('heading', { level: 2 })).toBeFocused()
+  await expect(receipt).toContainText('What changed now')
+  await expectNoHorizontalScroll(page)
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))))
+  const audit = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+  expect(audit.violations).toEqual([])
+  await receipt.getByRole('button', { name: 'Dismiss decision receipt' }).click()
+  await expect(receipt).toBeHidden()
+})
+
+test('a played quarter boundary adds a recap below the work waiting on you', async ({ page }) => {
+  await openPreparedCampaign(page, prepareCampaign('e2e-quarter-feedback', 'day:90'))
+  await expect(page.getByRole('heading', { name: /in the record/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Skip ahead', exact: true }).click()
+  const recap = page.getByRole('region', { name: 'Q1 in the record. Q2 ahead.' })
+  await expect(recap).toBeVisible()
+  await expect(recap).toContainText('Q1 board paper: awaiting your paper.')
+  const actions = page.locator('#decisions')
+  expect(await actions.evaluate((element) => Boolean(element.compareDocumentPosition(document.querySelector('.quarter-paper')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true)
+  await expectNoHorizontalScroll(page)
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))))
+  const audit = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+  expect(audit.violations).toEqual([])
+  await recap.getByRole('button', { name: 'Review commitments' }).click()
+  await expect(page.getByRole('heading', { name: 'Team', exact: true })).toBeVisible()
+})

@@ -450,18 +450,20 @@ export function TabPanel({ value, children }: { value: string; children: ReactNo
 
 export function Disclosure({ summary, children, defaultOpen = false }: { summary: ReactNode; children: ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen)
+  const panelId = useId()
   return (
     <div className="rounded-lg border border-line bg-surface-2">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
+        aria-controls={panelId}
         className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left text-sm font-medium"
       >
         {summary}
         <span aria-hidden="true" className={cn('text-ink-faint transition-transform', open && 'rotate-180')}>▾</span>
       </button>
-      {open && <div className="border-t border-line px-3 py-3 text-sm text-ink-muted">{children}</div>}
+      <div id={panelId} hidden={!open} className="border-t border-line px-3 py-3 text-sm text-ink-muted">{open && children}</div>
     </div>
   )
 }
@@ -554,4 +556,12 @@ export function SegmentedControl<T extends string>({
       })}
     </div>
   )
+}
+
+/** A readable status while an optional document or map loads. */
+export function LoadingState({ label }: { label: string }) {
+  return <div role="status" className="rounded-lg border border-line bg-surface-2 px-5 py-8 text-center">
+    <span aria-hidden="true" className="mx-auto mb-4 block h-10 w-8 rounded border border-line-strong bg-surface" />
+    <p className="text-sm text-ink-muted">{label}</p>
+  </div>
 }

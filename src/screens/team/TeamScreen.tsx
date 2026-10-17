@@ -3,7 +3,7 @@
  * without turning the game into an HR simulator.
  */
 import { useMemo } from 'react'
-import { Badge, Button, Card, CardBody, EmptyState, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Disclosure, EmptyState, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
 import { capacityTone, money, plural } from '@/lib/formatting/labels'
@@ -92,24 +92,26 @@ export function TeamScreen() {
                     <Fact label="Morale" value={leader.moraleLabel} />
                     <Fact label="Track record" value={leader.reliabilityLabel} />
                   </dl>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <div>
-                      <p className="text-xs font-medium text-ink-faint">Strong on</p>
-                      <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
-                        {leader.strengths.map((strength) => (
-                          <li key={strength}>{strength}</li>
-                        ))}
-                      </ul>
+                  <Disclosure summary="Strengths and watch points">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      <div>
+                        <p className="text-xs font-medium text-ink-faint">Strong on</p>
+                        <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
+                          {leader.strengths.map((strength) => (
+                            <li key={strength}>{strength}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-ink-faint">Watch for</p>
+                        <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
+                          {leader.weaknesses.map((weakness) => (
+                            <li key={weakness}>{weakness}</li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-medium text-ink-faint">Watch for</p>
-                      <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
-                        {leader.weaknesses.map((weakness) => (
-                          <li key={weakness}>{weakness}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                  </Disclosure>
                   <p className="text-xs text-ink-faint">
                     {plural(leader.running, 'assignment')} running · {leader.completed} delivered
                     {leader.late > 0 && ` · ${leader.late} late`}

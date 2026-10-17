@@ -47,7 +47,7 @@ const BUDGETS: Budget[] = [
  * The campaign and its loader (with the schema library) are split because the
  * start screen needs neither, and they were most of what it waited for.
  */
-const MUST_STAY_LAZY = ['OrgGraph-', 'DebriefScreen-', 'campaign-', 'loader-']
+const MUST_STAY_LAZY = ['OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 'campaign-', 'loader-']
 
 /**
  * Everything the entry HTML fetches before the first screen can be

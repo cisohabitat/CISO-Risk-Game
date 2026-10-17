@@ -32,6 +32,22 @@ changes.
 
 ## Artwork
 
+- Incident response actions precede journal history. Keep the latest public
+  update visible and earlier updates/recorded choices expandable, preserving
+  the journal focus target and every pending response route.
+- Decision receipts use successful before/after snapshots for actual resource
+  changes and new message IDs. Never promote foreseeable or delayed effects to
+  observed outcomes. Bring a new receipt into view and focus its heading once,
+  without repeating focus on ticks or navigation. Feedback is ephemeral UI
+  state, cleared on campaign
+  lifecycle changes; it must not alter the engine, saves or clock pauses.
+- Quarter recaps appear only after played boundaries, below the Briefing action
+  area. Exclude defaulted decisions from player choices, use programme completion
+  dates, preserve pending board-paper status, and never invent a fifth quarter.
+- Keep optional feedback deferred and nonblocking. Expand programme milestones
+  and leadership notes without hiding costs, staffing, morale, blockers or
+  actions; disclosures need keyboard controls and associated panels.
+
 - Decision papers separate context, option costs, known effects and rationale;
   never present hidden outcomes as foreseeable effects. Board submission counts
   must reflect the selected agenda, recommendations and uncertainty control.
@@ -88,6 +104,9 @@ changes.
 - Before pushing, run `pnpm check`: typecheck, lint, content validation, unit
   tests, production build and bundle size budget.
 - For UI changes, also run `pnpm test:e2e:local`.
+- Browser automation selects decision actions by their `Decide: <title>`
+  accessible names. A substring match for “Decide” also matches the expandable
+  “What you have already decided” journal and can stall a playthrough.
 - Browser tests that already opened the start screen should use
   `beginCampaign` rather than navigate again during the campaign preload.
 - Scroll checks must cover vertical reachability as well as horizontal

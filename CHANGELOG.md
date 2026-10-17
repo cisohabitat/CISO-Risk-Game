@@ -10,6 +10,12 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Incident response decisions now precede the journal, with earlier updates
+  and recorded response choices available on demand.
+- Decision receipts confirm the chosen option, immediate resource changes and
+  new messages. Briefing quarter recaps show recorded work and what remains open.
+- Programme milestones and leadership notes expand separately from actions and
+  staffing; screen headings and document/map loading states are consistent.
 - **A second year that knows what the first did.** From two AI playthroughs
   of the second year:
   - Last year's evidence reads as last year's, and what the first year fixed

@@ -28,8 +28,8 @@ test('the header takes two rows at most on a phone, and the briefing starts bene
 
   // The first thing the briefing asks for is in reach without hunting.
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-  await page.getByRole('button', { name: 'Decide' }).first().scrollIntoViewIfNeeded()
-  await page.getByRole('button', { name: 'Decide' }).first().click()
+  await page.getByRole('button', { name: /^Decide: / }).first().scrollIntoViewIfNeeded()
+  await page.getByRole('button', { name: /^Decide: / }).first().click()
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.getByRole('button', { name: 'Commit to this' })).toBeInViewport()

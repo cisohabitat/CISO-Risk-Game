@@ -22,7 +22,7 @@ test.describe('playthrough', () => {
     await shot('day-one')
 
     // The first thing the game asks of you.
-    await page.getByRole('button', { name: 'Decide' }).first().click()
+    await page.getByRole('button', { name: /^Decide: / }).first().click()
     await page.getByRole('dialog').waitFor()
     await page.waitForTimeout(300)
     await shot('first-decision')
@@ -96,7 +96,7 @@ test.describe('playthrough', () => {
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         continue
       }
-      const decide = page.getByRole('button', { name: 'Decide' }).first()
+      const decide = page.getByRole('button', { name: /^Decide: / }).first()
       if (await decide.isVisible().catch(() => false)) {
         await decide.click()
         const dialog = page.getByRole('dialog')
