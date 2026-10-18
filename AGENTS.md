@@ -32,6 +32,11 @@ changes.
 
 ## Artwork
 
+- Decision descriptions scroll with the paper, with one description ID linked
+  from the dialog. Keep title, Close and footer fixed and reachable on phones.
+- At narrow widths, containment and recovery share a row; services use the full
+  row beneath them. Keep public wording and the status → actions → update order.
+
 - Decision papers put deadlines before context, label budget/attention costs
   separately and show selection in words as well as colour. Keep the fixed
   footer and reachable rationale route; preserve affordability and hidden effects.

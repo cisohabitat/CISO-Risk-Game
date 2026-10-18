@@ -592,6 +592,10 @@ portrait cannot load.
 
 ### Reading and comparing work
 
+A decision’s description scrolls with its options; the title, Close button and
+footer stay in view. Phone incident summaries show containment and recovery on
+one row, with affected services beneath them.
+
 Decision papers show the deadline before the situation, with separate budget and
 attention costs under each option. The selected option is marked and repeated
 beside the fixed action buttons. If a reason is required, the footer takes you to

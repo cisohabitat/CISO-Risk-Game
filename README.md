@@ -36,6 +36,11 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Decision descriptions scroll with the paper while its title, Close button and
+footer stay in view. This leaves more phone space for options and reasons.
+Phone incidents put containment and recovery side by side, with affected services
+below them, bringing response controls closer without hiding any status.
+
 Decision papers lead with the deadline, label budget and attention costs, and
 mark the chosen option in words. The fixed footer repeats the selected option
 and keeps rationale and commitment reachable on phones. The decision UI preloads

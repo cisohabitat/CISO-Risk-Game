@@ -69,6 +69,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       title={decision.title}
       titleClassName="text-2xl"
       description={decision.description}
+      descriptionInBody
       footer={
         <>
           <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}` : 'Choose an option below'}</span>

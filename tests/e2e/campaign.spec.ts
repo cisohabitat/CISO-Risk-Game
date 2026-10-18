@@ -396,6 +396,8 @@ test.describe('a first year at Nexora', () => {
     // ...and the body scrolls to the last option.
     const last = dialog.getByRole('radio').last()
     await last.scrollIntoViewIfNeeded()
+    await expect(dialog.getByRole('heading', { level: 2 })).toBeInViewport()
+    await expect(dialog.getByRole('button', { name: 'Close', exact: true })).toBeInViewport()
     const lastBox = (await last.boundingBox())!
     expect(lastBox.y + lastBox.height).toBeLessThanOrEqual(viewport.height + 1)
 

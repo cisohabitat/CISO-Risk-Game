@@ -223,6 +223,7 @@ export function Dialog({
   footer,
   size = 'md',
   titleClassName,
+  descriptionInBody = false,
 }: {
   open: boolean
   onClose: () => void
@@ -232,6 +233,7 @@ export function Dialog({
   footer?: ReactNode
   size?: 'md' | 'lg'
   titleClassName?: string
+  descriptionInBody?: boolean
 }) {
   const titleId = useId()
   const descriptionId = useId()
@@ -321,7 +323,7 @@ export function Dialog({
         <div className="flex items-start justify-between gap-4 border-b border-line p-4 sm:p-5">
           <div>
             <h2 id={titleId} className={cn('font-display leading-tight text-balance', titleClassName ?? 'text-xl')}>{title}</h2>
-            {description && (
+            {description && !descriptionInBody && (
               <p id={descriptionId} className="mt-1 text-sm text-ink-muted text-pretty">{description}</p>
             )}
           </div>
@@ -329,7 +331,10 @@ export function Dialog({
             <span aria-hidden="true">✕</span>
           </Button>
         </div>
-        <div className="scroll-area min-h-0 flex-1 p-4 sm:p-5">{children}</div>
+        <div className="scroll-area min-h-0 flex-1 p-4 sm:p-5">
+          {description && descriptionInBody && <p id={descriptionId} className="mb-4 text-sm leading-relaxed text-ink-muted text-pretty">{description}</p>}
+          {children}
+        </div>
         {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-line p-4 sm:p-5">{footer}</div>}
       </div>
       </div>

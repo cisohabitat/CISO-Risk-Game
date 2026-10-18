@@ -10,6 +10,9 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Decision descriptions scroll with the paper beneath the fixed title and Close
+  button. Phone incident summaries put containment and recovery side by side,
+  with services on the next row, leaving more room for response controls.
 - Decision papers foreground deadlines, separate resource costs and identify
   the selected option in the paper and fixed footer. Decision UI preloads during
   play. Incident status precedes response choices and the latest recorded update.

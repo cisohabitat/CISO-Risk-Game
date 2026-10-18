@@ -80,7 +80,7 @@ export function IncidentCommand() {
           internally and never appears as one: the player is told where the
           response has got to, not given a percentage to optimise.
         */}
-        <div className="incident-situation grid gap-3 border-y border-line py-3 text-sm sm:grid-cols-3">
+        <div className="incident-situation grid grid-cols-2 gap-3 border-y border-line py-3 text-sm sm:grid-cols-3">
           <span className="text-ink-muted">
             <span className="mb-1 block text-xs text-ink-faint">Containment:</span> {incident.containmentLabel}
           </span>
@@ -88,7 +88,7 @@ export function IncidentCommand() {
             <span className="mb-1 block text-xs text-ink-faint">Recovery:</span> {incident.recoveryLabel}
           </span>
           {incident.servicesAffected.length > 0 && (
-            <span className="text-ink-muted">
+            <span className="col-span-2 text-ink-muted sm:col-span-1">
               <span className="mb-1 block text-xs text-ink-faint">Services:</span> {incident.servicesAffected.join(', ')}
             </span>
           )}
