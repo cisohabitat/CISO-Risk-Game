@@ -33,7 +33,7 @@ test('important correspondence gives the named sender a readable portrait and ro
   await signature.scrollIntoViewIfNeeded()
   await expect(signature).toContainText('Marianne Okafor')
   await expect(signature).toContainText('Chief Executive')
-  expect((await signature.locator('img').locator('..').boundingBox())!.width).toBeGreaterThanOrEqual(80)
+  expect((await signature.locator('img').locator('..').boundingBox())!.width).toBeGreaterThanOrEqual(page.viewportSize()!.width < 768 ? 56 : 80)
   await expectNoHorizontalScroll(page)
 })
 

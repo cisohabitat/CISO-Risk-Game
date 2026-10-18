@@ -362,7 +362,7 @@ export function Tabs({
   )
 }
 
-export function TabList({ children, label }: { children: ReactNode; label: string }) {
+export function TabList({ children, label, className }: { children: ReactNode; label: string; className?: string }) {
   const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return
     const tabs = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]'))
@@ -386,10 +386,9 @@ export function TabList({ children, label }: { children: ReactNode; label: strin
       role="tablist"
       aria-label={label}
       onKeyDown={onKeyDown}
-      // Wrapped rather than scrolled on a phone: scrolled, the last tabs sat
-      // off the right edge with nothing to say they were there, and a
-      // playtester looking for the enquiries tried three other screens first.
-      className="-mx-1 flex flex-wrap gap-1 px-1 pb-1"
+      // Wrap by default. A scrollable variant must provide a visible discovery
+      // cue: without one, a playtester missed the tabs beyond the right edge.
+      className={cn('-mx-1 flex flex-wrap gap-1 px-1 pb-1', className)}
     >
       {children}
     </div>

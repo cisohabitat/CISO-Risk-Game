@@ -183,13 +183,13 @@ export function InboxScreen() {
                 </p>
                 <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
                 <h2 ref={heading} tabIndex={-1} className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
-                <div className="sender-signature mt-4 flex items-center gap-3">
+                <div className="sender-signature mt-2 md:mt-4 flex items-center gap-3">
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}
                   <div className="min-w-0 text-sm">
                     {sender ? <><p className="font-semibold text-ink">{sender.name}</p><p className="mt-1 text-ink-muted">{sender.role}</p>{selected.from !== sender.name && selected.from !== `${sender.name}, ${sender.role}` && <p className="mt-1 text-xs text-ink-faint">{selected.from}</p>}</> : <p className="text-ink-muted">{selected.from}</p>}
                   </div>
                 </div>
-                <div className="correspondence-body mt-6 space-y-4 text-pretty">
+                <div className="correspondence-body mt-3 md:mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (
                     <p key={position} className="whitespace-pre-line leading-relaxed">
                       {paragraph}

@@ -36,6 +36,12 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+The phone header shows labelled budget and attention values beside the clock
+controls. Risk tabs use one horizontal row below 768px, with a swipe cue and
+arrow-key/Home/End navigation. The empty inspector explains what selecting a
+scenario reveals. Programme groups use simpler dividers, and phone sender
+blocks leave more room for message text while retaining full names and roles.
+
 On phones, selecting an Inbox message moves to its reader; **Back to messages**
 returns focus and position to the selected row. Returning to Inbox retains the
 selected message. Unread membership remains stable while you read. Risk cards

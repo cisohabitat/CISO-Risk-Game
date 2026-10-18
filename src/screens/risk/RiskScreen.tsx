@@ -40,7 +40,7 @@ export function RiskScreen() {
       </header>
 
       <Tabs value={tab} onChange={setTab}>
-        <TabList label="Risk workspace">
+        <TabList label="Risk workspace" className="risk-tabs">
           {/* The count is what the tab lists: it counted open risks only, and
               read 11 over a list of 13 to 15 (AI second-year re-test). */}
           <Tab value="risks" count={risks.length}>Risk scenarios</Tab>
@@ -49,6 +49,7 @@ export function RiskScreen() {
           <Tab value="investigate">Investigate</Tab>
           <Tab value="assumptions" count={failedAssumptions}>Assumptions</Tab>
         </TabList>
+        <p className="mt-1 text-right text-xs text-ink-faint md:hidden">Swipe for more tabs →</p>
 
         <TabPanel value="risks">
           {risks.length === 0 ? (
@@ -120,11 +121,17 @@ export function RiskScreen() {
                 {selected ? (
                   <RiskDetail risk={selected} onClose={() => setUi({ selectedScenarioId: undefined })} />
                 ) : (
-                  <Card>
+                  <Card className="risk-inspector-prompt bg-surface-2 lg:sticky lg:top-24">
                     <CardBody>
-                      <p className="text-sm text-ink-muted">
-                        Select a risk to see its exposure, its consequence, who owns it and what it rests on.
-                      </p>
+                      <p className="document-kicker">Risk inspector</p>
+                      <h2 className="mt-2 font-display text-2xl">Select a risk</h2>
+                      <p className="mt-3 text-sm text-ink-muted">Choose a scenario from the list to examine:</p>
+                      <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-ink-muted">
+                        <li>Exposure and business consequence</li>
+                        <li>Ownership and review status</li>
+                        <li>Evidence and underlying assumptions</li>
+                      </ul>
+                      <p className="mt-4 border-t border-line pt-3 text-xs text-ink-faint">Use Tab to reach a scenario, then Enter to open it.</p>
                     </CardBody>
                   </Card>
                 )}

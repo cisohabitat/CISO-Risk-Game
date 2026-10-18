@@ -328,16 +328,16 @@ function ShellHeader() {
   if (!state) return null
   const view = briefing(state, index)
 
+  const resources = <dl className="header-resources grid grid-cols-[auto_auto] gap-x-3 text-xs lg:hidden" aria-label="Available resources">
+    <div><dt className="text-[0.65rem] text-ink-faint">Budget</dt><dd className="tabular-nums"><ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)}</ChangeHighlight></dd></div>
+    <div><dt className="text-[0.65rem] text-ink-faint">Attention</dt><dd className="tabular-nums"><ChangeHighlight key={`${state.gameId}:attention`} value={view.focusRemaining}>{attentionLeft(view.focusRemaining, view.focusPerWeek, true)}</ChangeHighlight></dd></div>
+  </dl>
+
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface" data-print="hide">
-      {/* One row on wide screens. On a phone it was three: the date, the
-          save/theme controls, then the clock and a status chip, about a sixth
-          of the screen, with each screen's title sliding under it. Now the
-          date shares the first row with save, leave and theme, and the clock
-          has the second — at 320px the three icons had wrapped onto a row of
-          their own beneath it, a quarter of the screen. */}
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-2 sm:px-6 sm:py-3">
-        <div className="order-1 min-w-0 flex-1 lg:flex-none">
+      {/* Phones share the second row between clock controls and labelled resources. */}
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-2 gap-y-1.5 px-4 py-2 sm:gap-x-4 sm:px-6 sm:py-3">
+        <div className="order-1 min-w-0 flex-1 basis-[calc(100%-10rem)] sm:basis-auto lg:flex-none">
           <p className="truncate text-sm font-medium">
             {view.dateLabel}
             <span className="text-ink-faint">
@@ -348,9 +348,7 @@ function ShellHeader() {
               {view.weekLabel} · Q{view.quarter}
             </span>
           </p>
-          <p className="truncate text-xs text-ink-faint lg:hidden">
-            <ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)} left</ChangeHighlight> · <ChangeHighlight key={`${state.gameId}:attention`} value={view.focusRemaining}>{attentionLeft(view.focusRemaining, view.focusPerWeek, true)} attention</ChangeHighlight>
-          </p>
+          <div className="hidden sm:block lg:hidden">{resources}</div>
         </div>
         <div className="order-2 flex shrink-0 items-center gap-1 sm:order-3 sm:ml-auto lg:ml-0" data-testid="header-tools">
           <Button
@@ -385,9 +383,10 @@ function ShellHeader() {
             <span className="sr-only">{theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}</span>
           </Button>
         </div>
-        <div className="order-3 w-full sm:order-2 sm:w-auto lg:flex lg:flex-1 lg:justify-end" data-testid="header-clock">
+        <div className="order-3 min-w-0 flex-1 basis-[calc(100%-9rem)] sm:order-2 sm:w-auto sm:flex-none sm:basis-auto lg:flex lg:flex-1 lg:justify-end" data-testid="header-clock">
           <TimeControls compact />
         </div>
+        <div className="order-4 sm:hidden">{resources}</div>
       </div>
     </header>
   )

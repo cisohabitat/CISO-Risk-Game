@@ -592,6 +592,11 @@ portrait cannot load.
 
 ### Reading and comparing work
 
+On phones, Budget and Attention appear beside the clock. The Risk workspace tabs
+stay in a single row: swipe sideways for more tabs, or focus a tab and use arrow
+keys, Home or End. Selecting a risk opens its ownership, evidence and assumptions
+in the inspector.
+
 On phones, selecting a message brings its reader into view. **Back to messages**
 returns you to the selected row, including its keyboard focus. The Unread list
 keeps the same membership as you read. Returning to Inbox opens the retained

@@ -60,3 +60,35 @@ test('risk cards align the same four public facts and programmes retain focus wh
   await expect(row.getByRole('button', { name: 'Resume', exact: true })).toBeFocused()
   await expectNoHorizontalScroll(page)
 })
+
+
+test('compact resources stay readable and the final risk tab remains reachable by keyboard', async ({ page }) => {
+  await startCampaign(page, 'e2e-compact-workspace')
+  if (page.viewportSize()!.width < 1024) {
+    const resources = page.locator('.header-resources:visible')
+    await expect(resources.locator('dt')).toHaveText(['Budget', 'Attention'])
+    for (const value of await resources.locator('dd').all()) {
+      await expect(value).toBeInViewport()
+      expect(await value.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+    }
+  }
+  await goTo(page, 'Risk')
+  await expect(page.getByRole('heading', { name: 'Select a risk', exact: true })).toBeVisible()
+  const tabs = page.getByRole('tablist', { name: 'Risk workspace' })
+  const first = tabs.getByRole('tab', { name: /^Risk scenarios/ })
+  const last = tabs.getByRole('tab', { name: /^Assumptions/ })
+  await first.focus()
+  await first.press('End')
+  await expect(last).toBeFocused()
+  await expect(last).toHaveAttribute('aria-selected', 'true')
+  await expect(last).toBeInViewport()
+  await last.press('Home')
+  await expect(first).toBeFocused()
+  await expect(first).toBeInViewport()
+  if (page.viewportSize()!.width < 768) {
+    const rows = await tabs.getByRole('tab').evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().top)))
+    expect(new Set(rows).size).toBe(1)
+    await expect(page.getByText('Swipe for more tabs →')).toBeVisible()
+  }
+  await expectNoHorizontalScroll(page)
+})

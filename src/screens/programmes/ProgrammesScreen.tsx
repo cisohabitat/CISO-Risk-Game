@@ -70,7 +70,7 @@ export function ProgrammesScreen() {
 
       {live.length > 0 && (
         <section aria-label="Delivery portfolio">
-          <ul className="divide-y divide-line border-y border-line">
+          <ul className="portfolio-list">
             {groupedLive.map(({ programme, label, count }) => (
               <li key={programme.id}>
                 {label && <h2 className="portfolio-divider"><span>{label}</span>{' '}<span className="text-sm font-normal tabular-nums text-ink-muted">{count} {count === 1 ? 'programme' : 'programmes'}</span></h2>}

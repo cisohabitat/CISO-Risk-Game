@@ -50,6 +50,8 @@ for (const theme of ['light', 'dark'] as const) {
       // Horizontal filters must let vertical input reach the page or main pane.
       const filters = name === 'Inbox'
         ? main.getByRole('group', { name: 'Filter messages' })
+        : name === 'Risk'
+          ? main.getByRole('tablist', { name: 'Risk workspace' })
         : name === 'Organisation'
           ? main.getByRole('button', { name: 'Everything', exact: true }).locator('..')
           : undefined

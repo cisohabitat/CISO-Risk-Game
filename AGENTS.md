@@ -32,6 +32,15 @@ changes.
 
 ## Artwork
 
+- Compact header resources retain visible Budget and Attention labels and full
+  values at 320px. Keep clock, save and theme controls within two phone rows.
+- Risk tabs may scroll horizontally below 768px, with a visible discovery cue,
+  native overflow and keyboard access to every tab. Contain horizontal gestures
+  only; vertical wheel/touch input must still reach the page.
+- Compact phone correspondence keeps full sender names and roles, and a working
+  portrait fallback. Programme groups use one divider per boundary while keeping
+  the same keyed rows and intervention controls.
+
 - At widths below 768px, explicit or retained Inbox selections move to the reader
   after shell navigation has settled. Back to messages restores the selected
   row’s focus and position. Do not hide or rebuild the frozen Unread membership.

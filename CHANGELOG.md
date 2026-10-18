@@ -10,6 +10,10 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Compact phone resources have readable labels and values beside the clock.
+  Risk tabs scroll in one row with a discovery cue and keyboard navigation;
+  the inspector has a clearer selection prompt. Programme dividers and mobile
+  sender blocks use less space while keeping controls, names and roles visible.
 - Phone Inbox selections move to the reader, with Back to messages restoring the
   selected row. Returning to Inbox retains the selected message.
 - Risk cards align four comparable facts. Programme status groups keep running,
