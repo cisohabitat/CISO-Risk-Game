@@ -32,6 +32,9 @@ changes.
 
 ## Artwork
 
+- Give map attribution links a real layout box so the shared minimum touch
+  height applies and WebKit can scroll their hit target into clipped panes.
+
 - Suppress root pull-to-refresh only during gameplay. The touch fallback may
   cancel a single-finger downward edge swipe only when neither the page nor an
   ancestor reader can scroll upward. Preserve horizontal/upward gestures, native

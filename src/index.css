@@ -393,7 +393,7 @@
 .react-flow .react-flow__controls-button:hover { background: var(--surface-2); }
 .react-flow .react-flow__controls-button svg { fill: currentColor; }
 .react-flow .react-flow__attribution { background: var(--surface); z-index: 11; }
-.react-flow .react-flow__attribution a { color: var(--ink-muted); }
+.react-flow .react-flow__attribution a { display: inline-flex; align-items: center; color: var(--ink-muted); }
 .report-cover {
   padding-inline: clamp(1rem, 4vw, 2.5rem);
   background: linear-gradient(160deg, var(--brass-soft), var(--surface) 68%);

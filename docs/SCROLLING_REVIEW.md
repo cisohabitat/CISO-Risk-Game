@@ -109,3 +109,7 @@ are exempt. Both root styling and listeners are removed on campaign exit.
 Tests cover cleanup, direction, nested readers, browser cancellation semantics
 and native Chromium touch scrolling. Physical iPhone Chrome browser-chrome
 behaviour is not reproducible in Playwright and still needs device validation.
+
+The map attribution link uses an inline-flex box so its minimum touch height
+applies. An inline text box could land below the clipped pane edge after WebKit
+scrollIntoView; the existing all-screen reachability test covers its hit target.
