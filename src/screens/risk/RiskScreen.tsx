@@ -3,12 +3,13 @@
  * assumptions underneath them — never a single flat spreadsheet.
  */
 import { useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, EmptyState, Tab, TabList, TabPanel, Tabs } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, EmptyState, Tab, TabPanel, Tabs } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { assumptionViews, evidenceList, visibleRisks } from '@/store/selectors'
 import { InvestigationPanel } from '@/components/risk/InvestigationPanel'
 import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
 import { PatternNotice } from '@/components/risk/PatternNotice'
+import { RiskTabStrip } from '@/components/risk/RiskTabStrip'
 import { RiskDetail } from '@/components/risk/RiskDetail'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { bandTone, confidenceTone, evidenceSourceLabel, shortDate, statusLabel, trendBadge } from '@/lib/formatting/labels'
@@ -40,7 +41,7 @@ export function RiskScreen() {
       </header>
 
       <Tabs value={tab} onChange={setTab}>
-        <TabList label="Risk workspace" className="risk-tabs">
+        <RiskTabStrip>
           {/* The count is what the tab lists: it counted open risks only, and
               read 11 over a list of 13 to 15 (AI second-year re-test). */}
           <Tab value="risks" count={risks.length}>Risk scenarios</Tab>
@@ -48,8 +49,7 @@ export function RiskScreen() {
           <Tab value="hypotheses">Hypotheses</Tab>
           <Tab value="investigate">Investigate</Tab>
           <Tab value="assumptions" count={failedAssumptions}>Assumptions</Tab>
-        </TabList>
-        <p className="mt-1 text-right text-xs text-ink-faint md:hidden">Swipe for more tabs →</p>
+        </RiskTabStrip>
 
         <TabPanel value="risks">
           {risks.length === 0 ? (
@@ -74,8 +74,8 @@ export function RiskScreen() {
                       <h3 className="font-medium text-balance">{risk.title}</h3>
                       <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
                       <div className="risk-comparison-grid mt-3">
-                        <div><p className="comparison-label">Residual risk</p><Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge></div>
-                        <div><p className="comparison-label">Confidence</p><Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge></div>
+                        <div><p className="comparison-label">Residual risk</p><Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]}</Badge></div>
+                        <div><p className="comparison-label">Confidence</p><Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence}</Badge></div>
                         <div><p className="comparison-label">Owner</p><p className="text-sm">{risk.ownerName}</p></div>
                         <div><p className="comparison-label">Next review</p><p className={cn('text-sm', risk.reviewDue && 'font-medium text-warning')}>{risk.reviewDue ? 'Due now' : `in ${risk.daysUntilReview} days`}</p></div>
                       </div>

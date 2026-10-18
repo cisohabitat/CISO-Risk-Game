@@ -17,6 +17,7 @@ import {
   type ComponentPropsWithRef,
   type HTMLAttributes,
   type ReactNode,
+  type Ref,
 } from 'react'
 import { cn } from '@/lib/utils/cn'
 import { EmptyIllustration } from './EmptyIllustration'
@@ -362,7 +363,7 @@ export function Tabs({
   )
 }
 
-export function TabList({ children, label, className }: { children: ReactNode; label: string; className?: string }) {
+export function TabList({ children, label, className, ref }: { children: ReactNode; label: string; className?: string; ref?: Ref<HTMLDivElement> }) {
   const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return
     const tabs = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]'))
@@ -383,6 +384,7 @@ export function TabList({ children, label, className }: { children: ReactNode; l
 
   return (
     <div
+      ref={ref}
       role="tablist"
       aria-label={label}
       onKeyDown={onKeyDown}

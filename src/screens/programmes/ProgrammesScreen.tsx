@@ -74,8 +74,8 @@ export function ProgrammesScreen() {
             {groupedLive.map(({ programme, label, count }) => (
               <li key={programme.id}>
                 {label && <h2 className="portfolio-divider"><span>{label}</span>{' '}<span className="text-sm font-normal tabular-nums text-ink-muted">{count} {count === 1 ? 'programme' : 'programmes'}</span></h2>}
-                <article className="programme-row grid gap-5 py-6 lg:grid-cols-2 lg:gap-8">
-                  <div className="space-y-3">
+                <article className="programme-row programme-active grid gap-5 py-6">
+                  <div className="programme-summary space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
                         <h3 className="font-display text-xl leading-tight text-balance">{programme.name}</h3>

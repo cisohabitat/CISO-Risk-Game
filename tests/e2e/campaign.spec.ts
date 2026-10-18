@@ -811,7 +811,7 @@ test.describe('a first year at Nexora', () => {
 
     // And every mark is also a sentence with its day on it.
     await page.getByText('Read the year as a list').click()
-    await expect(page.getByText(/\b\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/).first()).toBeVisible()
+    await expect(figure.locator('details[open]').getByRole('listitem').filter({ hasText: /\b\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/ }).first()).toBeVisible()
   })
 
   test('the briefing leads with what needs an answer, not with four gauges', async ({ page }) => {

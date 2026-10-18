@@ -32,6 +32,15 @@ changes.
 
 ## Artwork
 
+- Phone date labels use the existing calendar formatter and compact week text;
+  retain the full date/week/quarter in accessible text. Risk badges beneath
+  labelled comparison cells omit repeated field names, keeping qualitative bands.
+- Risk tab cues reflect actual overflow at each edge and update on scroll/resize.
+  Retain keyboard navigation and vertical gesture propagation.
+- Keep message type and date readable in the compact phone masthead. Active
+  programme summaries and delivery paths share the desktop width; milestone
+  order and completion remain recorded facts, with vertical phone fallbacks.
+
 - Compact header resources retain visible Budget and Attention labels and full
   values at 320px. Keep clock, save and theme controls within two phone rows.
 - Risk tabs may scroll horizontally below 768px, with a visible discovery cue,

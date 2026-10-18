@@ -592,7 +592,10 @@ portrait cannot load.
 
 ### Reading and comparing work
 
-On phones, Budget and Attention appear beside the clock. The Risk workspace tabs
+On phones, Budget and Attention appear beside the clock. Dates use a short month
+and week, such as “2 Jan · W1”. Risk badges show the value beneath its field label.
+The tab arrows point toward tabs still outside the view. Desktop programme
+delivery paths run across the page; on smaller screens they stack in order. The Risk workspace tabs
 stay in a single row: swipe sideways for more tabs, or focus a tab and use arrow
 keys, Home or End. Selecting a risk opens its ownership, evidence and assumptions
 in the inspector.

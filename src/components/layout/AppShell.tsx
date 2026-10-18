@@ -19,7 +19,7 @@ import { NexoraMark } from '@/components/game/NexoraMark'
 import { RecordingControl } from '@/components/game/RecordingControl'
 import { SoundToggle } from '@/components/game/SoundToggle'
 import { ShortcutsToggle } from '@/components/game/ShortcutsToggle'
-import { attentionLeft, money } from '@/lib/formatting/labels'
+import { attentionLeft, money, shortDate } from '@/lib/formatting/labels'
 import { capacityTone } from '@/lib/formatting/labels'
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -338,12 +338,14 @@ function ShellHeader() {
       {/* Phones share the second row between clock controls and labelled resources. */}
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-2 gap-y-1.5 px-4 py-2 sm:gap-x-4 sm:px-6 sm:py-3">
         <div className="order-1 min-w-0 flex-1 basis-[calc(100%-10rem)] sm:basis-auto lg:flex-none">
-          <p className="truncate text-sm font-medium">
+          <p className="header-date text-sm font-medium sm:hidden">
+            <span aria-hidden="true">{shortDate(state.currentDay)} · W{view.weekLabel.replace('Week ', '')}</span>
+            <span className="sr-only">{view.dateLabel}, {view.weekLabel}, quarter {view.quarter}</span>
+          </p>
+          <p className="hidden truncate text-sm font-medium sm:block">
             {view.dateLabel}
             <span className="text-ink-faint">
               {' · '}
-              {/* On a phone the line has room for the date and the week; the
-                  Briefing's masthead says which year it is. */}
               {view.yearLabel && <span className="hidden sm:inline">{view.yearLabel} · </span>}
               {view.weekLabel} · Q{view.quarter}
             </span>

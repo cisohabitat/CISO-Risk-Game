@@ -666,3 +666,19 @@
   .message-reader .sender-signature { padding-block: 0.5rem; gap: 0.75rem; }
   .message-reader .sender-signature > span[aria-hidden] { width: 3.5rem; height: 3.5rem; border-radius: 0.75rem; }
 }
+
+@media (max-width: 767px) {
+  .message-metadata { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+  .message-metadata .message-kind { margin-bottom: 0; }
+  .message-letterhead { letter-spacing: 0.1em; }
+}
+@media (min-width: 1024px) {
+  .programme-summary { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); align-items: start; gap: 1.5rem; }
+  .programme-summary > * { margin-block: 0; }
+}
+@media (min-width: 1280px) {
+  .programme-active .programme-journey ol { display: grid; grid-template-columns: repeat(auto-fit,minmax(9rem,1fr)); gap: 1.5rem; }
+  .programme-active .journey-step { grid-template-columns: minmax(0,1fr); gap: 0.5rem; }
+  .programme-active .journey-step > div { padding-bottom: 0; }
+  .programme-active .journey-step:not(:last-child)::before { top: 0.85rem; bottom: auto; left: 1.75rem; right: -1.5rem; border-left: 0; border-top: 1px solid var(--line-strong); }
+}

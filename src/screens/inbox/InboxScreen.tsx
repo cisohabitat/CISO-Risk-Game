@@ -145,7 +145,7 @@ export function InboxScreen() {
                       : 'border-transparent hover:bg-surface-2',
                   )}
                 >
-                  <p className={`message-kind message-kind-${MESSAGE_KIND[message.type].style} mb-2 flex items-center gap-2 text-xs font-medium`}>
+                    <p className={`message-kind message-kind-${MESSAGE_KIND[message.type].style} mb-2 flex items-center gap-2 text-xs font-medium`}>
                     <Icon name={MESSAGE_KIND[message.type].icon} size={14} />{MESSAGE_KIND[message.type].label}
                   </p>
                   <div className="flex items-baseline justify-between gap-2">
@@ -174,14 +174,16 @@ export function InboxScreen() {
             <Card id="message-reader" ref={reader} className={`correspondence message-reader scroll-mt-36 message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
               <CardBody>
                 <div className="mb-4 md:hidden"><Button variant="secondary" size="sm" onClick={backToMessages}>Back to messages</Button></div>
-                <div className="mb-4 flex items-center gap-2 border-b border-line pb-3">
-                  <NexoraMark className="h-7 w-7" />
+                <div className="message-letterhead mb-2 flex items-center gap-2 border-b border-line pb-2 md:mb-4 md:pb-3">
+                  <NexoraMark className="h-5 w-5 md:h-7 md:w-7" />
                   <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink-faint">Nexora Group</span>
                 </div>
-                <p className={`message-kind message-kind-${MESSAGE_KIND[selected.type].style} mb-3 flex items-center gap-2 text-xs font-medium`}>
-                  <Icon name={MESSAGE_KIND[selected.type].icon} size={16} />{MESSAGE_KIND[selected.type].label}
-                </p>
-                <p className="text-sm text-ink-faint">{formatGameDate(selected.day).label}</p>
+                <div className="message-metadata">
+                  <p className={`message-kind message-kind-${MESSAGE_KIND[selected.type].style} mb-1 flex items-center gap-2 text-xs font-medium md:mb-3`}>
+                    <Icon name={MESSAGE_KIND[selected.type].icon} size={16} />{MESSAGE_KIND[selected.type].label}
+                  </p>
+                  <p className="text-xs text-ink-faint md:text-sm">{formatGameDate(selected.day).label}</p>
+                </div>
                 <h2 ref={heading} tabIndex={-1} className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
                 <div className="sender-signature mt-2 md:mt-4 flex items-center gap-3">
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}

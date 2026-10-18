@@ -10,6 +10,10 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Phone dates and risk badges are shorter without losing calendar context or
+  qualitative bands. Risk tab cues follow the actual scroll position. Compact
+  Inbox mastheads bring text closer, and full-width desktop programme summaries
+  and delivery paths reduce unused column space.
 - Compact phone resources have readable labels and values beside the clock.
   Risk tabs scroll in one row with a discovery cue and keyboard navigation;
   the inspector has a clearer selection prompt. Programme dividers and mobile

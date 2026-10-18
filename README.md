@@ -36,6 +36,12 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Phone dates use a short month and week label, with full calendar context for
+assistive technology. Risk badges omit words repeated in their field labels;
+scroll cues point only toward hidden tabs. Inbox mastheads use less phone space.
+Active programmes use a full-width desktop summary and delivery path, with
+milestones stacked on smaller screens.
+
 The phone header shows labelled budget and attention values beside the clock
 controls. Risk tabs use one horizontal row below 768px, with a swipe cue and
 arrow-key/Home/End navigation. The empty inspector explains what selecting a

@@ -46,6 +46,10 @@ test('risk cards align the same four public facts and programmes retain focus wh
   await goTo(page, 'Risk')
   const cards = page.locator('.risk-comparison-grid')
   expect(await cards.count()).toBeGreaterThan(0)
+  for (const badge of await cards.locator('.rounded-full').all()) {
+    await expect(badge).not.toContainText(/residual|confidence/)
+    expect(await badge.evaluate((element) => element.getBoundingClientRect().height)).toBeLessThan(40)
+  }
   for (const card of await cards.all()) await expect(card.locator('.comparison-label')).toHaveText(['Residual risk', 'Confidence', 'Owner', 'Next review'])
   await expectNoHorizontalScroll(page)
   await goTo(page, 'Programmes')
@@ -72,6 +76,11 @@ test('compact resources stay readable and the final risk tab remains reachable b
       expect(await value.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
     }
   }
+  if (page.viewportSize()!.width < 640) {
+    const date = page.locator('.header-date')
+    expect(await date.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+    await expect(date).toHaveText(/\d+ [A-Z][a-z]{2} · W\d+/)
+  }
   await goTo(page, 'Risk')
   await expect(page.getByRole('heading', { name: 'Select a risk', exact: true })).toBeVisible()
   const tabs = page.getByRole('tablist', { name: 'Risk workspace' })
@@ -82,13 +91,21 @@ test('compact resources stay readable and the final risk tab remains reachable b
   await expect(last).toBeFocused()
   await expect(last).toHaveAttribute('aria-selected', 'true')
   await expect(last).toBeInViewport()
+  if (page.viewportSize()!.width < 768) await expect(page.locator('.risk-tab-cue')).toHaveText('← More tabs')
   await last.press('Home')
   await expect(first).toBeFocused()
   await expect(first).toBeInViewport()
   if (page.viewportSize()!.width < 768) {
     const rows = await tabs.getByRole('tab').evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().top)))
     expect(new Set(rows).size).toBe(1)
-    await expect(page.getByText('Swipe for more tabs →')).toBeVisible()
+    await expect(page.locator('.risk-tab-cue')).toHaveText('More tabs →')
+    await tabs.evaluate((element) => { element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2 })
+    await expect(page.locator('.risk-tab-cue')).toHaveText('← More tabs →')
+    const viewport = page.viewportSize()!
+    await page.setViewportSize({ ...viewport, width: 760 })
+    await expect(page.locator('.risk-tab-cue')).toBeEmpty()
+    await page.setViewportSize(viewport)
+
   }
   await expectNoHorizontalScroll(page)
 })
