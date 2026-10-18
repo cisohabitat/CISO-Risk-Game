@@ -99,3 +99,13 @@ selection resets the reader only; narrow layouts and print retain document flow.
 `scrolling.spec.ts` checks real wheel input at 1024px and 1366px in Chromium and
 WebKit, sibling stability, scroll limits, detail reset and rotation to 834px.
 These browser checks do not replace a physical iPad touch test.
+
+## Pull-to-refresh during gameplay
+
+Root overscroll is disabled while a campaign is open. A non-passive touchmove
+fallback cancels only downward vertical single-touch movement at the top edge
+when no ancestor reader can scroll upwards. Editing, map and multi-touch gestures
+are exempt. Both root styling and listeners are removed on campaign exit.
+Tests cover cleanup, direction, nested readers, browser cancellation semantics
+and native Chromium touch scrolling. Physical iPhone Chrome browser-chrome
+behaviour is not reproducible in Playwright and still needs device validation.

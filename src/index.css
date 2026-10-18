@@ -706,3 +706,8 @@
   .split-pane > .split-detail { position: static; }
   .split-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 }
+
+/* Native pull-to-refresh must not interrupt an active campaign. */
+html[data-gameplay-scroll="true"], html[data-gameplay-scroll="true"] body {
+  overscroll-behavior-y: none;
+}

@@ -20,6 +20,7 @@ import { CampaignFeedback } from '@/components/game/CampaignFeedback'
 import { IncidentCommand } from '@/components/game/IncidentCommand'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
+import { usePullToRefreshGuard } from '@/app/usePullToRefreshGuard'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
 import { Button, Card, CardBody, Dialog, LoadingState } from '@/components/ui/primitives'
@@ -45,6 +46,7 @@ export function App() {
   useKeyboardShortcuts()
 
   const inCampaign = state !== null
+  usePullToRefreshGuard(inCampaign && contentLoaded)
   useEffect(() => {
     if (inCampaign) {
       void loadDebrief().catch(() => undefined)

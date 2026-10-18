@@ -10,6 +10,8 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Added a gameplay-only pull-to-refresh guard for downward swipes at the page
+  edge, while preserving ordinary scrolling and dialog readers.
 - Fixed coupled scrolling on iPad landscape and desktop: Inbox, Risk scenarios
   and Organisation now scroll their list/map and detail panes independently.
 - Quarter recaps explain recorded strengths, missed decisions and current public

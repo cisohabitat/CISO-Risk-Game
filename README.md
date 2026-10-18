@@ -145,6 +145,12 @@ reader in place; selecting another item returns its detail pane to the top.
 Headers and filters remain reachable, and narrower layouts retain their existing
 page scrolling and phone reader navigation.
 
+During gameplay, root overscroll controls and a targeted touch fallback suppress
+accidental pull-to-refresh at the top of a page. Normal scrolling, dialog readers,
+editing and pinch gestures remain available; the guard is removed on campaign
+exit. Physical iPhone Chrome validation is still needed for browser-specific
+refresh gestures.
+
 ## Running it
 
 ```bash

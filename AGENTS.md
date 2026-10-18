@@ -32,6 +32,11 @@ changes.
 
 ## Artwork
 
+- Suppress root pull-to-refresh only during gameplay. The touch fallback may
+  cancel a single-finger downward edge swipe only when neither the page nor an
+  ancestor reader can scroll upward. Preserve horizontal/upward gestures, native
+  editing, map gestures and multi-touch; remove listeners on campaign exit.
+
 - At widths of 1024px and above, Inbox, risk scenarios and Organisation use
   bounded independent scroll panes. Keep headers/tabs reachable, contain vertical
   scroll chaining, and reset only the detail pane on selection. Preserve narrow
