@@ -55,7 +55,7 @@ export function TeamScreen() {
                     )}
                   </div>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 border-t border-line pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
                   <p className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
                     <span className="text-xs font-medium text-ink-faint">Morale</span><span>{fn.moraleLabel}</span>
                   </p>
@@ -87,10 +87,10 @@ export function TeamScreen() {
                       <p className="text-sm text-ink-muted">{leader.role}</p>
                     </div>
                   </div>
-                  <dl className="grid grid-cols-3 gap-2">
+                  <dl className="leader-facts grid grid-cols-2 gap-x-4 gap-y-3 border-y border-line py-3 sm:grid-cols-3">
                     <Fact label="Workload" value={leader.workloadLabel} />
                     <Fact label="Morale" value={leader.moraleLabel} />
-                    <Fact label="Track record" value={leader.reliabilityLabel} />
+                    <Fact className="col-span-2 sm:col-span-1" label="Track record" value={leader.reliabilityLabel} />
                   </dl>
                   <Disclosure summary="Strengths and watch points">
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

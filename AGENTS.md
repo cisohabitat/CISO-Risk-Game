@@ -32,6 +32,12 @@ changes.
 
 ## Artwork
 
+- Map selection and direct neighbours carry distinct text labels; keep the
+  inspector selection cue consistent. Space rows for wrapped names and public
+  status labels without overlap, and draw highlighted edges behind node cards.
+  Team dossiers pair workload and morale on phones, with track record beneath;
+  keep capacity and recovery guidance separate.
+
 - Decision descriptions scroll with the paper, with one description ID linked
   from the dialog. Keep title, Close and footer fixed and reachable on phones.
 - At narrow widths, containment and recovery share a row; services use the full

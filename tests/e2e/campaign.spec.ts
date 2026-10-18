@@ -445,7 +445,7 @@ test.describe('a first year at Nexora', () => {
       await expect(page.getByText('Nexora Pay').first()).toBeVisible({ timeout: 20_000 })
       // The outlines and colours say something only with their key beside them.
       const key = page.getByRole('list', { name: 'Key to the map' })
-      for (const entry of ['Business', 'Checked', 'Taken on trust', 'On a known attack path']) {
+      for (const entry of ['Business', 'Directly connected', 'Checked', 'Taken on trust', 'On a known attack path']) {
         await expect(key.getByText(entry, { exact: true })).toBeVisible()
       }
       // The next column is cut by the edge; the fade says the map carries on.
@@ -453,7 +453,18 @@ test.describe('a first year at Nexora', () => {
       const selected = page.locator('.react-flow__node').filter({ has: page.getByText('Nexora Pay', { exact: true }) })
       await selected.click()
       await expect(selected.getByText('Selected system', { exact: true })).toBeVisible()
-      await expect(page.locator('.react-flow__edge-path[marker-end]').first()).toBeAttached()
+      const connected = page.locator('.react-flow__node').filter({ has: page.getByText('Payment Gateway', { exact: true }) })
+      await expect(connected.getByText('Directly connected', { exact: true })).toBeVisible()
+      const unrelated = page.locator('.react-flow__node').filter({ has: page.getByText('Customer Digital Platform', { exact: true }) })
+      await expect(unrelated.getByText('Directly connected', { exact: true })).toHaveCount(0)
+      await expect(page.getByTestId('inspector-heading')).toHaveText('Nexora Pay')
+      await expect(page.getByTestId('inspector-heading').locator('..').locator('..').getByText('Selected system', { exact: true })).toBeVisible()
+      const edge = page.locator('.react-flow__edge-path[marker-end]').first()
+      await expect(edge).toBeAttached()
+      // The library otherwise raises links above cards when a node is selected.
+      const edgeLayer = await edge.evaluate((element) => Number(getComputedStyle(element.closest('svg')!).zIndex))
+      const nodeLayer = await connected.evaluate((element) => Number(getComputedStyle(element).zIndex))
+      expect(edgeLayer).toBeLessThan(nodeLayer)
     }
 
     // The list view is always available, and is all a phone shows, so the

@@ -84,7 +84,7 @@ function OrgNodeCard({ data }: NodeProps) {
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5" style={{ background: familyOf(node.type).colour }} />
       <p className="text-[0.7rem] text-ink-faint">{nodeTypeLabel(node.type)}</p>
       <p className="text-sm font-medium leading-snug">{node.label}</p>
-      {node.selected && <p className="mt-1 text-[0.7rem] font-semibold text-accent-ink">Selected system</p>}
+      {(node.selected || node.related) && <p className="mt-1 text-[0.7rem] font-semibold text-accent-ink">{node.selected ? 'Selected system' : 'Directly connected'}</p>}
       {node.onPath && <p className="mt-1 text-[0.7rem] text-band-high">on a known attack path</p>}
       {/* The outline says whether it was checked, and the key says what an
           outline means; a line of words under every dashed card repeated it
@@ -124,7 +124,10 @@ export default function OrgGraph({
       return {
         id: node.id,
         type: 'org',
-        position: { x: column * 280, y: row * 120 },
+        // Highlighted edges pass behind cards, so they cannot strike through
+        // a neighbour's name or selection label.
+        zIndex: 2,
+        position: { x: column * 280, y: row * 160 },
         data: {
           label: node.name,
           type: node.type,
@@ -213,6 +216,10 @@ export default function OrgGraph({
           Selected system
         </li>
         <li className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-3 w-5 rounded-sm border-2 border-accent bg-surface-2" />
+          Directly connected
+        </li>
+        <li className="flex items-center gap-1.5">
           <span aria-hidden="true" className="h-3 w-5 rounded-sm border border-solid border-line-strong" />
           Checked
         </li>
@@ -235,6 +242,7 @@ export default function OrgGraph({
           nodesDraggable={false}
           nodesConnectable={false}
           edgesFocusable={false}
+          elevateEdgesOnSelect={false}
           fitView
           fitViewOptions={{ nodes: opening.length > 0 ? opening : undefined, padding: 0.15, maxZoom: 1 }}
           minZoom={0.25}

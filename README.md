@@ -105,7 +105,11 @@ Decision papers separate the situation, options, costs, known effects and
 reasons. Board papers group agenda evidence, recommendations and a live
 submission summary. Inbox messages carry explicit type labels and icons.
 The organisation map outlines the selected system and its directly connected
-neighbours, with arrows pointing to dependencies. Team functions and programme
+neighbours, with arrows pointing to dependencies. Direct neighbours are labelled
+**Directly connected**, and the inspector shares the selected-system accent.
+Map rows leave room for wrapped names and status labels. Team dossiers pair
+workload and morale on phones, with track record beneath; function rows separate
+capacity from wellbeing guidance. Team functions and programme
 portfolios use quieter rows that stack on phones, keeping costs, staffing,
 morale, blockers and actions visible.
 

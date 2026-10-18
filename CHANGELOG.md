@@ -10,6 +10,9 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Map neighbours are labelled Directly connected, with more space between rows,
+  links behind cards and a matching selection cue on the inspector. Team dossiers give phone facts
+  more room and separate function capacity from wellbeing guidance.
 - Decision descriptions scroll with the paper beneath the fixed title and Close
   button. Phone incident summaries put containment and recovery side by side,
   with services on the next row, leaving more room for response controls.

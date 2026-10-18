@@ -32,6 +32,15 @@ test('portraits load with people rather than with the start screen', async ({ pa
   const leader = page.getByRole('heading', { name: 'Jo Mbeki', exact: true }).locator('..').locator('..').locator('img')
   await leader.scrollIntoViewIfNeeded()
   await expect.poll(() => leader.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0)
+  const facts = page.locator('.leader-facts').first()
+  const workload = await facts.getByText('Workload', { exact: true }).boundingBox()
+  const morale = await facts.getByText('Morale', { exact: true }).boundingBox()
+  const record = await facts.getByText('Track record', { exact: true }).boundingBox()
+  expect(workload!.y).toBe(morale!.y)
+  if (page.viewportSize()!.width < 640) {
+    expect(record!.y).toBeGreaterThan(workload!.y)
+    expect(record!.x).toBe(workload!.x)
+  } else expect(record!.y).toBe(workload!.y)
   // Every portrait uses the same cached atlas, including when changing screens.
   expect(new Set(portraits).size).toBe(1)
   await expectNoHorizontalScroll(page)

@@ -51,8 +51,9 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
   }
 
   return (
-    <Card className="lg:sticky lg:top-24">
+    <Card className="border-t-2 border-t-accent lg:sticky lg:top-24">
       <CardBody className="space-y-4">
+        <p className="document-kicker text-accent-ink">Selected system</p>
         {trail.length > 1 && (
           <nav aria-label="Your walk through the estate" data-testid="walk-trail">
             <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-ink-faint">

@@ -296,6 +296,9 @@ new players most often skip. Do not skip it.
 
 ### The organisation
 
+The graph labels direct neighbours **Directly connected**. The selected system
+and its inspector share an accent; arrows point towards dependencies.
+
 ![The Organisation view](images/06-organisation.png)
 
 Every system, supplier, network and data set, and what depends on what. Use
@@ -321,6 +324,9 @@ visibly sharpens as the year goes on, which is the point. The difference between
 Programmes are set out in rows: what the work is for on one side, and its cost,
 people and delivery details on the other. On a phone those columns stack.
 Work under way keeps its blockers, milestones and intervention buttons visible.
+
+Leadership dossiers keep workload and morale side by side on phones, with
+track record beneath. Function rows separate capacity from recovery guidance.
 
 ![The Team screen](images/06c-team.png)
 
