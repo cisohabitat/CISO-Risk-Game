@@ -361,6 +361,10 @@ summary. Before taking it to the board, check the selected-topic and
 recommendation counts and whether you acknowledged uncertainty. The summary
 reflects your selections; it does not certify that the paper is complete.
 
+The paper shows its reporting period, preparation date and submission deadline
+together above the agenda. Its introduction scrolls with the document, leaving
+the title, Close and submission controls within reach.
+
 ![The board paper](images/08-board.png)
 
 Three times a year — at the end of Q1, Q2 and Q3 — the board risk committee
@@ -441,6 +445,10 @@ phase updates where retained. It does not estimate alternative outcomes.
 ---
 
 ## How the year is judged
+
+Use **Read the review** to jump to the account, timeline, assessment, business
+outcomes or next year. The timeline key explains events, lapsed decisions and
+programme bars; quarter guides carry across every lane.
 
 ![The annual review](images/10-review.png)
 

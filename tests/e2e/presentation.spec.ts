@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { startCampaign } from './helpers'
+import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 import type { GameState } from '../../src/game/types'
 
@@ -49,6 +49,14 @@ test('the annual cover and choice highlights reflect the recorded year', async (
   await openPreparedCampaign(page, save)
   const cover = page.locator('.report-cover')
   await expect(cover.getByText('At the close', { exact: true })).toBeVisible()
+  const sections = page.getByRole('navigation', { name: 'Annual review sections' })
+  await sections.getByRole('link', { name: 'Assessment', exact: true }).click()
+  await expect(page.locator('#dimensions')).toBeFocused()
+  await expect(page.locator('#dimensions')).toBeInViewport()
+  await sections.getByRole('link', { name: 'Year timeline', exact: true }).click()
+  await expect(page.locator('#the-year')).toBeInViewport()
+  await expect(page.getByRole('list', { name: 'Timeline marker key' })).toContainText('Lapsed decision')
+  await expectNoHorizontalScroll(page)
   const moments = page.getByRole('region', { name: 'Choices from your year', exact: true })
   await expect(moments.locator('ol > li')).toHaveCount(3)
   await expect(moments.getByRole('heading', { name: 'Where do you start?', exact: true })).toBeVisible()
@@ -67,4 +75,22 @@ test('the annual cover and choice highlights reflect the recorded year', async (
   await openPreparedCampaign(page, save)
   await expect(moments).toHaveCount(0)
   await expect(page.getByRole('heading', { name: 'How the year is read', exact: true })).toBeVisible()
+})
+
+
+test('the board paper keeps context scrollable and its dates distinct', async ({ page }) => {
+  await openPreparedCampaign(page, prepareCampaign('guide-3', 'board'))
+  await goTo(page, 'Board')
+  const note = page.getByRole('button', { name: 'Got it', exact: true })
+  if (await note.isVisible()) await note.click()
+  await page.getByRole('button', { name: /Prepare the Q1 board paper/ }).click()
+  const paper = page.getByRole('dialog', { name: 'Board paper: quarter 1', exact: true })
+  const description = await paper.getAttribute('aria-describedby')
+  await expect(paper.locator('.scroll-area').locator(`[id="${description}"]`)).toBeVisible()
+  await expect(paper.locator('.paper-dates dt')).toHaveText(['Reporting period', 'Prepared', 'Submit by'])
+  await expect(paper.locator('.paper-dates dd')).toHaveText(['Q1 results · presented in Q2', '2 April', '1 July'])
+  await paper.getByRole('heading', { name: 'Your submission' }).scrollIntoViewIfNeeded()
+  await expect(paper.getByRole('button', { name: 'Close', exact: true })).toBeInViewport()
+  await expect(paper.getByRole('button', { name: 'Take it to the board', exact: true })).toBeInViewport()
+  await expectNoHorizontalScroll(page)
 })

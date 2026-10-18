@@ -195,6 +195,7 @@ export function BoardScreen() {
         onClose={() => setPreparing(false)}
         size="lg"
         title={`Board paper: quarter ${pendingQuarter ?? ''}`}
+        descriptionInBody
         description="Pick what the committee sees. It expects every risk rated high or with a high consequence, every risk accepted on its behalf, any incident or failed assumption it has not yet been told about, and a team past its limit. The rest is your call."
         footer={
           <>
@@ -205,10 +206,14 @@ export function BoardScreen() {
       >
         <div className="board-paper space-y-6">
           <header className="flex items-start justify-between gap-4 border-b-2 border-ink pb-5">
-            <div><p className="document-kicker">Nexora Group</p><p className="mt-2 font-display text-2xl">Board Risk Committee</p><p className="mt-1 text-sm text-ink-muted">Management paper · {formatGameDate(state.currentDay).label}</p></div>
+            <div><p className="document-kicker">Nexora Group</p><p className="mt-2 font-display text-2xl">Board Risk Committee</p><p className="mt-1 text-sm text-ink-muted">Management paper</p></div>
             <span aria-hidden="true" className="font-display text-5xl text-ink-faint">Q{pendingQuarter}</span>
           </header>
-          <p className="text-sm text-ink-muted">This paper reports Q{pendingQuarter} results during Q{Math.min(4, (pendingQuarter ?? 0) + 1)}. The date above is when you prepare it; the submission deadline is shown on the committee card.</p>
+          <dl className="paper-dates grid grid-cols-2 gap-4 border-b border-line pb-5 text-sm sm:grid-cols-3">
+            <div><dt className="text-xs text-ink-faint">Reporting period</dt><dd className="mt-1 font-medium">Q{pendingQuarter} results · presented in Q{Math.min(4, (pendingQuarter ?? 0) + 1)}</dd></div>
+            <div><dt className="text-xs text-ink-faint">Prepared</dt><dd className="mt-1 font-medium">{formatGameDate(state.currentDay).label}</dd></div>
+            <div className="col-span-2 sm:col-span-1"><dt className="text-xs text-ink-faint">Submit by</dt><dd className="mt-1 font-medium">{formatGameDate(((pendingQuarter ?? 0) + 1) * DAYS_PER_QUARTER - 1).label}</dd></div>
+          </dl>
           {availableTopics.length === 0 ? (
             <EmptyState
               title="No agenda topics are eligible yet"

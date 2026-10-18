@@ -32,6 +32,12 @@ changes.
 
 ## Artwork
 
+- Annual-review section links must reach and focus their targets beneath the
+  header, and disappear in print. Timeline guides and keys describe recorded
+  marks and programme completion only. Do not invent opening/closing snapshots.
+- Board introductions scroll with the paper; keep title, Close and footer
+  reachable. Show reporting period, preparation date and actual deadline together.
+
 - Map selection and direct neighbours carry distinct text labels; keep the
   inspector selection cue consistent. Space rows for wrapped names and public
   status labels without overlap, and draw highlighted edges behind node cards.

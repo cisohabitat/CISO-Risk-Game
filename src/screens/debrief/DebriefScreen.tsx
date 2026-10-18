@@ -150,7 +150,8 @@ export function DebriefScreen() {
             <h1 className="mt-4 max-w-[22ch] font-display text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">
               {review.headline}
             </h1>
-            <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ink-muted">{review.performanceBand}</p>
+            <p className="mt-4 document-kicker">Overall assessment</p>
+            <p className="mt-1 text-sm font-medium text-ink">{review.performanceBand}</p>
             <p className="mt-1 text-xs text-ink-faint">Seed {state.seed}</p>
             <div className="mt-6 border-t border-line-strong pt-5">
               <p className="document-kicker">At the close</p>
@@ -205,7 +206,20 @@ export function DebriefScreen() {
         />
       </Dialog>
 
-      <article className="report-narrative space-y-4">
+      <nav aria-label="Annual review sections" data-print="hide" className="border-y border-line py-4">
+        <p className="document-kicker mb-3">Read the review</p>
+        <ul className="grid grid-cols-2 gap-x-5 gap-y-3 text-sm sm:flex sm:flex-wrap sm:gap-x-6">
+          {[
+            ['review-account', 'The account'],
+            ['the-year', 'Year timeline'],
+            ['dimensions', 'Assessment'],
+            ['objectives', 'Business outcomes'],
+            ['another-year', 'Another year'],
+          ].map(([id, label]) => <li key={id}><a className="underline decoration-line-strong underline-offset-4 hover:text-accent-ink" href={`#${id}`}>{label}</a></li>)}
+        </ul>
+      </nav>
+
+      <article id="review-account" tabIndex={-1} className="scroll-mt-36 report-narrative space-y-4">
           {review.narrative.map((paragraph, position) => (
             <p key={position} className="text-pretty leading-relaxed">
               {paragraph}
@@ -216,7 +230,7 @@ export function DebriefScreen() {
       <ReviewMoments />
 
       <section aria-labelledby="the-year">
-        <SectionHeading><span id="the-year">Your year, day by day</span></SectionHeading>
+        <SectionHeading><span id="the-year" tabIndex={-1} className="scroll-mt-36">Your year, day by day</span></SectionHeading>
         <Card>
           <CardBody>
             <YearTimeline lanes={timeline} />
@@ -225,7 +239,7 @@ export function DebriefScreen() {
       </section>
 
       <section aria-labelledby="dimensions">
-        <SectionHeading><span id="dimensions">How the year is read</span></SectionHeading>
+        <SectionHeading><span id="dimensions" tabIndex={-1} className="scroll-mt-36">How the year is read</span></SectionHeading>
         {/* A strip you read down, not eight boxes competing for the eye. The
             verdict sits in a fixed column so the shape of the year is legible
             before a single sentence is read. */}
@@ -256,7 +270,7 @@ export function DebriefScreen() {
       </section>
 
       <section aria-labelledby="objectives">
-        <SectionHeading><span id="objectives">What the business achieved</span></SectionHeading>
+        <SectionHeading><span id="objectives" tabIndex={-1} className="scroll-mt-36">What the business achieved</span></SectionHeading>
         <Card>
           <CardBody>
             <ul className="space-y-2">
@@ -360,7 +374,7 @@ export function DebriefScreen() {
       )}
 
       <section aria-labelledby="another-year">
-        <SectionHeading><span id="another-year">Another year</span></SectionHeading>
+        <SectionHeading><span id="another-year" tabIndex={-1} className="scroll-mt-36">Another year</span></SectionHeading>
         <Card>
           <CardBody className="space-y-3">
             {state.finished && (

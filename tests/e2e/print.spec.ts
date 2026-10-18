@@ -24,6 +24,7 @@ test('the annual review prints as a document', async ({ page, browserName }, tes
   await expect(page.getByRole('button', { name: 'Print or save as PDF' })).toBeHidden()
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await expect(page.locator('.closing-scene')).toBeHidden()
+  await expect(page.getByRole('navigation', { name: 'Annual review sections' })).toBeHidden()
   const paperWidth = await page.locator('.report-opening').evaluate((element) => ({ content: element.firstElementChild!.getBoundingClientRect().width, available: element.getBoundingClientRect().width }))
   expect(paperWidth.content).toBeGreaterThanOrEqual(paperWidth.available - 2)
 

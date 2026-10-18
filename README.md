@@ -113,6 +113,11 @@ capacity from wellbeing guidance. Team functions and programme
 portfolios use quieter rows that stack on phones, keeping costs, staffing,
 morale, blockers and actions visible.
 
+The annual review has keyboard-accessible section links, labelled assessment
+and quarter guides with a timeline marker key. Section links are omitted from
+print. Board paper introductions scroll with the document; reporting period,
+preparation date and submission deadline appear together above the agenda.
+
 ## Running it
 
 ```bash

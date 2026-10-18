@@ -39,7 +39,7 @@ function Lane({ lane }: { lane: TimelineLane }) {
       <span className="hidden sm:block sm:justify-self-end" style={{ color: colour }}>
         <Icon name={lane.icon} size={17} />
       </span>
-      <div className="flex items-center gap-2 sm:block sm:text-right">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 sm:block sm:text-right">
         <span className="sm:hidden" style={{ color: colour }}>
           <Icon name={lane.icon} size={16} />
         </span>
@@ -48,6 +48,9 @@ function Lane({ lane }: { lane: TimelineLane }) {
       </div>
 
       <div className="relative h-10 border-t border-line">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid grid-cols-4">
+          {[0, 1, 2, 3].map((quarter) => <span key={quarter} className="border-l border-line" />)}
+        </div>
         {empty && (
           <span className="absolute inset-y-0 left-0 flex items-center text-xs text-ink-faint">
             nothing this year
@@ -133,6 +136,13 @@ export function YearTimeline({ lanes }: { lanes: TimelineLane[] }) {
           <Lane key={lane.id} lane={lane} />
         ))}
       </div>
+
+      <ul aria-label="Timeline marker key" className="flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-3 text-xs text-ink-muted">
+        <li className="flex items-center gap-2"><span aria-hidden="true" className="h-4 w-[3px] bg-ink" />Recorded event</li>
+        <li className="flex items-center gap-2"><span aria-hidden="true" className="h-4 w-[3px] border border-dashed border-ink-faint" />Lapsed decision</li>
+        <li className="flex items-center gap-2"><span aria-hidden="true" className="h-3 w-6 rounded-full bg-chart-programme/30" />Completed programme</li>
+        <li className="flex items-center gap-2"><span aria-hidden="true" className="h-3 w-6 rounded-full border border-dashed border-chart-programme" />Unfinished programme</li>
+      </ul>
 
       <details className="rounded-lg border border-line bg-surface-2">
         <summary className="cursor-pointer px-3 py-2 text-sm font-medium">Read the year as a list</summary>
