@@ -118,6 +118,18 @@ and quarter guides with a timeline marker key. Section links are omitted from
 print. Board paper introductions scroll with the document; reporting period,
 preparation date and submission deadline appear together above the agenda.
 
+Annual assessments keep eight equally weighted dimensions, with rating
+safeguards: any Weak dimension blocks Exceptional; Weak prioritisation or team
+sustainability caps the result at Mixed; three Weak dimensions cap it at
+Difficult. Exceptional also requires a completed recovery exercise/restore or
+closed incidents with at least Solid resilience. Applied ceilings are explained
+in the narrative. Programme execution retains delivery credit, while Strong
+requires relevance in the upper half of the campaign's programme options,
+using opening materiality and authored treatment links. Older saves without an
+opening snapshot use the current picture, with that limitation stated. Stored
+reviews keep their original assessment; new reviews use these rules.
+[Assessment rules and calibration](docs/ASSESSMENT.md) document the exact method.
+
 ## Running it
 
 ```bash

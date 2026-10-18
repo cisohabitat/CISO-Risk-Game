@@ -168,6 +168,20 @@ changes.
   reviews, and compact rows for routine records. Empty-state illustrations
   remain decorative beside a clear explanation and a useful next action.
 
+## Annual assessment
+
+- Keep the eight dimensions equally weighted. Exceptional requires no weak
+  dimension and tested recovery capability; weak prioritisation or team
+  sustainability caps the overall result at Mixed. Three weak dimensions cap
+  it at Difficult. Explain an applied ceiling in the review narrative.
+- Programme delivery retains credit, but Strong also requires portfolio
+  relevance in the upper half of the available programme materiality range.
+  Use the opening snapshot, authored treatment links and this year's work;
+  retain current-picture fallback for older saves and neutral handling of ties.
+- Review generation must remain pure: no effects, RNG draws or save rewrites.
+  Stored annual reviews retain their original judgement. Calibrate changed
+  assessment rules across seeds, modes and policies with `pnpm tsx scripts/tune.ts`.
+
 ## Verification and deployment
 
 - The start footer reads its version from `package.json`; `/release-notes`

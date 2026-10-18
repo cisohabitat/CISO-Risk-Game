@@ -237,3 +237,21 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
 
   return { allocation, raw, floor, commitments, biggest, missed }
 }
+
+/** Programme-only comparison, using the opening picture so success cannot erase relevance. */
+export function programmeRelevance(state: GameState, index: ContentIndex, programmeIds: string[]): number | undefined {
+  const materiality = state.risks.initialMateriality ?? Object.fromEntries(
+    index.content.riskScenarios.map((def) => [def.id, assessScenario(state, index, def).residual]),
+  )
+  const weights = new Map(index.content.programmes.flatMap((programme) => {
+    const targets = aimedAt(index, { programmeId: programme.id })
+    return targets.length > 0 ? [[programme.id, Math.max(...targets.map((id) => materiality[id] ?? 0))] as const] : []
+  }))
+  const selected = programmeIds.flatMap((id) => weights.has(id) ? [weights.get(id)!] : [])
+  if (selected.length === 0 || weights.size === 0) return undefined
+  const highest = Math.max(...weights.values())
+  const lowest = Math.min(...weights.values())
+  // Equally material options offer no basis for penalising selection.
+  if (highest === lowest) return 1
+  return Math.max(0, Math.min(1, (selected.reduce((sum, value) => sum + value, 0) / selected.length - lowest) / (highest - lowest)))
+}

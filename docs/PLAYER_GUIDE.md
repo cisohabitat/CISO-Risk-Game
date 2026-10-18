@@ -467,11 +467,25 @@ The review assesses eight dimensions, each with a band and a sentence explaining
 | Risk understanding | Did you build a picture, or work someone else's? |
 | Prioritisation | Did your budget and attention go to what mattered most? |
 | Resilience | When tested, what did it cost? |
-| Cyber programme execution | Did you finish what you started? |
+| Cyber programme execution | Did you finish work aimed at material risks? |
 | Business enablement | Did the business get its year? |
 | Communication and escalation | Did the board come to rely on you? |
 | Team sustainability | Can your people do this again? |
 | Material blind spots | What did you never look at? |
+
+The overall assessment weights these dimensions equally, with safeguards:
+Exceptional requires no Weak dimension and tested recovery capability (a
+completed exercise or restore, or closed incidents the organisation absorbed).
+Weak prioritisation or team sustainability limits the result to Mixed; three
+Weak dimensions limit it to Difficult. Any other Weak dimension blocks
+Exceptional. The narrative explains a ceiling when it changes the result.
+
+Programme completion still earns credit. A Strong programme assessment also
+requires work aimed at the more material risks among available programme
+choices. Relevance uses the opening picture, so reducing a risk does not erase
+the credit for addressing it. Older campaigns without that snapshot use the
+current picture, and the review states that limitation. Saved reviews are not
+regraded.
 
 Plus a narrative, and the section that reckons with every reason you recorded.
 **Print or save as PDF** sets the review out as a document, on white and

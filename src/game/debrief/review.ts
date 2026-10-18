@@ -15,7 +15,8 @@ import type {
 import { clamp01, money } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
-import { effortAllocation } from './prioritisation'
+import { effortAllocation, programmeRelevance } from './prioritisation'
+import { overallAssessment } from './assessment'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
@@ -479,7 +480,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // 4. Programme execution.
   const started = programmesThisYear(state)
   const completed = started.filter((p) => p.status === 'complete')
-  const execution = clamp01(started.length === 0 ? 0 : (completed.length + 0.4 * (started.length - completed.length)) / started.length)
+  const delivery = clamp01(started.length === 0 ? 0 : (completed.length + 0.4 * (started.length - completed.length)) / started.length)
+  const relevance = programmeRelevance(state, index, started.map((programme) => programme.id))
+  // Delivery still earns credit. The top band additionally requires choosing
+  // work in the upper half of this campaign's programme materiality range.
+  const relevanceLimited = relevance !== undefined && relevance < 0.5 && delivery >= 0.75
+  const execution = relevanceLimited ? 0.74 : delivery
+  const executionEvidence = started.map((programme) => {
+    const def = index.programme.get(programme.id)
+    return `${def?.shortName ?? programme.id}: ${Math.round(programme.progress * 100)}% delivered`
+  })
+  if (relevanceLimited) executionEvidence.unshift('Programme execution is capped at solid because delivery and relevance are assessed together.')
+  if (started.length > 0 && !state.risks.initialMateriality) executionEvidence.unshift('The opening risk snapshot is unavailable; programme relevance uses the current risk picture.')
   dimensions.push({
     id: 'programme-execution',
     label: 'Cyber programme execution',
@@ -487,11 +499,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative:
       started.length === 0
         ? `You started no capability programme. Nexora ends the year with the controls it had ${laterYear ? 'in January' : 'when you arrived'}, minus drift.`
-        : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion.`,
-    evidence: started.map((p) => {
-      const def = index.programme.get(p.id)
-      return `${def?.shortName ?? p.id}: ${Math.round(p.progress * 100)}% delivered`
-    }),
+        : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion.${relevanceLimited ? ' Delivery was strong, but the programme portfolio addressed less material risks than other available programmes.' : ''}`,
+    evidence: executionEvidence,
   })
 
   // 5. Business enablement.
@@ -664,10 +673,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     ],
   })
 
-  const overall = dimensions.reduce((sum, d) => sum + bandValue(d.band), 0) / dimensions.length
+  const capabilityTested = exercises.length > 0 || restoreTaken || sandboxRestore ||
+    (tested && !stillRunning && resilience >= 0.52)
+  const assessment = overallAssessment(dimensions, capabilityTested)
   const headline = chooseHeadline(dimensions, incidents.length > 0)
   const ordinal = yearWord(state.year)
-  const performanceBand = `${overall > 0.78 ? 'Exceptional' : overall > 0.6 ? 'Credible' : overall > 0.42 ? 'Mixed' : 'Difficult'} ${ordinal} year`
+  const performanceBand = `${assessment.label} ${ordinal} year`
 
   const worstRisk = Object.values(state.risks.scenarios)
     .filter((s) => s.lastAssessed)
@@ -694,6 +705,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ? 'You worked what was in front of you, and much of how the organisation fits together was never verified.'
         : 'You let the year run without you, and much of how the organisation fits together was never verified.',
   )
+  if (assessment.reason) narrative.push(`The overall assessment is limited to ${assessment.label.toLowerCase()} because ${assessment.reason}.`)
   if (started.length > 0) {
     const lead = started.slice().sort((a, b) => b.progress - a.progress)[0]
     const leadDef = lead ? index.programme.get(lead.id) : undefined

@@ -5,12 +5,14 @@
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
+import { programmeRelevance } from '../src/game/debrief/prioritisation'
+import { buildAnnualReview, programmesThisYear } from '../src/game/debrief/review'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { nexoraContent } from '../src/content/nexora'
 import { completeQuarterIfDue, leastCommissioned, rationaleFor } from './play-helpers'
 import type { GameState, ContentIndex, DecisionOptionDef, Difficulty } from '../src/game/types'
 
-type Policy = 'passive' | 'defensive' | 'business' | 'balanced'
+type Policy = 'passive' | 'defensive' | 'business' | 'balanced' | 'relevant' | 'minor'
 
 /**
  * How much an option does for security, read from its effects. The defensive
@@ -61,11 +63,14 @@ function securityValue(option: DecisionOptionDef): number {
 function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Difficulty): GameState {
   const state = newGame(index, { seed, difficulty })
   const commissioned: Record<string, number> = {}
+  const ranked = index.content.programmes.map((programme) => ({ id: programme.id, relevance: programmeRelevance(state, index, [programme.id]) ?? 1 })).sort((a, b) => b.relevance - a.relevance)
   const programmesByPolicy: Record<Policy, string[]> = {
     passive: [],
     defensive: ['prog-identity', 'prog-ransomware', 'prog-detection', 'prog-segmentation', 'prog-thirdparty', 'prog-cloud'],
     business: ['prog-cloud'],
     balanced: ['prog-identity', 'prog-ransomware'],
+    relevant: ranked.length > 0 ? [ranked[0]!.id] : [],
+    minor: ranked.length > 0 ? [ranked.at(-1)!.id] : [],
   }
   let started = 0
   for (let day = 0; day < 364; day += 1) {
@@ -130,7 +135,7 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
 function main(): void {
   const index = buildContentIndex(nexoraContent)
   console.log('± is one standard error; differences smaller than about two of them are noise.\n')
-  const policies: Policy[] = ['passive', 'defensive', 'business', 'balanced']
+  const policies: Policy[] = ['passive', 'defensive', 'business', 'balanced', 'relevant', 'minor']
   const runs = Number(process.argv[2] ?? 25)
   const difficulty = (process.argv[3] as Difficulty) ?? 'ciso'
   for (const policy of policies) {
@@ -147,8 +152,23 @@ function main(): void {
     let evidence = 0
     let noIncidentRuns = 0
     let programmesComplete = 0
+    const before: Record<string, number> = {}
+    const after: Record<string, number> = {}
+    let relevanceCaps = 0
     for (let i = 0; i < runs; i += 1) {
       const state = play(index, `tune-${i}`, policy, difficulty)
+      const review = buildAnnualReview(state, index)
+      const programmes = programmesThisYear(state)
+      const completed = programmes.filter((programme) => programme.status === 'complete').length
+      const delivery = programmes.length === 0 ? 0 : (completed + 0.4 * (programmes.length - completed)) / programmes.length
+      const deliveryBand = delivery < 0.3 ? 'weak' : delivery < 0.52 ? 'developing' : delivery < 0.75 ? 'solid' : 'strong'
+      const values = { weak: 0.2, developing: 0.45, solid: 0.68, strong: 0.88 }
+      const prior = review.dimensions.reduce((sum, dimension) => sum + values[dimension.id === 'programme-execution' ? deliveryBand : dimension.band], 0) / review.dimensions.length
+      const previous = prior > 0.78 ? 'Exceptional' : prior > 0.6 ? 'Credible' : prior > 0.42 ? 'Mixed' : 'Difficult'
+      before[previous] = (before[previous] ?? 0) + 1
+      const current = review.performanceBand.split(' ')[0]!
+      after[current] = (after[current] ?? 0) + 1
+      if (deliveryBand === 'strong' && review.dimensions.find((dimension) => dimension.id === 'programme-execution')!.band !== 'strong') relevanceCaps += 1
       const incidentList = Object.values(state.incidents.incidents)
       incidents += incidentList.length
       perRun.push(incidentList.length)
@@ -160,6 +180,7 @@ function main(): void {
       evidence += state.evidence.order.length
       programmesComplete += Object.values(state.programmes.programmes).filter((p) => p.status === 'complete').length
     }
+    console.log(`${policy}: prior ratings ${JSON.stringify(before)}; revised ratings ${JSON.stringify(after)}; programme relevance caps ${relevanceCaps}/${runs}`)
     const m = incidents / runs
     const se = Math.sqrt(perRun.reduce((a, b) => a + (b - m) ** 2, 0) / Math.max(1, runs - 1) / runs)
     console.log(

@@ -86,6 +86,8 @@ end-to-end suite is serving. Do not run the two at once; finish one first.
 
 **The feature set is complete and the major systems are frozen.** The remaining
 work is playtesting, tightening and rewriting unclear text — not new mechanics.
+On 18 October 2026 the owner authorised annual-rating safeguards and programme
+relevance assessment, without changing simulation effects, difficulty or weights.
 Further simulation is now more likely to make the game worse than better unless
 a human playtest asks for it. The owner lifted the freeze once, on 9 October
 2026, for two things from `docs/ROADMAP.md` Phase 2: a second year that

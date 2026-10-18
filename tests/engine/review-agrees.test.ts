@@ -65,6 +65,18 @@ for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
 }
 
 describe('the annual review agrees with itself', () => {
+  it('applies rating safeguards to real campaigns, without rewriting their outcomes', () => {
+    for (const { label, state } of years) {
+      const snapshot = structuredClone(state)
+      const review = buildAnnualReview(state, index)
+      const weak = review.dimensions.filter((dimension) => dimension.band === 'weak')
+      if (weak.length >= 3) expect(review.performanceBand, label).toMatch(/^Difficult/)
+      else if (weak.some((dimension) => dimension.id === 'prioritisation' || dimension.id === 'team-sustainability')) expect(review.performanceBand, label).toMatch(/^(Mixed|Difficult)/)
+      else if (weak.length > 0) expect(review.performanceBand, label).not.toMatch(/^Exceptional/)
+      expect(state, label).toEqual(snapshot)
+    }
+  })
+
   it('leads the resilience sentence from the resilience band', () => {
     // Each band's sentence, and its form for a year that ends with an
     // incident still running, which has not yet been come through.

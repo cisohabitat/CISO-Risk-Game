@@ -10,6 +10,10 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Overall annual ratings now have minimum standards, with explanations when a
+  weak dimension or untested capability limits the rating. Programme execution
+  judges delivery alongside relevance to material risks. Existing stored reviews
+  keep their original assessment.
 - Annual reviews have section links, a labelled overall assessment and timeline
   quarter guides with a marker key. Board introductions scroll with the paper,
   and its reporting period, preparation date and deadline sit together.

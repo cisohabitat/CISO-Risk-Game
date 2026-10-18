@@ -1362,6 +1362,16 @@ Example:
 
 The player may still receive an optional high-level performance band for game progression, but it must not replace the narrative review.
 
+Owner-authorised assessment refinement (18 October 2026): retain equal dimension
+weights and existing average thresholds, with minimum standards for the overall
+rating. Exceptional requires no Weak dimension and tested recovery capability;
+Weak prioritisation or team sustainability caps the result at Mixed; three Weak
+dimensions cap it at Difficult. Other Weak dimensions cap it at Credible.
+Programme execution retains delivery credit, with Strong additionally requiring
+relevance in the upper half of the available programme materiality range, using
+the opening snapshot and authored treatment links. Explain applied ceilings and
+preserve stored reviews. See `docs/ASSESSMENT.md` for rules and calibration.
+
 ---
 
 # 27. Replayability
