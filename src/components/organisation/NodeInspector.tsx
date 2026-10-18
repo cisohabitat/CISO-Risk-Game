@@ -42,6 +42,7 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
   }
 
   useEffect(() => {
+    heading.current?.closest<HTMLElement>('.split-pane')?.scrollTo?.(0, 0)
     if (arrived) heading.current?.focus()
   }, [arrived, shown])
 
@@ -51,7 +52,7 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
   }
 
   return (
-    <Card className="border-t-2 border-t-accent lg:sticky lg:top-24">
+    <Card className="split-detail border-t-2 border-t-accent lg:sticky lg:top-24">
       <CardBody className="space-y-4">
         <p className="document-kicker text-accent-ink">Selected system</p>
         {trail.length > 1 && (

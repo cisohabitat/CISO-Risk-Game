@@ -49,7 +49,7 @@ export function OrganisationScreen() {
   )
 
   return (
-    <div className="space-y-4">
+    <div className="split-shell space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="document-kicker mb-2">Nexora Group</p>
@@ -92,8 +92,8 @@ export function OrganisationScreen() {
           description="Nexora's architecture is not documented anywhere you can trust. Commission an architecture review, or talk to the people who run the services."
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-          <div className="space-y-3">
+        <div className="split-workspace grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+          <div className="split-pane space-y-3" tabIndex={0} role="region" aria-label="Organisation browser">
             {/* Wraps from tablet width up. It scrolled sideways everywhere, and beside
                 the inspector it stopped at "Net" with nothing to say more followed. */}
             <div
@@ -196,7 +196,7 @@ export function OrganisationScreen() {
             </div>
           </div>
 
-          <div>
+          <div className="split-pane" tabIndex={0} role="region" aria-label="System details">
             {selected ? (
               <NodeInspector node={selected} onSelect={(id) => setUi({ selectedNodeId: id })} />
             ) : (

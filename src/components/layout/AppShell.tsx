@@ -187,7 +187,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           className="print-flow flex-1 pb-24 outline-none lg:overflow-y-auto lg:overscroll-contain lg:pb-8"
           aria-label={current?.label ?? 'Game'}
         >
-          <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">{children}</div>
+          <div className="workspace-frame mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">{children}</div>
         </main>
       </div>
 

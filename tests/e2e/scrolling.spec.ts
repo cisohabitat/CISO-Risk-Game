@@ -77,3 +77,59 @@ test('a short desktop rail stays reachable with every function struggling', asyn
   await rail.getByRole('button', { name: 'Briefing', exact: true }).click()
   await expect(page.getByRole('main', { name: 'Briefing', exact: true })).toBeVisible()
 })
+
+for (const width of [1024, 1366]) {
+  test(`split workspaces scroll independently at ${width}px`, async ({ page }, info) => {
+    test.skip(!['desktop-chromium', 'desktop-webkit'].includes(info.project.name), 'wheel isolation in both browser engines')
+    test.setTimeout(120_000)
+    await page.setViewportSize({ width, height: 768 })
+    const save = prepareCampaign('scroll-audit', 'day:200') as { state: GameState }
+    // Exercise a long reader as well as a long message list.
+    for (const message of save.state.inbox.messages.slice(0, 2)) message.body = Array(12).fill(message.body).join('\n\n')
+    await openPreparedCampaign(page, save)
+    for (const name of ['Inbox', 'Risk', 'Organisation']) {
+      await goTo(page, name)
+      if (name === 'Organisation') await page.getByRole('button', { name: 'List', exact: true }).click()
+      const panes = page.locator('.split-workspace > .split-pane')
+      await expect(panes).toHaveCount(2)
+      const left = panes.nth(0), right = panes.nth(1)
+      for (const pane of [left, right]) {
+        const bounds = (await pane.boundingBox())!
+        expect(bounds.y + bounds.height).toBeLessThanOrEqual(768)
+      }
+      const choices = name === 'Organisation' ? left.getByRole('list', { name: 'Discovered systems' }).getByRole('button') : left.getByRole('button')
+      await choices.first().click()
+      const heading = page.getByRole('main').getByRole('heading', { level: 1 })
+      const headingY = (await heading.boundingBox())!.y
+      const scroll = (pane: Locator) => pane.evaluate((element) => element.scrollTop)
+      const wheel = async (pane: Locator, delta: number) => {
+        const box = (await pane.boundingBox())!
+        await page.mouse.move(box.x + box.width / 2, box.y + Math.min(100, box.height / 2))
+        await page.mouse.wheel(0, delta)
+      }
+      await wheel(left, 350)
+      await expect.poll(() => scroll(left)).toBe(350)
+      expect(await scroll(right)).toBe(0)
+      const leftPosition = await scroll(left)
+      const readerDistance = await right.evaluate((element) => Math.min(300, element.scrollHeight - element.clientHeight))
+      await wheel(right, 300)
+      await expect.poll(() => scroll(right)).toBe(readerDistance)
+      expect(await scroll(left)).toBe(leftPosition)
+      expect(await page.locator('#main').evaluate((element) => element.scrollTop)).toBe(0)
+      expect((await heading.boundingBox())!.y).toBe(headingY)
+      // At the end of either panel, further wheel input must not move its neighbour.
+      await right.evaluate((element) => { element.scrollTop = element.scrollHeight })
+      await wheel(right, 500)
+      await expect.poll(() => scroll(left)).toBe(leftPosition)
+      await choices.nth(1).click()
+      await expect.poll(() => scroll(right)).toBe(0)
+      await expectNoHorizontalScroll(page)
+      const controls = right.locator('button:visible:not([disabled]), a[href]:visible')
+      if (await controls.count()) await expectReachable(controls.last())
+    }
+    // Rotating back restores the existing stacked organisation flow.
+    await page.setViewportSize({ width: 834, height: 1112 })
+    await expect.poll(() => page.locator('.split-workspace > .split-pane').first().evaluate((element) => getComputedStyle(element).overflowY)).toBe('visible')
+    await expectNoHorizontalScroll(page)
+  })
+}

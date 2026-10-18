@@ -139,6 +139,12 @@ workload, morale and blocker concerns. A practical next step opens the relevant
 decision or workspace. Current concerns are dated, no hidden risk truth or interim
 annual grade is exposed, and loading a save does not replay the recap.
 
+At landscape widths (1024px and above), Inbox, Risk scenarios and Organisation
+have independently scrolling list/map and detail panes. Browsing a list keeps the
+reader in place; selecting another item returns its detail pane to the top.
+Headers and filters remain reachable, and narrower layouts retain their existing
+page scrolling and phone reader navigation.
+
 ## Running it
 
 ```bash

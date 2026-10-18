@@ -10,6 +10,8 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Fixed coupled scrolling on iPad landscape and desktop: Inbox, Risk scenarios
+  and Organisation now scroll their list/map and detail panes independently.
 - Quarter recaps explain recorded strengths, missed decisions and current public
   team/programme concerns, with a practical next step linked to the work.
 - Later-year reviews now credit the second-year test-tenancy restore and exclude

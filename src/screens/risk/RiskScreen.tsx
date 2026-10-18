@@ -34,13 +34,13 @@ export function RiskScreen() {
   const failedAssumptions = assumptions.filter((assumption) => assumption.status === 'invalidated').length
 
   return (
-    <div className="space-y-4">
+    <div className="split-shell space-y-4">
       <header>
         <p className="document-kicker mb-2">Risk register</p>
         <h1 className="font-display text-3xl leading-tight">Risk</h1>
       </header>
 
-      <Tabs value={tab} onChange={setTab}>
+      <Tabs value={tab} onChange={setTab} className="split-tabs">
         <RiskTabStrip>
           {/* The count is what the tab lists: it counted open risks only, and
               read 11 over a list of 13 to 15 (AI second-year re-test). */}
@@ -59,8 +59,8 @@ export function RiskScreen() {
               action={<Button variant="primary" size="sm" onClick={() => setTab('investigate')}>Go and find something out</Button>}
             />
           ) : (
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
-              <ul className="space-y-3">
+            <div className="split-workspace grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+              <ul className="split-pane space-y-3" tabIndex={0} aria-label="Risk scenarios">
                 {risks.map((risk) => (
                   <li key={risk.id}>
                     <button
@@ -117,11 +117,11 @@ export function RiskScreen() {
                   </li>
                 ))}
               </ul>
-              <div>
+              <div className="split-pane" tabIndex={0} role="region" aria-label="Risk details">
                 {selected ? (
                   <RiskDetail risk={selected} onClose={() => setUi({ selectedScenarioId: undefined })} />
                 ) : (
-                  <Card className="risk-inspector-prompt bg-surface-2 lg:sticky lg:top-24">
+                  <Card className="split-detail risk-inspector-prompt bg-surface-2 lg:sticky lg:top-24">
                     <CardBody>
                       <p className="document-kicker">Risk inspector</p>
                       <h2 className="mt-2 font-display text-2xl">Select a risk</h2>

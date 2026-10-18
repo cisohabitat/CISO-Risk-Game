@@ -25,6 +25,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   // Under the list on a phone, a chosen risk's detail was after every card,
   // and choosing one seemed to do nothing. Go to it.
   useEffect(() => {
+    panel.current?.closest<HTMLElement>('.split-pane')?.scrollTo?.(0, 0)
     if (!detailIsBelowTheList()) return
     panel.current?.focus({ preventScroll: true })
     panel.current?.scrollIntoView?.({ block: 'start' })
@@ -68,7 +69,7 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
   }
 
   return (
-    <section ref={panel} tabIndex={-1} aria-label={def.title} className="outline-none lg:sticky lg:top-24">
+    <section ref={panel} tabIndex={-1} aria-label={def.title} className="split-detail outline-none lg:sticky lg:top-24">
     <Card>
       <CardBody className="space-y-4">
         <div className="flex items-start justify-between gap-3">

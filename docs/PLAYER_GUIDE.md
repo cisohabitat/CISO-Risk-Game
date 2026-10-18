@@ -581,6 +581,14 @@ know them beforehand.
 and may differ slightly from your campaign — the organisation's hidden
 configuration varies with the seed.*
 
+### Browsing beside a reader
+
+On iPad landscape and other screens at least 1024px wide, the Inbox message list,
+Risk scenario list and Organisation browser scroll separately from their detail
+panels. Scroll inside the panel you want to move. Selecting another item starts
+its detail at the top. On narrower screens, use the existing page flow and the
+Inbox's **Back to messages** controls.
+
 ### Reading the latest changes
 
 After committing a choice, a dismissible receipt confirms the option and any

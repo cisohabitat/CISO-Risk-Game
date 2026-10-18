@@ -97,6 +97,10 @@ export function InboxScreen() {
     return () => window.cancelAnimationFrame(frame)
   }, [selectedId, readingRequest])
 
+  useEffect(() => {
+    reader.current?.scrollTo?.(0, 0)
+  }, [selected?.id])
+
   const backToMessages = () => {
     const buttons = list.current?.querySelectorAll<HTMLButtonElement>('button[data-message-id]')
     const target = Array.from(buttons ?? []).find((button) => button.dataset.messageId === (lastOpened.current ?? selected?.id)) ?? buttons?.[0]
@@ -107,7 +111,7 @@ export function InboxScreen() {
   if (!state) return null
 
   return (
-    <div className="correspondence-workspace space-y-4">
+    <div className="split-shell correspondence-workspace space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><p className="document-kicker">Nexora Group · Correspondence</p><h1 className="mt-2 font-display text-3xl leading-tight">Inbox</h1></div>
         <SegmentedControl
@@ -124,8 +128,8 @@ export function InboxScreen() {
         <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"
           action={<Button variant="secondary" size="sm" onClick={() => filter === 'all' ? useGameStore.getState().setScreen('home') : setFilter('all')}>{filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <ul ref={list} className="divide-y divide-line border-y border-line" aria-label="Messages">
+        <div className="split-workspace grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+          <ul ref={list} tabIndex={0} className="split-pane divide-y divide-line border-y border-line" aria-label="Messages">
             {messages.slice(0, 60).map((message) => (
               <li key={message.id}>
                 <button
@@ -171,7 +175,7 @@ export function InboxScreen() {
           </ul>
 
           {selected && (
-            <Card id="message-reader" ref={reader} className={`correspondence message-reader scroll-mt-36 message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
+            <Card id="message-reader" ref={reader} tabIndex={0} role="region" aria-label="Message reader" className={`split-pane correspondence message-reader scroll-mt-36 message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
               <CardBody>
                 <div className="message-letterhead mb-2 flex items-center justify-between gap-2 border-b border-line pb-2 md:mb-4 md:pb-3">
                   <div className="md:hidden"><Button variant="secondary" size="sm" onClick={backToMessages}>Back to messages</Button></div>

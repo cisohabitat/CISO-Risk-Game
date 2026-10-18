@@ -89,3 +89,13 @@ pnpm test:e2e tests/e2e/scrolling.spec.ts --workers=2
 
 The complete release gate remains `pnpm check`, followed sequentially by the
 full `pnpm test:e2e` suite.
+
+## Independent landscape panes
+
+Inbox, Risk scenarios and Organisation now bound the two workspace columns at
+1024px and above, with separate vertical scrolling and contained overscroll.
+The shared main pane does not move when either column is scrolled. Detail
+selection resets the reader only; narrow layouts and print retain document flow.
+`scrolling.spec.ts` checks real wheel input at 1024px and 1366px in Chromium and
+WebKit, sibling stability, scroll limits, detail reset and rotation to 834px.
+These browser checks do not replace a physical iPad touch test.

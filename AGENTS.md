@@ -32,6 +32,12 @@ changes.
 
 ## Artwork
 
+- At widths of 1024px and above, Inbox, risk scenarios and Organisation use
+  bounded independent scroll panes. Keep headers/tabs reachable, contain vertical
+  scroll chaining, and reset only the detail pane on selection. Preserve narrow
+  screen navigation and document printing. Verify isolation with real wheel input
+  in Chromium and WebKit, including panel ends and rotation back to portrait.
+
 - Annual-review section links must reach and focus their targets beneath the
   header, and disappear in print. Timeline guides and keys describe recorded
   marks and programme completion only. Do not invent opening/closing snapshots.

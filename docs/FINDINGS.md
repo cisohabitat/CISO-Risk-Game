@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **Landscape list and detail panels shared one scrolling page.** At 1024×768
+  in WebKit, scrolling the Inbox or Risk list by 450px moved `main` by 450px;
+  the list itself did not scroll, and its sticky reader moved too. Organisation
+  List used the same arrangement. These workspaces now bound each column and
+  contain its vertical scrolling; detail selection resets only that pane.
+  The frame accounts for coaching notices above it, while retaining page
+  overflow for unusually tall notices. Four Chromium/WebKit cases at 1024px
+  and 1366px check wheel isolation, pane bounds, scroll ends, selection reset
+  and rotation to portrait. A physical iPad touch test remains unperformed.
+
 - **Later-year annual reviews missed a restore and counted old commitments.**
   A fresh review reproduced the second-year test-tenancy restore reading
   “Recovery was never exercised”, and a programme completed before day zero
