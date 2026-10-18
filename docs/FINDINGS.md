@@ -18,6 +18,16 @@ fault.
 
 ### Fixed
 
+- **Later-year annual reviews missed a restore and counted old commitments.**
+  A fresh review reproduced the second-year test-tenancy restore reading
+  “Recovery was never exercised”, and a programme completed before day zero
+  appearing as a new commitment. Recovery evidence and Exceptional eligibility
+  now recognise both authored test-tenancy restore decisions. Prioritisation
+  shares execution's current-year programme filter, retaining unfinished
+  carry-over work. Both regressions failed before the fixes; the assessment,
+  review-agreement and next-year suites then passed all 38 tests. The regression
+  also checks day-zero completions, unresolved restore choices and purity.
+
 - **A delayed initial save could overwrite newer autosaves.** Hosted browser
   testing found a day-one primary record beside a day-two backup after rapid
   Skip ahead actions. Validation loads asynchronously, so saves could reach

@@ -15,11 +15,13 @@ import type {
 import { clamp01, money } from '../types'
 import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
-import { effortAllocation, programmeRelevance } from './prioritisation'
+import { effortAllocation, programmeRelevance, programmesThisYear } from './prioritisation'
 import { overallAssessment } from './assessment'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
+
+export { programmesThisYear } from './prioritisation'
 
 export { buildQuarterReview, materialTopics, type QuarterReviewInput, type QuarterReviewOutput } from './quarter'
 
@@ -363,7 +365,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // score said "Recovery was never exercised". Found by the New money playtest.
   // Read from the decision record: a flag would be one the content never reads.
   const sandboxRestore = Object.values(state.decisions.decisions).some(
-    (d) => d.defId === 'dec-q4-recovery-window' && d.selectedOptionId === 'opt-q4-recovery-nonprod',
+    (d) => (d.defId === 'dec-q4-recovery-window' && d.selectedOptionId === 'opt-q4-recovery-nonprod') ||
+      (d.defId === 'dec-y2-restore' && d.selectedOptionId === 'opt-y2-restore-nonprod'),
   )
   // How the production restore went is known once its letter has come: it
   // ran past the window when the backups were too weak for the runbook.
@@ -851,17 +854,6 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     blindSpots: spots,
     reasoning: reasoningReview(state, index),
   }
-}
-
-/**
- * Programmes that are this year's work: everything started, less what an
- * earlier year finished. A programme carried over unfinished is this year's
- * to deliver.
- */
-export function programmesThisYear(state: GameState): GameState['programmes']['programmes'][string][] {
-  return Object.values(state.programmes.programmes).filter(
-    (p) => p.status !== 'proposed' && !(p.status === 'complete' && (p.completedDay ?? 0) < 0),
-  )
 }
 
 const COUNT_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']

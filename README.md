@@ -128,6 +128,9 @@ requires relevance in the upper half of the campaign's programme options,
 using opening materiality and authored treatment links. Older saves without an
 opening snapshot use the current picture, with that limitation stated. Stored
 reviews keep their original assessment; new reviews use these rules.
+Prioritisation and execution both exclude programmes completed in earlier years,
+while retaining unfinished carry-over work. Recovery evidence and Exceptional
+eligibility recognise test-tenancy restores in both the first and later years.
 [Assessment rules and calibration](docs/ASSESSMENT.md) document the exact method.
 
 ## Running it

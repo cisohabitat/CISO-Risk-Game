@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { overallAssessment } from '@/game/debrief/assessment'
 import { buildAnnualReview } from '@/game/debrief/review'
-import { programmeRelevance } from '@/game/debrief/prioritisation'
+import { effortAllocation, programmeRelevance } from '@/game/debrief/prioritisation'
 import { newGame } from '@/game/engine/orchestrator'
 import type { AnnualReviewDimension } from '@/game/types'
 import { testIndex } from './helpers'
@@ -88,5 +88,46 @@ describe('programme delivery and relevance', () => {
     const result = buildAnnualReview(state, index).dimensions.find((dimension) => dimension.id === 'programme-execution')!
     expect(result.band).toBe('weak')
     expect(result.evidence).toHaveLength(0)
+  })
+})
+
+describe('annual assessment in later years', () => {
+  it.each([
+    ['dec-q4-recovery-window', 'opt-q4-recovery-nonprod'],
+    ['dec-y2-restore', 'opt-y2-restore-nonprod'],
+  ])('credits the recorded test-tenancy restore from %s', (defId, selectedOptionId) => {
+    const state = newGame(index, { seed: 'later-year-restore' })
+    state.year = 2
+    state.currentDay = 365
+    state.decisions.decisions['restore'] = {
+      id: 'restore', defId, selectedOptionId, createdDay: 10, resolvedDay: 11,
+      resolvedByDefault: false, rationaleTagIds: [], assumptionIds: [],
+    }
+    const before = structuredClone(state)
+    const resilience = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
+    expect(resilience.evidence).toContain('1 recovery exercise completed, a restore into the test tenancy')
+    expect(resilience.evidence).not.toContain('Recovery was never exercised')
+    expect(state).toEqual(before)
+    delete state.decisions.decisions['restore']!.selectedOptionId
+    expect(buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!.evidence)
+      .toContain('Recovery was never exercised')
+  })
+
+  it('excludes earlier completions from prioritisation but retains unfinished carry-over and new completions', () => {
+    const state = newGame(index, { seed: 'later-year-prioritisation' })
+    state.year = 2
+    state.currentDay = 365
+    const [old, carry, current] = Object.values(state.programmes.programmes)
+    Object.assign(old!, { status: 'complete', startedDay: -200, completedDay: -1, progress: 1 })
+    expect(effortAllocation(state, index).commitments).toEqual([])
+    Object.assign(carry!, { status: 'active', startedDay: -100 })
+    Object.assign(current!, { status: 'complete', startedDay: -50, completedDay: 0, progress: 1 })
+    const before = structuredClone(state)
+    const commitments = effortAllocation(state, index).commitments
+    expect(commitments.map((c) => c.label)).toEqual([
+      index.programme.get(carry!.id)!.shortName,
+      index.programme.get(current!.id)!.shortName,
+    ])
+    expect(state).toEqual(before)
   })
 })

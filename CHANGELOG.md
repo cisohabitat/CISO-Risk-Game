@@ -10,6 +10,8 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Later-year reviews now credit the second-year test-tenancy restore and exclude
+  programmes finished in earlier years from prioritisation commitments.
 - Overall annual ratings now have minimum standards, with explanations when a
   weak dimension or untested capability limits the rating. Programme execution
   judges delivery alongside relevance to material risks. Existing stored reviews

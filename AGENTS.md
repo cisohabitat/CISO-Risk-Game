@@ -170,6 +170,11 @@ changes.
 
 ## Annual assessment
 
+- Use the shared `programmesThisYear` filter for execution and prioritisation;
+  exclude earlier completions but retain unfinished carry-over work. Credit
+  recorded test-tenancy restores from both the Q4 and second-year decisions
+  in recovery evidence and Exceptional eligibility.
+
 - Keep the eight dimensions equally weighted. Exceptional requires no weak
   dimension and tested recovery capability; weak prioritisation or team
   sustainability caps the overall result at Mixed. Three weak dimensions cap

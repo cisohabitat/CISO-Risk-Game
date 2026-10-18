@@ -141,8 +141,7 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
     commitments.push({ kind, label, scenarioId: best.id, scenarioTitle: best.title, materiality: best.materiality })
   }
 
-  for (const runtime of Object.values(state.programmes.programmes)) {
-    if (runtime.status === 'proposed') continue
+  for (const runtime of programmesThisYear(state)) {
     const def = index.programme.get(runtime.id)
     pick('programme', def?.shortName ?? runtime.id, aimedAt(index, { programmeId: runtime.id }))
   }
@@ -254,4 +253,15 @@ export function programmeRelevance(state: GameState, index: ContentIndex, progra
   // Equally material options offer no basis for penalising selection.
   if (highest === lowest) return 1
   return Math.max(0, Math.min(1, (selected.reduce((sum, value) => sum + value, 0) / selected.length - lowest) / (highest - lowest)))
+}
+
+/**
+ * Programmes that are this year's work: everything started, less what an
+ * earlier year finished. A programme carried over unfinished is this year's
+ * to deliver.
+ */
+export function programmesThisYear(state: GameState): GameState['programmes']['programmes'][string][] {
+  return Object.values(state.programmes.programmes).filter(
+    (p) => p.status !== 'proposed' && !(p.status === 'complete' && (p.completedDay ?? 0) < 0),
+  )
 }

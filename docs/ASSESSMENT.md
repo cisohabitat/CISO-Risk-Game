@@ -31,7 +31,8 @@ least and most material available programme choices. Below the midpoint, otherwi
 Strong delivery becomes Solid. It does not become Weak for choosing smaller work.
 One programme addressing the most material risk can still earn Strong.
 
-Only this year's work counts, including unfinished carry-over programmes but
+Prioritisation and programme execution share the same current-year programme
+filter. Only this year's work counts, including unfinished carry-over programmes but
 excluding programmes completed in earlier years. Equally material choices are
 neutral; work without authored treatment links is unscored for relevance. A
 missing opening snapshot uses current residuals with a stated limitation: risk
@@ -58,3 +59,7 @@ for human players. Ten seeds per policy cannot establish small differences.
 | guided | Difficult: 10, Credible: 42, Mixed: 2, Exceptional: 6 | Difficult: 10, Credible: 19, Mixed: 25, Exceptional: 6 | 9 |
 | ciso | Difficult: 10, Credible: 45, Exceptional: 1, Mixed: 4 | Difficult: 10, Credible: 20, Mixed: 29, Exceptional: 1 | 9 |
 | high-pressure | Difficult: 10, Credible: 43, Mixed: 7 | Difficult: 10, Mixed: 45, Credible: 5 | 7 |
+
+Recorded test-tenancy restores count as recovery exercises for both the Q4
+restore-window decision and the second-year deferred-restore decision. The same
+recognition feeds recovery evidence and the Exceptional eligibility check.
