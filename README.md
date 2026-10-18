@@ -36,6 +36,12 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Decision papers lead with the deadline, label budget and attention costs, and
+mark the chosen option in words. The fixed footer repeats the selected option
+and keeps rationale and commitment reachable on phones. The decision UI preloads
+when play begins, with a loading dialog if needed. Incidents show current public
+status, response choices, then the latest update; earlier history stays expandable.
+
 Active programme status has a consistent position below its title and sponsor.
 Phone risk tabs fade at edges with hidden tabs, matching the directional cue;
 the fade never intercepts input. Inbox return and branding share one phone row,

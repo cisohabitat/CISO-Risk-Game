@@ -592,6 +592,12 @@ portrait cannot load.
 
 ### Reading and comparing work
 
+Decision papers show the deadline before the situation, with separate budget and
+attention costs under each option. The selected option is marked and repeated
+beside the fixed action buttons. If a reason is required, the footer takes you to
+the reasons before you commit. During an incident, read current status first,
+then choose a response and review the latest update; earlier updates can expand.
+
 Programme status sits below its title and sponsor. On phones, fades mark the
 edges of the risk tabs with more content outside the view. The Inbox puts its
 return action and Nexora mark on one line; another return action remains below

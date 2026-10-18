@@ -306,7 +306,7 @@ test.describe('a first year at Nexora', () => {
     await decide.focus()
     await page.keyboard.press('Enter')
     const dialog = page.getByRole('dialog')
-    await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('radio').first()).toBeVisible()
     expect((await focused()).inDialog, 'focus did not move into the dialog').toBe(true)
 
     for (let i = 0; i < 5 && (await focused()).tag !== 'INPUT'; i += 1) await page.keyboard.press('Tab')
@@ -382,7 +382,7 @@ test.describe('a first year at Nexora', () => {
     if (await got.isVisible().catch(() => false)) await got.click()
     await page.getByRole('button', { name: /^Decide: / }).first().click()
     const dialog = page.getByRole('dialog')
-    await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('radio').first()).toBeVisible()
     // The panel rises into place; measure it once it has arrived.
     await dialog.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)))
     const viewport = page.viewportSize()!
@@ -691,6 +691,11 @@ test.describe('a first year at Nexora', () => {
         // itself "Record why first" rather than sitting dead.
         const why = page.getByRole('button', { name: /Record why first/ }).first()
         if (await why.isVisible().catch(() => false)) {
+          await why.focus()
+          await why.press('Enter')
+          const reason = page.locator('#decision-why-reasons button').first()
+          await expect(reason).toBeFocused()
+          await expect(reason).toBeInViewport()
           await page.getByRole('button', { name: 'More evidence is required' }).first().click()
         }
         const commit = page.getByRole('button', { name: /Commit to this/ }).first()

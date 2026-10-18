@@ -32,6 +32,14 @@ changes.
 
 ## Artwork
 
+- Decision papers put deadlines before context, label budget/attention costs
+  separately and show selection in words as well as colour. Keep the fixed
+  footer and reachable rationale route; preserve affordability and hidden effects.
+- Preload decision UI when play begins, with an accessible loading dialog and
+  recoverable failure. Keep the decision chunk out of the title download budget.
+- Incidents show public operational status before response controls, then the
+  latest recorded update. Keep earlier history expandable and controls reachable.
+
 - Active programme status occupies a stable row beneath its title/sponsor.
   Risk-tab edge fades follow the same overflow state as the cue, use theme
   colours and never intercept input. Keep keyboard focus and final tabs visible.

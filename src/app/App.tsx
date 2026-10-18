@@ -14,7 +14,6 @@ import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
 import { TeamScreen } from '@/screens/team/TeamScreen'
 import { BoardScreen } from '@/screens/board/BoardScreen'
-import { DecisionDialog } from '@/components/decisions/DecisionDialog'
 import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
@@ -23,12 +22,14 @@ import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
-import { Button, Card, CardBody, LoadingState } from '@/components/ui/primitives'
+import { Button, Card, CardBody, Dialog, LoadingState } from '@/components/ui/primitives'
 import { yearWord } from '@/game/time'
 
 // The year view is opened a few times a year and read once at the close, so
 // it stays out of what the first screen waits for. It is fetched in the
 // background once a campaign is open, so the close never waits on it.
+const loadDecision = () => import('@/components/decisions/DecisionDialog')
+const DecisionDialog = lazy(() => loadDecision().then((m) => ({ default: m.DecisionDialog })))
 const loadDebrief = () => import('@/screens/debrief/DebriefScreen')
 const DebriefScreen = lazy(() => loadDebrief().then((m) => ({ default: m.DebriefScreen })))
 
@@ -45,7 +46,10 @@ export function App() {
 
   const inCampaign = state !== null
   useEffect(() => {
-    if (inCampaign) void loadDebrief().catch(() => undefined)
+    if (inCampaign) {
+      void loadDebrief().catch(() => undefined)
+      void loadDecision().catch(() => undefined)
+    }
   }, [inCampaign])
 
   // An incident subtly raises the temperature of the whole shell (plan §30).
@@ -121,7 +125,11 @@ export function App() {
         </ScreenBoundary>
       </AppShell>
       {openDecisionId && (
-        <DecisionDialog decisionId={openDecisionId} onClose={() => setUi({ openDecisionId: undefined })} />
+        <ScreenBoundary onLeave={() => setUi({ openDecisionId: undefined })} leaveLabel="Back to campaign">
+          <Suspense fallback={<Dialog open title="Opening decision…" onClose={() => setUi({ openDecisionId: undefined })}><LoadingState label="Opening decision…" /></Dialog>}>
+            <DecisionDialog decisionId={openDecisionId} onClose={() => setUi({ openDecisionId: undefined })} />
+          </Suspense>
+        </ScreenBoundary>
       )}
       <Glossary />
       <Toasts />

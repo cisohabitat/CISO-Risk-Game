@@ -149,7 +149,7 @@ test.describe('accessibility', () => {
   test('the decision dialog is accessible', async ({ page }) => {
     await startCampaign(page, 'a11y-dialog')
     await page.getByRole('button', { name: /^Decide: / }).first().click()
-    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page.getByRole('dialog').getByRole('radio').first()).toBeVisible()
     await settle(page)
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])

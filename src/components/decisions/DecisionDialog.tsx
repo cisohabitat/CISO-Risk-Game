@@ -67,9 +67,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       onClose={onClose}
       size="lg"
       title={decision.title}
+      titleClassName="text-2xl"
       description={decision.description}
       footer={
         <>
+          <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}` : 'Choose an option below'}</span>
           <Button variant="quiet" onClick={onClose}>
             Not yet
           </Button>
@@ -90,6 +92,13 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       }
     >
       <div className="decision-paper space-y-6">
+        {decision.daysRemaining !== undefined && (
+          <p className={cn('decision-deadline rounded-lg border border-line p-3 text-sm font-medium', decision.urgent ? 'text-band-high' : 'text-ink-muted')}>
+            {decision.daysRemaining <= 0
+              ? 'This is due today. If you do not decide, the organisation will decide for you.'
+              : `Due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}.`}
+          </p>
+        )}
         <section aria-labelledby="decision-context" className="decision-context">
           <h3 id="decision-context" className="document-kicker mb-2"><span aria-hidden="true" className="paper-number">01</span>The situation</h3>
           <p className="text-sm leading-relaxed text-ink-muted text-pretty">
@@ -100,13 +109,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           text={`${decision.title} ${decision.description} ${decision.context} ${decision.options.map((o) => `${o.label} ${o.description}`).join(' ')}`}
         />
 
-        {decision.daysRemaining !== undefined && (
-          <p className={cn('text-sm', decision.urgent ? 'text-band-high' : 'text-ink-muted')}>
-            {decision.daysRemaining <= 0
-              ? 'This is due today. If you do not decide, the organisation will decide for you.'
-              : `Due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}.`}
-          </p>
-        )}
+
 
         <fieldset className="space-y-3">
           <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
@@ -116,8 +119,9 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           {decision.options.map((option) => (
             <label
               key={option.id}
+              data-selected={optionId === option.id}
               className={cn(
-                'decision-option flex cursor-pointer gap-3 rounded-lg border p-4 transition-colors',
+                'decision-option flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors sm:p-4',
                 optionId === option.id ? 'border-accent bg-accent-soft/40' : 'border-line bg-surface-2 hover:border-line-strong',
                 !option.affordable && 'opacity-60',
               )}
@@ -133,20 +137,19 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                 style={{ minHeight: 0 }}
               />
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-xl leading-tight text-balance">{option.label}</span>
+                <span className="flex flex-wrap items-start justify-between gap-2"><span className="font-display text-xl leading-tight text-balance">{option.label}</span>{optionId === option.id && <span className="rounded border border-accent px-2 py-1 text-xs font-semibold text-accent-ink" aria-hidden="true">✓ Selected</span>}</span>
                 <span className="mt-2 block text-sm leading-relaxed text-ink-muted text-pretty">{option.description}</span>
-                {(option.budgetCost !== undefined || option.focusCost !== undefined) && <span className="decision-costs mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-y border-line py-2">
-                  <span className="text-xs font-medium text-ink-faint">Cost</span>
+                {(option.budgetCost !== undefined || option.focusCost !== undefined) && <span className="decision-costs mt-3 grid grid-cols-2 gap-3 border-y border-line py-2">
                   {/* A price the organisation already knows is not part of the
                       uncertainty. "Expensive" told the player nothing they could
                       weigh against the budget bar on the same screen. */}
                   {option.budgetCost !== undefined && (
-                    <span className="text-sm tabular-nums text-ink-faint">{money(option.budgetCost)}</span>
+                    <span className="text-sm tabular-nums"><span className="mb-1 block text-xs text-ink-faint">Budget cost</span>{money(option.budgetCost)}</span>
                   )}
                   {/* Attention is spent when the option is taken; two options
                       spent it without their text saying so. */}
                   {option.focusCost !== undefined && (
-                    <span className="text-sm tabular-nums text-ink-faint">{option.focusCost} attention</span>
+                    <span className="text-sm tabular-nums"><span className="mb-1 block text-xs text-ink-faint">Attention cost</span>{option.focusCost} attention</span>
                   )}
                 </span>}
                 {option.visibleKnownEffects.length > 0 && (

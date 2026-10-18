@@ -222,6 +222,7 @@ export function Dialog({
   children,
   footer,
   size = 'md',
+  titleClassName,
 }: {
   open: boolean
   onClose: () => void
@@ -230,6 +231,7 @@ export function Dialog({
   children: ReactNode
   footer?: ReactNode
   size?: 'md' | 'lg'
+  titleClassName?: string
 }) {
   const titleId = useId()
   const descriptionId = useId()
@@ -318,7 +320,7 @@ export function Dialog({
       >
         <div className="flex items-start justify-between gap-4 border-b border-line p-4 sm:p-5">
           <div>
-            <h2 id={titleId} className="font-display text-xl leading-tight text-balance">{title}</h2>
+            <h2 id={titleId} className={cn('font-display leading-tight text-balance', titleClassName ?? 'text-xl')}>{title}</h2>
             {description && (
               <p id={descriptionId} className="mt-1 text-sm text-ink-muted text-pretty">{description}</p>
             )}

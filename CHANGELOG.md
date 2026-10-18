@@ -10,6 +10,9 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Decision papers foreground deadlines, separate resource costs and identify
+  the selected option in the paper and fixed footer. Decision UI preloads during
+  play. Incident status precedes response choices and the latest recorded update.
 - Programme status stays beneath the title and sponsor across screen sizes.
   Phone risk tabs have theme-aware edge fades that follow actual overflow.
   Inbox return and branding share a compact phone letterhead row.

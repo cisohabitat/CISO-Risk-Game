@@ -75,29 +75,12 @@ export function IncidentCommand() {
           )}
         </div>
 
-        {incident.awaiting.length > 0 && (
-          <div className="rounded-lg border border-band-severe/50 bg-surface p-3">
-            <p className="text-sm font-medium">
-              {plural(incident.awaiting.length, 'decision', 'decisions')} waiting on you
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {incident.awaiting.map((item) => (
-                <li key={item.decisionId}>
-                  <Button variant="primary" size="sm" onClick={() => setUi({ openDecisionId: item.decisionId })}>
-                    {item.title}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {/*
           The operational state, in words. Containment is a 0..1 number
           internally and never appears as one: the player is told where the
           response has got to, not given a percentage to optimise.
         */}
-        <div className="grid gap-3 border-y border-line py-3 text-sm sm:grid-cols-3">
+        <div className="incident-situation grid gap-3 border-y border-line py-3 text-sm sm:grid-cols-3">
           <span className="text-ink-muted">
             <span className="mb-1 block text-xs text-ink-faint">Containment:</span> {incident.containmentLabel}
           </span>
@@ -111,9 +94,28 @@ export function IncidentCommand() {
           )}
         </div>
 
+        {incident.awaiting.length > 0 && (
+          <div className="incident-actions rounded-lg border border-band-severe/50 bg-surface p-3">
+            <p className="text-sm font-medium">
+              {plural(incident.awaiting.length, 'decision', 'decisions')} waiting on you
+            </p>
+            <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+              {incident.awaiting.map((item) => (
+                <li key={item.decisionId}>
+                  <Button variant="primary" size="sm" className="w-full justify-start text-left" onClick={() => setUi({ openDecisionId: item.decisionId })}>
+                    {item.title}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+
+
         {incident.timeline.length > 0 && (
           <div>
-            <p className="text-xs font-medium text-ink-faint">What you have been told</p>
+            <p className="text-xs font-medium text-ink-faint">Latest update</p>
             <ol className="response-timeline mt-3 text-sm">
               {incident.timeline.slice(-1).map((entry, position) => (
                 <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
