@@ -173,10 +173,12 @@ export function InboxScreen() {
           {selected && (
             <Card id="message-reader" ref={reader} className={`correspondence message-reader scroll-mt-36 message-reader-${MESSAGE_KIND[selected.type].style} md:sticky md:top-24 md:self-start`}>
               <CardBody>
-                <div className="mb-4 md:hidden"><Button variant="secondary" size="sm" onClick={backToMessages}>Back to messages</Button></div>
-                <div className="message-letterhead mb-2 flex items-center gap-2 border-b border-line pb-2 md:mb-4 md:pb-3">
-                  <NexoraMark className="h-5 w-5 md:h-7 md:w-7" />
-                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink-faint">Nexora Group</span>
+                <div className="message-letterhead mb-2 flex items-center justify-between gap-2 border-b border-line pb-2 md:mb-4 md:pb-3">
+                  <div className="md:hidden"><Button variant="secondary" size="sm" onClick={backToMessages}>Back to messages</Button></div>
+                  <div className="flex items-center gap-2">
+                    <NexoraMark className="h-5 w-5 md:h-7 md:w-7" />
+                    <span className="hidden text-xs font-medium uppercase tracking-[0.16em] text-ink-faint min-[400px]:inline">Nexora Group</span>
+                  </div>
                 </div>
                 <div className="message-metadata">
                   <p className={`message-kind message-kind-${MESSAGE_KIND[selected.type].style} mb-1 flex items-center gap-2 text-xs font-medium md:mb-3`}>

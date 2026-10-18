@@ -670,7 +670,6 @@
 @media (max-width: 767px) {
   .message-metadata { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
   .message-metadata .message-kind { margin-bottom: 0; }
-  .message-letterhead { letter-spacing: 0.1em; }
 }
 @media (min-width: 1024px) {
   .programme-summary { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); align-items: start; gap: 1.5rem; }
@@ -681,4 +680,12 @@
   .programme-active .journey-step { grid-template-columns: minmax(0,1fr); gap: 0.5rem; }
   .programme-active .journey-step > div { padding-bottom: 0; }
   .programme-active .journey-step:not(:last-child)::before { top: 0.85rem; bottom: auto; left: 1.75rem; right: -1.5rem; border-left: 0; border-top: 1px solid var(--line-strong); }
+}
+
+@media (max-width: 767px) {
+  .risk-tab-edges { position: relative; }
+  .risk-tab-edges::before, .risk-tab-edges::after { content: ''; position: absolute; z-index: 1; top: 0; bottom: 0.35rem; width: 1rem; pointer-events: none; opacity: 0; }
+  .risk-tab-edges::before { left: -0.25rem; background: linear-gradient(to right,var(--paper),transparent); }
+  .risk-tab-edges::after { right: -0.25rem; background: linear-gradient(to left,var(--paper),transparent); }
+  .risk-tab-edges[data-before="true"]::before, .risk-tab-edges[data-after="true"]::after { opacity: 1; }
 }

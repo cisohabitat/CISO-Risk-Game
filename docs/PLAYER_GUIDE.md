@@ -592,6 +592,11 @@ portrait cannot load.
 
 ### Reading and comparing work
 
+Programme status sits below its title and sponsor. On phones, fades mark the
+edges of the risk tabs with more content outside the view. The Inbox puts its
+return action and Nexora mark on one line; another return action remains below
+the message.
+
 On phones, Budget and Attention appear beside the clock. Dates use a short month
 and week, such as “2 Jan · W1”. Risk badges show the value beneath its field label.
 The tab arrows point toward tabs still outside the view. Desktop programme

@@ -76,7 +76,7 @@ export function ProgrammesScreen() {
                 {label && <h2 className="portfolio-divider"><span>{label}</span>{' '}<span className="text-sm font-normal tabular-nums text-ink-muted">{count} {count === 1 ? 'programme' : 'programmes'}</span></h2>}
                 <article className="programme-row programme-active grid gap-5 py-6">
                   <div className="programme-summary space-y-3">
-                    <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="programme-heading space-y-2">
                       <div>
                         <h3 className="font-display text-xl leading-tight text-balance">{programme.name}</h3>
                         <p className="text-sm text-ink-muted">

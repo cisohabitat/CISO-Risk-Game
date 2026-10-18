@@ -10,6 +10,9 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+- Programme status stays beneath the title and sponsor across screen sizes.
+  Phone risk tabs have theme-aware edge fades that follow actual overflow.
+  Inbox return and branding share a compact phone letterhead row.
 - Phone dates and risk badges are shorter without losing calendar context or
   qualitative bands. Risk tab cues follow the actual scroll position. Compact
   Inbox mastheads bring text closer, and full-width desktop programme summaries

@@ -91,7 +91,11 @@ test('compact resources stay readable and the final risk tab remains reachable b
   await expect(last).toBeFocused()
   await expect(last).toHaveAttribute('aria-selected', 'true')
   await expect(last).toBeInViewport()
-  if (page.viewportSize()!.width < 768) await expect(page.locator('.risk-tab-cue')).toHaveText('← More tabs')
+  if (page.viewportSize()!.width < 768) {
+    await expect(page.locator('.risk-tab-cue')).toHaveText('← More tabs')
+    await expect(page.locator('.risk-tab-edges')).toHaveAttribute('data-after', 'false')
+    expect(await page.locator('.risk-tab-edges').evaluate((element) => getComputedStyle(element, '::after').opacity)).toBe('0')
+  }
   await last.press('Home')
   await expect(first).toBeFocused()
   await expect(first).toBeInViewport()
@@ -99,6 +103,8 @@ test('compact resources stay readable and the final risk tab remains reachable b
     const rows = await tabs.getByRole('tab').evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().top)))
     expect(new Set(rows).size).toBe(1)
     await expect(page.locator('.risk-tab-cue')).toHaveText('More tabs →')
+    await expect(page.locator('.risk-tab-edges')).toHaveAttribute('data-after', 'true')
+    expect(await page.locator('.risk-tab-edges').evaluate((element) => getComputedStyle(element, '::after').pointerEvents)).toBe('none')
     await tabs.evaluate((element) => { element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2 })
     await expect(page.locator('.risk-tab-cue')).toHaveText('← More tabs →')
     const viewport = page.viewportSize()!

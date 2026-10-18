@@ -36,6 +36,11 @@ beginning, middle and end of the year. These are a chronological sample, not
 a score or a claim about which choices caused the outcome. The full timeline,
 judgement log, sharing and printable review remain available.
 
+Active programme status has a consistent position below its title and sponsor.
+Phone risk tabs fade at edges with hidden tabs, matching the directional cue;
+the fade never intercepts input. Inbox return and branding share one phone row,
+leaving more room for the message while retaining the bottom return action.
+
 Phone dates use a short month and week label, with full calendar context for
 assistive technology. Risk badges omit words repeated in their field labels;
 scroll cues point only toward hidden tabs. Inbox mastheads use less phone space.

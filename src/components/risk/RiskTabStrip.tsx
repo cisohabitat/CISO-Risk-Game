@@ -22,7 +22,9 @@ export function RiskTabStrip({ children }: { children: ReactNode }) {
     return () => { observer?.disconnect(); element.removeEventListener('scroll', measure); window.removeEventListener('resize', measure) }
   }, [])
   return <>
-    <TabList ref={strip} label="Risk workspace" className="risk-tabs">{children}</TabList>
+    <div className="risk-tab-edges" data-before={cue.startsWith('←')} data-after={cue.endsWith('→')}>
+      <TabList ref={strip} label="Risk workspace" className="risk-tabs">{children}</TabList>
+    </div>
     <p className="risk-tab-cue mt-1 min-h-4 text-right text-xs text-ink-faint md:hidden" aria-hidden="true">{cue}</p>
   </>
 }

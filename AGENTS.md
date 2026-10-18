@@ -32,6 +32,12 @@ changes.
 
 ## Artwork
 
+- Active programme status occupies a stable row beneath its title/sponsor.
+  Risk-tab edge fades follow the same overflow state as the cue, use theme
+  colours and never intercept input. Keep keyboard focus and final tabs visible.
+- Phone Inbox return and branding share one letterhead row. Retain both return
+  actions, heading focus, full sender details and the desktop letterhead.
+
 - Phone date labels use the existing calendar formatter and compact week text;
   retain the full date/week/quarter in accessible text. Risk badges beneath
   labelled comparison cells omit repeated field names, keeping qualitative bands.
