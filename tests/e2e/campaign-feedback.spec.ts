@@ -36,6 +36,10 @@ test('a played quarter boundary adds a recap below the work waiting on you', asy
   const recap = page.getByRole('region', { name: 'Q1 in the record. Q2 ahead.' })
   await expect(recap).toBeVisible()
   await expect(recap).toContainText('Q1 board paper: awaiting your paper.')
+  for (const name of ['What went well', 'What needs attention', 'A practical next step']) {
+    await expect(recap.getByRole('heading', { name })).toBeVisible()
+  }
+  await expect(recap).toContainText('The annual assessment comes at year-end.')
   const actions = page.locator('#decisions')
   expect(await actions.evaluate((element) => Boolean(element.compareDocumentPosition(document.querySelector('.quarter-paper')!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true)
   await expectNoHorizontalScroll(page)

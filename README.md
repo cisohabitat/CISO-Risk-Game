@@ -133,6 +133,12 @@ while retaining unfinished carry-over work. Recovery evidence and Exceptional
 eligibility recognise test-tenancy restores in both the first and later years.
 [Assessment rules and calibration](docs/ASSESSMENT.md) document the exact method.
 
+Quarter recaps now explain what went well from recorded choices, programme
+completions and board submissions, then name lapsed decisions and current public
+workload, morale and blocker concerns. A practical next step opens the relevant
+decision or workspace. Current concerns are dated, no hidden risk truth or interim
+annual grade is exposed, and loading a save does not replay the recap.
+
 ## Running it
 
 ```bash

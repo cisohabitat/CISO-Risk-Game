@@ -591,7 +591,12 @@ reply. Later effects still arrive through the Inbox.
 
 When you play into a new quarter, the Briefing places a recap below **Waiting on
 you**. It summarises recorded choices, programmes completed and the prior board
-paper, then points to current commitments. Loading a save does not replay it.
+paper. **What went well** describes those recorded actions; it does not promise
+that every choice was good. **What needs attention** names decisions that lapsed
+in that quarter and dates today's workload, morale and programme blockers.
+**A practical next step** opens the next decision or the relevant workspace.
+The annual assessment still comes at year-end. Loading a save does not replay
+the recap.
 
 ![A quarter recap on the Briefing](images/08b-quarter-recap.png)
 

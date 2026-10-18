@@ -121,6 +121,10 @@ changes.
 - Quarter recaps appear only after played boundaries, below the Briefing action
   area. Exclude defaulted decisions from player choices, use programme completion
   dates, preserve pending board-paper status, and never invent a fifth quarter.
+- Quarterly guidance uses recorded choices/completions and public views only;
+  never call the annual grader mid-year. Separate dated quarter lapses from
+  today's labelled workload, morale and blocker concerns. Name all struggling
+  functions and keep the linked next step available without hiding urgent work.
 - Keep optional feedback deferred and nonblocking. Expand programme milestones
   and leadership notes without hiding costs, staffing, morale, blockers or
   actions; disclosures need keyboard controls and associated panels.
