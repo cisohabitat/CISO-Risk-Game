@@ -149,8 +149,7 @@ export function OrganisationScreen() {
                       onClick={() => pick(node.id)}
                       aria-current={selectedNodeId === node.id ? 'true' : undefined}
                       className={cn(
-                        'w-full rounded-lg border bg-surface p-3 text-left transition-colors',
-                        selectedNodeId === node.id ? 'border-accent border-l-4 bg-accent-soft/25' : 'border-line hover:border-line-strong',
+                        'workspace-choice w-full rounded-lg border border-line bg-surface p-3 text-left transition-colors',
                         // Something you were told about and never checked is
                         // drawn as what it is: an outline, not a fact. The
                         // badge said so already, but a badge is a label on a

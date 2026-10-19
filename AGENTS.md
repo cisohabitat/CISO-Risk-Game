@@ -32,6 +32,11 @@ changes.
 
 ## Artwork
 
+- Split-workspace choices share the `workspace-choice` selection cue and
+  `aria-current`. Keep selection geometry stable, preserve unverified systems’
+  dashed outlines, and distinguish hover from selection in both themes.
+  Keep pane framing desktop-only and phone reader actions freely wrapping.
+
 - Give map attribution links a real layout box so the shared minimum touch
   height applies and WebKit can scroll their hit target into clipped panes.
 

@@ -66,9 +66,9 @@ export function RiskScreen() {
                     <button
                       type="button"
                       onClick={() => setUi({ selectedScenarioId: risk.id })}
+                      aria-current={selectedScenarioId === risk.id ? 'true' : undefined}
                       className={cn(
-                        'w-full rounded-[--radius-card] border bg-surface p-4 text-left transition-colors',
-                        selectedScenarioId === risk.id ? 'border-accent' : 'border-line hover:border-line-strong',
+                        'workspace-choice w-full rounded-[--radius-card] border border-line bg-surface p-4 text-left transition-colors',
                       )}
                     >
                       <h3 className="font-medium text-balance">{risk.title}</h3>

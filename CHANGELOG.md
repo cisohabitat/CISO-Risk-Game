@@ -10,6 +10,9 @@ The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
 ### Playing
+
+- Clarified Inbox, Risk and Organisation panel boundaries, unified selection
+  styling, and improved message hierarchy and narrow-screen reading space.
 - Added a gameplay-only pull-to-refresh guard for downward swipes at the page
   edge, while preserving ordinary scrolling and dialog readers.
 - Fixed coupled scrolling on iPad landscape and desktop: Inbox, Risk scenarios

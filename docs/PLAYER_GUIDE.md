@@ -230,6 +230,9 @@ whatever sounds best.
 
 ### Reading your inbox
 
+On wider screens, the framed list and reader scroll separately. The highlighted
+row marks the open message; the same selection cue is used for risks and systems.
+
 ![The Inbox](images/03b-inbox.png)
 
 Each message has a type label and icon, so a personal message, evidence update

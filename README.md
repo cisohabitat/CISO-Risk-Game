@@ -144,7 +144,10 @@ have independently scrolling list/map and detail panes. Browsing a list keeps th
 reader in place; selecting another item returns its detail pane to the top.
 Headers and filters remain reachable, and narrower layouts retain their existing
 page scrolling and phone reader navigation. Map attribution uses the shared
-minimum touch height and stays reachable inside its scroll pane.
+minimum touch height and stays reachable inside its scroll pane. The panes have
+separate frames and a wider gutter; Inbox gives the reader more room on tablets.
+Messages, risks and systems share a consistent selection cue. Message subjects
+lead the reading hierarchy, with quieter metadata and roomier phone spacing.
 
 During gameplay, root overscroll controls and a targeted touch fallback suppress
 accidental pull-to-refresh at the top of a page. Normal scrolling, dialog readers,

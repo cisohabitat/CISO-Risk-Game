@@ -711,3 +711,24 @@
 html[data-gameplay-scroll="true"], html[data-gameplay-scroll="true"] body {
   overscroll-behavior-y: none;
 }
+
+/* A shared selection cue without changing row geometry or trust outlines. */
+.workspace-choice { overflow-wrap: anywhere; }
+.workspace-choice:hover:not([aria-current="true"]) { background: var(--surface-2); }
+.workspace-choice[aria-current="true"] { background: var(--accent-soft); border-color: var(--accent); box-shadow: inset 3px 0 var(--accent); }
+.message-subject { font-size: clamp(1.5rem, 2.2vw, 2rem); overflow-wrap: anywhere; }
+.message-reader .sender-signature { border-top: 0; }
+.split-pane .card-grain { box-shadow: none; }
+@media screen and (min-width: 1024px) {
+  .split-shell .split-workspace { gap: 1.5rem; }
+  .split-workspace > .split-pane:first-child { border: 1px solid var(--line); border-radius: 0.375rem; background: var(--surface-2); padding: 0.5rem; }
+  .split-workspace > .split-pane { scrollbar-color: var(--ink-faint) var(--surface-2); }
+  .split-workspace > .split-pane:last-child { border-inline-start: 1px solid var(--line-strong); }
+}
+@media (max-width: 767px) {
+  .message-reader .message-subject { margin-top: 0.75rem; }
+  .message-reader .sender-signature { margin-top: 0.75rem; padding-bottom: 0.75rem; }
+  .message-reader .correspondence-body { margin-top: 1.25rem; }
+  .split-detail h2 { overflow-wrap: anywhere; }
+  .split-detail button, .message-reader button { white-space: normal; }
+}

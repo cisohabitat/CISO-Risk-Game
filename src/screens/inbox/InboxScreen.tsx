@@ -128,7 +128,7 @@ export function InboxScreen() {
         <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"
           action={<Button variant="secondary" size="sm" onClick={() => filter === 'all' ? useGameStore.getState().setScreen('home') : setFilter('all')}>{filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
       ) : (
-        <div className="split-workspace grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+        <div className="split-workspace grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
           <ul ref={list} tabIndex={0} className="split-pane divide-y divide-line border-y border-line" aria-label="Messages">
             {messages.slice(0, 60).map((message) => (
               <li key={message.id}>
@@ -143,10 +143,7 @@ export function InboxScreen() {
                   }}
                   aria-current={selected?.id === message.id ? 'true' : undefined}
                   className={cn(
-                    'w-full border-l-2 px-3 py-4 text-left transition-colors',
-                    selected?.id === message.id
-                      ? 'border-accent bg-accent-soft/30'
-                      : 'border-transparent hover:bg-surface-2',
+                    'workspace-choice w-full border-l-2 border-transparent px-3 py-4 text-left transition-colors',
                   )}
                 >
                     <p className={`message-kind message-kind-${MESSAGE_KIND[message.type].style} mb-2 flex items-center gap-2 text-xs font-medium`}>
@@ -160,7 +157,7 @@ export function InboxScreen() {
                         reading 2 January read as a mistake. */}
                     <span className="shrink-0 text-xs tabular-nums text-ink-faint">{shortDate(message.day)}</span>
                   </div>
-                  <p className={cn('mt-1 line-clamp-2 leading-snug text-pretty', message.read ? 'text-ink-muted' : 'font-medium')}>
+                  <p className={cn('mt-2 line-clamp-2 leading-snug text-pretty text-ink', !message.read && 'font-semibold')}>
                     {message.subject}
                   </p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -190,7 +187,7 @@ export function InboxScreen() {
                   </p>
                   <p className="text-xs text-ink-faint md:text-sm">{formatGameDate(selected.day).label}</p>
                 </div>
-                <h2 ref={heading} tabIndex={-1} className="mt-1 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
+                <h2 ref={heading} tabIndex={-1} className="message-subject mt-3 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
                 <div className="sender-signature mt-2 md:mt-4 flex items-center gap-3">
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}
                   <div className="min-w-0 text-sm">
@@ -199,7 +196,7 @@ export function InboxScreen() {
                 </div>
                 <div className="correspondence-body mt-3 md:mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (
-                    <p key={position} className="whitespace-pre-line leading-relaxed">
+                    <p key={position} className="whitespace-pre-line">
                       {paragraph}
                     </p>
                   ))}
