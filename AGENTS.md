@@ -36,6 +36,8 @@ changes.
   detail panels expose a return action that restores the selected row’s focus
   without clearing selection. Keep these actions below the fixed header when
   opening details, including dependency walks, and verify at 320px and tablet.
+  Correspondence portraits use the compact 56px size below 1280px; retain
+  readable full sender names and roles beside them.
 
 - Split-workspace choices share the `workspace-choice` selection cue and
   `aria-current`. Keep selection geometry stable, preserve unverified systems’
