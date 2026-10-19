@@ -32,6 +32,11 @@ changes.
 
 ## Artwork
 
+- Organisation uses a labelled native System type filter. Stacked risk/system
+  detail panels expose a return action that restores the selected row’s focus
+  without clearing selection. Keep these actions below the fixed header when
+  opening details, including dependency walks, and verify at 320px and tablet.
+
 - Split-workspace choices share the `workspace-choice` selection cue and
   `aria-current`. Keep selection geometry stable, preserve unverified systems’
   dashed outlines, and distinguish hover from selection in both themes.

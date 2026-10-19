@@ -302,6 +302,10 @@ new players most often skip. Do not skip it.
 The graph labels direct neighbours **Directly connected**. The selected system
 and its inspector share an accent; arrows point towards dependencies.
 
+Use **System type** to filter the discovered systems. On phones and stacked
+tablet layouts, **Back to systems** returns to the selected row. Risk details
+have the equivalent **Back to risks** action.
+
 ![The Organisation view](images/06-organisation.png)
 
 Every system, supplier, network and data set, and what depends on what. Use

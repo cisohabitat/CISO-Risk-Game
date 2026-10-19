@@ -7,3 +7,11 @@
 export function detailIsBelowTheList(): boolean {
   return typeof window.matchMedia === 'function' && !window.matchMedia('(min-width: 1024px)').matches
 }
+
+/** Restore the selected row without changing selection or list membership. */
+export function returnToWorkspaceList() {
+  const row = document.querySelector<HTMLElement>('#main .workspace-choice[aria-current="true"]')
+    ?? document.querySelector<HTMLElement>('#main .workspace-choice')
+  row?.scrollIntoView({ block: 'center' })
+  row?.focus({ preventScroll: true })
+}

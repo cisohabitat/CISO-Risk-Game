@@ -3,7 +3,7 @@
  * recorded assumptions, or give it to an executive to own (plan §12.3, §13).
  */
 import { useEffect, useRef, useState } from 'react'
-import { detailIsBelowTheList } from '@/lib/layout/stacked'
+import { detailIsBelowTheList, returnToWorkspaceList } from '@/lib/layout/stacked'
 import { Badge, Button, Card, CardBody, Dialog, Fact, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
@@ -12,7 +12,7 @@ import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { bandTone, confidenceTone, statusLabel } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
-export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () => void }) {
+export function RiskDetail({ risk }: { risk: VisibleRisk }) {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
@@ -72,15 +72,11 @@ export function RiskDetail({ risk, onClose }: { risk: VisibleRisk; onClose: () =
     <section ref={panel} tabIndex={-1} aria-label={def.title} className="split-detail outline-none lg:sticky lg:top-24">
     <Card>
       <CardBody className="space-y-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-wrap gap-2">
-            <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
-            <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge>
-            <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
-          </div>
-          <Button variant="ghost" size="sm" className="compact min-h-9 px-2.5 lg:hidden" onClick={onClose} aria-label="Close">
-            ✕
-          </Button>
+        <Button variant="secondary" size="sm" className="lg:hidden" onClick={returnToWorkspaceList}>Back to risks</Button>
+        <div className="flex flex-wrap gap-2">
+          <Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]} residual</Badge>
+          <Badge tone={confidenceTone(risk.confidence)} glyph={false}>{risk.confidence} confidence</Badge>
+          <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
         </div>
 
         <div>

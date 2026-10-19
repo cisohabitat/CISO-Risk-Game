@@ -40,7 +40,7 @@ export function OrganisationScreen() {
     if (!detailIsBelowTheList()) return
     requestAnimationFrame(() => {
       const heading = document.querySelector<HTMLElement>('[data-testid="inspector-heading"]')
-      heading?.scrollIntoView({ block: 'start' })
+      heading?.closest('.split-detail')?.scrollIntoView({ block: 'start' })
       heading?.focus({ preventScroll: true })
     })
   }
@@ -94,35 +94,13 @@ export function OrganisationScreen() {
       ) : (
         <div className="split-workspace grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
           <div className="split-pane space-y-3" tabIndex={0} role="region" aria-label="Organisation browser">
-            {/* Wraps from tablet width up. It scrolled sideways everywhere, and beside
-                the inspector it stopped at "Net" with nothing to say more followed. */}
-            <div
-              className="-mx-1 flex gap-1 overflow-x-auto overscroll-x-contain px-1 pb-1 sm:flex-wrap sm:overflow-visible"
-              role="group"
-              aria-label="Filter by type"
-            >
-              <Button
-                size="sm"
-                variant={filter === 'all' ? 'secondary' : 'ghost'}
-                className="compact min-h-9 shrink-0"
-                aria-pressed={filter === 'all'}
-                onClick={() => setFilter('all')}
-              >
-                Everything
-              </Button>
-              {types.map((type) => (
-                <Button
-                  key={type}
-                  size="sm"
-                  variant={filter === type ? 'secondary' : 'ghost'}
-                  className="compact min-h-9 shrink-0"
-                  aria-pressed={filter === type}
-                  onClick={() => setFilter(type)}
-                >
-                  {nodeTypeLabel(type)}
-                </Button>
-              ))}
-            </div>
+            <label className="flex flex-wrap items-center gap-2 text-sm text-ink-muted">
+              System type
+              <select value={filter} onChange={(event) => setFilter(event.target.value)} className="min-h-11 min-w-0 max-w-full rounded-lg border border-line bg-surface px-3 text-base text-ink">
+                <option value="all">Everything</option>
+                {types.map((type) => <option key={type} value={type}>{nodeTypeLabel(type)}</option>)}
+              </select>
+            </label>
 
             {/* The graph is an enhancement; the list is always available and is
                 the default on small screens (plan §27.1). */}
@@ -177,7 +155,7 @@ export function OrganisationScreen() {
                           <Badge tone="positive" glyph={false}>Checked</Badge>
                         )}
                       </div>
-                      <p className={cn('mt-1.5 font-medium', !node.verified && 'text-ink-muted')}>{node.name}</p>
+                      <p className={cn('choice-title mt-1.5 font-medium', !node.verified && 'text-ink-muted')}>{node.name}</p>
                       <p className={cn('mt-0.5 line-clamp-2 text-sm text-pretty', node.verified ? 'text-ink-muted' : 'text-ink-faint')}>
                         {(state?.year ?? 1) > 1 && <span className="font-medium">When you arrived: </span>}
                         {node.description}

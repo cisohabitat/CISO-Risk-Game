@@ -53,7 +53,7 @@ for (const theme of ['light', 'dark'] as const) {
         : name === 'Risk'
           ? main.getByRole('tablist', { name: 'Risk workspace' })
         : name === 'Organisation'
-          ? main.getByRole('button', { name: 'Everything', exact: true }).locator('..')
+          ? main.getByRole('combobox', { name: 'System type' }).locator('..')
           : undefined
       await scrollWithWheel(page, filters)
       const controls = main.locator('button:visible:not([disabled]), a[href]:visible, summary:visible')

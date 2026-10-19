@@ -150,14 +150,14 @@ export function InboxScreen() {
                     <Icon name={MESSAGE_KIND[message.type].icon} size={14} />{MESSAGE_KIND[message.type].label}
                   </p>
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className={cn('truncate text-sm', message.read ? 'text-ink-muted' : 'font-semibold')}>
+                    <span className={cn('message-sender min-w-0 text-sm', message.read ? 'text-ink-muted' : 'font-semibold')}>
                       {message.from}
                     </span>
                     {/* A date, as the header gives one. "d0" beside a header
                         reading 2 January read as a mistake. */}
                     <span className="shrink-0 text-xs tabular-nums text-ink-faint">{shortDate(message.day)}</span>
                   </div>
-                  <p className={cn('mt-2 line-clamp-2 leading-snug text-pretty text-ink', !message.read && 'font-semibold')}>
+                  <p className={cn('choice-title mt-2 line-clamp-2 leading-snug text-pretty text-ink', !message.read && 'font-semibold')}>
                     {message.subject}
                   </p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">

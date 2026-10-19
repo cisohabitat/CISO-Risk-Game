@@ -148,6 +148,10 @@ minimum touch height and stays reachable inside its scroll pane. The panes have
 separate frames and a wider gutter; Inbox gives the reader more room on tablets.
 Messages, risks and systems share a consistent selection cue. Message subjects
 lead the reading hierarchy, with quieter metadata and roomier phone spacing.
+Tablet correspondence uses a compact letterhead and sender block; list sender
+names can wrap to two lines. Organisation’s labelled System type dropdown keeps
+filters compact. On stacked layouts, Back to risks / Back to systems restores
+the selected row, and detail openings leave space beneath the fixed toolbar.
 
 During gameplay, root overscroll controls and a targeted touch fallback suppress
 accidental pull-to-refresh at the top of a page. Normal scrolling, dialog readers,

@@ -71,7 +71,7 @@ export function RiskScreen() {
                         'workspace-choice w-full rounded-[--radius-card] border border-line bg-surface p-4 text-left transition-colors',
                       )}
                     >
-                      <h3 className="font-medium text-balance">{risk.title}</h3>
+                      <h3 className="choice-title font-medium text-balance">{risk.title}</h3>
                       <p className="mt-1 line-clamp-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
                       <div className="risk-comparison-grid mt-3">
                         <div><p className="comparison-label">Residual risk</p><Badge tone={bandTone(risk.band)}>{RISK_BAND_LABEL[risk.band]}</Badge></div>
@@ -119,7 +119,7 @@ export function RiskScreen() {
               </ul>
               <div className="split-pane" tabIndex={0} role="region" aria-label="Risk details">
                 {selected ? (
-                  <RiskDetail risk={selected} onClose={() => setUi({ selectedScenarioId: undefined })} />
+                  <RiskDetail risk={selected} />
                 ) : (
                   <Card className="split-detail risk-inspector-prompt bg-surface-2 lg:sticky lg:top-24">
                     <CardBody>

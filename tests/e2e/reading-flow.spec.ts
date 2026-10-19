@@ -115,3 +115,35 @@ test('compact resources stay readable and the final risk tab remains reachable b
   }
   await expectNoHorizontalScroll(page)
 })
+
+test('system filters and stacked detail returns preserve the selected row', async ({ page }) => {
+  await startCampaign(page, 'detail-return')
+  for (const name of ['Risk', 'Organisation']) {
+    await goTo(page, name)
+    if (name === 'Organisation') {
+      if (page.viewportSize()!.width >= 640) await page.getByRole('button', { name: 'List', exact: true }).click()
+      const filter = page.getByRole('combobox', { name: 'System type' })
+      await filter.selectOption('service')
+      const rows = page.getByRole('list', { name: 'Discovered systems' }).getByRole('button')
+      for (const row of await rows.all()) await expect(row).toContainText('Business service')
+      await filter.selectOption('all')
+    }
+    const row = page.locator('.workspace-choice').nth(1)
+    await row.click()
+    await expect(row).toHaveAttribute('aria-current', 'true')
+    if (page.viewportSize()!.width < 1024) {
+      const back = page.getByRole('button', { name: name === 'Risk' ? 'Back to risks' : 'Back to systems', exact: true })
+      await expect(back).toBeInViewport()
+      await expect.poll(async () => {
+        const control = await back.boundingBox()
+        const header = await page.locator('header[data-print="hide"]').boundingBox()
+        return control!.y - (header!.y + header!.height)
+      }).toBeGreaterThanOrEqual(8)
+      await back.click()
+      await expect(row).toBeFocused()
+      await expect(row).toBeInViewport()
+      await expect(row).toHaveAttribute('aria-current', 'true')
+    }
+    await expectNoHorizontalScroll(page)
+  }
+})

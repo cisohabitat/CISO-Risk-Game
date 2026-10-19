@@ -732,3 +732,13 @@ html[data-gameplay-scroll="true"], html[data-gameplay-scroll="true"] body {
   .split-detail h2 { overflow-wrap: anywhere; }
   .split-detail button, .message-reader button { white-space: normal; }
 }
+
+.workspace-choice[aria-current="true"] .choice-title { font-weight: 600; color: var(--ink); }
+.message-sender { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+@media (min-width: 768px) and (max-width: 1279px) {
+  .message-reader .message-letterhead { margin-bottom: 0.75rem; padding-bottom: 0.5rem; }
+  .message-reader .sender-signature { padding-block: 0.75rem; }
+  .message-reader .sender-signature > span[aria-hidden] { width: 3.5rem; height: 3.5rem; border-radius: 0.75rem; }
+  .message-reader .correspondence-body { margin-top: 1rem; }
+}
+@media (max-width: 1023px) { .split-detail { scroll-margin-top: 9rem; } }

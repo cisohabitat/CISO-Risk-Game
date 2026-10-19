@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { detailIsBelowTheList } from '@/lib/layout/stacked'
-import { Badge, Card, CardBody, Fact, SectionHeading } from '@/components/ui/primitives'
+import { detailIsBelowTheList, returnToWorkspaceList } from '@/lib/layout/stacked'
+import { Badge, Button, Card, CardBody, Fact, SectionHeading } from '@/components/ui/primitives'
 import type { DiscoveredNodeView } from '@/store/selectors'
 import { useGameStore } from '@/store/game-store'
 import { controlBandTone, nodeTypeLabel } from '@/lib/formatting/labels'
@@ -43,7 +43,10 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
 
   useEffect(() => {
     heading.current?.closest<HTMLElement>('.split-pane')?.scrollTo?.(0, 0)
-    if (arrived) heading.current?.focus()
+    if (arrived) {
+      heading.current?.focus({ preventScroll: true })
+      if (detailIsBelowTheList()) heading.current?.closest('.split-detail')?.scrollIntoView({ block: 'start' })
+    }
   }, [arrived, shown])
 
   const walk = (id: string) => {
@@ -54,6 +57,7 @@ export function NodeInspector({ node, onSelect }: { node: DiscoveredNodeView; on
   return (
     <Card className="split-detail border-t-2 border-t-accent lg:sticky lg:top-24">
       <CardBody className="space-y-4">
+        <Button variant="secondary" size="sm" className="lg:hidden" onClick={returnToWorkspaceList}>Back to systems</Button>
         <p className="document-kicker text-accent-ink">Selected system</p>
         {trail.length > 1 && (
           <nav aria-label="Your walk through the estate" data-testid="walk-trail">

@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Compacted tablet correspondence and system filters, improved sender-name
+  wrapping and selected titles, and added focused return actions to stacked
+  risk/system details with clearance below the toolbar.
+
 - Clarified Inbox, Risk and Organisation panel boundaries, unified selection
   styling, and improved message hierarchy and narrow-screen reading space.
 - Added a gameplay-only pull-to-refresh guard for downward swipes at the page
