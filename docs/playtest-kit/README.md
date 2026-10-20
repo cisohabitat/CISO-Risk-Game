@@ -8,11 +8,18 @@ is the paperwork around it.
 | File | Use it |
 |---|---|
 | `PROTOCOL.md` | The facilitator's one page: before, during, after, in order |
+| `FOCUSED_REVIEW.md` | Five-player round on stakeholder replies, repeated mail, quiet periods and paired replay; includes evidence gates and a findings table |
 | `CONSENT.md` | Read to the player, or hand over, before they begin |
 | `OBSERVATION.md` | Copy once per session and fill in while they play |
 | `SYNTHESIS.md` | Fill in once, after every eight to twelve sessions |
 
 ## The session log
+
+Start with [the focused review](FOCUSED_REVIEW.md) for the next content priorities.
+It uses five first-time players, seeks two full years, includes physical iPhone
+and iPad sessions and offers two optional paired replays. The broader 8–12-player
+pilot still supplies the main evidence gate. No human results are implied by
+having the protocol ready.
 
 The game can record a session on the player's own device and hand it over as
 a file. Nothing is sent anywhere.

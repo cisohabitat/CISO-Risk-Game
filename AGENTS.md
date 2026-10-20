@@ -12,6 +12,10 @@ changes.
 - Keep the two files consistent with the implementation, CI and hosting
   configuration. Update related documentation when those contracts change.
 - Report only checks actually run and results actually measured.
+- Use `docs/playtest-kit/FOCUSED_REVIEW.md` for the five-player content review.
+  Treat recruitment slots, optional paired replays and human results separately.
+  Record the build, preserve original saves and distinguish prompted tasks from
+  unaided observations. This focused round does not complete the broader pilot.
 - Decision-paper shortcuts must move focus as well as scroll within the paper;
   retain native radio navigation, known effects, resource costs and fixed actions.
 - Inbox Follow-ups shares `messageReturnKind` with the Briefing and includes

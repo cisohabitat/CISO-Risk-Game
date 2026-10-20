@@ -28,6 +28,14 @@ The independent 8–12-player pilot remains outstanding. Use the existing
 `docs/playtest-kit/` protocol and session recording; do not upgrade grades or
 claim engagement/learning gains from browser checks alone.
 
+The owner accepted the next recommendations: investigate stakeholder
+follow-through first if human observations support it, then routine mail, quiet
+periods and replay differences. The smaller
+[five-player focused review](playtest-kit/FOCUSED_REVIEW.md) is ready to run with
+neutral prompts, physical-device slots and two optional paired replays. It is
+preparation for human sessions, not completed evidence or a replacement for the
+broader pilot. Content changes follow the findings table and its retest tasks.
+
 ## What "AAA" means here
 
 Not a studio's budget. For a single-player browser strategy game made by a

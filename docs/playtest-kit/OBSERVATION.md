@@ -13,6 +13,7 @@ Copy once per session. Fill in while they play; tidy afterwards.
 | Situation | the usual opening / after the breach / new money / a tidy inheritance / surprise |
 | Recording | yes / no — file name |
 | Facilitator | |
+| Build commit (About) | |
 
 ## Timeline
 

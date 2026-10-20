@@ -89,6 +89,13 @@ different starting world. These reading and replay changes do not alter balance,
 create new situations or establish that pacing and learning have improved;
 independent human and physical-device playtests are still required.
 
+The next playtest round is ready in
+[`docs/playtest-kit/FOCUSED_REVIEW.md`](docs/playtest-kit/FOCUSED_REVIEW.md): five
+first-time players, stakeholder responses, repeated correspondence, quiet periods
+and optional paired replays. It includes device coverage, neutral questions and
+an evidence-to-change table. Participants and results remain outstanding; this
+preparation does not establish that the game is more engaging.
+
 Long correspondence, evidence and review text use consistent reading widths and
 paragraph spacing. A short neutral highlight marks actual budget/attention or
 recorded milestone changes. Loading a save does not replay it, and reduced-motion
