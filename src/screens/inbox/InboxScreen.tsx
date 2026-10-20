@@ -16,6 +16,7 @@ import { shortDate } from '@/lib/formatting/labels'
 import type { InboxMessage } from '@/game/types'
 import { Icon, type IconName } from '@/components/ui/icons'
 import { messageReturnKind } from '@/store/selectors'
+import { MESSAGE_RETURN_LABEL } from '@/lib/formatting/message-return'
 
 const MESSAGE_KIND: Record<InboxMessage['type'], { label: string; icon: IconName; style: string }> = {
   business: { label: 'Business update', icon: 'briefing', style: 'routine' },
@@ -53,6 +54,7 @@ export function InboxScreen() {
   const lastOpened = useRef<string | undefined>(undefined)
   const [readingRequest, setReadingRequest] = useState(0)
   const [filter, setFilter] = useState<Filter>('all')
+  const [query, setQuery] = useState('')
   const [messageLimit, setMessageLimit] = useState(60)
   // Freeze membership on entry: marking the open message read must not select
   // and mark the next one, recursively consuming the player's whole backlog.
@@ -65,7 +67,10 @@ export function InboxScreen() {
 
   const messages = useMemo(() => {
     if (!state) return []
+    const terms = query.trim().toLocaleLowerCase('en-GB').split(/\s+/).filter(Boolean)
     return state.inbox.messages.filter((message) => {
+      const text = `${message.from}\n${message.subject}\n${message.body}`.toLocaleLowerCase('en-GB')
+      if (!terms.every((term) => text.includes(term))) return false
       switch (filter) {
         case 'unread':
           return unreadIds.includes(message.id)
@@ -81,9 +86,11 @@ export function InboxScreen() {
           return true
       }
     })
-  }, [state, filter, unreadIds, index])
+  }, [state, filter, unreadIds, index, query])
 
-  const selected = messages.find((message) => message.id === selectedId) ?? messages[0]
+  // Searching must not open and mark every transient first result read.
+  const selected = messages.find((message) => message.id === selectedId) ?? (query.trim() ? undefined : messages[0])
+  const returnKind = selected ? messageReturnKind(selected, index) : undefined
   // A selected older message must retain a reachable row after navigating away
   // and back, even though the local pagination starts again at sixty.
   const shownCount = Math.max(messageLimit, messages.findIndex((message) => message.id === selectedId) + 1)
@@ -131,6 +138,21 @@ export function InboxScreen() {
         />
       </div>
 
+      <div className="flex flex-wrap items-end gap-2">
+        <label className="min-w-0 flex-1 text-sm font-medium">
+          Search messages
+          <input type="search" value={query} onChange={(event) => {
+            setQuery(event.target.value)
+            setMessageLimit(60)
+          }} placeholder="Sender, subject or words in the message" className="mt-1 block w-full min-w-0 rounded-lg border border-line bg-surface px-3 py-2.5 text-base font-normal" aria-describedby="message-search-help" />
+        </label>
+        {query && messages.length > 0 && <Button variant="quiet" size="sm" onClick={() => {
+          setQuery('')
+          setMessageLimit(60)
+        }}>Clear search</Button>}
+        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all messages in this filter, including older mail. Choose a result to read it.</p>
+      </div>
+
       {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}
       {filter === 'follow-ups' && <p className="text-sm text-ink-muted">Enquiry results, recorded follow-ups, acceptance updates, stopped work and incident reports, including messages you have read.</p>}
       {messages.length > 0 && <div className="flex flex-wrap items-center justify-between gap-2">
@@ -147,8 +169,8 @@ export function InboxScreen() {
       </div>}
 
       {messages.length === 0 ? (
-        <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"
-          action={<Button variant="secondary" size="sm" onClick={() => filter === 'all' ? useGameStore.getState().setScreen('home') : setFilter('all')}>{filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
+        <EmptyState title="Nothing here" description={query.trim() ? 'No messages match this search in the selected filter.' : 'No messages match this filter yet.'} illustration="inbox"
+          action={<Button variant="secondary" size="sm" onClick={() => query.trim() ? setQuery('') : filter === 'all' ? useGameStore.getState().setScreen('home') : changeFilter('all')}>{query.trim() ? 'Clear search' : filter === 'all' ? 'Back to the briefing' : 'Show all messages'}</Button>} />
       ) : (
         <div className="split-workspace grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
           <ul ref={list} tabIndex={0} className="split-pane divide-y divide-line border-y border-line" aria-label="Messages">
@@ -210,6 +232,7 @@ export function InboxScreen() {
                   <p className="text-xs text-ink-faint md:text-sm">{formatGameDate(selected.day).label}</p>
                 </div>
                 <h2 ref={heading} tabIndex={-1} className="message-subject mt-3 font-display text-2xl leading-tight text-balance">{selected.subject}</h2>
+                {returnKind && <p className="mt-2 text-sm font-medium text-accent">{MESSAGE_RETURN_LABEL[returnKind]}</p>}
                 <div className="sender-signature mt-2 md:mt-4 flex items-center gap-3">
                   {sender && <PersonPortrait key={sender.id} id={sender.id} name={sender.name} size={important ? 'large' : 'small'} />}
                   <div className="min-w-0 text-sm">
@@ -239,6 +262,7 @@ export function InboxScreen() {
               </CardBody>
             </Card>
           )}
+          {!selected && <Card className="split-pane"><CardBody><p className="text-sm text-ink-muted">Choose a message to read the full correspondence.</p></CardBody></Card>}
         </div>
       )}
     </div>

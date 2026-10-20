@@ -360,6 +360,7 @@ export function HomeScreen() {
                         tone={programme.status === 'at-risk' ? 'elevated' : 'accent'}
                       />
                       <p className="mt-1 text-sm text-ink-muted">{statusLabel(programme.status)}</p>
+                      {programme.status === 'paused' && <p className="mt-1 text-sm text-ink-muted">Delivery is paused. Review staffing and blockers in Programmes before resuming.</p>}
                       {programme.status !== 'complete' && programme.milestones.find((milestone) => !milestone.complete) && (
                         <p className="mt-1 text-xs text-ink-faint">Next milestone: {programme.milestones.find((milestone) => !milestone.complete)!.name}</p>
                       )}

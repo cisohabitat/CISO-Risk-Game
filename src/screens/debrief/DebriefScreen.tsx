@@ -3,9 +3,10 @@
  * the output is narrative: the optional performance band never replaces it.
  * Incident reconstructions live here too, alongside the decisions that shaped them.
  */
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, SectionHeading } from '@/components/ui/primitives'
 import { sendYear, shareYear, type SharedYear } from '@/lib/share-year'
+import { seedLinkUrl } from '@/lib/seed-link'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { yearTimeline } from '@/store/selectors'
 import { exportSave } from '@/store/persistence'
@@ -38,6 +39,8 @@ export function DebriefScreen() {
   const pushToast = useGameStore((store) => store.pushToast)
   const [sharing, setSharing] = useState<SharedYear>()
   const [closingEarly, setClosingEarly] = useState(false)
+  const [judgementLimit, setJudgementLimit] = useState(14)
+  const judgementList = useRef<HTMLUListElement>(null)
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
 
   if (!state) return null
@@ -303,8 +306,8 @@ export function DebriefScreen() {
           <SectionHeading><span id="decisions-log">The judgements you made</span></SectionHeading>
           <Card>
             <CardBody>
-              <ul className="space-y-2 text-sm">
-                {state.history.decisionsLog.slice(-14).reverse().map((entry, position) => {
+              <ul ref={judgementList} className="space-y-2 text-sm" aria-label="Recorded judgements">
+                {state.history.decisionsLog.slice(-judgementLimit).reverse().map((entry, position) => {
                   const runtime = state.decisions.decisions[entry.decisionId]
                   const def = runtime ? index.decision.get(runtime.defId) : undefined
                   const option = def?.options.find((candidate) => candidate.id === entry.optionId)
@@ -312,7 +315,7 @@ export function DebriefScreen() {
                     .map((id) => index.rationaleTag.get(id)?.label)
                     .filter(Boolean)
                   return (
-                    <li key={`${entry.decisionId}-${position}`} className="border-b border-line pb-2 last:border-0">
+                    <li key={`${entry.decisionId}-${position}`} tabIndex={-1} className="scroll-mt-36 border-b border-line pb-2 last:border-0">
                       <p>
                         <span className="tabular-nums text-ink-faint">{shortDate(entry.day)}</span>{' '}
                         <span className="font-medium">{def?.title ?? entry.decisionId}</span>
@@ -328,6 +331,15 @@ export function DebriefScreen() {
                   )
                 })}
               </ul>
+              {judgementLimit < state.history.decisionsLog.length && <Button variant="quiet" size="sm" className="mt-3" onClick={() => {
+                const next = judgementLimit
+                setJudgementLimit((limit) => limit + 14)
+                requestAnimationFrame(() => {
+                  const target = judgementList.current?.children[next] as HTMLElement | undefined
+                  target?.scrollIntoView({ block: 'center' })
+                  target?.focus({ preventScroll: true })
+                })
+              }}>Show earlier judgements</Button>}
             </CardBody>
           </Card>
         </section>
@@ -392,6 +404,8 @@ export function DebriefScreen() {
             <h3 className="font-medium">Try a different first year</h3>
             <p className="text-sm text-ink-muted text-pretty">{anotherYear(openingSituation, index.content.situations ?? [])}</p>
             <p className="text-sm text-ink-muted text-pretty">To revisit a judgement, use the same seed, opening situation and mode, and change your approach. Choose a new seed for a different starting world. Before replaying, pick one choice from this review you want to test.</p>
+            <p className="text-sm text-ink-muted text-pretty">Export this campaign to keep a comparison copy. The replay link opens fresh campaign options in a new tab; it does not carry your progress into the replay.</p>
+            <a className="inline-flex min-h-11 items-center text-sm font-medium text-accent underline underline-offset-4" href={seedLinkUrl(window.location.origin, { seed: state.seed, mode: state.difficulty, situation: openingSituation })} target="_blank" rel="noopener noreferrer" data-print="hide">Replay this starting world (new tab)</a>
             <div className="flex flex-wrap gap-2">
               {state.finished && (
                 <Button variant="secondary" onClick={() => void leaveCampaign()}>Start another year</Button>

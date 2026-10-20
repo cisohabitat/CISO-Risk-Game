@@ -6,6 +6,16 @@ changes.
 
 ## Documentation
 
+- Inbox search covers sender, subject and body across the full selected filter,
+  before pagination. Searching must not automatically read transient results;
+  preserve frozen Unread membership and choose results explicitly. Keep search
+  local to the device and use the shared return labels in Briefing and reader.
+- Annual judgements must remain reachable beyond the initial 14 entries. When
+  revealing older entries, focus the first new entry. Replay links preserve the
+  original opening, seed and mode, open fresh options rather than beginning a
+  campaign, and leave the original campaign available for export/comparison.
+- Paused-work guidance must describe the actual lack of delivery progress,
+  without promising that resuming alone clears staffing or blockers.
 - Keep `AGENTS.md` and `README.md` updated in every change set. Record changes
   to contributor workflows here and changes to behaviour, setup, commands,
   limitations and deployment in the README.

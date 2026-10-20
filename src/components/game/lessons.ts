@@ -85,7 +85,7 @@ export const LESSONS: Lesson[] = [
     id: 'lesson-hypothesis',
     teaches: 'hypothesis',
     title: 'Test the proposition',
-    body: 'A hypothesis gives you something to gather evidence against. Some of what you find will contradict it, and that is the point.',
+    body: 'A hypothesis is an explanation you have not confirmed. Commission an enquiry to test it; some findings may contradict it. Review those findings before raising it as a risk.',
     // On forming one, whatever else is already open: the old trigger also
     // required no raised scenario, so a player who raised one first could
     // never be taught what a hypothesis is for.

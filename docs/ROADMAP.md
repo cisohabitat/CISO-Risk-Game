@@ -42,6 +42,17 @@ lost at the year boundary and clarifies existing work on the Briefing. Repeated
 mail and long decision-arrival gaps are recorded as human-test candidates;
 different branch/review records are not evidence of engagement.
 
+The owner subsequently authorised the B+-and-below fixes. The next implementation
+pass adds full-filter Inbox search without reading transient results, consistent
+return labels in the message reader, plain-language hypothesis guidance and
+paused-delivery guidance. Annual judgements beyond the latest 14 are now
+reachable, and a direct link opens the original first-year seed/mode/situation
+in fresh campaign options. These improve retrieval and comparison without
+suppressing recurring reports, changing simulation timing or adding mechanics.
+The priority is now physical-device usability, clarity, stakeholder follow-through,
+pacing, then replay. The five-player observation targets and independent pilot
+remain unmet until actual sessions provide evidence; grades remain provisional.
+
 ## What "AAA" means here
 
 Not a studio's budget. For a single-player browser strategy game made by a

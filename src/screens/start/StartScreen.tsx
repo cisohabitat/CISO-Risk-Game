@@ -304,12 +304,13 @@ export function StartScreen() {
             */}
             <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recording || Boolean(link.seed) || undefined}>
               <summary className="cursor-pointer text-sm font-medium">Replay settings</summary>
-              <label className="mt-3 block">
-                <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+              <div className="mt-3">
+                <label htmlFor="campaign-seed" className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
                   Campaign seed
-                </span>
+                </label>
                 <div className="flex flex-wrap gap-2">
                   <input
+                    id="campaign-seed"
                     value={seed}
                     onChange={(event) => setSeed(event.target.value)}
                     className="min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 py-2.5 text-base"
@@ -322,7 +323,7 @@ export function StartScreen() {
                   controls really are, and what the executives are like. The same seed always produces the same Nexora.
                   {' '}Keep the seed, opening situation and mode the same to explore a different strategy. Change the seed for a different starting world; your decisions still shape how the year unfolds.
                 </p>
-              </label>
+              </div>
               {/* For playtests (docs/PLAYTEST.md). Open by default when a
                   facilitator's link turned it on, so the player can see it. */}
               <label className="mt-4 flex cursor-pointer items-start gap-3">

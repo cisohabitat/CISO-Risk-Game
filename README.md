@@ -78,6 +78,18 @@ a row changes group. An at-risk badge alone does not mean delivery is blocked.
 
 Inbox **Follow-ups** brings together recorded enquiry results, consequences,
 acceptance updates, stopped work and incident reports, including read messages.
+**Search messages** searches sender, subject and body across the entire selected
+filter, including mail beyond the first page. Searching does not read results
+automatically; choose a message to open it. The reader uses the same return
+labels as the Briefing. Recurring correspondence stays available in full.
+
+The Briefing explains that paused programmes make no delivery progress and
+points to staffing and blockers before resuming. The annual review's **Show
+earlier judgements** reveals records beyond the latest 14, with keyboard focus
+on the first newly shown entry. **Replay this starting world (new tab)** opens
+fresh campaign options with the same seed, mode and original opening situation;
+export the original campaign for comparison. These changes do not establish
+human engagement gains or physical iPhone/iPad scrolling validation.
 It uses the same classification as the Briefing. **Show older messages** reveals
 another batch beyond the initial 60 and focuses the first newly revealed row;
 older selections remain reachable when returning to Inbox.

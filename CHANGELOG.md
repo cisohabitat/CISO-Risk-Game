@@ -11,6 +11,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Search Inbox correspondence across sender, subject, body and older mail,
+  without automatically reading search results. Follow-up labels now match the
+  Briefing, and paused programmes explain the next place to review delivery.
+- Reveal earlier annual judgements beyond the latest 14, and open matching
+  first-year replay settings directly while retaining the original campaign.
+- Explain a hypothesis in plain language with its enquiry-to-risk next step.
 - Preserved the guard facts for replies carried across a year boundary, without
   restoring old budget decisions into the new year's global flags.
 - Briefing now names programme status and next milestones, wraps enquiry names

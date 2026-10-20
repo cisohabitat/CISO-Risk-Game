@@ -7,15 +7,7 @@ import { Button } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { cameBack } from '@/store/selectors'
 import { shortDate } from '@/lib/formatting/labels'
-
-const KIND_LABEL: Record<ReturnType<typeof cameBack>[number]['kind'], string> = {
-  result: 'Enquiry returned',
-  consequence: 'Follow-up to a choice',
-  lapse: 'Decided for you',
-  acceptance: 'Acceptance ran out',
-  stopped: 'Work pulled back',
-  incident: 'Incident update',
-}
+import { MESSAGE_RETURN_LABEL } from '@/lib/formatting/message-return'
 
 export function CameBack() {
   const state = useGameStore((store) => store.state)
@@ -37,7 +29,7 @@ export function CameBack() {
             <div className="min-w-0 flex-1">
               <p className="line-clamp-2 text-sm text-pretty">{item.subject}</p>
               <p className="text-xs text-ink-faint">
-                {KIND_LABEL[item.kind]} · {item.from} · {shortDate(item.day)}
+                {MESSAGE_RETURN_LABEL[item.kind]} · {item.from} · {shortDate(item.day)}
               </p>
             </div>
             <Button
