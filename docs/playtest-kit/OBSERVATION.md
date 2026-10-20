@@ -30,6 +30,27 @@ From `pnpm session <file>` after the session; fill the "said" column during it.
 | End of Q3 | | | |
 | Year ended (or stopped) | | | |
 
+## Review-roadmap checks
+
+Observe the first decision and enquiry without coaching. Ask the player to
+explain the trade-off afterwards; record any facilitator help separately.
+
+| Check | Observed / not attempted | Assistance or exact words |
+|---|---|---|
+| Opening decision completed unaided | | |
+| First enquiry commissioned unaided | | |
+| Can explain what they traded off | | |
+| Can find an enquiry result and say what it establishes | | |
+| Phone/tablet: reaches options, reasons and commit without trapped scrolling | | |
+| Phone/tablet: returns to the selected Inbox row and reaches older mail | | |
+| Large text / keyboard: no obscured action or lost reading position | | |
+
+For pacing, record the specific game day and message when they begin skipping
+routine mail; ask whether the quiet stretch feels purposeful or empty. For a
+returning player, record the two runs' seed, situation and mode, which choices
+changed, and the differences they noticed. Do not count a willingness to replay
+as evidence that a second run actually feels different.
+
 ## Questions they asked aloud
 
 Day — question, verbatim. Do not answer them.

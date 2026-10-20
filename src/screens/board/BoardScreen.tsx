@@ -214,6 +214,7 @@ export function BoardScreen() {
             <div><dt className="text-xs text-ink-faint">Prepared</dt><dd className="mt-1 font-medium">{formatGameDate(state.currentDay).label}</dd></div>
             <div className="col-span-2 sm:col-span-1"><dt className="text-xs text-ink-faint">Submit by</dt><dd className="mt-1 font-medium">{formatGameDate(((pendingQuarter ?? 0) + 1) * DAYS_PER_QUARTER - 1).label}</dd></div>
           </dl>
+          <p className="text-sm text-ink-muted">Choose the agenda, programme recommendations and uncertainties you will disclose. Submitting records the paper and returns the committee’s response; recommendations do not start programmes automatically.</p>
           {availableTopics.length === 0 ? (
             <EmptyState
               title="No agenda topics are eligible yet"

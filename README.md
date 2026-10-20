@@ -38,6 +38,11 @@ judgement log, sharing and printable review remain available.
 
 Decision descriptions scroll with the paper while its title, Close button and
 footer stay in view. This leaves more phone space for options and reasons.
+Decision papers show the option count and available attention, with **Compare
+options** and **Your reasons** shortcuts that move keyboard focus to the section.
+Enquiry commissioning explains the cost, expected duration and where findings
+arrive. Board papers explain the submission flow and distinguish recommendations
+from actually starting a programme.
 Phone incidents put containment and recovery side by side, with affected services
 below them, bringing response controls closer without hiding any status.
 
@@ -70,6 +75,19 @@ selected message. Unread membership remains stable while you read. Risk cards
 align residual risk, confidence, owner and next review. Programme lists separate
 Running, Paused, Blocked and Completed work, with controls retaining focus when
 a row changes group. An at-risk badge alone does not mean delivery is blocked.
+
+Inbox **Follow-ups** brings together recorded enquiry results, consequences,
+acceptance updates, stopped work and incident reports, including read messages.
+It uses the same classification as the Briefing. **Show older messages** reveals
+another batch beyond the initial 60 and focuses the first newly revealed row;
+older selections remain reachable when returning to Inbox.
+
+The annual review separates continuing with the organisation you built from
+trying a different first year. Replay settings explain how to compare approaches:
+keep the seed, opening situation and mode fixed, or choose a new seed for a
+different starting world. These reading and replay changes do not alter balance,
+create new situations or establish that pacing and learning have improved;
+independent human and physical-device playtests are still required.
 
 Long correspondence, evidence and review text use consistent reading widths and
 paragraph spacing. A short neutral highlight marks actual budget/attention or

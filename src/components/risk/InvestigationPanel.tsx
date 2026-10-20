@@ -100,6 +100,7 @@ export function InvestigationPanel() {
 
       <section aria-labelledby="available-work">
         <SectionHeading><span id="available-work">Lines of enquiry</span></SectionHeading>
+        <p className="mb-4 text-sm text-ink-muted">Commission a check to gather evidence before deciding what to do. Choose a leader, allow time for the work, then read the result in your Inbox and assess it in Risk.</p>
         {available.length === 0 ? (
           <EmptyState
             title="Nothing left to commission"
@@ -209,6 +210,7 @@ export function InvestigationPanel() {
           onClose={() => setChosen(undefined)}
           title={`Commission: ${chosen.name}`}
           description="Who leads this changes both how long it takes and how much comes back."
+          descriptionInBody
           footer={
             <>
               <Button variant="quiet" onClick={() => setChosen(undefined)}>Cancel</Button>
@@ -216,6 +218,7 @@ export function InvestigationPanel() {
             </>
           }
         >
+          <p className="mb-4 rounded-lg border border-line p-3 text-sm text-ink-muted">This uses {chosen.focusCost} attention{chosen.budgetCost > 0 ? ` and ${money(chosen.budgetCost)}` : ''}. Allow about {chosen.durationDays} days; workload and delegation can affect the result. Findings arrive in your Inbox.</p>
           <fieldset className="space-y-2">
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Delegate to</legend>
             {index.content.leaders.map((leader) => {

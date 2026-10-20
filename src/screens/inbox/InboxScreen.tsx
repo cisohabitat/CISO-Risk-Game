@@ -15,6 +15,7 @@ import { formatGameDate } from '@/game/time'
 import { shortDate } from '@/lib/formatting/labels'
 import type { InboxMessage } from '@/game/types'
 import { Icon, type IconName } from '@/components/ui/icons'
+import { messageReturnKind } from '@/store/selectors'
 
 const MESSAGE_KIND: Record<InboxMessage['type'], { label: string; icon: IconName; style: string }> = {
   business: { label: 'Business update', icon: 'briefing', style: 'routine' },
@@ -33,6 +34,7 @@ const FILTERS = [
   { id: 'all', label: 'All' },
   { id: 'unread', label: 'Unread' },
   { id: 'decisions', label: 'Needs a decision' },
+  { id: 'follow-ups', label: 'Follow-ups' },
   { id: 'threat', label: 'Threat' },
   { id: 'business', label: 'Business' },
 ] as const
@@ -51,12 +53,14 @@ export function InboxScreen() {
   const lastOpened = useRef<string | undefined>(undefined)
   const [readingRequest, setReadingRequest] = useState(0)
   const [filter, setFilter] = useState<Filter>('all')
+  const [messageLimit, setMessageLimit] = useState(60)
   // Freeze membership on entry: marking the open message read must not select
   // and mark the next one, recursively consuming the player's whole backlog.
   const [unreadIds, setUnreadIds] = useState<string[]>([])
   const changeFilter = (next: Filter) => {
     if (next === 'unread') setUnreadIds(state?.inbox.messages.filter((message) => !message.read).map((message) => message.id) ?? [])
     setFilter(next)
+    setMessageLimit(60)
   }
 
   const messages = useMemo(() => {
@@ -67,6 +71,8 @@ export function InboxScreen() {
           return unreadIds.includes(message.id)
         case 'decisions':
           return message.decisionId !== undefined && state.decisions.openIds.includes(message.decisionId)
+        case 'follow-ups':
+          return messageReturnKind(message, index) !== undefined
         case 'threat':
           return message.type === 'threat' || message.type === 'incident'
         case 'business':
@@ -75,9 +81,12 @@ export function InboxScreen() {
           return true
       }
     })
-  }, [state, filter, unreadIds])
+  }, [state, filter, unreadIds, index])
 
   const selected = messages.find((message) => message.id === selectedId) ?? messages[0]
+  // A selected older message must retain a reachable row after navigating away
+  // and back, even though the local pagination starts again at sixty.
+  const shownCount = Math.max(messageLimit, messages.findIndex((message) => message.id === selectedId) + 1)
   const sender = selected && [...index.content.stakeholders, ...index.content.leaders].find(
     (person) => selected.from === person.name || selected.from.startsWith(`${person.name},`),
   )
@@ -123,6 +132,19 @@ export function InboxScreen() {
       </div>
 
       {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}
+      {filter === 'follow-ups' && <p className="text-sm text-ink-muted">Enquiry results, recorded follow-ups, acceptance updates, stopped work and incident reports, including messages you have read.</p>}
+      {messages.length > 0 && <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs text-ink-faint" role="status">Showing {Math.min(shownCount, messages.length)} of {messages.length} messages</p>
+        {shownCount < messages.length && <Button variant="quiet" size="sm" onClick={() => {
+          const next = messages[shownCount]
+          setMessageLimit(shownCount + 60)
+          requestAnimationFrame(() => {
+            const target = Array.from(list.current?.querySelectorAll<HTMLButtonElement>('button[data-message-id]') ?? []).find((button) => button.dataset.messageId === next?.id)
+            target?.scrollIntoView({ block: 'center' })
+            target?.focus({ preventScroll: true })
+          })
+        }}>Show older messages</Button>}
+      </div>}
 
       {messages.length === 0 ? (
         <EmptyState title="Nothing here" description="No messages match this filter yet." illustration="inbox"
@@ -130,7 +152,7 @@ export function InboxScreen() {
       ) : (
         <div className="split-workspace grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
           <ul ref={list} tabIndex={0} className="split-pane divide-y divide-line border-y border-line" aria-label="Messages">
-            {messages.slice(0, 60).map((message) => (
+            {messages.slice(0, shownCount).map((message) => (
               <li key={message.id}>
                 <button
                   type="button"

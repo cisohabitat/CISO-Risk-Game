@@ -19,9 +19,17 @@ From the observation sheets and `pnpm session`, median and range.
 | Finished Q1 without opening the guide | _ of _ | _ of _ | _ of _ |
 | Minutes to first decision | | | |
 | Minutes to first enquiry | | | |
+| Opening decision and enquiry unaided, with explained trade-off | _ of _ | _ of _ | _ of _ |
 | Day of first skip ahead without reading | | | |
 | Could name the biggest risk and why | _ of _ | _ of _ | _ of _ |
 | Said they learned something (verbatim below) | _ of _ | _ of _ | _ of _ |
+
+For the review roadmap, report whether at least four of five new players
+completed the opening decision and first enquiry unaided and could explain the
+trade-off. Count observed attempts, not missing sessions. Summarise physical
+phone/tablet scrolling and large-text checks separately from browser automation.
+List the repeated messages/quiet stretches players identified and the concrete
+differences observed by returning players before proposing pacing or content work.
 
 ## Stumble list
 

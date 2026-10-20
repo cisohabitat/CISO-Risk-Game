@@ -36,6 +36,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
   )
   const selected = decision.options.find((option) => option.id === optionId)
   const needsRationale = decision.requiresRationale && tags.length === 0
+  const moveTo = (id: string) => {
+    const target = document.getElementById(id)
+    target?.scrollIntoView({ block: 'start' })
+    target?.focus({ preventScroll: true })
+  }
 
   const submit = () => {
     if (!optionId) return
@@ -72,7 +77,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       descriptionInBody
       footer={
         <>
-          <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}` : 'Choose an option below'}</span>
+          <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}` : 'Choose an option to continue'}</span>
           <Button variant="quiet" onClick={onClose}>
             Not yet
           </Button>
@@ -100,6 +105,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
               : `Due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}.`}
           </p>
         )}
+        <nav aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
+          <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available</span>
+          <Button variant="quiet" size="sm" onClick={() => moveTo('decision-options')}>Compare options</Button>
+          <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>
+        </nav>
         <section aria-labelledby="decision-context" className="decision-context">
           <h3 id="decision-context" className="document-kicker mb-2"><span aria-hidden="true" className="paper-number">01</span>The situation</h3>
           <p className="text-sm leading-relaxed text-ink-muted text-pretty">
@@ -113,7 +123,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
 
 
         <fieldset className="space-y-3">
-          <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+          <legend id="decision-options" tabIndex={-1} className="mb-2 scroll-mt-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
             <span aria-hidden="true" className="paper-number">02</span>
             Your options
           </legend>
@@ -187,7 +197,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         </fieldset>
 
         <section aria-labelledby="decision-why" className="border-t-2 border-line-strong pt-5">
-          <p id="decision-why" className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
+          <p id="decision-why" tabIndex={-1} className="mb-2 scroll-mt-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
             <span aria-hidden="true" className="paper-number">03</span>
             Why? {decision.requiresRationale ? '(at least one reason)' : '(optional)'}
           </p>

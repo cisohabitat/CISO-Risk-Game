@@ -320,6 +320,7 @@ export function StartScreen() {
                 <p id="seed-help" className="mt-2 text-sm text-ink-muted text-pretty">
                   The seed fixes this world's hidden configuration: which awkward dependencies exist, how good the
                   controls really are, and what the executives are like. The same seed always produces the same Nexora.
+                  {' '}Keep the seed, opening situation and mode the same to explore a different strategy. Change the seed for a different starting world; your decisions still shape how the year unfolds.
                 </p>
               </label>
               {/* For playtests (docs/PLAYTEST.md). Open by default when a

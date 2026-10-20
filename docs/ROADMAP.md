@@ -11,6 +11,23 @@ game is checked by a harness or by a person, not asserted. Where a phase
 depends on something only people can tell us, it says so, and it does not
 start until they have.
 
+## 20 October review follow-through
+
+The owner authorised the B-and-below review roadmap: clarity, mobile reading,
+pacing and replay, in that order. This pass addresses the implementation work
+without changing simulation balance or adding authored filler:
+
+| Priority | Implemented | Still needs evidence |
+|---|---|---|
+| Clarity | Focused shortcuts to decision options/reasons, available attention, corrected footer copy, enquiry/result and board-submission guidance | Four of five newcomers complete the opening and commission an enquiry unaided, then explain the trade-off |
+| Mobile reading | Reach older Inbox messages beyond the initial 60, focus the newly revealed batch, preserve reachable retained selections | Physical iPhone/iPad scrolling, large-text and keyboard checks; browser emulation is not device validation |
+| Pacing | Follow-ups view exposes recorded results/consequences and incident updates alongside read messages | Full-year human observations of skipped mail, quiet weeks and repetition before consolidating or adding content |
+| Replay | Separate continuing Nexora from a fresh first year; explain fixed-setup strategy comparisons and different starting seeds | Returning players identify meaningful differences; deeper authored reactions and another organisation remain evidence-gated |
+
+The independent 8–12-player pilot remains outstanding. Use the existing
+`docs/playtest-kit/` protocol and session recording; do not upgrade grades or
+claim engagement/learning gains from browser checks alone.
+
 ## What "AAA" means here
 
 Not a studio's budget. For a single-player browser strategy game made by a

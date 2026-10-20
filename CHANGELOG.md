@@ -11,6 +11,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Added focused shortcuts through long decision papers and clearer enquiry and
+  board-submission guidance. Corrected the decision footer’s directional copy.
+- Added an Inbox Follow-ups view and access to correspondence older than the
+  first 60 messages, preserving read state and retained selections.
+- Distinguished carrying Nexora into another year from replaying a fresh
+  campaign, with guidance for comparing approaches under the same setup.
+
 - Validate imported campaigns before activation, reject unsafe or oversized save
   files, and preserve the current campaign when an import fails.
 - Restrict the local AI playtest servers, patch a build dependency advisory, and

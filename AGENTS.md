@@ -12,6 +12,16 @@ changes.
 - Keep the two files consistent with the implementation, CI and hosting
   configuration. Update related documentation when those contracts change.
 - Report only checks actually run and results actually measured.
+- Decision-paper shortcuts must move focus as well as scroll within the paper;
+  retain native radio navigation, known effects, resource costs and fixed actions.
+- Inbox Follow-ups shares `messageReturnKind` with the Briefing and includes
+  read messages. Do not classify consequences by additional wording guesses.
+  Older mail must remain reachable beyond the initial 60 rows; revealing a batch
+  focuses its first row without marking it read. Retained selections must have
+  a reachable row after navigation. Preserve frozen Unread membership.
+- Replay guidance distinguishes continuing the existing organisation from a fresh
+  campaign. A strategy comparison needs the same seed, situation and mode;
+  describe variation without promising different outcomes or exposing hidden state.
 - Unread-filter membership must stay stable while messages are opened; never
   let marking one read recursively select and consume the next unread message.
 - Incident warning links require recorded signal provenance. Do not infer an

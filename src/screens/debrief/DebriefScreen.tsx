@@ -378,18 +378,21 @@ export function DebriefScreen() {
         <Card>
           <CardBody className="space-y-3">
             {state.finished && (
-              <p className="text-sm text-pretty">
-                Your {yearWord((state.year ?? 1) + 1)} year begins where this one ends: the same Nexora, the same
-                people, what you built and what you left, and the risks you chose to carry.
-              </p>
-            )}
-            <p className="text-sm text-ink-muted text-pretty">{anotherYear(openingSituation, index.content.situations ?? [])}</p>
-            <div className="flex flex-wrap gap-2">
-              {state.finished && (
-                <Button variant="primary" onClick={() => void beginNextYear()}>
+              <div className="border-b border-line pb-4">
+                <h3 className="font-medium">Continue with what you built</h3>
+                <p className="mt-2 text-sm text-pretty">
+                  Your {yearWord((state.year ?? 1) + 1)} year begins where this one ends: the same Nexora, the same
+                  people, what you built and what you left, and the risks you chose to carry.
+                </p>
+                <Button className="mt-3" variant="primary" onClick={() => void beginNextYear()}>
                   Begin your {yearWord((state.year ?? 1) + 1)} year
                 </Button>
-              )}
+              </div>
+            )}
+            <h3 className="font-medium">Try a different first year</h3>
+            <p className="text-sm text-ink-muted text-pretty">{anotherYear(openingSituation, index.content.situations ?? [])}</p>
+            <p className="text-sm text-ink-muted text-pretty">To revisit a judgement, use the same seed, opening situation and mode, and change your approach. Choose a new seed for a different starting world. Before replaying, pick one choice from this review you want to test.</p>
+            <div className="flex flex-wrap gap-2">
               {state.finished && (
                 <Button variant="secondary" onClick={() => void leaveCampaign()}>Start another year</Button>
               )}

@@ -1,0 +1,63 @@
+import { expect, test } from '@playwright/test'
+import type { GameState } from '../../src/game/types'
+import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
+import { openPreparedCampaign, prepareCampaign } from './prepared'
+
+test('decision shortcuts reach options and reasons without losing the fixed actions', async ({ page }) => {
+  await startCampaign(page, 'roadmap-reading')
+  await page.getByRole('button', { name: /^Decide: / }).first().click()
+  const paper = page.getByRole('dialog')
+  await expect(paper).toContainText('Choose an option to continue')
+  await paper.getByRole('button', { name: 'Compare options', exact: true }).click()
+  await expect(paper.locator('#decision-options')).toBeFocused()
+  await expect(paper.locator('#decision-options')).toBeInViewport()
+  await paper.getByRole('radio').first().check()
+  await paper.getByRole('button', { name: 'Your reasons', exact: true }).click()
+  await expect(paper.locator('#decision-why')).toBeFocused()
+  await expect(paper.locator('#decision-why')).toBeInViewport()
+  await expect(paper.getByRole('button', { name: 'Commit to this', exact: true })).toBeInViewport()
+  const body = paper.locator('.scroll-area')
+  await body.hover()
+  await page.mouse.wheel(0, 1500)
+  await expect(paper.getByRole('button', { name: 'Close', exact: true })).toBeInViewport()
+  await expect(paper.getByRole('button', { name: 'Commit to this', exact: true })).toBeInViewport()
+  await expectNoHorizontalScroll(page)
+})
+
+test('older correspondence stays reachable and Follow-ups retains read messages', async ({ page }) => {
+  const save = prepareCampaign('roadmap-mail', 'year-end') as { state: GameState }
+  save.state.inbox.messages = Array.from({ length: 130 }, (_, i) => ({
+    id: `roadmap-mail-${i}`, day: 130 - i, from: 'Sentinel SOC',
+    subject: i === 5 || i === 120 ? `Completed: Review ${i}` : `Routine review ${i}`,
+    body: 'The review is available.\n\nRead the findings before deciding your next step.',
+    type: 'business', priority: 'routine', read: false, pinned: false, relatedNodeIds: [],
+  }))
+  await openPreparedCampaign(page, save)
+  await expect(page.getByText('How the year is read', { exact: true })).toBeVisible()
+  await goTo(page, 'Inbox')
+  const list = page.getByRole('list', { name: 'Messages' })
+  await expect(list.getByRole('button')).toHaveCount(60)
+  await page.getByRole('button', { name: 'Show older messages', exact: true }).click()
+  await expect(list.getByRole('button')).toHaveCount(120)
+  await expect(list.locator('[data-message-id="roadmap-mail-60"]')).toBeFocused()
+  await page.getByRole('button', { name: 'Show older messages', exact: true }).click()
+  await expect(list.getByRole('button')).toHaveCount(130)
+  await expect(page.getByRole('button', { name: 'Show older messages', exact: true })).toHaveCount(0)
+  const oldest = list.locator('[data-message-id="roadmap-mail-129"]')
+  await oldest.click()
+  await expect(page.getByRole('heading', { name: 'Routine review 129', exact: true })).toBeVisible()
+  await goTo(page, 'Risk')
+  await goTo(page, 'Inbox')
+  await expect(oldest).toHaveAttribute('aria-current', 'true')
+  if (page.viewportSize()!.width < 768) {
+    await page.getByRole('button', { name: 'Back to messages', exact: true }).first().click()
+    await expect(oldest).toBeFocused()
+    await expect(oldest).toBeInViewport()
+  }
+  await page.getByRole('button', { name: 'Follow-ups', exact: true }).click()
+  await expect(list.getByRole('button')).toHaveCount(2)
+  await list.getByRole('button').last().click()
+  await expect(page.getByRole('heading', { name: 'Completed: Review 120', exact: true })).toBeVisible()
+  await expect(list.getByRole('button')).toHaveCount(2)
+  await expectNoHorizontalScroll(page)
+})

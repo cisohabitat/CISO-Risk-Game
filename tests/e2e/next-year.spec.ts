@@ -13,6 +13,8 @@ test('a finished year leads to a second year that remembers it', async ({ page }
   await goTo(page, 'Your year')
   await expect(page.getByRole('heading', { name: 'How the year is read' })).toBeVisible()
   await expect(page.getByText('Your second year begins where this one ends')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Continue with what you built', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Try a different first year', exact: true })).toBeVisible()
 
   await page.getByRole('button', { name: 'Begin your second year' }).click()
   const header = page.locator('header[data-print="hide"]')
