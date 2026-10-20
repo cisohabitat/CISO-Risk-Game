@@ -10,7 +10,8 @@ import { hiringUnderWay, teamStrain } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
 import { carriedAcceptances } from '../risk/carried'
 
-export function evaluateCondition(state: GameState, index: ContentIndex, condition: Condition): boolean {
+/** A carried reply can judge governance against its originating year's papers. */
+export function evaluateCondition(state: GameState, index: ContentIndex, condition: Condition, sourcePaperCount?: number): boolean {
   switch (condition.kind) {
     case 'always':
       return true
@@ -152,7 +153,7 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     case 'evidence.countAtLeast':
       return state.evidence.order.length >= condition.value
     case 'review.papersWrittenAtLeast':
-      return state.reviews.quarters.filter((quarter) => quarter.completed).length >= condition.value
+      return (sourcePaperCount ?? state.reviews.quarters.filter((quarter) => quarter.completed).length) >= condition.value
     case 'risk.scenarioStatus':
       return state.risks.scenarios[condition.scenarioId]?.status === condition.status
     case 'risk.openCountAtLeast':
@@ -211,11 +212,11 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
     case 'event.notFired':
       return !state.events.firedEventIds.includes(condition.eventId)
     case 'not':
-      return !evaluateCondition(state, index, condition.condition)
+      return !evaluateCondition(state, index, condition.condition, sourcePaperCount)
     case 'all':
-      return condition.conditions.every((c) => evaluateCondition(state, index, c))
+      return condition.conditions.every((c) => evaluateCondition(state, index, c, sourcePaperCount))
     case 'any':
-      return condition.conditions.some((c) => evaluateCondition(state, index, c))
+      return condition.conditions.some((c) => evaluateCondition(state, index, c, sourcePaperCount))
     default: {
       const exhaustive: never = condition
       void exhaustive
@@ -224,9 +225,9 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
   }
 }
 
-export function evaluateAll(state: GameState, index: ContentIndex, conditions: Condition[]): boolean {
+export function evaluateAll(state: GameState, index: ContentIndex, conditions: Condition[], sourcePaperCount?: number): boolean {
   for (const condition of conditions) {
-    if (!evaluateCondition(state, index, condition)) return false
+    if (!evaluateCondition(state, index, condition, sourcePaperCount)) return false
   }
   return true
 }

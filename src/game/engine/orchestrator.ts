@@ -90,7 +90,6 @@ export function newGame(index: ContentIndex, options: NewGameOptions): GameState
   return state
 }
 
-export { beginNextYear } from './next-year'
 
 /** What each kind of intervention costs of the player's week. Read by the screens that offer them. */
 export const FOCUS_COSTS = {

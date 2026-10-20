@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { applyAction, beginNextYear, newGame, runDays } from '@/game/engine/orchestrator'
-import { createNextYear, nextYearBudget, YEAR_SHIFT } from '@/game/engine/next-year'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
+import { beginNextYear, createNextYear, nextYearBudget, YEAR_SHIFT } from '@/game/engine/next-year'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { checkInvariants } from '@/game/engine/invariants'
 import { buildAnnualReview, finishYear, programmesThisYear } from '@/game/debrief/review'

@@ -13,7 +13,7 @@ import { PatternNotice } from '@/components/risk/PatternNotice'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
-import { attentionLeft, bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge } from '@/lib/formatting/labels'
+import { attentionLeft, bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge, statusLabel } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
 export function HomeScreen() {
@@ -341,7 +341,7 @@ export function HomeScreen() {
             {programmes.length === 0 ? (
               <EmptyState
                 title="No programme has started"
-                description="Controls drift downwards on their own. Nothing improves unless you fund it and staff it."
+                description="Programmes build lasting capability over months and need funding and people. Individual decisions can also address specific weaknesses."
                 action={
                   <Button variant="secondary" size="sm" onClick={() => setScreen('programmes')}>
                     Review programmes
@@ -359,6 +359,10 @@ export function HomeScreen() {
                         valueLabel={`${programme.progressPercent}% · ${programme.confidenceLabel.toLowerCase()} confidence`}
                         tone={programme.status === 'at-risk' ? 'elevated' : 'accent'}
                       />
+                      <p className="mt-1 text-sm text-ink-muted">{statusLabel(programme.status)}</p>
+                      {programme.status !== 'complete' && programme.milestones.find((milestone) => !milestone.complete) && (
+                        <p className="mt-1 text-xs text-ink-faint">Next milestone: {programme.milestones.find((milestone) => !milestone.complete)!.name}</p>
+                      )}
                       {programme.blockers.length > 0 && (
                         <p className="mt-1 text-xs text-band-elevated">
                           Blocked: {programme.blockers.map((blocker) => blocker.name).join(', ')}
@@ -399,9 +403,9 @@ export function HomeScreen() {
                       .slice(0, 3)
                       .map((assignment) => (
                         <li key={assignment.id} className="flex justify-between gap-3">
-                          <span className="truncate">{assignment.title}</span>
+                          <span className="min-w-0 text-pretty">{assignment.title}</span>
                           <span className="shrink-0 text-ink-faint tabular-nums">
-                            {Math.max(0, assignment.dueDay - state.currentDay)}d
+                            {assignment.dueDay <= state.currentDay ? 'Due now' : `Around ${shortDate(assignment.dueDay)}`}
                           </span>
                         </li>
                       ))}

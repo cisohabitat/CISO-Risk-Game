@@ -322,7 +322,14 @@ export interface EventState {
   /** How many times each event has fired; picks a recurring message's wording. */
   firedCount?: Record<string, number>
   suppressedEventIds: string[]
-  scheduled: { eventId: string; day: number }[]
+  scheduled: {
+    eventId: string
+    day: number
+    /** Only the story flags needed to validate a reply carried across years. */
+    carriedFlags?: Record<string, number | string | boolean>
+    /** Original year for historical governance checks on a carried reply. */
+    sourceYear?: number
+  }[]
   lastFiredDayByTag: Record<string, number>
   dailyFiredCount: number
 }

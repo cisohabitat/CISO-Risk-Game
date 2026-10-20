@@ -10,7 +10,8 @@
  */
 import { rationaleFor } from './play-helpers'
 import { buildContentIndex } from '../src/game/engine/content-index'
-import { newGame, runDays, applyAction, beginNextYear } from '../src/game/engine/orchestrator'
+import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
+import { beginNextYear } from '../src/game/engine/next-year'
 import { finishYear } from '../src/game/debrief/review'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { loadPack, packArgument } from './content/pack.ts'

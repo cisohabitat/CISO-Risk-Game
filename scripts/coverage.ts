@@ -8,7 +8,8 @@
  * content only a later year can reach is counted.
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
-import { newGame, runDays, applyAction, beginNextYear } from '../src/game/engine/orchestrator'
+import { newGame, runDays, applyAction } from '../src/game/engine/orchestrator'
+import { beginNextYear } from '../src/game/engine/next-year'
 import { finishYear } from '../src/game/debrief/review'
 import { loadPack, packArgument } from './content/pack.ts'
 import { validatedCampaign } from '../src/lib/content/validate-content'

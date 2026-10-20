@@ -3,6 +3,26 @@ import type { GameState } from '../../src/game/types'
 import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
+test('the Briefing names paused work, its next milestone and expected enquiry returns', async ({ page }) => {
+  await startCampaign(page, 'quiet-work-visibility')
+  await goTo(page, 'Programmes')
+  await page.getByRole('button', { name: /^Start this/ }).first().click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Start the programme', exact: true }).click()
+  await page.locator('.programme-row').first().getByRole('button', { name: 'Pause', exact: true }).click()
+  await goTo(page, 'Risk')
+  await page.getByRole('tab', { name: 'Investigate', exact: true }).click()
+  await page.getByRole('button', { name: 'Commission: Critical business service review', exact: true }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Commission the work', exact: true }).click()
+  await goTo(page, 'Briefing')
+  const capability = page.getByRole('region', { name: 'Capability you are building', exact: true })
+  await expect(capability.getByText('Paused', { exact: true })).toBeVisible()
+  await expect(capability.getByText(/^Next milestone:/)).toBeVisible()
+  const team = page.getByRole('region', { name: 'Your team', exact: true })
+  await expect(team).toContainText('Critical business service review')
+  await expect(team).toContainText(/Around \d+ [A-Z][a-z]{2}/)
+  await expectNoHorizontalScroll(page)
+})
+
 test('decision shortcuts reach options and reasons without losing the fixed actions', async ({ page }) => {
   await startCampaign(page, 'roadmap-reading')
   await page.getByRole('button', { name: /^Decide: / }).first().click()

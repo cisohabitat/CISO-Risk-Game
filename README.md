@@ -96,6 +96,25 @@ and optional paired replays. It includes device coverage, neutral questions and
 an evidence-to-change table. Participants and results remain outstanding; this
 preparation does not establish that the game is more engaging.
 
+The [content audit](docs/CONTENT_FLOW_AUDIT.md) is reproducible with
+`pnpm audit:content-flow 6`: it traces scheduled replies, counts repeated
+correspondence and compares two declared policies over matching seeds and two
+years, with deterministic replays and daily invariant checks. These engine
+probes do not establish that players notice or enjoy the differences.
+
+Replies scheduled beyond December now keep their own required story flags when
+the campaign continues. Delivery still checks current capability and suppression;
+old budget choices are not restored into the new year's global flags. This
+prevents a late commitment's reply from silently disappearing after annual reset.
+Historical board-paper checks use the commitment's year, not January's empty list.
+Older saves already missing those facts are not reconstructed by guessing.
+
+Briefing programme summaries name their status and next outstanding milestone.
+Enquiry names wrap and return dates are labelled approximately. The second-year
+builder loads only when requested; duplicate clicks create one year, and a load
+failure leaves the finished campaign open with its export action. The existing
+first-visit size limits still apply.
+
 Long correspondence, evidence and review text use consistent reading widths and
 paragraph spacing. A short neutral highlight marks actual budget/attention or
 recorded milestone changes. Loading a save does not replay it, and reduced-motion

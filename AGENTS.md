@@ -12,6 +12,21 @@ changes.
 - Keep the two files consistent with the implementation, CI and hosting
   configuration. Update related documentation when those contracts change.
 - Report only checks actually run and results actually measured.
+- Run `pnpm audit:content-flow 6` for the content follow-through audit. Its
+  declared engine policies, repeated runs and duplicate counts are probes, not
+  human engagement evidence. Do not suppress repeated urgent/decision mail on
+  the basis of identical text alone.
+- Carry pending replies' guard flags on their scheduled entries across years,
+  never into the new year's global story flags. Recheck present capability and
+  suppression at delivery. Historical paper checks use the originating year's
+  record. Keep the estate retirement date shifted normally.
+- Load the next-year builder on request from the store, not through a static
+  orchestrator re-export. Read the active campaign again after loading, prevent
+  duplicate starts, and preserve the finished campaign/export route on failure.
+  Keep `next-year-` out of the initial download in the size budget.
+- Briefing work summaries show actual programme status and the first outstanding
+  milestone; enquiry return dates are approximate. Do not expose scheduled
+  narrative events or turn milestones into promised delivery dates.
 - Use `docs/playtest-kit/FOCUSED_REVIEW.md` for the five-player content review.
   Treat recruitment slots, optional paired replays and human results separately.
   Record the build, preserve original saves and distinguish prompted tasks from

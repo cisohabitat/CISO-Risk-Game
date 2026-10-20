@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { applyAction, beginNextYear, newGame, runDays } from '@/game/engine/orchestrator'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
+import { beginNextYear } from '@/game/engine/next-year'
 import { applyEffects } from '@/game/engine/effects'
 import { createRng } from '@/game/engine/rng'
 import { finishYear } from '@/game/debrief/review'

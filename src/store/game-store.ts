@@ -8,7 +8,8 @@ import { produce } from 'immer'
 import { DAYS_PER_QUARTER } from '@/game/types'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
-import { applyAction, beginNextYear, newGame } from '@/game/engine/orchestrator'
+import type { beginNextYear as buildFollowingYear } from '@/game/engine/next-year'
+import { applyAction, newGame } from '@/game/engine/orchestrator'
 import {
   clearSaves,
   deleteCampaign,
@@ -428,8 +429,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   async beginNextYear() {
+    const source = get().state
+    if (!source?.finished || !source.reviews.annual) return
+    let beginNextYear: typeof buildFollowingYear
+    try {
+      const module = await import('@/game/engine/next-year')
+      beginNextYear = module.beginNextYear
+    } catch {
+      if (get().state === source) get().pushToast('The next year could not load. Export this campaign before reloading to try again.', 'warning')
+      return
+    }
     const { state, index } = get()
-    if (!state?.finished || !state.reviews.annual) return
+    // A second click or a different loaded campaign must not start another year.
+    if (state !== source) return
     const content = contentOf(index)
     const next = beginNextYear(content, state)
     set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })

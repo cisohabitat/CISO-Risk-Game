@@ -30,6 +30,9 @@ These are enforced by lint or by tests, so breaking one fails the build.
 
 - **The engine is pure.** Nothing under `src/game/` may import React, the DOM,
   storage or any SDK.
+- The next-year builder is imported on demand by the store; harnesses import
+  it directly from `src/game/engine/next-year.ts`. Do not re-export it from the
+  orchestrator: that makes it a static dependency of the opening screen.
 - **No `Math.random()` in simulation.** Every draw comes from the seeded RNG in
   `src/game/engine/rng.ts`, with the cursor in game state so a save reproduces
   its own future. A test scans every engine file.

@@ -18,7 +18,8 @@
  * first (src/game/engine/next-year.ts) and reports, or prints, that year.
  */
 import { buildContentIndex } from '../src/game/engine/content-index'
-import { newGame, applyAction, runDays, beginNextYear } from '../src/game/engine/orchestrator'
+import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
+import { beginNextYear } from '../src/game/engine/next-year'
 import { nexoraContent } from '../src/content/nexora'
 import { buildAnnualReview, materialTopics } from '../src/game/debrief/review'
 import { patternSuggestions, briefing, teamView, visibleRisks } from '../src/store/selectors'

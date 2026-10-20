@@ -11,6 +11,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Preserved the guard facts for replies carried across a year boundary, without
+  restoring old budget decisions into the new year's global flags.
+- Briefing now names programme status and next milestones, wraps enquiry names
+  and labels approximate return dates. The second-year builder loads on request
+  with protection against duplicate starts and a retained export route on failure.
+- Added a reproducible content-flow audit for scheduled replies, repeated mail
+  and contrasting strategies under matching seeds.
 - Added focused shortcuts through long decision papers and clearer enquiry and
   board-submission guidance. Corrected the decision footer’s directional copy.
 - Added an Inbox Follow-ups view and access to correspondence older than the

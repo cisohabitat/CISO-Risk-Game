@@ -153,7 +153,9 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
       // are buying "before the next one", after the next one — and delivered
       // messages whose conditions had stopped being true.
       if (def.oncePerCampaign && state.events.firedEventIds.includes(def.id)) continue
-      if (!evaluateAll(state, index, def.conditions)) continue
+      const context = entry.carriedFlags ? { ...state, flags: { ...entry.carriedFlags, ...state.flags } } : state
+      const sourcePapers = entry.sourceYear === undefined ? undefined : state.previousYears?.find((year) => year.year === entry.sourceYear)?.papersWritten
+      if (!evaluateAll(context, index, def.conditions, sourcePapers)) continue
       fire(def)
     }
   }

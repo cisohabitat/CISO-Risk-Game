@@ -12,7 +12,7 @@
  *
  * Pure, like the rest of the engine: same finished year, same next year.
  */
-import type { ContentIndex, GameState, YearRecord } from '../types'
+import type { Condition, ContentIndex, GameState, YearRecord } from '../types'
 import { CAMPAIGN_DAYS, clamp01 } from '../types'
 import { DIFFICULTY_PROFILES } from './setup'
 import { deriveRng } from './rng'
@@ -79,6 +79,19 @@ export function nextYearBudget(state: GameState, index: ContentIndex): number {
 
 const shift = (day: number) => day - YEAR_SHIFT
 const shiftOptional = (day: number | undefined) => (day === undefined ? undefined : shift(day))
+
+/** Facts needed by replies still in flight must outlive the annual reset. */
+function pendingReplyFlags(state: GameState, index: ContentIndex, entry: GameState['events']['scheduled'][number]): GameState['flags'] {
+  const needed = new Set<string>()
+  const visit = (condition: Condition) => {
+    if ('flag' in condition) needed.add(condition.flag)
+    else if (condition.kind === 'not') visit(condition.condition)
+    else if (condition.kind === 'all' || condition.kind === 'any') condition.conditions.forEach(visit)
+  }
+  index.event.get(entry.eventId)?.conditions.forEach(visit)
+  const flags = { ...entry.carriedFlags, ...state.flags }
+  return Object.fromEntries([...needed].filter((flag) => flag !== 'legacy.retirementDay' && Object.hasOwn(flags, flag)).map((flag) => [flag, flags[flag]!]))
+}
 
 export function createNextYear(index: ContentIndex, previous: GameState): GameState {
   if (!canBeginNextYear(previous)) throw new Error('A year can only follow one that has finished and been reviewed.')
@@ -225,13 +238,15 @@ export function createNextYear(index: ContentIndex, previous: GameState): GameSt
   events.lastFiredDayByTag = Object.fromEntries(
     Object.entries(events.lastFiredDayByTag).map(([tag, day]) => [tag, shift(day)]),
   )
-  events.scheduled = events.scheduled.filter((s) => s.day >= YEAR_SHIFT).map((s) => ({ ...s, day: shift(s.day) }))
+  events.scheduled = events.scheduled.filter((s) => s.day >= YEAR_SHIFT).map((s) => ({
+    ...s, day: shift(s.day), carriedFlags: pendingReplyFlags(state, index, s), sourceYear: s.sourceYear ?? previous.year ?? 1,
+  }))
   events.dailyFiredCount = 0
   state.pendingEffects = state.pendingEffects.filter((p) => p.day >= YEAR_SHIFT).map((p) => ({ ...p, day: shift(p.day) }))
 
-  // A flag is something a year's content said happened. The record keeps
-  // last year's choices; the one flag that describes the estate rather than
-  // a choice carries, dated from this year.
+  // Annual flags reset; pending replies carry their own guarded story facts.
+  // Restoring those flags globally would also repeat last autumn's budget
+  // choice when calculating a third year's line. The estate date still carries.
   const retirement = previous.flags['legacy.retirementDay']
   state.flags = typeof retirement === 'number' ? { 'legacy.retirementDay': shift(retirement) } : {}
   // What last year's emergency spend takes from this year's line, for the

@@ -36,6 +36,12 @@ neutral prompts, physical-device slots and two optional paired replays. It is
 preparation for human sessions, not completed evidence or a replacement for the
 broader pilot. Content changes follow the findings table and its retest tasks.
 
+The [content-flow audit](CONTENT_FLOW_AUDIT.md) provides concrete engine
+evidence across 24 campaign years and 24 deterministic replays. It fixes replies
+lost at the year boundary and clarifies existing work on the Briefing. Repeated
+mail and long decision-arrival gaps are recorded as human-test candidates;
+different branch/review records are not evidence of engagement.
+
 ## What "AAA" means here
 
 Not a studio's budget. For a single-player browser strategy game made by a
