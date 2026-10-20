@@ -69,7 +69,8 @@ const MUST_STAY_LAZY = ['OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 
  */
 // The editorial pass adds a 23.2 KiB self-hosted display face. Fonts are now
 // counted below as well as JS/CSS; the old 185 KiB gate did not count them.
-const CRITICAL_LIMIT_KB = 220
+// Security import validation and its module boundary add roughly 0.3 KiB.
+const CRITICAL_LIMIT_KB = 221
 
 // The approved illustrated start screen adds one responsive decorative image.
 // Account for it explicitly; neither variant may silently grow, and phones

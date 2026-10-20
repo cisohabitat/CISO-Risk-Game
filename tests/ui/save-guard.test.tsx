@@ -45,3 +45,18 @@ describe('a broken campaign is not saved over a good one', () => {
     stop()
   })
 })
+
+describe('import validation before activation', () => {
+  it('keeps the running campaign and does not write an invalid or foreign save', async () => {
+    await useGameStore.getState().startNewGame('import-protected', 'ciso')
+    const previous = useGameStore.getState().state!
+    written.count = 0
+    for (const patch of [{ currentDay: 9999 }, { resources: null }, { contentId: 'foreign' }]) {
+      const imported = { ...previous, ...patch } as unknown as typeof previous
+      expect(await useGameStore.getState().loadImported(imported)).toBe(false)
+      expect(useGameStore.getState().state).toBe(previous)
+      expect(written.count).toBe(0)
+    }
+    expect(useGameStore.getState().ui.toasts.at(-1)?.message).toContain('saved progress were kept')
+  })
+})

@@ -159,6 +159,21 @@ editing and pinch gestures remain available; the guard is removed on campaign
 exit. Physical iPhone Chrome validation is still needed for browser-specific
 refresh gestures.
 
+## Security
+
+Save imports are limited to 16 MiB and checked for unsafe properties, excessive
+nesting and invalid numbers before migration. Engine checks and campaign identity
+validation run before an import becomes active; rejected imports preserve the
+current campaign and saved progress. Save exports can include your optional
+notes, so share them deliberately.
+
+The AI playtest driver binds only to 127.0.0.1, confines served files to the build
+folder, and accepts bounded local JSON commands. CI uses read-only permissions,
+immutable action revisions and a dependency audit. See [SECURITY.md](SECURITY.md)
+for reporting and [the security review](docs/SECURITY_REVIEW.md) for scope and
+verification. The code/CSS/font budget includes a 1 KiB allowance for this
+validation boundary; complete-page download limits remain unchanged.
+
 ## Running it
 
 ```bash

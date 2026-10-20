@@ -84,7 +84,7 @@ interface GameStore {
   ensureCampaign: () => Promise<ContentIndex>
   startNewGame: (seed: string, difficulty: Difficulty, situation?: string) => Promise<void>
   loadGame: (key: SaveKey) => Promise<boolean>
-  /** Opens an imported campaign; false if the content could not be loaded. */
+  /** Opens an imported campaign only after validation; preserves play on rejection. */
   loadImported: (state: GameState) => Promise<boolean>
   refreshSaves: () => Promise<void>
   saveManual: () => Promise<void>
@@ -304,6 +304,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       index = await get().ensureCampaign()
     } catch {
       get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+      return false
+    }
+    try {
+      if (state.contentId !== index.content.meta.id || (await brokenRules(state, index)).length > 0) {
+        throw new Error('Invalid save')
+      }
+    } catch {
+      get().pushToast('That save failed validation. Your current campaign and saved progress were kept.', 'warning')
       return false
     }
     set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })

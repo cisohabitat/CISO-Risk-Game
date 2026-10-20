@@ -11,6 +11,12 @@ values are shipped. Named releases and site ZIPs follow
 
 ## Build size
 
+The October security pass raises the code/CSS/font critical-path allowance from
+220 to 221 KiB for import validation and its deferred module boundary (about
+0.3 KiB measured increase). Title rendering and complete-visit limits remain
+350/320 KiB and 450/410 KiB respectively. Earlier measurements below describe
+the budgets at the time of those changes.
+
 `pnpm build && pnpm size` prints the transfer size of every chunk against a
 budget and fails if one is exceeded. CI runs it on every push, next to the
 check that the output is still static. It is part of the job named after the

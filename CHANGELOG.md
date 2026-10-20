@@ -11,6 +11,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Validate imported campaigns before activation, reject unsafe or oversized save
+  files, and preserve the current campaign when an import fails.
+- Restrict the local AI playtest servers, patch a build dependency advisory, and
+  harden CI permissions and dependency checks.
+
 - Compacted tablet correspondence and system filters, improved sender-name
   wrapping and selected titles, and added focused return actions to stacked
   risk/system details with clearance below the toolbar.

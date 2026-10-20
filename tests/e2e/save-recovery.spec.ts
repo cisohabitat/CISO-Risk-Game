@@ -96,3 +96,22 @@ test('a campaign can be exported mid-year and brought back', async ({ page }) =>
   await expect(page.getByRole('navigation', { name: 'Primary' }).first()).toBeVisible({ timeout: 20_000 })
   expect(await page.evaluate(() => document.querySelector('header')?.textContent ?? '')).not.toContain('2 January')
 })
+
+test('an invalid import leaves the saved campaign available and never opens broken state', async ({ page }) => {
+  await startCampaign(page, 'e2e-import-protected')
+  await page.getByRole('button', { name: 'Save and close this campaign' }).click()
+  await expect(page.getByRole('heading', { name: 'CISO: First Year', exact: true })).toBeVisible()
+  const before = await records(page)
+  const primary = before.find((record) => record.slot.startsWith('campaign:'))!
+  const payload = JSON.parse(JSON.stringify(primary))
+  payload.state.currentDay = 9999
+  await page.getByRole('button', { name: 'Import a saved campaign' }).click()
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'invalid-save.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(payload)),
+  })
+  await expect(page.getByTestId('toasts')).toContainText('That save failed validation')
+  await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+  expect(await records(page)).toEqual(before)
+  await page.getByRole('button', { name: SAVE_ROW }).first().click()
+  await expect(page.getByRole('navigation', { name: 'Primary' }).first()).toBeVisible()
+})

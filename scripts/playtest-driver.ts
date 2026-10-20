@@ -27,10 +27,10 @@
  * the end-to-end suite does, so a playtester can begin from a point months in
  * — a year's end, to play the second year — and open it from the start screen.
  */
-import { createServer } from 'node:http'
-import { readFile, stat } from 'node:fs/promises'
+import { mkdir, readFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
-import { extname, join } from 'node:path'
+import { basename, join } from 'node:path'
+import { playtestControl, playtestSite } from './playtest-http.ts'
 import { chromium } from '@playwright/test'
 
 const [portArg = '4301', size = '1440x900', dist = 'dist', outdir = '/tmp/playtest', saveFile] = process.argv.slice(2)
@@ -38,27 +38,9 @@ const port = Number(portArg)
 const [width, height] = size.split('x').map(Number) as [number, number]
 const sitePort = port + 1000
 
-const TYPES: Record<string, string> = {
-  '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml',
-  '.png': 'image/png', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
-}
-
-// The game, served as the host serves it.
-createServer(async (request, response) => {
-  const path = decodeURIComponent((request.url ?? '/').split('?')[0]!)
-  const candidates = [path, `${path}.html`, '/index.html'].map((p) => join(dist, p === '/' ? '/index.html' : p))
-  for (const file of candidates) {
-    try {
-      if (!(await stat(file)).isFile()) continue
-      response.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' })
-      response.end(await readFile(file))
-      return
-    } catch {
-      /* next */
-    }
-  }
-  response.writeHead(404).end()
-}).listen(sitePort)
+// Both services are local-only; the command service also rejects foreign origins.
+playtestSite(dist).listen(sitePort, '127.0.0.1')
+await mkdir(outdir, { recursive: true })
 
 // The same browser the end-to-end suite uses where one is installed.
 const LOCAL_CHROMIUM = '/opt/pw-browsers/chromium'
@@ -96,10 +78,14 @@ async function run(command: Command): Promise<unknown> {
     return base.filter({ visible: true }).nth(Number(command.nth ?? 0))
   }
   switch (command.do) {
-    case 'goto':
-      await page.goto(`http://localhost:${sitePort}${command.url as string}`)
+    case 'goto': {
+      const base = `http://localhost:${sitePort}`
+      const url = new URL(String(command.url), base)
+      if (url.origin !== base) throw new Error('Navigation must stay on the local game.')
+      await page.goto(url.href)
       await page.waitForLoadState('networkidle')
       return { url: page.url() }
+    }
     case 'read':
       return { url: page.url(), tree: await page.locator('body').ariaSnapshot() }
     case 'shot': {
@@ -147,7 +133,8 @@ async function run(command: Command): Promise<unknown> {
       const download = page.waitForEvent('download')
       await locate().click({ timeout: 8000 })
       const file = await download
-      const path = `${outdir}/${file.suggestedFilename()}`
+      const name = basename(file.suggestedFilename().replace(/\\/g, '/'))
+      const path = join(outdir, name === '.' || name === '..' ? 'download.json' : name)
       await file.saveAs(path)
       return { path }
     }
@@ -156,15 +143,4 @@ async function run(command: Command): Promise<unknown> {
   }
 }
 
-createServer((request, response) => {
-  let body = ''
-  request.on('data', (chunk: Buffer) => (body += chunk.toString()))
-  request.on('end', async () => {
-    try {
-      const result = await run(JSON.parse(body) as Command)
-      response.writeHead(200, { 'content-type': 'application/json' }).end(JSON.stringify(result))
-    } catch (error) {
-      response.writeHead(400, { 'content-type': 'application/json' }).end(JSON.stringify({ error: String(error).slice(0, 600) }))
-    }
-  })
-}).listen(port, () => console.log(`playtest driver on ${port}, game on ${sitePort}, ${width}x${height}`))
+playtestControl(run).listen(port, '127.0.0.1', () => console.log(`playtest driver on ${port}, game on ${sitePort}, ${width}x${height}`))

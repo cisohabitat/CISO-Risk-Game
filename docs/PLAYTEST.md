@@ -288,7 +288,7 @@ turn, as a person would.
 
 ```
 pnpm tsx scripts/playtest-driver.ts <port> <width>x<height> <built dist> <outdir> [save.json]
-curl -s -X POST localhost:<port> -d '{"do":"read"}'
+curl -s -X POST localhost:<port> -H 'Content-Type: application/json' -d '{"do":"read"}'
 ```
 
 A save written by `pnpm tsx scripts/prepare-campaign.ts <seed> year-end` can
@@ -324,3 +324,12 @@ counts toward the human gate.
 - **The pace of consequence.** A decision whose cost arrives four months later
   will feel unfair to somebody who played for twenty minutes. It is not unfair;
   it is the job.
+
+
+### Local driver security
+
+The command and game servers bind to **127.0.0.1** only. Use localhost or
+127.0.0.1 URLs and send commands with `Content-Type: application/json`. Foreign
+Host/Origin headers, cross-site requests and command bodies over 64 KiB are
+rejected. Only files inside the build directory are served, including through
+symlinks. Keep the driver local; it is development tooling, not a hosted API.

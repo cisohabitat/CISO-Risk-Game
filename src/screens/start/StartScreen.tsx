@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { situationChoices, situationName } from '@/lib/content/situations'
-import { parseImportedSave, storageAvailable, type SaveSummary } from '@/store/persistence'
+import { storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 import { setRecording, useRecording } from '@/store/session-recording'
@@ -96,8 +96,8 @@ export function StartScreen() {
   const onImport = (file: File) =>
     open('import', async () => {
       try {
-        const text = await file.text()
-        const save = parseImportedSave(text)
+        const { readImportedSave } = await import('@/store/import-save')
+        const save = await readImportedSave(file)
         if (await loadImported(save.state)) pushToast('Campaign imported.', 'success')
       } catch (error) {
         pushToast(error instanceof Error ? error.message : 'That file could not be read.', 'warning')

@@ -30,6 +30,21 @@ changes.
   initial save. A delayed invariant import or disk write must not overwrite
   newer progress. A rejected save must still allow later saves to proceed.
 
+## Security
+
+- Treat imported saves as untrusted: check the 16 MiB file limit before reading,
+  bound nesting/entries, and reject prototype-related keys and non-finite numbers
+  before migration. Load the import parser only on demand. Run engine invariants
+  and verify content identity before replacing active state or queuing a write.
+  Rejection must preserve both the running campaign and existing saves.
+- Keep playtest HTTP services on 127.0.0.1. Reject foreign Host/Origin values,
+  cross-site commands, non-JSON/non-POST commands and oversized request bodies.
+  Resolve file paths and symlinks inside the build directory; navigation and
+  downloads must stay within their intended local origin/output directory.
+- CI tokens are read-only, checkout credentials are not persisted, and actions
+  are pinned to reviewed commit SHAs. Run `pnpm audit:security` before release;
+  remediate advisories without disabling TLS or skipping registry failures.
+
 ## Artwork
 
 - Organisation uses a labelled native System type filter. Stacked risk/system

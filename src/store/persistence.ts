@@ -242,8 +242,3 @@ export async function clearSaves(): Promise<void> {
 export function exportSave(state: GameState, campaignTitle: string): string {
   return JSON.stringify(toRecord(state, campaignTitle, true), null, 2)
 }
-
-export function parseImportedSave(json: string): StoredSave {
-  const parsed: unknown = JSON.parse(json)
-  return migrateSave(parsed)
-}
