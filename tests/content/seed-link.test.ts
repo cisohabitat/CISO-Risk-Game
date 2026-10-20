@@ -16,9 +16,13 @@ describe('a link to a year', () => {
   })
 
   it('ignores what it does not recognise rather than guessing', () => {
-    expect(readSeedLink('?seed=<script>&mode=impossible&situation=sit-nowhere', situations)).toEqual({})
-    expect(readSeedLink(`?seed=${'x'.repeat(65)}`, situations)).toEqual({})
+    expect(readSeedLink('?seed=%20%20&mode=impossible&situation=sit-nowhere', situations)).toEqual({})
     expect(readSeedLink('', situations)).toEqual({})
+  })
+
+  it.each(['risk review 2026', '新加坡', 'x'.repeat(65), '<script> & ? # / +'])('preserves the accepted campaign seed %s through a replay link', (seed) => {
+    const url = seedLinkUrl('https://example.test', { seed, mode: 'ciso', situation: 'sit-money' })
+    expect(readSeedLink(new URL(url).search, situations)).toEqual({ seed, mode: 'ciso', situation: 'sit-money' })
   })
 
   it('writes a link that reads back as the same year', () => {

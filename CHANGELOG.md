@@ -11,6 +11,8 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Preserve free-text campaign seeds in replay links instead of silently choosing
+  a different seed, and retain a valid accessible reader target in Inbox search.
 - Search Inbox correspondence across sender, subject, body and older mail,
   without automatically reading search results. Follow-up labels now match the
   Briefing, and paused programmes explain the next place to review delivery.

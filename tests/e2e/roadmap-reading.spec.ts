@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
 import type { GameState } from '../../src/game/types'
 import { expectNoHorizontalScroll, goTo, startCampaign } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
@@ -40,6 +41,9 @@ test('Inbox search reaches older mail without reading transient search results',
   await expect(list.getByRole('button')).toHaveCount(1)
   await expect(list.locator('.message-sender')).toHaveClass(/font-semibold/)
   await expect(page.getByRole('heading', { name: 'Routine review 129', exact: true })).toHaveCount(0)
+  await expect(page.locator('#message-reader')).toHaveCount(1)
+  const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()
+  expect(accessibility.violations).toEqual([])
   await search.fill('kestrel sentinel')
   await expect(list.getByRole('button')).toHaveCount(1)
   await expect(list.locator('.message-sender')).toHaveClass(/font-semibold/)
@@ -58,6 +62,15 @@ test('Inbox search reaches older mail without reading transient search results',
   await expect(list.getByRole('button')).toHaveCount(1)
   await expect(list.locator('.message-sender')).toHaveClass(/font-semibold/)
   await expectNoHorizontalScroll(page)
+})
+
+test('replay links retain free-text campaign seeds as text', async ({ page }) => {
+  const seed = `risk review 新加坡 <script> & ? # / + ${'x'.repeat(65)}`
+  await page.goto(`/?${new URLSearchParams({ seed, mode: 'high-pressure', situation: 'sit-after-breach' })}`)
+  await expect(page.getByRole('textbox', { name: 'Campaign seed', exact: true })).toHaveValue(seed)
+  await expect(page.getByTestId('shared-year')).toContainText(seed)
+  await expect(page.getByRole('radio', { name: /High pressure/ })).toBeChecked()
+  await expect(page.getByRole('radio', { name: /After the breach/ })).toBeChecked()
 })
 
 test('the annual review reveals earlier judgements and preserves replay setup', async ({ page }) => {

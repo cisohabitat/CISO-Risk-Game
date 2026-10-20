@@ -262,7 +262,7 @@ export function InboxScreen() {
               </CardBody>
             </Card>
           )}
-          {!selected && <Card className="split-pane"><CardBody><p className="text-sm text-ink-muted">Choose a message to read the full correspondence.</p></CardBody></Card>}
+          {!selected && <Card id="message-reader" role="region" aria-label="Message reader" className="split-pane"><CardBody><p className="text-sm text-ink-muted">Choose a message to read the full correspondence.</p></CardBody></Card>}
         </div>
       )}
     </div>

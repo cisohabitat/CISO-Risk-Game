@@ -10,6 +10,11 @@ changes.
   before pagination. Searching must not automatically read transient results;
   preserve frozen Unread membership and choose results explicitly. Keep search
   local to the device and use the shared return labels in Briefing and reader.
+  Keep the `message-reader` target present before selecting a search result;
+  verify the search-results state with axe as well as the default Inbox.
+- Replay-link seed handling must accept the free text accepted by campaign
+  creation, including spaces, Unicode and long seeds. Keep seed text escaped
+  through URLSearchParams and React; mode and situation retain their allowlists.
 - Annual judgements must remain reachable beyond the initial 14 entries. When
   revealing older entries, focus the first new entry. Replay links preserve the
   original opening, seed and mode, open fresh options rather than beginning a

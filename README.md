@@ -82,6 +82,7 @@ acceptance updates, stopped work and incident reports, including read messages.
 filter, including mail beyond the first page. Searching does not read results
 automatically; choose a message to open it. The reader uses the same return
 labels as the Briefing. Recurring correspondence stays available in full.
+Search results keep a valid accessible reader target before a message is opened.
 
 The Briefing explains that paused programmes make no delivery progress and
 points to staffing and blockers before resuming. The annual review's **Show
@@ -90,6 +91,8 @@ on the first newly shown entry. **Replay this starting world (new tab)** opens
 fresh campaign options with the same seed, mode and original opening situation;
 export the original campaign for comparison. These changes do not establish
 human engagement gains or physical iPhone/iPad scrolling validation.
+Replay links preserve free-text campaign seeds, including spaces, non-English
+characters and seeds longer than 64 characters; seed text is never treated as HTML.
 It uses the same classification as the Briefing. **Show older messages** reveals
 another batch beyond the initial 60 and focuses the first newly revealed row;
 older selections remain reachable when returning to Inbox.

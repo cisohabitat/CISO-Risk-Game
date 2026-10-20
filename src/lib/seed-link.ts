@@ -28,7 +28,9 @@ export function readSeedLink(search: string, situations: string[]): SeedLink {
   const mode = params.get('mode')
   const situation = params.get('situation')
   return {
-    ...(seed && /^[\w.-]{1,64}$/.test(seed) ? { seed } : {}),
+    // Campaign creation accepts free text. Keep the same text when replaying;
+    // URLSearchParams decodes it and React renders it as text, never markup.
+    ...(seed ? { seed } : {}),
     ...(mode && (MODES as string[]).includes(mode) ? { mode: mode as Difficulty } : {}),
     ...(situation && (situation === 'surprise' || situations.includes(situation)) ? { situation } : {}),
   }

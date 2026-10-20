@@ -18,6 +18,24 @@ fault.
 
 ### Fixed
 
+- **Replay links discarded valid free-text seeds.** Campaign creation accepted
+  spaces, Unicode and seeds longer than 64 characters, but the link parser's
+  ASCII/length restriction silently dropped them and the start screen generated
+  a different seed. Four round-trip regressions failed before the fix; all nine
+  seed-link/sharing tests pass afterward. Links now preserve the trimmed free
+  text accepted by campaign creation. URLSearchParams handles encoding and React
+  displays it as text; mode and situation still use their existing allowlists.
+  Browser coverage also checks mixed Unicode, long text and markup characters
+  alongside the requested mode and opening.
+
+- **Inbox search results referenced a missing reader.** Before choosing a
+  result, the placeholder lacked the `message-reader` ID used by result buttons'
+  `aria-controls`. A Chromium probe found two buttons and zero reader targets;
+  axe reported `aria-valid-attr-value` violations. The placeholder now retains
+  that ID and a named reader region. The search regression checks both the
+  target and axe results before selecting anything, while retaining the check
+  that transient search results stay unread.
+
 - **Landscape list and detail panels shared one scrolling page.** At 1024×768
   in WebKit, scrolling the Inbox or Risk list by 450px moved `main` by 450px;
   the list itself did not scroll, and its sticky reader moved too. Organisation
