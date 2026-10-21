@@ -394,7 +394,7 @@
     {
       "id": "dec-exploit-published",
       "title": "The exploit arrived before the change window",
-      "description": "A sector advisory reports AI-assisted analysis turning the checkout framework fix into working exploit variants within hours. Nexora runs the affected version. The planned patch window is eleven days away.",
+      "description": "A sector advisory reports AI-assisted analysis turning the checkout framework fix into working exploit variants within hours. Nexora runs the affected version. The announced patch window is eleven days after this advisory.",
       "context": "Priya wants the release kept on track; the exposed route is still reachable and the usual change process has not caught up. The advisory describes how the exploit was developed, not proof that an AI-enabled actor has entered Nexora.",
       "deadlineDays": 2,
       "defaultOptionId": "opt-exploit-window",
@@ -445,19 +445,16 @@
             {
               "type": "capacity.change",
               "fn": "engineering",
-              "delta": -0.5
+              "delta": -0.5,
+              "temporary": {
+                "dayOffset": 2
+              }
             }
           ],
           "delayedEffects": [
             {
               "dayOffset": 2,
-              "effects": [
-                {
-                  "type": "capacity.change",
-                  "fn": "engineering",
-                  "delta": 0.5
-                }
-              ],
+              "effects": [],
               "note": "Engineering capacity diverted to the emergency framework patch is released."
             }
           ]
@@ -465,17 +462,21 @@
         {
           "id": "opt-exploit-window",
           "label": "Accept temporary exposure with a SOC watch",
-          "description": "Keep the eleven-day patch window and assign a temporary watch. Monitoring can miss an attempt.",
+          "description": "Keep the announced patch window and assign a temporary watch. Monitoring can miss an attempt.",
           "visibleKnownEffects": [
             "Keeps the planned release window",
             "Carries exposure until the scheduled patch",
-            "Diverts SOC capacity for eleven days"
+            "Diverts SOC capacity until the announced patch window"
           ],
           "immediateEffects": [
             {
               "type": "node.exposure",
               "nodeId": "node-app-checkout",
-              "delta": 0.08
+              "delta": 0.08,
+              "temporary": {
+                "dayOffset": 11,
+                "relativeTo": "decision-opened"
+              }
             },
             {
               "type": "threat.interest",
@@ -494,7 +495,11 @@
             {
               "type": "capacity.change",
               "fn": "soc",
-              "delta": -0.5
+              "delta": -0.5,
+              "temporary": {
+                "dayOffset": 11,
+                "relativeTo": "decision-opened"
+              }
             },
             {
               "type": "event.schedule",
@@ -510,36 +515,31 @@
                   "type": "node.weakness",
                   "nodeId": "node-app-checkout",
                   "delta": -0.2
-                },
-                {
-                  "type": "node.exposure",
-                  "nodeId": "node-app-checkout",
-                  "delta": -0.08
-                },
-                {
-                  "type": "capacity.change",
-                  "fn": "soc",
-                  "delta": 0.5
                 }
               ],
-              "note": "The checkout framework has been patched in the scheduled window; the temporary SOC assignment ends."
+              "note": "The checkout framework has been patched in the scheduled window; the temporary SOC assignment ends.",
+              "relativeTo": "decision-opened"
             }
           ]
         },
         {
           "id": "opt-exploit-mitigate",
           "label": "Mitigate at the edge, patch in the window",
-          "description": "Filter the exploit route at the edge while keeping the eleven-day patch window. Variants may evade a rule.",
+          "description": "Filter the exploit route at the edge while keeping the announced patch window. Variants may evade a rule.",
           "visibleKnownEffects": [
             "Reduces exposed access while the patch waits",
             "Mitigation does not remove the framework weakness",
-            "Diverts engineering capacity for eleven days"
+            "Diverts engineering capacity until the announced patch window"
           ],
           "immediateEffects": [
             {
               "type": "node.exposure",
               "nodeId": "node-app-checkout",
-              "delta": -0.1
+              "delta": -0.1,
+              "temporary": {
+                "dayOffset": 11,
+                "relativeTo": "decision-opened"
+              }
             },
             {
               "type": "control.coverage",
@@ -549,7 +549,11 @@
             {
               "type": "capacity.change",
               "fn": "engineering",
-              "delta": -0.5
+              "delta": -0.5,
+              "temporary": {
+                "dayOffset": 11,
+                "relativeTo": "decision-opened"
+              }
             },
             {
               "type": "flag.set",
@@ -569,14 +573,10 @@
                   "type": "node.weakness",
                   "nodeId": "node-app-checkout",
                   "delta": -0.2
-                },
-                {
-                  "type": "capacity.change",
-                  "fn": "engineering",
-                  "delta": 0.5
                 }
               ],
-              "note": "Checkout has been patched; the edge mitigation is retired."
+              "note": "Checkout has been patched; the edge mitigation is retired.",
+              "relativeTo": "decision-opened"
             }
           ]
         },
@@ -593,7 +593,11 @@
             {
               "type": "node.exposure",
               "nodeId": "node-app-checkout",
-              "delta": -0.2
+              "delta": -0.2,
+              "temporary": {
+                "dayOffset": 11,
+                "relativeTo": "decision-opened"
+              }
             },
             {
               "type": "objective.delay",
@@ -624,14 +628,10 @@
                   "type": "node.weakness",
                   "nodeId": "node-app-checkout",
                   "delta": -0.2
-                },
-                {
-                  "type": "node.exposure",
-                  "nodeId": "node-app-checkout",
-                  "delta": 0.2
                 }
               ],
-              "note": "The checkout framework is patched and the temporary access restriction is lifted; the launch delay remains recorded."
+              "note": "The checkout framework is patched and the temporary access restriction is lifted; the launch delay remains recorded.",
+              "relativeTo": "decision-opened"
             }
           ]
         }

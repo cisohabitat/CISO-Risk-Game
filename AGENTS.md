@@ -6,6 +6,14 @@ changes.
 
 ## Documentation
 
+- Temporary capacity/exposure effects record their actual bounded delta as a
+  plain inverse in pending effects. Expiry must preserve intervening changes,
+  retain the resolved function target, and never schedule another inverse.
+  Decision timing marked `relativeTo: decision-opened` uses the opening date in
+  both player and default paths. Unmarked effects retain resolution-relative
+  timing. Never infer missing before-values for legacy pending entries.
+  Regenerate `docs/content/campaign.schema.json` with `pnpm content:schema` when changing
+  authored timing/effect fields; the pack-pipeline test checks the published copy.
 - The owner authorised the AI-accelerated checkout exploit scenario on 21 October
   2026. Extend the existing event/decision through authored conditions/effects;
   preserve previous option IDs and avoid a separate AI score or forced breach.

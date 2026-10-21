@@ -8,7 +8,7 @@
 import type { ContentIndex, GameEffect, GameEventDef, GameState, PauseReason } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, DAYS_PER_WEEK, clamp01 } from '../types'
 import { createRng } from './rng'
-import { applyEffects } from './effects'
+import { applyEffects, scheduledEffectDay } from './effects'
 import { applyDrift } from '../controls/effectiveness'
 import { maintainedControlIds, tickProgrammes } from '../programmes/progression'
 import { recoverServiceHealth, tickObjectives } from '../business/objectives'
@@ -522,7 +522,7 @@ function resolveByDefault(
   for (const delayed of option.delayedEffects ?? []) {
     state.pendingEffects.push({
       id: `pending-${decisionId}-${delayed.dayOffset}`,
-      day: state.currentDay + delayed.dayOffset,
+      day: scheduledEffectDay(state, delayed, decisionId),
       effects: delayed.effects,
       note: delayed.note,
       source: `decision:${def.id}`,

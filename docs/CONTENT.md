@@ -77,6 +77,17 @@ variant only ever arrives after the original, so it may say "again".
 
 ## Writing a decision
 
+For a temporary `capacity.change` or `node.exposure`, set
+`temporary: { "dayOffset": 11, "relativeTo": "decision-opened" }` to end it
+on an announced window. Omit `relativeTo` for a duration measured from the
+action. The reducer queues an inverse of the actual bounded delta; do not
+also author a fixed positive/negative refund in `delayedEffects`. These plain
+inverse effects survive saves and year transitions, preserve other changes
+and do not schedule further inverses. Delayed patch effects may also set
+`relativeTo: "decision-opened"`; player choices and defaults use the same clock.
+Describe the announced window, rather than a number of days that stays frozen
+while the player reads. Existing content without these fields keeps its timing.
+
 **AI acceleration changes the trade-off, not the evidence standard.** The
 checkout exploit uses a fictional advisory about faster exploit development,
 a shorter response deadline and existing exposure/capacity/delivery effects.

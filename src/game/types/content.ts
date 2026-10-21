@@ -15,7 +15,7 @@ import type {
   OrgEdgeType,
   OrgNodeType,
 } from './primitives'
-import type { GameEffect } from './effects'
+import type { EffectTiming, GameEffect } from './effects'
 import type { Condition } from './conditions'
 
 export interface OrgNodeDef {
@@ -342,7 +342,7 @@ export interface DecisionOptionDef {
   /** Consequences the CISO could reasonably foresee. Never hidden effects. */
   visibleKnownEffects: string[]
   immediateEffects: GameEffect[]
-  delayedEffects?: { dayOffset: number; effects: GameEffect[]; note?: string }[]
+  delayedEffects?: (EffectTiming & { effects: GameEffect[]; note?: string })[]
   requirements?: {
     budget?: number
     focus?: number

@@ -73,11 +73,15 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
 
 const cyberFunction = z.enum(['soc', 'engineering', 'architecture', 'grc', 'iam', 'incident-response'])
 const functionTarget = cyberFunction.or(z.literal('most-pressed'))
+const effectTiming = {
+  dayOffset: z.number().int().positive(),
+  relativeTo: z.literal('decision-opened').optional(),
+}
 
 export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('budget.change'), amount: z.number(), note: z.string().optional() }),
   z.object({ type: z.literal('focus.change'), amount: z.number() }),
-  z.object({ type: z.literal('capacity.change'), fn: functionTarget, delta: z.number() }),
+  z.object({ type: z.literal('capacity.change'), fn: functionTarget, delta: z.number(), temporary: z.object(effectTiming).optional() }),
   z.object({ type: z.literal('stakeholder.trust'), stakeholderId: id, delta: z.number(), reason: z.string().optional() }),
   z.object({ type: z.literal('stakeholder.concern'), stakeholderId: id, concern: z.string() }),
   z.object({ type: z.literal('stakeholder.understanding'), stakeholderId: id, delta: z.number() }),
@@ -95,7 +99,7 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('evidence.reveal'), evidenceId: id, note: z.string().optional() }),
   z.object({ type: z.literal('node.reveal'), nodeId: id, confidence: unit.optional() }),
   z.object({ type: z.literal('edge.reveal'), edgeId: id }),
-  z.object({ type: z.literal('node.exposure'), nodeId: id, delta: z.number() }),
+  z.object({ type: z.literal('node.exposure'), nodeId: id, delta: z.number(), temporary: z.object(effectTiming).optional() }),
   z.object({ type: z.literal('node.weakness'), nodeId: id, delta: z.number() }),
   z.object({ type: z.literal('assumption.record'), assumptionId: id, decisionId: id.optional() }),
   z.object({ type: z.literal('assumption.invalidate'), assumptionId: id, reason: z.string().optional() }),
@@ -413,7 +417,7 @@ export const decisionSchema = z.object({
       visibleKnownEffects: z.array(z.string()).default([]),
       immediateEffects: z.array(effectSchema),
       delayedEffects: z.array(
-        z.object({ dayOffset: z.number().int().positive(), effects: z.array(effectSchema), note: z.string().optional() }),
+        z.object({ ...effectTiming, effects: z.array(effectSchema), note: z.string().optional() }),
       ).optional(),
       requirements: z.object({
         budget: z.number().optional(),

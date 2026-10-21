@@ -5,7 +5,7 @@
  * is the only place that knows *how* to change it. Anything that bypasses this
  * reducer is an architectural regression.
  */
-import type { ContentIndex, CyberFunction, FunctionTarget, GameEffect, GameState } from '../types'
+import type { ContentIndex, CyberFunction, EffectTiming, FunctionTarget, GameEffect, GameState } from '../types'
 import { CYBER_FUNCTIONS, clamp01, round2 } from '../types'
 import { revealEdge, revealEvidence, revealNode } from '../knowledge/discovery'
 import { openDecision } from '../decisions/open'
@@ -47,6 +47,24 @@ export interface EffectOutcome {
   notes: string[]
   /** Effects that should pause the clock once applied. */
   interrupts: string[]
+}
+
+/** Resolve authored timing once; pending entries persist the resulting date. */
+export function scheduledEffectDay(state: GameState, timing: EffectTiming, decisionId?: string): number {
+  const opened = decisionId ? state.decisions.decisions[decisionId]?.createdDay : undefined
+  return (timing.relativeTo === 'decision-opened' ? opened ?? state.currentDay : state.currentDay) + timing.dayOffset
+}
+
+/** Reverse only the bounded change we actually applied, not its requested size. */
+function restoreTemporary(state: GameState, context: EffectContext, effect: Extract<GameEffect, { type: 'capacity.change' | 'node.exposure' }>, applied: number): void {
+  if (!effect.temporary || applied === 0) return
+  const { temporary, ...plain } = effect
+  state.pendingEffects.push({
+    id: `restore-${context.decisionId ?? context.source}-${state.currentDay}-${state.pendingEffects.length}`,
+    day: scheduledEffectDay(state, temporary, context.decisionId),
+    effects: [{ ...plain, delta: -applied }],
+    source: context.source,
+  })
 }
 
 export function applyEffects(
@@ -92,8 +110,13 @@ export function applyEffect(
       break
     }
     case 'capacity.change': {
-      const fn = state.team.functions[resolveFunction(state, effect.fn)]
-      if (fn) fn.capacity = Math.max(0, round2(fn.capacity + effect.delta))
+      const target = resolveFunction(state, effect.fn)
+      const fn = state.team.functions[target]
+      if (fn) {
+        const before = fn.capacity
+        fn.capacity = Math.max(0, round2(fn.capacity + effect.delta))
+        restoreTemporary(state, context, { ...effect, fn: target }, fn.capacity - before)
+      }
       break
     }
     case 'work.stop': {
@@ -241,7 +264,11 @@ export function applyEffect(
     }
     case 'node.exposure': {
       const node = state.organisation.nodes[effect.nodeId]
-      if (node) node.exposure = clamp01(node.exposure + effect.delta)
+      if (node) {
+        const before = node.exposure
+        node.exposure = clamp01(node.exposure + effect.delta)
+        restoreTemporary(state, context, effect, node.exposure - before)
+      }
       break
     }
     case 'node.weakness': {

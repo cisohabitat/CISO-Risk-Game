@@ -18,6 +18,22 @@ fault.
 
 ### Fixed
 
+- **Exploit response refunds assumed the requested amount had been applied.**
+  Review probes reproduced exposure going 0.05 → 0 → 0.20 after isolation and
+  capacity going 0.20 → 0 → 0.50 after emergency patching or a SOC watch. The
+  retired edge mitigation also left its exposure benefit behind. Authored
+  temporary capacity/exposure effects now queue only their actual bounded
+  inverse, with the concrete function target and no recursive expiry metadata.
+  Focused regressions cover exposure bounds, low capacity, intervening staffing
+  and exposure changes, overlapping effects, JSON reload and year transition.
+  Previously queued effects lack before-values and are not rewritten by guess.
+
+- **The announced exploit patch window moved with the answer.** A decision
+  opened on day 50 and answered on day 51 patched on day 62 instead of day 61.
+  Delayed effects and temporary diversions can now use an opening-relative
+  date, resolved identically for player choices and automatic defaults. The
+  emergency diversion remains two days from authorisation. Option wording no
+  longer claims eleven days remain after the player has already waited.
 - **Replay links discarded valid free-text seeds.** Campaign creation accepted
   spaces, Unicode and seeds longer than 64 characters, but the link parser's
   ASCII/length restriction silently dropped them and the start screen generated

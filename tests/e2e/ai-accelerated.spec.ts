@@ -15,7 +15,7 @@ test('the accelerated exploit decision explains uncertainty, costs and all respo
   const paper = page.getByRole('dialog')
   await expect(paper).toContainText('Due in 2 days.')
   await expect(paper.getByRole('radio')).toHaveCount(4)
-  await expect(paper).toContainText('SOC capacity for eleven days')
+  await expect(paper).toContainText('SOC capacity until the announced patch window')
   await paper.getByRole('radio', { name: /Restrict the affected route until patching/ }).check()
   await expect(paper).toContainText('Delays platform launch work')
   await paper.getByRole('button', { name: 'Your reasons', exact: true }).click()

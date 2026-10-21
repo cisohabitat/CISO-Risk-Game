@@ -31,6 +31,16 @@ coverage, and delayed patching and capacity releases survive a year boundary.
 The advisory does not prove an intrusion at Nexora. Existing controls and attack
 paths determine incidents; there is no separate AI score or scripted breach.
 
+The announced checkout patch window stays tied to the advisory even if you
+answer later or let the decision lapse. Temporary capacity and exposure changes
+return only the amount actually changed, retain unrelated later changes and
+expire through the normal save/year-transition queue. Edge mitigation retires
+when patching completes. Fixes apply to newly resolved choices; older saves'
+already-queued effects retain their recorded amounts because their original
+before-values were not saved.
+The published campaign schema includes the new temporary-effect and timing
+fields for authors of other campaign packs.
+
 Development builds use Vite 8.3.5, which includes fixes for the launch-editor
 advisories affecting Vite 8.3.0–8.3.2. Security auditing remains part of CI.
 

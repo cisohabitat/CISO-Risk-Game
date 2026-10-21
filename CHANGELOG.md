@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Fixed temporary exploit-response effects over-refunding low capacity or
+  exposure, and removed the retired edge mitigation's remaining exposure
+  benefit. The announced patch date now stays fixed when answering later or
+  letting the decision default; emergency engineering time starts on approval.
 - Updated Vite to 8.3.5 to address three launch-editor security advisories found
   during the release audit; the shipped game remains a static client application.
 - Extended the checkout exploit decision with an AI-accelerated disclosure,

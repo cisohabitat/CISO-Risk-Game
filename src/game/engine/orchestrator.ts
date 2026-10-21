@@ -16,7 +16,7 @@ import type {
 } from '../types'
 import { CAMPAIGN_DAYS, clamp01, money, round2 } from '../types'
 import { createRng } from './rng'
-import { applyEffects, recordAssumption } from './effects'
+import { applyEffects, recordAssumption, scheduledEffectDay } from './effects'
 import { tickDay, type TickResult } from './tick'
 export type { TickResult }
 import { createInitialState, type NewGameOptions } from './setup'
@@ -265,7 +265,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       for (const delayed of option.delayedEffects ?? []) {
         state.pendingEffects.push({
           id: `pending-${action.decisionId}-${delayed.dayOffset}`,
-          day: state.currentDay + delayed.dayOffset,
+          day: scheduledEffectDay(state, delayed, action.decisionId),
           effects: delayed.effects.map(pin),
           note: delayed.note,
           source: `decision:${def.id}`,

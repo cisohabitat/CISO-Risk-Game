@@ -794,6 +794,24 @@
                           },
                           "delta": {
                             "type": "number"
+                          },
+                          "temporary": {
+                            "type": "object",
+                            "properties": {
+                              "dayOffset": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "relativeTo": {
+                                "type": "string",
+                                "const": "decision-opened"
+                              }
+                            },
+                            "required": [
+                              "dayOffset"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
@@ -1195,6 +1213,24 @@
                           },
                           "delta": {
                             "type": "number"
+                          },
+                          "temporary": {
+                            "type": "object",
+                            "properties": {
+                              "dayOffset": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "relativeTo": {
+                                "type": "string",
+                                "const": "decision-opened"
+                              }
+                            },
+                            "required": [
+                              "dayOffset"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
@@ -2878,6 +2914,24 @@
                           },
                           "delta": {
                             "type": "number"
+                          },
+                          "temporary": {
+                            "type": "object",
+                            "properties": {
+                              "dayOffset": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "relativeTo": {
+                                "type": "string",
+                                "const": "decision-opened"
+                              }
+                            },
+                            "required": [
+                              "dayOffset"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
@@ -3279,6 +3333,24 @@
                           },
                           "delta": {
                             "type": "number"
+                          },
+                          "temporary": {
+                            "type": "object",
+                            "properties": {
+                              "dayOffset": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "relativeTo": {
+                                "type": "string",
+                                "const": "decision-opened"
+                              }
+                            },
+                            "required": [
+                              "dayOffset"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
@@ -4063,6 +4135,10 @@
                         "exclusiveMinimum": 0,
                         "maximum": 9007199254740991
                       },
+                      "relativeTo": {
+                        "type": "string",
+                        "const": "decision-opened"
+                      },
                       "effects": {
                         "type": "array",
                         "items": {
@@ -4132,6 +4208,24 @@
                                 },
                                 "delta": {
                                   "type": "number"
+                                },
+                                "temporary": {
+                                  "type": "object",
+                                  "properties": {
+                                    "dayOffset": {
+                                      "type": "integer",
+                                      "exclusiveMinimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "relativeTo": {
+                                      "type": "string",
+                                      "const": "decision-opened"
+                                    }
+                                  },
+                                  "required": [
+                                    "dayOffset"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               },
                               "required": [
@@ -4533,6 +4627,24 @@
                                 },
                                 "delta": {
                                   "type": "number"
+                                },
+                                "temporary": {
+                                  "type": "object",
+                                  "properties": {
+                                    "dayOffset": {
+                                      "type": "integer",
+                                      "exclusiveMinimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "relativeTo": {
+                                      "type": "string",
+                                      "const": "decision-opened"
+                                    }
+                                  },
+                                  "required": [
+                                    "dayOffset"
+                                  ],
+                                  "additionalProperties": false
                                 }
                               },
                               "required": [
@@ -5538,6 +5650,24 @@
                     },
                     "delta": {
                       "type": "number"
+                    },
+                    "temporary": {
+                      "type": "object",
+                      "properties": {
+                        "dayOffset": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "relativeTo": {
+                          "type": "string",
+                          "const": "decision-opened"
+                        }
+                      },
+                      "required": [
+                        "dayOffset"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [
@@ -5939,6 +6069,24 @@
                     },
                     "delta": {
                       "type": "number"
+                    },
+                    "temporary": {
+                      "type": "object",
+                      "properties": {
+                        "dayOffset": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "relativeTo": {
+                          "type": "string",
+                          "const": "decision-opened"
+                        }
+                      },
+                      "required": [
+                        "dayOffset"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [
@@ -6956,6 +7104,24 @@
                     },
                     "delta": {
                       "type": "number"
+                    },
+                    "temporary": {
+                      "type": "object",
+                      "properties": {
+                        "dayOffset": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "relativeTo": {
+                          "type": "string",
+                          "const": "decision-opened"
+                        }
+                      },
+                      "required": [
+                        "dayOffset"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [
@@ -7357,6 +7523,24 @@
                     },
                     "delta": {
                       "type": "number"
+                    },
+                    "temporary": {
+                      "type": "object",
+                      "properties": {
+                        "dayOffset": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "relativeTo": {
+                          "type": "string",
+                          "const": "decision-opened"
+                        }
+                      },
+                      "required": [
+                        "dayOffset"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [

@@ -12,10 +12,16 @@ import type { CyberFunction } from './primitives'
  */
 export type FunctionTarget = CyberFunction | 'most-pressed'
 
+export interface EffectTiming {
+  dayOffset: number
+  /** Otherwise measured from the action that applies the effect. */
+  relativeTo?: 'decision-opened'
+}
+
 export type GameEffect =
   | { type: 'budget.change'; amount: number; note?: string }
   | { type: 'focus.change'; amount: number }
-  | { type: 'capacity.change'; fn: FunctionTarget; delta: number }
+  | { type: 'capacity.change'; fn: FunctionTarget; delta: number; temporary?: EffectTiming }
   | { type: 'stakeholder.trust'; stakeholderId: string; delta: number; reason?: string }
   | { type: 'stakeholder.concern'; stakeholderId: string; concern: string }
   | { type: 'stakeholder.understanding'; stakeholderId: string; delta: number }
@@ -33,7 +39,7 @@ export type GameEffect =
   | { type: 'evidence.reveal'; evidenceId: string; note?: string }
   | { type: 'node.reveal'; nodeId: string; confidence?: number; verified?: boolean }
   | { type: 'edge.reveal'; edgeId: string; verified?: boolean }
-  | { type: 'node.exposure'; nodeId: string; delta: number }
+  | { type: 'node.exposure'; nodeId: string; delta: number; temporary?: EffectTiming }
   | { type: 'node.weakness'; nodeId: string; delta: number }
   | { type: 'assumption.record'; assumptionId: string; decisionId?: string }
   | { type: 'assumption.invalidate'; assumptionId: string; reason?: string }
