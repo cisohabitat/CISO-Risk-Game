@@ -6,6 +6,11 @@ changes.
 
 ## Documentation
 
+- Keep Vitest and `@vitest/coverage-v8` on matching patched versions (currently
+  5.0.3). This resolves mocker advisories GHSA-qxg6-89mg-rqv8 and
+  GHSA-xp26-3454-mjgp. Retain the CI audit gate; do not suppress advisories to
+  release. Audit dependency updates before running the full revision checks.
+
 - Visual workspace review fixes: secondary screens start with a compact incident
   summary; response decisions remain outside the expandable journal. Briefing
   opens the full journal. Keep recorded incident identity and latest-message

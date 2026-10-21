@@ -71,7 +71,10 @@ The published campaign schema includes the new temporary-effect and timing
 fields for authors of other campaign packs.
 
 Development builds use Vite 8.3.5, which includes fixes for the launch-editor
-advisories affecting Vite 8.3.0–8.3.2. Security auditing remains part of CI.
+advisories affecting Vite 8.3.0–8.3.2. Vitest and its coverage adapter use matching
+5.0.3 releases, including fixes for unauthenticated mock registration and Windows
+redirect-allowlist traversal in the mocker. These are development dependencies;
+security auditing remains part of CI.
 
 The title-screen footer shows the version and links to [release notes](https://ciso-risk-game.vercel.app/release-notes).
 About lists the build's UTC timestamp and linked commit ID, and is also available

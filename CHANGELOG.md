@@ -11,6 +11,9 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Patched Vitest and matching coverage tooling to 5.0.3, resolving two moderate
+  mocker advisories reported by the dependency audit.
+
 - Compact incident context on secondary screens while keeping response actions
   visible; the full factual journal expands on request and opens on Briefing.
 - Give sidebar navigation more room by folding Help and settings. Present Team

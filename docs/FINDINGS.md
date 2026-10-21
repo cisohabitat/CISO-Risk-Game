@@ -18,6 +18,12 @@ fault.
 
 ### Fixed
 
+- **CI reported moderate advisories in Vitest's mocker.** The post-push audit
+  reported GHSA-qxg6-89mg-rqv8 (unauthenticated manual mock registration) and
+  GHSA-xp26-3454-mjgp (Windows redirect-allowlist traversal), both patched in
+  5.0.3. Vitest and its coverage adapter now match at that version. The local
+  dependency audit reports no known vulnerabilities; the audit gate remains.
+
 - **Incident context and utilities crowded the selected workspace.** A visual
   review of build `039956a` at desktop, 1180×820, 393px and 320px found the full
   response journal above every destination. Secondary screens now keep status
