@@ -22,6 +22,13 @@ discover what matters, form and test hypotheses, prioritise scarce attention,
 influence people you do not control, build capability over months, and live with
 delayed consequences.
 
+Secondary screens keep a compact incident summary and any response decisions
+visible, with the factual response journal expandable. Briefing opens the full
+journal. Sidebar utilities live under Help and settings so navigation has more
+space. Team shows capacity and wellbeing separately; executive relationship
+actions appear before expandable profile/history. Inbox uses tighter phone
+spacing and shorter search guidance while retaining all filters and older mail.
+
 During incidents, Inbox, Risk and Organisation retain usable independent
 scroll panes even when response journals, decision receipts and guidance fill
 the top of the screen. The page scrolls to make room rather than collapsing

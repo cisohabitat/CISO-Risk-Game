@@ -4,7 +4,7 @@
  * put in front of people, not in writing a document.
  */
 import { useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews, visibleRisks } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/quarter'
@@ -108,49 +108,6 @@ export function BoardScreen() {
                     </div>
                     <RelationshipScale band={person.band} />
                   </div>
-                  <p className="text-sm italic text-ink-faint text-pretty">{person.voice}</p>
-                  <div>
-                    <p className="text-xs font-medium text-ink-faint">What they care about</p>
-                    <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
-                      {person.priorities.map((priority) => (
-                        <li key={priority}>{priority}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {person.concerns.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-ink-faint">On their mind</p>
-                      <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
-                        {person.concerns.map((concern) => (
-                          <li key={concern}>{concern}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {person.memory.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-ink-faint">They remember</p>
-                      <ul className="mt-1 space-y-1 text-sm">
-                        {person.memory.map((memory, position) => (
-                          <li key={`${memory.day}-${position}`} className="flex gap-2">
-                            <span
-                              aria-hidden="true"
-                              className={
-                                memory.sentiment === 'positive'
-                                  ? 'text-positive'
-                                  : memory.sentiment === 'negative'
-                                    ? 'text-band-high'
-                                    : 'text-ink-faint'
-                              }
-                            >
-                              {memory.sentiment === 'positive' ? '+' : memory.sentiment === 'negative' ? '−' : '·'}
-                            </span>
-                            <span className="text-ink-muted text-pretty">{memory.summary}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                   <div className="flex flex-wrap gap-2 border-t border-line pt-3">
                     {(['listen', 'brief', 'press'] as const).map((approach) => (
                       <Button
@@ -167,6 +124,54 @@ export function BoardScreen() {
                       </Button>
                     ))}
                   </div>
+                  <Disclosure summary={`Profile and history: ${person.name}`}>
+                    <div className="space-y-3">
+                      <p className="text-sm italic text-ink-faint text-pretty">{person.voice}</p>
+                      <div>
+                        <p className="text-xs font-medium text-ink-faint">What they care about</p>
+                        <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
+                          {person.priorities.map((priority) => (
+                            <li key={priority}>{priority}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      {person.concerns.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium text-ink-faint">On their mind</p>
+                          <ul className="mt-1 space-y-0.5 text-sm text-ink-muted">
+                            {person.concerns.map((concern) => (
+                              <li key={concern}>{concern}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {person.memory.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium text-ink-faint">They remember</p>
+                          <ul className="mt-1 space-y-1 text-sm">
+                            {person.memory.map((memory, position) => (
+                              <li key={`${memory.day}-${position}`} className="flex gap-2">
+                                <span
+                                  aria-hidden="true"
+                                  className={
+                                    memory.sentiment === 'positive'
+                                      ? 'text-positive'
+                                      : memory.sentiment === 'negative'
+                                        ? 'text-band-high'
+                                        : 'text-ink-faint'
+                                  }
+                                >
+                                  {memory.sentiment === 'positive' ? '+' : memory.sentiment === 'negative' ? '−' : '·'}
+                                </span>
+                                <span className="text-ink-muted text-pretty">{memory.summary}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                    </div>
+                  </Disclosure>
                 </CardBody>
               </Card>
             </li>

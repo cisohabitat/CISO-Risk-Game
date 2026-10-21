@@ -69,9 +69,11 @@ test('a short desktop rail stays reachable with every function struggling', asyn
   for (const fn of Object.values(save.state.team.functions)) fn!.morale = 0.2
   await openPreparedCampaign(page, save)
   const rail = page.getByRole('navigation', { name: 'Primary' }).first()
-  for (const name of ['Briefing', 'Inbox', 'Risk', 'Organisation', 'Programmes', 'Team', 'Board', 'Your year', 'Glossary']) {
+  for (const name of ['Briefing', 'Inbox', 'Risk', 'Organisation', 'Programmes', 'Team', 'Board', 'Your year']) {
     await expectReachable(rail.getByRole('button', { name, exact: true }))
   }
+  await rail.locator('summary', { hasText: 'Help and settings' }).click()
+  await expectReachable(rail.getByRole('button', { name: 'Glossary', exact: true }))
   await expectReachable(rail.getByRole('button', { name: 'Shortcut keys on', exact: true }))
   await expectReachable(rail.getByRole('button', { name: 'Briefing', exact: true }))
   await rail.getByRole('button', { name: 'Briefing', exact: true }).click()

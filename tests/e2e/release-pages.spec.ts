@@ -73,6 +73,7 @@ test('build details open separately while a campaign stays available', async ({ 
   if (page.viewportSize()!.width < 1024) {
     await page.getByRole('navigation', { name: 'Primary' }).getByRole('button', { name: 'More' }).click()
   }
+  if (page.viewportSize()!.width >= 1024) await page.locator('summary', { hasText: 'Help and settings' }).click()
   const link = page.getByRole('link', { name: /About and build details/ }).filter({ visible: true })
   await expect(link).toHaveAttribute('href', '/about#release-and-build')
   const opened = page.waitForEvent('popup')

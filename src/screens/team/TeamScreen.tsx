@@ -39,7 +39,10 @@ export function TeamScreen() {
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <h3 className="font-display text-xl leading-tight">{fn.label}</h3>
-                    <Badge tone={capacityTone(fn.band)} glyph={false}>{fn.band}</Badge>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge tone={capacityTone(fn.band)} glyph={false}>Capacity: {fn.band}</Badge>
+                      <Badge tone={fn.moraleLabel === 'Burning out' ? 'high' : fn.moraleLabel === 'Strained' ? 'elevated' : 'positive'} glyph={false}>Wellbeing: {fn.moraleLabel}</Badge>
+                    </div>
                   </div>
                   <Meter label="Committed" value={fn.committed} max={fn.capacity}
                     valueLabel={`${fn.committed} of ${fn.capacity} days a week`} tone={capacityTone(fn.band)} />
@@ -57,7 +60,7 @@ export function TeamScreen() {
                 </div>
                 <div className="space-y-3 border-t border-line pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
                   <p className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
-                    <span className="text-xs font-medium text-ink-faint">Morale</span><span>{fn.moraleLabel}</span>
+                    <span className="text-xs font-medium text-ink-faint">Recovery outlook</span>
                   </p>
                   <p className="text-sm leading-relaxed text-ink-muted">{fn.recoveryNote}</p>
                   <div className="text-sm">

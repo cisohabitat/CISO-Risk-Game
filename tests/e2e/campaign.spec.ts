@@ -479,6 +479,7 @@ test.describe('a first year at Nexora', () => {
   test('the glossary is reachable from anywhere', async ({ page }) => {
     await startCampaign(page, 'e2e-glossary')
     const nav = page.getByRole('navigation', { name: 'Primary' })
+    if (page.viewportSize()!.width >= 1024) await nav.locator('summary', { hasText: 'Help and settings' }).click()
     const direct = nav.getByRole('button', { name: 'Glossary' })
     if (await direct.isVisible().catch(() => false)) {
       await direct.click()

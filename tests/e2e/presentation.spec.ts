@@ -25,6 +25,7 @@ test('sound makes no audio until the player turns it on', async ({ page }) => {
 
   const width = page.viewportSize()?.width ?? 1280
   if (width < 1024) await page.getByRole('button', { name: 'More' }).click()
+  else await page.locator('summary', { hasText: 'Help and settings' }).click()
   const toggle = page.getByTestId('sound-toggle').filter({ visible: true })
   await expect(toggle).toHaveAttribute('aria-pressed', 'false')
   await toggle.click()

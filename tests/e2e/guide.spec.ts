@@ -45,7 +45,8 @@ test.describe("the player's guide", () => {
   test('is within reach during a campaign, beside the glossary', async ({ page }) => {
     await startCampaign(page)
     const nav = page.getByRole('navigation', { name: 'Primary' })
-    // The desktop rail carries it; on a phone it sits behind More.
+    // Desktop utilities fold under Help and settings; phones use More.
+    if (page.viewportSize()!.width >= 1024) await nav.locator('summary', { hasText: 'Help and settings' }).click()
     let link = page.getByRole('link', { name: /player's guide/i }).filter({ visible: true })
     if ((await link.count()) === 0) {
       await nav.getByRole('button', { name: 'More' }).click()

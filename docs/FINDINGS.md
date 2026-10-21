@@ -18,6 +18,19 @@ fault.
 
 ### Fixed
 
+- **Incident context and utilities crowded the selected workspace.** A visual
+  review of build `039956a` at desktop, 1180×820, 393px and 320px found the full
+  response journal above every destination. Secondary screens now keep status
+  and response decisions outside an expandable journal; Briefing opens it.
+  Folded sidebar utilities give all eight destinations room in landscape.
+  Team labels capacity and wellbeing separately, executive actions precede
+  expandable profiles, and Inbox phone spacing/search help is shorter.
+  `visual-hierarchy.spec.ts` checks retained response actions, keyboard
+  disclosures, landscape destination visibility, separate wellbeing labels,
+  action order, horizontal overflow and expanded Board accessibility. Existing
+  incident-art tests also preserve facts before response actions. These are
+  browser checks, not physical iPhone gesture or human usability validation.
+
 - **Incident banners collapsed landscape readers.** A complete first-year
   browser review on seed `full-review-20261021` reproduced a zero-height Inbox
   workspace at 1440×900 and 1180×820. At the smaller size it stayed collapsed

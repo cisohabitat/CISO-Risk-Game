@@ -6,6 +6,19 @@ changes.
 
 ## Documentation
 
+- Visual workspace review fixes: secondary screens start with a compact incident
+  summary; response decisions remain outside the expandable journal. Briefing
+  opens the full journal. Keep recorded incident identity and latest-message
+  links intact, with keyboard-accessible disclosure controls.
+- Sidebar destinations take priority over utilities. Help and settings folds
+  secondary tools; expanded tools scroll within a bounded area. Preserve 44px
+  touch targets and verify all destinations at landscape tablet sizes.
+- Team presents capacity and wellbeing as separate labelled badges; spare
+  capacity must never visually obscure burnout. Executive relationship actions
+  precede expandable profile/history; do not discard memories or change effects.
+- Inbox spacing and search help stay concise on phones without hiding filters,
+  older mail, search scope, reader targets or independent pane scrolling.
+
 - The 21 October full-campaign review fixes are owner-authorised. Landscape
   split panes retain 12rem of working height, or 20rem during an incident, when
   receipt and guidance banners stack above them; the main page may grow and

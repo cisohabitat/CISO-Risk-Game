@@ -76,8 +76,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
           </div>
         </div>
-        <div className="sidebar-menu scroll-area flex-1">
-          <ul className="space-y-1 p-3">
+        <div className="sidebar-menu scroll-area min-h-0 flex-1">
+          <ul className="p-2">
             {DESTINATIONS.map((destination) => (
               <li key={destination.id}>
                 <button
@@ -134,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </ul>
           <YearStrip day={state.currentDay} />
         </div>
-        <div className="space-y-3 border-t border-line p-4 text-sm">
+        <div className="sidebar-resources max-h-[50dvh] shrink-0 space-y-2 overflow-y-auto border-t border-line p-3 text-sm">
           <dl className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Budget left</dt>
@@ -160,21 +160,26 @@ export function AppShell({ children }: { children: ReactNode }) {
               </dd>
             </div>
           </dl>
-          {/* A pair, drawn alike: the guide was bare text under a boxed button. */}
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="quiet" size="sm" block onClick={() => openGlossary()} className="compact min-h-10">
-              Glossary
-            </Button>
-            <a href={GUIDE_URL} target="_blank" rel="noopener" className={buttonClass('quiet', 'sm', true, 'compact min-h-10')}>
-              Guide <Icon name="external" size={14} />
-              <span className="sr-only">: the player's guide (opens in a new tab)</span>
-            </a>
-          </div>
-          <a href="/about#release-and-build" target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center rounded-lg text-center text-xs text-ink-muted underline underline-offset-2">
-            About and build details<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          <SoundToggle className="compact min-h-9" />
-          <ShortcutsToggle className="compact min-h-9" />
+          <details className="sidebar-tools max-h-[35dvh] overflow-y-auto">
+            <summary className="cursor-pointer rounded-lg px-2 py-2 text-sm font-medium hover:bg-surface-2">Help and settings</summary>
+            <div className="space-y-2 pt-2">
+              {/* A pair, drawn alike: the guide was bare text under a boxed button. */}
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="quiet" size="sm" block onClick={() => openGlossary()} className="compact min-h-10">
+                  Glossary
+                </Button>
+                <a href={GUIDE_URL} target="_blank" rel="noopener" className={buttonClass('quiet', 'sm', true, 'compact min-h-10')}>
+                  Guide <Icon name="external" size={14} />
+                  <span className="sr-only">: the player's guide (opens in a new tab)</span>
+                </a>
+              </div>
+              <a href="/about#release-and-build" target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center rounded-lg text-center text-xs text-ink-muted underline underline-offset-2">
+                About and build details<span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              <SoundToggle className="compact min-h-9" />
+              <ShortcutsToggle className="compact min-h-9" />
+            </div>
+          </details>
           <RecordingControl className="border-t border-line pt-3" />
         </div>
       </nav>

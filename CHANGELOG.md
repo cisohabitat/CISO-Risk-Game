@@ -11,6 +11,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Compact incident context on secondary screens while keeping response actions
+  visible; the full factual journal expands on request and opens on Briefing.
+- Give sidebar navigation more room by folding Help and settings. Present Team
+  wellbeing alongside capacity, bring executive actions above expandable
+  profiles/history, and tighten Inbox spacing and search guidance on phones.
+
 - Keep Inbox, Risk and Organisation readers usable beneath incident banners;
   long banner stacks expand the page while preserving independent pane scrolling.
 - Keep incident journals, response decisions and latest-message links scoped to

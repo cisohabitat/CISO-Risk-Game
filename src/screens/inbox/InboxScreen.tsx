@@ -127,9 +127,9 @@ export function InboxScreen() {
   if (!state) return null
 
   return (
-    <div className="split-shell correspondence-workspace space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div><p className="document-kicker">Nexora Group · Correspondence</p><h1 className="mt-2 font-display text-3xl leading-tight">Inbox</h1></div>
+    <div className="split-shell correspondence-workspace space-y-3 sm:space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+        <div><p className="document-kicker">Nexora Group · Correspondence</p><h1 className="mt-1 font-display text-3xl leading-tight sm:mt-2">Inbox</h1></div>
         <SegmentedControl
           label="Filter messages"
           value={filter}
@@ -144,13 +144,13 @@ export function InboxScreen() {
           <input type="search" value={query} onChange={(event) => {
             setQuery(event.target.value)
             setMessageLimit(60)
-          }} placeholder="Sender, subject or words in the message" className="mt-1 block w-full min-w-0 rounded-lg border border-line bg-surface px-3 py-2.5 text-base font-normal" aria-describedby="message-search-help" />
+          }} placeholder="Sender, subject or message text" className="mt-1 block w-full min-w-0 rounded-lg border border-line bg-surface px-3 py-2.5 text-base font-normal" aria-describedby="message-search-help" />
         </label>
         {query && messages.length > 0 && <Button variant="quiet" size="sm" onClick={() => {
           setQuery('')
           setMessageLimit(60)
         }}>Clear search</Button>}
-        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all messages in this filter, including older mail. Choose a result to read it.</p>
+        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all mail in this filter, including older messages.</p>
       </div>
 
       {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}

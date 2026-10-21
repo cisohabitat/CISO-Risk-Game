@@ -20,6 +20,7 @@ export function IncidentCommand() {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const setUi = useGameStore((store) => store.setUi)
+  const screen = useGameStore((store) => store.ui.screen)
   const setScreen = useGameStore((store) => store.setScreen)
   // Once the year is over nothing can be decided, and the panel sat above the
   // annual review offering a response log. The review says the incident was
@@ -45,10 +46,9 @@ export function IncidentCommand() {
       <p className="sticky top-0 z-10 bg-alarm px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-on-alarm">
         Incident active · {incident.name} · {incident.phaseLabel}
       </p>
-      <CardBody className="space-y-4">
+      <CardBody className="space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="document-kicker mb-2">Response journal</p>
             <h2 id="incident-command" tabIndex={-1} className="scroll-mt-36 font-display text-xl leading-tight text-balance">
               {incident.name}
             </h2>
@@ -58,11 +58,12 @@ export function IncidentCommand() {
               {incident.detectedDay === undefined && ' · not yet confirmed detected'}
             </p>
           </div>
-          <IncidentIllustration name={incident.name} phase={incident.phaseLabel} className="w-24 shrink-0 sm:w-40" />
+          {screen === 'home' && <IncidentIllustration name={incident.name} phase={incident.phaseLabel} className="w-24 shrink-0 sm:w-40" />}
           {incident.awaiting.length === 0 && incident.timeline.length > 0 && (
             <Button
               variant="secondary"
               size="sm"
+              className="w-full sm:w-auto"
               onClick={() => {
                 // Land on the incident, not on whatever was selected last time.
                 const latest = incident.timeline.at(-1)
@@ -87,7 +88,7 @@ export function IncidentCommand() {
           <span className="text-ink-muted">
             <span className="mb-1 block text-xs text-ink-faint">Recovery:</span> {incident.recoveryLabel}
           </span>
-          {incident.servicesAffected.length > 0 && (
+          {screen === 'home' && incident.servicesAffected.length > 0 && (
             <span className="col-span-2 text-ink-muted sm:col-span-1">
               <span className="mb-1 block text-xs text-ink-faint">Services:</span> {incident.servicesAffected.join(', ')}
             </span>
@@ -111,45 +112,49 @@ export function IncidentCommand() {
           </div>
         )}
 
-
-
-        {incident.timeline.length > 0 && (
-          <div>
-            <p className="text-xs font-medium text-ink-faint">Latest update</p>
-            <ol className="response-timeline mt-3 text-sm">
-              {incident.timeline.slice(-1).map((entry, position) => (
-                <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
-                  <span className="text-ink-muted">{entry.text}</span>
-                </li>
-              ))}
-            </ol>
-            {incident.timeline.length > 1 && <div className="mt-3"><Disclosure summary={`Earlier updates (${incident.timeline.length - 1})`}>
-              <ol className="response-timeline space-y-3">
-                {incident.timeline.slice(0, -1).map((entry, position) => <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
-                  <span>{entry.text}</span>
-                </li>)}
+        <Disclosure key={`${incident.id}:${screen}`} summary="Response journal" defaultOpen={screen === 'home'}>
+          {screen !== 'home' && <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+            <p>Services: {incident.servicesAffected.length ? incident.servicesAffected.join(', ') : 'Not yet confirmed'}</p>
+            <IncidentIllustration name={incident.name} phase={incident.phaseLabel} className="w-24 shrink-0 sm:w-40" />
+          </div>}
+          {incident.timeline.length > 0 && (
+            <div>
+              <p className="text-xs font-medium text-ink-faint">Latest update</p>
+              <ol className="response-timeline mt-3 text-sm">
+                {incident.timeline.slice(-1).map((entry, position) => (
+                  <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
+                    <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                    <span className="text-ink-muted">{entry.text}</span>
+                  </li>
+                ))}
               </ol>
-            </Disclosure></div>}
-          </div>
-        )}
+              {incident.timeline.length > 1 && <div className="mt-3"><Disclosure summary={`Earlier updates (${incident.timeline.length - 1})`}>
+                <ol className="response-timeline space-y-3">
+                  {incident.timeline.slice(0, -1).map((entry, position) => <li key={`${entry.day}-${position}`} className="flex gap-3 text-pretty">
+                    <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                    <span>{entry.text}</span>
+                  </li>)}
+                </ol>
+              </Disclosure></div>}
+            </div>
+          )}
 
-        {incident.taken.length > 0 && (
-          <Disclosure summary={`What you have already decided (${incident.taken.length})`}>
-            <ul className="mt-1.5 space-y-1 text-sm">
-              {incident.taken.map((entry, position) => (
-                <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
-                  <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
-                  <span className="text-ink-muted">
-                    {entry.title}: <span className="text-ink">{entry.option}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Disclosure>
-        )}
+          {incident.taken.length > 0 && (
+            <Disclosure summary={`What you have already decided (${incident.taken.length})`}>
+              <ul className="mt-1.5 space-y-1 text-sm">
+                {incident.taken.map((entry, position) => (
+                  <li key={`${entry.day}-${position}`} className="flex gap-2 text-pretty">
+                    <span className="shrink-0 tabular-nums text-ink-faint">{shortDate(entry.day)}</span>
+                    <span className="text-ink-muted">
+                      {entry.title}: <span className="text-ink">{entry.option}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Disclosure>
+          )}
 
+        </Disclosure>
       </CardBody>
     </Card>
   )

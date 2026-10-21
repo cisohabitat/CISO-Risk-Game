@@ -24,8 +24,9 @@ The game's automated browser tests run before every release.
   belong to the page: they do nothing while a dialog is open or a control has
   focus, so Space presses a button and the arrows move between tabs. Dialogs
   keep focus inside them and return it when they close. Changing screen moves
-  focus to the new one. **Shortcut keys** (beside Sound) turns the
-  single-key shortcuts off, and the choice is kept.
+  focus to the new one. **Shortcut keys** (under Help and settings on desktop,
+  or More on a phone, beside Sound) turns the single-key shortcuts off, and the
+  choice is kept.
 - **Nothing is said by colour alone.** Every rating carries a word, and risk
   ratings a height mark as well (▁▃▅▆█). The dependency map has a key, and
   every box on it names what it is.
