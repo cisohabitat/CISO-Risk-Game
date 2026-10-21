@@ -1,5 +1,21 @@
 # Content flow audit — 20 October 2026
 
+## 21 October addition: AI-accelerated checkout exploit
+
+The owner authorised a focused expansion of the existing exploit decision.
+The same six-seed command was rerun with that content: 24 distinct campaign
+years and 24 deterministic repeats pass daily invariants. Current inventory is
+222 events, 49 decisions, 149 options and 74 scheduled reply targets, with no
+unreferenced replies or exact duplicate authored bodies. All six paired policies
+still differ in choices, received callbacks and review records. Figures below
+remain the original 20 October measurements rather than a new pacing claim.
+
+Focused engine tests cover every option's response, the live logging-coverage
+branch, capacity release, scheduled patching and late-year save/transition.
+`pnpm soak 30 --years 2` also completed 30 two-year campaigns across the three
+modes with no crashes or invariant failures. None of these probes establishes
+human understanding, engagement or attribution of AI use against Nexora.
+
 Scope: promises and follow-through, repeated mail, quiet-period visibility and
 replay consistency. Base revision: `114d237`; measurements include this
 changeset's fixes. No human sessions were run for this audit.

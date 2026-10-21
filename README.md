@@ -22,6 +22,15 @@ discover what matters, form and test hypotheses, prioritise scarce attention,
 influence people you do not control, build capability over months, and live with
 delayed consequences.
 
+The checkout-framework threat explores AI-accelerated exploit development:
+a fictional sector advisory reports working variants within hours, while the
+normal patch window is eleven days away. You have two days to choose emergency
+patching, restricted access, a temporary SOC watch or edge mitigation. Each
+response has a recorded follow-up; watch reports reflect current logging
+coverage, and delayed patching and capacity releases survive a year boundary.
+The advisory does not prove an intrusion at Nexora. Existing controls and attack
+paths determine incidents; there is no separate AI score or scripted breach.
+
 The title-screen footer shows the version and links to [release notes](https://ciso-risk-game.vercel.app/release-notes).
 About lists the build's UTC timestamp and linked commit ID, and is also available
 from the in-game rail or mobile menu in a separate tab. The version comes from

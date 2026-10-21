@@ -66,7 +66,7 @@ These are enforced by lint or by tests, so breaking one fails the build.
 | `pnpm ladder transcript ciso [seed] [situation]` | Everything one year says, in full — messages, decisions, the close (`--years 2` prints the second) |
 | `pnpm tsx scripts/efficacy.ts 150` | Does each programme reduce what it is meant to? |
 | `pnpm guide:shots` | Regenerates the pictures in `docs/PLAYER_GUIDE.md` |
-| `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
+| `pnpm tsx scripts/prepare-campaign.ts <seed> <stop>` | A save the engine played to a point (`pattern`, `board`, `incident`, `exploit`, `year-end`, `day:N`), which browser tests load instead of clicking through months |
 | `pnpm build && pnpm size` | What does a first-time player download? |
 | `pnpm validate:content --pack <file>` | Does a pack (Nexora by default) resolve, read in the voice, and fill a year? `pnpm content:bundle` writes Nexora as a pack to start from |
 | `pnpm strings` | How much English would a translation replace, and where does it live? (`docs/LOCALISATION.md`) |
@@ -89,6 +89,10 @@ end-to-end suite is serving. Do not run the two at once; finish one first.
 
 **The feature set is complete and the major systems are frozen.** The remaining
 work is playtesting, tightening and rewriting unclear text — not new mechanics.
+On 21 October 2026 the owner authorised one AI-accelerated exploit scenario.
+It extends the existing checkout decision through authored conditions/effects,
+shortens its response window and adds an access-restriction option and replies;
+global threat speed, difficulty and incident generation remain unchanged.
 On 18 October 2026 the owner authorised annual-rating safeguards and programme
 relevance assessment, without changing simulation effects, difficulty or weights.
 Further simulation is now more likely to make the game worse than better unless

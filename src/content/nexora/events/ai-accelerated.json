@@ -1,0 +1,152 @@
+{
+  "events": [
+    {
+      "id": "evt-con-exploit-emergency",
+      "type": "programme",
+      "title": "The emergency checkout change you authorised",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The emergency patch you authorised is applied. Engineering capacity diverted to that change has been released. Priya has had to replan delivery work around it.\n\nIt reduces the framework weakness the advisory identified. It does not establish whether an earlier attempt succeeded, and other routes still need their own controls.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "exploit.emergency"
+        }
+      ],
+      "weight": 1,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "scheduledOnly": true,
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
+      "tags": [
+        "consequence",
+        "vulnerability",
+        "ai-accelerated"
+      ]
+    },
+    {
+      "id": "evt-con-exploit-mitigate",
+      "type": "threat",
+      "title": "The edge mitigation you chose",
+      "from": "Callum Reid, Head of Security Engineering",
+      "body": "The edge mitigation you chose reduces exposed access while the checkout patch waits. Engineering remains committed to this work until the scheduled window.\n\nThe framework weakness is still present. Variants are a reason to keep checking the rule, not evidence that the route is safe.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "exploit.mitigate"
+        }
+      ],
+      "weight": 1,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "scheduledOnly": true,
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
+      "tags": [
+        "consequence",
+        "vulnerability",
+        "ai-accelerated"
+      ]
+    },
+    {
+      "id": "evt-con-exploit-window",
+      "type": "threat",
+      "title": "The temporary watch you authorised",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "You kept the eleven-day patch window and assigned a temporary watch. The SOC is reviewing the part of the estate covered by logging. The assignment continues until the patch.\n\nThat coverage gives us evidence to examine, not a clean bill of health. Monitoring cannot replace the patch or prove that every attempt would be seen.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "exploit.window"
+        },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "control.coverageBelow",
+            "controlId": "ctl-logging",
+            "value": 0.6
+          }
+        }
+      ],
+      "weight": 1,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "scheduledOnly": true,
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
+      "tags": [
+        "consequence",
+        "vulnerability",
+        "ai-accelerated"
+      ]
+    },
+    {
+      "id": "evt-con-exploit-window-limited",
+      "type": "threat",
+      "title": "The temporary watch has limited visibility",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "You kept the eleven-day patch window and assigned a temporary watch. Logging coverage is limited, so the SOC cannot give you a firm account of activity across the estate. The assignment continues until the patch.\n\nNot seeing an attempt is not evidence that none occurred. The exposed framework still needs the scheduled patch.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "exploit.window"
+        },
+        {
+          "kind": "control.coverageBelow",
+          "controlId": "ctl-logging",
+          "value": 0.6
+        }
+      ],
+      "weight": 1,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "scheduledOnly": true,
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
+      "tags": [
+        "consequence",
+        "vulnerability",
+        "ai-accelerated"
+      ]
+    },
+    {
+      "id": "evt-con-exploit-isolate",
+      "type": "threat",
+      "title": "The checkout restriction you authorised",
+      "from": "Priya Nandakumar, Managing Director, Digital",
+      "body": "The checkout access restriction you authorised is in place. Public exposure is reduced and the platform launch work has taken the delay. I have had to replan around it.\n\nThe framework patch is still due in the scheduled window. Lifting the restriction then will not recover the delivery time we have already lost.",
+      "priority": "notable",
+      "availableFromDay": 0,
+      "conditions": [
+        {
+          "kind": "flag.set",
+          "flag": "exploit.isolate"
+        }
+      ],
+      "weight": 1,
+      "pinned": false,
+      "oncePerCampaign": true,
+      "scheduledOnly": true,
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
+      "tags": [
+        "consequence",
+        "vulnerability",
+        "ai-accelerated"
+      ]
+    }
+  ]
+}

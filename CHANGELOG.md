@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Extended the checkout exploit decision with an AI-accelerated disclosure,
+  a two-day response window, an access-restriction option and choice-specific
+  follow-ups. Temporary monitoring consumes SOC capacity; its report reflects
+  current logging coverage without claiming that silence proves safety.
 - Preserve free-text campaign seeds in replay links instead of silently choosing
   a different seed, and retain a valid accessible reader target in Inbox search.
 - Search Inbox correspondence across sender, subject, body and older mail,

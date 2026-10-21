@@ -393,34 +393,248 @@
     },
     {
       "id": "dec-exploit-published",
-      "title": "A working exploit for the checkout framework",
-      "description": "A public exploit exists for the framework version running the checkout service. The delivery team's next release window is in eleven days.",
-      "context": "Priya will not want an emergency change during the launch run-up. The alternative is carrying a known, weaponised weakness on an internet-facing service.",
-      "deadlineDays": 4,
+      "title": "The exploit arrived before the change window",
+      "description": "A sector advisory reports AI-assisted analysis turning the checkout framework fix into working exploit variants within hours. Nexora runs the affected version. The planned patch window is eleven days away.",
+      "context": "Priya wants the release kept on track; the exposed route is still reachable and the usual change process has not caught up. The advisory describes how the exploit was developed, not proof that an AI-enabled actor has entered Nexora.",
+      "deadlineDays": 2,
       "defaultOptionId": "opt-exploit-window",
       "requiresRationale": true,
-      "relatedNodeIds": ["node-app-checkout"],
+      "relatedNodeIds": [
+        "node-app-checkout"
+      ],
       "options": [
-        { "id": "opt-exploit-emergency", "label": "Force an emergency patch", "description": "Invoke emergency change and patch this week.", "visibleKnownEffects": ["Disrupts the delivery plan", "Closes the exposure quickly"],
-          "immediateEffects": [
-            { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.25 },
-            { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.08, "reason": "You forced an emergency change during the launch run-up." },
-            { "type": "operationalTolerance", "delta": -0.06 },
-            { "type": "threat.setback", "actorId": "actor-credential", "stages": 1 }
-          ] },
-        { "id": "opt-exploit-window", "label": "Wait for the scheduled window", "description": "Eleven days is not long.", "visibleKnownEffects": ["No disruption", "Eleven days of exposure to a public exploit"],
-          "immediateEffects": [
-            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": 0.08 },
-            { "type": "threat.interest", "actorId": "actor-credential", "delta": 0.08 }
+        {
+          "id": "opt-exploit-emergency",
+          "label": "Force an emergency patch",
+          "description": "Use emergency change now and divert engineers from planned delivery work.",
+          "visibleKnownEffects": [
+            "Reduces the known framework weakness immediately",
+            "Priya loses trust over the unplanned change",
+            "Diverts engineering capacity for two days"
           ],
-          "delayedEffects": [ { "dayOffset": 11, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.2 }, { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.08 } ], "note": "The checkout framework has been patched in the scheduled window." } ] },
-        { "id": "opt-exploit-mitigate", "label": "Mitigate at the edge, patch in the window", "description": "Block the exploit path at the perimeter now and patch on schedule.", "visibleKnownEffects": ["No delivery disruption", "Mitigation is not the same as a fix"],
           "immediateEffects": [
-            { "type": "node.exposure", "nodeId": "node-app-checkout", "delta": -0.1 },
-            { "type": "control.coverage", "controlId": "ctl-vuln", "delta": 0.04 },
-            { "type": "capacity.change", "fn": "engineering", "delta": -0.5 }
+            {
+              "type": "node.weakness",
+              "nodeId": "node-app-checkout",
+              "delta": -0.25
+            },
+            {
+              "type": "stakeholder.trust",
+              "stakeholderId": "stk-digital",
+              "delta": -0.08,
+              "reason": "You forced an emergency change during the launch run-up."
+            },
+            {
+              "type": "operationalTolerance",
+              "delta": -0.06
+            },
+            {
+              "type": "threat.setback",
+              "actorId": "actor-credential",
+              "stages": 1
+            },
+            {
+              "type": "flag.set",
+              "flag": "exploit.emergency"
+            },
+            {
+              "type": "event.schedule",
+              "eventId": "evt-con-exploit-emergency",
+              "dayOffset": 2
+            },
+            {
+              "type": "capacity.change",
+              "fn": "engineering",
+              "delta": -0.5
+            }
           ],
-          "delayedEffects": [ { "dayOffset": 11, "effects": [ { "type": "node.weakness", "nodeId": "node-app-checkout", "delta": -0.2 }, { "type": "capacity.change", "fn": "engineering", "delta": 0.5 } ], "note": "Checkout has been patched; the edge mitigation is retired." } ] }
+          "delayedEffects": [
+            {
+              "dayOffset": 2,
+              "effects": [
+                {
+                  "type": "capacity.change",
+                  "fn": "engineering",
+                  "delta": 0.5
+                }
+              ],
+              "note": "Engineering capacity diverted to the emergency framework patch is released."
+            }
+          ]
+        },
+        {
+          "id": "opt-exploit-window",
+          "label": "Accept temporary exposure with a SOC watch",
+          "description": "Keep the eleven-day patch window and assign a temporary watch. Monitoring can miss an attempt.",
+          "visibleKnownEffects": [
+            "Keeps the planned release window",
+            "Carries exposure until the scheduled patch",
+            "Diverts SOC capacity for eleven days"
+          ],
+          "immediateEffects": [
+            {
+              "type": "node.exposure",
+              "nodeId": "node-app-checkout",
+              "delta": 0.08
+            },
+            {
+              "type": "threat.interest",
+              "actorId": "actor-credential",
+              "delta": 0.08
+            },
+            {
+              "type": "flag.set",
+              "flag": "exploit.window"
+            },
+            {
+              "type": "event.schedule",
+              "eventId": "evt-con-exploit-window",
+              "dayOffset": 2
+            },
+            {
+              "type": "capacity.change",
+              "fn": "soc",
+              "delta": -0.5
+            },
+            {
+              "type": "event.schedule",
+              "eventId": "evt-con-exploit-window-limited",
+              "dayOffset": 2
+            }
+          ],
+          "delayedEffects": [
+            {
+              "dayOffset": 11,
+              "effects": [
+                {
+                  "type": "node.weakness",
+                  "nodeId": "node-app-checkout",
+                  "delta": -0.2
+                },
+                {
+                  "type": "node.exposure",
+                  "nodeId": "node-app-checkout",
+                  "delta": -0.08
+                },
+                {
+                  "type": "capacity.change",
+                  "fn": "soc",
+                  "delta": 0.5
+                }
+              ],
+              "note": "The checkout framework has been patched in the scheduled window; the temporary SOC assignment ends."
+            }
+          ]
+        },
+        {
+          "id": "opt-exploit-mitigate",
+          "label": "Mitigate at the edge, patch in the window",
+          "description": "Filter the exploit route at the edge while keeping the eleven-day patch window. Variants may evade a rule.",
+          "visibleKnownEffects": [
+            "Reduces exposed access while the patch waits",
+            "Mitigation does not remove the framework weakness",
+            "Diverts engineering capacity for eleven days"
+          ],
+          "immediateEffects": [
+            {
+              "type": "node.exposure",
+              "nodeId": "node-app-checkout",
+              "delta": -0.1
+            },
+            {
+              "type": "control.coverage",
+              "controlId": "ctl-vuln",
+              "delta": 0.04
+            },
+            {
+              "type": "capacity.change",
+              "fn": "engineering",
+              "delta": -0.5
+            },
+            {
+              "type": "flag.set",
+              "flag": "exploit.mitigate"
+            },
+            {
+              "type": "event.schedule",
+              "eventId": "evt-con-exploit-mitigate",
+              "dayOffset": 2
+            }
+          ],
+          "delayedEffects": [
+            {
+              "dayOffset": 11,
+              "effects": [
+                {
+                  "type": "node.weakness",
+                  "nodeId": "node-app-checkout",
+                  "delta": -0.2
+                },
+                {
+                  "type": "capacity.change",
+                  "fn": "engineering",
+                  "delta": 0.5
+                }
+              ],
+              "note": "Checkout has been patched; the edge mitigation is retired."
+            }
+          ]
+        },
+        {
+          "id": "opt-exploit-isolate",
+          "label": "Restrict the affected route until patching",
+          "description": "Restrict public access to the affected checkout route and hold related launch work until the patch window.",
+          "visibleKnownEffects": [
+            "Reduces public exposure before patching",
+            "Delays platform launch work",
+            "Priya loses trust over the restrictions"
+          ],
+          "immediateEffects": [
+            {
+              "type": "node.exposure",
+              "nodeId": "node-app-checkout",
+              "delta": -0.2
+            },
+            {
+              "type": "objective.delay",
+              "objectiveId": "obj-platform-launch",
+              "days": 7
+            },
+            {
+              "type": "stakeholder.trust",
+              "stakeholderId": "stk-digital",
+              "delta": -0.06,
+              "reason": "You restricted the checkout route and held launch work."
+            },
+            {
+              "type": "flag.set",
+              "flag": "exploit.isolate"
+            },
+            {
+              "type": "event.schedule",
+              "eventId": "evt-con-exploit-isolate",
+              "dayOffset": 2
+            }
+          ],
+          "delayedEffects": [
+            {
+              "dayOffset": 11,
+              "effects": [
+                {
+                  "type": "node.weakness",
+                  "nodeId": "node-app-checkout",
+                  "delta": -0.2
+                },
+                {
+                  "type": "node.exposure",
+                  "nodeId": "node-app-checkout",
+                  "delta": 0.2
+                }
+              ],
+              "note": "The checkout framework is patched and the temporary access restriction is lifted; the launch delay remains recorded."
+            }
+          ]
+        }
       ]
     },
     {

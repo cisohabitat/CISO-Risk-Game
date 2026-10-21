@@ -34,7 +34,9 @@ const BUDGETS: Budget[] = [
   // longer delays the first screen; it still has to arrive before the first
   // day can be played. Raised from 77 when it left the first load, to leave
   // room for roughly sixty more short letters before this is looked at again.
-  { name: 'campaign-', limit: 90, why: 'the authored campaign, loaded when a campaign opens' },
+  // The owner-approved AI-accelerated exploit and five replies take the campaign
+  // from 89.3 to 90.8 KiB. First-screen and complete-visit limits stay unchanged.
+  { name: 'campaign-', limit: 92, why: 'the authored campaign, loaded when a campaign opens' },
   { name: 'react-', limit: 75, why: 'the framework' },
   { name: 'OrgGraph-', limit: 70, why: 'the graph library, which must stay out of the first load' },
 ]

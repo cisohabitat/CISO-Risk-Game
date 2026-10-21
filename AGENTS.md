@@ -6,6 +6,13 @@ changes.
 
 ## Documentation
 
+- The owner authorised the AI-accelerated checkout exploit scenario on 21 October
+  2026. Extend the existing event/decision through authored conditions/effects;
+  preserve previous option IDs and avoid a separate AI score or forced breach.
+  Logging-dependent replies check current coverage at delivery, including after
+  a year transition. The fictional advisory is not attribution of Nexora activity.
+  Use the `exploit` prepared-campaign stop for browser coverage. Global threat
+  speed, difficulty and incident generation remain unchanged.
 - Inbox search covers sender, subject and body across the full selected filter,
   before pagination. Searching must not automatically read transient results;
   preserve frozen Unread membership and choose results explicitly. Keep search

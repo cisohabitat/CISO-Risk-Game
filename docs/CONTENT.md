@@ -77,6 +77,14 @@ variant only ever arrives after the original, so it may say "again".
 
 ## Writing a decision
 
+**AI acceleration changes the trade-off, not the evidence standard.** The
+checkout exploit uses a fictional advisory about faster exploit development,
+a shorter response deadline and existing exposure/capacity/delivery effects.
+It does not identify an AI-enabled actor inside Nexora or force an incident.
+Callbacks name the actual choice and check any present capability they claim;
+the SOC watch uses current logging coverage. Preserve existing option IDs and
+use scheduled guard flags for replies that may cross into another year.
+
 Each option needs a label, a description, the foreseeable effects, immediate
 effects and, where the point is delayed consequence, `delayedEffects`. Set
 `requiresRationale` for material decisions: the recorded rationale is read back

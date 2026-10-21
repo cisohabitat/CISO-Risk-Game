@@ -55,6 +55,15 @@ remain unmet until actual sessions provide evidence; grades remain provisional.
 
 ## What "AAA" means here
 
+On 21 October 2026 the owner authorised a focused AI-accelerated threat addition.
+The existing checkout exploit now asks for a response within two days, preserves
+its earlier option IDs, adds restricted access and answers each choice. It uses
+existing control, exposure, capacity and delivery effects; incidents still follow
+the simulation. This is a scoped content addition, not evidence that pacing or
+replay grades have improved. Human review should ask whether players distinguish
+faster exploit development from proof of compromise and understand the cost of
+carrying exposure until a planned patch window.
+
 Not a studio's budget. For a single-player browser strategy game made by a
 small team, the bar is that a player who knows nothing about the subject can
 sit down, be taught by the game itself, finish a year that felt like theirs,

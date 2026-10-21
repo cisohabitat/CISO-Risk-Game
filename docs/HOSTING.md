@@ -11,6 +11,10 @@ values are shipped. Named releases and site ZIPs follow
 
 ## Build size
 
+The owner-approved AI-accelerated checkout content adds about 1.5 KiB of campaign
+transfer (89.3 to 90.8 KiB). Its on-demand chunk allowance is now 92 KiB instead
+of 90. The 221 KiB critical path and all title/complete-visit budgets stay fixed.
+
 The October security pass raises the code/CSS/font critical-path allowance from
 220 to 221 KiB for import validation and its deferred module boundary (about
 0.3 KiB measured increase). Title rendering and complete-visit limits remain

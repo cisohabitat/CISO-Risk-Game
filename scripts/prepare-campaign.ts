@@ -2,7 +2,7 @@
  * Prints a saved campaign, played by the engine up to a stopping point, as
  * the JSON record the game keeps in IndexedDB.
  *
- *   pnpm tsx scripts/prepare-campaign.ts <seed> <pattern|board|incident|year-end|day:N> [difficulty]
+ *   pnpm tsx scripts/prepare-campaign.ts <seed> <pattern|board|incident|exploit|year-end|day:N> [difficulty]
  *
  * For screens that only exist months into a year. The guide's board-paper
  * picture used to be reached by driving a quarter of play through the
@@ -26,6 +26,7 @@ const until = (state: GameState): boolean => {
   if (stop === 'pattern') return state.currentDay > 30 && patternSuggestions(state, index).length > 0
   if (stop === 'board') return state.reviews.pendingQuarter !== undefined
   if (stop === 'incident') return Object.values(state.incidents.incidents).some((i) => i.phase === 'containment')
+  if (stop === 'exploit') return state.decisions.openIds.some((id) => state.decisions.decisions[id]?.defId === 'dec-exploit-published')
   if (stop === 'year-end') return state.finished
   if (stop.startsWith('day:')) return state.currentDay >= Number(stop.slice(4))
   throw new Error(`unknown stopping point: ${stop}`)
