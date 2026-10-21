@@ -93,7 +93,7 @@ interface GameStore {
   deleteAllSaves: () => Promise<void>
 
   dispatch: (action: PlayerAction) => ActionResult
-  advanceDays: (days: number) => TickResult[]
+  advanceDays: (days: number, stopOnUpdate?: boolean) => TickResult[]
   setScreen: (screen: Screen) => void
   setUi: (patch: Partial<UiState>) => void
   pushToast: (message: string, tone?: Toast['tone']) => void
@@ -388,8 +388,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     return result
   },
 
-  advanceDays(days) {
-    const result = get().dispatch({ type: 'advance', days })
+  advanceDays(days, stopOnUpdate) {
+    const result = get().dispatch({ type: 'advance', days, ...(stopOnUpdate ? { stopOnUpdate: true } : {}) })
     return result.ticks ?? []
   },
 

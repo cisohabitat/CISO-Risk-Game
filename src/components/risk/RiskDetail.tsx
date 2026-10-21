@@ -146,6 +146,7 @@ export function RiskDetail({ risk }: { risk: VisibleRisk }) {
           </p>
         )}
 
+        {risk.status === 'emerging' && <p className="text-sm text-ink-muted text-pretty">This concern is emerging. Raise it to make it eligible for a board paper; funding or linking treatment alone does not raise it. You still choose whether to include it in each paper.</p>}
         <div className={cn('flex flex-wrap gap-2', !(risk.reviewDue && risk.status !== 'closed') && 'border-t border-line pt-4')}>
           {risk.status === 'emerging' && (
             <Button variant="primary" size="sm" onClick={() => dispatch({ type: 'openRisk', scenarioId: risk.id })}>

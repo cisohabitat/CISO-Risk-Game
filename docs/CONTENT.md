@@ -164,6 +164,15 @@ the decision opens ("in three weeks", "not until the new year"). A message
 about a quiet stretch tests for it: `incident.noneWithin` and
 `inbox.noUrgentWithin` take a number of days.
 
+**Post-incident correspondence needs a specific response.** Set
+`incidentContext: "latest-closed"` on a post-incident event to bind the message
+and its decision to the latest closed incident when it fires. Use
+`{{closedIncident}}` in its body or decision description to name that response.
+A resolved-count condition alone does not mean the currently active incident
+has closed. Response-phase messages and decisions record their incident IDs;
+legacy messages without provenance remain readable but are not guessed into a
+live journal.
+
 **A report the player has overtaken is not sent.** A once-only message whose
 every effect reveals evidence, a node or an edge the player already holds is
 skipped, so a colleague does not "discover" what the player's own enquiry

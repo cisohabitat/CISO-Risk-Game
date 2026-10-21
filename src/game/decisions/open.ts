@@ -10,14 +10,14 @@ export function openDecision(
   state: GameState,
   index: ContentIndex,
   defId: string,
-  options: { eventId?: string; deadlineDays?: number; scenarioId?: string } = {},
+  options: { incidentId?: string; eventId?: string; deadlineDays?: number; scenarioId?: string } = {},
 ): DecisionRuntime | undefined {
   const def = index.decision.get(defId)
   if (!def) return undefined
   // Never stack an identical unresolved decision on the player.
   const existing = state.decisions.openIds
     .map((id) => state.decisions.decisions[id])
-    .find((d) => d && d.defId === defId)
+    .find((d) => d && d.defId === defId && d.incidentId === options.incidentId)
   if (existing) return existing
 
   state.decisions.counter += 1
@@ -27,6 +27,7 @@ export function openDecision(
     id,
     defId,
     eventId: options.eventId,
+    incidentId: options.incidentId,
     createdDay: state.currentDay,
     deadlineDay: deadlineDays === undefined ? undefined : state.currentDay + deadlineDays,
     resolvedByDefault: false,

@@ -880,7 +880,7 @@
     {
       "id": "dec-post-incident",
       "title": "After the incident",
-      "description": "The incident is closed. What you do with it now determines whether the organisation learns anything.",
+      "description": "The review of {{closedIncident}} is ready after its closure. What you do with it now determines whether the organisation learns anything.",
       "context": "This is the moment the organisation is most willing to change, and least willing to hear that it was predictable.",
       "deadlineDays": 14,
       "defaultOptionId": "opt-post-report",

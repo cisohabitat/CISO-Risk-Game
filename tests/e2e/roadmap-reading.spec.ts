@@ -34,6 +34,9 @@ test('Inbox search reaches older mail without reading transient search results',
     type: 'business', priority: 'routine', read: false, pinned: false, relatedNodeIds: [],
   }))
   await openPreparedCampaign(page, save)
+  // The annual review is imported on demand and navigates when it is ready.
+  // Let the prepared year's closing navigation finish before opening Inbox.
+  await expect(page.getByText('How the year is read', { exact: true })).toBeVisible()
   await goTo(page, 'Inbox')
   const search = page.getByRole('searchbox', { name: 'Search messages', exact: true })
   const list = page.getByRole('list', { name: 'Messages' })

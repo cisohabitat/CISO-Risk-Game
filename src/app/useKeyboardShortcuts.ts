@@ -62,7 +62,7 @@ export function useKeyboardShortcuts(): void {
       }
       if (event.key === 'ArrowRight') {
         event.preventDefault()
-        advanceDays(30)
+        advanceDays(30, true)
         return
       }
       const key = event.key.toLowerCase()

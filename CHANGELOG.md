@@ -11,6 +11,17 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Keep Inbox, Risk and Organisation readers usable beneath incident banners;
+  long banner stacks expand the page while preserving independent pane scrolling.
+- Keep incident journals, response decisions and latest-message links scoped to
+  their recorded incident. Name the closed incident in post-incident reviews and
+  retain older unlinked correspondence without guessing its response.
+- Stop Skip ahead on newly delivered results, follow-ups, programme delivery,
+  recorded warnings and urgent updates. Milestones now remain in correspondence;
+  ordinary timed play is unchanged and unread backlogs never block another skip.
+- Explain Emerging risks and board eligibility before paper preparation. Defer
+  Board UI until play begins to stay within the existing initial download limit.
+
 - Fixed temporary exploit-response effects over-refunding low capacity or
   exposure, and removed the retired edge mitigation's remaining exposure
   benefit. The announced patch date now stays fixed when answering later or

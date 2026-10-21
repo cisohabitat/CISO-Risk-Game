@@ -398,6 +398,8 @@ export interface DecisionDef {
 }
 
 export interface GameEventDef {
+  /** Bind post-incident correspondence to the latest closed response at delivery. */
+  incidentContext?: 'latest-closed'
   id: string
   type: EventType
   title: string

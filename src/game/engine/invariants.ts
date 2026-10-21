@@ -86,6 +86,9 @@ export function checkInvariants(state: GameState, index: ContentIndex): Invarian
       add('selected-option-requires-resolution', id)
     }
     if (!index.decision.has(decision.defId)) add('decision-def-exists', decision.defId)
+    if (decision.incidentId !== undefined && (typeof decision.incidentId !== 'string' || !Object.hasOwn(state.incidents.incidents, decision.incidentId))) {
+      add('decision-incident-exists', id)
+    }
   }
   const duplicates = state.decisions.resolvedIds.filter((id, i) => state.decisions.resolvedIds.indexOf(id) !== i)
   if (duplicates.length > 0) add('decision-resolved-once', duplicates.join(','))

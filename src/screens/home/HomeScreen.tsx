@@ -226,6 +226,7 @@ export function HomeScreen() {
                           {/* Acceptance is a decision about a risk, not the
                               removal of one, so it stays on the briefing and
                               says what it is. */}
+                          {risk.status === 'emerging' && <Badge tone="neutral" glyph={false}>Emerging · not raised for the board</Badge>}
                           {risk.status === 'accepted' && (
                             <Badge tone="elevated" glyph={false}>Accepted — carried</Badge>
                           )}
@@ -248,7 +249,7 @@ export function HomeScreen() {
                             setScreen('risk')
                           }}
                         >
-                          Examine
+                          {risk.status === 'emerging' ? 'Examine and consider raising' : 'Examine'}
                         </Button>
                       </CardBody>
                     </Card>

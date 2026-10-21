@@ -115,7 +115,8 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         variant="secondary"
         className="compact min-h-9"
         disabled={state.finished}
-        onClick={() => advanceDays(30)}
+        title="Stops at decisions, returned work, follow-ups and urgent updates"
+        onClick={() => advanceDays(30, true)}
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}
       </Button>

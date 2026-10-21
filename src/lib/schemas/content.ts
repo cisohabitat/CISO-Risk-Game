@@ -436,6 +436,7 @@ export const decisionSchema = z.object({
 })
 
 export const eventSchema = z.object({
+  incidentContext: z.literal('latest-closed').optional(),
   id,
   type: z.enum(['business', 'threat', 'programme', 'people', 'supplier', 'executive', 'board', 'discovery', 'incident', 'assumption']),
   title: z.string(),

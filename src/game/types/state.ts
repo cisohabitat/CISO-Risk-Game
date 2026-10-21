@@ -335,6 +335,8 @@ export interface EventState {
 }
 
 export interface DecisionRuntime {
+  /** Explicit response or post-incident context; absent in older saves. */
+  incidentId?: string
   id: string
   defId: string
   eventId?: string

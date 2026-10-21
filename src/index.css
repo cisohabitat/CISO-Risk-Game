@@ -701,7 +701,8 @@
   .split-tabs:has(.split-workspace) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .split-tabs > [role="tabpanel"]:has(.split-workspace) { flex: 1; min-height: 0; }
   .split-tabs > [role="tabpanel"] > .split-workspace { height: 100%; }
-  .split-shell .split-workspace { flex: 1; min-height: 0; overflow: hidden; align-items: stretch; }
+  .split-shell .split-workspace { flex: 1; min-height: 12rem; overflow: hidden; align-items: stretch; }
+  .workspace-frame:has(> .response-room) .split-workspace { min-height: 20rem; }
   .split-workspace > .split-pane { min-height: 0; min-width: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; position: static; align-self: stretch; }
   .split-pane > .split-detail { position: static; }
   .split-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }

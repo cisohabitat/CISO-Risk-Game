@@ -18,6 +18,39 @@ fault.
 
 ### Fixed
 
+- **Incident banners collapsed landscape readers.** A complete first-year
+  browser review on seed `full-review-20261021` reproduced a zero-height Inbox
+  workspace at 1440×900 and 1180×820. At the smaller size it stayed collapsed
+  after removing the receipt and guidance. The shared split workspace now has
+  a 12rem minimum working height (20rem with an incident), letting the outer main region grow and
+  scroll beneath the banners. Browser regressions retain the incident panel,
+  actual decision receipt and guidance and check all three workspaces with
+  real wheel input in Chromium and WebKit.
+- **An earlier closure appeared in a newer incident's journal.** On 2 July of
+  the same review, Customer data exposure was in containment while its latest
+  update said an incident had closed: the message concerned Customer platform
+  tampering, which had closed on 26 June. The selector filtered incident mail
+  only by date. It now uses explicit incident IDs, as do response choices and
+  the latest-message link. Post-incident content binds and names its closed
+  response at delivery. A two-incident engine regression covers JSON reload,
+  unrelated/legacy messages, context-preserving decisions and scoped effects.
+  Imported decision references are validated before activation, including
+  inherited-property names; rejection preserves the active campaign and writes
+  nothing. The import regression failed before adding this validation.
+- **Skip ahead bypassed the work that filled a quiet quarter.** The reviewed
+  first year had 12/9/3/4 decisions per quarter and its last decision 46 days
+  before year-end. This does not establish human boredom. Skip ahead now ends
+  on new returned work, callbacks, programme delivery, recorded SOC signals and
+  urgent updates, without changing ordinary ticks or adding decisions. Milestone
+  messages persist the delivery already recorded by the engine. Regressions
+  verify that old unread mail cannot trap the player and normal ticking agrees
+  with the original advance path.
+- **Visible inherited risks did not explain board eligibility early enough.**
+  The review's first paper had no agenda topics while Briefing showed a High
+  concern. Emerging concerns now name that status in Briefing and explain the
+  explicit raising step in Risk. Examining or funding a concern still does not
+  raise it automatically, and the player retains control over each agenda.
+
 - **Exploit response refunds assumed the requested amount had been applied.**
   Review probes reproduced exposure going 0.05 → 0 → 0.20 after isolation and
   capacity going 0.20 → 0 → 0.50 after emergency patching or a SOC watch. The

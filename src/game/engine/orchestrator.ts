@@ -26,13 +26,14 @@ import { remember } from '../stakeholders/relationships'
 import { meetingAccount } from '../stakeholders/meeting'
 import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
+import { messageReturnKind } from '../inbox/returns'
 import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
 import { dateOf, yearWord } from '../time'
 
 export type PlayerAction =
-  | { type: 'advance'; days: number }
+  | { type: 'advance'; days: number; stopOnUpdate?: boolean }
   | { type: 'setSpeed'; speed: GameState['speed'] }
   | { type: 'resolveDecision'; decisionId: string; optionId: string; rationaleTagIds: string[]; note?: string }
   | { type: 'startInvestigation'; investigationId: string; leaderId: string }
@@ -165,9 +166,25 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const ticks: TickResult[] = []
       for (let i = 0; i < action.days; i += 1) {
         if (state.currentDay >= CAMPAIGN_DAYS) break
+        const previousCounter = state.inbox.counter
         const result = tickDay(state, index)
         ticks.push(result)
         if (result.pauseReasons.length > 0) break
+        // Skip ahead reads only newly delivered public correspondence. Old unread
+        // mail never blocks progress, and ordinary timed ticks retain their rules.
+        const update = action.stopOnUpdate && state.inbox.messages.find((message) =>
+          Number(message.id.slice(4)) > previousCounter && (
+            messageReturnKind(message, index) || message.signalCampaignId ||
+            message.priority === 'urgent' || message.priority === 'critical'
+          ),
+        )
+        if (update) {
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['player']
+          result.shouldAutosave = true
+          return { ok: true, message: `Update received: ${update.subject}`, ticks }
+        }
       }
       return { ok: true, message: '', ticks }
     }
@@ -228,13 +245,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       state.decisions.openIds = state.decisions.openIds.filter((id) => id !== action.decisionId)
       state.decisions.resolvedIds.push(action.decisionId)
 
-      // A choice taken while an incident is running belongs to that incident's
-      // record. The field existed and nothing ever wrote to it, so neither the
-      // live command view nor the reconstruction could show what was decided
-      // during the response.
-      const liveIncident = Object.values(state.incidents.incidents).find(
-        (candidate) => candidate.phase !== 'closed',
-      )
+      // A previous incident's review must not become a newer response's choice.
+      const liveIncident = typeof decision.incidentId === 'string' && Object.hasOwn(state.incidents.incidents, decision.incidentId)
+        ? state.incidents.incidents[decision.incidentId] : undefined
       if (liveIncident) {
         liveIncident.decisionsTaken.push({
           decisionId: action.decisionId,

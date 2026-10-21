@@ -5510,6 +5510,10 @@
       "items": {
         "type": "object",
         "properties": {
+          "incidentContext": {
+            "type": "string",
+            "const": "latest-closed"
+          },
           "id": {
             "type": "string",
             "minLength": 1

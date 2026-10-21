@@ -162,6 +162,12 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   for (const milestone of programmeResult.milestones) {
     const programme = index.programme.get(milestone.programmeId)
     highlights.push(`${programme?.shortName ?? milestone.programmeId}: ${milestone.name} reached.`)
+    pushMessage(state, {
+      from: programme?.name ?? 'Programme office',
+      subject: `Milestone: ${milestone.name}`,
+      body: `${programme?.name ?? 'The programme'} reached ${milestone.name}. Review the delivery path in Programmes; further milestones may still be outstanding.`,
+      type: 'programme', priority: 'notable',
+    })
   }
   // Enquiries announce themselves when they finish; a programme, the largest
   // thing a player builds, used to finish with a toast about its last
@@ -333,12 +339,13 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       pinned: transition.phase !== 'closed',
     })
   }
-  for (const { decisionId } of incidentResult.openDecisionIds) {
-    const decision = openDecision(state, index, decisionId, { deadlineDays: 2 })
+  for (const { decisionId, incidentId } of incidentResult.openDecisionIds) {
+    const decision = openDecision(state, index, decisionId, { deadlineDays: 2, incidentId })
     if (decision) {
       const def = index.decision.get(decisionId)
       pushMessage(state, {
         from: 'Incident response',
+        incidentId,
         subject: def?.title ?? 'Response decision required',
         body: def?.description ?? '',
         type: 'incident',
@@ -356,9 +363,14 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     const outcome = applyEffects(state, fired.effects, { index, rng, source: `event:${fired.def.id}` })
     for (const interrupt of outcome.interrupts) pauseReasons.add(interrupt as PauseReason)
 
+    const incident = fired.def.incidentContext === 'latest-closed'
+      ? Object.values(state.incidents.incidents).filter((entry) => entry.phase === 'closed')
+        .sort((a, b) => (b.resolvedDay ?? b.phaseEnteredDay) - (a.resolvedDay ?? a.phaseEnteredDay))[0]
+      : undefined
+    const incidentId = incident?.id
     let decisionRuntimeId: string | undefined
     if (fired.def.decisionId) {
-      const decision = openDecision(state, index, fired.def.decisionId, { eventId: fired.def.id })
+      const decision = openDecision(state, index, fired.def.decisionId, { eventId: fired.def.id, incidentId })
       decisionRuntimeId = decision?.id
       if (decision) pauseReasons.add('decision-deadline')
     }
@@ -366,9 +378,10 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     // The overload message comes from whoever runs the overloaded function; it
     // was signed by the SOC head while the decision it opened named engineering.
     pushMessage(state, {
+      incidentId,
       from: renderDecisionText(fired.def.from, state, index),
       subject: wording.title,
-      body: renderDecisionText(wording.body, state, index),
+      body: renderDecisionText(wording.body, state, index, { incidentId }),
       type: fired.def.type,
       priority: fired.def.priority,
       decisionId: decisionRuntimeId,

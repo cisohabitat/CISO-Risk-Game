@@ -13,7 +13,6 @@ import { RiskScreen } from '@/screens/risk/RiskScreen'
 import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
 import { TeamScreen } from '@/screens/team/TeamScreen'
-import { BoardScreen } from '@/screens/board/BoardScreen'
 import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
@@ -29,6 +28,8 @@ import { yearWord } from '@/game/time'
 // The year view is opened a few times a year and read once at the close, so
 // it stays out of what the first screen waits for. It is fetched in the
 // background once a campaign is open, so the close never waits on it.
+const loadBoard = () => import('@/screens/board/BoardScreen')
+const BoardScreen = lazy(() => loadBoard().then((module) => ({ default: module.BoardScreen })))
 const loadDecision = () => import('@/components/decisions/DecisionDialog')
 const DecisionDialog = lazy(() => loadDecision().then((m) => ({ default: m.DecisionDialog })))
 const loadDebrief = () => import('@/screens/debrief/DebriefScreen')
@@ -49,6 +50,7 @@ export function App() {
   usePullToRefreshGuard(inCampaign && contentLoaded)
   useEffect(() => {
     if (inCampaign) {
+      void loadBoard().catch(() => undefined)
       void loadDebrief().catch(() => undefined)
       void loadDecision().catch(() => undefined)
     }
@@ -118,7 +120,7 @@ export function App() {
           {screen === 'organisation' && <OrganisationScreen />}
           {screen === 'programmes' && <ProgrammesScreen />}
           {screen === 'team' && <TeamScreen />}
-          {screen === 'board' && <BoardScreen />}
+          {screen === 'board' && <Suspense fallback={<LoadingState label="Opening board…" />}><BoardScreen /></Suspense>}
           {screen === 'debrief' && (
             <Suspense fallback={<LoadingState label="Opening your year…" />}>
               <DebriefScreen />

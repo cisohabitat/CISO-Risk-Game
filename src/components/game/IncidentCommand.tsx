@@ -59,14 +59,14 @@ export function IncidentCommand() {
             </p>
           </div>
           <IncidentIllustration name={incident.name} phase={incident.phaseLabel} className="w-24 shrink-0 sm:w-40" />
-          {incident.awaiting.length === 0 && (
+          {incident.awaiting.length === 0 && incident.timeline.length > 0 && (
             <Button
               variant="secondary"
               size="sm"
               onClick={() => {
                 // Land on the incident, not on whatever was selected last time.
-                const latest = state.inbox.messages.find((m) => m.type === 'incident')
-                setUi({ selectedMessageId: latest?.id })
+                const latest = incident.timeline.at(-1)
+                setUi({ selectedMessageId: latest?.messageId })
                 setScreen('inbox')
               }}
             >

@@ -1010,10 +1010,11 @@
     },
     {
       "id": "evt-org-post-incident",
+      "incidentContext": "latest-closed",
       "type": "incident",
       "title": "What do we do with what we learned?",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "The incident is closed and our internal review is written. How we present it will decide whether anything actually changes.",
+      "body": "The review of {{closedIncident}} is written after its closure. How we present it will decide whether anything actually changes.",
       "priority": "urgent",
       "availableFromDay": 30,
       "conditions": [

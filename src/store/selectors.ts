@@ -5,6 +5,7 @@
  * numbers into the bands, labels and orderings the screens render, and they
  * never leak a value the player should not see.
  */
+import { messageReturnKind, type MessageReturnKind } from '@/game/inbox/returns'
 import type {
   AssignmentState,
   ContentIndex,
@@ -808,7 +809,7 @@ export interface IncidentCommandView {
   recoveryLabel: string
   servicesAffected: string[]
   /** What the player has been told, in the order they were told it. */
-  timeline: { day: number; text: string }[]
+  timeline: { day: number; text: string; messageId: string }[]
   /** Response choices waiting on the CISO right now. */
   awaiting: { decisionId: string; title: string }[]
   /** Choices already made in this incident, so the record is visible while it runs. */
@@ -828,16 +829,16 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
   if (!incident) return undefined
   const family = index.incidentFamily.get(incident.familyId)
 
-  const timeline = state.inbox.messages
-    .filter((message) => message.type === 'incident' && message.day >= incident.startedDay)
-    .map((message) => ({ day: message.day, text: message.body || message.subject }))
+  const timeline = state.inbox.messages.toReversed()
+    .filter((message) => message.incidentId === incident.id)
+    .map((message) => ({ day: message.day, text: message.body || message.subject, messageId: message.id }))
     .sort((a, b) => a.day - b.day)
 
   const awaiting: IncidentCommandView['awaiting'] = []
   for (const decisionId of state.decisions.openIds) {
     const runtime = state.decisions.decisions[decisionId]
     const def = runtime ? index.decision.get(runtime.defId) : undefined
-    if (!def || !def.id.startsWith('dec-inc-')) continue
+    if (!def || runtime?.incidentId !== incident.id || !def.id.startsWith('dec-inc-')) continue
     awaiting.push({ decisionId, title: def.title })
   }
 
@@ -1328,24 +1329,10 @@ export interface CameBackItem {
   day: number
   from: string
   subject: string
-  kind: 'result' | 'consequence' | 'lapse' | 'acceptance' | 'stopped' | 'incident'
+  kind: MessageReturnKind
 }
 
-/** Recorded return messages, shared by the Briefing and Inbox; read state is separate. */
-export function messageReturnKind(message: InboxMessage, index: ContentIndex): CameBackItem['kind'] | undefined {
-  const tags = message.eventId ? (index.event.get(message.eventId)?.tags ?? []) : []
-  let kind: CameBackItem['kind'] | undefined
-  if (message.subject.startsWith('Completed: ')) kind = 'result'
-  else if (message.subject.startsWith('Decided without you: ')) kind = 'lapse'
-  else if (message.subject.startsWith('Followed up: ')) kind = 'consequence'
-  else if (message.subject.startsWith('Your acceptance of ')) kind = 'acceptance'
-  else if (message.subject.startsWith('Pulled back: ') || message.subject.startsWith('Paused: ')) kind = 'stopped'
-  else if (tags.includes('consequence')) kind = 'consequence'
-  // Skip ahead can carry a player from containment to closure in one
-  // click, leaving the consequence, recovery and debrief in the inbox.
-  else if (message.type === 'incident') kind = 'incident'
-  return kind
-}
+export { messageReturnKind } from '@/game/inbox/returns'
 
 /**
  * What the player's own actions sent back, unread: an enquiry that

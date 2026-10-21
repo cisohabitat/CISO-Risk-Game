@@ -24,11 +24,14 @@ export function renderDecisionText(
   text: string,
   state: GameState,
   index: ContentIndex,
-  runtime?: Pick<DecisionRuntime, 'scenarioId'>,
+  runtime?: Pick<DecisionRuntime, 'scenarioId' | 'incidentId'>,
 ): string {
   if (!text.includes('{{')) return text
   const scenario = runtime?.scenarioId ? index.riskScenario.get(runtime.scenarioId)?.title : undefined
+  const incident = runtime?.incidentId ? state.incidents.incidents[runtime.incidentId] : undefined
+  const incidentName = incident ? index.incidentFamily.get(incident.familyId)?.name : undefined
   return text
+    .replaceAll('{{closedIncident}}', incidentName ?? 'the earlier incident')
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))

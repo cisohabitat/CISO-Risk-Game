@@ -133,3 +133,58 @@ for (const width of [1024, 1366]) {
     await expectNoHorizontalScroll(page)
   })
 }
+
+for (const viewport of [{ width: 1440, height: 900 }, { width: 1180, height: 820 }]) {
+  test(`incident banners preserve usable split panes at ${viewport.width}x${viewport.height}`, async ({ page }, info) => {
+    test.skip(!['desktop-chromium', 'desktop-webkit'].includes(info.project.name), 'both engines at the reported landscape sizes')
+    test.setTimeout(120_000)
+    await page.setViewportSize(viewport)
+    const save = prepareCampaign('incident-banner-scroll', 'incident') as { state: GameState }
+    for (const message of save.state.inbox.messages) message.body = Array(10).fill(message.body).join('\n\n')
+    await openPreparedCampaign(page, save)
+    // Create the real receipt via the decision UI. Keep both it and guidance
+    // present: dismissing them concealed the zero-height reader regression.
+    await page.getByRole('button', { name: /^Decide:/ }).first().click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('radio').filter({ visible: true }).first().check()
+    await dialog.getByRole('region', { name: /^Why\?/ }).getByRole('button').first().click()
+    await dialog.getByRole('button', { name: 'Commit to this', exact: true }).click()
+    await expect(page.getByRole('button', { name: 'Dismiss decision receipt', exact: true })).toBeVisible()
+
+    for (const name of ['Inbox', 'Risk', 'Organisation']) {
+      await goTo(page, name)
+      if (name === 'Organisation') await page.getByRole('button', { name: 'List', exact: true }).click()
+      const panes = page.locator('.split-workspace > .split-pane')
+      await expect(panes).toHaveCount(2)
+      const left = panes.nth(0), right = panes.nth(1)
+      await expect.poll(() => left.evaluate((element) => element.clientHeight)).toBeGreaterThanOrEqual(300)
+      await expect.poll(() => right.evaluate((element) => element.clientHeight)).toBeGreaterThanOrEqual(300)
+      const choices = name === 'Organisation' ? left.getByRole('list', { name: 'Discovered systems' }).getByRole('button') : left.getByRole('button')
+      await choices.first().click()
+      if (name === 'Inbox') {
+        await choices.last().click()
+        await expect(page.getByRole('region', { name: 'Message reader', exact: true }).getByRole('heading', { level: 2 })).toBeVisible()
+        await choices.first().click()
+      }
+      await left.evaluate((element) => { element.scrollTop = 0 })
+      await left.scrollIntoViewIfNeeded()
+      const bounds = (await left.boundingBox())!
+      await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
+      const listDistance = await left.evaluate((element) => Math.min(150, element.scrollHeight - element.clientHeight))
+      await page.mouse.wheel(0, 150)
+      await expect.poll(() => left.evaluate((element) => element.scrollTop)).toBe(listDistance)
+      expect(await right.evaluate((element) => element.scrollTop)).toBe(0)
+      const position = await left.evaluate((element) => element.scrollTop)
+      await right.scrollIntoViewIfNeeded()
+      const reader = (await right.boundingBox())!
+      await page.mouse.move(reader.x + reader.width / 2, reader.y + reader.height / 2)
+      await page.mouse.wheel(0, 150)
+      const distance = await right.evaluate((element) => Math.min(150, element.scrollHeight - element.clientHeight))
+      await expect.poll(() => right.evaluate((element) => element.scrollTop)).toBe(distance)
+      expect(await left.evaluate((element) => element.scrollTop)).toBe(position)
+      const controls = right.locator('button:visible:not([disabled]), a[href]:visible')
+      if (await controls.count()) await expectReachable(controls.last())
+      await expectNoHorizontalScroll(page)
+    }
+  })
+}

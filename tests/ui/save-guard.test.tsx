@@ -60,3 +60,17 @@ describe('import validation before activation', () => {
     expect(useGameStore.getState().ui.toasts.at(-1)?.message).toContain('saved progress were kept')
   })
 })
+
+it('rejects invalid incident references without replacing or writing the running campaign', async () => {
+  await useGameStore.getState().startNewGame('import-incident-reference', 'ciso')
+  const previous = useGameStore.getState().state!
+  written.count = 0
+  for (const reference of ['__proto__', 'constructor', 'missing-response', 12, { id: 'inc-1' }]) {
+    const imported = structuredClone(previous)
+    const decision = Object.values(imported.decisions.decisions)[0]!
+    Object.assign(decision, { incidentId: reference })
+    expect(await useGameStore.getState().loadImported(imported)).toBe(false)
+    expect(useGameStore.getState().state).toBe(previous)
+    expect(written.count).toBe(0)
+  }
+})

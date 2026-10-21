@@ -6,6 +6,33 @@ changes.
 
 ## Documentation
 
+- The 21 October full-campaign review fixes are owner-authorised. Landscape
+  split panes retain 12rem of working height, or 20rem during an incident, when
+  receipt and guidance banners stack above them; the main page may grow and
+  scroll to reach them. Test Inbox, Risk and Organisation with banners retained
+  in both Chromium and WebKit, including independent wheel scrolling.
+- Live incident journals, response decisions and latest-message links use
+  recorded incident IDs. Do not attribute legacy unlinked messages by date or
+  wording; leave them in Inbox. Authored `incidentContext: latest-closed` binds
+  post-incident correspondence and its decision at delivery; `{{closedIncident}}`
+  names that response. Validate decision incident references before activating an
+  imported save; missing, non-string and inherited-property references are
+  invalid. An older review must not enter a newer response record.
+- Skip ahead and the right-arrow shortcut request `stopOnUpdate`; only newly
+  delivered results, follow-ups, programme delivery, provenance-linked warnings
+  and urgent mail end the skip. Old unread mail must never block progress.
+  Ordinary timed ticks and headless advances retain their existing semantics.
+  Programme milestones create factual correspondence shared by Briefing and
+  Inbox through `src/game/inbox/returns.ts`. Do not add filler decisions or claim
+  pacing has been validated with people.
+- Emerging concerns say they are not raised for the board. Examining, funding
+  or linking treatment does not raise them; raising enables agenda eligibility,
+  and the player still selects the agenda. Keep this distinction visible before
+  opening a board paper.
+- Board UI preloads after a campaign opens, alongside decision and annual-review
+  UI. Preserve its accessible loading state and screen-boundary recovery, and
+  keep it out of the first-screen download rather than raising size limits.
+
 - Temporary capacity/exposure effects record their actual bounded delta as a
   plain inverse in pending effects. Expiry must preserve intervening changes,
   retain the resolved function target, and never schedule another inverse.
@@ -310,6 +337,9 @@ changes.
 - Browser automation selects decision actions by their `Decide: <title>`
   accessible names. A substring match for “Decide” also matches the expandable
   “What you have already decided” journal and can stall a playthrough.
+- Tests loading a finished prepared campaign must await the annual review
+  before navigating elsewhere; its deferred completion intentionally opens Your
+  year and can otherwise overwrite the test's premature screen navigation.
 - Browser tests that already opened the start screen should use
   `beginCampaign` rather than navigate again during the campaign preload.
 - Scroll checks must cover vertical reachability as well as horizontal

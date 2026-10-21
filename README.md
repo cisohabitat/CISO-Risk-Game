@@ -22,6 +22,28 @@ discover what matters, form and test hypotheses, prioritise scarce attention,
 influence people you do not control, build capability over months, and live with
 delayed consequences.
 
+During incidents, Inbox, Risk and Organisation retain usable independent
+scroll panes even when response journals, decision receipts and guidance fill
+the top of the screen. The page scrolls to make room rather than collapsing
+the readers. Response journals and their message links use recorded incident
+identity, so an earlier incident's review cannot announce a newer response as
+closed. Older unlinked messages remain available in Inbox without guessed
+attribution. Imported decisions with invalid incident references are rejected
+before replacing or saving over the running campaign.
+
+Skip ahead (also the right-arrow shortcut) now stops when new enquiry results,
+follow-ups, programme milestones/completions, recorded SOC warnings or urgent
+updates arrive. It identifies the update without opening or reading mail for
+you, and unread backlogs do not prevent another skip. The ordinary timed clock
+and threat model keep their existing rules. Milestone correspondence appears in
+Briefing and Inbox under Programme delivery; this improves visibility of existing
+work rather than adding more decisions. Human validation of pacing remains open.
+
+Emerging concerns now explain that funding or linking treatment does not raise
+a risk for the board. Examine and raise an appropriate concern in Risk, then
+choose whether it belongs on the quarterly agenda. The Board screen preloads
+after play begins to preserve the existing first-download size budget.
+
 The checkout-framework threat explores AI-accelerated exploit development:
 a fictional sector advisory reports working variants within hours, while the
 normal patch window is eleven days away. You have two days to choose emergency
