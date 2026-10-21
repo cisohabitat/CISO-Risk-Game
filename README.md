@@ -31,6 +31,9 @@ coverage, and delayed patching and capacity releases survive a year boundary.
 The advisory does not prove an intrusion at Nexora. Existing controls and attack
 paths determine incidents; there is no separate AI score or scripted breach.
 
+Development builds use Vite 8.3.5, which includes fixes for the launch-editor
+advisories affecting Vite 8.3.0–8.3.2. Security auditing remains part of CI.
+
 The title-screen footer shows the version and links to [release notes](https://ciso-risk-game.vercel.app/release-notes).
 About lists the build's UTC timestamp and linked commit ID, and is also available
 from the in-game rail or mobile menu in a separate tab. The version comes from

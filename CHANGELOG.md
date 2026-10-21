@@ -11,6 +11,8 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Updated Vite to 8.3.5 to address three launch-editor security advisories found
+  during the release audit; the shipped game remains a static client application.
 - Extended the checkout exploit decision with an AI-accelerated disclosure,
   a two-day response window, an access-restriction option and choice-specific
   follow-ups. Temporary monitoring consumes SOC capacity; its report reflects

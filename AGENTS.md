@@ -83,6 +83,9 @@ changes.
 
 ## Security
 
+- Keep Vite at a patched 8.3.x release (currently 8.3.5); the 21 October audit
+  identified three launch-editor advisories affecting 8.3.0–8.3.2. Preserve the
+  registry audit and verify size budgets/browser coverage after bundler updates.
 - Treat imported saves as untrusted: check the 16 MiB file limit before reading,
   bound nesting/entries, and reject prototype-related keys and non-finite numbers
   before migration. Load the import parser only on demand. Run engine invariants
