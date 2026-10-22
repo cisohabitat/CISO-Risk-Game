@@ -1,6 +1,6 @@
 # Character voice catalogue
 
-Thirty prerecorded synthetic messages, twelve recurring characters. Playback is
+Thirty-three prerecorded synthetic messages, twelve recurring characters. Playback is
 explicit and optional in Inbox. The authoritative transcript is the message body
 in campaign content, copied into `manifest.json` for exact runtime comparison.
 Event ID, sender, subject and body must all match before playback is offered.
@@ -10,15 +10,15 @@ The audio reads the body; the sender and subject remain visible beside it.
 | Character | Voice preset | Direction | Coverage |
 |---|---|---|---|
 | Marianne Okafor, CEO | `bf_isabella`, phrase speeds 0.96–1.08 | Direct, conversational | 3: opening, follow-up, year-end invitation |
-| Tomas Lindqvist, CFO | `bm_george`, phrase speeds 0.95–1.03 | Measured, precise | 5: audit, next year's plan, acquisition, both boundary outcomes |
+| Tomas Lindqvist, CFO | `bm_george`, phrase speeds 0.95–1.03 | Measured, precise | 6: audit, next year's plan, acquisition, both boundary outcomes, external responders |
 | Helen Brandt, COO | `bf_alice`, phrase speeds 0.96–1.05 | Practical, composed | 4: warehouse, fallback, both restore outcomes |
 | Dev Raghunathan, CIO | `bm_daniel`, phrase speeds 0.97–1.06 | Fluent, concerned with delivery | 2: migration and review pressure |
 | Jo Mbeki, Security Operations | `bf_emma`, phrase speeds 0.97–1.03 | Factual, composed | 2: response readiness and mailbox activity |
 | Sir Alan Whitcombe, board chair | `bm_fable`, phrase speeds 0.94–1.00 | Deliberate, probing | 2: appetite and six-month review |
 | Priya Nandakumar, Digital | `bf_lily`, phrase speeds 0.98–1.05 | Brisk, commercially focused | 2: releases and client questions |
 | Nadia Farrell, Procurement | `mix-nadia`, phrase speeds 0.97–1.04 | Practical, matter-of-fact | 2: SOC and Corvus renewals |
-| Ruth Ahmadi, Legal | `mix-ruth`, phrase speeds 0.95–1.01 | Precise, composed | 2: regulator and merchant questions |
-| Fenella Osei, Governance | `mix-fenella`, phrase speeds 0.96–1.03 | Evidence-focused, measured | 2: audit findings matched and overstated |
+| Ruth Ahmadi, Legal | `mix-ruth`, phrase speeds 0.95–1.01 | Precise, composed | 3: regulator and merchant questions, People Cloud disclosure |
+| Fenella Osei, Governance | `mix-fenella`, phrase speeds 0.96–1.03 | Evidence-focused, measured | 3: audit findings matched and overstated, command record |
 | Stefan Alvarez, Architecture | `mix-stefan`, phrase speeds 0.95–1.03 | Analytical, direct | 2: contradictory documents and unseen data flows |
 | Callum Reid, Engineering | `bm_lewis`, phrase speeds 0.98–1.03 | Plain, delivery-focused | 2: vacancies and unsigned releases |
 
@@ -85,7 +85,7 @@ files into a directory outside the repository. Then run:
 python scripts/voice/generate.py /path/to/model-directory
 ```
 
-The script reads current authored bodies, rewrites the 30 MP3s and manifest,
+The script reads current authored bodies, rewrites the 33 MP3s and manifest,
 and generates `event-ids.json` for the lightweight UI gate and size check. Tests
 require the IDs and manifest to agree, avoiding a separate manual playback list.
 It leaves temporary WAVs in the model directory. Review any transcript changes
@@ -102,7 +102,7 @@ available. Audio does not change saves, resources, choices or clock state.
 
 The catalogue has a 160 KiB per-clip and 3072 KiB total encoded budget, separate from
 the unchanged title/critical-path budgets. Content tests verify exact transcripts,
-all 30 files, consistent speaker mapping and fixed stock-voice mixes. UI tests verify explicit playback,
+all 33 files, consistent speaker mapping and fixed stock-voice mixes. UI tests verify explicit playback,
 cleanup, mismatch protection and error recovery. Browser tests use real decoding
 in Chromium/WebKit and verify on-request loading and phone layouts.
 On restricted Linux runners, WebKit's media cache needs a writable `/var/tmp`;
@@ -113,3 +113,8 @@ The total allowance was deliberately raised from 768 to 2048 KiB for the first
 expansion, then to 3072 KiB for the full cast. First-visit limits stay fixed;
 all audio remains on request.
 See [the review](../../../docs/VOICE_REVIEW.md) for selection and remaining gaps.
+
+The incident expansion adds three authored, static messages with the existing
+Tomas, Ruth and Fenella profiles. All earlier thirty files are preserved. It
+adds no generic narration for changing operational reports and does not infer
+incident identity from message wording. The 3072 KiB allowance is unchanged.

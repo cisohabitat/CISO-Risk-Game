@@ -46,6 +46,9 @@ PROFILES = [
     ('evt-biz-shadow-project', 'mix-stefan', [1.03, 0.97, 1.00], [0.24, 0.22, 0]),
     ('evt-org-vacancy-pressure', 'bm_lewis', [1.02, 0.98], [0.26, 0]),
     ('evt-org-unsigned-releases', 'bm_lewis', [1.03, 0.99], [0.24, 0]),
+    ('evt-con-incident-command-recalled', 'mix-fenella', [1.00, 1.03, 0.96], [0.20, 0.30, 0]),
+    ('evt-con-incident-external-invoiced', 'bm_george', [1.00, 0.96], [0.28, 0]),
+    ('evt-org-hr-provider-incident', 'mix-ruth', [0.99, 0.96], [0.26, 0]),
 ]
 MODEL_HASHES = {
     'kokoro-v1.0.onnx': '7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5',

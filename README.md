@@ -27,12 +27,15 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
-Thirty selected Inbox messages offer **Play message** across all twelve recurring
+Thirty-three selected Inbox messages offer **Play message** across all twelve recurring
 characters. Priya, Nadia, Ruth, Fenella, Stefan and Callum join Marianne, Tomas,
 Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,
 incident readiness, suspicious mailbox activity, acquisition and restore
 outcomes, board expectations, procurement, legal questions, audit findings,
-engineering concerns and the first-year review invitation.
+engineering concerns and the first-year review invitation. Three incident-related
+messages now cover the command record, external responder invoice and People
+Cloud disclosure. Changing operational reports remain text-only; recordings
+match the delivered sender, subject and full body exactly.
 Playback is optional and separate from sound effects.
 The revised clips use the owner's approved CEO voice and explicit
 sentence phrasing, varied pacing and short pauses throughout the catalogue.

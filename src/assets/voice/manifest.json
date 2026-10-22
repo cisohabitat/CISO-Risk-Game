@@ -834,5 +834,83 @@
     "durationSeconds": 11.25,
     "from": "Callum Reid, Head of Security Engineering",
     "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
+  },
+  {
+    "eventId": "evt-con-incident-command-recalled",
+    "subject": "What standing up command changed",
+    "body": "You stood up formal command during the incident. Reading the log so far, the decisions have times against them and the handovers are written down. Whatever else the year does to us, that record is the difference between explaining ourselves and guessing.",
+    "file": "evt-con-incident-command-recalled.mp3",
+    "voice": "mix-fenella",
+    "phrases": [
+      {
+        "text": "You stood up formal command during the incident.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.2
+      },
+      {
+        "text": "Reading the log so far, the decisions have times against them and the handovers are written down.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.3
+      },
+      {
+        "text": "Whatever else the year does to us, that record is the difference between explaining ourselves and guessing.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 13.73,
+    "from": "Fenella Osei, Head of Cyber Risk and Governance",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.45,
+      "bf_lily": 0.55
+    }
+  },
+  {
+    "eventId": "evt-con-incident-external-invoiced",
+    "subject": "The external responders, invoiced",
+    "body": "The external responders you called in have invoiced. It is a large number for a small number of days, and I am not questioning the decision — I am asking you to tell me, before the next one, what we are buying that we cannot do ourselves.",
+    "file": "evt-con-incident-external-invoiced.mp3",
+    "voice": "bm_george",
+    "phrases": [
+      {
+        "text": "The external responders you called in have invoiced.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.28
+      },
+      {
+        "text": "It is a large number for a small number of days, and I am not questioning the decision — I am asking you to tell me, before the next one, what we are buying that we cannot do ourselves.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 15.34,
+    "from": "Tomas Lindqvist, Chief Financial Officer"
+  },
+  {
+    "eventId": "evt-org-hr-provider-incident",
+    "subject": "People Cloud discloses an incident",
+    "body": "Our HR provider has notified customers of unauthorised access to a support system. The notification is vague about scope and firm about there being no evidence of customer data access.",
+    "file": "evt-org-hr-provider-incident.mp3",
+    "voice": "mix-ruth",
+    "phrases": [
+      {
+        "text": "Our HR provider has notified customers of unauthorised access to a support system.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0.26
+      },
+      {
+        "text": "The notification is vague about scope and firm about there being no evidence of customer data access.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 12.42,
+    "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_alice": 0.55,
+      "bf_lily": 0.45
+    }
   }
 ]

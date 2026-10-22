@@ -33,6 +33,7 @@ test('character speech is requested explicitly, decodes, stops on navigation and
 
 for (const group of [
   { name: 'CIO, operations and board', ids: ['evt-biz-cio-pressure', 'evt-org-ir-plan', 'evt-biz-board-appetite'] },
+  { name: 'incident follow-ups', ids: ['evt-con-incident-command-recalled', 'evt-con-incident-external-invoiced', 'evt-org-hr-provider-incident'] },
   { name: 'remaining cast', ids: ['evt-biz-release-pressure', 'evt-soc-renewal', 'evt-biz-regulator-thematic', 'evt-con-audit-shown', 'evt-org-doc-contradiction', 'evt-org-vacancy-pressure'] },
 ]) {
   test(`${group.name} voices decode without overlapping or preloading`, async ({ page }) => {

@@ -28,5 +28,8 @@
   "evt-org-doc-contradiction",
   "evt-biz-shadow-project",
   "evt-org-vacancy-pressure",
-  "evt-org-unsigned-releases"
+  "evt-org-unsigned-releases",
+  "evt-con-incident-command-recalled",
+  "evt-con-incident-external-invoiced",
+  "evt-org-hr-provider-incident"
 ]

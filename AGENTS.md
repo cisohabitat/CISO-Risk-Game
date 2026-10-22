@@ -7,7 +7,12 @@ changes.
 ## Documentation
 
 - The owner authorised further voice review and coverage after the six-clip
-  pilot. The catalogue now contains 30 clips across all 12 recurring characters.
+  pilot. The catalogue now contains 33 clips across all 12 recurring characters.
+  The incident pass adds the command-record follow-up (Fenella), external
+  responder invoice (Tomas) and People Cloud disclosure (Ruth). Preserve all
+  earlier 30 MP3s. Dynamic operational reports remain text-only; never play a
+  generic recording over changing incident facts or infer incident attribution.
+  Keep the existing 3072 KiB total allowance and exact-transcript gate.
   Priya uses `bf_lily`, Callum `bm_lewis`; Nadia, Ruth, Fenella and Stefan use
   the fixed stock-voice mixes recorded in the generator and manifest. Keep
   mix weights positive, summing to one, and consistent per character. New

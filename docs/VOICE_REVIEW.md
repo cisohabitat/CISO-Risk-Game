@@ -21,15 +21,15 @@ sound natural or improve comprehension; that still needs listening sessions.
 | Character | Clips | Coverage |
 |---|---:|---|
 | Marianne Okafor | 3 | First meeting, later uncertainty follow-up, first-year review invitation |
-| Tomas Lindqvist | 5 | Audit, next year's plan, acquisition join, boundary held and lifted |
+| Tomas Lindqvist | 6 | Audit, next year's plan, acquisition join, boundary held and lifted, external responder invoice |
 | Helen Brandt | 4 | Warehouse concern, funded fallback, restore within and beyond its window |
 | Dev Raghunathan | 2 | Migration slipping, security review affecting delivery |
 | Jo Mbeki | 2 | An unexercised incident plan, an unauthorised finance mailbox rule |
 | Sir Alan Whitcombe | 2 | Risk appetite, the six-month post-encryption review |
 | Priya Nandakumar | 2 | Release cadence and client security questions |
 | Nadia Farrell | 2 | SOC renewal and Corvus contract direction |
-| Ruth Ahmadi | 2 | Regulatory scope and merchant card-data questions |
-| Fenella Osei | 2 | Audit evidence matched and overstated |
+| Ruth Ahmadi | 3 | Regulatory scope, merchant card-data questions, People Cloud disclosure |
+| Fenella Osei | 3 | Audit evidence matched and overstated, incident command record |
 | Stefan Alvarez | 2 | Conflicting architecture documents and unseen data flows |
 | Callum Reid | 2 | Engineering vacancies and unsigned releases |
 
@@ -43,7 +43,7 @@ Media test fixtures exercise reader behaviour separately from event reachability
 ## Delivery and constraints
 
 The catalogue grew from 6 to 18 clips, and now to 30 across the full recurring
-cast. Eight profiles use individual stock voices and four use fixed stock-voice
+cast; the incident pass adds three more, for 33. Eight profiles use individual stock voices and four use fixed stock-voice
 blends recorded in the manifest. These are twelve configured identities;
 perceptual recognition remains a listening question. Existing profiles and
 the CEO's approved four phrases are retained.
@@ -84,3 +84,20 @@ Routine updates, full annual-review narration and dynamically
 assembled incident correspondence remain outside this catalogue. Dynamic text
 needs matching recordings for its actual wording before it can be voiced safely.
 No runtime synthesis, inferred missing words or automatic narration is added.
+
+## Incident correspondence pass
+
+Add the existing command-record follow-up, external responder invoice and People
+Cloud disclosure with their established speaker profiles. These static bodies
+contain no substituted incident names, severity or service figures. They remain
+subject to their existing delivery conditions and exact transcript matching.
+The response follow-ups are scheduled by the existing command and external
+support choices; the supplier disclosure retains its existing availability.
+No event, decision, eligibility, simulation or incident attribution changes.
+All earlier thirty recordings and the 3072 KiB total allowance are retained.
+Browser fixtures check decoding and switching for all three added recordings;
+they do not establish event reachability or human listening quality.
+
+Incident asset verification: all 33 MP3s fully decoded with FFmpeg; SHA-256
+comparison confirmed all earlier 30 recordings are unchanged. The catalogue
+measures 2476.8 KiB within the unchanged 3072 KiB allowance.

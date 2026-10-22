@@ -11,6 +11,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Add optional voices to three existing incident-related messages: the command
+  record, external responder invoice and People Cloud disclosure. Keep all
+  earlier 30 recordings and the 3 MiB total allowance. Dynamic operational
+  reports remain written; playback still requires an exact transcript match.
+
 - Continue voice coverage to 30 selected messages across all 12 recurring
   characters. Add digital, procurement, legal, governance, architecture and
   engineering voices with fixed profiles and phrase pacing. Preserve the earlier
