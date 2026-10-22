@@ -6,6 +6,18 @@ changes.
 
 ## Documentation
 
+- The owner authorised the six-clip character voice pilot on 22 October.
+  Keep the three fixed speaker profiles and exact message transcripts in
+  `src/assets/voice/manifest.json`. Only delivered messages with matching
+  event ID, sender, subject and body expose playback. No autoplay, runtime
+  synthesis, remote speech service or simulation changes. Audio loads only
+  after Play message, stops on reader/campaign exit and pauses in hidden tabs.
+  Keep visible text, native media controls and recoverable playback errors.
+  Regenerate offline with `scripts/voice/generate.py`; model files stay outside
+  the repo. Preserve attribution, 160 KiB per clip and 768 KiB total limits.
+  Human listening review remains pending; generated audio is not proof of
+  pronunciation quality, speaker recognition or improved comprehension.
+
 - The owner authorised the 22 October balance pass: partial funding access,
   atomic programme purchases, progress-based execution credit and earlier
   earned programme follow-through. Keep difficulty in its profiles and retain

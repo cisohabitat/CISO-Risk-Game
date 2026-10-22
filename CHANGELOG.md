@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Optional character voice pilot for six selected messages from Marianne,
+  Tomas and Helen. Play on request, pause/replay/stop, and keep the full text;
+  no runtime speech service or autoplay. Human listening review remains pending.
+
 - Make half-funded programmes reachable with smaller budgets, preserve resources
   on refused programme actions, and enforce quoted funding and acceleration.
 - Credit actual delivered progress in annual programme execution; retain

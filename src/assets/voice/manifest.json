@@ -1,0 +1,62 @@
+[
+  {
+    "eventId": "evt-day-one",
+    "subject": "The CEO meeting starts in 23 minutes",
+    "body": "Welcome aboard. I have twenty-three minutes and one question: what are the three cyber risks I should be most concerned about?\n\nYou have inherited 6,283 critical vulnerabilities, 17 high-priority audit findings, 23 open risk register entries, four transformation programmes, fourteen important suppliers and five security vacancies.\n\nWhere do you start?",
+    "file": "evt-day-one.mp3",
+    "voice": "bf_emma",
+    "speed": 1.04,
+    "durationSeconds": 20.82,
+    "from": "Marianne Okafor, Chief Executive"
+  },
+  {
+    "eventId": "evt-con-ceo-honest-returns",
+    "subject": "She remembered what you said you did not know",
+    "body": "When you gave me your three risks in your first month, you told me which of them you were unsure about. I have had cause to repeat that to the board, and it has done you no harm at all. Tell me what you are unsure about now.",
+    "file": "evt-con-ceo-honest-returns.mp3",
+    "voice": "bf_emma",
+    "speed": 1.04,
+    "durationSeconds": 11.35,
+    "from": "Marianne Okafor, Chief Executive"
+  },
+  {
+    "eventId": "evt-audit-report",
+    "subject": "External audit: privileged access, third year running",
+    "body": "The auditors have raised privileged access management again. That is three consecutive years, and the audit committee has noticed.\n\nI need a response from you for the committee papers. Please do not send me the same remediation plan we sent last year.",
+    "file": "evt-audit-report.mp3",
+    "voice": "bm_george",
+    "speed": 0.98,
+    "durationSeconds": 16.0,
+    "from": "Tomas Lindqvist, Chief Financial Officer"
+  },
+  {
+    "eventId": "evt-con-next-year-plan",
+    "subject": "Next year's plan has gone to the board",
+    "body": "Next year's plan has gone to the board with the cyber line as we agreed. I recorded the reasons you gave, in your words. If the year had been different, so would the conversation, and we both know it.",
+    "file": "evt-con-next-year-plan.mp3",
+    "voice": "bm_george",
+    "speed": 0.98,
+    "durationSeconds": 12.63,
+    "from": "Tomas Lindqvist, Chief Financial Officer"
+  },
+  {
+    "eventId": "evt-legacy-question",
+    "subject": "The warehouse platform question",
+    "body": "I am told the Meridian platform is running on software that is no longer supported. I am also told it cannot be upgraded and that migration is at least a year away.\n\nDespatch runs on it. Three sites. If it stops, we stop. What are you proposing to do about that?",
+    "file": "evt-legacy-question.mp3",
+    "voice": "bf_alice",
+    "speed": 1.0,
+    "durationSeconds": 15.34,
+    "from": "Helen Brandt, Chief Operating Officer"
+  },
+  {
+    "eventId": "evt-con-legacy-fallback-used",
+    "subject": "The fallback you paid for",
+    "body": "The manual fulfilment fallback you funded was exercised last week, for four hours, during a planned change that did not go to plan. Nobody outside the warehouse noticed. I thought you should know that the money did something.",
+    "file": "evt-con-legacy-fallback-used.mp3",
+    "voice": "bf_alice",
+    "speed": 1.0,
+    "durationSeconds": 12.84,
+    "from": "Helen Brandt, Chief Operating Officer"
+  }
+]

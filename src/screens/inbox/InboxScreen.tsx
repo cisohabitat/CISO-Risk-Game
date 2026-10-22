@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { PersonPortrait } from '@/components/game/Person'
+import { CharacterVoice } from '@/components/game/CharacterVoice'
 import { NexoraMark } from '@/components/game/NexoraMark'
 import { Terms } from '@/components/game/Terms'
 import { cn } from '@/lib/utils/cn'
@@ -239,6 +240,7 @@ export function InboxScreen() {
                     {sender ? <><p className="font-semibold text-ink">{sender.name}</p><p className="mt-1 text-ink-muted">{sender.role}</p>{selected.from !== sender.name && selected.from !== `${sender.name}, ${sender.role}` && <p className="mt-1 text-xs text-ink-faint">{selected.from}</p>}</> : <p className="text-ink-muted">{selected.from}</p>}
                   </div>
                 </div>
+                <CharacterVoice key={`${state.gameId}:${selected.id}`} message={selected} />
                 <div className="correspondence-body mt-3 md:mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (
                     <p key={position} className="whitespace-pre-line">

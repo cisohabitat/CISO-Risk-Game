@@ -27,6 +27,16 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
+Six selected Inbox messages now offer **Play message**: Marianne, Tomas and
+Helen each have a consistent AI-generated voice for an opening message and a
+later follow-up. Playback is optional and separate from sound effects. No audio
+downloads or plays until requested; native controls provide pause, seeking and
+volume, with Replay message and Stop voice alongside. Leaving the reader stops
+speech; hiding the tab pauses it. The full text always remains available.
+Edited or mismatched correspondence does not play an outdated recording.
+The [voice pilot notes](src/assets/voice/README.md) cover transcripts, offline
+generation, attribution, asset budgets and the pending human listening review.
+
 The design test applied to every feature is the one from the specification:
 
 > **Am I managing cyber risk, or merely answering cybersecurity questions?**

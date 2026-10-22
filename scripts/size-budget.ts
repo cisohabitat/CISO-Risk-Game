@@ -49,7 +49,7 @@ const BUDGETS: Budget[] = [
  * The campaign and its loader (with the schema library) are split because the
  * start screen needs neither, and they were most of what it waited for.
  */
-const MUST_STAY_LAZY = ['OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 'campaign-', 'loader-', 'next-year-']
+const MUST_STAY_LAZY = ['OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 'campaign-', 'loader-', 'next-year-', 'CharacterVoicePlayer-']
 
 /**
  * Everything the entry HTML fetches before the first screen can be
@@ -190,6 +190,18 @@ async function main(): Promise<void> {
     if (size > 160) failures.push('office atlas exceeds its 160 KiB budget')
     if (html.includes(office)) failures.push('office atlas must not be fetched by the title screen')
   }
+
+  const voices = entries.filter((entry) => entry.endsWith('.mp3'))
+  let voiceTotal = 0
+  if (voices.length !== 6) failures.push('the voice pilot must contain exactly six clips')
+  for (const voice of voices) {
+    const size = (await readFile(join(dir, voice))).byteLength / 1024
+    voiceTotal += size
+    if (size > 160) failures.push(`${voice} exceeds the 160 KiB clip budget`)
+    if (html.includes(voice)) failures.push('voice clips must not load with the title screen')
+  }
+  console.log(`\n  Character voice (on request): ${voiceTotal.toFixed(1)} KiB / 768 KiB`)
+  if (voiceTotal > 768) failures.push('character voice exceeds its 768 KiB total budget')
 
   if (failures.length > 0) {
     console.error(`\n${failures.length} budget failure(s):`)

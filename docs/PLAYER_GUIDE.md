@@ -240,6 +240,14 @@ and incident update are easier to distinguish. Priority is still stated in
 words when a message is notable, urgent or critical. Opening a message in
 Unread does not consume the rest of that list; select Unread again to refresh it.
 
+Six selected messages from Marianne, Tomas and Helen offer **Play message**
+beside the sender. These optional AI-generated voices read the full message
+body. Nothing plays until you ask; use the audio controls to pause or seek,
+**Replay message** to start again, or **Stop voice** to stop. Leaving the message
+stops playback and hiding the tab pauses it. The written message stays below
+the controls, including when audio cannot play. Voice is separate from sound
+effects and does not change your choices or the clock.
+
 ### The risk workspace
 
 ![The Risk workspace](images/04-risk.png)
