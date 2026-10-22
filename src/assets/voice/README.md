@@ -9,12 +9,21 @@ The audio reads the body; the sender and subject remain visible beside it.
 
 | Character | Voice preset | Direction | Messages |
 |---|---|---|---|
-| Marianne Okafor, CEO | `bf_emma`, speed 1.04 | Direct, concise | `evt-day-one`, `evt-con-ceo-honest-returns` |
-| Tomas Lindqvist, CFO | `bm_george`, speed 0.98 | Measured, precise | `evt-audit-report`, `evt-con-next-year-plan` |
-| Helen Brandt, COO | `bf_alice`, speed 1.00 | Practical, composed | `evt-legacy-question`, `evt-con-legacy-fallback-used` |
+| Marianne Okafor, CEO | `bf_isabella`, phrase speeds 0.96–1.08 | Direct, conversational | `evt-day-one`, `evt-con-ceo-honest-returns` |
+| Tomas Lindqvist, CFO | `bm_george`, phrase speeds 0.95–1.03 | Measured, precise | `evt-audit-report`, `evt-con-next-year-plan` |
+| Helen Brandt, COO | `bf_alice`, phrase speeds 0.96–1.05 | Practical, composed | `evt-legacy-question`, `evt-con-legacy-fallback-used` |
+
+The owner found the original pilot monotonous, approved the revised CEO sample,
+and requested that approach for all six clips. Each recording now uses explicit
+sentence/paragraph phrases, modest rate changes and pauses of 0.12–0.40 seconds
+between phrases. The CEO welcome retains the sample's exact four-phrase plan.
+The words and figures stay unchanged. The manifest records every phrase, rate
+and pause; joined phrase text must match the authored body after whitespace
+normalisation. A changed sentence count requires review of its direction plan.
 
 These are stock synthetic voices, not impersonations or claims about the
-characters' nationalities. Human listening review is pending: check pronunciation
+characters' nationalities. The owner approved the revised CEO preview. Broader
+human listening review is pending: check pronunciation
 (especially Nexora, Meridian, names and numbers), speaker distinction, naturalness
 and whether delivery biases a decision. Do not claim voice improves comprehension
 until people compare it with the same text. Keep independent observations and
@@ -34,7 +43,7 @@ prompted listening tasks separate in the existing focused review protocol.
   SHA-256 for `voices-v1.0.bin`:
   `bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d`.
 - Generated on 22 October 2026, English (`en-gb`), mono 24 kHz MP3, 48 kbit/s.
-  `manifest.json` records each duration, preset and speed. No third-party text
+  `manifest.json` records each duration, preset and phrase direction. No third-party text
   service received campaign or player data.
 
 To regenerate, install `kokoro-onnx==0.4.9` in a separate Python virtual

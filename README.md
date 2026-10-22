@@ -29,8 +29,11 @@ it is not a protected budget or a guarantee about future costs.
 
 Six selected Inbox messages now offer **Play message**: Marianne, Tomas and
 Helen each have a consistent AI-generated voice for an opening message and a
-later follow-up. Playback is optional and separate from sound effects. No audio
-downloads or plays until requested; native controls provide pause, seeking and
+later follow-up. Playback is optional and separate from sound effects.
+The revised clips use the owner's approved CEO voice and explicit
+sentence phrasing, varied pacing and short pauses throughout the six-message
+pilot. Each speaker retains a consistent preset; the spoken words are unchanged.
+Audio downloads and plays only when requested; native controls provide pause, seeking and
 volume, with Replay message and Stop voice alongside. Leaving the reader stops
 speech; hiding the tab pauses it. The full text always remains available.
 Edited or mismatched correspondence does not play an outdated recording.

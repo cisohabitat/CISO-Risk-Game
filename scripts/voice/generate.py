@@ -4,27 +4,38 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import wave
 
 os.environ['OMP_NUM_THREADS'] = '2'
 from kokoro_onnx import Kokoro
 import onnxruntime as ort
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / 'src/assets/voice'
 PROFILES = [
-    ('evt-day-one', 'bf_emma', 1.04),
-    ('evt-con-ceo-honest-returns', 'bf_emma', 1.04),
-    ('evt-audit-report', 'bm_george', 0.98),
-    ('evt-con-next-year-plan', 'bm_george', 0.98),
-    ('evt-legacy-question', 'bf_alice', 1.00),
-    ('evt-con-legacy-fallback-used', 'bf_alice', 1.00),
+    ('evt-day-one', 'bf_isabella', [1.00, 1.02, 1.08, 0.96], [0.12, 0.32, 0.40, 0]),
+    ('evt-con-ceo-honest-returns', 'bf_isabella', [1.02, 1.04, 0.96], [0.25, 0.32, 0]),
+    ('evt-audit-report', 'bm_george', [0.99, 1.03, 0.97, 0.95], [0.18, 0.32, 0.22, 0]),
+    ('evt-con-next-year-plan', 'bm_george', [1.00, 0.97, 0.96], [0.22, 0.28, 0]),
+    ('evt-legacy-question', 'bf_alice', [1.02, 1.04, 0.98, 0.96, 1.02, 0.97], [0.18, 0.32, 0.14, 0.22, 0.30, 0]),
+    ('evt-con-legacy-fallback-used', 'bf_alice', [1.05, 1.00, 0.96], [0.28, 0.30, 0]),
 ]
 MODEL_HASHES = {
     'kokoro-v1.0.onnx': '7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5',
     'voices-v1.0.bin': 'bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d',
 }
+
+
+def phrase_text(event_id, body):
+    if event_id == 'evt-day-one':
+        # Preserve the owner's approved sample's four phrases exactly.
+        opening, inventory, question = body.split('\n\n')
+        welcome, rest = opening.split('. ', 1)
+        return [welcome + '.', rest, inventory, question]
+    return re.split(r'(?<=[.!?])\s+', body)
 
 
 def main():
@@ -57,11 +68,22 @@ def main():
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
     manifest = []
-    for event_id, voice, speed in PROFILES:
+    for event_id, voice, speeds, pauses in PROFILES:
         event = events[event_id]
         if '{{' in event['body']:
             raise ValueError(f'Dynamic text needs a separate recording: {event_id}')
-        samples, rate = model.create(event['body'], voice=voice, speed=speed, lang='en-gb')
+        text_parts = phrase_text(event_id, event['body'])
+        if len(text_parts) != len(speeds) or len(speeds) != len(pauses):
+            raise ValueError(f'Review phrasing after a transcript change: {event_id}')
+        if ' '.join(text_parts) != ' '.join(event['body'].split()):
+            raise ValueError(f'Phrasing changed the transcript: {event_id}')
+        phrases = []
+        rendered = []
+        for text, speed, pause in zip(text_parts, speeds, pauses):
+            speech, rate = model.create(text, voice=voice, speed=speed, lang='en-gb')
+            rendered.extend([speech, np.zeros(round(rate * pause), dtype=np.float32)])
+            phrases.append({'text': text, 'speed': speed, 'pauseAfterSeconds': pause})
+        samples = np.concatenate(rendered)
         temporary = args.model_dir / f'{event_id}.wav'
         with wave.open(str(temporary), 'wb') as out:
             out.setnchannels(1)
@@ -76,7 +98,7 @@ def main():
         ], check=True)
         manifest.append({
             'eventId': event_id, 'subject': event['title'], 'body': event['body'],
-            'file': filename, 'voice': voice, 'speed': speed,
+            'file': filename, 'voice': voice, 'phrases': phrases,
             'durationSeconds': round(len(samples) / rate, 2), 'from': event['from'],
         })
         print(event_id, manifest[-1]['durationSeconds'], 'seconds', flush=True)

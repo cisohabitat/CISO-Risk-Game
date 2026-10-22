@@ -7,6 +7,12 @@ changes.
 ## Documentation
 
 - The owner authorised the six-clip character voice pilot on 22 October.
+  The owner approved the revised CEO sample and its use across the six-clip
+  pilot: Marianne uses `bf_isabella`; Tomas and Helen retain `bm_george` and
+  `bf_alice`. Render explicit phrases with varied rates and boundary pauses;
+  preserve every word and figure. Keep the approved CEO's four-phrase plan.
+  The manifest records each phrase, rate and pause, and content tests require
+  their joined text to match the authored body. Revisit plans when text changes.
   Keep the three fixed speaker profiles and exact message transcripts in
   `src/assets/voice/manifest.json`. Only delivered messages with matching
   event ID, sender, subject and body expose playback. No autoplay, runtime
@@ -15,7 +21,8 @@ changes.
   Keep visible text, native media controls and recoverable playback errors.
   Regenerate offline with `scripts/voice/generate.py`; model files stay outside
   the repo. Preserve attribution, 160 KiB per clip and 768 KiB total limits.
-  Human listening review remains pending; generated audio is not proof of
+  The owner approved the CEO preview; broader human listening review remains
+  pending. Generated audio is not proof of
   pronunciation quality, speaker recognition or improved comprehension.
 
 - The owner authorised the 22 October balance pass: partial funding access,

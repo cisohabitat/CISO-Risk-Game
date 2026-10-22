@@ -14,6 +14,16 @@ it('ships six bounded recordings with exact authored transcripts and one voice p
     expect(event).toBeDefined()
     expect({ from: clip.from, subject: clip.subject, body: clip.body }).toEqual({ from: event!.from, subject: event!.title, body: event!.body })
     expect(clip.body).not.toContain('{{')
+    expect(clip.phrases.map((phrase) => phrase.text).join(' ').replace(/\s+/g, ' ').trim()).toBe(clip.body.replace(/\s+/g, ' ').trim())
+    expect(clip.phrases.length).toBeGreaterThan(1)
+    expect(new Set(clip.phrases.map((phrase) => phrase.speed)).size).toBeGreaterThan(1)
+    expect(clip.phrases.at(-1)!.pauseAfterSeconds).toBe(0)
+    for (const phrase of clip.phrases) {
+      expect(phrase.speed).toBeGreaterThanOrEqual(0.9)
+      expect(phrase.speed).toBeLessThanOrEqual(1.15)
+      expect(phrase.pauseAfterSeconds).toBeGreaterThanOrEqual(0)
+      expect(phrase.pauseAfterSeconds).toBeLessThanOrEqual(0.4)
+    }
     expect(clip.file).toBe(`${clip.eventId}.mp3`)
     if (speakers.has(clip.from)) expect(clip.voice).toBe(speakers.get(clip.from))
     speakers.set(clip.from, clip.voice)
@@ -31,4 +41,12 @@ it('ships six bounded recordings with exact authored transcripts and one voice p
   expect(total).toBeLessThanOrEqual(768 * 1024)
   const shipped = (await readdir(new URL('../../src/assets/voice/', import.meta.url))).filter((name) => name.endsWith('.mp3')).sort()
   expect(shipped).toEqual(recordings.map((clip) => clip.file).sort())
+})
+
+it('retains the owner-approved CEO preview voice and four-phrase direction', () => {
+  const welcome = recordings.find((clip) => clip.eventId === 'evt-day-one')!
+  expect(welcome.voice).toBe('bf_isabella')
+  expect(welcome.phrases.map(({ speed, pauseAfterSeconds }) => [speed, pauseAfterSeconds])).toEqual([
+    [1, 0.12], [1.02, 0.32], [1.08, 0.4], [0.96, 0],
+  ])
 })

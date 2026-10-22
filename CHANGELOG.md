@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Revise all six character recordings with phrase-level pacing and pauses,
+  following the owner's approved CEO sample. Marianne uses the revised voice;
+  Tomas and Helen retain their distinct presets. Spoken message text is unchanged.
+
 - Optional character voice pilot for six selected messages from Marianne,
   Tomas and Helen. Play on request, pause/replay/stop, and keep the full text;
   no runtime speech service or autoplay. Human listening review remains pending.
