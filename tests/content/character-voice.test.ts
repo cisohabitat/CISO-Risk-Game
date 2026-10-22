@@ -1,12 +1,14 @@
 import { expect, it } from 'vitest'
 import { readFile, readdir, stat } from 'node:fs/promises'
 import recordings from '@/assets/voice/manifest.json'
+import recordedEvents from '@/assets/voice/event-ids.json'
 import { testIndex } from '../engine/helpers'
 
-it('ships six bounded recordings with exact authored transcripts and one voice per character', async () => {
+it('ships a bounded catalogue with exact authored transcripts and one voice per character', async () => {
   const events = testIndex().content.events
-  expect(recordings).toHaveLength(6)
-  expect(new Set(recordings.map((clip) => clip.eventId)).size).toBe(6)
+  expect(recordings).toHaveLength(18)
+  expect(new Set(recordings.map((clip) => clip.eventId)).size).toBe(18)
+  expect(recordedEvents).toEqual(recordings.map((clip) => clip.eventId))
   const speakers = new Map<string, string>()
   let total = 0
   for (const clip of recordings) {
@@ -36,9 +38,9 @@ it('ships six bounded recordings with exact authored transcripts and one voice p
     total += bytes
     expect((await readFile(url)).subarray(0, 3).toString()).toBe('ID3')
   }
-  expect(speakers.size).toBe(3)
-  expect(new Set(speakers.values()).size).toBe(3)
-  expect(total).toBeLessThanOrEqual(768 * 1024)
+  expect(speakers.size).toBe(6)
+  expect(new Set(speakers.values()).size).toBe(6)
+  expect(total).toBeLessThanOrEqual(2048 * 1024)
   const shipped = (await readdir(new URL('../../src/assets/voice/', import.meta.url))).filter((name) => name.endsWith('.mp3')).sort()
   expect(shipped).toEqual(recordings.map((clip) => clip.file).sort())
 })

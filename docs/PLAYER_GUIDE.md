@@ -240,7 +240,7 @@ and incident update are easier to distinguish. Priority is still stated in
 words when a message is notable, urgent or critical. Opening a message in
 Unread does not consume the rest of that list; select Unread again to refresh it.
 
-Six selected messages from Marianne, Tomas and Helen offer **Play message**
+Eighteen selected messages from Marianne, Tomas, Helen, Dev, Jo and Sir Alan offer **Play message**
 beside the sender. These optional AI-generated voices read the full message
 body. Nothing plays until you ask; use the audio controls to pause or seek,
 **Replay message** to start again, or **Stop voice** to stop. Leaving the message

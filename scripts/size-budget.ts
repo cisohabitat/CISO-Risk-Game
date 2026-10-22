@@ -19,6 +19,7 @@
 import { gzipSync } from 'node:zlib'
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import voiceEvents from '../src/assets/voice/event-ids.json'
 
 interface Budget {
   /** Chunk name prefix, as emitted into dist/assets. */
@@ -193,15 +194,19 @@ async function main(): Promise<void> {
 
   const voices = entries.filter((entry) => entry.endsWith('.mp3'))
   let voiceTotal = 0
-  if (voices.length !== 6) failures.push('the voice pilot must contain exactly six clips')
+  if (voices.length !== voiceEvents.length) failures.push('voice clips must match the generated catalogue')
+  for (const id of voiceEvents) {
+    if (!voices.some((entry) => entry.startsWith(`${id}-`))) failures.push(`missing voice clip: ${id}`)
+  }
   for (const voice of voices) {
     const size = (await readFile(join(dir, voice))).byteLength / 1024
     voiceTotal += size
     if (size > 160) failures.push(`${voice} exceeds the 160 KiB clip budget`)
     if (html.includes(voice)) failures.push('voice clips must not load with the title screen')
   }
-  console.log(`\n  Character voice (on request): ${voiceTotal.toFixed(1)} KiB / 768 KiB`)
-  if (voiceTotal > 768) failures.push('character voice exceeds its 768 KiB total budget')
+  // Owner-requested expansion: 18 clips across six speakers; no first-visit increase.
+  console.log(`\n  Character voice (on request): ${voiceTotal.toFixed(1)} KiB / 2048 KiB`)
+  if (voiceTotal > 2048) failures.push('character voice exceeds its 2048 KiB total budget')
 
   if (failures.length > 0) {
     console.error(`\n${failures.length} budget failure(s):`)

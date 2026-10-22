@@ -11,6 +11,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Expand optional character speech from six to eighteen selected messages,
+  adding Dev, Jo and Sir Alan. Voice both Kestrel boundary outcomes and both
+  restore-test outcomes, plus delivery, readiness, board and closing messages.
+  Generate the playback catalogue alongside recordings; retain exact text
+  matching and on-request loading. Allow 2 MiB total audio with unchanged
+  per-clip and first-visit limits.
+
 - Revise all six character recordings with phrase-level pacing and pauses,
   following the owner's approved CEO sample. Marianne uses the revised voice;
   Tomas and Helen retain their distinct presets. Spoken message text is unchanged.

@@ -27,18 +27,25 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
-Six selected Inbox messages now offer **Play message**: Marianne, Tomas and
-Helen each have a consistent AI-generated voice for an opening message and a
-later follow-up. Playback is optional and separate from sound effects.
+Eighteen selected Inbox messages offer **Play message** across six characters:
+Marianne, Tomas, Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,
+incident readiness, suspicious mailbox activity, acquisition and restore
+outcomes, board expectations and the first-year review invitation.
+Playback is optional and separate from sound effects.
 The revised clips use the owner's approved CEO voice and explicit
-sentence phrasing, varied pacing and short pauses throughout the six-message
-pilot. Each speaker retains a consistent preset; the spoken words are unchanged.
+sentence phrasing, varied pacing and short pauses throughout the catalogue.
+Each speaker retains a consistent preset; the spoken words are unchanged.
+The new board-chair clips are mastered to reduce their level difference from
+the other speakers; the approved original six recordings are retained.
 Audio downloads and plays only when requested; native controls provide pause, seeking and
 volume, with Replay message and Stop voice alongside. Leaving the reader stops
 speech; hiding the tab pauses it. The full text always remains available.
 Edited or mismatched correspondence does not play an outdated recording.
 The [voice pilot notes](src/assets/voice/README.md) cover transcripts, offline
 generation, attribution, asset budgets and the pending human listening review.
+The [voice review](docs/VOICE_REVIEW.md) explains selection and remaining gaps.
+The expanded recordings have a 2 MiB total allowance, downloaded only on request;
+the 160 KiB per-clip and all first-visit budgets remain unchanged.
 
 The design test applied to every feature is the one from the specification:
 

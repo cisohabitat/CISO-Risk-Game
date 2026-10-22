@@ -1,25 +1,34 @@
-# Character voice pilot
+# Character voice catalogue
 
-Six prerecorded synthetic messages, three recurring stakeholders. Playback is
+Eighteen prerecorded synthetic messages, six recurring characters. Playback is
 explicit and optional in Inbox. The authoritative transcript is the message body
 in campaign content, copied into `manifest.json` for exact runtime comparison.
 Event ID, sender, subject and body must all match before playback is offered.
 No voices are inferred for other messages, and no future correspondence is shown.
 The audio reads the body; the sender and subject remain visible beside it.
 
-| Character | Voice preset | Direction | Messages |
+| Character | Voice preset | Direction | Coverage |
 |---|---|---|---|
-| Marianne Okafor, CEO | `bf_isabella`, phrase speeds 0.96–1.08 | Direct, conversational | `evt-day-one`, `evt-con-ceo-honest-returns` |
-| Tomas Lindqvist, CFO | `bm_george`, phrase speeds 0.95–1.03 | Measured, precise | `evt-audit-report`, `evt-con-next-year-plan` |
-| Helen Brandt, COO | `bf_alice`, phrase speeds 0.96–1.05 | Practical, composed | `evt-legacy-question`, `evt-con-legacy-fallback-used` |
+| Marianne Okafor, CEO | `bf_isabella`, phrase speeds 0.96–1.08 | Direct, conversational | 3: opening, follow-up, year-end invitation |
+| Tomas Lindqvist, CFO | `bm_george`, phrase speeds 0.95–1.03 | Measured, precise | 5: audit, next year's plan, acquisition, both boundary outcomes |
+| Helen Brandt, COO | `bf_alice`, phrase speeds 0.96–1.05 | Practical, composed | 4: warehouse, fallback, both restore outcomes |
+| Dev Raghunathan, CIO | `bm_daniel`, phrase speeds 0.97–1.06 | Fluent, concerned with delivery | 2: migration and review pressure |
+| Jo Mbeki, Security Operations | `bf_emma`, phrase speeds 0.97–1.03 | Factual, composed | 2: response readiness and mailbox activity |
+| Sir Alan Whitcombe, board chair | `bm_fable`, phrase speeds 0.94–1.00 | Deliberate, probing | 2: appetite and six-month review |
 
 The owner found the original pilot monotonous, approved the revised CEO sample,
-and requested that approach for all six clips. Each recording now uses explicit
+and requested that approach for the original six clips, then further coverage.
+Each recording uses explicit
 sentence/paragraph phrases, modest rate changes and pauses of 0.12–0.40 seconds
 between phrases. The CEO welcome retains the sample's exact four-phrase plan.
 The words and figures stay unchanged. The manifest records every phrase, rate
 and pause; joined phrase text must match the authored body after whitespace
 normalisation. A changed sentence count requires review of its direction plan.
+
+The board preset was quieter in a technical level check. Its two new clips use
+`loudnorm=I=-19:TP=-1.5:LRA=7`, resampled back to 24 kHz before MP3 encoding;
+the manifest records that mastering filter. The original six files remain
+unchanged. This reduces level variation; perceived loudness still needs listening.
 
 These are stock synthetic voices, not impersonations or claims about the
 characters' nationalities. The owner approved the revised CEO preview. Broader
@@ -54,8 +63,10 @@ files into a directory outside the repository. Then run:
 python scripts/voice/generate.py /path/to/model-directory
 ```
 
-The script reads current authored bodies, rewrites the six MP3s and manifest,
-and leaves temporary WAVs in the model directory. Review any transcript changes
+The script reads current authored bodies, rewrites the 18 MP3s and manifest,
+and generates `event-ids.json` for the lightweight UI gate and size check. Tests
+require the IDs and manifest to agree, avoiding a separate manual playback list.
+It leaves temporary WAVs in the model directory. Review any transcript changes
 and listen before accepting new audio. Byte-identical output across runtimes is
 not promised. Do not add Python/model dependencies to the player application.
 
@@ -67,11 +78,15 @@ leaving Inbox or changing campaign releases the player. Background tabs pause
 without automatic resumption. Playback errors leave the text and retry controls
 available. Audio does not change saves, resources, choices or clock state.
 
-The pilot has a 160 KiB per-clip and 768 KiB total encoded budget, separate from
+The catalogue has a 160 KiB per-clip and 2048 KiB total encoded budget, separate from
 the unchanged title/critical-path budgets. Content tests verify exact transcripts,
-six files and consistent speaker mapping. UI tests verify explicit playback,
+all 18 files and consistent speaker mapping. UI tests verify explicit playback,
 cleanup, mismatch protection and error recovery. Browser tests use real decoding
 in Chromium/WebKit and verify on-request loading and phone layouts.
 On restricted Linux runners, WebKit's media cache needs a writable `/var/tmp`;
 without it the browser can reject valid MP3s with a temporary-file error.
 Grant test-process cache access rather than weakening playback assertions.
+
+The total allowance was deliberately raised from 768 KiB for the requested
+expansion. First-visit limits stay fixed; all audio remains on request.
+See [the review](../../../docs/VOICE_REVIEW.md) for selection and remaining gaps.

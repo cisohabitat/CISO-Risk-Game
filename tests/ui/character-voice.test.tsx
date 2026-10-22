@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import CharacterVoicePlayer from '@/components/game/CharacterVoicePlayer'
+import { CharacterVoice } from '@/components/game/CharacterVoice'
 import recordings from '@/assets/voice/manifest.json'
 import type { InboxMessage } from '@/game/types'
 
@@ -48,4 +49,18 @@ it('keeps a failed playback recoverable and stops speech in a hidden tab', async
   expect(container.querySelector('audio')!.pause).toHaveBeenCalled()
   fireEvent.click(screen.getByRole('button', { name: 'Replay message' }))
   expect(screen.queryByRole('status')).not.toBeInTheDocument()
+})
+
+it('offers a newly catalogued speaker and releases the previous message when switching', async () => {
+  const { container, rerender } = render(<CharacterVoice message={message} />)
+  fireEvent.click(await screen.findByRole('button', { name: 'Play message' }))
+  const previous = container.querySelector('audio')!
+  const next = recordings.find((clip) => clip.eventId === 'evt-biz-cio-pressure')!
+  rerender(<CharacterVoice message={{ ...message, ...next, id: 'voice-two' }} />)
+  expect(await screen.findByRole('button', { name: 'Play message' })).toBeVisible()
+  expect(previous).not.toHaveAttribute('src')
+  expect(container.querySelector('audio')).not.toHaveAttribute('src')
+  expect(screen.getByLabelText(`Voice message from ${next.from}`)).toBeInTheDocument()
+  rerender(<CharacterVoice message={{ ...message, eventId: 'unknown-voice' }} />)
+  expect(container).toBeEmptyDOMElement()
 })

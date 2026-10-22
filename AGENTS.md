@@ -6,21 +6,33 @@ changes.
 
 ## Documentation
 
-- The owner authorised the six-clip character voice pilot on 22 October.
+- The owner authorised further voice review and coverage after the six-clip
+  pilot. The catalogue now contains 18 clips across Marianne, Tomas, Helen,
+  Dev, Jo and Sir Alan. Dev uses `bm_daniel`, Jo `bf_emma`, Sir Alan `bm_fable`.
+  The new board-chair clips use the recorded loudness filter in the generator
+  and manifest; retain 24 kHz output and leave the approved six files unchanged.
+  Keep opposing Kestrel and restore outcomes covered. This is presentation
+  coverage; do not change event eligibility or simulation effects to deliver it.
+  Generate `event-ids.json` together with the transcript manifest; the UI gate,
+  tests and size check use that catalogue rather than a separate manual list.
+  Findings and coverage choices are in `docs/VOICE_REVIEW.md`.
+- The owner authorised the original six-clip character voice pilot on 22 October.
   The owner approved the revised CEO sample and its use across the six-clip
   pilot: Marianne uses `bf_isabella`; Tomas and Helen retain `bm_george` and
   `bf_alice`. Render explicit phrases with varied rates and boundary pauses;
   preserve every word and figure. Keep the approved CEO's four-phrase plan.
   The manifest records each phrase, rate and pause, and content tests require
   their joined text to match the authored body. Revisit plans when text changes.
-  Keep the three fixed speaker profiles and exact message transcripts in
+  Keep the six fixed speaker profiles and exact message transcripts in
   `src/assets/voice/manifest.json`. Only delivered messages with matching
   event ID, sender, subject and body expose playback. No autoplay, runtime
   synthesis, remote speech service or simulation changes. Audio loads only
   after Play message, stops on reader/campaign exit and pauses in hidden tabs.
   Keep visible text, native media controls and recoverable playback errors.
   Regenerate offline with `scripts/voice/generate.py`; model files stay outside
-  the repo. Preserve attribution, 160 KiB per clip and 768 KiB total limits.
+  the repo. Preserve attribution and the 160 KiB per-clip limit. The requested
+  expansion raises the total on-request allowance from 768 to 2048 KiB;
+  first-screen and complete-visit limits remain unchanged.
   The owner approved the CEO preview; broader human listening review remains
   pending. Generated audio is not proof of
   pronunciation quality, speaker recognition or improved comprehension.

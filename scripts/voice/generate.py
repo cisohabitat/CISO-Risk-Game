@@ -1,4 +1,4 @@
-"""Regenerate the six pilot clips offline; see src/assets/voice/README.md."""
+"""Regenerate selected character clips offline; see src/assets/voice/README.md."""
 import argparse
 import hashlib
 import json
@@ -22,11 +22,24 @@ PROFILES = [
     ('evt-con-next-year-plan', 'bm_george', [1.00, 0.97, 0.96], [0.22, 0.28, 0]),
     ('evt-legacy-question', 'bf_alice', [1.02, 1.04, 0.98, 0.96, 1.02, 0.97], [0.18, 0.32, 0.14, 0.22, 0.30, 0]),
     ('evt-con-legacy-fallback-used', 'bf_alice', [1.05, 1.00, 0.96], [0.28, 0.30, 0]),
+    ('evt-year-end-notice', 'bf_isabella', [1.00, 1.04, 0.96], [0.20, 0.35, 0]),
+    ('evt-acquisition-integration', 'bm_george', [0.99, 1.03, 0.98, 0.95], [0.16, 0.30, 0.18, 0]),
+    ('evt-con-kestrel-held', 'bm_george', [0.99, 1.02, 0.96], [0.24, 0.28, 0]),
+    ('evt-con-kestrel-lifted', 'bm_george', [0.99, 1.03, 0.96], [0.22, 0.28, 0]),
+    ('evt-con-recovery-tested', 'bf_alice', [1.02, 1.05, 0.97], [0.22, 0.30, 0]),
+    ('evt-con-recovery-struggled', 'bf_alice', [1.00, 1.04, 0.96], [0.24, 0.32, 0]),
+    ('evt-biz-migration-slip', 'bm_daniel', [1.02, 1.06, 1.00, 0.97], [0.18, 0.30, 0.20, 0]),
+    ('evt-biz-cio-pressure', 'bm_daniel', [1.04, 0.99, 1.01], [0.24, 0.22, 0]),
+    ('evt-org-ir-plan', 'bf_emma', [1.00, 0.97, 1.03], [0.22, 0.28, 0]),
+    ('evt-thr-mailbox-rule', 'bf_emma', [1.01, 0.97, 1.02], [0.22, 0.26, 0]),
+    ('evt-biz-board-appetite', 'bm_fable', [0.98, 0.94], [0.32, 0]),
+    ('evt-sit-breach-six-months', 'bm_fable', [0.96, 1.00, 0.94], [0.24, 0.34, 0]),
 ]
 MODEL_HASHES = {
     'kokoro-v1.0.onnx': '7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5',
     'voices-v1.0.bin': 'bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d',
 }
+MASTERING = {'bm_fable': 'loudnorm=I=-19:TP=-1.5:LRA=7'}
 
 
 def phrase_text(event_id, body):
@@ -91,9 +104,11 @@ def main():
             out.setframerate(rate)
             out.writeframes((samples.clip(-1, 1) * 32767).astype('<i2').tobytes())
         filename = f'{event_id}.mp3'
+        mastering = MASTERING.get(voice)
+        filters = ['-af', mastering] if mastering else []
         subprocess.run([
             'ffmpeg', '-v', 'error', '-y', '-i', str(temporary),
-            '-codec:a', 'libmp3lame', '-b:a', '48k', '-ac', '1',
+            *filters, '-ar', '24000', '-codec:a', 'libmp3lame', '-b:a', '48k', '-ac', '1',
             '-map_metadata', '-1', str(OUTPUT / filename),
         ], check=True)
         manifest.append({
@@ -101,8 +116,11 @@ def main():
             'file': filename, 'voice': voice, 'phrases': phrases,
             'durationSeconds': round(len(samples) / rate, 2), 'from': event['from'],
         })
+        if mastering:
+            manifest[-1]['mastering'] = mastering
         print(event_id, manifest[-1]['durationSeconds'], 'seconds', flush=True)
     (OUTPUT / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
+    (OUTPUT / 'event-ids.json').write_text(json.dumps([clip['eventId'] for clip in manifest], indent=2) + '\n')
 
 
 if __name__ == '__main__':
