@@ -7,8 +7,13 @@ changes.
 ## Documentation
 
 - The owner authorised further voice review and coverage after the six-clip
-  pilot. The catalogue now contains 18 clips across Marianne, Tomas, Helen,
-  Dev, Jo and Sir Alan. Dev uses `bm_daniel`, Jo `bf_emma`, Sir Alan `bm_fable`.
+  pilot. The catalogue now contains 30 clips across all 12 recurring characters.
+  Priya uses `bf_lily`, Callum `bm_lewis`; Nadia, Ruth, Fenella and Stefan use
+  the fixed stock-voice mixes recorded in the generator and manifest. Keep
+  mix weights positive, summing to one, and consistent per character. New
+  profiles use the recorded loudness filter and retain 24 kHz output.
+  The earlier 18 recordings must remain unchanged. Dev uses `bm_daniel`,
+  Jo `bf_emma`, Sir Alan `bm_fable`.
   The new board-chair clips use the recorded loudness filter in the generator
   and manifest; retain 24 kHz output and leave the approved six files unchanged.
   Keep opposing Kestrel and restore outcomes covered. This is presentation
@@ -23,7 +28,7 @@ changes.
   preserve every word and figure. Keep the approved CEO's four-phrase plan.
   The manifest records each phrase, rate and pause, and content tests require
   their joined text to match the authored body. Revisit plans when text changes.
-  Keep the six fixed speaker profiles and exact message transcripts in
+  Keep the twelve fixed speaker profiles and exact message transcripts in
   `src/assets/voice/manifest.json`. Only delivered messages with matching
   event ID, sender, subject and body expose playback. No autoplay, runtime
   synthesis, remote speech service or simulation changes. Audio loads only
@@ -31,7 +36,8 @@ changes.
   Keep visible text, native media controls and recoverable playback errors.
   Regenerate offline with `scripts/voice/generate.py`; model files stay outside
   the repo. Preserve attribution and the 160 KiB per-clip limit. The requested
-  expansion raises the total on-request allowance from 768 to 2048 KiB;
+  full-cast expansion raises the total on-request allowance to 3072 KiB
+  (previously 768, then 2048 KiB);
   first-screen and complete-visit limits remain unchanged.
   The owner approved the CEO preview; broader human listening review remains
   pending. Generated audio is not proof of

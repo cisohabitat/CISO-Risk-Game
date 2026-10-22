@@ -204,9 +204,9 @@ async function main(): Promise<void> {
     if (size > 160) failures.push(`${voice} exceeds the 160 KiB clip budget`)
     if (html.includes(voice)) failures.push('voice clips must not load with the title screen')
   }
-  // Owner-requested expansion: 18 clips across six speakers; no first-visit increase.
-  console.log(`\n  Character voice (on request): ${voiceTotal.toFixed(1)} KiB / 2048 KiB`)
-  if (voiceTotal > 2048) failures.push('character voice exceeds its 2048 KiB total budget')
+  // Owner-requested expansion: 30 clips across the 12-character cast.
+  console.log(`\n  Character voice (on request): ${voiceTotal.toFixed(1)} KiB / 3072 KiB`)
+  if (voiceTotal > 3072) failures.push('character voice exceeds its 3072 KiB total budget')
 
   if (failures.length > 0) {
     console.error(`\n${failures.length} budget failure(s):`)

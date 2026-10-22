@@ -14,6 +14,7 @@ sound natural or improve comprehension; that still needs listening sessions.
 | The playback ID list was maintained separately from generated recordings | Generate a small `event-ids.json` with the transcript manifest; use it in the UI gate and output-size checks |
 | The owner preferred the revised phrasing over uniform delivery | Retain the original six recordings and approved CEO direction; give new recordings explicit sentence pacing and pauses |
 | The new board preset measured quieter than the other cast | Master its two new clips with a recorded loudness filter and peak headroom; retain the original six files |
+| Six recurring characters still had no voiced messages | Add two existing messages each for Priya, Nadia, Ruth, Fenella, Stefan and Callum; retain all earlier eighteen files |
 
 ## Selected coverage
 
@@ -25,6 +26,12 @@ sound natural or improve comprehension; that still needs listening sessions.
 | Dev Raghunathan | 2 | Migration slipping, security review affecting delivery |
 | Jo Mbeki | 2 | An unexercised incident plan, an unauthorised finance mailbox rule |
 | Sir Alan Whitcombe | 2 | Risk appetite, the six-month post-encryption review |
+| Priya Nandakumar | 2 | Release cadence and client security questions |
+| Nadia Farrell | 2 | SOC renewal and Corvus contract direction |
+| Ruth Ahmadi | 2 | Regulatory scope and merchant card-data questions |
+| Fenella Osei | 2 | Audit evidence matched and overstated |
+| Stefan Alvarez | 2 | Conflicting architecture documents and unseen data flows |
+| Callum Reid | 2 | Engineering vacancies and unsigned releases |
 
 These are existing authored messages with static bodies and known senders.
 Playback is offered only after the message is delivered and its recorded ID,
@@ -35,9 +42,12 @@ Media test fixtures exercise reader behaviour separately from event reachability
 
 ## Delivery and constraints
 
-The catalogue grows from 6 to 18 clips and from 3 to 6 distinct stock voice
-presets. Existing profiles and the CEO's approved four phrases are retained.
-The new total encoded-audio allowance is 2048 KiB, up from 768 KiB; the per-clip
+The catalogue grew from 6 to 18 clips, and now to 30 across the full recurring
+cast. Eight profiles use individual stock voices and four use fixed stock-voice
+blends recorded in the manifest. These are twelve configured identities;
+perceptual recognition remains a listening question. Existing profiles and
+the CEO's approved four phrases are retained.
+The new total encoded-audio allowance is 3072 KiB, up from 2048 KiB; the per-clip
 limit remains 160 KiB. MP3s are still fetched only on Play message. Initial
 download budgets, optional sound cues and the full written correspondence stay
 as before. The expanded player catalogue remains deferred.
@@ -48,11 +58,20 @@ new-speaker discovery, real playback, switching without overlap, stopping on
 navigation and narrow layouts. See `src/assets/voice/README.md` for generation
 and licensing. Report the checks actually run when releasing this revision.
 
-Focused verification during this pass: nine voice unit/content tests and twelve
+Verification of the earlier 18-clip expansion: nine voice unit/content tests and twelve
 browser cases passed across the six configured projects. All eighteen MP3s fully
 decoded without errors. SHA-256 comparison against the six pre-expansion files
 confirmed those recordings are unchanged. The measured catalogue is 1436.1 KiB,
-within the new allowance. Full revision checks remain a separate release gate.
+within its 2048 KiB allowance. The full-cast pass has its own file-preservation,
+decode, mix-consistency and browser checks; report their measured results when
+releasing it. Full revision checks remain a separate release gate.
+
+Full-cast focused verification: nine voice unit/content tests, typechecking and
+eighteen browser cases passed. All thirty files fully decoded, and SHA-256
+comparison confirmed the earlier eighteen MP3s are unchanged. Audio totals
+2232.0 KiB within the 3072 KiB allowance. The new profiles' measured MP3 peaks
+remain below full scale. These technical checks do not establish naturalness or
+perceptual speaker recognition.
 
 ## Remaining listening work
 
@@ -61,7 +80,7 @@ fatigue and whether delivery overstates a character's written certainty. Compare
 the same messages with and without playback; keep prompted listening separate
 from unaided play. Only the CEO preview has explicit owner approval so far.
 
-Other characters, routine updates, full annual-review narration and dynamically
+Routine updates, full annual-review narration and dynamically
 assembled incident correspondence remain outside this catalogue. Dynamic text
 needs matching recordings for its actual wording before it can be voiced safely.
 No runtime synthesis, inferred missing words or automatic narration is added.

@@ -27,16 +27,20 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
-Eighteen selected Inbox messages offer **Play message** across six characters:
-Marianne, Tomas, Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,
+Thirty selected Inbox messages offer **Play message** across all twelve recurring
+characters. Priya, Nadia, Ruth, Fenella, Stefan and Callum join Marianne, Tomas,
+Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,
 incident readiness, suspicious mailbox activity, acquisition and restore
-outcomes, board expectations and the first-year review invitation.
+outcomes, board expectations, procurement, legal questions, audit findings,
+engineering concerns and the first-year review invitation.
 Playback is optional and separate from sound effects.
 The revised clips use the owner's approved CEO voice and explicit
 sentence phrasing, varied pacing and short pauses throughout the catalogue.
 Each speaker retains a consistent preset; the spoken words are unchanged.
 The new board-chair clips are mastered to reduce their level difference from
-the other speakers; the approved original six recordings are retained.
+the other speakers. The six added character profiles receive the same mastering
+approach; all earlier eighteen recordings are retained. Four new profiles use
+fixed blends of stock synthetic voices, recorded in the generation manifest.
 Audio downloads and plays only when requested; native controls provide pause, seeking and
 volume, with Replay message and Stop voice alongside. Leaving the reader stops
 speech; hiding the tab pauses it. The full text always remains available.
@@ -44,7 +48,7 @@ Edited or mismatched correspondence does not play an outdated recording.
 The [voice pilot notes](src/assets/voice/README.md) cover transcripts, offline
 generation, attribution, asset budgets and the pending human listening review.
 The [voice review](docs/VOICE_REVIEW.md) explains selection and remaining gaps.
-The expanded recordings have a 2 MiB total allowance, downloaded only on request;
+The expanded recordings have a 3 MiB total allowance, downloaded only on request;
 the 160 KiB per-clip and all first-visit budgets remain unchanged.
 
 The design test applied to every feature is the one from the specification:

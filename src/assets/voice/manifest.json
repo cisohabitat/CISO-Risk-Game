@@ -498,5 +498,341 @@
     "durationSeconds": 10.27,
     "from": "Sir Alan Whitcombe, Chair, Board Risk Committee",
     "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
+  },
+  {
+    "eventId": "evt-biz-release-pressure",
+    "subject": "Release cadence is increasing",
+    "body": "We are moving to twice-weekly releases on the platform. I am telling you rather than asking, but I would rather you heard it from me.",
+    "file": "evt-biz-release-pressure.mp3",
+    "voice": "bf_lily",
+    "phrases": [
+      {
+        "text": "We are moving to twice-weekly releases on the platform.",
+        "speed": 1.05,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "I am telling you rather than asking, but I would rather you heard it from me.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 7.22,
+    "from": "Priya Nandakumar, Managing Director, Digital",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
+  },
+  {
+    "eventId": "evt-biz-customer-question",
+    "subject": "An enterprise client is asking security questions",
+    "body": "One of the Insight Services clients has sent a 140-question security assessment as part of their renewal. Some of the questions I cannot answer honestly and confidently at the same time.",
+    "file": "evt-biz-customer-question.mp3",
+    "voice": "bf_lily",
+    "phrases": [
+      {
+        "text": "One of the Insight Services clients has sent a 140-question security assessment as part of their renewal.",
+        "speed": 1.04,
+        "pauseAfterSeconds": 0.28
+      },
+      {
+        "text": "Some of the questions I cannot answer honestly and confidently at the same time.",
+        "speed": 0.98,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 12.21,
+    "from": "Priya Nandakumar, Managing Director, Digital",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
+  },
+  {
+    "eventId": "evt-soc-renewal",
+    "subject": "SOC contract renewal decision required",
+    "body": "Sentinel's contract renews in eight weeks and I need a direction from you. Renewing as-is is straightforward. Anything else takes time I need to start spending now.",
+    "file": "evt-soc-renewal.mp3",
+    "voice": "mix-nadia",
+    "phrases": [
+      {
+        "text": "Sentinel's contract renews in eight weeks and I need a direction from you.",
+        "speed": 1.01,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "Renewing as-is is straightforward.",
+        "speed": 1.04,
+        "pauseAfterSeconds": 0.18
+      },
+      {
+        "text": "Anything else takes time I need to start spending now.",
+        "speed": 0.97,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 9.57,
+    "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.7,
+      "bf_alice": 0.3
+    }
+  },
+  {
+    "eventId": "evt-q4-corvus-renewal",
+    "subject": "Corvus renews in January",
+    "body": "Corvus's contract goes to signature in December. I have read it again: it says nothing about how their engineers connect, only that they will. Whatever we agreed this year about their access is in emails. I can write it in, renew it as it stands, or take it to market, and I need a direction this month.",
+    "file": "evt-q4-corvus-renewal.mp3",
+    "voice": "mix-nadia",
+    "phrases": [
+      {
+        "text": "Corvus's contract goes to signature in December.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.2
+      },
+      {
+        "text": "I have read it again: it says nothing about how their engineers connect, only that they will.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "Whatever we agreed this year about their access is in emails.",
+        "speed": 1.01,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "I can write it in, renew it as it stands, or take it to market, and I need a direction this month.",
+        "speed": 0.97,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 17.28,
+    "from": "Nadia Farrell, Director of Procurement and Supplier Management",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.7,
+      "bf_alice": 0.3
+    }
+  },
+  {
+    "eventId": "evt-biz-regulator-thematic",
+    "subject": "Regulator opens a thematic review",
+    "body": "The regulator has opened a thematic review into operational resilience in payment services. We are in scope. They will ask about recovery capability and third-party dependencies.",
+    "file": "evt-biz-regulator-thematic.mp3",
+    "voice": "mix-ruth",
+    "phrases": [
+      {
+        "text": "The regulator has opened a thematic review into operational resilience in payment services.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "We are in scope.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0.18
+      },
+      {
+        "text": "They will ask about recovery capability and third-party dependencies.",
+        "speed": 1.01,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 12.37,
+    "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_alice": 0.55,
+      "bf_lily": 0.45
+    }
+  },
+  {
+    "eventId": "evt-biz-merchant-complaint",
+    "subject": "A merchant is asking about card data handling",
+    "body": "One of the larger merchants has asked, in writing, for confirmation that card data is not retained outside the payment environment. I would like to answer accurately.",
+    "file": "evt-biz-merchant-complaint.mp3",
+    "voice": "mix-ruth",
+    "phrases": [
+      {
+        "text": "One of the larger merchants has asked, in writing, for confirmation that card data is not retained outside the payment environment.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.3
+      },
+      {
+        "text": "I would like to answer accurately.",
+        "speed": 0.95,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 10.43,
+    "from": "Ruth Ahmadi, General Counsel and Data Protection Officer",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_alice": 0.55,
+      "bf_lily": 0.45
+    }
+  },
+  {
+    "eventId": "evt-con-audit-shown",
+    "subject": "Audit: the account matched production",
+    "body": "The auditors have written up the follow-up. They recorded what is enforced and what is not, and noted that management's account matched what they found. That last line is the one the audit committee will read.",
+    "file": "evt-con-audit-shown.mp3",
+    "voice": "mix-fenella",
+    "phrases": [
+      {
+        "text": "The auditors have written up the follow-up.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "They recorded what is enforced and what is not, and noted that management's account matched what they found.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.28
+      },
+      {
+        "text": "That last line is the one the audit committee will read.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 11.89,
+    "from": "Fenella Osei, Head of Cyber Risk and Governance",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.45,
+      "bf_lily": 0.55
+    }
+  },
+  {
+    "eventId": "evt-con-audit-overstated",
+    "subject": "Audit found production behind the account",
+    "body": "The auditors tested the milestones we presented and found production behind them. The finding stays open, now with a note that management's account was ahead of the evidence. The committee will read that note first.",
+    "file": "evt-con-audit-overstated.mp3",
+    "voice": "mix-fenella",
+    "phrases": [
+      {
+        "text": "The auditors tested the milestones we presented and found production behind them.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "The finding stays open, now with a note that management's account was ahead of the evidence.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.3
+      },
+      {
+        "text": "The committee will read that note first.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 12.4,
+    "from": "Fenella Osei, Head of Cyber Risk and Governance",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.45,
+      "bf_lily": 0.55
+    }
+  },
+  {
+    "eventId": "evt-org-doc-contradiction",
+    "subject": "Two documents, two different answers",
+    "body": "The architecture pack says the legacy estate is fully segregated from production. The firewall rule base says otherwise. Both are current documents.",
+    "file": "evt-org-doc-contradiction.mp3",
+    "voice": "mix-stefan",
+    "phrases": [
+      {
+        "text": "The architecture pack says the legacy estate is fully segregated from production.",
+        "speed": 1.02,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "The firewall rule base says otherwise.",
+        "speed": 0.97,
+        "pauseAfterSeconds": 0.26
+      },
+      {
+        "text": "Both are current documents.",
+        "speed": 0.95,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 9.7,
+    "from": "Stefan Alvarez, Head of Security Architecture",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bm_daniel": 0.6,
+      "bm_george": 0.4
+    }
+  },
+  {
+    "eventId": "evt-biz-shadow-project",
+    "subject": "A project you had not heard of",
+    "body": "The commercial team have been running a customer data enrichment project with an external provider for four months. Nobody told us. The data flows out of the analytics estate nightly.",
+    "file": "evt-biz-shadow-project.mp3",
+    "voice": "mix-stefan",
+    "phrases": [
+      {
+        "text": "The commercial team have been running a customer data enrichment project with an external provider for four months.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "Nobody told us.",
+        "speed": 0.97,
+        "pauseAfterSeconds": 0.22
+      },
+      {
+        "text": "The data flows out of the analytics estate nightly.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 11.57,
+    "from": "Stefan Alvarez, Head of Security Architecture",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bm_daniel": 0.6,
+      "bm_george": 0.4
+    }
+  },
+  {
+    "eventId": "evt-org-vacancy-pressure",
+    "subject": "Two vacancies, six months open",
+    "body": "Both identity engineering roles are still open. We have been covering with the people we have, and it is starting to show in what we can commit to.",
+    "file": "evt-org-vacancy-pressure.mp3",
+    "voice": "bm_lewis",
+    "phrases": [
+      {
+        "text": "Both identity engineering roles are still open.",
+        "speed": 1.02,
+        "pauseAfterSeconds": 0.26
+      },
+      {
+        "text": "We have been covering with the people we have, and it is starting to show in what we can commit to.",
+        "speed": 0.98,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 8.79,
+    "from": "Callum Reid, Head of Security Engineering",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
+  },
+  {
+    "eventId": "evt-org-unsigned-releases",
+    "subject": "The pipeline trusts itself",
+    "body": "Anything that reaches the build pipeline is deployed. Nothing checks who wrote it or whether anyone reviewed it, so the pipeline's only safeguard is that nobody bad reaches it.",
+    "file": "evt-org-unsigned-releases.mp3",
+    "voice": "bm_lewis",
+    "phrases": [
+      {
+        "text": "Anything that reaches the build pipeline is deployed.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "Nothing checks who wrote it or whether anyone reviewed it, so the pipeline's only safeguard is that nobody bad reaches it.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 11.25,
+    "from": "Callum Reid, Head of Security Engineering",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7"
   }
 ]

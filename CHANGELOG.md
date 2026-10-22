@@ -11,6 +11,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Continue voice coverage to 30 selected messages across all 12 recurring
+  characters. Add digital, procurement, legal, governance, architecture and
+  engineering voices with fixed profiles and phrase pacing. Preserve the earlier
+  18 recordings; raise the on-request audio allowance to 3 MiB while retaining
+  per-clip and first-visit limits.
+
 - Expand optional character speech from six to eighteen selected messages,
   adding Dev, Jo and Sir Alan. Voice both Kestrel boundary outcomes and both
   restore-test outcomes, plus delivery, readiness, board and closing messages.

@@ -16,5 +16,17 @@
   "evt-org-ir-plan",
   "evt-thr-mailbox-rule",
   "evt-biz-board-appetite",
-  "evt-sit-breach-six-months"
+  "evt-sit-breach-six-months",
+  "evt-biz-release-pressure",
+  "evt-biz-customer-question",
+  "evt-soc-renewal",
+  "evt-q4-corvus-renewal",
+  "evt-biz-regulator-thematic",
+  "evt-biz-merchant-complaint",
+  "evt-con-audit-shown",
+  "evt-con-audit-overstated",
+  "evt-org-doc-contradiction",
+  "evt-biz-shadow-project",
+  "evt-org-vacancy-pressure",
+  "evt-org-unsigned-releases"
 ]

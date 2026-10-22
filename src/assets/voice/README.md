@@ -1,6 +1,6 @@
 # Character voice catalogue
 
-Eighteen prerecorded synthetic messages, six recurring characters. Playback is
+Thirty prerecorded synthetic messages, twelve recurring characters. Playback is
 explicit and optional in Inbox. The authoritative transcript is the message body
 in campaign content, copied into `manifest.json` for exact runtime comparison.
 Event ID, sender, subject and body must all match before playback is offered.
@@ -15,6 +15,26 @@ The audio reads the body; the sender and subject remain visible beside it.
 | Dev Raghunathan, CIO | `bm_daniel`, phrase speeds 0.97–1.06 | Fluent, concerned with delivery | 2: migration and review pressure |
 | Jo Mbeki, Security Operations | `bf_emma`, phrase speeds 0.97–1.03 | Factual, composed | 2: response readiness and mailbox activity |
 | Sir Alan Whitcombe, board chair | `bm_fable`, phrase speeds 0.94–1.00 | Deliberate, probing | 2: appetite and six-month review |
+| Priya Nandakumar, Digital | `bf_lily`, phrase speeds 0.98–1.05 | Brisk, commercially focused | 2: releases and client questions |
+| Nadia Farrell, Procurement | `mix-nadia`, phrase speeds 0.97–1.04 | Practical, matter-of-fact | 2: SOC and Corvus renewals |
+| Ruth Ahmadi, Legal | `mix-ruth`, phrase speeds 0.95–1.01 | Precise, composed | 2: regulator and merchant questions |
+| Fenella Osei, Governance | `mix-fenella`, phrase speeds 0.96–1.03 | Evidence-focused, measured | 2: audit findings matched and overstated |
+| Stefan Alvarez, Architecture | `mix-stefan`, phrase speeds 0.95–1.03 | Analytical, direct | 2: contradictory documents and unseen data flows |
+| Callum Reid, Engineering | `bm_lewis`, phrase speeds 0.98–1.03 | Plain, delivery-focused | 2: vacancies and unsigned releases |
+
+The four custom profile names refer to fixed blends of stock voice embeddings,
+not recordings or clones of real people:
+
+| Profile | Stock voice weights |
+|---|---|
+| `mix-nadia` | 70% `bf_emma`, 30% `bf_alice` |
+| `mix-ruth` | 55% `bf_alice`, 45% `bf_lily` |
+| `mix-fenella` | 45% `bf_emma`, 55% `bf_lily` |
+| `mix-stefan` | 60% `bm_daniel`, 40% `bm_george` |
+
+Weights are recorded as `voiceMix` in the manifest. Tests require positive weights
+summing to one and an unchanged mix across a character's messages. Different
+configured profiles are not proof that listeners can reliably distinguish them.
 
 The owner found the original pilot monotonous, approved the revised CEO sample,
 and requested that approach for the original six clips, then further coverage.
@@ -29,6 +49,8 @@ The board preset was quieter in a technical level check. Its two new clips use
 `loudnorm=I=-19:TP=-1.5:LRA=7`, resampled back to 24 kHz before MP3 encoding;
 the manifest records that mastering filter. The original six files remain
 unchanged. This reduces level variation; perceived loudness still needs listening.
+The same filter is applied to the six newly added profiles. All earlier eighteen
+MP3s are retained byte for byte in this expansion.
 
 These are stock synthetic voices, not impersonations or claims about the
 characters' nationalities. The owner approved the revised CEO preview. Broader
@@ -63,7 +85,7 @@ files into a directory outside the repository. Then run:
 python scripts/voice/generate.py /path/to/model-directory
 ```
 
-The script reads current authored bodies, rewrites the 18 MP3s and manifest,
+The script reads current authored bodies, rewrites the 30 MP3s and manifest,
 and generates `event-ids.json` for the lightweight UI gate and size check. Tests
 require the IDs and manifest to agree, avoiding a separate manual playback list.
 It leaves temporary WAVs in the model directory. Review any transcript changes
@@ -78,15 +100,16 @@ leaving Inbox or changing campaign releases the player. Background tabs pause
 without automatic resumption. Playback errors leave the text and retry controls
 available. Audio does not change saves, resources, choices or clock state.
 
-The catalogue has a 160 KiB per-clip and 2048 KiB total encoded budget, separate from
+The catalogue has a 160 KiB per-clip and 3072 KiB total encoded budget, separate from
 the unchanged title/critical-path budgets. Content tests verify exact transcripts,
-all 18 files and consistent speaker mapping. UI tests verify explicit playback,
+all 30 files, consistent speaker mapping and fixed stock-voice mixes. UI tests verify explicit playback,
 cleanup, mismatch protection and error recovery. Browser tests use real decoding
 in Chromium/WebKit and verify on-request loading and phone layouts.
 On restricted Linux runners, WebKit's media cache needs a writable `/var/tmp`;
 without it the browser can reject valid MP3s with a temporary-file error.
 Grant test-process cache access rather than weakening playback assertions.
 
-The total allowance was deliberately raised from 768 KiB for the requested
-expansion. First-visit limits stay fixed; all audio remains on request.
+The total allowance was deliberately raised from 768 to 2048 KiB for the first
+expansion, then to 3072 KiB for the full cast. First-visit limits stay fixed;
+all audio remains on request.
 See [the review](../../../docs/VOICE_REVIEW.md) for selection and remaining gaps.
