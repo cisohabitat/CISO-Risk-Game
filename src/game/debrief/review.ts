@@ -483,7 +483,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // 4. Programme execution.
   const started = programmesThisYear(state)
   const completed = started.filter((p) => p.status === 'complete')
-  const delivery = clamp01(started.length === 0 ? 0 : (completed.length + 0.4 * (started.length - completed.length)) / started.length)
+  const delivery = clamp01(started.length === 0 ? 0 : started.reduce((sum, programme) => sum + (programme.status === 'complete' ? 1 : clamp01(programme.progress)), 0) / started.length)
   const relevance = programmeRelevance(state, index, started.map((programme) => programme.id))
   // Delivery still earns credit. The top band additionally requires choosing
   // work in the upper half of this campaign's programme materiality range.
@@ -502,7 +502,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative:
       started.length === 0
         ? `You started no capability programme. Nexora ends the year with the controls it had ${laterYear ? 'in January' : 'when you arrived'}, minus drift.`
-        : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion.${relevanceLimited ? ' Delivery was strong, but the programme portfolio addressed less material risks than other available programmes.' : ''}`,
+        : `${completed.length} of ${started.length} programme${started.length === 1 ? '' : 's'} you started reached completion. The assessment credits delivered progress, including unfinished work; starting alone earns no delivery credit.${relevanceLimited ? ' Delivery was strong, but the programme portfolio addressed less material risks than other available programmes.' : ''}`,
     evidence: executionEvidence,
   })
 

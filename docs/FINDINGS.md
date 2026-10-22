@@ -18,6 +18,17 @@ fault.
 
 ### Fixed
 
+- **Budget access and execution credit distorted balance.** Programme cards
+  required full funding although their dialogs offered half funding. Refused
+  attention purchases could consume budget because the negative spend helper
+  did not refund. Resume admitted proposed work, acceleration accepted unpriced
+  allocations, and partial funding recorded spend against full cost. These now
+  use shared quoted minima and preflight attention checks. Annual execution
+  formerly gave the same 40% credit to 0% and 99% unfinished delivery; it now
+  reads delivered progress. Existing earned identity/restore follow-ups can
+  arrive from day 210. `docs/BALANCE_REVIEW.md` records paired engine evidence
+  across 360 campaigns per revision and the human validation still required.
+
 - **CI reported moderate advisories in Vitest's mocker.** The post-push audit
   reported GHSA-qxg6-89mg-rqv8 (unauthenticated manual mock registration) and
   GHSA-xp26-3454-mjgp (Windows redirect-allowlist traversal), both patched in

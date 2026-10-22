@@ -6,6 +6,23 @@ changes.
 
 ## Documentation
 
+- The owner authorised the 22 October balance pass: partial funding access,
+  atomic programme purchases, progress-based execution credit and earlier
+  earned programme follow-through. Keep difficulty in its profiles and retain
+  the eight equal assessment weights and existing ceilings.
+- Programme starts use the shared 50% minimum in engine and UI. Acceleration
+  uses the quoted quarter-cost minimum. Validate attention before spending;
+  failed actions must not consume budget. Proposed work cannot bypass funding
+  through Resume. Record programme spend against its actual allocation.
+- `pnpm --silent audit:balance 30` compares four declared strategies across
+  identical seeds and modes. Keep policy and investment identical when comparing
+  modes, report reserve assumptions and invariants, and do not present probes as
+  human fairness evidence. Findings and limits are in `docs/BALANCE_REVIEW.md`.
+- Identity enforcement and recovery-window follow-ups can arise from day 210
+  after 80% progress. Preserve their IDs and conditions; do not force unfinished
+  work to complete. New annual reviews credit delivered progress; stored reviews
+  keep their recorded judgement.
+
 - Keep Vitest and `@vitest/coverage-v8` on matching patched versions (currently
   5.0.3). This resolves mocker advisories GHSA-qxg6-89mg-rqv8 and
   GHSA-xp26-3454-mjgp. Retain the CI audit gate; do not suppress advisories to

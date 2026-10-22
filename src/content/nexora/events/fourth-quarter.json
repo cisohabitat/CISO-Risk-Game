@@ -7,7 +7,7 @@
       "from": "Callum Reid, Head of Security Engineering",
       "body": "The identity uplift is done, or as near as makes no difference, and the question nobody has answered is whether it is mandatory. I can switch enforcement on now, peak or no peak, which means locking out anyone who has not enrolled, or we carry the second factor as optional, with the exception list growing, into the new year. Helen's people want it after peak. I would rather you decided than the calendar.",
       "priority": "urgent",
-      "availableFromDay": 240,
+      "availableFromDay": 210,
       "conditions": [
         {
           "kind": "programme.progressAtLeast",
@@ -33,9 +33,9 @@
       "type": "programme",
       "title": "The restore test needs a window",
       "from": "Jo Mbeki, Head of Security Operations",
-      "body": "Recovery is built. Nobody has yet run a planned restore of Nexora Pay against production, and that is the only honest test, which means four hours down. Operations will not give me that window in peak. I can test into the non-production tenancy, which proves the backups and not the runbook, or we carry it to January. Your call, and I would like it on record.",
+      "body": "Recovery work has reached the point where we can test a restore. Nobody has yet run a planned restore of Nexora Pay against production, and that is the only honest test, which means four hours down. Operations want the window settled before peak. I can test into the non-production tenancy, which proves the backups and not the runbook, or we carry it to January. Your call, and I would like it on record.",
       "priority": "urgent",
-      "availableFromDay": 275,
+      "availableFromDay": 210,
       "conditions": [
         {
           "kind": "programme.progressAtLeast",

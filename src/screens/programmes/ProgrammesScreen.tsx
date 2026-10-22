@@ -2,6 +2,7 @@
  * Programme portfolio (plan §28.5). Programmes take months, need people as well
  * as money, and hit blockers that money cannot clear.
  */
+import { minimumProgrammeFunding, programmeAccelerationCost } from '@/game/programmes/funding'
 import { ProgrammeJourney } from '@/components/programmes/ProgrammeJourney'
 import { useMemo, useState } from 'react'
 import { Badge, Button, Dialog, Disclosure, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
@@ -177,11 +178,11 @@ export function ProgrammesScreen() {
                             dispatch({
                               type: 'accelerateProgramme',
                               programmeId: programme.id,
-                              budget: Math.round(programme.budgetCost * 0.25),
+                              budget: programmeAccelerationCost(programme.budgetCost),
                             })
                           }
                         >
-                          Accelerate ({money(Math.round(programme.budgetCost * 0.25))})
+                          Accelerate ({money(programmeAccelerationCost(programme.budgetCost))})
                         </Button>
                       </div>
                     )}
@@ -259,20 +260,20 @@ export function ProgrammesScreen() {
                       size="sm"
                       className="self-start"
                       aria-label={`${
-                        state.resources.budgetRemaining < programme.budgetCost
+                        state.resources.budgetRemaining < minimumProgrammeFunding(programme.budgetCost)
                           ? 'Not affordable'
                           : attentionShort
                             ? 'Out of attention this week'
                             : 'Start this'
                       }: ${programme.name}`}
-                      disabled={state.resources.budgetRemaining < programme.budgetCost || attentionShort}
+                      disabled={state.resources.budgetRemaining < minimumProgrammeFunding(programme.budgetCost) || attentionShort}
                       onClick={() => {
                         setStarting(programme)
-                        setBudget(programme.budgetCost)
+                        setBudget(Math.min(programme.budgetCost, Math.floor(state.resources.budgetRemaining)))
                         setSponsorId('')
                       }}
                     >
-                      {state.resources.budgetRemaining < programme.budgetCost
+                      {state.resources.budgetRemaining < minimumProgrammeFunding(programme.budgetCost)
                         ? 'Not affordable'
                         : attentionShort
                           ? 'Out of attention this week'
@@ -287,7 +288,7 @@ export function ProgrammesScreen() {
       )}
 
       {starting && (() => {
-        const fundingMax = Math.min(starting.budgetCost, Math.round(state.resources.budgetRemaining))
+        const fundingMax = Math.min(starting.budgetCost, Math.floor(state.resources.budgetRemaining))
         return (
         <Dialog
           open
@@ -308,13 +309,11 @@ export function ProgrammesScreen() {
               </span>
               <input
                 type="range"
-                // Steps counted down from the most it can have, so the top
-                // of the range is reachable: from a minimum of £425k in £10k
-                // steps the slider stopped at £845k of £850k, and a keyboard
-                // could never fund the programme fully again once it moved.
-                min={fundingMax - 10 * Math.floor((fundingMax - Math.round(starting.budgetCost * 0.5)) / 10)}
+                // Whole £1k steps keep both the half-cost floor and the
+                // affordable upper endpoint reachable, including after cuts.
+                min={minimumProgrammeFunding(starting.budgetCost)}
                 max={fundingMax}
-                step={10}
+                step={1}
                 value={budget}
                 aria-valuetext={`${money(budget)} of ${money(starting.budgetCost)}`}
                 onChange={(event) => setBudget(Number(event.target.value))}
@@ -328,6 +327,11 @@ export function ProgrammesScreen() {
                   : 'underfunded, which will slow delivery'}
               </span>
             </label>
+
+            <p className="text-sm text-ink-muted">
+              Funding is committed now. Pausing later frees people, but does not return
+              this allocation. Keep room for later decisions and incident response.
+            </p>
 
             <fieldset>
               <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">

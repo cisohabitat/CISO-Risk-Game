@@ -13,6 +13,20 @@ browser and your campaign saves to the device you played it on. New to it?
 [`docs/PLAYER_GUIDE.md`](docs/PLAYER_GUIDE.md) assumes you know nothing about
 the game or the subject.
 
+Programme funding can start at half the quoted cost when money is tight, with
+slower delivery. The engine and slider share that minimum; rejected starts,
+acceleration and blocker resolutions preserve resources. Acceleration requires
+its quoted quarter-cost allocation. Annual execution now credits delivered
+progress, including unfinished work, rather than giving flat credit for starting.
+Existing assessment safeguards and difficulty profiles remain in place.
+Identity-enforcement and restore-window follow-ups can arise from day 210 when
+80% of the relevant programme is delivered, bringing earned choices into Q3.
+
+Run `pnpm --silent audit:balance 30` for paired strategy and difficulty probes.
+The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
+results and remaining human validation. The £350k reserve is a probe policy;
+it is not a protected budget or a guarantee about future costs.
+
 The design test applied to every feature is the one from the specification:
 
 > **Am I managing cyber risk, or merely answering cybersecurity questions?**

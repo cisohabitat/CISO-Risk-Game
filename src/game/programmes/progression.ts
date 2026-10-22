@@ -93,8 +93,8 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     programme.progress = clamp01(programme.progress + delta)
 
     // Spend tracks delivery, so a paused programme stops burning budget.
-    const spendThisDay = def.budgetCost * (programme.progress - before)
-    programme.budgetSpent = Math.round((programme.budgetSpent + spendThisDay) * 100) / 100
+    const spendThisDay = programme.budgetAllocated * (programme.progress - before)
+    programme.budgetSpent = Math.min(programme.budgetAllocated, Math.round((programme.budgetSpent + spendThisDay) * 100) / 100)
 
     for (const milestone of def.milestones) {
       if (programme.completedMilestoneIds.includes(milestone.id)) continue

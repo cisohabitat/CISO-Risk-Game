@@ -133,7 +133,8 @@ describe('the fourth quarter arises from the player\'s position', () => {
       }
     }
     expect(openedOnDay, 'the restore window never came to a player who built recovery').toBeDefined()
-    expect(openedOnDay!).toBeGreaterThan(270)
+    expect(openedOnDay!).toBeGreaterThanOrEqual(210)
+    expect(openedOnDay!).toBeLessThan(273)
     // And the programme it rests on actually finished, which is the other
     // thing a probe that never cleared a blocker made look impossible.
     expect(state.programmes.programmes[def.id]!.status).toBe('complete')

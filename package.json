@@ -13,6 +13,7 @@
     "preview": "vite preview --port 4173",
     "lint": "eslint .",
     "audit:security": "pnpm audit --audit-level=moderate",
+    "audit:balance": "tsx scripts/balance.ts",
     "audit:content-flow": "tsx scripts/audit-content-flow.ts",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",

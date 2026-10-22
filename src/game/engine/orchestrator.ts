@@ -5,6 +5,7 @@
  *
  * Everything here is pure: same state + same action = same result.
  */
+import { minimumProgrammeFunding, programmeAccelerationCost } from '../programmes/funding'
 import type {
   ContentIndex,
   CyberFunction,
@@ -542,12 +543,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         return fail('That programme is already under way.')
       }
       const budget = Math.max(0, Math.round(action.budget))
-      if (budget <= 0) return fail('A programme needs funding to start.')
+      if (!Number.isFinite(budget) || budget < minimumProgrammeFunding(def.budgetCost)) return fail(`A programme needs at least ${money(minimumProgrammeFunding(def.budgetCost))} to start.`)
+      if (state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention) return fail('Standing a programme up takes more attention than you have left this week.')
       if (!spendBudget(state, budget)) return fail('There is not enough budget left this year.')
-      if (!spendFocus(state, FOCUS_COSTS.programmeIntervention)) {
-        spendBudget(state, -budget)
-        return fail('Standing a programme up takes more attention than you have left this week.')
-      }
+      spendFocus(state, FOCUS_COSTS.programmeIntervention)
       programme.budgetAllocated += budget
       programme.status = 'active'
       programme.startedDay ??= state.currentDay
@@ -569,7 +568,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const programme = state.programmes.programmes[action.programmeId]
       const def = index.programme.get(action.programmeId)
       if (!programme || !def) return fail('That programme does not exist.')
-      if (programme.status === 'complete') return fail('That programme is already finished.')
+      if (!['active', 'at-risk', 'paused'].includes(programme.status)) return fail('Only a funded programme under way can be paused or resumed.')
       programme.status = action.status
       state.history.entries.push({
         day: state.currentDay,
@@ -589,11 +588,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (programme.status !== 'active' && programme.status !== 'at-risk') {
         return fail('Only a live programme can be accelerated.')
       }
+      if (!Number.isFinite(action.budget) || action.budget < programmeAccelerationCost(def.budgetCost)) return fail('Acceleration needs the quoted additional funding.')
+      if (state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention) return fail('You have no attention left this week to push that programme.')
       if (!spendBudget(state, action.budget)) return fail('There is not enough budget left this year.')
-      if (!spendFocus(state, FOCUS_COSTS.programmeIntervention)) {
-        spendBudget(state, -action.budget)
-        return fail('You have no attention left this week to push that programme.')
-      }
+      spendFocus(state, FOCUS_COSTS.programmeIntervention)
       programme.budgetAllocated += action.budget
       programme.accelerated = true
       // Pushing delivery teams harder has a cost elsewhere.
@@ -616,6 +614,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const blockerDef = def.blockers.find((b) => b.id === action.blockerId)
       const active = programme.blockers.find((b) => b.id === action.blockerId && !b.resolved)
       if (!blockerDef || !active) return fail('That blocker is not active.')
+      if (blockerDef.resolution.focus && state.resources.focusRemaining < blockerDef.resolution.focus) return fail('Clearing that blocker needs attention you do not have this week.')
       if (blockerDef.resolution.budget && !spendBudget(state, blockerDef.resolution.budget)) {
         return fail('There is not enough budget to clear that blocker.')
       }

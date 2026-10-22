@@ -88,12 +88,13 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
             : def.options[Math.floor(def.options.length / 2)]
       const option = preferred ?? def.options[0]
       if (!option) continue
-      applyAction(state, index, {
-        type: 'resolveDecision',
-        decisionId,
-        optionId: option.id,
-        rationaleTagIds: rationaleFor(index, state.decisions.decisions[decisionId]!.defId),
-      })
+      for (const candidate of [option, ...def.options.filter((other) => other.id !== option.id)]) {
+        const result = applyAction(state, index, {
+          type: 'resolveDecision', decisionId, optionId: candidate.id,
+          rationaleTagIds: rationaleFor(index, decision.defId),
+        })
+        if (result.ok) break
+      }
     }
     // Start programmes when affordable, one at a time: the next once the last
     // is past halfway. Starting all six on consecutive twenty-day marks
@@ -104,7 +105,7 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
       const programmeId = wanted[started]
       if (programmeId) {
         const def = index.programme.get(programmeId)
-        if (def && state.resources.budgetRemaining > def.budgetCost) {
+        if (def && state.resources.budgetRemaining >= def.budgetCost) {
           const result = applyAction(state, index, { type: 'startProgramme', programmeId, budget: def.budgetCost })
           if (result.ok) started += 1
         }

@@ -11,6 +11,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Make half-funded programmes reachable with smaller budgets, preserve resources
+  on refused programme actions, and enforce quoted funding and acceleration.
+- Credit actual delivered progress in annual programme execution; retain
+  relevance and overall safeguards. Bring earned identity and restore follow-ups
+  into Q3 from day 210. Add paired strategy/mode balance probes and document limits.
+
 - Patched Vitest and matching coverage tooling to 5.0.3, resolving two moderate
   mocker advisories reported by the dependency audit.
 

@@ -136,7 +136,10 @@ was; no event names it, and the validator knows. Its text carries
 resolves to the decision's scenario. Author a decision this way when it is
 about *whichever one it was* rather than a fixed thing.
 
-**The fourth quarter asks what organisation you have created.** Late-year
+**The back half asks what organisation you have created.** Programme follow-through
+(identity enforcement and the restore window) can become eligible from day 210,
+while still requiring 80% progress. Their historical `q4` IDs remain stable.
+Other late-year
 decisions gate on the player's own position — a programme past 80%, an
 objective the business achieved while recovery was never built, a year with
 no incident — rather than on the calendar alone, so an idle player meets few

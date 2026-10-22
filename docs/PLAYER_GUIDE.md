@@ -331,6 +331,10 @@ visibly sharpens as the year goes on, which is the point. The difference between
 Programmes are set out in rows: what the work is for on one side, and its cost,
 people and delivery details on the other. On a phone those columns stack.
 Work under way keeps its blockers, milestones and intervention buttons visible.
+You can start with at least half the quoted funding when the full amount is out
+of reach; lower funding slows delivery. The allocation is committed upfront.
+Pausing frees people but does not refund it, so leave room for later choices
+and response. Acceleration needs its displayed additional allocation.
 
 Leadership dossiers keep workload and morale side by side on phones, with
 track record beneath. Function rows separate capacity from recovery guidance.
@@ -474,7 +478,7 @@ The review assesses eight dimensions, each with a band and a sentence explaining
 | Risk understanding | Did you build a picture, or work someone else's? |
 | Prioritisation | Did your budget and attention go to what mattered most? |
 | Resilience | When tested, what did it cost? |
-| Cyber programme execution | Did you finish work aimed at material risks? |
+| Cyber programme execution | What did you deliver toward material risks, including unfinished work? |
 | Business enablement | Did the business get its year? |
 | Communication and escalation | Did the board come to rely on you? |
 | Team sustainability | Can your people do this again? |
