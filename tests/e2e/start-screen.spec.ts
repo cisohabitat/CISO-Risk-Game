@@ -12,7 +12,8 @@ for (const theme of ['light', 'dark'] as const) {
     await page.goto('/')
     const image = page.locator('.start-scene img')
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(0)
-    const selected = page.viewportSize()!.width < 640 ? 'mobile' : 'desktop'
+    const { width, height } = page.viewportSize()!
+    const selected = width < 640 || height >= width ? 'mobile' : 'desktop'
     expect(scenes).toHaveLength(1)
     expect(scenes[0]).toContain(`start-${selected}-`)
     const begin = page.getByRole('button', { name: 'Begin your first year', exact: true })
@@ -52,4 +53,25 @@ test('the title remains usable when artwork and storage are unavailable', async 
   await expect(page.locator('.start-storage')).toContainText('Saving is unavailable')
   await page.getByRole('button', { name: 'Begin your first year', exact: true }).click()
   await expect(page.getByRole('main', { name: 'Briefing', exact: true })).toBeVisible()
+})
+
+
+test('portrait iPads select the portrait composition and rotation restores landscape artwork', async ({ page }) => {
+  for (const portrait of [{ width: 768, height: 1024 }, { width: 834, height: 1112 }, { width: 1024, height: 1366 }]) {
+    await page.setViewportSize(portrait)
+    await page.goto('/')
+    const image = page.locator('.start-scene img')
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.currentSrc)).toContain('start-mobile-')
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBeGreaterThan(0)
+    await expect(page.locator('.start-content')).toHaveCSS('align-items', 'center')
+    await expect(page.getByRole('heading', { name: 'CISO: First Year', exact: true })).toBeInViewport({ ratio: 1 })
+    await expect(page.getByRole('button', { name: 'Begin your first year', exact: true })).toBeInViewport({ ratio: 1 })
+    await expectNoHorizontalScroll(page)
+    await page.setViewportSize({ width: portrait.height, height: portrait.width })
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.currentSrc)).toContain('start-desktop-')
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBeGreaterThan(0)
+    await expect(page.locator('.start-content')).toHaveCSS('align-items', 'flex-start')
+    await expect(page.getByRole('button', { name: 'Begin your first year', exact: true })).toBeInViewport({ ratio: 1 })
+    await expectNoHorizontalScroll(page)
+  }
 })

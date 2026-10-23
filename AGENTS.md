@@ -6,6 +6,14 @@ changes.
 
 ## Documentation
 
+- Title artwork and composition use the portrait variant on portrait viewports,
+  including 768, 834 and 1024px-wide iPads, as well as narrow phones. Keep
+  picture selection and the title CSS media query aligned. Rotation must restore
+  landscape artwork/layout without reloading; fetch only the selected scene on
+  first load and retain direct play, resume and image-failure fallbacks.
+  Title shading and the decorative compass needle use CSS pseudo-elements;
+  keep the artwork layers and readable text contrast without extra DOM nodes.
+
 - The owner authorised further voice review and coverage after the six-clip
   pilot. The catalogue now contains 33 clips across all 12 recurring characters.
   The incident pass adds the command-record follow-up (Fenella), external

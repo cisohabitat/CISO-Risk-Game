@@ -27,6 +27,10 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
+The title screen uses the portrait theme image and centred composition on
+portrait iPads and phones. Rotating a tablet to landscape restores the wide
+scene and layout automatically. Only the selected image loads initially.
+
 Thirty-three selected Inbox messages offer **Play message** across all twelve recurring
 characters. Priya, Nadia, Ruth, Fenella, Stefan and Callum join Marianne, Tomas,
 Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,

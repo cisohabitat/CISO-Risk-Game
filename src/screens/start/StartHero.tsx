@@ -17,15 +17,14 @@ export function StartHero({ disabled, beginning, continuing, onBegin, onContinue
   return (
     <header className="start-hero">
       <picture className="start-scene" aria-hidden="true">
-        <source media="(max-width: 639px)" srcSet={mobileScene} />
+        <source media="(max-width:639px),(orientation:portrait)" srcSet={mobileScene} />
         <img src={desktopScene} alt="" width="1600" height="900" decoding="async" fetchPriority="low" />
       </picture>
-      <div className="start-shade" aria-hidden="true" />
       <div className="start-content">
         <div className="start-heading">
           <p className="start-company">Nexora Group <span>· Office of the CISO</span></p>
           <h1 className="start-title" aria-label="CISO: First Year">
-            <span className="start-wordmark" aria-hidden="true">CIS<span className="start-letter-o">O<span className="start-needle" /></span></span>
+            <span className="start-wordmark" aria-hidden="true">CIS<span className="start-letter-o">O</span></span>
             <span className="start-subtitle" aria-hidden="true">First Year</span>
           </h1>
           <p className="start-tagline">Every decision has a consequence.</p>

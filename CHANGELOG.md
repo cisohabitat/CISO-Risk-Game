@@ -11,6 +11,9 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Use the portrait theme image and centred title composition on upright iPads.
+  Rotate to landscape to restore the wide image and layout automatically.
+
 - Add optional voices to three existing incident-related messages: the command
   record, external responder invoice and People Cloud disclosure. Keep all
   earlier 30 recordings and the 3 MiB total allowance. Dynamic operational
