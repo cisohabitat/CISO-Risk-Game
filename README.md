@@ -27,6 +27,10 @@ The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;
 it is not a protected budget or a guarantee about future costs.
 
+Inbox code loads after a campaign opens, leaving more room in the initial
+JavaScript budget. A loading message covers the wait; if loading fails, the
+campaign stays open and offers a return to Briefing.
+
 The title screen uses the portrait theme image and centred composition on
 portrait iPads and phones. Rotating a tablet to landscape restores the wide
 scene and layout automatically. Only the selected image loads initially.

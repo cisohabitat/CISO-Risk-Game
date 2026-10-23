@@ -25,13 +25,18 @@ export async function goTo(page: Page, label: string): Promise<void> {
   const direct = nav.getByRole('button', { name: label, exact: true })
   if (await direct.first().isVisible().catch(() => false)) {
     await direct.first().click()
-    return
+  } else {
+    // Secondary destinations live behind "More" on small screens.
+    await nav.getByRole('button', { name: 'More' }).click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: label, exact: true }).first().click()
+    await expect(dialog).toBeHidden()
   }
-  // Secondary destinations live behind "More" on small screens.
-  await nav.getByRole('button', { name: 'More' }).click()
-  const dialog = page.getByRole('dialog')
-  await dialog.getByRole('button', { name: label, exact: true }).first().click()
-  await expect(dialog).toBeHidden()
+  if (label === 'Inbox') {
+    // Inbox now loads on demand. Wait for a real reader/list or its explicit
+    // failure route before callers inspect counts or photograph the screen.
+    await expect(page.getByRole('list', { name: 'Messages', exact: true }).or(page.getByTestId('screen-failed')).first()).toBeVisible()
+  }
 }
 
 export async function expectNoHorizontalScroll(page: Page): Promise<void> {

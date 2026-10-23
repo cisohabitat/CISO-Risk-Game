@@ -6,6 +6,16 @@ changes.
 
 ## Documentation
 
+- Keep Inbox UI outside the entry download and preload it only after a campaign
+  opens. Retain the accessible loading state and screen-boundary return to
+  Briefing if its chunk fails. The size gate rejects an eager InboxScreen chunk.
+  Title rotation coverage includes Continue and a storage-loss warning together
+  in both themes at 768, 834 and 1024px portrait widths and their landscapes.
+  Browser navigation waits for the Inbox list or its explicit error boundary
+  before inspecting counts; a chunk-loading placeholder is not a ready screen.
+  Prepared-save fixtures initialise the version-one saves store when their
+  IndexedDB open wins the race with the app's startup effect.
+
 - Title artwork and composition use the portrait variant on portrait viewports,
   including 768, 834 and 1024px-wide iPads, as well as narrow phones. Keep
   picture selection and the title CSS media query aligned. Rotation must restore

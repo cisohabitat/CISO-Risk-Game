@@ -22,7 +22,12 @@ export async function openPreparedCampaign(page: Page, save: unknown): Promise<v
   await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
   await page.evaluate(async (record) => {
     const db: IDBDatabase = await new Promise((resolve, reject) => {
-      const open = indexedDB.open('ciso-first-year')
+      const open = indexedDB.open('ciso-first-year', 1)
+      // A visible title can precede the app's storage effect. If this fixture
+      // opens first, initialise the same store rather than creating an empty DB.
+      open.onupgradeneeded = () => {
+        if (!open.result.objectStoreNames.contains('saves')) open.result.createObjectStore('saves', { keyPath: 'slot' })
+      }
       open.onsuccess = () => resolve(open.result)
       open.onerror = () => reject(open.error)
     })

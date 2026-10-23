@@ -11,6 +11,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Defer Inbox code until a campaign opens to recover entry-download headroom.
+  Keep a readable loading state and return to Briefing on load failure. Cover
+  iPad rotation with Continue and a storage warning together in both themes.
+
 - Use the portrait theme image and centred title composition on upright iPads.
   Rotate to landscape to restore the wide image and layout automatically.
 

@@ -8,7 +8,6 @@ import { AppShell } from '@/components/layout/AppShell'
 import { ScreenBoundary } from '@/components/layout/ScreenBoundary'
 import { StartScreen } from '@/screens/start/StartScreen'
 import { HomeScreen } from '@/screens/home/HomeScreen'
-import { InboxScreen } from '@/screens/inbox/InboxScreen'
 import { RiskScreen } from '@/screens/risk/RiskScreen'
 import { OrganisationScreen } from '@/screens/organisation/OrganisationScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
@@ -28,6 +27,8 @@ import { yearWord } from '@/game/time'
 // The year view is opened a few times a year and read once at the close, so
 // it stays out of what the first screen waits for. It is fetched in the
 // background once a campaign is open, so the close never waits on it.
+const loadInbox = () => import('@/screens/inbox/InboxScreen')
+const InboxScreen = lazy(() => loadInbox().then((module) => ({ default: module.InboxScreen })))
 const loadBoard = () => import('@/screens/board/BoardScreen')
 const BoardScreen = lazy(() => loadBoard().then((module) => ({ default: module.BoardScreen })))
 const loadDecision = () => import('@/components/decisions/DecisionDialog')
@@ -50,6 +51,7 @@ export function App() {
   usePullToRefreshGuard(inCampaign && contentLoaded)
   useEffect(() => {
     if (inCampaign) {
+      void loadInbox().catch(() => undefined)
       void loadBoard().catch(() => undefined)
       void loadDebrief().catch(() => undefined)
       void loadDecision().catch(() => undefined)
@@ -115,7 +117,7 @@ export function App() {
           onLeave={() => useGameStore.getState().setScreen(screen === 'home' ? 'inbox' : 'home')}
         >
           {screen === 'home' && <HomeScreen />}
-          {screen === 'inbox' && <InboxScreen />}
+          {screen === 'inbox' && <Suspense fallback={<LoadingState label="Opening inbox…" />}><InboxScreen /></Suspense>}
           {screen === 'risk' && <RiskScreen />}
           {screen === 'organisation' && <OrganisationScreen />}
           {screen === 'programmes' && <ProgrammesScreen />}
