@@ -20,6 +20,20 @@ export function prepareCampaign(seed: string, stop: Stop, difficulty = 'ciso'): 
 export async function openPreparedCampaign(page: Page, save: unknown): Promise<void> {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+  await storePreparedCampaign(page, save)
+  await page.reload()
+  await page.getByRole('button', { name: SAVE_ROW }).first().click()
+  await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
+}
+
+/** A saved campaign on the start screen, which leads with the date it reached. */
+export const SAVE_ROW = /\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) · /
+
+/** Seed a stored record without loading its validation module first. */
+export async function storePreparedCampaign(page: Page, save: unknown): Promise<void> {
+  // Do not insert a record while the initial listing can still discover it
+  // and start a validator download that the fixture's reload would interrupt.
+  await expect(page.locator('[data-saves-ready="true"][data-campaign-ready="true"]')).toBeVisible()
   await page.evaluate(async (record) => {
     const db: IDBDatabase = await new Promise((resolve, reject) => {
       const open = indexedDB.open('ciso-first-year', 1)
@@ -39,10 +53,4 @@ export async function openPreparedCampaign(page: Page, save: unknown): Promise<v
     })
     db.close()
   }, save)
-  await page.reload()
-  await page.getByRole('button', { name: SAVE_ROW }).first().click()
-  await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
 }
-
-/** A saved campaign on the start screen, which leads with the date it reached. */
-export const SAVE_ROW = /\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) · /

@@ -15,7 +15,7 @@
 import { openDB, type IDBPDatabase } from 'idb'
 import type { GameState } from '@/game/types'
 import { SAVE_SCHEMA_VERSION } from '@/game/types'
-import { migrateSave, type StoredSave } from './migrations'
+import type { StoredSave } from './migrations'
 
 const DB_NAME = 'ciso-first-year'
 const DB_VERSION = 1
@@ -175,6 +175,7 @@ export async function readSave(key: SaveKey): Promise<GameState | undefined> {
   const db = await getDb()
   const record = (await db.get(STORE, key)) as StoredSave | undefined
   if (!record) return undefined
+  const { migrateSave } = await import('./migrations')
   return migrateSave(record).state
 }
 
@@ -182,6 +183,8 @@ export async function listSaves(): Promise<SaveSummary[]> {
   if (!storageAvailable()) return []
   const db = await getDb()
   const records = (await db.getAll(STORE)) as StoredSave[]
+  if (records.length === 0) return []
+  const { migrateSave } = await import('./migrations')
   // Grouped by campaign rather than trusting the key, so a save left behind by
   // an interrupted collapse does not put the same campaign on the list twice.
   const newest = new Map<string, SaveSummary>()

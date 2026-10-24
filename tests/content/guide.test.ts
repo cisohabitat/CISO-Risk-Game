@@ -145,3 +145,15 @@ describe('the player\'s guide', () => {
     expect(stale, `the guide quotes words the game no longer uses:\n${stale.join('\n')}`).toEqual([])
   })
 })
+
+describe('documentation URL safety', () => {
+  it.each(['javascript:alert', 'JaVaScRiPt:alert', 'data:text/html,attack', 'vbscript:attack'])('renders %s as text rather than an actionable URL', (url) => {
+    expect(renderInline(`[Read this](${url})`)).toBe('Read this')
+    expect(renderGuide(`![Unsafe image](${url})`).html).not.toContain('<img')
+  })
+  it('retains ordinary web, site-relative and fragment links', () => {
+    for (const url of ['https://example.com', 'http://example.com', '/guide', 'images/example.webp', '#section']) {
+      expect(renderInline(`[Safe](${url})`)).toContain(`href="${url}"`)
+    }
+  })
+})

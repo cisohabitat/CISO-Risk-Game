@@ -12,6 +12,12 @@ The game as it stands after the roadmap's engineering phases
 - Patch Zod to 4.6.7 and the test tooling’s Undici to 8.12.3 for the
   24 October security advisories.
 
+### Security
+
+- Reject crafted deferred-save effects and unsafe object references before
+  activation; keep stored progress intact. Guard reducer map lookups against
+  inherited properties and reject executable URLs in built documentation.
+
 ### Playing
 
 - Fix fresh-playtest follow-through: dated recovery assurance, incident-safe

@@ -74,3 +74,17 @@ it('rejects invalid incident references without replacing or writing the running
     expect(written.count).toBe(0)
   }
 })
+
+it('rejects hostile deferred work without activating it or replacing the good save', async () => {
+  await useGameStore.getState().startNewGame('import-deferred-attack', 'ciso')
+  const previous = useGameStore.getState().state!
+  written.count = 0
+  for (const controlId of ['__proto__', 'constructor', 'toString', 'missing-control']) {
+    const imported = structuredClone(previous)
+    imported.pendingEffects.push({ id: 'attack', day: imported.currentDay + 1, source: 'test', effects: [{ type: 'control.coverage', controlId, delta: 0.2 }] })
+    expect(await useGameStore.getState().loadImported(imported)).toBe(false)
+    expect(useGameStore.getState().state).toBe(previous)
+    expect(written.count).toBe(0)
+    expect(Object.hasOwn(Object.prototype, 'coverage')).toBe(false)
+  }
+})

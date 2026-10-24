@@ -5,18 +5,20 @@
  * content fails loudly rather than producing a quietly incoherent simulation.
  */
 import { z } from 'zod'
+import { unsafeKey } from '@/game/security/references'
 
 const unit = z.number().min(0).max(1)
-const id = z.string().min(1)
+const propertyKey = z.string().refine((value) => !unsafeKey(value), 'Unsafe reference')
+const id = propertyKey.min(1)
 
 export const conditionSchema: z.ZodType = z.lazy(() =>
   z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('always') }),
     z.object({ kind: z.literal('day.after'), day: z.number().int().min(0) }),
     z.object({ kind: z.literal('day.before'), day: z.number().int().min(0) }),
-    z.object({ kind: z.literal('flag.set'), flag: z.string() }),
-    z.object({ kind: z.literal('flag.notSet'), flag: z.string() }),
-    z.object({ kind: z.literal('flag.atLeast'), flag: z.string(), value: z.number() }),
+    z.object({ kind: z.literal('flag.set'), flag: propertyKey }),
+    z.object({ kind: z.literal('flag.notSet'), flag: propertyKey }),
+    z.object({ kind: z.literal('flag.atLeast'), flag: propertyKey, value: z.number() }),
     z.object({ kind: z.literal('node.discovered'), nodeId: id }),
     z.object({ kind: z.literal('node.notDiscovered'), nodeId: id }),
     z.object({ kind: z.literal('edge.exists'), edgeId: id }),
@@ -126,8 +128,8 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('incident.command') }),
   z.object({ type: z.literal('incident.recovery'), delta: z.number() }),
   z.object({ type: z.literal('incident.consequence'), delta: z.number() }),
-  z.object({ type: z.literal('flag.set'), flag: z.string(), value: z.union([z.number(), z.string(), z.boolean()]).optional() }),
-  z.object({ type: z.literal('flag.increment'), flag: z.string(), amount: z.number() }),
+  z.object({ type: z.literal('flag.set'), flag: propertyKey, value: z.union([z.number(), z.string(), z.boolean()]).optional() }),
+  z.object({ type: z.literal('flag.increment'), flag: propertyKey, amount: z.number() }),
   z.object({ type: z.literal('inbox.message'), messageId: id }),
   z.object({ type: z.literal('history.note'), kind: z.string(), summary: z.string() }),
   z.object({ type: z.literal('decision.open'), decisionId: id, deadlineDays: z.number().int().optional() }),

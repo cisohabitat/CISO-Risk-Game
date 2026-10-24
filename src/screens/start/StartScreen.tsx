@@ -56,6 +56,8 @@ export function StartScreen() {
   const refreshSaves = useGameStore((store) => store.refreshSaves)
   const pushToast = useGameStore((store) => store.pushToast)
   const saves = useGameStore((store) => store.ui.saves)
+  const savesReady = useGameStore((store) => store.ui.savesReady)
+  const campaignReady = useGameStore((store) => store.index !== null)
   const situations = situationChoices
   // A shared year: the start screen opens on what the link asked for.
   const [link] = useState(() => readSeedLink(window.location.search, situations.map((choice) => choice.id)))
@@ -105,7 +107,7 @@ export function StartScreen() {
     })
 
   return (
-    <div className="min-h-[100dvh] bg-paper">
+    <div className="min-h-[100dvh] bg-paper" data-saves-ready={savesReady} data-campaign-ready={campaignReady}>
       <StartHero
         disabled={opening !== undefined}
         beginning={opening === 'new'}

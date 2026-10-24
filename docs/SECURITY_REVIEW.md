@@ -59,3 +59,44 @@ does not inspect browser extensions, operating-system security, all Git history,
 GitHub organisation settings or Vercel account configuration. Existing exports
 are not encrypted. Dependency audit results describe the registry's known
 advisories at the time checked.
+
+
+## 24 October follow-up — deferred save effects
+
+The review of main `4c0c312` reproduced a local prototype-pollution path. A save
+with a pending `control.coverage` effect targeting `__proto__` passed the file
+parser and all engine invariants. Applying that effect created an own `coverage`
+property on `Object.prototype`. This requires importing a crafted local save;
+remote execution, data exfiltration and an account/server compromise were not
+shown. Ordinary invariant checks did not validate the future work's shape.
+
+File and IndexedDB migration now share bounded pre-migration checks for unsafe
+keys and reference values. Free-text notes retain those words. A deferred
+save-safety validator checks pending effect schemas and content targets,
+scheduled events and carried flag primitives before activation or persistence.
+The reducer independently ignores reserved reference targets and reads object
+maps through own properties, including ordinary inherited names like `toString`.
+An invalid import is refused rather than sanitised into a different campaign.
+
+Documentation URL rendering also rejects executable schemes such as JavaScript,
+VBScript and data URLs; ordinary web/site/fragment links remain. This is build
+renderer defence in depth: the published Markdown sources are repository-owned,
+and the hosting CSP already restricts script execution.
+
+Focused regressions cover the reproduced payload, inherited function targets,
+malformed/unknown deferred effects, unsafe stored-save migration, valid pending
+recruitment and temporary effects, free text, and preservation of active and
+stored campaigns. Browser coverage imports both reserved and inherited targets
+and then resumes the untouched campaign. The current dependency audit is clean;
+a credential-pattern scan of tracked text found no matches (values were never
+printed). This is not a complete secret-history scan or independent penetration
+test. Full state-shape validation and anti-cheat remain outside the claim.
+
+
+Saved-list initialization has explicit readiness and request ordering. Prepared
+browser fixtures wait for both saved-list enumeration and campaign prefetch
+before seeding a record/reloading, preventing navigation from interrupting a
+new validation download. A late older listing cannot replace a newer result.
+The focused ordering cases passed, and 18 WebKit save/voice cases passed over
+two repeats after this readiness change. Full final-revision checks remain the
+release gate; no test assertions or timeouts were relaxed for the fixture fix.

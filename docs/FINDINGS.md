@@ -3837,3 +3837,36 @@ new advisories; Zod 4.6.7 and Undici 8.12.3 restore a clean audit. The final
 commit additionally receives the full Chromium/WebKit browser suite and hosted
 smoke checks before release completion; these preflight figures are not a claim
 of physical-device touch or human listening validation.
+
+
+## 24 October 2026 — deferred-save security follow-up
+
+On `4c0c312`, a crafted pending control effect targeting `__proto__` passed
+import and zero invariant errors, then created a property on Object.prototype.
+The fix validates unsafe references before migration, deferred work before
+activation/persistence, and own-property targets at the reducer. Invalid mode
+values and non-primitive story flags are also refused. Free-text notes remain
+valid. Executable URL schemes are rejected by the build-only Markdown renderer.
+
+Migration and validation now load on demand. Their chunk prefixes are guarded
+by the size gate, with no allowance increase. The initial app download fell
+from about 103 KiB to 80 KiB gzip; overall critical path measured 192.6 KiB
+against the existing 221 KiB limit. Failed saved-list downloads keep the records
+and explain reload/retry. The browser fixture starts with a cold stored record
+because WebKit can reuse already-loaded module bytes across reload; it also
+models the generic preload refresh's cooldown before inspecting the failure.
+
+Preflight: 656 tests in 107 files passed, plus typecheck/lint/content/build/size;
+10 focused save/recovery browser cases passed across Chromium and WebKit. The
+dependency audit is clean and the tracked-text credential-pattern scan found no
+matches. The security record contains scope and limits; final revision checks
+and hosted verification are required before release completion.
+
+
+The first full security browser run caught a WebKit fixture reloading before
+initial enumeration/prefetch settled. Start-screen readiness now reflects both
+startup tasks; overlapping list requests retain the latest result and report
+ready only after all requests settle. Fixtures await those public readiness
+markers before installing a save. Three ordering-focused unit cases and 18
+WebKit save/voice cases over two repeats passed afterwards. This was a fixture
+startup race, not an audio decoding defect; assertions/timeouts stayed intact.

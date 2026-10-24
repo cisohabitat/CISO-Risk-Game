@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import { goTo, startCampaign } from './helpers'
-import { SAVE_ROW } from './prepared'
+import { prepareCampaign, SAVE_ROW, storePreparedCampaign } from './prepared'
 
 /**
  * Phase 5 of docs/ROADMAP.md: one save per campaign was one copy. The save
@@ -112,6 +112,44 @@ test('an invalid import leaves the saved campaign available and never opens brok
   await expect(page.getByTestId('toasts')).toContainText('That save failed validation')
   await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
   expect(await records(page)).toEqual(before)
+  await page.getByRole('button', { name: SAVE_ROW }).first().click()
+  await expect(page.getByRole('navigation', { name: 'Primary' }).first()).toBeVisible()
+})
+
+test('hostile deferred effects cannot activate or replace an existing campaign', async ({ page }) => {
+  await startCampaign(page, 'e2e-deferred-save-protected')
+  await page.getByRole('button', { name: 'Save and close this campaign' }).click()
+  await expect(page.getByRole('heading', { name: 'CISO: First Year', exact: true })).toBeVisible()
+  const before = await records(page)
+  const primary = before.find((record) => record.slot.startsWith('campaign:'))!
+  await page.getByRole('button', { name: 'Import a saved campaign' }).click()
+  for (const controlId of ['__proto__', 'toString']) {
+    const payload = JSON.parse(JSON.stringify(primary))
+    payload.state.pendingEffects.push({ id: 'hostile', day: payload.state.currentDay + 1, source: 'test', effects: [{ type: 'control.coverage', controlId, delta: 0.2 }] })
+    await page.locator('input[type="file"]').setInputFiles({ name: `hostile-${controlId}.json`, mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(payload)) })
+    await expect(page.getByTestId('toasts')).toContainText(controlId === '__proto__' ? 'unsafe reference' : 'That save failed validation')
+    await expect(page.getByRole('heading', { name: 'CISO: First Year' })).toBeVisible()
+    expect(await records(page)).toEqual(before)
+    expect(await page.evaluate(() => Object.hasOwn(Object.prototype, 'coverage'))).toBe(false)
+  }
+  await page.getByRole('button', { name: SAVE_ROW }).first().click()
+  await expect(page.getByRole('navigation', { name: 'Primary' }).first()).toBeVisible()
+})
+
+test('a saved-list validation download failure keeps records and recovers on reload', async ({ page }) => {
+  // Seed a cold stored campaign. WebKit can retain already-used module bytes
+  // over reload, which would not exercise the failed-download path.
+  await page.addInitScript(() => sessionStorage.setItem('ciso-reloaded-at', String(Date.now())))
+  await page.route('**/assets/migrations-*.js', (route) => route.abort())
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'CISO: First Year', exact: true })).toBeVisible()
+  await storePreparedCampaign(page, prepareCampaign('e2e-validation-download', 'day:2'))
+  const before = await records(page)
+  await page.reload()
+  await expect(page.getByTestId('toasts')).toContainText('Saved campaigns could not be listed. Reload to retry; existing saves were kept.')
+  expect(await records(page)).toEqual(before)
+  await page.unroute('**/assets/migrations-*.js')
+  await page.reload()
   await page.getByRole('button', { name: SAVE_ROW }).first().click()
   await expect(page.getByRole('navigation', { name: 'Primary' }).first()).toBeVisible()
 })

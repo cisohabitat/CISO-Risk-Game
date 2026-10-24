@@ -233,6 +233,25 @@ changes.
 
 ## Security
 
+- The 24 October follow-up reproduced prototype mutation from an imported
+  deferred effect. Validate unsafe keys and reference values before file or
+  IndexedDB migration, while allowing those words in free-text notes. Before
+  activation or persistence, validate deferred effect shapes/targets, scheduled
+  event IDs and carried flag values in the deferred save-safety module.
+- Effect dictionary reads use own properties and ignore reserved reference
+  targets even if a caller bypasses import validation. Do not restore inherited
+  lookups or silently strip hostile work from a save; reject it and preserve
+  the running campaign and previous stored progress. Keep the validator deferred
+  so the opening download remains within its unchanged budgets. Save migration
+  loads only when a stored record exists or a save is imported/validated; keep
+  migrations and save-safety out of entry preloads. A listing failure must keep
+  records intact and explain reload/retry. Prepared-save fixtures await both
+  saved-list and campaign readiness before inserting records/reloading. Listing
+  readiness waits for all overlapping requests; older results cannot replace a
+  newer listing.
+- Built documentation renders executable URL schemes as text. Preserve normal
+  HTTP(S), relative and fragment links, attribute escaping and the hosting CSP.
+
 - The 24 October audit requires Zod >=4.6.6 (locked 4.6.7) and transitive
   Undici >=8.12.2 (locked 8.12.3), addressing collection memory exhaustion,
   content-encoding/EventSource denial of service and SRI parsing advisories.

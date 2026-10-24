@@ -32,6 +32,17 @@ partial funding and reserve 100% for completed work. Related delivery notices
 share a Briefing row while every original message remains reachable. Enquiry
 readers link to Evidence and converted hypotheses link to their risk scenario.
 
+Save hardening rejects malicious deferred effects and unsafe object references
+before campaign activation. File and IndexedDB loads share the pre-migration
+checks; effect execution uses own-property lookups as a second boundary.
+Invalid imports preserve the current campaign and stored saves. Migration and
+validation code load on demand; a saved-list loading failure keeps records and
+offers reload/retry guidance. Overlapping saved-list refreshes retain the newest
+result. Free-text notes
+remain text, including security terms such as `__proto__`. Documentation pages
+also reject executable link/image URL schemes. See the
+[security review](docs/SECURITY_REVIEW.md) for the reproduced issue and limits.
+
 The dependency lock now uses patched Zod 4.6.7 and Undici 8.12.3; the security
 audit remains a release requirement.
 

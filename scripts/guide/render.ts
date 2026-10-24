@@ -37,6 +37,15 @@ export function slug(text: string): string {
 /** A private-use character, never in the guide: marks text held aside. */
 const HELD = '\uE000'
 
+/** Keep documentation links navigable without executable URL schemes. */
+export function safeWebUrl(url: string): boolean {
+  for (const character of url) {
+    const code = character.codePointAt(0)!
+    if (code <= 32 || code === 127) return false
+  }
+  try { return ['http:', 'https:'].includes(new URL(url, 'https://guide.invalid/').protocol) } catch { return false }
+}
+
 /** Emphasis, code and links inside one line of text. */
 export function renderInline(text: string): string {
   // Code first, held aside so nothing inside it is read as emphasis.
@@ -45,7 +54,7 @@ export function renderInline(text: string): string {
   let out = text.replace(/`([^`]+)`/g, (_, code: string) => hold(`<code>${escapeHtml(code)}</code>`))
   out = out.replace(/<(https?:\/\/[^>\s]+)>/g, (_, url: string) => hold(`<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`))
   out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, label: string, url: string) =>
-    hold(`<a href="${escapeHtml(url)}">${renderInline(label)}</a>`),
+    hold(safeWebUrl(url) ? `<a href="${escapeHtml(url)}">${renderInline(label)}</a>` : renderInline(label)),
   )
   out = escapeHtml(out)
   out = out.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>')
@@ -106,7 +115,10 @@ export function renderGuide(markdown: string, imageUrl: (src: string) => string 
     const image = IMAGE.exec(line.trim())
     if (image) {
       const alt = escapeHtml(image[1]!)
-      out.push(`<figure><img src="${escapeHtml(imageUrl(image[2]!))}" alt="${alt}" loading="lazy"><figcaption>${alt}</figcaption></figure>`)
+      const src = imageUrl(image[2]!)
+      out.push(safeWebUrl(src)
+        ? `<figure><img src="${escapeHtml(src)}" alt="${alt}" loading="lazy"><figcaption>${alt}</figcaption></figure>`
+        : `<p>${alt}</p>`)
       i += 1
       continue
     }

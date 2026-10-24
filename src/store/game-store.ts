@@ -67,6 +67,7 @@ export interface UiState {
   glossaryOpen: boolean
   glossaryTerm?: string
   toasts: Toast[]
+  savesReady: boolean
   saves: SaveSummary[]
   storageWarning?: string
 }
@@ -161,10 +162,14 @@ const SAVES_ON: Record<PlayerAction['type'], boolean> = {
  * replace the last good save of the campaign with a broken one.
  */
 async function brokenRules(state: GameState, index: ContentIndex): Promise<string[]> {
-  const { checkInvariants } = await import('@/game/engine/invariants')
+  const [{ checkInvariants }, { saveSafety }] = await Promise.all([import('@/game/engine/invariants'), import('./save-safety')])
+  const unsafe = saveSafety(state, index)
+  if (unsafe.length) return unsafe
   return checkInvariants(state, index).map((violation) => `${violation.rule}: ${violation.detail}`)
 }
 
+let savedListRequests = 0
+let savedListSequence = 0
 let refusedThisSession = false
 let pendingSave: Promise<void> = Promise.resolve()
 
@@ -216,6 +221,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     glossaryOpen: false,
     toasts: [],
     saves: [],
+    savesReady: false,
   },
 
   async ensureCampaign() {
@@ -323,11 +329,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   async refreshSaves() {
+    const sequence = ++savedListSequence
+    savedListRequests += 1
+    set((store) => ({ ui: { ...store.ui, savesReady: false } }))
     try {
       const saves = await listSaves()
-      set((store) => ({ ui: { ...store.ui, saves } }))
+      if (sequence === savedListSequence) set((store) => ({ ui: { ...store.ui, saves } }))
     } catch {
-      /* storage unavailable: the game still plays, it just cannot resume. */
+      if (sequence === savedListSequence) get().pushToast('Saved campaigns could not be listed. Reload to retry; existing saves were kept.', 'warning')
+    } finally {
+      savedListRequests -= 1
+      if (savedListRequests === 0) set((store) => ({ ui: { ...store.ui, savesReady: true } }))
     }
   },
 

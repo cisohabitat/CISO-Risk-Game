@@ -6,6 +6,7 @@
  * silently producing a broken campaign.
  */
 import { z } from 'zod'
+import { referenceField, unsafeKey } from '@/game/security/references'
 import type { GameState } from '@/game/types'
 import { SAVE_SCHEMA_VERSION } from '@/game/types'
 
@@ -78,7 +79,26 @@ const MIGRATIONS: Record<number, Migration> = {
   }),
 }
 
+/** Validate file and IndexedDB input before migrations can inspect references. */
+export function validateSaveInput(raw: unknown): void {
+  const pending: { value: unknown; depth: number; reference: boolean }[] = [{ value: raw, depth: 0, reference: false }]
+  let entries = 1
+  while (pending.length) {
+    const { value, depth, reference } = pending.pop()!
+    if (depth > 64) throw new SaveMigrationError('That save contains too much nested data.')
+    if (typeof value === 'number' && !Number.isFinite(value)) throw new SaveMigrationError('That save contains an invalid number.')
+    if (reference && unsafeKey(value)) throw new SaveMigrationError('That save contains an unsafe reference.')
+    if (!value || typeof value !== 'object') continue
+    for (const key of Object.keys(value)) {
+      if (unsafeKey(key)) throw new SaveMigrationError('That save contains an unsafe property.')
+      if (++entries > 500_000) throw new SaveMigrationError('That save contains too much nested data.')
+      pending.push({ value: (value as Record<string, unknown>)[key], depth: depth + 1, reference: (Array.isArray(value) && reference) || referenceField(key) })
+    }
+  }
+}
+
 export function migrateSave(raw: unknown): StoredSave {
+  validateSaveInput(raw)
   const parsed = storedSaveSchema.safeParse(raw)
   if (!parsed.success) {
     throw new SaveMigrationError('This file is not a CISO: First Year save.')

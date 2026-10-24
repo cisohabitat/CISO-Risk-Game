@@ -15,6 +15,7 @@ import { functionName, leaderForFunction, mostPressedFunction, refreshCommittedC
 import { stopWork } from '../team/assignments'
 import { evaluateAssumption } from '../assumptions/validation'
 import type { Rng } from './rng'
+import { ownValue, referenceField, unsafeKey } from '../security/references'
 
 /** A function named in content, or the one closest to breaking right now. */
 /** `linked` is the scenario the decision was opened about; anything else is an id. */
@@ -51,7 +52,7 @@ export interface EffectOutcome {
 
 /** Resolve authored timing once; pending entries persist the resulting date. */
 export function scheduledEffectDay(state: GameState, timing: EffectTiming, decisionId?: string): number {
-  const opened = decisionId ? state.decisions.decisions[decisionId]?.createdDay : undefined
+  const opened = decisionId ? ownValue(state.decisions.decisions, decisionId)?.createdDay : undefined
   return (timing.relativeTo === 'decision-opened' ? opened ?? state.currentDay : state.currentDay) + timing.dayOffset
 }
 
@@ -78,11 +79,11 @@ export function applyEffects(
 }
 
 function stakeholder(state: GameState, id: string) {
-  return state.stakeholders.stakeholders[id]
+  return ownValue(state.stakeholders.stakeholders, id)
 }
 
 function control(state: GameState, id: string) {
-  return state.controls.controls[id]
+  return ownValue(state.controls.controls, id)
 }
 
 export function applyEffect(
@@ -91,6 +92,8 @@ export function applyEffect(
   context: EffectContext,
   outcome: EffectOutcome,
 ): void {
+  // Defence in depth for callers that did not pass through save validation.
+  if (Object.entries(effect).some(([key, value]) => referenceField(key) && unsafeKey(value))) return
   const { index } = context
   switch (effect.type) {
     case 'budget.change': {
@@ -111,7 +114,7 @@ export function applyEffect(
     }
     case 'capacity.change': {
       const target = resolveFunction(state, effect.fn)
-      const fn = state.team.functions[target]
+      const fn = ownValue(state.team.functions, target)
       if (fn) {
         const before = fn.capacity
         fn.capacity = Math.max(0, round2(fn.capacity + effect.delta))
@@ -212,12 +215,12 @@ export function applyEffect(
       break
     }
     case 'programme.progress': {
-      const programme = state.programmes.programmes[effect.programmeId]
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (programme) programme.progress = clamp01(programme.progress + effect.delta)
       break
     }
     case 'programme.status': {
-      const programme = state.programmes.programmes[effect.programmeId]
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (!programme) break
       programme.status = effect.status
       if (effect.status === 'active' && programme.startedDay === undefined) programme.startedDay = state.currentDay
@@ -225,7 +228,7 @@ export function applyEffect(
       break
     }
     case 'programme.blocker': {
-      const programme = state.programmes.programmes[effect.programmeId]
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (!programme) break
       if (!programme.blockers.some((b) => b.id === effect.blockerId && !b.resolved)) {
         programme.blockers.push({ id: effect.blockerId, startedDay: state.currentDay, resolved: false })
@@ -234,7 +237,7 @@ export function applyEffect(
       break
     }
     case 'programme.resolveBlocker': {
-      const programme = state.programmes.programmes[effect.programmeId]
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (!programme) break
       for (const blocker of programme.blockers) {
         if (blocker.id === effect.blockerId) blocker.resolved = true
@@ -243,7 +246,7 @@ export function applyEffect(
       break
     }
     case 'programme.sponsor': {
-      const programme = state.programmes.programmes[effect.programmeId]
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (programme) programme.sponsorId = effect.stakeholderId
       break
     }
@@ -263,7 +266,7 @@ export function applyEffect(
       break
     }
     case 'node.exposure': {
-      const node = state.organisation.nodes[effect.nodeId]
+      const node = ownValue(state.organisation.nodes, effect.nodeId)
       if (node) {
         const before = node.exposure
         node.exposure = clamp01(node.exposure + effect.delta)
@@ -272,7 +275,7 @@ export function applyEffect(
       break
     }
     case 'node.weakness': {
-      const node = state.organisation.nodes[effect.nodeId]
+      const node = ownValue(state.organisation.nodes, effect.nodeId)
       if (node) node.weakness = clamp01(node.weakness + effect.delta)
       break
     }
@@ -301,17 +304,17 @@ export function applyEffect(
       break
     }
     case 'threat.pressure': {
-      const actor = state.threats.actors[effect.actorId]
+      const actor = ownValue(state.threats.actors, effect.actorId)
       if (actor) actor.pressure = clamp01(actor.pressure + effect.delta)
       break
     }
     case 'threat.interest': {
-      const actor = state.threats.actors[effect.actorId]
+      const actor = ownValue(state.threats.actors, effect.actorId)
       if (actor) actor.interest = clamp01(actor.interest + effect.delta)
       break
     }
     case 'threat.setback': {
-      const actor = state.threats.actors[effect.actorId]
+      const actor = ownValue(state.threats.actors, effect.actorId)
       if (actor) actor.setbackUntilDay = state.currentDay + Math.max(1, effect.stages) * 14
       for (const campaign of state.threats.campaigns) {
         if (campaign.actorId !== effect.actorId || campaign.disrupted || campaign.incidentId) continue
@@ -326,7 +329,7 @@ export function applyEffect(
       break
     }
     case 'objective.progress': {
-      const objective = state.business.objectives[effect.objectiveId]
+      const objective = ownValue(state.business.objectives, effect.objectiveId)
       if (!objective) break
       objective.progress = clamp01(objective.progress + effect.delta)
       // Security actively helping an objective makes it measurably easier to
@@ -335,7 +338,7 @@ export function applyEffect(
       break
     }
     case 'objective.delay': {
-      const objective = state.business.objectives[effect.objectiveId]
+      const objective = ownValue(state.business.objectives, effect.objectiveId)
       const def = index.objective.get(effect.objectiveId)
       if (!objective || !def) break
       // A delay costs delivery, it does not move the commitment: the date the
@@ -346,12 +349,12 @@ export function applyEffect(
       break
     }
     case 'objective.status': {
-      const objective = state.business.objectives[effect.objectiveId]
+      const objective = ownValue(state.business.objectives, effect.objectiveId)
       if (objective) objective.status = effect.status
       break
     }
     case 'risk.open': {
-      const scenario = state.risks.scenarios[effect.scenarioId]
+      const scenario = ownValue(state.risks.scenarios, effect.scenarioId)
       const def = index.riskScenario.get(effect.scenarioId)
       if (!def) break
       if (scenario) {
@@ -374,7 +377,7 @@ export function applyEffect(
       break
     }
     case 'risk.status': {
-      const scenario = state.risks.scenarios[resolveScenario(effect.scenarioId, context)]
+      const scenario = ownValue(state.risks.scenarios, resolveScenario(effect.scenarioId, context))
       if (!scenario) break
       scenario.status = effect.status
       // Accepting through an effect is a renewal: a quarter, reviewed at the end of it.
@@ -387,17 +390,17 @@ export function applyEffect(
       break
     }
     case 'risk.review': {
-      const scenario = state.risks.scenarios[resolveScenario(effect.scenarioId, context)]
+      const scenario = ownValue(state.risks.scenarios, resolveScenario(effect.scenarioId, context))
       if (scenario) scenario.nextReviewDay = state.currentDay + effect.dayOffset
       break
     }
     case 'team.morale': {
       if (effect.fn) {
-        const fn = state.team.functions[resolveFunction(state, effect.fn)]
+        const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
         if (fn) fn.morale = clamp01(fn.morale + effect.delta)
       } else {
         for (const fn of CYBER_FUNCTIONS) {
-          const runtime = state.team.functions[fn]
+          const runtime = ownValue(state.team.functions, fn)
           if (runtime) runtime.morale = clamp01(runtime.morale + effect.delta)
         }
       }
@@ -406,7 +409,7 @@ export function applyEffect(
     case 'team.workload': {
       // Committed capacity is derived from real work, so unplanned load is
       // modelled as a surge that decays rather than a permanent commitment.
-      const fn = state.team.functions[resolveFunction(state, effect.fn)]
+      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
       if (fn) fn.surge = Math.max(0, (fn.surge ?? 0) + effect.delta)
       break
     }
@@ -415,19 +418,19 @@ export function applyEffect(
         effect.leaderId === 'most-pressed'
           ? leaderForFunction(index, mostPressedFunction(state))
           : effect.leaderId
-      const leader = leaderId ? state.team.leaders[leaderId] : undefined
+      const leader = leaderId ? ownValue(state.team.leaders, leaderId) : undefined
       if (leader) leader.morale = clamp01(leader.morale + effect.delta)
       break
     }
     case 'leader.confidence': {
-      const leader = state.team.leaders[effect.leaderId]
+      const leader = ownValue(state.team.leaders, effect.leaderId)
       if (leader) leader.reliability = clamp01(leader.reliability + effect.delta)
       break
     }
     // A resignation that only took capacity left the function reading "Fully
     // staffed" with nothing to recruit (second-year AI playtest).
     case 'team.departure': {
-      const fn = state.team.functions[resolveFunction(state, effect.fn)]
+      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
       if (fn && fn.capacity >= 1) {
         fn.capacity = round2(fn.capacity - 1)
         fn.vacancies += 1
@@ -435,7 +438,7 @@ export function applyEffect(
       break
     }
     case 'team.vacancyFilled': {
-      const fn = state.team.functions[effect.fn]
+      const fn = ownValue(state.team.functions, effect.fn)
       if (fn && fn.vacancies > 0) {
         fn.vacancies -= 1
         fn.capacity = round2(fn.capacity + 1)
@@ -526,9 +529,9 @@ export function applyEffect(
 }
 
 function currentIncident(state: GameState, context: EffectContext) {
-  const id = (context.decisionId ? state.decisions.decisions[context.decisionId]?.incidentId : undefined) ?? state.incidents.activeId
+  const id = (context.decisionId ? ownValue(state.decisions.decisions, context.decisionId)?.incidentId : undefined) ?? state.incidents.activeId
   if (typeof id !== 'string' || !Object.hasOwn(state.incidents.incidents, id)) return undefined
-  const incident = state.incidents.incidents[id]
+  const incident = ownValue(state.incidents.incidents, id)
   return incident && incident.phase !== 'closed' ? incident : undefined
 }
 
