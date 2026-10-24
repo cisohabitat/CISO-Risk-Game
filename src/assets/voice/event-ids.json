@@ -31,5 +31,6 @@
   "evt-org-unsigned-releases",
   "evt-con-incident-command-recalled",
   "evt-con-incident-external-invoiced",
-  "evt-org-hr-provider-incident"
+  "evt-org-hr-provider-incident",
+  "evt-team-intro"
 ]

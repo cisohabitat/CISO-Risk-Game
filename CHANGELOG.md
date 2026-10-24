@@ -20,6 +20,9 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Add optional voice for Fenella’s early team introduction, retaining her
+  established voice and every earlier recording.
+
 - Fix fresh-playtest follow-through: dated recovery assurance, incident-safe
   restore requests, visible SOC hunt replies and material blocked programmes.
   Retain board drafts during risk review, show recruitment arrival dates and

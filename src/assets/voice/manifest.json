@@ -912,5 +912,51 @@
       "bf_alice": 0.55,
       "bf_lily": 0.45
     }
+  },
+  {
+    "eventId": "evt-team-intro",
+    "subject": "Your leadership team",
+    "body": "Four of us report to you. Between us we run security operations, incident response, architecture, engineering, identity, and cyber risk and governance.\n\nA warning before you start assigning work. Everyone here is already committed. If you give us more, something else stops, or it comes back thinner than you wanted. We would rather you chose than we quietly disappointed you.",
+    "file": "evt-team-intro.mp3",
+    "voice": "mix-fenella",
+    "phrases": [
+      {
+        "text": "Four of us report to you.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.18
+      },
+      {
+        "text": "Between us we run security operations, incident response, architecture, engineering, identity, and cyber risk and governance.",
+        "speed": 1.03,
+        "pauseAfterSeconds": 0.4
+      },
+      {
+        "text": "A warning before you start assigning work.",
+        "speed": 0.98,
+        "pauseAfterSeconds": 0.2
+      },
+      {
+        "text": "Everyone here is already committed.",
+        "speed": 1.0,
+        "pauseAfterSeconds": 0.24
+      },
+      {
+        "text": "If you give us more, something else stops, or it comes back thinner than you wanted.",
+        "speed": 0.99,
+        "pauseAfterSeconds": 0.28
+      },
+      {
+        "text": "We would rather you chose than we quietly disappointed you.",
+        "speed": 0.96,
+        "pauseAfterSeconds": 0
+      }
+    ],
+    "durationSeconds": 22.57,
+    "from": "Fenella Osei, Head of Cyber Risk and Governance",
+    "mastering": "loudnorm=I=-19:TP=-1.5:LRA=7",
+    "voiceMix": {
+      "bf_emma": 0.45,
+      "bf_lily": 0.55
+    }
   }
 ]

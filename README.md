@@ -63,7 +63,7 @@ The title screen uses the portrait theme image and centred composition on
 portrait iPads and phones. Rotating a tablet to landscape restores the wide
 scene and layout automatically. Only the selected image loads initially.
 
-Thirty-three selected Inbox messages offer **Play message** across all twelve recurring
+Thirty-four selected Inbox messages offer **Play message** across all twelve recurring
 characters. Priya, Nadia, Ruth, Fenella, Stefan and Callum join Marianne, Tomas,
 Helen, Dev, Jo and Sir Alan. Coverage includes delivery pressure,
 incident readiness, suspicious mailbox activity, acquisition and restore
@@ -72,6 +72,8 @@ engineering concerns and the first-year review invitation. Three incident-relate
 messages now cover the command record, external responder invoice and People
 Cloud disclosure. Changing operational reports remain text-only; recordings
 match the delivered sender, subject and full body exactly.
+Fenella’s early team introduction is also voiced, using her established profile
+and a pause before the workload warning. All earlier 33 recordings are retained.
 Playback is optional and separate from sound effects.
 The revised clips use the owner's approved CEO voice and explicit
 sentence phrasing, varied pacing and short pauses throughout the catalogue.

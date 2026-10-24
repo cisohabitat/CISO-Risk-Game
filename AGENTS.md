@@ -44,8 +44,14 @@ changes.
   Title shading and the decorative compass needle use CSS pseudo-elements;
   keep the artwork layers and readable text contrast without extra DOM nodes.
 
+- The owner authorised Fenella’s team-introduction recording on 24 October.
+  Keep her existing `mix-fenella` profile, exact authored transcript and six
+  paced sentences. Preserve all earlier 33 MP3s. The generator supports
+  repeatable `--event` selection to retain unselected audio and manifest entries.
+  Keep the 3072 KiB allowance and optional on-request playback unchanged.
+
 - The owner authorised further voice review and coverage after the six-clip
-  pilot. The catalogue now contains 33 clips across all 12 recurring characters.
+  pilot. The catalogue now contains 34 clips across all 12 recurring characters.
   The incident pass adds the command-record follow-up (Fenella), external
   responder invoice (Tomas) and People Cloud disclosure (Ruth). Preserve all
   earlier 30 MP3s. Dynamic operational reports remain text-only; never play a

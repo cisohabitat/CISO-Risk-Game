@@ -49,6 +49,7 @@ PROFILES = [
     ('evt-con-incident-command-recalled', 'mix-fenella', [1.00, 1.03, 0.96], [0.20, 0.30, 0]),
     ('evt-con-incident-external-invoiced', 'bm_george', [1.00, 0.96], [0.28, 0]),
     ('evt-org-hr-provider-incident', 'mix-ruth', [0.99, 0.96], [0.26, 0]),
+    ('evt-team-intro', 'mix-fenella', [1.00, 1.03, 0.98, 1.00, 0.99, 0.96], [0.18, 0.40, 0.20, 0.24, 0.28, 0]),
 ]
 MODEL_HASHES = {
     'kokoro-v1.0.onnx': '7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5',
@@ -77,6 +78,8 @@ def phrase_text(event_id, body):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('model_dir', type=Path)
+    parser.add_argument('--event', action='append', choices=[profile[0] for profile in PROFILES],
+                        help='Regenerate only this event; retain other manifest entries and MP3s. Repeatable.')
     args = parser.parse_args()
     for name, expected in MODEL_HASHES.items():
         actual = hashlib.sha256((args.model_dir / name).read_bytes()).hexdigest()
@@ -103,8 +106,12 @@ def main():
             events[event['id']] = event
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
+    retained = {clip['eventId']: clip for clip in json.loads((OUTPUT / 'manifest.json').read_text())} if args.event else {}
     manifest = []
     for event_id, voice, speeds, pauses in PROFILES:
+        if args.event and event_id not in args.event:
+            manifest.append(retained[event_id])
+            continue
         event = events[event_id]
         if '{{' in event['body']:
             raise ValueError(f'Dynamic text needs a separate recording: {event_id}')

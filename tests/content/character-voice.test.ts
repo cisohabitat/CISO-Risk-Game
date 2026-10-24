@@ -6,8 +6,8 @@ import { testIndex } from '../engine/helpers'
 
 it('ships a bounded catalogue with exact authored transcripts and one voice per character', async () => {
   const events = testIndex().content.events
-  expect(recordings).toHaveLength(33)
-  expect(new Set(recordings.map((clip) => clip.eventId)).size).toBe(33)
+  expect(recordings).toHaveLength(34)
+  expect(new Set(recordings.map((clip) => clip.eventId)).size).toBe(34)
   expect(recordedEvents).toEqual(recordings.map((clip) => clip.eventId))
   const speakers = new Map<string, string>()
   const mixes = new Map<string, string>()

@@ -1,6 +1,6 @@
 # Character voice catalogue
 
-Thirty-three prerecorded synthetic messages, twelve recurring characters. Playback is
+Thirty-four prerecorded synthetic messages, twelve recurring characters. Playback is
 explicit and optional in Inbox. The authoritative transcript is the message body
 in campaign content, copied into `manifest.json` for exact runtime comparison.
 Event ID, sender, subject and body must all match before playback is offered.
@@ -18,7 +18,7 @@ The audio reads the body; the sender and subject remain visible beside it.
 | Priya Nandakumar, Digital | `bf_lily`, phrase speeds 0.98–1.05 | Brisk, commercially focused | 2: releases and client questions |
 | Nadia Farrell, Procurement | `mix-nadia`, phrase speeds 0.97–1.04 | Practical, matter-of-fact | 2: SOC and Corvus renewals |
 | Ruth Ahmadi, Legal | `mix-ruth`, phrase speeds 0.95–1.01 | Precise, composed | 3: regulator and merchant questions, People Cloud disclosure |
-| Fenella Osei, Governance | `mix-fenella`, phrase speeds 0.96–1.03 | Evidence-focused, measured | 3: audit findings matched and overstated, command record |
+| Fenella Osei, Governance | `mix-fenella`, phrase speeds 0.96–1.03 | Evidence-focused, measured | 4: audit findings matched and overstated, command record, team introduction |
 | Stefan Alvarez, Architecture | `mix-stefan`, phrase speeds 0.95–1.03 | Analytical, direct | 2: contradictory documents and unseen data flows |
 | Callum Reid, Engineering | `bm_lewis`, phrase speeds 0.98–1.03 | Plain, delivery-focused | 2: vacancies and unsigned releases |
 
@@ -85,7 +85,7 @@ files into a directory outside the repository. Then run:
 python scripts/voice/generate.py /path/to/model-directory
 ```
 
-The script reads current authored bodies, rewrites the 33 MP3s and manifest,
+The script reads current authored bodies, rewrites the 34 MP3s and manifest,
 and generates `event-ids.json` for the lightweight UI gate and size check. Tests
 require the IDs and manifest to agree, avoiding a separate manual playback list.
 It leaves temporary WAVs in the model directory. Review any transcript changes
@@ -102,7 +102,7 @@ available. Audio does not change saves, resources, choices or clock state.
 
 The catalogue has a 160 KiB per-clip and 3072 KiB total encoded budget, separate from
 the unchanged title/critical-path budgets. Content tests verify exact transcripts,
-all 33 files, consistent speaker mapping and fixed stock-voice mixes. UI tests verify explicit playback,
+all 34 files, consistent speaker mapping and fixed stock-voice mixes. UI tests verify explicit playback,
 cleanup, mismatch protection and error recovery. Browser tests use real decoding
 in Chromium/WebKit and verify on-request loading and phone layouts.
 On restricted Linux runners, WebKit's media cache needs a writable `/var/tmp`;
@@ -118,3 +118,14 @@ The incident expansion adds three authored, static messages with the existing
 Tomas, Ruth and Fenella profiles. All earlier thirty files are preserved. It
 adds no generic narration for changing operational reports and does not infer
 incident identity from message wording. The 3072 KiB allowance is unchanged.
+
+The 24 October team-introduction pass adds `evt-team-intro` with Fenella’s
+existing blend and loudness filter. Its six sentences retain every authored
+word, with a longer pause before the workload warning. Earlier 33 files remain
+unchanged. To regenerate just this recording and merge its manifest entry:
+
+```sh
+python scripts/voice/generate.py /path/to/model-directory --event evt-team-intro
+```
+
+Repeat `--event` for several selected recordings; omit it for the full catalogue.
