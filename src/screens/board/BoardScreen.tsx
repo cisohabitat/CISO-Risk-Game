@@ -22,10 +22,11 @@ export function BoardScreen() {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
-  const [preparing, setPreparing] = useState(false)
-  const [topics, setTopics] = useState<string[]>([])
-  const [recommendations, setRecommendations] = useState<string[]>([])
-  const [uncertainty, setUncertainty] = useState(true)
+  const draft = useGameStore((store) => store.ui.boardDraft)
+  const [preparing, setPreparing] = useState(Boolean(draft && draft.quarter === state?.reviews.pendingQuarter))
+  const [topics, setTopics] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.topics ?? [] : [])
+  const [recommendations, setRecommendations] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.recommendations ?? [] : [])
+  const [uncertainty, setUncertainty] = useState(draft?.quarter === state?.reviews.pendingQuarter ? draft?.uncertainty ?? true : true)
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
   const availableTopics = useMemo(() => (state ? materialTopics(state, index) : []), [state, index])
@@ -42,6 +43,18 @@ export function BoardScreen() {
 
   const pendingQuarter = state.reviews.pendingQuarter
 
+  const reviewRisks = () => {
+    if (pendingQuarter === undefined) return
+    useGameStore.getState().setUi({ boardDraft: { quarter: pendingQuarter, topics, recommendations, uncertainty }, riskTab: 'risks' })
+    setPreparing(false)
+    useGameStore.getState().setScreen('risk')
+  }
+
+  const closePaper = () => {
+    useGameStore.getState().setUi({ boardDraft: undefined })
+    setPreparing(false)
+  }
+
   const submit = () => {
     if (pendingQuarter === undefined) return
     const result = dispatch({
@@ -52,6 +65,7 @@ export function BoardScreen() {
       communicateUncertainty: uncertainty,
     })
     if (result.ok) {
+      useGameStore.getState().setUi({ boardDraft: undefined })
       setPreparing(false)
       setTopics([])
       setRecommendations([])
@@ -197,14 +211,14 @@ export function BoardScreen() {
 
       <Dialog
         open={preparing}
-        onClose={() => setPreparing(false)}
+        onClose={closePaper}
         size="lg"
         title={`Board paper: quarter ${pendingQuarter ?? ''}`}
         descriptionInBody
-        description="Pick what the committee sees. It expects every risk rated high or with a high consequence, every risk accepted on its behalf, any incident or failed assumption it has not yet been told about, and a team past its limit. The rest is your call."
+        description="Pick what the committee sees. It expects every risk rated high or with a high consequence, every risk accepted on its behalf, any incident or failed assumption it has not yet been told about, a programme blocked on an unresolved dependency, and a team past its limit. The rest is your call."
         footer={
           <>
-            <Button variant="quiet" onClick={() => setPreparing(false)}>Cancel</Button>
+            <Button variant="quiet" onClick={closePaper}>Cancel</Button>
             <Button variant="primary" onClick={submit}>Take it to the board</Button>
           </>
         }
@@ -224,7 +238,7 @@ export function BoardScreen() {
             <EmptyState
               title="No agenda topics are eligible yet"
               description="The agenda draws on raised risks, incidents, failed assumptions, off-track programmes and a team beyond its workload limit. Completed checks and low morale alone do not add an agenda item. Programme recommendations remain available below. Open Risk to assess or raise a risk for the paper."
-              action={<Button variant="secondary" size="sm" onClick={() => { setPreparing(false); useGameStore.getState().setScreen('risk') }}>Review risks for the paper</Button>}
+              action={<Button variant="secondary" size="sm" onClick={reviewRisks}>Review risks for the paper</Button>}
             />
           ) : (
             <fieldset>
@@ -236,6 +250,7 @@ export function BoardScreen() {
                   risks you have raised, and an emerging one is raised from the Risk screen.
                 </p>
               )}
+              {emergingCount > 0 && <Button variant="secondary" size="sm" className="mb-3" onClick={reviewRisks}>Review emerging risks and return to this draft</Button>}
               <div className="space-y-2">
                 {availableTopics.map((topic) => {
                   const active = topics.includes(topic.id)
@@ -256,7 +271,7 @@ export function BoardScreen() {
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
                         style={{ minHeight: 0 }}
                       />
-                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}</span>
+                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}<span className="mt-1 block text-xs text-ink-muted">{topic.material ? 'Required: material to this committee' : 'Optional update'}</span></span>
                       {riskBands.has(topic.id) ? (
                         <Badge tone={bandTone(riskBands.get(topic.id)!)} className="shrink-0 self-start">
                           {RISK_BAND_LABEL[riskBands.get(topic.id)!]} residual

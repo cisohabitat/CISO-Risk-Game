@@ -2,7 +2,7 @@
  * The risk workspace (plan §28.3): evidence, hypotheses, risk scenarios and the
  * assumptions underneath them — never a single flat spreadsheet.
  */
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, Tab, TabPanel, Tabs } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { assumptionViews, evidenceList, visibleRisks } from '@/store/selectors'
@@ -22,7 +22,9 @@ export function RiskScreen() {
   const dispatch = useGameStore((store) => store.dispatch)
   const selectedScenarioId = useGameStore((store) => store.ui.selectedScenarioId)
   const setUi = useGameStore((store) => store.setUi)
-  const [tab, setTab] = useState('risks')
+  const hasBoardDraft = useGameStore((store) => Boolean(store.ui.boardDraft && !store.state?.finished && store.ui.boardDraft.quarter === store.state?.reviews.pendingQuarter))
+  const tab = useGameStore((store) => store.ui.riskTab ?? 'risks')
+  const setTab = (riskTab: string) => setUi({ riskTab })
 
   const risks = useMemo(() => (state ? visibleRisks(state, index) : []), [state, index])
   const evidence = useMemo(() => (state ? evidenceList(state, index) : []), [state, index])
@@ -40,6 +42,7 @@ export function RiskScreen() {
         <h1 className="font-display text-3xl leading-tight">Risk</h1>
       </header>
 
+      {hasBoardDraft && <Button variant="secondary" onClick={() => useGameStore.getState().setScreen('board')}>Return to board paper draft</Button>}
       <Tabs value={tab} onChange={setTab} className="split-tabs">
         <RiskTabStrip>
           {/* The count is what the tab lists: it counted open risks only, and

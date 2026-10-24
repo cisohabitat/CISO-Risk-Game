@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, Disclosure, EmptyState, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
-import { capacityTone, money, plural } from '@/lib/formatting/labels'
+import { capacityTone, money, plural, shortDate } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import { PersonPortrait } from '@/components/game/Person'
 
@@ -48,7 +48,8 @@ export function TeamScreen() {
                     valueLabel={`${fn.committed} of ${fn.capacity} days a week`} tone={capacityTone(fn.band)} />
                   <div className="flex min-h-11 flex-wrap items-center justify-between gap-2">
                     <p className={cn('text-sm', fn.vacancies > 0 && !fn.hiring ? 'text-band-elevated' : 'text-ink-muted')}>
-                      {fn.hiring ? 'Recruiting' : fn.vacancies > 0 ? `${plural(fn.vacancies, 'vacancy', 'vacancies')} unfilled` : 'Fully staffed'}
+                      {fn.vacancies > 0 ? `${plural(fn.vacancies, 'vacancy', 'vacancies')}${fn.hiring ? '' : ' unfilled'}` : 'Fully staffed'}
+                      {fn.hiring && <> · {fn.incoming} incoming · {Math.max(0, fn.vacancies - fn.incoming)} not yet recruiting. Expected around {fn.arrivingDays.map(shortDate).join(', ')}.</>}
                     </p>
                     {fn.vacancies > 0 && (
                       <Button variant="quiet" size="sm" className="compact min-h-9" disabled={fn.hiring}

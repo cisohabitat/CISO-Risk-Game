@@ -402,7 +402,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
       rationale: def.rationale,
       status: runtime.status,
       finishedEarlier: runtime.status === 'complete' && (runtime.completedDay ?? 0) < 0,
-      progressPercent: Math.round(runtime.progress * 100),
+      progressPercent: runtime.status === 'complete' ? 100 : Math.min(99, Math.round(runtime.progress * 100)),
       budgetCost: def.budgetCost,
       budgetAllocated: runtime.budgetAllocated,
       sponsorName: runtime.sponsorId ? index.stakeholder.get(runtime.sponsorId)?.name : undefined,
@@ -455,6 +455,8 @@ export interface TeamView {
     moraleLabel: string
     vacancies: number
     hiring: boolean
+    incoming: number
+    arrivingDays: number[]
     workload: string[]
     recoveryNote: string
   }[]
@@ -513,6 +515,8 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         // screen offered to recruit the same identity role again after
         // "Recruit properly", and a playtester nearly paid for it twice.
         hiring: hiringUnderWay(state, runtime.fn),
+        incoming: state.pendingEffects.flatMap((pending) => pending.effects).filter((effect) => effect.type === 'team.vacancyFilled' && effect.fn === fn).length,
+        arrivingDays: state.pendingEffects.filter((pending) => pending.effects.some((effect) => effect.type === 'team.vacancyFilled' && effect.fn === fn)).map((pending) => pending.day).sort((a, b) => a - b),
         workload: [
           ...Object.values(state.programmes.programmes)
             .filter((programme) => (programme.status === 'active' || programme.status === 'at-risk') && (index.programme.get(programme.id)?.capacityDemand[fn] ?? 0) > 0)
@@ -675,7 +679,10 @@ function recoveryNote(state: GameState, index: ContentIndex): string | undefined
     if (runtime?.status !== 'complete' || (runtime.completedDay ?? -Infinity) <= verifiedOn) return false
     return def.milestones.some((milestone) => milestone.controlEffects?.some((effect) => effect.controlId === 'ctl-backup'))
   })
-  return builtSince ? 'Built, but you have not checked recovery yourself since' : undefined
+  if (!builtSince) return undefined
+  return Number.isFinite(verifiedOn)
+    ? `Last independently checked ${formatGameDate(verifiedOn).label}. Recovery delivery completed later; delivery does not renew that assurance.`
+    : 'Recovery delivered; no independent backup check is recorded.'
 }
 
 export function briefing(state: GameState, index: ContentIndex): BriefingView {
@@ -1330,6 +1337,7 @@ export interface CameBackItem {
   from: string
   subject: string
   kind: MessageReturnKind
+  related: { id: string; subject: string }[]
 }
 
 export { messageReturnKind } from '@/game/inbox/returns'
@@ -1344,11 +1352,20 @@ export { messageReturnKind } from '@/game/inbox/returns'
  */
 export function cameBack(state: GameState, index: ContentIndex, limit = 4): CameBackItem[] {
   const out: CameBackItem[] = []
+  const groups = new Map<string, CameBackItem>()
   for (const message of state.inbox.messages) {
     if (message.read) continue
     const kind = messageReturnKind(message, index)
     if (!kind) continue
-    out.push({ id: message.id, day: message.day, from: message.from, subject: message.subject, kind })
+    const key = typeof message.returnGroup === 'string' ? `${message.day}:${message.returnGroup}` : undefined
+    const existing = key ? groups.get(key) : undefined
+    if (existing) {
+      existing.related.push({ id: message.id, subject: message.subject })
+      continue
+    }
+    const item = { id: message.id, day: message.day, from: message.from, subject: message.subject, kind, related: [] }
+    out.push(item)
+    if (key) groups.set(key, item)
   }
   // Inbox messages are prepended, so this is already newest first.
   return out.slice(0, limit)

@@ -248,6 +248,9 @@ export function InboxScreen() {
                     </p>
                   ))}
                 </div>
+                {returnKind === 'result' || selected.type === 'discovery' ? (
+                  <Button variant="secondary" className="mt-4" onClick={() => { setUi({ riskTab: 'evidence' }); useGameStore.getState().setScreen('risk') }}>Review evidence</Button>
+                ) : null}
                 {/* The words live in the messages at least as much as in the
                     risks: break-glass, jump servers, credential stuffing. */}
                 <Terms text={`${selected.subject} ${selected.body}`} className="mt-3" />

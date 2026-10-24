@@ -3802,3 +3802,38 @@ fault.
   and the annual review names them as things relied on all year and never
   tested. See `src/game/assumptions/validation.ts`.
 
+
+
+## 24 October 2026 — fresh heron-241026 campaign
+
+A new browser campaign on `4b3a2a6`, CISO / inherited mess, completed all 364
+simulated days at 834 × 1112. The recorded session contained 25 decisions,
+three enquiries and three board papers in 42 minutes. It ended Credible with
+Recovery complete, Identity at 83%, and two of five objectives achieved.
+These are one AI-assisted run's observations, not human engagement evidence.
+
+Closed in the follow-up: the recovery caption now retains the assessment date
+rather than implying the pre-completion restore never happened; the planned
+outage request waits for no active incident; both authored hunt replies carry
+consequence classification; unresolved programme blockers make the board topic
+material, with material/optional labels on the composer. Recruitment retains
+incoming counts and dates, funding cards state the minimum and full allocation,
+and unfinished percentages stop at 99. Explicitly recorded same-day returns
+share a Briefing row with every original reader route retained. Older unlinked
+mail stays separate. Board drafts survive Risk review; enquiry results and
+converted hypotheses provide onward navigation. Executive history keeps the
+disclosed deadline/dependencies (the full meeting already remained in Inbox).
+
+Cleanup: removed the unreferenced prototype `scripts/smoke.ts`, superseded by
+maintained engine/invariant/soak tests, and cleared old ignored browser output.
+Historical evidence and regression files are not obsolete merely by date and
+remain. Fresh review artifacts remain outside the repository.
+
+Preflight verification: `pnpm check` passed 638 tests across 106 files, content
+validation, lint/typecheck, build and size budgets. `pnpm audit:content-flow 6`
+passed 24 campaign years and 24 deterministic replays, with no unreferenced
+replies or duplicate authored body groups. The dependency audit identified four
+new advisories; Zod 4.6.7 and Undici 8.12.3 restore a clean audit. The final
+commit additionally receives the full Chromium/WebKit browser suite and hosted
+smoke checks before release completion; these preflight figures are not a claim
+of physical-device touch or human listening validation.

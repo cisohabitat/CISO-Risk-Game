@@ -6,6 +6,26 @@ changes.
 
 ## Documentation
 
+- The 24 October fresh-playtest fixes are owner-authorised. Recovery notes keep
+  the independent assessment date; programme completion does not renew it.
+  Restore-window requests wait for no active incident, retaining day 210 / 80%
+  eligibility afterwards. Both scheduled SOC hunt outcomes are explicit
+  consequences for the shared Inbox/Briefing classification.
+- An at-risk programme with an unresolved dependency is material to the board;
+  routine variance remains optional. Label material versus optional agenda items.
+  Board-to-Risk navigation preserves an ephemeral draft and offers a return;
+  clear drafts and Risk tabs on campaign lifecycle changes, never save them.
+- Recruitment retains vacancies, incoming roles and approximate arrival dates.
+  Programme cards explain minimum/full funding and partial delivery; unfinished
+  progress stays below 100%. Keep evidence and converted-risk navigation direct.
+- Return grouping uses explicit recorded metadata and the delivery day. Preserve
+  every message and its reader route, and leave unlinked legacy mail separate.
+  Never group by wording alone. Executive history retains disclosed plan details.
+- The obsolete unreferenced `scripts/smoke.ts` prototype was removed; use the
+  maintained invariant, soak and campaign tests. Keep historical playtests,
+  regression tests, player-guide images and asset licences. Generated browser
+  output stays ignored and may be cleared before a new verification run.
+
 - Keep Inbox UI outside the entry download and preload it only after a campaign
   opens. Retain the accessible loading state and screen-boundary return to
   Briefing if its chunk fails. The size gate rejects an eager InboxScreen chunk.
@@ -79,7 +99,7 @@ changes.
   modes, report reserve assumptions and invariants, and do not present probes as
   human fairness evidence. Findings and limits are in `docs/BALANCE_REVIEW.md`.
 - Identity enforcement and recovery-window follow-ups can arise from day 210
-  after 80% progress. Preserve their IDs and conditions; do not force unfinished
+  after 80% progress. Preserve their IDs and earned progress threshold; the restore window waits for no active incident. Do not force unfinished
   work to complete. New annual reviews credit delivered progress; stored reviews
   keep their recorded judgement.
 
@@ -212,6 +232,11 @@ changes.
   newer progress. A rejected save must still allow later saves to proceed.
 
 ## Security
+
+- The 24 October audit requires Zod >=4.6.6 (locked 4.6.7) and transitive
+  Undici >=8.12.2 (locked 8.12.3), addressing collection memory exhaustion,
+  content-encoding/EventSource denial of service and SRI parsing advisories.
+  Keep registry audits enabled and the lockfile's patched transitive resolution.
 
 - Keep Vite at a patched 8.3.x release (currently 8.3.5); the 21 October audit
   identified three launch-editor advisories affecting 8.3.0–8.3.2. Preserve the

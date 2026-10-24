@@ -9,7 +9,18 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 The game as it stands after the roadmap's engineering phases
 (`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
 
+- Patch Zod to 4.6.7 and the test tooling’s Undici to 8.12.3 for the
+  24 October security advisories.
+
 ### Playing
+
+- Fix fresh-playtest follow-through: dated recovery assurance, incident-safe
+  restore requests, visible SOC hunt replies and material blocked programmes.
+  Retain board drafts during risk review, show recruitment arrival dates and
+  partial-funding guidance, and reserve 100% progress for completed programmes.
+  Group explicitly linked returns without deleting correspondence; add evidence
+  and converted-risk routes and retain executive plan details in history.
+
 
 - Defer Inbox code until a campaign opens to recover entry-download headroom.
   Keep a readable loading state and return to Briefing on load failure. Cover

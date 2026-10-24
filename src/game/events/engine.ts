@@ -11,6 +11,7 @@ import { evaluateAll } from './conditions'
 export interface FiredEvent {
   def: GameEventDef
   effects: GameEffect[]
+  returnGroup?: string
 }
 
 export interface EventTickResult {
@@ -128,7 +129,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
   const result: EventTickResult = { fired: [] }
   const firedThisDay = new Set<string>()
 
-  const fire = (def: GameEventDef) => {
+  const fire = (def: GameEventDef, returnGroup?: string) => {
     if (firedThisDay.has(def.id)) return
     firedThisDay.add(def.id)
     if (!state.events.firedEventIds.includes(def.id)) state.events.firedEventIds.push(def.id)
@@ -136,7 +137,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
     const counts = (state.events.firedCount ??= {})
     counts[def.id] = (counts[def.id] ?? 0) + 1
     for (const tag of def.tags) state.events.lastFiredDayByTag[tag] = state.currentDay
-    result.fired.push({ def, effects: def.effectsOnReveal ?? [] })
+    result.fired.push({ def, effects: def.effectsOnReveal ?? [], returnGroup })
   }
 
   // 1. Explicitly scheduled events (delayed consequences) come first.
@@ -156,7 +157,7 @@ export function tickEvents(state: GameState, index: ContentIndex, rng: Rng): Eve
       const context = entry.carriedFlags ? { ...state, flags: { ...entry.carriedFlags, ...state.flags } } : state
       const sourcePapers = entry.sourceYear === undefined ? undefined : state.previousYears?.find((year) => year.year === entry.sourceYear)?.papersWritten
       if (!evaluateAll(context, index, def.conditions, sourcePapers)) continue
-      fire(def)
+      fire(def, entry.returnGroup)
     }
   }
 

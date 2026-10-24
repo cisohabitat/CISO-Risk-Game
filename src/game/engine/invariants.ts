@@ -78,6 +78,12 @@ export function checkInvariants(state: GameState, index: ContentIndex): Invarian
     if (!inUnit(runtime.morale)) add('morale-range', `${fn}=${runtime.morale}`)
   }
 
+  for (const record of [...state.inbox.messages, ...state.events.scheduled, ...state.pendingEffects]) {
+    if (record.returnGroup !== undefined && (typeof record.returnGroup !== 'string' || record.returnGroup.length > 256)) {
+      add('return-group-valid', 'Return grouping must be a short string.')
+    }
+  }
+
   for (const [id, decision] of Object.entries(state.decisions.decisions)) {
     if (decision.resolvedDay !== undefined && state.decisions.openIds.includes(id)) {
       add('resolved-decision-not-open', id)

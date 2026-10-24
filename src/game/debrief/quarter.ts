@@ -75,7 +75,10 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
   for (const programme of Object.values(state.programmes.programmes)) {
     if (programme.status !== 'at-risk') continue
     const def = index.programme.get(programme.id)
-    if (def) out.push({ id: `programme:${programme.id}`, label: `${def.name} is off track`, material: false })
+    // An unresolved delivery dependency needs a decision, even when a later
+    // milestone can still advance. Routine schedule variance remains optional.
+    const blocked = programme.blockers.some((blocker) => !blocker.resolved)
+    if (def) out.push({ id: `programme:${programme.id}`, label: `${def.name} is off track`, material: blocked })
   }
   const strain = teamStrain(state)
   if (strain > 0.85) {

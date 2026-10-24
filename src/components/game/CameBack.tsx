@@ -31,6 +31,7 @@ export function CameBack() {
               <p className="text-xs text-ink-faint">
                 {MESSAGE_RETURN_LABEL[item.kind]} · {item.from} · {shortDate(item.day)}
               </p>
+              {item.related.map((related) => <Button key={related.id} variant="quiet" size="sm" onClick={() => { setUi({ selectedMessageId: related.id }); setScreen('inbox') }}>Also: {related.subject}</Button>)}
             </div>
             <Button
               variant="quiet"

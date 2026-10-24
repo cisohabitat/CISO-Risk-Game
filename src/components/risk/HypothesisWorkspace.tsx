@@ -125,6 +125,9 @@ export function HypothesisWorkspace() {
                         </div>
                       </div>
 
+                      {hypothesis.status === 'converted' && hypothesis.linkedScenarioId && state.risks.scenarios[hypothesis.linkedScenarioId] && (
+                        <Button className="mt-4" variant="secondary" size="sm" onClick={() => useGameStore.getState().setUi({ selectedScenarioId: hypothesis.linkedScenarioId, riskTab: 'risks' })}>View risk scenario</Button>
+                      )}
                       {canConvert && (
                         <div className="mt-4 flex flex-wrap gap-2">
                           {/* Short of attention it said nothing and did nothing a

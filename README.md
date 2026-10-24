@@ -22,6 +22,23 @@ Existing assessment safeguards and difficulty profiles remain in place.
 Identity-enforcement and restore-window follow-ups can arise from day 210 when
 80% of the relevant programme is delivered, bringing earned choices into Q3.
 
+Fresh-playtest follow-through: recovery notes retain the last independent
+check date, and planned restore requests wait until active incidents close.
+The SOC hunt replies appear in Follow-ups. Blocked programmes are material to
+the board; agenda items distinguish required topics from optional updates.
+Reviewing emerging risks preserves a board-paper draft until you return.
+Recruitment shows incoming roles and approximate dates; programme cards explain
+partial funding and reserve 100% for completed work. Related delivery notices
+share a Briefing row while every original message remains reachable. Enquiry
+readers link to Evidence and converted hypotheses link to their risk scenario.
+
+The dependency lock now uses patched Zod 4.6.7 and Undici 8.12.3; the security
+audit remains a release requirement.
+
+Repository cleanup removed the unused `scripts/smoke.ts` prototype; use
+`pnpm test` and `pnpm soak` for maintained simulation checks. Historical
+playtest evidence, regression coverage, guide images and licences are retained.
+
 Run `pnpm --silent audit:balance 30` for paired strategy and difficulty probes.
 The [balance review](docs/BALANCE_REVIEW.md) records the policies, before/after
 results and remaining human validation. The £350k reserve is a probe policy;

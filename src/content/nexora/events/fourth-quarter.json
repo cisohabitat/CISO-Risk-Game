@@ -5,7 +5,7 @@
       "type": "programme",
       "title": "Identity uplift: make it mandatory?",
       "from": "Callum Reid, Head of Security Engineering",
-      "body": "The identity uplift is done, or as near as makes no difference, and the question nobody has answered is whether it is mandatory. I can switch enforcement on now, peak or no peak, which means locking out anyone who has not enrolled, or we carry the second factor as optional, with the exception list growing, into the new year. Helen's people want it after peak. I would rather you decided than the calendar.",
+      "body": "The core identity controls are built, though the programme may still have work to finish. The question nobody has answered is whether enrolment is mandatory. I can switch enforcement on now, peak or no peak, which means locking out anyone who has not enrolled, or we carry the second factor as optional, with the exception list growing, into the new year. Helen's people want it after peak. I would rather you decided than the calendar.",
       "priority": "urgent",
       "availableFromDay": 210,
       "conditions": [
@@ -37,6 +37,7 @@
       "priority": "urgent",
       "availableFromDay": 210,
       "conditions": [
+        { "kind": "incident.none" },
         {
           "kind": "programme.progressAtLeast",
           "programmeId": "prog-ransomware",

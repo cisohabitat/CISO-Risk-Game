@@ -283,6 +283,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           effects: delayed.effects.map(pin),
           note: delayed.note,
           source: `decision:${def.id}`,
+          returnGroup: `${state.year ?? 1}:decision:${def.id}`,
         })
       }
 

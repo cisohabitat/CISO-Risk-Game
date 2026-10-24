@@ -291,7 +291,7 @@ export function applyEffect(
       break
     }
     case 'event.schedule': {
-      state.events.scheduled.push({ eventId: effect.eventId, day: state.currentDay + effect.dayOffset })
+      state.events.scheduled.push({ eventId: effect.eventId, day: state.currentDay + effect.dayOffset, returnGroup: context.source.startsWith('decision:') || context.source.startsWith('decision-default:') ? `${state.year ?? 1}:${context.source.replace('decision-default:', 'decision:')}` : undefined })
       break
     }
     case 'event.suppress': {

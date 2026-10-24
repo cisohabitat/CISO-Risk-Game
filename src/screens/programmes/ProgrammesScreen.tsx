@@ -235,6 +235,9 @@ export function ProgrammesScreen() {
                       }
                       tone={programme.budgetCost > state.resources.budgetRemaining ? 'high' : 'neutral'}
                     />
+                    <p className="text-sm text-ink-muted">Minimum to start: {money(minimumProgrammeFunding(programme.budgetCost))}. Full funding: {money(programme.budgetCost)}.
+                      {programme.budgetCost > state.resources.budgetRemaining && minimumProgrammeFunding(programme.budgetCost) <= state.resources.budgetRemaining && <> You can start with {money(state.resources.budgetRemaining)}; partial funding slows delivery.</>}
+                    </p>
                     <dl className="grid grid-cols-2 gap-3">
                       <Fact label="Runs for" value={`about ${Math.round(programme.durationDays / 30)} months`} />
                       <Fact label="Improves" value={programme.controlImpact.join(', ')} />

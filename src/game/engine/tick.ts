@@ -119,6 +119,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
         pushMessage(state, {
           from: 'Nexora Group',
           subject: `Followed up: ${decisionDef.title}`,
+          returnGroup: entry.returnGroup,
           body: entry.note,
           type: 'executive',
           priority: 'notable',
@@ -165,6 +166,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     pushMessage(state, {
       from: programme?.name ?? 'Programme office',
       subject: `Milestone: ${milestone.name}`,
+      returnGroup: `programme:${milestone.programmeId}`,
       body: `${programme?.name ?? 'The programme'} reached ${milestone.name}. Review the delivery path in Programmes; further milestones may still be outstanding.`,
       type: 'programme', priority: 'notable',
     })
@@ -186,6 +188,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     pushMessage(state, {
       from: programme.name,
       subject: `Delivered: ${programme.name}`,
+      returnGroup: `programme:${programmeId}`,
       body: list
         ? `${programme.name} is delivered. It strengthened ${list}. Controls drift when nothing maintains them, and an assessment is still the only way to know how well they now work.`
         : `${programme.name} is delivered. An assessment is still the only way to know how well what it built now works.`,
@@ -387,6 +390,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       decisionId: decisionRuntimeId,
       relatedNodeIds: fired.def.relatedNodeIds,
       eventId: fired.def.id,
+      returnGroup: fired.returnGroup,
       pinned: fired.def.priority === 'critical',
     })
     if (fired.def.priority === 'urgent' || fired.def.priority === 'critical') {
@@ -539,6 +543,7 @@ function resolveByDefault(
       effects: delayed.effects,
       note: delayed.note,
       source: `decision:${def.id}`,
+      returnGroup: `${state.year ?? 1}:decision:${def.id}`,
     })
   }
   state.history.decisionsLog.push({

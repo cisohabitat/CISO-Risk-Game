@@ -56,6 +56,8 @@ export interface UiState {
   decisionReceipt?: DecisionReceipt
   quarterTransition?: QuarterTransition
   screen: Screen
+  riskTab?: string
+  boardDraft?: { quarter: number; topics: string[]; recommendations: string[]; uncertainty: boolean }
   selectedNodeId?: string
   selectedScenarioId?: string
   selectedMessageId?: string
@@ -249,7 +251,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameId: `game-${seed}-${Date.now().toString(36)}`,
       createdAtIso: new Date().toISOString(),
     })
-    set({ state, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home', selectedMessageId: undefined } })
     try {
       await saveSafely(state, index)
       await get().refreshSaves()
@@ -284,7 +286,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const backup = gameId ? await readBackup(gameId).catch(() => undefined) : undefined
       if (backup && (await brokenRules(backup, index)).length === 0) {
         reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
-        set({ state: backup, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
+        set({ state: backup, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home' } })
         get().pushToast(
           `That save was damaged, so the campaign opened from the one before it, on ${formatGameDate(backup.currentDay).label}.`,
           'warning',
@@ -295,7 +297,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return false
     }
     if (!state) return false
-    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
+    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home' } })
     return true
   },
 
@@ -315,7 +317,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       get().pushToast('That save failed validation. Your current campaign and saved progress were kept.', 'warning')
       return false
     }
-    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home' } })
+    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home' } })
     void saveSafely(state, index, { savedByPlayer: true }, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     return true
   },
@@ -394,7 +396,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   setScreen(screen) {
-    set((store) => ({ ui: { ...store.ui, screen } }))
+    set((store) => ({ ui: { ...store.ui, screen, ...(screen !== 'risk' ? { riskTab: undefined } : {}) } }))
   },
 
   setUi(patch) {
@@ -424,7 +426,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state || state.reviews.annual) return
     const index = contentOf(get().index)
     const next = produce(state, (draft) => finishYear(draft, index))
-    set({ state: next, ui: { ...get().ui, screen: 'debrief' } })
+    set({ state: next, ui: { ...get().ui, boardDraft: undefined, riskTab: undefined, screen: 'debrief' } })
     void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
   },
 
@@ -444,7 +446,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (state !== source) return
     const content = contentOf(index)
     const next = beginNextYear(content, state)
-    set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
     try {
       await saveSafely(next, content, {}, (message) => get().pushToast(message, 'warning'))
       await get().refreshSaves()
@@ -464,7 +466,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         // Already saved when the year closed; leaving is still allowed.
       }
     }
-    set({ state: null, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
+    set({ state: null, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
     await get().refreshSaves()
   },
 }))

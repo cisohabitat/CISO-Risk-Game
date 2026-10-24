@@ -13,6 +13,8 @@ export interface MessageDraft {
   decisionId?: string
   relatedNodeIds?: string[]
   eventId?: string
+  /** Explicit return grouping; absent in older saves. Never inferred from prose. */
+  returnGroup?: string
   signalCampaignId?: string
   incidentId?: string
   pinned?: boolean
@@ -34,6 +36,7 @@ export function pushMessage(state: GameState, draft: MessageDraft): InboxMessage
     relatedNodeIds: draft.relatedNodeIds ?? [],
     eventId: draft.eventId,
     signalCampaignId: draft.signalCampaignId,
+    returnGroup: draft.returnGroup,
     incidentId: draft.incidentId,
   }
   state.inbox.messages.unshift(message)

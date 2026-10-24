@@ -97,7 +97,7 @@ export function meetingAccount(
         : ' Nothing on your register reaches it yet: because it is safe, or because nobody has looked?'
       return {
         message: `${name} talks you through the plan to ${agenda.goal}, ${when}.${rests}${reach}`,
-        memory: `You asked about the plan to ${agenda.goal} and heard them out.`,
+        memory: `You asked about the plan to ${agenda.goal}, ${when}.${rests}${reach}`,
       }
     }
     const concern = person?.concerns.at(-1)

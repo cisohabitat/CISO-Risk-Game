@@ -306,6 +306,8 @@ export interface InboxMessage {
   relatedNodeIds: string[]
   eventId?: string
   /** Provenance for a visible SOC signal; never displayed as hidden campaign truth. */
+  /** Explicit return grouping; absent in older saves. Never inferred from prose. */
+  returnGroup?: string
   signalCampaignId?: string
   /** Exact provenance for a visible response-phase update. */
   incidentId?: string
@@ -329,6 +331,7 @@ export interface EventState {
     carriedFlags?: Record<string, number | string | boolean>
     /** Original year for historical governance checks on a carried reply. */
     sourceYear?: number
+    returnGroup?: string
   }[]
   lastFiredDayByTag: Record<string, number>
   dailyFiredCount: number
@@ -554,6 +557,7 @@ export interface PendingEffect {
   effects: GameEffect[]
   note?: string
   source: string
+  returnGroup?: string
 }
 
 /**
