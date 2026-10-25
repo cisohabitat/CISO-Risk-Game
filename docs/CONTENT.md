@@ -36,6 +36,13 @@ src/content/nexora/
 - **Never expose hidden consequences.** `visibleKnownEffects` is what a CISO
   could reasonably foresee — "the delivery team expects a two-week impact", not
   "+20 security, −10 productivity". A test checks for the latter shape.
+- **Every option buys something and costs something.** Name what the option
+  gains as plainly as what it loses, and leave the verdict to the player:
+  "No acquirer scrutiny, and no conversation for finance" beside "The next
+  assessment will find it", not "No immediate scrutiny" beside a warning.
+  Lines such as "Changes little" or "It is never only a few more weeks" tell
+  the player which answer is wanted. Keep each line true to the option's
+  effects; where an option really is weaker, say what it is weaker at.
 
 ## Writing an event
 

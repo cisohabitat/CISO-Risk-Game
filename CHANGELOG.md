@@ -20,6 +20,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Rewrite the known effects on thirteen decision options so each names what
+  it buys as well as what it costs. Options such as fixing card data quietly,
+  waiting for the scheduled board meeting or asking a stretched team to push
+  through no longer give away the expected answer; no effect changed.
+
 - Add optional voice for Fenella’s early team introduction, retaining her
   established voice and every earlier recording.
 

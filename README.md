@@ -478,8 +478,8 @@ schemas and a referential integrity pass:
 | Evidence items (including deliberate noise) | 48 |
 | Hypothesis templates / risk scenarios | 14 / 14 |
 | Lines of enquiry | 18 |
-| Decisions / decision options | 26 / 80 |
-| Events | 123 |
+| Decisions / decision options | 49 / 149 |
+| Events | 222 |
 
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.
