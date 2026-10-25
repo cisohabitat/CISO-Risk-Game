@@ -3870,3 +3870,27 @@ ready only after all requests settle. Fixtures await those public readiness
 markers before installing a save. Three ordering-focused unit cases and 18
 WebKit save/voice cases over two repeats passed afterwards. This was a fixture
 startup race, not an audio decoding defect; assertions/timeouts stayed intact.
+
+## 25 October 2026 — review pass
+
+**Decision options that gave away the expected answer.** Thirteen options'
+known effects judged rather than described ("Changes little", "Nothing
+happens now", "It is never only a few more weeks"). Read in a seed-7 CISO
+transcript. Each now names what the option buys beside what it costs, checked
+against its effects; no effect changed. The honest post-incident account still
+outscores the standard report in the simulation (board confidence +0.08
+against +0.01), which wording cannot hide; changing that is an effects change
+and is left to the owner.
+
+**An incident panel with nothing to act on.** On escalation day the response
+decisions open the next day, and after they are answered the panel offered
+only "Read the latest incident message". It now says that nothing waits on
+the player yet, and why (`tests/ui/incident-idle.test.tsx`).
+
+**Checked and left alone: the notifications over the incident.** The
+screenshot of 19 April shows two "Update received" notifications stacked over
+the page. They are Skip ahead's account of why it stopped, they dismiss
+themselves after 5.2 seconds, pass clicks through to the page and show one at
+a time on a phone. The crowding was the gallery capturing them in that
+window, not something a player sits with. Suppressing them during an incident
+would leave Skip ahead stopping without a reason.
