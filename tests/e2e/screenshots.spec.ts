@@ -63,7 +63,9 @@ test.describe('screenshots', () => {
         sawIncident = true
         // The gallery captures the viewport, and a year of play leaves the page
         // scrolled: without this the shot of the incident missed the incident.
-        await page.evaluate(() => document.getElementById('main')?.scrollTo({ top: 0 }))
+        // On a phone the page scrolls rather than #main, and the shot landed
+        // below the panel.
+        await page.evaluate(() => { document.getElementById('main')?.scrollTo({ top: 0 }); window.scrollTo({ top: 0 }) })
         await page.waitForTimeout(300)
         await shot('13-incident-command')
         break

@@ -20,6 +20,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The live incident panel now says when nothing waits on you, and why: on the
+  day an incident escalates its first decisions arrive when the clock next
+  moves, and after you answer them the response runs on what you decided.
+  The red bar no longer reads as an alarm with no next step.
+
 - Rewrite the known effects on thirteen decision options so each names what
   it buys as well as what it costs. Options such as fixing card data quietly,
   waiting for the scheduled board meeting or asking a stretched team to push

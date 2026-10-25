@@ -187,6 +187,8 @@ changes.
 - Decision option effect lines name what each option buys as well as what it
   costs, true to its effects and without a verdict (`docs/CONTENT.md`,
   "Every option buys something and costs something").
+- The live incident panel always says what waits on the player: the open
+  response decisions, or that nothing does yet and why (`IncidentCommand`).
 - Keep `AGENTS.md` and `README.md` updated in every change set. Record changes
   to contributor workflows here and changes to behaviour, setup, commands,
   limitations and deployment in the README.

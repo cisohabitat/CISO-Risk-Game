@@ -435,7 +435,10 @@ Note what the bar shows — *containment*, *recovery*, *affected services* — a
 what it does not: the attack path. You only ever see what your own people have
 actually told you.
 
-If no response decision is open, the empty decision panel still acknowledges
+If no response decision is open, the bar says so: *Nothing waits on you yet*,
+and why. On the day an incident is escalated to you, its first decisions
+arrive when the clock next moves; once you have answered them, the response
+runs on what you decided. The empty decision panel still acknowledges
 the incident. Its action returns focus to the response journal. Once a debrief
 is available, the Briefing links to a recap in Your year; it does not force a
 new clock pause.

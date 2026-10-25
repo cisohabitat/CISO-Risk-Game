@@ -16,6 +16,15 @@ import { incidentCommand } from '@/store/selectors'
 import { plural, shortDate } from '@/lib/formatting/labels'
 import { IncidentIllustration } from './IncidentIllustration'
 
+function idleLine(phase: string, decided: boolean): string {
+  if (phase === 'signal') return 'It is not confirmed, and there is nothing to decide until it is.'
+  // Escalation lasts a day; the response decisions open on the next.
+  if (phase === 'escalation') return 'The response team is framing the first decisions, and they reach you when the clock next moves.'
+  return decided
+    ? 'The response runs on what you decided. The journal below records each change.'
+    : 'The response team is running it without your direction. The journal below records each change.'
+}
+
 export function IncidentCommand() {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
@@ -94,6 +103,16 @@ export function IncidentCommand() {
             </span>
           )}
         </div>
+
+        {/* On the day an incident escalates, and after its decisions are
+            answered, the panel was an alarm with nothing to act on, and a
+            first-time player could not tell whether they had missed something. */}
+        {incident.awaiting.length === 0 && (
+          <p className="incident-actions rounded-lg border border-line bg-surface p-3 text-sm text-pretty">
+            <span className="font-medium">Nothing waits on you yet.</span>{' '}
+            {idleLine(incident.phase, incident.taken.length > 0)}
+          </p>
+        )}
 
         {incident.awaiting.length > 0 && (
           <div className="incident-actions rounded-lg border border-band-severe/50 bg-surface p-3">

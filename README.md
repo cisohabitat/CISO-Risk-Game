@@ -102,7 +102,8 @@ influence people you do not control, build capability over months, and live with
 delayed consequences.
 
 Secondary screens keep a compact incident summary and any response decisions
-visible, with the factual response journal expandable. Briefing opens the full
+visible (when none is open, the panel says that nothing waits on the player
+yet, and why), with the factual response journal expandable. Briefing opens the full
 journal. Sidebar utilities live under Help and settings so navigation has more
 space. Team shows capacity and wellbeing separately; executive relationship
 actions appear before expandable profile/history. Inbox uses tighter phone
