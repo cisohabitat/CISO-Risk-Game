@@ -104,13 +104,21 @@ describe('deployment configuration', () => {
 describe('CI supply-chain boundaries', () => {
   it('uses read-only tokens, ephemeral checkout credentials and pinned actions', () => {
     const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8')
+    // The shared setup steps live in a local composite action; its third-party
+    // actions are held to the same pinning as the workflow's own.
+    const setup = readFileSync(new URL('../../.github/actions/setup/action.yml', import.meta.url), 'utf8')
     expect(workflow).toContain('permissions:\n  contents: read\n')
-    const actions = [...workflow.matchAll(/uses: ([\w/-]+)@([^\s]+)/g)]
+    const actions = [...`${workflow}\n${setup}`.matchAll(/uses: ([\w/-]+)@([^\s]+)/g)]
     expect(actions.length).toBeGreaterThanOrEqual(4)
+    // Local actions are the only unpinned references allowed.
+    for (const local of workflow.matchAll(/uses: (\S+)/g)) {
+      if (!local[1]!.includes('@')) expect(local[1]).toMatch(/^\.\/\.github\/actions\//)
+    }
     for (const action of actions) expect(action[2], action[1]).toMatch(/^[a-f0-9]{40}$/)
     const checkouts = workflow.match(/uses: actions\/checkout@/g) ?? []
     expect(workflow.match(/persist-credentials: false/g)).toHaveLength(checkouts.length)
     expect(workflow).not.toContain('pull_request_target')
+    expect(setup).not.toContain('actions/checkout')
     expect(workflow).toContain('pnpm audit:security')
   })
 })

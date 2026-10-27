@@ -422,7 +422,11 @@ If checks cannot run or fail, deployment stays pending.
 
 Vercel runs `pnpm check` as its build command, blocking the hosted build on
 typecheck, lint, content, unit test, build or size failures. Browser tests run
-separately in CI: confirm both CI jobs pass before deploying or promoting.
+separately in CI, split across four shards and reported together as **End-to-end
+and responsive**: confirm that check and **Typecheck, lint, content and unit
+tests** both pass before deploying or promoting. On `main` a newer push no
+longer cancels an older run, so every revision gets its own result; feature
+branches still cancel superseded runs.
 After deployment, run `BASE_URL=<deployment-url> pnpm test:e2e:live` and complete
 the release gate in [`docs/HOSTING.md`](docs/HOSTING.md).
 

@@ -189,6 +189,12 @@ changes.
   "Every option buys something and costs something").
 - The live incident panel always says what waits on the player: the open
   response decisions, or that nothing does yet and why (`IncidentCommand`).
+- CI setup shared by jobs lives in `.github/actions/setup` (pnpm, Node,
+  locked install); checkout stays in each job with `persist-credentials: false`.
+  Every third-party action, there or in `ci.yml`, is pinned to a full commit SHA
+  (`tests/content/deployment.test.ts`). The browser suite runs as four
+  `--shard` jobs behind the single **End-to-end and responsive** check; change
+  the shard count in the matrix and the `--shard` denominator together.
 - Keep `AGENTS.md` and `README.md` updated in every change set. Record changes
   to contributor workflows here and changes to behaviour, setup, commands,
   limitations and deployment in the README.
