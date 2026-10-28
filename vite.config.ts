@@ -24,9 +24,12 @@ export default defineConfig({
         // own chunk (plan §48), and it is loaded on demand: the start screen
         // needs none of it but the starting situations, which have a small
         // chunk of their own so that the campaign's group does not take them.
+        // Year Two's events and decisions are a chunk of their own too, fetched
+        // only when a second year begins or a second-year save opens.
         codeSplitting: {
           groups: [
             { name: 'situations', test: /src[\\/]content[\\/]nexora[\\/]situations\.json/, priority: 30 },
+            { name: 'year-two', test: /src[\\/]content[\\/]nexora[\\/](year-two\.ts|decisions-year-two\.json|events[\\/]year-two\.json)/, priority: 25 },
             { name: 'campaign', test: /src[\\/]content[\\/]nexora[\\/]/, priority: 20 },
             { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/, priority: 10 },
           ],

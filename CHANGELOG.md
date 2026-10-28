@@ -20,6 +20,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- A decision's receipt now names the reactions it caused straight away: an
+  executive's remembered response, board confidence and a team's morale, in
+  words. It used to say only that the choice was recorded.
+- Year Two's events and decisions download when a second year begins, not
+  with the first. The campaign a first year waits for is about 7 kB smaller.
+
 - The live incident panel now says when nothing waits on you, and why: on the
   day an incident escalates its first decisions arrive when the clock next
   moves, and after you answer them the response runs on what you decided.

@@ -17,12 +17,18 @@ src/content/nexora/
 ├─ risks.json           risk scenarios, hypothesis templates, assumptions, rationale tags
 ├─ investigations.json  lines of enquiry, glossary
 ├─ decisions.json       decisions and their options
+├─ decisions-year-two.json  decisions only a second year offers
 └─ events/              the conditional event pool, split by theme
                         (year-two.json: what only a later year says)
 ```
 
-`src/content/nexora/index.ts` assembles the bundle;
-`src/lib/content/loader.ts` validates it (in development) and indexes it.
+`src/content/nexora/assemble.ts` assembles the bundle, with or without Year
+Two (`year-two.ts`), and `index.ts` is both years for harnesses and tests.
+`src/lib/content/loader.ts` validates it (in development) and indexes it. The
+app downloads Year Two separately, when a second year begins or a second-year
+save opens, so anything only a later year says goes in the two Year Two files;
+`tests/content/year-two-split.test.ts` checks a first year stands on its own
+and that the two put back together are the campaign in its authored order.
 
 ## The rules that make content safe
 

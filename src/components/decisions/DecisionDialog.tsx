@@ -12,6 +12,7 @@ import { Terms } from '@/components/game/Terms'
 import { openDecisions, type OpenDecisionView } from '@/store/selectors'
 import { cn } from '@/lib/utils/cn'
 import { money } from '@/lib/formatting/labels'
+import { decisionReactions } from '@/store/decision-reactions'
 
 export function DecisionDialog({ decisionId, onClose }: { decisionId: string; onClose: () => void }) {
   const state = useGameStore((store) => store.state)
@@ -61,6 +62,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         unfundedChange: after.resources.unfundedCommitment - state.resources.unfundedCommitment,
         evidenceIds: after.evidence.order.filter((id) => !state.evidence.items[id]),
         messageIds: after.inbox.messages.filter((message) => !state.inbox.messages.some((before) => before.id === message.id)).map((message) => message.id),
+        reactions: decisionReactions(state, after, index),
       } })
       onClose()
     }

@@ -3,6 +3,7 @@
  * (plan §32.4). It owns UI state and persistence; every change to the canonical
  * game state goes through the orchestrator.
  */
+import type { DecisionReaction } from './decision-reactions'
 import { create } from 'zustand'
 import { produce } from 'immer'
 import { DAYS_PER_QUARTER } from '@/game/types'
@@ -43,6 +44,8 @@ export interface DecisionReceipt {
   unfundedChange: number
   messageIds: string[]
   evidenceIds: string[]
+  /** Reactions the player can already see elsewhere (`decision-reactions.ts`). */
+  reactions?: DecisionReaction[]
 }
 
 export interface QuarterTransition {
@@ -85,7 +88,8 @@ interface GameStore {
   busy: boolean
 
   /** Loads the campaign content if it is not loaded yet. Safe to call early and often. */
-  ensureCampaign: () => Promise<ContentIndex>
+  /** Loads the campaign; `yearTwo` adds what only a second year says. */
+  ensureCampaign: (options?: { yearTwo?: boolean }) => Promise<ContentIndex>
   startNewGame: (seed: string, difficulty: Difficulty, situation?: string) => Promise<void>
   loadGame: (key: SaveKey) => Promise<boolean>
   /** Opens an imported campaign only after validation; preserves play on rejection. */
@@ -111,6 +115,21 @@ interface GameStore {
 
 let toastId = 0
 let loadingCampaign: Promise<ContentIndex> | undefined
+let loadingBothYears: Promise<ContentIndex> | undefined
+
+/**
+ * Whether an index carries Year Two's content, which loads on its own when a
+ * second year needs it (`src/lib/content/loader.ts`). Read from a decision only
+ * a second year has, so the store need not import the loader to ask.
+ */
+function hasYearTwo(index: ContentIndex): boolean {
+  return index.decision.has('dec-y2-focus')
+}
+
+/** A second-year save cannot be checked, or played, without Year Two. */
+function needsYearTwo(state: GameState): boolean {
+  return (state.year ?? 1) > 1
+}
 const CAMPAIGN_UNAVAILABLE = 'The campaign could not be loaded. Check the connection and try again.'
 
 /** The content of the running campaign; there is no campaign without it. */
@@ -224,18 +243,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
     savesReady: false,
   },
 
-  async ensureCampaign() {
+  async ensureCampaign({ yearTwo = false } = {}) {
     const loaded = get().index
-    if (loaded) return loaded
-    const attempt = (loadingCampaign ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign()))
+    if (loaded && (!yearTwo || hasYearTwo(loaded))) return loaded
+    const attempt = yearTwo
+      ? (loadingBothYears ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign({ yearTwo: true })))
+      : (loadingCampaign ??= import('@/lib/content/loader').then((loader) => loader.loadCampaign()))
     try {
       const index = await attempt
-      set({ index })
-      return index
+      // A first-year load that finishes after the full one must not replace it.
+      const current = get().index
+      if (!current || !hasYearTwo(current)) set({ index })
+      return get().index ?? index
     } catch (error) {
       // A failed fetch (offline, a deploy mid-session) must not stick, but
       // only this attempt is forgotten: a newer one may already be under way.
       if (loadingCampaign === attempt) loadingCampaign = undefined
+      if (loadingBothYears === attempt) loadingBothYears = undefined
       // In development this is where an authoring mistake arrives.
       console.error(error)
       throw error
@@ -278,6 +302,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
     let failure: unknown
     try {
       state = await readSave(key)
+      if (state && needsYearTwo(state)) {
+        // A failed download is not a damaged save: say so, and keep the backup.
+        try {
+          index = await get().ensureCampaign({ yearTwo: true })
+        } catch {
+          get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+          return false
+        }
+      }
       if (state && (await brokenRules(state, index)).length > 0) {
         failure = new Error('The save failed its own checks.')
         state = undefined
@@ -290,6 +323,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state && failure) {
       const gameId = gameIdOfKey(key)
       const backup = gameId ? await readBackup(gameId).catch(() => undefined) : undefined
+      if (backup && needsYearTwo(backup)) {
+        try {
+          index = await get().ensureCampaign({ yearTwo: true })
+        } catch {
+          get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
+          return false
+        }
+      }
       if (backup && (await brokenRules(backup, index)).length === 0) {
         reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
         set({ state: backup, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home' } })
@@ -310,7 +351,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   async loadImported(state) {
     let index: ContentIndex
     try {
-      index = await get().ensureCampaign()
+      index = await get().ensureCampaign({ yearTwo: needsYearTwo(state) })
     } catch {
       get().pushToast(CAMPAIGN_UNAVAILABLE, 'warning')
       return false
@@ -446,17 +487,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const source = get().state
     if (!source?.finished || !source.reviews.annual) return
     let beginNextYear: typeof buildFollowingYear
+    let content: ContentIndex
     try {
-      const module = await import('@/game/engine/next-year')
+      const [module, full] = await Promise.all([import('@/game/engine/next-year'), get().ensureCampaign({ yearTwo: true })])
       beginNextYear = module.beginNextYear
+      content = full
     } catch {
       if (get().state === source) get().pushToast('The next year could not load. Export this campaign before reloading to try again.', 'warning')
       return
     }
-    const { state, index } = get()
+    const { state } = get()
     // A second click or a different loaded campaign must not start another year.
     if (state !== source) return
-    const content = contentOf(index)
     const next = beginNextYear(content, state)
     set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, screen: 'home', selectedMessageId: undefined, openDecisionId: undefined } })
     try {

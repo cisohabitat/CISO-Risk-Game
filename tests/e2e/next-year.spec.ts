@@ -43,4 +43,20 @@ test('a finished year leads to a second year that remembers it', async ({ page }
   const rows = page.getByRole('button', { name: SAVE_ROW })
   await expect(rows).toHaveCount(2)
   await expect(rows.filter({ hasText: 'second year' })).toHaveCount(1)
+
+  // A fresh page has only the first year's content: opening the second-year
+  // save fetches Year Two before the save is checked or played.
+  const yearTwo = page.waitForResponse((response) => /\/year-two-[\w-]+\.js$/.test(response.url()))
+  await rows.filter({ hasText: 'second year' }).click()
+  expect((await yearTwo).status()).toBeLessThan(400)
+  await expect(header).toContainText('Second year')
+})
+
+test('a Year Two download failure leaves the finished campaign available to export', async ({ page }) => {
+  await page.route('**/year-two-*.js', (route) => route.abort())
+  await openPreparedCampaign(page, prepareCampaign('year-two-load-failure', 'year-end'))
+  await expect(page.getByRole('heading', { name: 'How the year is read' })).toBeVisible()
+  await page.getByRole('button', { name: 'Begin your second year' }).click()
+  await expect(page.getByText('The next year could not load. Export this campaign before reloading to try again.', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('year-over')).toBeVisible()
 })

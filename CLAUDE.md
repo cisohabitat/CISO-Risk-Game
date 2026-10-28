@@ -218,9 +218,9 @@ been fixed and moved to `docs/FINDINGS.md`.
   one decorative scene: 119.2 KiB desktop or 75.7 KiB phone, with complete
   rendering budgets of 350/320 KiB enforced by `pnpm size`. Including the
   background campaign prefetch, visit budgets are 450/410 KiB.
-  The campaign chunk has its own budget, 92 kB,
-  and after Year Two, the threat variety and the exploit scenario it is 91.2 kB: the next sizeable
-  piece of content needs the budget raised deliberately or the chunk split.
+  The campaign chunk has its own budget, 92 kB. It reached 91.2 kB; on
+  28 October Year Two's events and decisions became a download of their own
+  (8.3 kB, fetched when a second year begins), and the campaign is 84.6 kB.
   It is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
   to 7.7 s). The cost is one round trip for somebody who presses Begin

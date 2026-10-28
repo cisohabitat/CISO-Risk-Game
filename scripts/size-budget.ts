@@ -37,7 +37,10 @@ const BUDGETS: Budget[] = [
   // room for roughly sixty more short letters before this is looked at again.
   // The owner-approved AI-accelerated exploit and five replies take the campaign
   // from 89.3 to 90.8 KiB. First-screen and complete-visit limits stay unchanged.
+  // Year Two's events and decisions left it on 28 October (about 9 kB of
+  // gzip); the limit stays at 92 so that space is room for new content.
   { name: 'campaign-', limit: 92, why: 'the authored campaign, loaded when a campaign opens' },
+  { name: 'year-two-', limit: 14, why: "what only a second year says, loaded when one begins" },
   { name: 'react-', limit: 75, why: 'the framework' },
   { name: 'OrgGraph-', limit: 70, why: 'the graph library, which must stay out of the first load' },
 ]
@@ -50,7 +53,7 @@ const BUDGETS: Budget[] = [
  * The campaign and its loader (with the schema library) are split because the
  * start screen needs neither, and they were most of what it waited for.
  */
-const MUST_STAY_LAZY = ['migrations-', 'save-safety-', 'InboxScreen-', 'OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 'campaign-', 'loader-', 'next-year-', 'CharacterVoicePlayer-']
+const MUST_STAY_LAZY = ['migrations-', 'save-safety-', 'InboxScreen-', 'OrgGraph-', 'CampaignFeedbackView-', 'DebriefScreen-', 'campaign-', 'loader-', 'next-year-', 'CharacterVoicePlayer-', 'year-two-']
 
 /**
  * Everything the entry HTML fetches before the first screen can be

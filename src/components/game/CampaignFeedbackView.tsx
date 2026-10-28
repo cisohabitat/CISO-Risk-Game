@@ -42,6 +42,12 @@ export function CampaignFeedbackView({ kind }: { kind: 'decision' | 'quarter' })
           {receipt.unfundedChange !== 0 && <li>Unfunded commitment {receipt.unfundedChange > 0 ? '+' : '−'}{money(Math.abs(receipt.unfundedChange))}</li>}
           <li>Choice recorded in your decision log.</li>
         </ul>
+        {receipt.reactions && receipt.reactions.length > 0 && <ul className="mt-3 space-y-1.5 text-sm" aria-label="Reactions">
+          {receipt.reactions.map((reaction) => <li key={reaction.text} className="flex gap-2 text-pretty">
+            <span aria-hidden className={reaction.tone === 'positive' ? 'text-positive' : reaction.tone === 'negative' ? 'text-band-severe' : 'text-ink-faint'}>{reaction.tone === 'positive' ? '▲' : reaction.tone === 'negative' ? '▼' : '•'}</span>
+            <span>{reaction.text}</span>
+          </li>)}
+        </ul>}
         {evidence.length > 0 && <div className="mt-3"><Disclosure summary={`${plural(evidence.length, 'evidence record')} added`}>
           <ul className="list-inside list-disc space-y-1">{evidence.map((item) => <li key={item.id}>{item.title}</li>)}</ul>
           <p className="mt-2 text-xs">Read the evidence in the Risk workspace.</p>
@@ -49,7 +55,7 @@ export function CampaignFeedbackView({ kind }: { kind: 'decision' | 'quarter' })
         {messages.length > 0 && <div className="mt-3"><Disclosure summary={plural(messages.length, 'new message')}>
           <ul className="space-y-2">{messages.map((message) => <li key={message.id}><button type="button" className="text-left underline decoration-line-strong underline-offset-4 hover:text-accent-ink" onClick={() => { setUi({ selectedMessageId: message.id }); setScreen('inbox') }}>{message.subject}</button></li>)}</ul>
         </Disclosure></div>}
-        <p className="mt-3 text-xs leading-relaxed text-ink-faint">Later effects will appear as the organisation responds. This confirms the recorded choice and immediate resource changes.</p>
+        <p className="mt-3 text-xs leading-relaxed text-ink-faint">This is what changed straight away. Later effects will appear as the organisation responds.</p>
       </div>
     </section>
   }

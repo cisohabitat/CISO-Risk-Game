@@ -110,7 +110,8 @@ actions appear before expandable profile/history. Inbox uses tighter phone
 spacing and shorter search guidance while retaining all filters and older mail.
 
 During incidents, Inbox, Risk and Organisation retain usable independent
-scroll panes even when response journals, decision receipts and guidance fill
+scroll panes even when response journals, decision receipts (which name the
+reactions a choice caused straight away, in words) and guidance fill
 the top of the screen. The page scrolls to make room rather than collapsing
 the readers. Response journals and their message links use recorded incident
 identity, so an earlier incident's review cannot announce a newer response as
@@ -422,7 +423,8 @@ If checks cannot run or fail, deployment stays pending.
 
 Vercel runs `pnpm check` as its build command, blocking the hosted build on
 typecheck, lint, content, unit test, build or size failures. Browser tests run
-separately in CI, split across four shards and reported together as **End-to-end
+separately in CI, split across five runners (desktop WebKit in two, the
+Chromium projects in three) and reported together as **End-to-end
 and responsive**: confirm that check and **Typecheck, lint, content and unit
 tests** both pass before deploying or promoting. On `main` a newer push no
 longer cancels an older run, so every revision gets its own result; feature
@@ -508,6 +510,10 @@ they cost — without ever guaranteeing a clean year. Both properties are assert
 in `tests/engine/soak.test.ts`.
 
 ## Replayability
+
+What only a second year says (its events and decisions) is a download of its
+own, fetched when a second year begins or a second-year save opens; a first
+year plays identically with or without it.
 
 Every campaign has a visible seed. The seed fixes which awkward dependencies
 exist in this Nexora (a managed service provider with standing domain admin, a
