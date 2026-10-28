@@ -69,6 +69,9 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
     defensive: ['prog-identity', 'prog-ransomware', 'prog-detection', 'prog-segmentation', 'prog-thirdparty', 'prog-cloud'],
     business: ['prog-cloud'],
     balanced: ['prog-identity', 'prog-ransomware'],
+    // Several programmes tie at full relevance and the sort keeps content
+    // order, so in practice this is identity alone: one programme, against
+    // minor's least relevant one at the same build.
     relevant: ranked.length > 0 ? [ranked[0]!.id] : [],
     minor: ranked.length > 0 ? [ranked.at(-1)!.id] : [],
   }
@@ -99,9 +102,13 @@ function play(index: ContentIndex, seed: string, policy: Policy, difficulty: Dif
     // Start programmes when affordable, one at a time: the next once the last
     // is past halfway. Starting all six on consecutive twenty-day marks
     // overloaded the team and finished 1.7 of them.
+    // Balanced runs its two side by side. Waiting for identity to pass halfway
+    // left about £435k by day 120, short of ransomware's £700k, so balanced
+    // never started its second programme and read exactly as relevant did.
     const wanted = programmesByPolicy[policy]
     const live = Object.values(state.programmes.programmes).filter((p) => p.status === 'active' || p.status === 'at-risk')
-    if (started < wanted.length && day % 20 === 0 && live.every((p) => p.progress > 0.5)) {
+    const concurrent = policy === 'balanced' ? 2 : 1
+    if (started < wanted.length && day % 20 === 0 && live.filter((p) => p.progress <= 0.5).length < concurrent) {
       const programmeId = wanted[started]
       if (programmeId) {
         const def = index.programme.get(programmeId)
