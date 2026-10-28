@@ -130,7 +130,7 @@ Before deployment or promotion, `pnpm check` and the full `pnpm test:e2e`
 suite must pass for the exact revision being released. Run them sequentially:
 both rebuild `dist/`. A failed or unavailable check leaves deployment pending.
 Vercel runs `pnpm check` during its build, so failing checks block that build.
-Browser tests run separately in CI, in four shards summarised by the
+Browser tests run separately in CI, on five runners summarised by the
 **End-to-end and responsive** check; confirm it and **Typecheck, lint, content
 and unit tests** pass before deployment or promotion. Runs on `main` are never
 cancelled by a later push, so the revision being deployed has its own result. The local Chromium-only suite is useful during development but

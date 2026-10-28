@@ -192,9 +192,18 @@ changes.
 - CI setup shared by jobs lives in `.github/actions/setup` (pnpm, Node,
   locked install); checkout stays in each job with `persist-credentials: false`.
   Every third-party action, there or in `ci.yml`, is pinned to a full commit SHA
-  (`tests/content/deployment.test.ts`). The browser suite runs as four
-  `--shard` jobs behind the single **End-to-end and responsive** check; change
-  the shard count in the matrix and the `--shard` denominator together.
+  (`tests/content/deployment.test.ts`). The browser suite runs as a matrix
+  behind the single **End-to-end and responsive** check: desktop WebKit in two
+  shards, the five Chromium projects in three. A new Playwright project must be
+  added to a matrix group; the same test fails if one is missing or a group's
+  shards do not count 1..n.
+- Year Two's events and decisions (`events/year-two.json`,
+  `decisions-year-two.json`) are a separate download. Do not import
+  `src/content/nexora/index.ts` from app code: it holds both years and would
+  pull Year Two into the campaign chunk.
+- `scripts/tune.ts`: `balanced` runs its two programmes side by side; waiting
+  for the first to pass halfway left it unable to afford the second, so it
+  read exactly as `relevant` did.
 - Keep `AGENTS.md` and `README.md` updated in every change set. Record changes
   to contributor workflows here and changes to behaviour, setup, commands,
   limitations and deployment in the README.

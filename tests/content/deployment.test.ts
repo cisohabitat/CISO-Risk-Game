@@ -101,6 +101,32 @@ describe('deployment configuration', () => {
   })
 })
 
+describe('CI browser coverage', () => {
+  // The browser suite runs in CI as a matrix of project groups and shards. A
+  // project added to the Playwright config but to no group would pass CI
+  // without ever running; a group whose shards do not count 1..n would skip
+  // part of its project.
+  it('runs every Playwright project, each in one group, with complete shards', () => {
+    const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8')
+    const config = readFileSync(new URL('../../playwright.config.ts', import.meta.url), 'utf8')
+    const projects = [...config.slice(config.indexOf('projects:')).matchAll(/name: '([\w-]+)'/g)].map((match) => match[1]!)
+    expect(projects.length).toBeGreaterThan(0)
+    const groups = new Map<string, number[]>()
+    for (const [, args] of workflow.matchAll(/args: (.+)/g)) {
+      const names = [...args!.matchAll(/--project=([\w-]+)/g)].map((match) => match[1]!).sort().join(' ')
+      const [current, total] = /--shard=(\d+)\/(\d+)/.exec(args!)!.slice(1).map(Number)
+      groups.set(`${names}/${total}`, [...(groups.get(`${names}/${total}`) ?? []), current!])
+    }
+    const covered: string[] = []
+    for (const [key, shards] of groups) {
+      const total = Number(key.split('/').at(-1))
+      expect(shards.sort((a, b) => a - b), key).toEqual(Array.from({ length: total }, (_, i) => i + 1))
+      covered.push(...key.slice(0, key.lastIndexOf('/')).split(' '))
+    }
+    expect(covered.sort()).toEqual([...projects].sort())
+  })
+})
+
 describe('CI supply-chain boundaries', () => {
   it('uses read-only tokens, ephemeral checkout credentials and pinned actions', () => {
     const workflow = readFileSync(new URL('../../.github/workflows/ci.yml', import.meta.url), 'utf8')
