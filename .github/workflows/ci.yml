@@ -45,8 +45,9 @@ jobs:
   # shards took 3.3 to 7.0 minutes, because Playwright cuts the suite in config
   # order and put desktop WebKit, the slowest project, in the first two. Split
   # by browser on 28 October, two WebKit runners took 2.9 and 2.0 minutes and
-  # three Chromium runners about 4.8 each, so WebKit now has one runner and the
-  # five Chromium projects share four. Each installs only its browser.
+  # three Chromium runners about 4.8 each. One WebKit runner took 5.2, slower
+  # than the two together, so WebKit keeps two and the five Chromium projects
+  # share four (2.9 to 3.6 minutes). Each installs only its browser.
   # tests/content/deployment.test.ts fails if a project is left out.
   e2e-shard:
     name: End-to-end ${{ matrix.name }}
@@ -56,9 +57,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: WebKit
+          - name: WebKit 1/2
             browser: webkit
-            args: --project=desktop-webkit --shard=1/1
+            args: --project=desktop-webkit --shard=1/2
+          - name: WebKit 2/2
+            browser: webkit
+            args: --project=desktop-webkit --shard=2/2
           - name: Chromium 1/4
             browser: chromium
             args: --project=desktop-chromium --project=tablet-portrait --project=tablet-landscape --project=phone --project=phone-320 --shard=1/4
