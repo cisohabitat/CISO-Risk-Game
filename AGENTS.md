@@ -193,8 +193,8 @@ changes.
   locked install); checkout stays in each job with `persist-credentials: false`.
   Every third-party action, there or in `ci.yml`, is pinned to a full commit SHA
   (`tests/content/deployment.test.ts`). The browser suite runs as a matrix
-  behind the single **End-to-end and responsive** check: desktop WebKit in two
-  shards, the five Chromium projects in three. A new Playwright project must be
+  behind the single **End-to-end and responsive** check: desktop WebKit on one
+  runner, the five Chromium projects in four shards. A new Playwright project must be
   added to a matrix group; the same test fails if one is missing or a group's
   shards do not count 1..n.
 - Year Two's events and decisions (`events/year-two.json`,

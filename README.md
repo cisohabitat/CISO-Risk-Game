@@ -423,8 +423,8 @@ If checks cannot run or fail, deployment stays pending.
 
 Vercel runs `pnpm check` as its build command, blocking the hosted build on
 typecheck, lint, content, unit test, build or size failures. Browser tests run
-separately in CI, split across five runners (desktop WebKit in two, the
-Chromium projects in three) and reported together as **End-to-end
+separately in CI, split across five runners (desktop WebKit on one, the
+Chromium projects in four) and reported together as **End-to-end
 and responsive**: confirm that check and **Typecheck, lint, content and unit
 tests** both pass before deploying or promoting. On `main` a newer push no
 longer cancels an older run, so every revision gets its own result; feature
