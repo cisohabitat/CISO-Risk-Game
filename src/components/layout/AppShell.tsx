@@ -173,6 +173,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <span className="sr-only">: the player's guide (opens in a new tab)</span>
                 </a>
               </div>
+              <Button variant="quiet" size="sm" block onClick={() => openGlossary()}>Teaching tips</Button>
               <a href="/about#release-and-build" target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center rounded-lg text-center text-xs text-ink-muted underline underline-offset-2">
                 About and build details<span className="sr-only"> (opens in a new tab)</span>
               </a>
@@ -285,6 +286,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="block text-sm text-ink-muted">What the game means by its terms</span>
               </span>
             </button>
+          </li>
+          <li>
+            <Button variant="quiet" block onClick={() => { setMoreOpen(false); openGlossary() }}>Teaching tips</Button>
           </li>
           <li>
             <a

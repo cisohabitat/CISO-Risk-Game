@@ -43,3 +43,12 @@ describe('the first-quarter aim', () => {
     expect(screen.queryByText('A first quarter, in three questions')).toBeNull()
   })
 })
+
+
+it('keeps the teaching text and dismissal in compact workspace notes without the replay control', async () => {
+  await useGameStore.getState().startNewGame('compact-teaching', 'guided')
+  render(<Onboarding compact />)
+  expect(screen.getByText('A first quarter, in three questions')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Got it' })).toBeVisible()
+  expect(screen.queryByRole('button', { name: 'Revisit teaching tips' })).toBeNull()
+})

@@ -96,7 +96,7 @@ export function App() {
         <CampaignFeedback kind="decision" />
         {/* The Briefing places teaching below the work waiting on the player,
             keeping the first decision reachable on small screens. */}
-        {screen !== 'home' && <Onboarding />}
+        {screen !== 'home' && <Onboarding compact />}
         {/* Only once the review is written: while it loads, the year's end
             is already on its way to the review screen, and a banner that
             appeared for a moment and vanished under the pointer was worse

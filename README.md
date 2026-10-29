@@ -411,8 +411,11 @@ triage and pending reproduction.
 Newcomer guidance now explains the annual assessment on the Briefing and offers
 an evidence-first route in Risk. Guided campaigns open the Risk guide until
 **Keep this guide folded** is selected; it remains available afterwards.
-**Revisit teaching tips** opens the Glossary with every lesson, including
-previously dismissed tips. Game terms and subject terms both receive contextual
+**Revisit teaching tips** on Briefing opens the Glossary with every lesson,
+including previously dismissed tips. **Teaching tips** is also available under
+Help and settings on desktop and More on phones/tablets. Secondary workspaces
+keep their teaching note compact so Inbox, Risk and Organisation retain their
+independent reading panes when fallback fonts wrap the controls. Game terms and subject terms both receive contextual
 word links. Enquiry confirmation explicitly names attention and budget costs,
 including no-budget work. Decision attention labels separate the current balance
 from the weekly allowance; required reasons retain their explicit label.

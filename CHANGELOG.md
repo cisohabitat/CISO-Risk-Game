@@ -20,6 +20,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Keep teaching notes compact outside Briefing and put Teaching tips in shared
+  help menus, retaining every lesson and dismissal action. This fixes Inbox
+  panes extending below short landscape viewports with wider fallback fonts.
+
 - Explain the year-end assessment during play, guide the first Risk visit from
   evidence to board consideration, and make dismissed teaching tips available
   again through Glossary. Add definitions and contextual links for game terms.

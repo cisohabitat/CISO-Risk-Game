@@ -89,6 +89,10 @@ for (const width of [1024, 1366]) {
     // Exercise a long reader as well as a long message list.
     for (const message of save.state.inbox.messages.slice(0, 2)) message.body = Array(12).fill(message.body).join('\n\n')
     await openPreparedCampaign(page, save)
+    // CI's wider fallback font made the Inbox filters wrap and exposed the
+    // teaching controls consuming space needed by the independent panes.
+    await page.addStyleTag({ content: ':root { --font-sans: "DejaVu Sans", sans-serif; }' })
+    await page.evaluate(() => document.fonts.ready)
     for (const name of ['Inbox', 'Risk', 'Organisation']) {
       await goTo(page, name)
       if (name === 'Organisation') await page.getByRole('button', { name: 'List', exact: true }).click()

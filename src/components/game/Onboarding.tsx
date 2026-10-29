@@ -9,7 +9,7 @@ import { LESSONS, lessonContext } from './lessons'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { cn } from '@/lib/utils/cn'
 
-export function Onboarding({ className }: { className?: string }) {
+export function Onboarding({ className, compact = false }: { className?: string; compact?: boolean }) {
   const state = useGameStore((store) => store.state)
   const dispatch = useGameStore((store) => store.dispatch)
   // A lesson teaches a mechanic the player is about to use. On 31 December
@@ -32,7 +32,7 @@ export function Onboarding({ className }: { className?: string }) {
       candidate.when(context),
   )
   const revisit = <Button variant="quiet" size="sm" onClick={() => useGameStore.getState().openGlossary()}>Revisit teaching tips</Button>
-  if (!lesson) return <div className={className}>{revisit}</div>
+  if (!lesson) return compact ? null : <div className={className}>{revisit}</div>
 
   // One quiet line above the screen, not a card. As a card it took a sixth of
   // the screen above the briefing's own headline, beneath an incident banner,
@@ -47,7 +47,7 @@ export function Onboarding({ className }: { className?: string }) {
         <span className="text-ink-muted">. {lesson.body}</span>
       </p>
       <div className="flex shrink-0 flex-wrap items-center gap-1 sm:flex-col sm:items-end">
-        {revisit}
+        {!compact && revisit}
         <Button
           variant="quiet"
           size="sm"

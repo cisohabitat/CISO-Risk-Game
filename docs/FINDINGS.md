@@ -3950,3 +3950,31 @@ explanation and reference control pushed Decide below the opening viewport.
 Briefing now keeps only a short next-step line above the decision, with teaching
 and the longer explanation below the waiting-work section. The existing
 first-action viewport assertion remains the regression gate.
+
+## 29 October 2026 — CI fallback-font pane overflow
+
+CI run 40970870294 failed the 1024x768 wheel-isolation case in both Chromium
+and WebKit, including retries: pane bottoms reached 778.34375px. The downloaded
+WebKit trace identified Inbox, not Risk. Locally, selecting DejaVu Sans reproduced
+that exact bottom edge (the default OpenAI Sans environment ended at 744.34375px).
+The wider font wrapped Inbox's controls; the replay button stacked beside Got it
+had increased the teaching note to 108px, leaving too little height for the
+minimum-height panes.
+
+Secondary screens now retain the full teaching text and Got it action in compact
+notes, with Teaching tips available in shared Help and settings / More utilities.
+Briefing retains its direct replay control. The wheel-isolation test explicitly
+selects the wider fallback font and keeps its original viewport bounds and
+independent-scroll assertions. The newcomer browser flow checks tip retrieval
+from the shared help menu. No simulation, deadlines, save format or pane minimum
+height changed. Verification results are recorded with the delivered revision.
+
+Verification: `pnpm check` passed (113 files, 671 tests; typecheck, lint, content,
+build and unchanged size gates). The complete `pnpm test:e2e --workers=5` run
+passed 671 browser cases with 49 project-specific skips, including all WebKit
+cases. Critical code/CSS/font transfer is 194.6 KiB of 221 KiB. Local WebKit
+used Debian runtime libraries unpacked under /tmp; its ldconfig-only host
+preflight could not see that private prefix, so that preflight was disabled.
+The actual WebKit browser tests ran normally; CI uses standard installed runtime
+libraries and keeps its normal preflight. No CI checks or layout assertions were
+relaxed.

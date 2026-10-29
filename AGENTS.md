@@ -6,6 +6,12 @@ changes.
 
 ## Documentation
 
+- Secondary workspaces use compact teaching notes with their full text and
+  Got it action; replay stays in shared Help and settings / More utilities.
+  Keep the Briefing replay control. The desktop wheel-isolation test applies
+  DejaVu Sans to reproduce CI's wider fallback metrics and checks pane bounds
+  at 1024x768 and 1366x768 in Chromium and WebKit. Do not relax those bounds.
+
 - Newcomer follow-through keeps deadline notices visible across workspaces for
   decisions due within three days; preserve engine pause/default semantics.
   Receipts expire on day advancement without deleting recorded choices.
