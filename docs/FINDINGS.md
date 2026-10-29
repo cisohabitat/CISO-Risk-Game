@@ -3894,3 +3894,59 @@ themselves after 5.2 seconds, pass clicks through to the page and show one at
 a time on a phone. The crowding was the gallery capturing them in that
 window, not something a player sits with. Suppressing them during an incident
 would leave Skip ahead stopping without a reason.
+
+## 29 October 2026 — newcomer clarity and deadline visibility
+
+Source: [the owner-supplied unfinished Guided session](playtests/2026-10-29-owner-supplied-newcomer.md).
+The played build, seed and participant independence were not supplied. This
+pass addresses reported friction without treating source inspection or automated
+checks as a human retest, full-year completion or pilot evidence.
+
+**Progress and first steps.** Briefing now explains the existing eight annual
+assessment dimensions, with public evidence to examine during the year. Risk has
+an evidence-first guide, initially expanded for Guided campaigns until folded,
+with direct evidence/enquiry routes. It distinguishes raising a scenario from
+selecting it in a board paper. No mid-year grader or universal score was added.
+
+**Retrievable explanations.** Revisit teaching tips opens the Glossary, where
+all existing lessons can be expanded after dismissal. Contextual word links now
+include game terms, with aliases for the reported everyday wording and missing
+definitions for unallocated capacity, recovery confidence, uplift and Accept for
+now. Paid enquiries already showed their costs before confirmation; the quote
+now explicitly distinguishes paid and no-budget work. Decision attention copy
+separates the current balance from the weekly allowance. The current platform
+launch already labelled its required reason; a regression checks that label,
+focus route and inability to submit without a reason. The reported played-build
+attention and rationale contradictions remain unreproduced.
+
+**Time and feedback.** Impending decisions now have a direct review route on
+every workspace during their final three days, including after the player
+resumes time. Existing deadline pauses and authored defaults are unchanged.
+Receipts previously had no day-based expiry; advancing a day now clears the
+receipt while retaining decision history. Confidence reactions distinguish a
+change inside a band from crossing to a new one. The standard mobile web-app
+capability tag accompanies the existing Apple compatibility tags.
+
+**Verification.** `pnpm check` passed: 113 files / 670 tests, typecheck, lint,
+content validation, build and unchanged size gates. Critical code/CSS/font
+transfer is 194.5 KiB of 221 KiB; campaign content is 84.8 KiB of 92 KiB.
+The 320px Guided visual review found the new replay control squeezed the lesson
+into a narrow column; controls now sit below the text on phones. A fresh browser
+capture showed readable full-width text, no horizontal overflow and no page
+errors. The final complete `pnpm test:e2e:local --workers=5` run passed
+565 cases with 35 intentional skips across desktop, tablet and phone projects; physical-device and
+human comprehension checks remain outstanding. No simulation effects, deadlines,
+assessment weights, mail suppression or stakeholder response branches changed.
+
+The broader browser check also found that separate collapsed guide/word rows
+reduced the desktop Risk pane below the first card’s height: selecting it moved
+the list by 8px before wheel input. The guide toggle now shares the Risk heading
+row and its term links live inside the expandable guide. Both original wheel
+isolation tests pass at 1024px and 1366px, alongside the two newcomer-flow tests
+(4/4 in the focused desktop run). Folding the guide returns focus to its toggle.
+
+The final 320px browser shard caught a first-action regression: the new masthead
+explanation and reference control pushed Decide below the opening viewport.
+Briefing now keeps only a short next-step line above the decision, with teaching
+and the longer explanation below the waiting-work section. The existing
+first-action viewport assertion remains the regression gate.

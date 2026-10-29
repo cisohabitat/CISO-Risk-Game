@@ -401,6 +401,30 @@ Other commands:
 | `pnpm playthrough` | One campaign played end to end in a browser, photographed as it goes |
 | `pnpm guide:shots` | Regenerate the pictures in `docs/PLAYER_GUIDE.md` from the running game |
 
+The [roadmap](docs/ROADMAP.md) has a source review dated 29 October 2026,
+with current content counts, budget references and remaining-work estimates.
+Its proposed owners are unassigned roles; human validation gates remain open.
+An [owner-supplied newcomer report](docs/playtests/2026-10-29-owner-supplied-newcomer.md)
+records an unfinished Guided session and separates reported problems from source
+triage and pending reproduction.
+
+Newcomer guidance now explains the annual assessment on the Briefing and offers
+an evidence-first route in Risk. Guided campaigns open the Risk guide until
+**Keep this guide folded** is selected; it remains available afterwards.
+**Revisit teaching tips** opens the Glossary with every lesson, including
+previously dismissed tips. Game terms and subject terms both receive contextual
+word links. Enquiry confirmation explicitly names attention and budget costs,
+including no-budget work. Decision attention labels separate the current balance
+from the weekly allowance; required reasons retain their explicit label.
+
+Decisions due within three days have a notice on every campaign screen with a
+direct review action. Existing deadline pauses and default outcomes are unchanged.
+Decision receipts clear when the game day advances; choices remain in decision
+history. Board-confidence reactions say whether movement stays within a band or
+crosses to a new one. These changes address the reported newcomer friction;
+the played-build attention/rationale discrepancies remain unreproduced, and
+fresh human retesting is still needed.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
@@ -472,18 +496,18 @@ code comments mean when they cite "plan §13". Alongside it:
 ## Campaign content
 
 Everything about Nexora is data under `src/content/nexora/`, validated by Zod
-schemas and a referential integrity pass:
+schemas and a referential integrity pass. These counts include both years:
 
 | | |
 |---|---:|
 | Organisation nodes / dependencies | 38 / 52 |
-| Business services / objectives | 5 / 5 |
+| Business services / objectives | 5 / 10 |
 | Executives / cyber leaders | 8 / 4 |
 | Security controls | 13 |
 | Cyber programmes | 6 |
-| Threat actors / attack paths / incident families | 3 / 8 / 5 |
-| Evidence items (including deliberate noise) | 48 |
-| Hypothesis templates / risk scenarios | 14 / 14 |
+| Threat actors / attack paths / incident families | 4 / 14 / 8 |
+| Evidence items (including deliberate noise) | 54 |
+| Hypothesis templates / risk scenarios | 17 / 17 |
 | Lines of enquiry | 18 |
 | Decisions / decision options | 49 / 149 |
 | Events | 222 |

@@ -6,6 +6,27 @@ changes.
 
 ## Documentation
 
+- Newcomer follow-through keeps deadline notices visible across workspaces for
+  decisions due within three days; preserve engine pause/default semantics.
+  Receipts expire on day advancement without deleting recorded choices.
+  Confidence reactions distinguish within-band changes from band crossings.
+  Keep annual assessment guidance qualitative, Risk raising separate from board
+  selection, contextual game-term links, replayable lessons and explicit enquiry
+  quotes. Risk-guide folding uses the existing tutorial dismissal record.
+  Test the live attention balance and required reasons rather than assuming the
+  played-build contradictions were reproduced.
+
+- Preserve the owner-supplied 29 October newcomer report as an unfinished,
+  build-unidentified session. Keep source triage distinct from reproduction and
+  independent pilot evidence. Retest progress expectations, raised-risk versus
+  board-selection guidance and dismissed-lesson retrieval; do not introduce a
+  score or change simulation balance on this report alone.
+
+- Roadmap status was source-reviewed on 29 October 2026. Maintain its dated
+  remaining-work table with evidence links and explicitly unassigned role owners
+  until staffed. Separate historical whole-phase estimates from remaining work;
+  do not present a source review as fresh performance or human-session evidence.
+
 - The 24 October fresh-playtest fixes are owner-authorised. Recovery notes keep
   the independent assessment date; programme completion does not renew it.
   Restore-window requests wait for no active incident, retaining day 210 / 80%

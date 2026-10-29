@@ -2,10 +2,11 @@
  * The risk workspace (plan §28.3): evidence, hypotheses, risk scenarios and the
  * assumptions underneath them — never a single flat spreadsheet.
  */
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, Tab, TabPanel, Tabs } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { assumptionViews, evidenceList, visibleRisks } from '@/store/selectors'
+import { Terms } from '@/components/game/Terms'
 import { InvestigationPanel } from '@/components/risk/InvestigationPanel'
 import { HypothesisWorkspace } from '@/components/risk/HypothesisWorkspace'
 import { PatternNotice } from '@/components/risk/PatternNotice'
@@ -23,6 +24,7 @@ export function RiskScreen() {
   const selectedScenarioId = useGameStore((store) => store.ui.selectedScenarioId)
   const setUi = useGameStore((store) => store.setUi)
   const hasBoardDraft = useGameStore((store) => Boolean(store.ui.boardDraft && !store.state?.finished && store.ui.boardDraft.quarter === store.state?.reviews.pendingQuarter))
+  const [guideOpen, setGuideOpen] = useState(() => state?.difficulty === 'guided' && !state.tutorial.dismissed.includes('risk-workspace-guide'))
   const tab = useGameStore((store) => store.ui.riskTab ?? 'risks')
   const setTab = (riskTab: string) => setUi({ riskTab })
 
@@ -39,9 +41,30 @@ export function RiskScreen() {
     <div className="split-shell space-y-4">
       <header>
         <p className="document-kicker mb-2">Risk register</p>
-        <h1 className="font-display text-3xl leading-tight">Risk</h1>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="font-display text-3xl leading-tight">Risk</h1>
+          <Button id="risk-guide-toggle" variant="quiet" size="sm" aria-expanded={guideOpen} aria-controls="risk-start-guide" onClick={() => setGuideOpen((open) => !open)}>Where to start with Risk</Button>
+        </div>
       </header>
 
+      <section id="risk-start-guide" aria-label="Risk starting guide" hidden={!guideOpen} className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-ink-muted">
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>Read Evidence: what has actually been observed?</li>
+          <li>Use Hypotheses to explain how it could harm the business. Investigate to test what you do not know; the enquiry shows its costs before you confirm.</li>
+          <li>Raise a risk scenario when you can describe the route to business harm. Raising makes it eligible for board consideration; you still choose the agenda in the board paper.</li>
+        </ol>
+        <p className="mt-2">Residual risk is what remains after controls. Assumptions are what your judgement depends on. Accept for now records a time-limited decision to carry a risk; it does not remove it.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button variant="secondary" size="sm" onClick={() => setTab('evidence')}>Start with evidence</Button>
+          <Button variant="quiet" size="sm" onClick={() => setTab('investigate')}>Find an enquiry</Button>
+          <Button variant="quiet" size="sm" onClick={() => {
+            dispatch({ type: 'dismissTutorial', id: 'risk-workspace-guide' })
+            setGuideOpen(false)
+            document.getElementById('risk-guide-toggle')?.focus()
+          }}>Keep this guide folded</Button>
+        </div>
+        <Terms text="Residual risk, risk scenario, hypothesis, assumption, accept for now" className="mt-2" />
+      </section>
       {hasBoardDraft && <Button variant="secondary" onClick={() => useGameStore.getState().setScreen('board')}>Return to board paper draft</Button>}
       <Tabs value={tab} onChange={setTab} className="split-tabs">
         <RiskTabStrip>

@@ -11,6 +11,81 @@ game is checked by a harness or by a person, not asserted. Where a phase
 depends on something only people can tell us, it says so, and it does not
 start until they have.
 
+## Status reviewed 29 October 2026
+
+This review checks repository sources and recorded findings, not a new playtest,
+performance run or release verification. The 9 October column below is historical;
+the current column describes implementation separately from human validation.
+Owners below are proposed roles, **unassigned**, not staffing commitments. All
+remaining-work rows were reviewed on 29 October 2026. Estimates are planning
+ranges for unfinished work only; person-weeks exclude recruitment, procurement,
+translation turnaround and waiting at the existing phase gates. Re-estimate after
+the pilot; these ranges are not measured delivery forecasts.
+
+| Phase / remaining work | Status | Proposed owner (unassigned) | Remaining effort | Evidence / acceptance reference |
+|---|---|---|---|---|
+| 0: five-player focused review | Protocol ready; no participants/results recorded | Research lead | 1–2 person-weeks; 2–4 calendar weeks to recruit/run | [Focused review](playtest-kit/FOCUSED_REVIEW.md) |
+| 0: independent 8–12-player pilot and synthesis | Outstanding; focused round does not complete this gate | Research lead | 1–2 person-weeks; 2–4 calendar weeks, subject to recruitment | [Protocol](playtest-kit/PROTOCOL.md), [synthesis template](playtest-kit/SYNTHESIS.md) |
+| 1: observed clarity fixes, voice read-through, fresh-newcomer retest | Implementation foundations built; fixes depend on pilot findings; human voice review open | Engineer + writer + research lead | Provisional 2–4 person-weeks, then four fresh-newcomer sessions | [Phase 1 gate](#phase-1--teaches-itself-onboarding-clarity-voice), [voice guide](VOICE.md) |
+| 2: independent author trial and pack-wide claim checks | Pipeline built; external author trial and generalised Nexora checks remain | Content author + engineer | 1–2 person-weeks before/alongside second-pack authoring | [Authoring walkthrough](CONTENT.md), [pack loader](../scripts/content/pack.ts) |
+| 2: second organisation | Not started; evidence-gated | Content author + engineer | Provisional 8–12 person-weeks, including pack validation | [Phase 2 scope/gate](#phase-2--depth-and-replay) |
+| 2: Year Two human validation; stronger starting situations if needed | Year Two and threat variety built; perceived differences unvalidated | Research lead + content author | 0.5–1 person-week for three Year Two sessions/synthesis; situation changes unestimated until findings | [Year Two builder](../src/game/engine/next-year.ts), [playtest questions](PLAYTEST.md) |
+| 3: art/type review, optional commissioning and sound review | Identity, motion, layouts and cues built; human review open | Art director + sound designer + research lead | 1–2 person-weeks for review/refinement; optional commissions quoted separately | [Art catalogue](../src/assets/art/README.md), [presentation tests](../tests/e2e/presentation.spec.ts) |
+| 3: human listening review | 34 exact-transcript clips built; listening review pending | Audio reviewer + research lead | 0.5–1 person-week | [Voice review](VOICE_REVIEW.md), [manifest](../src/assets/voice/manifest.json) |
+| 3: throttled performance/accessibility measurement | Automated checks exist; required Lighthouse result not established by this review | Engineer | 0.5–1 person-week, fixes scoped from results | [Phase 3 measures](#phase-3--presentation), [hosting gates](HOSTING.md) |
+| 4: assistive-technology, keyboard, large-text and physical-device sessions | Dependency walk built; sessions outstanding | Accessibility specialist + research lead | 1–2 person-weeks plus recruitment; remediation estimated from findings | [Accessibility statement](release/ACCESSIBILITY.md), [focused device review](playtest-kit/FOCUSED_REVIEW.md) |
+| 4: colour-vision simulation | Text/glyph review recorded; requested simulation remains open | Accessibility specialist | 0.25–0.5 person-week | [Phase 4 checks](#phase-4--accessibility-and-localisation) |
+| 4: string extraction, Intl and pseudo-locale CI | Inventory/planning only | Engineer | Provisional 3–5 person-weeks | [Localisation plan](LOCALISATION.md) |
+| 4: one second language and native-speaker playthrough | Not started; language/reviewer not selected | Translator + native reviewer + engineer | Translation quote needed after refreshed word inventory; 1–2 engineering person-weeks for integration/QA | [Localisation plan](LOCALISATION.md), [Phase 4 gate](#phase-4--accessibility-and-localisation) |
+| 5: offline installation/update and physical iOS verification | Service worker not started; saves/recovery already built | Engineer + device tester | Provisional 3–5 person-weeks, including update/recovery tests | [Phase 5 acceptance](#phase-5--robustness-and-platform), [browser configuration](../playwright.config.ts) |
+| 5: network/graph performance measurement | CPU checks built; throttled network CI and graph first-paint measurement open | Engineer | 1–2 person-weeks | [Performance scope](#phase-5--robustness-and-platform), [size gate](../scripts/size-budget.ts) |
+| 5: optional cloud sync | Conditional; no demonstrated need recorded here | Engineer | Unestimated until cross-device loss evidence and scope exist | [Phase 5 condition](#phase-5--robustness-and-platform) |
+| 6: consented aggregate telemetry/dashboard and tuning | Local logs/analyser and cadence written; collection endpoint absent | Engineer + research lead | Provisional 3–4 person-weeks; then ongoing monthly review and three months of data for existing gate | [Session analyser](../scripts/session.ts), [tuning protocol](PLAYTEST.md) |
+| 6: educator cohort/classroom entry | Facilitator pack built; course not run; classroom entry remains to assess | Educator + engineer | 1–2 person-weeks plus course scheduling | [Facilitator pack](educator/FACILITATOR.md) |
+| 6: in-game external pack loading | Schema/linter built; runtime loading waits for second pack | Engineer | Provisional 1–2 person-weeks after second-pack validation | [Pack schema](content/campaign.schema.json), [Phase 6 scope](#phase-6--live-telemetry-tuning-and-the-people-who-play-it) |
+| 7: trailer, press kit, tagged release and optional storefront | About/accessibility/release guidance built; remaining launch assets unassembled | Release owner + video editor | Provisional 2–3 person-weeks; storefront publication remains owner decision | [Release checklist](release/RELEASING.md), [trailer shot list](release/TRAILER.md), [store copy](release/STORE.md) |
+
+The estimates above supersede the original whole-phase effort figures for
+remaining-work planning; those figures below remain historical scope estimates.
+Conditional work is not a commitment. Shareable-year and seed-link features are
+already implemented; they need usage evidence rather than another build.
+
+## Newcomer feedback received 29 October 2026
+
+An [owner-supplied newcomer report](playtests/2026-10-29-owner-supplied-newcomer.md)
+reached Week 37 on Guided / The inherited mess in about 35 minutes, including
+4× speed; it did not reach the ending or test mobile. Build, seed, participant
+independence and session recording are unknown. Preserve it as one reported
+session with source triage, separately from the independent pilot and focused
+recruitment slots. It does not close a gate or upgrade a grade.
+
+The report supports prioritising understandable progress expectations, a first
+step in Risk, jargon at point of use and access to dismissed lessons. A progress
+explanation should use the existing eight assessment dimensions and public
+records; it must not introduce a universal score or a mid-year annual grade.
+Raising a scenario enables board eligibility; it does not put it on the submitted
+agenda automatically. Retest that distinction explicitly.
+
+First reproduce the reported SOC deadline lapse, attention mismatch, rationale
+label and cost visibility on an identified build. Current source already covers
+some of these paths, which is not proof of what this player saw. Review persistent
+receipts and within-band confidence wording as presentation concerns. Mail
+consolidation, new stakeholder replies and pacing changes still need specific,
+repeated observations. Preserve the named reactions, delayed evidence and quarter
+collision explanation this player valued. Full triage and retest tasks are in
+the linked report.
+
+### Implementation follow-through, 29 October
+
+The newcomer pass adds Briefing assessment guidance, a foldable evidence-first
+Risk guide, revisitable lessons, game-term word links, missing glossary terms,
+explicit free/paid enquiry quotes, cross-screen impending-deadline notices,
+current-versus-weekly attention wording, within-band confidence reactions and
+receipt expiry when time advances. It preserves engine deadlines, defaults,
+assessment rules and simulation balance. Attention and required-rationale
+regressions are checked against the current code; the supplied played-build
+mismatches remain unreproduced. Human retests and pilot gates remain open.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,
@@ -24,7 +99,7 @@ without changing simulation balance or adding authored filler:
 | Pacing | Follow-ups view exposes recorded results/consequences and incident updates alongside read messages | Full-year human observations of skipped mail, quiet weeks and repetition before consolidating or adding content |
 | Replay | Separate continuing Nexora from a fresh first year; explain fixed-setup strategy comparisons and different starting seeds | Returning players identify meaningful differences; deeper authored reactions and another organisation remain evidence-gated |
 
-The independent 8–12-player pilot remains outstanding. Use the existing
+The independent 8–12-player pilot remains outstanding; the supplied newcomer report does not complete it. Use the existing
 `docs/playtest-kit/` protocol and session recording; do not upgrade grades or
 claim engagement/learning gains from browser checks alone.
 
@@ -71,17 +146,17 @@ want a second one, and tell someone else about it — on a phone, offline, with
 a screen reader, in their own language — and that the team can see, from
 evidence rather than hope, that this is happening. Concretely:
 
-| Pillar | AAA means | 9 October 2026, before | After the engineering of Phases 0–7 |
+| Pillar | AAA means | 9 October 2026, before | 29 October 2026 source review (human gates remain open) |
 |---|---|---|---|
-| **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. | **D.** Unchanged: the kit to ask people is built (session log, protocol, synthesis); nobody has been asked yet. |
+| **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. | **D.** Kit built (session log, protocol, synthesis); one owner-supplied unfinished newcomer report received on 29 October, with build and independence unknown. Independent pilot and synthesis remain outstanding. |
 | **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. | **Unknown.** A voice guide holds every string; the 320px first session is fixed; whether it teaches still needs people. |
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
-| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 216 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
+| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 222 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
 | **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
 | **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, an editorial review, twelve larger portraits, a Nexora mark, self-hosted display typography, distinct document layouts, incident scenes and illustrated empty states; human art review remains open. |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |
 | **Localisation** | At least one language besides English, and the pipeline to add more | **None.** `en-GB`, strings inline, content authored in English JSON. | **D.** Sized (`pnpm strings`: about 30,000 words) and planned (`docs/LOCALISATION.md`); nothing translated. |
-| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play; approximately 210.9 KiB of 220, now including the self-hosted font. |
+| **Platform** | Installable, offline, resilient saves, fast on a cheap phone | **B.** Manifest only (no service worker, by design until iOS update behaviour is tested); IndexedDB saves with export after year end; 180.5 kB critical path against 185; Slow 3G measured. | **B+.** Backup and recovery, a per-screen error boundary, mid-year export, a CPU budget in CI; no offline play. The current code/CSS/font limit is 221 KiB; the recorded Inbox split measured 192.6 KiB, not remeasured in this review ([finding](FINDINGS.md)). |
 | **Live** | The team can see what players do and tune from it | **None.** No telemetry, no crash reporting, no release cadence beyond CI. | **D.** Crash capture to a local log, `pnpm session` across many logs and a monthly cadence; no telemetry, no release yet. |
 
 The two weakest rows — evidence and localisation — are the ones no amount of
@@ -152,7 +227,7 @@ players chose and whether the name matched what they got; the post-session
 questions answered; a ranked stumble list. If the synthesis says the game does
 not teach itself, Phase 1 grows and Phase 2 waits.
 
-**Effort.** Two to four weeks of calendar time, mostly scheduling; about one
+**Original whole-phase estimate (not remaining effort).** Two to four weeks of calendar time, mostly scheduling; about one
 week of engineering for the session log and kit.
 
 ---
@@ -202,7 +277,7 @@ consistency. Guide test still green (`tests/content/guide.test.ts`).
 **Gate to Phase 2.** Four fresh newcomers finish Q1 unaided; the voice pass
 is complete and recorded in `docs/FINDINGS.md`.
 
-**Effort.** Four to six weeks; needs a writer or an author willing to read
+**Original whole-phase estimate (not remaining effort).** Four to six weeks; needs a writer or an author willing to read
 every line, and four more playtesters.
 
 ---
@@ -298,7 +373,7 @@ new.
 **Gate to Phase 3.** Second pack passes every harness the first does; three
 players have played a Year Two.
 
-**Effort.** Ten to fourteen weeks; the longest phase, most of it authoring.
+**Original whole-phase estimate (not remaining effort).** Ten to fourteen weeks; the longest phase, most of it authoring.
 
 ---
 
@@ -321,7 +396,7 @@ the clock and the arrival of consequence, and sound that is off until wanted.
   Newsreader with system sans-serif body text, larger directory portraits,
   committee papers, an editorial annual review, correspondence layouts, compact
   routine records, illustrated empty states and four restrained incident scenes.
-  Its code/CSS/font budget is 220 KiB including the display font; the approved
+  Its current code/CSS/font budget is 221 KiB including the display font; the approved
   illustrated title screen adds one responsive scene with rendering budgets of
   350 KiB desktop and 320 KiB phone (450/410 KiB including campaign prefetch). Portraits and
   incident scenes remain separate lazy image downloads. A custom commissioned
@@ -367,7 +442,7 @@ and accessibility both above 90 on a throttled profile.
 **Gate to Phase 4.** Identity shipped on every screen; two playtesters asked
 unprompted what they thought of how it looks.
 
-**Effort.** Six to ten weeks; needs an illustrator and, for sound, a designer
+**Original whole-phase estimate (not remaining effort).** Six to ten weeks; needs an illustrator and, for sound, a designer
 for about a week.
 
 ---
@@ -411,7 +486,7 @@ language passes the same content tests as English.
 
 **Gate to Phase 5.** AT findings closed; one language shipped end to end.
 
-**Effort.** Six to eight weeks plus translation.
+**Original whole-phase estimate (not remaining effort).** Six to eight weeks plus translation.
 
 ---
 
@@ -425,9 +500,11 @@ cheap phone.
   behaviour was tested on iOS (§32.12); test it: a Playwright profile that
   installs, goes offline, resumes a saved year, and then takes an update
   without losing the campaign. The existing "page reloads once to pick up the
-  new version" behaviour becomes the update prompt. **Not started:** iOS
-  Safari cannot be tested from here (the browser suite runs Chromium only in
-  this environment), and the plan forbids aggressive caching until it is.
+  new version" behaviour becomes the update prompt. **Not started:** physical iOS Safari installation/update validation remains
+  outstanding. The maintained browser suite includes desktop WebKit as well as
+  Chromium; neither desktop WebKit nor device emulation establishes physical
+  iOS installation/update behaviour. The plan defers aggressive caching until
+  that behaviour is tested.
 - **Save integrity.** Versioned save migrations with a test per version;
   corruption detection with recovery to the last good autosave; export and
   import at any time, not only after year end; an "every save must reproduce
@@ -462,7 +539,7 @@ Android and iOS profiles; save round-trip soak; the performance budget in CI.
 **Gate to Phase 6.** Install → offline → resume → update works on iOS Safari
 without a lost campaign.
 
-**Effort.** Four to six weeks.
+**Original whole-phase estimate (not remaining effort).** Four to six weeks.
 
 ---
 
@@ -507,7 +584,7 @@ one educator cohort's completion rate.
 
 **Gate to Phase 7.** Three months of dashboard data; one educator cohort.
 
-**Effort.** Four to six weeks of engineering, then ongoing.
+**Original whole-phase estimate (not remaining effort).** Four to six weeks of engineering, then ongoing.
 
 ---
 
@@ -538,13 +615,17 @@ written**; publishing it is the owner's call).
 with the evidence row's grade earned by at least thirty recorded human
 sessions across two organisations and two languages.
 
-**Effort.** Three to four weeks.
+**Original whole-phase estimate (not remaining effort).** Three to four weeks.
 
 ---
 
 ## Sequencing and effort
 
-| Phase | Weeks | Needs people | Starts when |
+This is the original whole-phase sequence and sizing, retained for context.
+It includes work now implemented and must not be read as today's remaining
+schedule. Use the dated remaining-work table above; the phase gates are unchanged.
+
+| Phase | Original weeks | Needs people | Starts when |
 |---|---|---|---|
 | 0 Evidence | 2–4 | 8–12 playtesters | Now |
 | 1 Teaches itself | 4–6 | a writer, 4 playtesters | Phase 0 synthesis |
@@ -555,8 +636,9 @@ sessions across two organisations and two languages.
 | 6 Live | 4–6, then ongoing | an educator | Phase 5 gate |
 | 7 Release | 3–4 | — | Phase 6 gate |
 
-Serial, that is nine to twelve months for one engineer and one author with
-the specialists brought in for their weeks. Phases 3–5 overlap well; Phases
+The original serial estimate was nine to twelve months for one engineer and
+one author with specialists brought in for their weeks. It is not a new estimate
+from 29 October; completed engineering must not be counted again. Phases 3–5 overlap well; Phases
 0–2 do not, because each decides the next.
 
 ## What this roadmap deliberately does not do

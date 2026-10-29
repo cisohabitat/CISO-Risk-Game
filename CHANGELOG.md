@@ -20,6 +20,14 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Explain the year-end assessment during play, guide the first Risk visit from
+  evidence to board consideration, and make dismissed teaching tips available
+  again through Glossary. Add definitions and contextual links for game terms.
+- Show impending decision deadlines across workspaces, expire decision receipts
+  when the day advances, and explain confidence changes within their current
+  band. Clarify current attention versus the weekly allowance and quote free
+  as well as paid enquiries before confirmation.
+
 - A decision's receipt now names the reactions it caused straight away: an
   executive's remembered response, board confidence and a team's morale, in
   words. It used to say only that the choice was recorded.

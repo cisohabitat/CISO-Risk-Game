@@ -8,6 +8,7 @@
  * Directions in words, never amounts (`CLAUDE.md`, "Bands, not numbers").
  * Delayed effects are not here: they belong to the organisation's response.
  */
+import { boardConfidenceLabel } from '@/game/stakeholders/relationships'
 import { functionTitle } from '@/game/team/capacity'
 import type { ContentIndex, GameState } from '@/game/types'
 
@@ -38,7 +39,9 @@ export function decisionReactions(before: GameState, after: GameState, index: Co
 
   const board = after.stakeholders.boardConfidence - before.stakeholders.boardConfidence
   if (Math.abs(board) >= NOTICEABLE) {
-    reactions.push({ text: `Board confidence ${board > 0 ? 'rose' : 'fell'}.`, tone: board > 0 ? 'positive' : 'negative' })
+    const earlier = boardConfidenceLabel(before.stakeholders.boardConfidence)
+    const current = boardConfidenceLabel(after.stakeholders.boardConfidence)
+    reactions.push({ text: `Board confidence ${board > 0 ? 'rose' : 'fell'}${earlier === current ? ` within the ${current} band` : ` from ${earlier} to ${current}`}.`, tone: board > 0 ? 'positive' : 'negative' })
   }
 
   for (const [fn, team] of Object.entries(after.team.functions)) {

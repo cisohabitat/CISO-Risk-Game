@@ -31,7 +31,8 @@ export function Onboarding({ className }: { className?: string }) {
       (context.liveIncidents === 0 || candidate.teaches === 'incident') &&
       candidate.when(context),
   )
-  if (!lesson) return null
+  const revisit = <Button variant="quiet" size="sm" onClick={() => useGameStore.getState().openGlossary()}>Revisit teaching tips</Button>
+  if (!lesson) return <div className={className}>{revisit}</div>
 
   // One quiet line above the screen, not a card. As a card it took a sixth of
   // the screen above the briefing's own headline, beneath an incident banner,
@@ -39,20 +40,23 @@ export function Onboarding({ className }: { className?: string }) {
   return (
     <aside
       aria-label="How this works"
-      className={cn('mb-4 flex items-start gap-3 border-l-2 border-accent bg-accent-soft/30 py-2 pl-3 pr-2', className)}
+      className={cn('mb-4 flex flex-col items-start gap-3 sm:flex-row border-l-2 border-accent bg-accent-soft/30 py-2 pl-3 pr-2', className)}
     >
       <p className="min-w-0 flex-1 text-sm text-pretty">
         <span className="font-medium text-ink">{lesson.title}</span>
         <span className="text-ink-muted">. {lesson.body}</span>
       </p>
-      <Button
-        variant="quiet"
-        size="sm"
-        className="compact min-h-9 shrink-0"
-        onClick={() => dispatch({ type: 'dismissTutorial', id: lesson.id })}
-      >
-        Got it
-      </Button>
+      <div className="flex shrink-0 flex-wrap items-center gap-1 sm:flex-col sm:items-end">
+        {revisit}
+        <Button
+          variant="quiet"
+          size="sm"
+          className="compact min-h-9 shrink-0"
+          onClick={() => dispatch({ type: 'dismissTutorial', id: lesson.id })}
+        >
+          Got it
+        </Button>
+      </div>
     </aside>
   )
 }

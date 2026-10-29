@@ -16,6 +16,7 @@ import { Glossary } from '@/components/game/Glossary'
 import { Toasts } from '@/components/game/Toasts'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
 import { IncidentCommand } from '@/components/game/IncidentCommand'
+import { DecisionDeadlines } from '@/components/game/DecisionDeadlines'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
 import { usePullToRefreshGuard } from '@/app/usePullToRefreshGuard'
@@ -91,9 +92,10 @@ export function App() {
       </a>
       <AppShell>
         <IncidentCommand />
+        <DecisionDeadlines />
         <CampaignFeedback kind="decision" />
-        {/* The Briefing places the note under its own headline, so the day's
-            first line is what the day is about rather than a lesson. */}
+        {/* The Briefing places teaching below the work waiting on the player,
+            keeping the first decision reachable on small screens. */}
         {screen !== 'home' && <Onboarding />}
         {/* Only once the review is written: while it loads, the year's end
             is already on its way to the review screen, and a banner that

@@ -2,7 +2,7 @@
  * Home / CISO briefing (plan §28.1): the day, what needs you, what changed and
  * what you still do not know. Qualitative language throughout.
  */
-import { Badge, Button, Card, CardBody, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Disclosure, EmptyState, Meter, SectionHeading } from '@/components/ui/primitives'
 import { DecisionList } from '@/components/decisions/DecisionList'
 import { Collisions } from '@/components/game/Collisions'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
@@ -77,9 +77,8 @@ export function HomeScreen() {
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
+        {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}
       </header>
-
-      <Onboarding className="mb-0" />
 
       <section aria-labelledby="decisions">
         <SectionHeading>
@@ -136,7 +135,17 @@ export function HomeScreen() {
         )}
       </section>
 
+      <Onboarding className="mb-0" />
+
       <CampaignFeedback kind="quarter" />
+
+      <Disclosure summary="How to judge your year">
+        <p>Due decisions and the board paper have deadlines. Concerns and patterns are leads to examine, rather than extra decisions to answer today. Unread counts also include reference mail; check message priorities and Follow-ups when choosing what to read next.</p>
+        <p>Your task is to understand Nexora’s risks, make defensible trade-offs and leave the organisation able to respond. A quiet year alone does not establish that it is secure.</p>
+        <p className="mt-2">The annual review weighs eight dimensions equally: risk understanding, prioritisation, resilience, cyber programme execution, business enablement, communication and escalation, team sustainability, and material blind spots.</p>
+        <p className="mt-2">During the year, look for evidence behind your risk claims, progress on relevant programmes, tested recovery, honest board papers and a team that can sustain the work. Your quarter recap records strengths, concerns and a practical next step. The year-end review judges the whole year; the number of choices made is not a quality rating.</p>
+        <p className="mt-2">For a first step, open Risk and read the evidence behind one concern. Decide what you still need to investigate before committing your attention or budget.</p>
+      </Disclosure>
 
       <Collisions />
 

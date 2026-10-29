@@ -431,6 +431,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const previousQuarter = Math.min(4, Math.floor(state.currentDay / DAYS_PER_QUARTER) + 1)
     set({ state: next, lastTicks: result.ticks ?? [], ui: {
       ...get().ui,
+      ...(next.currentDay !== state.currentDay ? { decisionReceipt: undefined } : {}),
       ...(quarter > previousQuarter && !next.finished ? {
         quarterTransition: { gameId: next.gameId, year: next.year ?? 1, quarter },
       } : {}),

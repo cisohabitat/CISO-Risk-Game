@@ -108,7 +108,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           </p>
         )}
         <nav aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
-          <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available</span>
+          <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available now (of {state.resources.focusPerWeek} per week)</span>
           <Button variant="quiet" size="sm" onClick={() => moveTo('decision-options')}>Compare options</Button>
           <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>
         </nav>

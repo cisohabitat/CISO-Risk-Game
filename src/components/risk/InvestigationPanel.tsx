@@ -218,7 +218,7 @@ export function InvestigationPanel() {
             </>
           }
         >
-          <p className="mb-4 rounded-lg border border-line p-3 text-sm text-ink-muted">This uses {chosen.focusCost} attention{chosen.budgetCost > 0 ? ` and ${money(chosen.budgetCost)}` : ''}. Allow about {chosen.durationDays} days; workload and delegation can affect the result. Findings arrive in your Inbox.</p>
+          <p className="mb-4 rounded-lg border border-line p-3 text-sm text-ink-muted">This uses {chosen.focusCost} attention{chosen.budgetCost > 0 ? ` and ${money(chosen.budgetCost)} budget` : ' and no budget'}. Allow about {chosen.durationDays} days; workload and delegation can affect the result. Findings arrive in your Inbox.</p>
           <fieldset className="space-y-2">
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Delegate to</legend>
             {index.content.leaders.map((leader) => {

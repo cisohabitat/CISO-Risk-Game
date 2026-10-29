@@ -12,7 +12,6 @@ export function Terms({ text, className }: { text: string; className?: string })
   const openGlossary = useGameStore((store) => store.openGlossary)
   const lower = text.toLowerCase()
   const hits = index.content.glossary.filter((entry) => {
-    if (entry.section !== 'subject') return false
     return entry.term
       .split(',')
       .map((t) => t.trim().toLowerCase())

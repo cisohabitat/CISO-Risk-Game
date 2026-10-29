@@ -3,7 +3,8 @@
  * this is the reference for anyone who wants it.
  */
 import { useEffect, useRef } from 'react'
-import { Dialog } from '@/components/ui/primitives'
+import { LESSONS } from './lessons'
+import { Disclosure, Dialog } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 
 export function Glossary() {
@@ -26,6 +27,10 @@ export function Glossary() {
       title="Glossary"
       description="What this game means by the words it uses, and what the field means by the ones it borrows."
     >
+      <section className="mb-6" aria-label="Teaching tips">
+        <h2 className="mb-3 font-display text-xl">Teaching tips — revisit any time</h2>
+        <div className="space-y-2">{LESSONS.map((lesson) => <Disclosure key={lesson.id} summary={lesson.title}><p>{lesson.body}</p></Disclosure>)}</div>
+      </section>
       {(
         [
           ['game', 'How this game uses its words'],
