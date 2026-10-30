@@ -3,7 +3,7 @@
  * in the executives' own words; quarterly preparation is an exercise in what to
  * put in front of people, not in writing a document.
  */
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews, visibleRisks } from '@/store/selectors'
@@ -26,6 +26,9 @@ export function BoardScreen() {
   const [preparing, setPreparing] = useState(Boolean(draft && draft.quarter === state?.reviews.pendingQuarter))
   const [topics, setTopics] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.topics ?? [] : [])
   const [recommendations, setRecommendations] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.recommendations ?? [] : [])
+  const [omissionsAcknowledged, setOmissionsAcknowledged] = useState<string>('')
+  const [reviewOmissions, setReviewOmissions] = useState(false)
+  const omissionHeading = useRef<HTMLHeadingElement>(null)
   const [uncertainty, setUncertainty] = useState(draft?.quarter === state?.reviews.pendingQuarter ? draft?.uncertainty ?? true : true)
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
@@ -38,7 +41,10 @@ export function BoardScreen() {
     [state, index],
   )
   // Why a risk the player can see is not on the agenda: it has not been raised.
-  const emergingCount = state ? Object.values(state.risks.scenarios).filter((s) => s.status === 'emerging').length : 0
+  const emergingRisks = state ? Object.values(state.risks.scenarios).filter((s) => s.status === 'emerging').flatMap((risk) => { const def = index.riskScenario.get(risk.id); return def ? [{ id: risk.id, title: def.title }] : [] }) : []
+  const emergingCount = emergingRisks.length
+  const omitted = availableTopics.filter((topic) => topic.material && !topics.includes(topic.id))
+  const omissionKey = `${state?.reviews.pendingQuarter}:${omitted.map((topic) => topic.id).sort().join('|')}`
   if (!state) return null
 
   const pendingQuarter = state.reviews.pendingQuarter
@@ -57,6 +63,11 @@ export function BoardScreen() {
 
   const submit = () => {
     if (pendingQuarter === undefined) return
+    if (omitted.length > 0 && omissionsAcknowledged !== omissionKey) {
+      setReviewOmissions(true)
+      requestAnimationFrame(() => { omissionHeading.current?.focus(); omissionHeading.current?.scrollIntoView({ block: 'center' }) })
+      return
+    }
     const result = dispatch({
       type: 'completeQuarterReview',
       quarter: pendingQuarter,
@@ -80,7 +91,7 @@ export function BoardScreen() {
           <h1 className="mt-2 font-display text-3xl leading-tight">Board and executives</h1>
         </div>
         {pendingQuarter !== undefined && (
-          <Button variant="primary" onClick={() => setPreparing(true)}>
+          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); setPreparing(true) }}>
             Prepare the Q{pendingQuarter} board paper
             <span className="font-normal opacity-80"> · {FOCUS_COSTS.boardPreparation} attention</span>
           </Button>
@@ -105,6 +116,10 @@ export function BoardScreen() {
         </Card>
       )}
 
+      <Disclosure summary="Governance correspondence: insurance, appetite and intelligence">
+        <p className="text-sm">Use the reports already received when preparing the paper. A report or recommendation does not itself buy cover, change policy or commission a test.</p>
+        {state.inbox.messages.filter((message) => message.eventId && index.event.get(message.eventId)?.boardReference).length === 0 ? <p className="mt-2 text-sm">No correspondence in these categories has been received yet.</p> : <ul className="mt-2 space-y-2">{state.inbox.messages.filter((message) => message.eventId && index.event.get(message.eventId)?.boardReference).map((message) => <li key={message.id}><Button variant="quiet" size="sm" onClick={() => { useGameStore.getState().setUi({ selectedMessageId: message.id }); useGameStore.getState().setScreen('inbox') }}>{message.subject}</Button></li>)}</ul>}
+      </Disclosure>
       <section aria-labelledby="people">
         <SectionHeading><span id="people">Where you stand</span></SectionHeading>
         <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -234,6 +249,13 @@ export function BoardScreen() {
             <div className="col-span-2 sm:col-span-1"><dt className="text-xs text-ink-faint">Submit by</dt><dd className="mt-1 font-medium">{formatGameDate(((pendingQuarter ?? 0) + 1) * DAYS_PER_QUARTER - 1).label}</dd></div>
           </dl>
           <p className="text-sm text-ink-muted">Choose the agenda, programme recommendations and uncertainties you will disclose. Submitting records the paper and returns the committee’s response; recommendations do not start programmes automatically.</p>
+          {omitted.length > 0 && reviewOmissions && <section className="rounded-lg border border-band-high/50 bg-band-high-soft p-3" aria-label="Material omissions" role={reviewOmissions ? 'alert' : undefined}>
+            <h2 ref={omissionHeading} tabIndex={-1} className="font-medium">{plural(omitted.length, 'material item')} not selected</h2>
+            <p className="mt-2 text-sm">The board will not hear these items. Omitting material information affects its confidence; a draft is not a submitted paper.</p>
+            <ul className="mt-2 list-disc pl-5 text-sm">{omitted.map((topic) => <li key={topic.id}>{topic.label}</li>)}</ul>
+            <Button variant="secondary" size="sm" className="mt-3" onClick={() => setTopics((current) => [...new Set([...current, ...omitted.map((topic) => topic.id)])])}>Include all material items</Button>
+            <label className="mt-3 flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={omissionsAcknowledged === omissionKey} onChange={(event) => setOmissionsAcknowledged(event.target.checked ? omissionKey : '')} />I understand and deliberately omit these items</label>
+          </section>}
           {availableTopics.length === 0 ? (
             <EmptyState
               title="No agenda topics are eligible yet"
@@ -247,9 +269,10 @@ export function BoardScreen() {
               {emergingCount > 0 && (
                 <p className="mb-3 text-sm text-ink-muted">
                   {plural(emergingCount, 'risk is', 'risks are')} emerging and not on the agenda: the board hears about
-                  risks you have raised, and an emerging one is raised from the Risk screen.
+                  risks you have raised, and an emerging one is raised from the Risk screen. This count does not include the raised risks listed below.
                 </p>
               )}
+              {emergingCount > 0 && <Disclosure summary="Which risks are still emerging?"><ul className="list-disc pl-5">{emergingRisks.map((risk) => <li key={risk.id}>{risk.title}</li>)}</ul></Disclosure>}
               {emergingCount > 0 && <Button variant="secondary" size="sm" className="mb-3" onClick={reviewRisks}>Review emerging risks and return to this draft</Button>}
               <div className="space-y-2">
                 {availableTopics.map((topic) => {
@@ -271,7 +294,7 @@ export function BoardScreen() {
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
                         style={{ minHeight: 0 }}
                       />
-                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}<span className="mt-1 block text-xs text-ink-muted">{topic.material ? 'Required: material to this committee' : 'Optional update'}</span></span>
+                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}<span className="mt-1 block text-xs text-ink-muted">{topic.material ? 'Required: material to this committee' : 'Optional update'}</span>{state.reviews.quarters.some((paper) => paper.completed && paper.topicsChosen.includes(topic.id)) && <span className="mt-1 block text-xs text-ink-muted">Previously reported; still available for this paper</span>}</span>
                       {riskBands.has(topic.id) ? (
                         <Badge tone={bandTone(riskBands.get(topic.id)!)} className="shrink-0 self-start">
                           {RISK_BAND_LABEL[riskBands.get(topic.id)!]} residual

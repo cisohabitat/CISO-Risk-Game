@@ -111,6 +111,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                     // Keyed by the count, so it pops once when mail arrives.
                     <span
                       key={view.unreadMessages}
+                      aria-label={`${view.unreadMessages} unread messages`}
+                      title={`${view.unreadMessages} unread messages`}
                       className="animate-pop rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums"
                     >
                       {view.unreadMessages > 9 ? '9+' : view.unreadMessages}

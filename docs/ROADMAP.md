@@ -86,6 +86,73 @@ assessment rules and simulation balance. Attention and required-rationale
 regressions are checked against the current code; the supplied played-build
 mismatches remain unreproduced. Human retests and pilot gates remain open.
 
+## CISO feedback received 29 October 2026
+
+A separate [owner-supplied CISO report](playtests/2026-10-29-owner-supplied-ciso.md)
+finished a year with a Credible assessment and four of five business objectives.
+Build/seed and protocol metadata were not supplied. Late defaulted choices,
+including next year's budget, must be excluded from claims about intended
+strategy. This is a reported full-year experience, not a completed independent
+pilot slot or permission to add mechanics.
+
+Source review prioritises two concrete gaps: a “funded” audit commitment that
+neither reserves budget nor starts a programme, and board papers omitted from the
+global decision-deadline notice. Reproduce scenario/agenda identity, submission
+counts, Skip ahead and notification discrepancies against an identified save.
+Clarify weekly attention, conditional durations and qualitative relationship
+changes before changing balance. Recovery/prioritisation grades do not imply that
+all identity/cloud risks were treated.
+
+Insurance and risk-appetite correspondence, intelligence advisories, an
+IR-readiness review and ransom negotiation already exist. Check reachability,
+noticeability and depth before adding duplicates. The readiness review is not
+proof of a fully implemented tabletop exercise; its assessment credit needs
+comparison with authored findings. New insurer, appetite-policy and operational
+metrics mechanics remain separate proposals. The report's triage table records
+source evidence, limits and retest tasks. Human gates and grades remain open.
+
+## Product-manager feedback received 29 October 2026
+
+The [owner-supplied product-manager report](playtests/2026-10-29-owner-supplied-product-manager.md)
+describes two completed campaigns: a passive CISO / inherited-mess run and an
+active Guided / after-breach run. Different modes, situations and unknown seeds
+prevent a controlled strategy comparison. They are two runs by one reported
+participant, not two independent participants; protocol/build metadata and mobile
+observations are absent.
+
+Prioritise reproducing the reported clock/default hazard even though incident
+and new authored-decision pause flags already exist. Inspect UI callbacks,
+queued advances and resume behaviour. Material board items are labelled Required
+but can be omitted without a pre-submission guard; make that consequence explicit
+before acceptance. Reconcile paper records and repair singular grammar.
+
+Separate node/dependency discovery, deliberate/default decisions and offered/
+submitted/missed board papers in the review. The reported 18 deliberate choices
+plus nine defaults can correctly produce 27 history entries; 38 known systems
+can coexist with hidden dependencies. These are clarity hypotheses until a save
+establishes an arithmetic defect. Repeated exposure and recovery performance are
+also different claims; calibrate any assessment change separately.
+
+Retest the weekly loop, attention refresh, reason requirements, opening context
+and artwork fallbacks. Treat the offer to make a Page as quoted feedback, not
+permission to create or share one. The triage record preserves source evidence
+and retest tasks; human gates and grades remain open.
+
+## Combined-report implementation follow-through, 30 October 2026
+
+The current pass implements clock callback/modal/visibility guards, board deadline
+warnings and a pre-deadline pause, an explicit material-omission guard, named
+emerging/previous agenda distinctions, audit promise quotes and persistent
+follow-through, and a conditional unfunded-promise consequence for new choices.
+It reconciles review record counts and labels, explains attention/reason/base
+programme duration/trust movement, surfaces existing governance correspondence,
+and fixes decorative-art failure fallbacks and starting-situation context.
+[Findings](FINDINGS.md) records actual checks. Stored assessments and dimension
+weights are unchanged. The new conditional audit consequence is the only scoped
+authored balance change; broad evasive-option, burnout and strategy claims still
+need controlled evidence. New insurer/appetite-policy/tabletop/metrics mechanics
+remain proposals. No independent-pilot or physical-device gate is closed here.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,
@@ -151,7 +218,7 @@ evidence rather than hope, that this is happening. Concretely:
 | **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. | **D.** Kit built (session log, protocol, synthesis); one owner-supplied unfinished newcomer report received on 29 October, with build and independence unknown. Independent pilot and synthesis remain outstanding. |
 | **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. | **Unknown.** A voice guide holds every string; the 320px first session is fixed; whether it teaches still needs people. |
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
-| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 222 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
+| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 223 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
 | **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
 | **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, an editorial review, twelve larger portraits, a Nexora mark, self-hosted display typography, distinct document layouts, incident scenes and illustrated empty states; human art review remains open. |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |

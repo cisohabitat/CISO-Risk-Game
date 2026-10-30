@@ -1,3 +1,4 @@
+import { boardPaperCounts } from '@/game/debrief/papers'
 /**
  * Derived, player-facing views of the game state (plan §40).
  *
@@ -164,6 +165,7 @@ export interface OpenDecisionView {
     label: string
     description: string
     visibleKnownEffects: string[]
+    programmeCommitment?: { programmeId: string; reviewAfterDays: number }
     budgetCost?: number
     /** Attention the option spends this week, from its requirements. */
     focusCost?: number
@@ -223,6 +225,7 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             label: option.label,
             description: option.description,
             visibleKnownEffects: option.visibleKnownEffects,
+            programmeCommitment: option.programmeCommitment,
             budgetCost: budgetCost > 0 ? budgetCost : undefined,
             focusCost: requirements?.focus || undefined,
             // Emergency spend is the one thing the year will let you commit
@@ -1264,7 +1267,7 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
       summary:
         lapsed.length === 0
           ? `${plural(taken.length, 'decision', 'decisions')}, all your own`
-          : `${plural(taken.length, 'taken', 'taken')}, ${lapsed.length} decided for you`,
+          : `${decisions.length} total · ${taken.length} taken by you, ${lapsed.length} decided for you`,
       icon: 'decision',
       tone: '--ink',
       marks: decisionMarks,
@@ -1294,10 +1297,10 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
     {
       id: 'board',
       label: 'Board papers',
-      summary: `${state.reviews.quarters.length} of 3 prepared`,
+      summary: (() => { const papers = boardPaperCounts(state); return `${papers.submitted} of ${papers.offered} offered papers submitted · ${papers.missed} missed${papers.awaiting ? ` · ${papers.awaiting} awaiting` : ''}` })(),
       icon: 'board',
       tone: '--chart-board',
-      marks: state.reviews.quarters.map((q) => ({ day: q.day, label: `Q${q.quarter} board paper`, present: true })),
+      marks: [...new Map(state.reviews.quarters.filter((q) => q.completed).map((q) => [q.quarter, q])).values()].map((q) => ({ day: q.day, label: `Q${q.quarter} board paper`, present: true })),
       spans: [],
     },
     {

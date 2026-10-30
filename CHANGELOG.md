@@ -20,6 +20,21 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Hold time while reading a decision or other modal and when the browser tab is
+  hidden; prevent queued callbacks from overrunning an incident/decision pause.
+- Warn before board papers lapse and require a deliberate acknowledgement before
+  submitting a paper with material omissions. Name emerging and previously
+  reported risks separately and link received governance correspondence.
+- Quote the audit promise's programme funding, retain its follow-through in
+  Briefing/Programmes, and deliver a credibility consequence if the new promise
+  remains unstarted at its funding review.
+- Reconcile paper counts, discovery counts and choice/default totals in new annual
+  reviews; clarify recovery versus prevention, weekly attention, base programme
+  durations, required reasons and the size of relationship changes in words.
+- Use situation-aware opening context, full accessible unread counts, finished
+  glossary labels and clean fallbacks when decorative images fail.
+
+
 - Keep teaching notes compact outside Briefing and put Teaching tips in shared
   help menus, retaining every lesson and dismissal action. This fixes Inbox
   panes extending below short landscape viewports with wider fallback fonts.

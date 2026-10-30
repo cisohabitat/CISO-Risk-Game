@@ -23,7 +23,7 @@ export function Terms({ text, className }: { text: string; className?: string })
   // with the residual and confidence badges above them.
   return (
     <p className={cn('text-xs text-ink-faint', className)}>
-      <span>Words: </span>
+      <span>Terms explained: </span>
       {hits.slice(0, 5).map((entry, position) => (
         <span key={entry.id}>
           {position > 0 && <span aria-hidden="true"> · </span>}

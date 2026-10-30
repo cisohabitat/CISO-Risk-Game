@@ -2845,6 +2845,25 @@
                     "type": "string"
                   }
                 },
+                "programmeCommitment": {
+                  "type": "object",
+                  "properties": {
+                    "programmeId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reviewAfterDays": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "programmeId",
+                    "reviewAfterDays"
+                  ],
+                  "additionalProperties": false
+                },
                 "immediateEffects": {
                   "type": "array",
                   "items": {
@@ -5510,6 +5529,9 @@
       "items": {
         "type": "object",
         "properties": {
+          "boardReference": {
+            "type": "boolean"
+          },
           "incidentContext": {
             "type": "string",
             "const": "latest-closed"

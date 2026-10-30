@@ -341,6 +341,8 @@ export interface DecisionOptionDef {
   description: string
   /** Consequences the CISO could reasonably foresee. Never hidden effects. */
   visibleKnownEffects: string[]
+  /** A recorded promise, not an automatic purchase or a delivery deadline. */
+  programmeCommitment?: { programmeId: string; reviewAfterDays: number }
   immediateEffects: GameEffect[]
   delayedEffects?: (EffectTiming & { effects: GameEffect[]; note?: string })[]
   requirements?: {
@@ -398,6 +400,8 @@ export interface DecisionDef {
 }
 
 export interface GameEventDef {
+  /** Presentation reference only; does not participate in event spacing. */
+  boardReference?: boolean
   /** Bind post-incident correspondence to the latest closed response at delivery. */
   incidentContext?: 'latest-closed'
   id: string

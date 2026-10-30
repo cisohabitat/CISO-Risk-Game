@@ -1,3 +1,4 @@
+import { boardPaperCounts } from './papers'
 /**
  * Quarterly board reviews and the annual CISO review (plan §26).
  *
@@ -13,7 +14,7 @@ import type {
   ReasoningLine,
 } from '../types'
 import { clamp01, money } from '../types'
-import { ASSURANCE_LIFE_DAYS, blindSpots, unexaminedMaterial } from '../knowledge/discovery'
+import { ASSURANCE_LIFE_DAYS, blindSpots, undiscoveredMaterial, unexaminedMaterial } from '../knowledge/discovery'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { effortAllocation, programmeRelevance, programmesThisYear } from './prioritisation'
 import { overallAssessment } from './assessment'
@@ -157,6 +158,7 @@ function missedStanding(state: GameState, index: ContentIndex, scenarioId: strin
 
 export function buildAnnualReview(state: GameState, index: ContentIndex): AnnualReview {
   const dimensions: AnnualReviewDimension[] = []
+  const papers = boardPaperCounts(state)
   // A year that followed another did not begin with an arrival.
   const laterYear = (state.year ?? 1) > 1
 
@@ -436,6 +438,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           ? `${name} on ${dateOf(days[0]!)}, and again on ${list} — the same weakness, still open`
           : `${name} on ${dateOf(days[0]!)}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
       })
+      lines.unshift('This dimension assesses impact and recovery. It does not establish that entry routes or identity and cloud exposures were fixed.')
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
       // three and a half hours. Found by the second observed playtest.
@@ -459,7 +462,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ...(restoreTaken ? [`a production restore${restoreOverran ? ', which ran past its window' : ''}`] : []),
         ...(sandboxRestore ? ['a restore into the test tenancy'] : []),
       ]
-      const exerciseCount = exercises.length + restores.length
+      const readinessReviews = exercises.filter((assignment) => assignment.refId === 'inv-ir-readiness').length
+      const exerciseCount = exercises.length - readinessReviews + restores.length
+      if (readinessReviews > 0) lines.push(`${readinessReviews} incident-response readiness review${readinessReviews === 1 ? '' : 's'} completed; a plan review is not a full tabletop exercise`)
       const which =
         restores.length === 0
           ? ''
@@ -552,7 +557,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   })
 
   // 6. Communication and escalation.
-  const quarters = state.reviews.quarters
+  const quarters = [...new Map(state.reviews.quarters.filter((paper) => paper.completed).map((paper) => [paper.quarter, paper])).values()]
   const boardConfidence = state.stakeholders.boardConfidence
   const communication = clamp01(0.6 * boardConfidence + 0.4 * clamp01(quarters.length / 3))
   dimensions.push({
@@ -574,10 +579,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       }
     })(),
     evidence: [
-      `${quarters.length} quarterly reviews prepared`,
-      ...((state.reviews.missedQuarters ?? 0) > 0
-        ? [`The committee met ${state.reviews.missedQuarters === 1 ? 'once' : `${state.reviews.missedQuarters} times`} without a paper from you`]
-        : []),
+      `${papers.submitted} quarterly review${papers.submitted === 1 ? '' : 's'} submitted; ${papers.offered} offered`,
+      ...(papers.missed > 0 ? [`${papers.missed} board paper${papers.missed === 1 ? '' : 's'} missed at the submission deadline`] : []),
+      ...(papers.awaiting > 0 ? [`${papers.awaiting} paper${papers.awaiting === 1 ? '' : 's'} still awaiting submission`] : []),
     ],
   })
 
@@ -631,6 +635,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
 
   const spots = blindSpots(state, index)
   const neverSeen = spots.length
+  const unseen = undiscoveredMaterial(state, index)
   const onTrust = examined.names.length
   // Things taken on trust sit behind things never seen at all: both are blind
   // spots, but not knowing something exists is the worse of the two.
@@ -663,12 +668,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       spots.length === 0
         ? 'Nothing material was left unexamined.'
         : neverSeen > 0
-          ? 'Material parts of how Nexora fits together were never seen, and more were known about but never examined.'
+          ? onTrust > 0
+            ? 'Material parts of how Nexora fits together were never seen, and more were known about but never examined.'
+            : 'Material parts of how Nexora fits together were never seen.'
           : 'You saw all of what mattered, but much of it was taken on trust rather than examined.',
     evidence: [
-      ...(neverSeen > 0
-        ? [`${neverSeen} material ${neverSeen === 1 ? 'system or dependency was' : 'systems and dependencies were'} never discovered`]
-        : []),
+      ...(unseen.systems.length > 0 ? [`${unseen.systems.length} material system${unseen.systems.length === 1 ? ' was' : 's were'} never discovered`] : []),
+      ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, separately from the system count`] : []),
       ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
         (a) => `"${quotedInline(a.statement)}" was relied on from ${dateOf(a.createdDay)}, not tested after that, and not true`,

@@ -24,6 +24,11 @@ test('a board draft survives reviewing emerging risks at every viewport', async 
   await expect(paper.getByRole('button', { name: 'Identity uplift', exact: true })).toHaveAttribute('aria-pressed', 'true')
   await expectNoHorizontalScroll(page)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
+  const omissions = paper.getByRole('alert')
+  if (await omissions.isVisible()) {
+    await omissions.getByRole('button', { name: 'Include all material items' }).click()
+    await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
+  }
   await expect(paper).toBeHidden()
   await expect(page.getByRole('heading', { name: 'Board and executives' })).toBeVisible()
 })

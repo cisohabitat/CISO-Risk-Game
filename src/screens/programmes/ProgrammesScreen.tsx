@@ -1,10 +1,11 @@
+import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
  * Programme portfolio (plan §28.5). Programmes take months, need people as well
  * as money, and hit blockers that money cannot clear.
  */
 import { minimumProgrammeFunding, programmeAccelerationCost } from '@/game/programmes/funding'
 import { ProgrammeJourney } from '@/components/programmes/ProgrammeJourney'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge, Button, Dialog, Disclosure, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { programmeViews, visibleRisks, type ProgrammeView } from '@/store/selectors'
@@ -15,6 +16,15 @@ export function ProgrammesScreen() {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
+  const requestedProgramme = useGameStore((store) => store.ui.selectedProgrammeId)
+  const setUi = useGameStore((store) => store.setUi)
+  useEffect(() => {
+    if (!requestedProgramme) return
+    const target = document.getElementById(`programme-${requestedProgramme}`)
+    target?.scrollIntoView?.({ block: 'start' })
+    target?.focus({ preventScroll: true })
+    setUi({ selectedProgrammeId: undefined })
+  }, [requestedProgramme, setUi])
   const [starting, setStarting] = useState<ProgrammeView | undefined>()
   const [budget, setBudget] = useState(0)
   const [sponsorId, setSponsorId] = useState('')
@@ -63,6 +73,7 @@ export function ProgrammesScreen() {
         </p>
       </div>
 
+      <ProgrammeCommitments />
       {earlier.length > 0 && (
         <p className="text-sm text-ink-muted text-pretty">
           Delivered in an earlier year: {earlier.map((programme) => programme.name).join(', ')}.
@@ -73,7 +84,7 @@ export function ProgrammesScreen() {
         <section aria-label="Delivery portfolio">
           <ul className="portfolio-list">
             {groupedLive.map(({ programme, label, count }) => (
-              <li key={programme.id}>
+              <li key={programme.id} id={`programme-${programme.id}`} tabIndex={-1}>
                 {label && <h2 className="portfolio-divider"><span>{label}</span>{' '}<span className="text-sm font-normal tabular-nums text-ink-muted">{count} {count === 1 ? 'programme' : 'programmes'}</span></h2>}
                 <article className="programme-row programme-active grid gap-5 py-6">
                   <div className="programme-summary space-y-3">
@@ -199,7 +210,7 @@ export function ProgrammesScreen() {
           <SectionHeading><span id="proposed">On the table</span></SectionHeading>
           <ul className="divide-y divide-line border-y border-line">
             {proposed.map((programme) => (
-              <li key={programme.id}>
+              <li key={programme.id} id={`programme-${programme.id}`} tabIndex={-1}>
                 <article className="programme-row grid gap-5 py-6 lg:grid-cols-2 lg:gap-8">
                   <div className="space-y-3">
                     <div>
@@ -239,7 +250,7 @@ export function ProgrammesScreen() {
                       {programme.budgetCost > state.resources.budgetRemaining && minimumProgrammeFunding(programme.budgetCost) <= state.resources.budgetRemaining && <> You can start with {money(state.resources.budgetRemaining)}; partial funding slows delivery.</>}
                     </p>
                     <dl className="grid grid-cols-2 gap-3">
-                      <Fact label="Runs for" value={`about ${Math.round(programme.durationDays / 30)} months`} />
+                      <Fact label="Base duration" value={`about ${Math.round(programme.durationDays / 30)} months`} />
                       <Fact label="Improves" value={programme.controlImpact.join(', ')} />
                       {/* "Identity 2d/wk, Engineering 1.5d/wk" was shorthand the
                           rest of the game never uses; the Team screen counts
@@ -362,7 +373,7 @@ export function ProgrammesScreen() {
 
             <p className="text-sm text-ink-muted text-pretty">
               It will need {plural(starting.capacityDemand.length, 'team')} for about{' '}
-              {Math.round(starting.durationDays / 30)} months. If those people are committed elsewhere, this will crawl.
+              {Math.round(starting.durationDays / 30)} months at the base rate. Funding, staffing, blockers, acceleration and recorded delivery decisions change the actual date; this is not a fixed completion promise.
             </p>
           </div>
         </Dialog>

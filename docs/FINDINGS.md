@@ -16,6 +16,54 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Combined CISO/product-manager follow-through — 30 October 2026
+
+Two supplied reports are preserved under `docs/playtests/2026-10-29-owner-supplied-*`.
+Their builds/seeds are unknown. They establish reported friction, not an
+independent pilot or controlled comparison.
+
+- Two clock regressions failed before the fix: a queued interval advanced after
+  pausing, and time advanced behind a modal reader. Callbacks now recheck current
+  campaign/speed/pause and reading surfaces; an observer and visibility listener
+  hold time until explicit resume. Added hidden-tab and campaign-switch coverage.
+- Board papers were absent from global deadline notices and allowed accidental
+  material omissions. Notices now include the real quarter deadline; the engine
+  pauses before the final legal day without moving the lapse boundary. Submission
+  lists omissions and requires inclusion or an explicit keyed acknowledgement.
+  Raised-risk eligibility already persisted; the UI names emerging and previously
+  reported topics separately rather than implying all risks are emerging.
+- The audit programme reply did not buy or reserve delivery. It now says so,
+  quotes actual minimum/full/available funding, and retains recorded follow-through
+  and shortfalls. New choices schedule an unstarted-programme check at 100 days,
+  with board confidence -0.08 and CFO trust -0.10 if still proposed. The review is
+  a funding checkpoint, not a completion deadline; historical records do not
+  invent dates or default provenance. This is the scoped authored balance change.
+- New reviews derive paper totals from closed windows and distinct completed
+  records, distinguish undiscovered nodes from edges and total choices from player
+  choices/defaults, and repair singular grammar. Recovery evidence separates a
+  readiness review from an exercise and explains that recovery credit does not
+  prove entry routes were fixed. No weights, thresholds or stored grades change.
+- Existing governance reports are linked from Board using presentation-only
+  `boardReference` metadata. The weekly loop, conditional durations, team recovery,
+  required reasons and qualitative trust movement are explained. Unread badges
+  expose the full count to assistive technology; decorative image failures remove
+  their containers and opening context names the selected situation.
+
+Verification: `pnpm check` passed all 685 unit/content/UI tests, content validation,
+production build and size budgets. Focused browser checks passed 18/18; the full
+six-project browser suite passed 683 checks with 49 existing viewport/feature
+skips (732 scheduled, 17.0 minutes), including Chromium, WebKit, both tablets and
+both phone sizes. No assertion, browser project or bound was relaxed. Local
+WebKit used the previously provisioned `/tmp` library tree and the host-preflight
+skip flag; actual WebKit tests ran. GitHub CI uses its normal dependency install.
+The 6-seed content-flow audit completed 24 unique campaign-years and their
+deterministic replays, with no unreferenced replies or duplicate authored bodies.
+The 30-seed balance audit completed 360 policy/mode campaigns with zero invariant
+violations. These probes do not establish player engagement or fairness.
+Insurance purchase, formal appetite policy, full tabletop and historical response
+metrics remain separate feature proposals; no report is marked as independently
+retested.
+
 ### Fixed
 
 - **Budget access and execution credit distorted balance.** Programme cards

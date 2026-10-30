@@ -719,6 +719,15 @@
         "consequence"
       ],
       "scheduledOnly": true
+    },
+    {
+      "id": "evt-con-audit-funding-missing", "type": "board", "title": "The audit promise is still unfunded", "from": "Tomas Lindqvist, Chief Financial Officer",
+      "body": "We promised a funded identity programme and dates for the repeat audit finding. At the funding review, that programme has still not started. The reply to audit did not reserve its budget.\n\nThe finding is still a delivery commitment, not evidence of closure. Bring the current funding and staffing proposal, or explain which dates need to be renegotiated. I have recorded that the funding was not arranged at this review.",
+      "priority": "urgent", "availableFromDay": 0,
+      "conditions": [{ "kind": "flag.set", "flag": "audit.committed" }, { "kind": "programme.status", "programmeId": "prog-identity", "status": "proposed" }],
+      "weight": 1, "pinned": false, "oncePerCampaign": true, "scheduledOnly": true,
+      "effectsOnReveal": [{ "type": "board.confidence", "delta": -0.08 }, { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.1, "reason": "The funding review found the identity programme had not started after your audit commitment." }],
+      "relatedNodeIds": ["node-pam"], "tags": ["board", "consequence"]
     }
   ]
 }

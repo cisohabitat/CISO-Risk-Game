@@ -428,6 +428,40 @@ crosses to a new one. These changes address the reported newcomer friction;
 the played-build attention/rationale discrepancies remain unreproduced, and
 fresh human retesting is still needed.
 
+A separate [CISO playtest report](docs/playtests/2026-10-29-owner-supplied-ciso.md)
+records a full-year account with late defaulted decisions excluded from strategy
+claims. Its source triage distinguishes commitment/deadline gaps, unconfirmed
+bugs, balance hypotheses and existing content the player did not encounter.
+
+The [product-manager playtest report](docs/playtests/2026-10-29-owner-supplied-product-manager.md)
+records two differently configured campaigns and separates reported clock/board
+hazards from review-count ambiguities. Source triage is not a browser reproduction
+or a controlled strategy comparison. Implementation follow-through is recorded below.
+
+Combined CISO/product-manager follow-through (30 October): queued clock callbacks
+respect current engine pauses and campaign identity; modal reading and hidden tabs
+hold time until explicit resume. Board papers have cross-screen deadline notices,
+a pre-deadline pause, named emerging/previously reported risks and a submission
+guard for material omissions. Deliberate omissions remain possible after an
+explicit acknowledgement. Raised risks stay eligible; submitting one paper never
+selects the next paper automatically.
+
+The audit promise quotes minimum/full programme funding before selection and
+remains visible in Briefing and Programmes. It reserves no money. New selections
+schedule a conditional review after 100 days: an unstarted identity programme
+receives a specific credibility consequence. This is a scoped authored consequence,
+not a new commitment simulator. Historical selections retain their provenance
+limits. Annual-review totals distinguish systems/dependencies, choices/defaults,
+and offered/submitted/missed papers; stored reviews retain their original grades.
+Weekly attention, conditional base durations, team recovery and qualitative trust
+movement are explained. Delivered insurance/appetite/intelligence correspondence
+is reachable from Board. Failed decorative artwork disappears cleanly.
+
+The reports still need identified-build human retests. Insurance purchasing,
+formal appetite policy, a full tabletop and historical detection/response metrics
+remain separate feature proposals; broad balance claims are not established by
+these differently configured runs. See [measured findings](docs/FINDINGS.md).
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
@@ -513,7 +547,7 @@ schemas and a referential integrity pass. These counts include both years:
 | Hypothesis templates / risk scenarios | 17 / 17 |
 | Lines of enquiry | 18 |
 | Decisions / decision options | 49 / 149 |
-| Events | 222 |
+| Events | 223 |
 
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.

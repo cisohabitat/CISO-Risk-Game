@@ -6,6 +6,35 @@ changes.
 
 ## Documentation
 
+- Combined-report follow-through (30 October): realtime callbacks recheck campaign,
+  speed and pause before advancing; modal/hidden-tab holds require explicit resume.
+  Board warnings use the 91-day quarter windows, with a pause before the final
+  legal day. Material omissions require a keyed acknowledgement or inclusion;
+  preserve deliberate omission effects and raised-risk eligibility across papers.
+  Count offered/submitted/missed papers from completed distinct quarter records.
+  Keep system and dependency discovery counts separate and stored grades intact.
+  Programme promises quote actual funding and remain distinct from purchases.
+  The audit funding review is a scoped conditional authored consequence for new
+  selections. Presentation-only governance references use `boardReference`, never
+  event tags (which alter scheduling). Preserve historical commitment uncertainty.
+
+
+- Preserve the 29 October supplied product-manager account as two differently
+  configured campaigns from one reported participant, not controlled strategy
+  evidence. Reproduce clock/default hazards despite existing engine pause flags;
+  audit material-topic submission guards and paper records. Separate discovered
+  nodes/dependencies and deliberate/default decisions before changing counters.
+  Keep recurrence/prevention separate from recovery assessment. The quoted Page
+  offer is not authorisation to create, share or contact anyone.
+
+- Preserve the 29 October owner-supplied CISO report separately from the newcomer
+  account. Build/seed and independence are unknown; exclude late defaulted choices
+  from intended-strategy claims. Audit commitment truthfulness and board-paper
+  reminders first, reproduce identity/count/time-control discrepancies, and check
+  existing insurance/appetite/intelligence/readiness/negotiation content before
+  proposing duplicates. A readiness review is not proof of a full tabletop.
+  Do not change balance, assessment or add mechanics merely to record feedback.
+
 - Secondary workspaces use compact teaching notes with their full text and
   Got it action; replay stays in shared Help and settings / More utilities.
   Keep the Briefing replay control. The desktop wheel-isolation test applies

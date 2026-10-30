@@ -8,7 +8,7 @@
  * Directions in words, never amounts (`CLAUDE.md`, "Bands, not numbers").
  * Delayed effects are not here: they belong to the organisation's response.
  */
-import { boardConfidenceLabel } from '@/game/stakeholders/relationships'
+import { boardConfidenceLabel, relationshipBand, RELATIONSHIP_LABEL } from '@/game/stakeholders/relationships'
 import { functionTitle } from '@/game/team/capacity'
 import type { ContentIndex, GameState } from '@/game/types'
 
@@ -32,8 +32,10 @@ export function decisionReactions(before: GameState, after: GameState, index: Co
     )
     for (const memory of remembered) reactions.push({ text: `${name}: ${memory.summary}`, tone: memory.sentiment })
     const delta = person.trust - earlier.trust
-    if (remembered.length === 0 && Math.abs(delta) >= NOTICEABLE) {
-      reactions.push({ text: `${name} trusts you ${delta > 0 ? 'more' : 'less'}.`, tone: delta > 0 ? 'positive' : 'negative' })
+    if (Math.abs(delta) >= NOTICEABLE) {
+      const extent = Math.abs(delta) >= 0.1 ? 'substantially' : Math.abs(delta) >= 0.05 ? 'noticeably' : 'slightly'
+      const currentBand = RELATIONSHIP_LABEL[relationshipBand(person.trust)]
+      reactions.push({ text: `${name}’s trust ${delta > 0 ? 'rose' : 'fell'} ${extent}. Relationship: ${currentBand}.`, tone: delta > 0 ? 'positive' : 'negative' })
     }
   }
 

@@ -538,6 +538,10 @@ test.describe('a first year at Nexora', () => {
         await board.click()
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
+        if (await dialog.getByRole('alert').isVisible()) {
+          await dialog.getByRole('button', { name: 'Include all material items' }).click()
+          await dialog.getByRole('button', { name: 'Take it to the board' }).click()
+        }
         await expect(dialog).toBeHidden()
         continue
       }

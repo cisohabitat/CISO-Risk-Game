@@ -1,3 +1,4 @@
+import { ProgrammePromiseQuote } from '@/components/game/ProgrammeCommitments'
 /**
  * Taking a decision (plan §21, §22).
  *
@@ -100,6 +101,8 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       }
     >
       <div className="decision-paper space-y-6">
+        {state.currentDay < 7 && state.situationId && <p className="text-sm text-ink-muted">Opening situation: {index.content.situations?.find((situation) => situation.id === state.situationId)?.name ?? 'Your inherited organisation'}. The first task is to establish what you can verify for yourself.</p>}
+        <p className="text-sm text-ink-muted">Time pauses while a paper or help dialog is open. Resume it explicitly after reading. {decision.requiresRationale ? 'This material decision requires at least one reason before you can commit; a note remains optional.' : 'Recording a reason is optional for this decision.'}</p>
         {decision.daysRemaining !== undefined && (
           <p className={cn('decision-deadline rounded-lg border border-line p-3 text-sm font-medium', decision.urgent ? 'text-band-high' : 'text-ink-muted')}>
             {decision.daysRemaining <= 0
@@ -165,6 +168,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                     <span className="text-sm tabular-nums"><span className="mb-1 block text-xs text-ink-faint">Attention cost</span>{option.focusCost} attention</span>
                   )}
                 </span>}
+                {option.programmeCommitment && <ProgrammePromiseQuote {...option.programmeCommitment} />}
                 {option.visibleKnownEffects.length > 0 && (
                   <div className="mt-3">
                     <p className="text-xs font-medium text-ink-faint">Known effects</p>

@@ -55,7 +55,7 @@ describe('the board standing', () => {
     // The third is missed on the last day, and the review says so instead.
     expect(subjects.filter((s) => s === 'Again, no paper')).toHaveLength(1)
     const evidence = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'communication')!.evidence
-    expect(evidence).toContain('The committee met 3 times without a paper from you')
+    expect(evidence).toContain('3 board papers missed at the submission deadline')
   })
 
   it('does not charge for a paper written late in the quarter', () => {

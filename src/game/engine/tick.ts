@@ -104,6 +104,9 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     pauseReasons.add('quarter-end')
   }
 
+  // Give the player a full final day to submit, without changing the lapse.
+  if (state.reviews.pendingQuarter !== undefined && day === (state.reviews.pendingQuarter + 1) * DAYS_PER_QUARTER - 2) pauseReasons.add('board-decision')
+
   // 3. Delayed consequences scheduled by earlier decisions.
   const duePending = state.pendingEffects.filter((entry) => entry.day <= day)
   if (duePending.length > 0) {

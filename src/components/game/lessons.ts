@@ -123,7 +123,7 @@ export const LESSONS: Lesson[] = [
     id: 'lesson-attention',
     teaches: 'attention',
     title: 'Your week is the scarce resource',
-    body: 'Attention does not carry over. Spending it on everything means spending it on nothing that matters.',
+    body: 'Your attention allowance refreshes every seven game days. Unused attention does not carry over; actions quote their cost before you commit.',
     when: (context) => context.day >= 21,
   },
 ]

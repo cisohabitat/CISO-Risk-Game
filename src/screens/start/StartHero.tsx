@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import desktopScene from '@/assets/art/start-desktop.webp'
 import mobileScene from '@/assets/art/start-mobile.webp'
 import { GUIDE_URL } from '@/app/navigation'
@@ -14,12 +15,13 @@ interface StartHeroProps {
 
 /** The title screen is the start screen itself; artwork never gates play. */
 export function StartHero({ disabled, beginning, continuing, onBegin, onContinue, resumeLabel, savingUnavailable }: StartHeroProps) {
+  const [artFailed, setArtFailed] = useState(false)
   return (
     <header className="start-hero">
-      <picture className="start-scene" aria-hidden="true">
+      {!artFailed && <picture className="start-scene" aria-hidden="true">
         <source media="(max-width:639px),(orientation:portrait)" srcSet={mobileScene} />
-        <img src={desktopScene} alt="" width="1600" height="900" decoding="async" fetchPriority="low" />
-      </picture>
+        <img src={desktopScene} alt="" width="1600" height="900" decoding="async" fetchPriority="low" onError={() => setArtFailed(true)} />
+      </picture>}
       <div className="start-content">
         <div className="start-heading">
           <p className="start-company">Nexora Group <span>· Office of the CISO</span></p>

@@ -3,7 +3,7 @@
     {
       "id": "dec-first-week-focus",
       "title": "Where do you start?",
-      "description": "The CEO wants three cyber risks in twenty-three minutes. You have an inherited backlog, a stale register and no picture of your own.",
+      "description": "The CEO wants three cyber risks in twenty-three minutes. Whatever happened before your arrival, you have not yet independently verified Nexora's inherited backlog or risk register.",
       "context": "Each route buys you a different kind of understanding, and you cannot have all of them first.",
       "defaultOptionId": "opt-first-register",
       "requiresRationale": false, "rationaleTagIds": ["rat-more-evidence", "rat-material", "rat-enables-business", "rat-exec-ownership", "rat-precedent"],
@@ -249,14 +249,15 @@
       "requiresRationale": true,
       "relatedNodeIds": ["node-pam"],
       "options": [
-        { "id": "opt-audit-programme", "label": "Commit to a funded programme with dates", "description": "Tell audit and the board that this is being fixed properly, and commit to milestones.", "visibleKnownEffects": ["You will be held to the dates", "Meeting them means funding and staffing a programme"],
+        { "id": "opt-audit-programme", "label": "Commit to funding the identity programme with dates", "description": "Promise a delivery plan. Funding and staffing the identity programme are separate decisions in Programmes; this reply does not purchase it or reserve money.", "visibleKnownEffects": ["A funding review follows in one hundred days", "A plan alone does not close the finding; an unfunded promise damages credibility"], "programmeCommitment": { "programmeId": "prog-identity", "reviewAfterDays": 100 },
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.08, "reason": "You gave audit a credible, dated answer." },
             { "type": "board.confidence", "delta": 0.06 },
             { "type": "flag.set", "flag": "audit.committed" },
-            { "type": "event.schedule", "eventId": "evt-con-audit-commitment-due", "dayOffset": 100 }
+            { "type": "event.schedule", "eventId": "evt-con-audit-commitment-due", "dayOffset": 100 },
+            { "type": "event.schedule", "eventId": "evt-con-audit-funding-missing", "dayOffset": 100 }
           ] },
-        { "id": "opt-audit-plan", "label": "Produce a remediation plan", "description": "The standard response: a plan, an owner and a target date.", "visibleKnownEffects": ["Audit will accept it, and no budget is committed", "It is the answer audit has had twice before"],
+        { "id": "opt-audit-plan", "label": "Produce a remediation plan", "description": "The standard response: a plan, an owner and a target date.", "visibleKnownEffects": ["Audit receives a plan, and no budget is committed", "A plan alone does not close the repeat finding"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.02 },
             { "type": "board.confidence", "delta": -0.01 }

@@ -143,13 +143,14 @@ function domainForNodeType(type: string): string {
 }
 
 /** Blind spots: material things that exist and matter but remain unseen. */
-export function blindSpots(state: GameState, index: ContentIndex): string[] {
-  const out: string[] = []
+export function undiscoveredMaterial(state: GameState, index: ContentIndex): { systems: string[]; dependencies: string[] } {
+  const systems: string[] = []
+  const dependencies: string[] = []
   for (const def of index.content.nodes) {
     const node = state.organisation.nodes[def.id]
     if (!node || !node.exists || node.discovered) continue
     if (def.criticality === 'critical' || def.criticality === 'high') {
-      out.push(`${def.name} was never brought into view`)
+      systems.push(`${def.name} was never brought into view`)
     }
   }
   for (const def of index.content.edges) {
@@ -159,12 +160,17 @@ export function blindSpots(state: GameState, index: ContentIndex): string[] {
     const to = index.node.get(def.to)
     if (!from || !to) continue
     if (from.criticality === 'critical' || to.criticality === 'critical') {
-      out.push(`the dependency between ${from.name} and ${to.name} stayed hidden`)
+      dependencies.push(`the dependency between ${from.name} and ${to.name} stayed hidden`)
     }
   }
   // Uncapped: the review caps the list it shows and counts the rest, and a
   // count taken from a capped list undercounts.
-  return out
+  return { systems, dependencies }
+}
+
+export function blindSpots(state: GameState, index: ContentIndex): string[] {
+  const { systems, dependencies } = undiscoveredMaterial(state, index)
+  return [...systems, ...dependencies]
 }
 
 /**

@@ -1,3 +1,4 @@
+import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
  * Home / CISO briefing (plan §28.1): the day, what needs you, what changed and
  * what you still do not know. Qualitative language throughout.
@@ -135,6 +136,16 @@ export function HomeScreen() {
         )}
       </section>
 
+      <Disclosure summary="How a week works">
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
+          <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>
+          <li>Follow the results and prepare the quarterly board paper. Raising a risk makes it eligible; select its agenda item when writing the paper.</li>
+        </ol>
+        <p className="mt-2">A game week is seven days. Your weekly attention refreshes at the boundary, and unused points do not carry over. Budget is an annual allocation. Spare attention has no direct penalty, but it is a chance to investigate, follow through or relieve work. Read at your pace: dialogs and hidden tabs pause the clock; Resume starts it again.</p>
+        <Button variant="secondary" size="sm" className="mt-3" onClick={() => setScreen('risk')}>Open Risk</Button>
+      </Disclosure>
+      <ProgrammeCommitments />
       <Onboarding className="mb-0" />
 
       <CampaignFeedback kind="quarter" />
