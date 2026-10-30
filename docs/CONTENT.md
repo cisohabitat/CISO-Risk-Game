@@ -17,6 +17,15 @@ actual recorded effects, without retroactively reconstructing older ledgers.
 All voiced transcripts, event eligibility and effect amounts remain unchanged.
 The objective probe and its limits are in `OBJECTIVE_REVIEW.md`.
 
+Five-run follow-through (30 October): recruitment quotes a single identity hire
+in 60 days, not all five vacancies. Priorities can cite delivered programmes as
+well as work under way. The watch option declares controls it leaves open for
+route-specific reconstruction; do not claim it alone caused an incident. Negative
+choice consequences in annual accounts require observed authored return mail.
+Assumption enquiry suggestions expose public examination routes, never a hidden
+verdict. Accepted risk still needs disclosure, and stopped work retains sunk
+cost. Voiced message transcripts and difficulty profiles remain unchanged.
+
 All campaign content is data. Nothing about Nexora is hard-coded into a React
 component or an engine module.
 

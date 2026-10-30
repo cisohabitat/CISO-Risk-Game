@@ -72,3 +72,13 @@ for the owner's reported run.
 - Rating weights, business rates, friction and stored annual judgements remain
   unchanged. These findings do not close independent human-learning or fairness
   gates.
+
+
+## Subsequent five-run retest
+
+The [five-run review](FIVE_RUN_REVIEW.md) records a later rerun after fixed
+post-deadline expiry and workload/priority fixes. Keep the earlier table above as
+its dated measurement, not a claim it reproduces the new engine byte for byte.
+The component cases are unchanged; the current High-pressure/Oppose full-policy
+cell has 8/12 platform achievements and mean 4.667 objectives. Other cells match
+to rounding. This does not isolate the effect of the deadline fix.

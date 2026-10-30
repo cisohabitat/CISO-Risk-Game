@@ -1,3 +1,4 @@
+import { unreadUpdateCount } from '@/game/inbox/messages'
 import { programmeDeliveryPercent } from '@/game/programmes/reporting'
 import { discoveryCounts } from '@/game/knowledge/discovery'
 import { boardPaperCounts } from '@/game/debrief/papers'
@@ -534,7 +535,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         ],
         capacityChange: state.history.entries.findLast((entry) => entry.kind === 'capacity' && entry.refs?.includes(fn))?.summary,
         recoveryNote: state.finished ? 'Year-end snapshot; morale no longer changes this year.'
-          : runtime.capacity <= 0 ? 'This function has no delivery capacity and remains under pressure, even without assigned work. Review capacity losses and support; filled vacancies and available delivery time are separate.'
+          : runtime.capacity <= 0 && runtime.committed > 0 ? 'This function has work assigned but no delivery capacity. Pause work or restore capacity; filled vacancies and available delivery time are separate.'
           : nextFunctionMorale(state, fn) > runtime.morale ? 'Recovering slowly at the current workload. Sustained relief takes time.'
             : nextFunctionMorale(state, fn) < runtime.morale ? `Morale is declining${runtime.vacancies > 0 ? ` with ${runtime.vacancies} unfilled ${runtime.vacancies === 1 ? 'vacancy' : 'vacancies'}, even when little work is committed` : ' under the current load'}. Reduce commitments or review staffing. Capacity purchases do not remove later workload or vacancy pressure.`
               : 'Morale is holding at the current workload and staffing. More capacity alone does not mean recovery.',
@@ -633,7 +634,7 @@ export function teamHealthClause(state: GameState): string | undefined {
 /** Compact summaries name every struggling function, not just the worst one. */
 export function teamWellbeingNotes(state: GameState): string[] {
   return CYBER_FUNCTIONS.filter((fn) => (state.team.functions[fn]?.morale ?? 1) < 0.45)
-    .map((fn) => `${functionTitle(fn)} ${moraleLabel(state.team.functions[fn]!.morale).toLowerCase()}`)
+    .map((fn) => { const runtime = state.team.functions[fn]!; const next = nextFunctionMorale(state, fn); return `${functionTitle(fn)} ${moraleLabel(runtime.morale).toLowerCase()} · ${next > runtime.morale ? 'recovering' : next < runtime.morale ? 'declining' : 'holding'} · ${runtime.committed}/${runtime.capacity} days committed · ${runtime.vacancies} ${runtime.vacancies === 1 ? 'vacancy' : 'vacancies'}` })
 }
 
 /**
@@ -725,7 +726,7 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
     recoveryConfidence: recoveryConfidenceLabel(recovery),
     recoveryNote: recoveryNote(state, index),
     openDecisions: openDecisions(state, index).length,
-    unreadMessages: state.inbox.messages.filter((message) => !message.read).length,
+    unreadMessages: unreadUpdateCount(state, index),
     invalidatedAssumptions: Object.values(state.assumptions.assumptions).filter((a) => a.status === 'invalidated' && !a.acknowledged).length,
     reviewsDue: Object.values(state.risks.scenarios).filter(
       (scenario) => scenario.status !== 'closed' && state.currentDay >= scenario.nextReviewDay,
@@ -1258,7 +1259,7 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
       toDay: runtime.completedDay ?? state.currentDay,
       label: def?.name ?? runtime.id,
       complete,
-      ending: complete ? 'completed' : state.finished ? 'still running at year end' : 'still running',
+      ending: complete ? 'completed' : runtime.status === 'paused' ? (state.finished ? 'paused at year end' : 'paused') : state.finished ? 'still running at year end' : 'still running',
     })
   }
   const completed = spans.filter((s) => s.complete).length
@@ -1366,7 +1367,7 @@ export function cameBack(state: GameState, index: ContentIndex, limit = 4): Came
   const out: CameBackItem[] = []
   const groups = new Map<string, CameBackItem>()
   for (const message of state.inbox.messages) {
-    if (message.read) continue
+    if (message.read || state.currentDay - message.day > 14) continue
     const kind = messageReturnKind(message, index)
     if (!kind) continue
     const key = typeof message.returnGroup === 'string' ? `${message.day}:${message.returnGroup}` : undefined

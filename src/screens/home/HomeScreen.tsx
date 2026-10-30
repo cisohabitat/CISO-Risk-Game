@@ -1,3 +1,4 @@
+import { ObjectiveTracker } from '@/components/game/ObjectiveTracker'
 import { BudgetActivity, QuietWeekNote } from '@/components/game/BriefingNotes'
 import { CapacityNotice } from '@/components/game/CapacityNotice'
 import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
@@ -38,7 +39,7 @@ export function HomeScreen() {
   const team = teamView(state, index)
   const progress = quarterProgress(state, index)
   const reviewsDue = visibleRisks(state, index).filter((risk) => risk.reviewDue && risk.status !== 'closed')
-  const lastHighlights = state.history.entries.slice(-4).reverse()
+  const lastHighlights = state.history.entries.filter((entry) => entry.day >= state.currentDay - 7).slice(-4).reverse()
   // Counted here as well as inside the two components, so the masthead can say
   // how many things want the player before they scroll to find out.
   const pressing = collisions(state, index).filter((collision) => collision.verdict !== 'covered')
@@ -139,15 +140,17 @@ export function HomeScreen() {
         )}
       </section>
 
+      <ObjectiveTracker />
+
       <Disclosure summary="How a week works">
         <ol className="list-decimal space-y-2 pl-5">
-          <li>Skip ahead advances once, up to thirty days, and holds for reading. Choose a speed to run between updates.</li>
+          <li>Skip ahead advances once, up to seven days, and holds for reading. Choose a speed to run between updates.</li>
           <li>At 2× and 4×, an action holds time, including a refused action so you can read why. A new week also holds time when attention renews. Choose a speed again when you are ready.</li>
           <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
           <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>
           <li>Follow the results and prepare the quarterly board paper. Raising a risk makes it eligible; select its agenda item when writing the paper.</li>
         </ol>
-        <p className="mt-2">A game week is seven days. Your weekly attention refreshes at the boundary, and unused points do not carry over. Budget is an annual allocation. Spare attention has no direct penalty, but it is a chance to investigate, follow through or relieve work. Read at your pace: dialogs and hidden tabs pause the clock; Resume starts it again.</p>
+        <p className="mt-2">A game week is seven days. Your weekly attention refreshes at the boundary, and unused points do not carry over. Budget is an annual allocation. Keep a reserve for later choices, incidents and programme constraints; spending the full allocation in January leaves those options out of reach. Spare attention has no direct penalty, but it is a chance to investigate, follow through or relieve work. Read at your pace: dialogs and hidden tabs pause the clock; Resume starts it again.</p>
         <Button variant="secondary" size="sm" className="mt-3" onClick={() => setScreen('risk')}>Open Risk</Button>
       </Disclosure>
       <ProgrammeCommitments />
@@ -160,9 +163,9 @@ export function HomeScreen() {
 
       <Disclosure summary="How to judge your year" defaultOpen={state.currentDay <= 7}>
         <p className="mb-2">“Mixed first year” means that useful capability and defensible choices can coexist with serious gaps. Strong individual dimensions do not cancel weak business delivery or an unsustainable team. Programme completion is one part of the year, not its win condition.</p>
-        <p>Due decisions and the board paper have deadlines. Concerns and patterns are leads to examine, rather than extra decisions to answer today. Unread counts also include reference mail; check message priorities and Follow-ups when choosing what to read next.</p>
+        <p>Due decisions and the board paper have deadlines. Concerns and patterns are leads to examine, rather than extra decisions to answer today. The Inbox badge counts unread updates; reference correspondence stays in All, Unread and Reference. Check priorities and Follow-ups when choosing what to read next.</p>
         <p>Your task is to understand Nexora’s risks, make defensible trade-offs and leave the organisation able to respond. A quiet year alone does not establish that it is secure.</p>
-        <p className="mt-2">The annual review weighs eight dimensions equally: risk understanding, prioritisation, resilience, cyber programme execution, business enablement, communication and escalation, team sustainability, and material blind spots.</p>
+        <p className="mt-2">The annual review weighs eight dimensions equally. Weak business enablement, prioritisation or team sustainability caps the overall verdict at Mixed. The dimensions are: risk understanding, prioritisation, resilience, cyber programme execution, business enablement, communication and escalation, team sustainability, and material blind spots.</p>
         <p className="mt-2">During the year, look for evidence behind your risk claims, progress on relevant programmes, tested recovery, honest board papers and a team that can sustain the work. Your quarter recap records strengths, concerns and a practical next step. The year-end review judges the whole year; the number of choices made is not a quality rating.</p>
         <p className="mt-2">For a first step, open Risk and read the evidence behind one concern. Decide what you still need to investigate before committing your attention or budget.</p>
       </Disclosure>

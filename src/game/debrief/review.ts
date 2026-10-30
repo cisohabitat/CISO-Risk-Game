@@ -9,6 +9,7 @@ import { boardPaperCounts } from './papers'
 import { dateOf, datesOf, formatGameDate, yearWord } from '../time'
 import type {
   AnnualReview,
+  GameEffect,
   AnnualReviewDimension,
   ContentIndex,
   GameState,
@@ -834,6 +835,27 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
   if (state.flags['recovery.deferred'] === true) {
     narrative.push('The recovery capability you built went into peak trading untested, on the assumption it would hold. It was not asked to.')
+  }
+
+  // Name only observed authored follow-through from a recorded selection.
+  for (const entry of state.history.decisionsLog) {
+    const runtime = state.decisions.decisions[entry.decisionId]
+    const def = runtime && index.decision.get(runtime.defId)
+    const option = def?.options.find((candidate) => candidate.id === entry.optionId)
+    if (!def || !option) continue
+    const negative = (effects: GameEffect[]) => effects.some((effect) =>
+      (effect.type === 'board.confidence' || effect.type === 'stakeholder.trust' || effect.type === 'team.morale' || effect.type === 'capacity.change') && effect.delta < 0,
+    )
+    const returns = (option.delayedEffects ?? []).filter((delayed) => negative(delayed.effects)).flatMap((delayed) =>
+      state.inbox.messages.filter((message) => message.day >= entry.day + delayed.dayOffset && message.subject === `Followed up: ${def.title}` && delayed.note && message.body.includes(delayed.note)),
+    )
+    for (const effect of option.immediateEffects) {
+      if (effect.type !== 'event.schedule') continue
+      const event = index.event.get(effect.eventId)
+      if (!event || !negative(event.effectsOnReveal ?? [])) continue
+      returns.push(...state.inbox.messages.filter((message) => message.eventId === event.id && message.day >= entry.day))
+    }
+    if (returns.length > 0) narrative.push(`Recorded cost of "${option.label}" in "${def.title}"${runtime.resolvedByDefault ? ' (deadline default)' : ''}: ${returns.map((message) => `${message.subject} on ${dateOf(message.day)}`).join('; ')}.`)
   }
 
   const businessOutcome =

@@ -1,12 +1,14 @@
 import { Button, Card, CardBody, Disclosure } from '@/components/ui/primitives'
 import { useGameStore } from '@/store/game-store'
 import { shortDate } from '@/lib/formatting/labels'
+import { CAMPAIGN_DAYS } from '@/game/types'
 import { DECEMBER_START_DAY } from '@/game/time'
 
 export function YearEndUpdates() {
   const state = useGameStore((store) => store.state)
   const handover = useGameStore((store) => store.ui.yearEndUpdates)
   const screen = useGameStore((store) => store.ui.screen)
+  if (state && !state.finished && state.currentDay >= CAMPAIGN_DAYS) return <Card className="mb-4 border-brass/50"><CardBody><h2 className="font-display text-xl">Finish your final day</h2><p className="mt-2 text-sm">Time is held on 31 December. Read the final correspondence and make any remaining decisions before choosing Close year. The annual review has not been written yet.</p><Button variant="secondary" onClick={() => useGameStore.getState().setScreen('inbox')}>Read final correspondence</Button></CardBody></Card>
   if (!state?.finished || !state.reviews.annual || screen === 'debrief') return null
   const current = handover?.gameId === state.gameId && handover.year === (state.year ?? 1)
   const messages = current ? handover.messageIds.flatMap((id) => state.inbox.messages.find((message) => message.id === id) ?? []) : []

@@ -16,6 +16,54 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Five-run CISO follow-through — 30 October 2026
+
+The [supplied five-campaign account](playtests/2026-10-30-owner-supplied-five-run-ciso-review.md)
+has unidentified builds/seeds and mixes strategies, modes and scenarios.
+[The engineering review](FIVE_RUN_REVIEW.md) preserves method, findings and limits.
+This is not five independent pilot participants or an exact replay.
+
+The last tick finished before a newly opened final-day decision could be taken.
+UI advances now hold day 364, and Close year explicitly finalises it without
+another tick. Pending defaults require acknowledgement; normal headless closure
+and historical reviews retain their behavior. UI Skip quotes seven days and
+holds for notable updates and December mail.
+
+Weak business enablement now shares the critical Mixed ceiling while retaining
+eight equal weights. Objective expiry precedes a post-deadline progress tick;
+a visible tracker shows public commitments and recorded delays. Zero-capacity
+empty functions no longer have full strain, and vacancy pressure follows actual
+load so idle teams recover. Daily rate constants and difficulty profiles remain
+unchanged. Wellbeing shows workload/staffing/direction; recruitment quotes its
+single identity hire, permits another uncovered vacancy and records real arrivals.
+
+Reference mail remains readable but leaves update badges. Bulk reference reading
+is explicit. Recent returns/history age out of Briefing without losing the source
+mail. Paused spans, delivered-programme priorities, assumption-enquiry routes,
+board materiality/history wording and reserve guidance are clearer. New annual
+accounts name only observed negative authored follow-through; incident routes
+can name the recorded watch choice without claiming sole causation. SOC wording
+checks hunts before claiming warnings were not pursued.
+
+The baseline and after audits each played 360 default-opening years. The all-
+scenario audit played another 1,440 current years, with no defaults/invariants;
+High pressure had more incidents in every matched opening. Overall verdicts
+remain nonmonotonic across modes, so perceived difficulty/verdict calibration is
+not claimed closed. The 108-year objective audit also passed its selected-choice
+and invariant checks. Synthetic grading and isolated recovery/expiry tests pin
+these fixes; the exact five supplied outcomes remain unverified.
+
+Verification: `pnpm check` passed 126 files / 753 tests, content validation with
+zero warnings, production build and size gates. The complete six-project
+`pnpm test:e2e --workers=4` passed 771 checks with 51 configured skips (822
+scheduled), including full-year playthroughs in Chromium and WebKit. Focused
+layout checks passed 48 with 24 configured skips. During verification, an added
+guard blocked explicitly requested early write-up; that path was restored while
+automatic review still waits for final-day closure. Expanded wellbeing also
+exposed a clipped landscape menu; intrinsic navigation height and a bounded
+resource scroller fixed it without relaxing the existing bounds. Final-day
+default correspondence distinguishes year close from an expired deadline.
+
 ### CISO closing retest follow-through — 30 October 2026
 
 Source: `docs/playtests/2026-10-30-owner-supplied-ciso-closing-retest.md`.

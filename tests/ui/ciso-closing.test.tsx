@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { useGameStore } from '@/store/game-store'
+import { AppShell } from '@/components/layout/AppShell'
 import { HomeScreen } from '@/screens/home/HomeScreen'
 import { BoardScreen } from '@/screens/board/BoardScreen'
 import { ProgrammesScreen } from '@/screens/programmes/ProgrammesScreen'
@@ -76,6 +77,8 @@ it('keeps December correspondence visible before a played-year review and preser
   pushMessage(state, { from: 'Threat intelligence', subject: 'Credentials in circulation', body: 'The final credential alert remains available.', type: 'threat', priority: 'urgent' })
   useGameStore.setState({ state })
   store.dispatch({ type: 'advance', days: 1 })
+  expect(useGameStore.getState().state!.finished).toBe(false)
+  useGameStore.getState().dispatch({ type: 'closeYear' })
   await useGameStore.getState().finishCampaign()
   const annual = useGameStore.getState().state!.reviews.annual
   expect(annual).toBeDefined()
@@ -89,4 +92,15 @@ it('keeps December correspondence visible before a played-year review and preser
   expect(useGameStore.getState().ui.screen).toBe('debrief')
   expect(useGameStore.getState().state!.reviews.annual).toBe(annual)
   expect(useGameStore.getState().ui.yearEndUpdates).toBeUndefined()
+})
+
+it('counts an unread update separately from unread reference mail in the actual shell', () => {
+  const state = structuredClone(useGameStore.getState().state!)
+  state.inbox.messages = []
+  pushMessage(state, { from: 'Office', subject: 'Background', body: 'Reference', type: 'business' })
+  pushMessage(state, { from: 'Office', subject: 'Needs review', body: 'Update', type: 'executive', priority: 'urgent' })
+  useGameStore.setState({ state })
+  render(<AppShell><p>Test reader</p></AppShell>)
+  expect(screen.getByLabelText('1 unread updates')).toHaveTextContent('1')
+  expect(useGameStore.getState().state!.inbox.messages.filter((message) => !message.read)).toHaveLength(2)
 })

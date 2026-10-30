@@ -217,6 +217,17 @@ zero-capacity pressure are visible; no burnout retuning is claimed.
 displayed deadline error without changing delivery or grading. Independent
 learning/fairness gates remain open; this does not close the Phase 0 pilot.
 
+### Five-run CISO follow-through, 30 October
+
+The [five supplied campaigns](playtests/2026-10-30-owner-supplied-five-run-ciso-review.md)
+confound strategy, scenario and difficulty. The [engineering review](FIVE_RUN_REVIEW.md)
+separates that report from matched probes. Implementation holds the played final
+day before explicit closure, adds visible business commitments, fixes idle strain
+and vacancy pressure, and makes weak business enablement a critical ceiling in
+new reviews. Reference mail and recent Briefing cards are distinct from current
+work. No difficulty-profile tuning is inferred from the five runs; independent
+human-learning/fairness gates remain open.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,

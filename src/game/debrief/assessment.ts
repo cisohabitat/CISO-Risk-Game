@@ -12,7 +12,7 @@ export function overallAssessment(dimensions: AnnualReviewDimension[], capabilit
   const average = dimensions.reduce((sum, dimension) => sum + VALUES[dimension.band], 0) / Math.max(1, dimensions.length)
   const base: Assessment = average > 0.78 ? 'Exceptional' : average > 0.6 ? 'Credible' : average > 0.42 ? 'Mixed' : 'Difficult'
   const weak = dimensions.filter((dimension) => dimension.band === 'weak')
-  const critical = weak.filter((dimension) => dimension.id === 'prioritisation' || dimension.id === 'team-sustainability')
+  const critical = weak.filter((dimension) => dimension.id === 'prioritisation' || dimension.id === 'team-sustainability' || dimension.id === 'business-enablement')
   let ceiling: Assessment = 'Exceptional'
   let reason: string | undefined
   if (weak.length >= 3) {

@@ -7,7 +7,7 @@ test('the unread badge and attention list show the work actually waiting', async
   const save = prepareCampaign('retest-counts', 'day:1', 'guided') as { state: GameState }
   const state = save.state
   const template = state.inbox.messages[0]!
-  state.inbox.messages = Array.from({ length: 82 }, (_, i) => ({ ...template, id: `msg-${1000 + i}`, read: false }))
+  state.inbox.messages = Array.from({ length: 82 }, (_, i) => ({ ...template, id: `msg-${1000 + i}`, priority: 'notable', decisionId: undefined, eventId: undefined, read: false }))
   state.inbox.counter = 1082
   for (const defId of ['dec-first-week-focus', 'dec-ceo-three-risks', 'dec-launch-conditions', 'dec-msp-access', 'dec-audit-finding']) {
     if (state.decisions.openIds.some((id) => state.decisions.decisions[id]!.defId === defId)) continue

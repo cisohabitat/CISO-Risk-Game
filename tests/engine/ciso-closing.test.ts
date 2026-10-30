@@ -16,6 +16,7 @@ function quiet() {
   state.decisions.openIds = []
   state.incidents = { incidents: {}, order: [], counter: 0 }
   state.pendingEffects = []
+  for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
   return state
 }
 it('stops for recorded refunds and explains a 105 to 255 budget path without inventing money', () => {
@@ -66,7 +67,7 @@ it('keeps zero-load recovery and fractional-load decline consistent with the dis
   expect(nextFunctionMorale(state, 'engineering')).toBeLessThan(engineering.morale)
   expect(teamView(state, index).functions.find((fn) => fn.fn === 'engineering')!.committed).toBe(0.04)
   Object.assign(engineering, { capacity: 0, committed: 0 })
-  expect(teamView(state, index).functions.find((fn) => fn.fn === 'engineering')!.recoveryNote).toContain('no delivery capacity')
+  expect(teamView(state, index).functions.find((fn) => fn.fn === 'engineering')!.recoveryNote).toContain('Recovering slowly')
 })
 it('keeps the displayed business commitment fixed when a decision records delay', () => {
   const state = newGame(index, { seed: 'fixed-business-date' })

@@ -12,6 +12,7 @@ function quiet() {
   state.decisions.openIds = []
   state.incidents = { incidents: {}, order: [], counter: 0 }
   state.pendingEffects = []
+  for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
   return { state, index }
 }
 
@@ -27,6 +28,16 @@ describe('Skip ahead public updates', () => {
     expect(result.ticks!.at(-1)!.shouldAutosave).toBe(true)
     applyAction(state, index, { type: 'advance', days: 1, stopOnUpdate: true })
     expect(state.currentDay).toBe(244)
+  })
+
+  it('holds for a missed business commitment rather than skipping its notable letter', () => {
+    const { state, index } = quiet()
+    const objective = state.business.objectives['obj-platform-launch']!
+    objective.status = 'active'; objective.progress = 0.5
+    state.currentDay = objective.targetDay
+    const result = applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
+    expect(state.currentDay).toBe(objective.targetDay + 1)
+    expect(result.message).toContain('Update received: Missed:')
   })
 
   it('does not change normal ticking or ordinary advance semantics', () => {

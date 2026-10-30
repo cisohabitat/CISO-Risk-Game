@@ -460,7 +460,9 @@ export function applyEffect(
       const fn = ownValue(state.team.functions, effect.fn)
       if (fn && fn.vacancies > 0) {
         fn.vacancies -= 1
+        const previousCapacity = fn.capacity
         fn.capacity = round2(fn.capacity + 1)
+        state.history.entries.push({ day: state.currentDay, kind: 'capacity', refs: [effect.fn], summary: `${functionName(effect.fn)} vacancy filled: capacity ${previousCapacity} to ${fn.capacity} days per week; ${fn.vacancies} vacancies remain.` })
       }
       break
     }

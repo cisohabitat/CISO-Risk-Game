@@ -10,7 +10,7 @@ import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
 import type { VisibleRisk } from '@/store/selectors'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
-import { bandTone, confidenceTone, statusLabel } from '@/lib/formatting/labels'
+import { bandTone, confidenceTone, statusLabel, shortDate } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 
 export function RiskDetail({ risk }: { risk: VisibleRisk }) {
@@ -80,7 +80,7 @@ export function RiskDetail({ risk }: { risk: VisibleRisk }) {
           <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
         </div>
 
-        {risk.status === 'accepted' && <RiskAcceptanceAppetite scenarioId={risk.id} />}
+        {risk.status === 'accepted' && <><RiskAcceptanceAppetite scenarioId={risk.id} /><p className="text-sm text-ink-muted">Acceptance ends {state.risks.scenarios[risk.id]?.acceptedUntilDay !== undefined ? shortDate(state.risks.scenarios[risk.id]!.acceptedUntilDay!) : 'on an unrecorded date'}. An assessment review can be due earlier without ending the acceptance.</p></>}
         <div>
           <h2 className="text-lg font-semibold text-balance">{risk.title}</h2>
           <p className="reading-copy mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>

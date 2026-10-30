@@ -540,6 +540,21 @@ for the required reason. Objective dates retain their original commitment;
 [108 controlled campaign probes](docs/OBJECTIVE_REVIEW.md) show choice responsiveness
 without changing balance or existing grades.
 
+Five-run CISO follow-through makes 31 December playable before an explicit
+Close year action; unanswered decisions require acknowledgement. Skip advances
+up to seven days and holds for notable updates and December correspondence.
+A live business-objective tracker shows original dates, progress and recorded
+delays. Weak business enablement now caps new verdicts at Mixed alongside weak
+prioritisation or team sustainability; stored grades retain their judgement.
+Idle teams can recover even with no delivery capacity or remaining vacancies;
+wellbeing shows staffing/load and recovery direction. Recruitment quotes one
+identity hire, and actual arrivals retain a capacity receipt. Inbox badges count
+unread updates, with reference correspondence kept separately. Paused timeline
+labels, delivered-programme priorities, reserve guidance, assumption checks and
+observed choice consequences are clearer. Matched difficulty probes and limits
+are in [the five-run review](docs/FIVE_RUN_REVIEW.md). Use `pnpm audit:balance 30 all`
+to compare the same policies across all four openings.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

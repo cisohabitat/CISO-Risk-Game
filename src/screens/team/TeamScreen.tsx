@@ -53,9 +53,9 @@ export function TeamScreen() {
                       {fn.hiring && <> · {fn.incoming} incoming · {Math.max(0, fn.vacancies - fn.incoming)} not yet recruiting. Expected around {fn.arrivingDays.map(shortDate).join(', ')}.</>}
                     </p>
                     {fn.vacancies > 0 && (
-                      <Button variant="quiet" size="sm" className="compact min-h-9" disabled={fn.hiring}
+                      <Button variant="quiet" size="sm" className="compact min-h-9" disabled={fn.incoming >= fn.vacancies}
                         onClick={() => dispatch({ type: 'hire', fn: fn.fn as never })}>
-                        {fn.hiring ? 'Recruiting…' : `Recruit (${money(120)})`}
+                        {fn.incoming >= fn.vacancies ? 'Recruiting…' : `${fn.hiring ? 'Recruit another' : 'Recruit'} (${money(120)})`}
                       </Button>
                     )}
                   </div>

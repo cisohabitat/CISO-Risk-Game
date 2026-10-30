@@ -547,6 +547,14 @@ test.describe('a first year at Nexora', () => {
         continue
       }
 
+      const closeYear = page.getByRole('button', { name: 'Close year', exact: true })
+      if (await closeYear.isVisible().catch(() => false)) {
+        await closeYear.click()
+        const acknowledge = page.getByRole('button', { name: 'Close with these unanswered', exact: true })
+        if (await acknowledge.isVisible().catch(() => false)) await acknowledge.click()
+        continue
+      }
+
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }
 

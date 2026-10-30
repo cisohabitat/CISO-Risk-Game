@@ -16,7 +16,7 @@ describe('overall assessment safeguards', () => {
     expect(overallAssessment(profile(), false).label).toBe('Credible')
     expect(overallAssessment(profile(), true).label).toBe('Exceptional')
   })
-  it.each(['prioritisation', 'team-sustainability'])('does not average away weak %s', (id) => {
+  it.each(['prioritisation', 'team-sustainability', 'business-enablement'])('does not average away weak %s', (id) => {
     const result = overallAssessment(profile({ [id]: 'weak' }), true)
     expect(result.label).toBe('Mixed')
     expect(result.reason).toContain(id)

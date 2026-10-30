@@ -4,6 +4,7 @@
  *
  * Mobile shows a list that pushes to a reader; tablet and desktop show both.
  */
+import { isReferenceMail } from '@/game/inbox/messages'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, SegmentedControl } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -35,6 +36,8 @@ const MESSAGE_KIND: Record<InboxMessage['type'], { label: string; icon: IconName
 const FILTERS = [
   { id: 'all', label: 'All' },
   { id: 'unread', label: 'Unread' },
+  { id: 'updates', label: 'Updates' },
+  { id: 'reference', label: 'Reference' },
   { id: 'decisions', label: 'Needs a decision' },
   { id: 'follow-ups', label: 'Follow-ups' },
   { id: 'threat', label: 'Threat' },
@@ -73,6 +76,10 @@ export function InboxScreen() {
       const text = `${message.from}\n${message.subject}\n${message.body}`.toLocaleLowerCase('en-GB')
       if (!terms.every((term) => text.includes(term))) return false
       switch (filter) {
+        case 'updates':
+          return !isReferenceMail(state, index, message)
+        case 'reference':
+          return isReferenceMail(state, index, message)
         case 'unread':
           return unreadIds.includes(message.id)
         case 'decisions':
@@ -151,9 +158,11 @@ export function InboxScreen() {
           setQuery('')
           setMessageLimit(60)
         }}>Clear search</Button>}
-        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all mail in this filter, including older messages. The navigation badge counts unread mail; this list can also include messages already read.</p>
+        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all mail in this filter, including older messages. The navigation badge counts unread updates, excluding reference mail. All and Unread retain every message, including reference correspondence.</p>
       </div>
 
+      {filter === 'reference' && <div className="flex flex-wrap items-center gap-2 text-sm"><p>Background correspondence and resolved decision letters stay here for reference.</p><Button variant="secondary" size="sm" onClick={() => { for (const message of state.inbox.messages) if (!message.read && isReferenceMail(state, index, message)) dispatch({ type: 'markRead', messageId: message.id }) }}>Mark reference mail read</Button></div>}
+      {selected?.signalCampaignId && <div className="rounded border border-line p-3 text-sm"><p>Follow this warning with a Targeted threat hunt under Risk → Investigate. It costs attention, budget and SOC capacity, and can return thin; commissioning a hunt does not guarantee eviction. Use the evidence to act on the exposed controls.</p><Button variant="secondary" size="sm" onClick={() => { useGameStore.getState().setScreen('risk'); setUi({ riskTab: 'investigate' }) }}>Review threat-hunt enquiry</Button></div>}
       {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}
       {filter === 'follow-ups' && <p className="text-sm text-ink-muted">Enquiry results, recorded follow-ups, acceptance updates, stopped work and incident reports, including messages you have read.</p>}
       {messages.length > 0 && <div className="flex flex-wrap items-center justify-between gap-2">

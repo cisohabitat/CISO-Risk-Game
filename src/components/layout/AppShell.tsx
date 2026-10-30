@@ -76,7 +76,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-ink-faint">Nexora Group</p>
           </div>
         </div>
-        <div className="sidebar-menu scroll-area min-h-0 flex-1">
+        <div className="sidebar-menu scroll-area shrink-0">
           <ul className="p-2">
             {DESTINATIONS.map((destination) => (
               <li key={destination.id}>
@@ -104,16 +104,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <Icon name={destination.icon} size={17} className="text-ink-faint" />
                   <span className="flex-1">{destination.label}</span>
                   {destination.id === 'inbox' && view.unreadMessages > 0 && (
-                    // Capped: by spring an unread count reached 63, most of it
-                    // background the Briefing had already summarised, and the
-                    // number read as a backlog to clear. The inbox's own Unread
-                    // filter still has the whole list.
+                    // Reference mail remains in Inbox; this badge counts unread updates.
                     // Keyed by the count, so it pops once when mail arrives.
                     <span
                       key={view.unreadMessages}
                       data-testid="inbox-unread-count"
-                      aria-label={`${view.unreadMessages} unread messages`}
-                      title={`${view.unreadMessages} unread messages`}
+                      aria-label={`${view.unreadMessages} unread updates`}
+                      title={`${view.unreadMessages} unread updates`}
                       className="animate-pop rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums"
                     >
                       {view.unreadMessages}
@@ -137,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </ul>
           <YearStrip day={state.currentDay} />
         </div>
-        <div className="sidebar-resources max-h-[50dvh] shrink-0 space-y-2 overflow-y-auto border-t border-line p-3 text-sm">
+        <div className="sidebar-resources min-h-0 max-h-[50dvh] flex-1 space-y-2 overflow-y-auto border-t border-line p-3 text-sm">
           <dl className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Budget left</dt>
@@ -224,7 +221,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span aria-hidden="true" className="relative inline-flex">
                   <Icon name={destination.icon} size={20} />
                   {destination.id === 'inbox' && view.unreadMessages > 0 && (
-                    <span id="mobile-inbox-unread" data-testid="inbox-unread-count" key={view.unreadMessages} title={`${view.unreadMessages} unread messages`} className="animate-pop absolute -right-3 -top-2 min-w-4 rounded-full bg-accent px-1 text-center text-[0.6rem] leading-4 text-ink-inverse">{view.unreadMessages}<span className="sr-only"> unread messages</span></span>
+                    <span id="mobile-inbox-unread" data-testid="inbox-unread-count" key={view.unreadMessages} title={`${view.unreadMessages} unread updates`} className="animate-pop absolute -right-3 -top-2 min-w-4 rounded-full bg-accent px-1 text-center text-[0.6rem] leading-4 text-ink-inverse">{view.unreadMessages}<span className="sr-only"> unread updates</span></span>
                   )}
                   {destination.id === 'home' && view.openDecisions > 0 && (
                     <span className="absolute -right-2 -top-1 h-2 w-2 rounded-full bg-brass" />

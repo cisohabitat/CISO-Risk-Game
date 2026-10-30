@@ -4,6 +4,7 @@
  * The engine only ever moves when a tick is requested: there is no 60fps loop
  * and nothing is computed while the game is paused (plan §48).
  */
+import { CAMPAIGN_DAYS } from '@/game/types'
 import { useEffect, useRef } from 'react'
 import { useGameStore } from '@/store/game-store'
 
@@ -29,7 +30,7 @@ export function useGameClock(): void {
       // Never let it overrun an engine pause or a newly opened reading surface.
       const store = useGameStore.getState()
       const current = store.state
-      if (!current || current.gameId !== gameId || current.paused || current.finished || current.speed !== speed) return
+      if (!current || current.gameId !== gameId || current.paused || current.finished || current.currentDay >= CAMPAIGN_DAYS || current.speed !== speed) return
       if (document.hidden || store.ui.openDecisionId || store.ui.glossaryOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) {
         store.dispatch({ type: 'setSpeed', speed: 'paused' })
         return

@@ -34,13 +34,13 @@ it('acknowledges a past checkpoint without inventing an outcome for a legacy sav
 it.each([17, 82])('shows %s unread messages and updates after one is read', (count) => {
   const state = structuredClone(useGameStore.getState().state!)
   const template = state.inbox.messages[0]!
-  state.inbox.messages = Array.from({ length: count }, (_, i) => ({ ...template, id: `msg-${i + 100}`, read: false }))
+  state.inbox.messages = Array.from({ length: count }, (_, i) => ({ ...template, id: `msg-${i + 100}`, priority: 'notable' as const, decisionId: undefined, eventId: undefined, read: false }))
   useGameStore.setState({ state })
   render(<AppShell><p>Test reader</p></AppShell>)
-  const badge = screen.getByLabelText(`${count} unread messages`)
+  const badge = screen.getByLabelText(`${count} unread updates`)
   expect(badge).toHaveTextContent(String(count))
   act(() => { useGameStore.getState().dispatch({ type: 'markRead', messageId: 'msg-100' }) })
-  expect(screen.getByLabelText(`${count - 1} unread messages`)).toHaveTextContent(String(count - 1))
+  expect(screen.getByLabelText(`${count - 1} unread updates`)).toHaveTextContent(String(count - 1))
 })
 it('changes the raised count while keeping the total concerns unchanged', () => {
   const state = structuredClone(useGameStore.getState().state!)

@@ -80,6 +80,7 @@ export function InvestigationPanel() {
 
   return (
     <div className="space-y-6">
+      <p className="text-sm text-ink-muted">Commissioning pays for the work up front. Pulling an enquiry back frees capacity; money and attention already spent are not refunded.</p>
       <CapacityNotice />
       {receipt && <p role="status" aria-label="Commission confirmation" className="rounded border border-line bg-surface-2 p-3 text-sm">{receipt} Work in progress below records the commission.</p>}
       <Disclosure summary="Completed and stopped enquiries">

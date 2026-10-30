@@ -20,6 +20,17 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Keep the final day open for decisions until Close year; acknowledge unanswered
+  defaults explicitly. Limit UI skips to seven days and hold for notable updates.
+- Show business commitments during play and enforce their original deadlines.
+  Weak business enablement now caps new annual verdicts at Mixed.
+- Let idle teams recover, expose staffing/load in wellbeing, clarify the single
+  identity hire and record arrivals. Separate reference mail from update badges.
+- Name observed costs of earlier choices, explain SOC follow-up and assumption
+  checks, label paused work correctly, retain delivered programmes in priorities,
+  and give visible reserve guidance. Age recent Briefing cards without deleting
+  their source correspondence.
+
 - Exclude suggested hypotheses from the attention total; distinguish unread
   badges from total mail and show fractional team commitments.
 - Confirm blocker clearing, explain slow delivery around constraints and expose

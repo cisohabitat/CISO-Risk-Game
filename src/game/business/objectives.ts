@@ -29,6 +29,12 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
     if (runtime.status === 'planned' && state.currentDay >= startDay) runtime.status = 'active'
     if (runtime.status === 'planned') continue
 
+    if (state.currentDay > runtime.targetDay) {
+      runtime.status = 'failed'
+      result.failed.push(def.id)
+      continue
+    }
+
     const remaining = Math.max(1, runtime.targetDay - state.currentDay)
     const needed = 1 - runtime.progress
     const requiredRate = needed / remaining
@@ -66,11 +72,6 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
     if (runtime.progress >= 1) {
       runtime.status = 'achieved'
       result.achieved.push(def.id)
-      continue
-    }
-    if (state.currentDay > runtime.targetDay) {
-      runtime.status = 'failed'
-      result.failed.push(def.id)
       continue
     }
     const wasAtRisk = runtime.status === 'at-risk'

@@ -265,6 +265,7 @@
     .sidebar-rail { overflow-y: auto; overscroll-behavior-y: contain; }
     .sidebar-rail > div { flex-shrink: 0; }
     .sidebar-menu { flex: none; overflow: visible; }
+    .sidebar-resources { flex: none; }
   }
 
   /* A dialog never outgrows the screen. `dvh` tracks the browser chrome on a

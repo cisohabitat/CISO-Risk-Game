@@ -6,6 +6,42 @@ changes.
 
 ## Documentation
 
+- Expanded wellbeing must not shrink the navigation pane. Keep intrinsic menu
+  height and a bounded resource scroller, with the existing short-window whole-rail
+  fallback; retain Chromium/WebKit navigation and independent-scroll bounds.
+- The five-run CISO account (30 October) is one owner-supplied report with
+  unidentified builds/seeds, not independent or controlled difficulty evidence.
+  Preserve it and the paired baseline/after results in `docs/FIVE_RUN_REVIEW.md`.
+- UI advances hold the final tick via `holdYearEnd`; unfinished day 364 is a
+  legitimate saved final day. `closeYear` closes without another tick, and
+  unanswered defaults require explicit acknowledgement in the UI. Keep headless
+  tick/runDays automatic closure and historical finished-save routing intact.
+  Automatic review waits for closure; preserve explicitly requested early
+  write-up and do not rewrite stored judgements.
+- UI Skip quotes seven days. It holds for notable returns and December mail;
+  factual quiet-week and objective updates replace multiweek blind jumps, not
+  invented events or extra decisions. Existing pending-decision guards remain.
+- Weak business enablement now shares the Mixed ceiling with prioritisation and
+  team sustainability. Keep eight equal weights and existing other safeguards.
+  Objective commitments expire before a following day's progress can complete
+  them; imposed delay is still distinct from actual lateness. Tracker fields are
+  public commitments/progress, never hidden dependency health or a live grade.
+- Empty functions with no work have zero strain. Vacancy pressure follows actual
+  strain, so idle teams can recover; keep the daily overload/recovery constants.
+  Show workload, vacancies and recovery direction in wellbeing. Recruitment
+  promises one identity hire after 60 days, not filling five vacancies at once;
+  guard fully covered incoming vacancies and record actual capacity additions.
+- Inbox badges count unread updates, excluding reference mail; All and Unread
+  retain every letter. Resource-changing event mail is an update. Bulk reference
+  reading is explicit and must not mark updates read. Recent Briefing returns
+  age out after 14 days, recent history after seven; keep the originals in Inbox
+  and do not age out current decisions, blockers or due work.
+- Name only observed negative authored follow-through in new annual accounts;
+  link watch choices only on the actual still-exposed incident route. SOC hunt
+  wording distinguishes commissioning, return and eviction. Assumption enquiry
+  routes use public reveal metadata, never hidden truth. Accepted risks remain
+  required board disclosures; past papers are read-only, not concurrent drafts.
+
 - The 30 October CISO closing retest has no identified build/seed/mode; retain
   its source separately from reproduction. Suggested hypotheses are optional
   leads, excluded from the attention total. Inbox badges count unread mail,

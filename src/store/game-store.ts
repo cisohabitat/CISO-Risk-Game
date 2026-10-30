@@ -150,6 +150,7 @@ function contentOf(index: ContentIndex | null): ContentIndex {
  */
 const SAVES_ON: Record<PlayerAction['type'], boolean> = {
   advance: false,
+  closeYear: true,
   setSpeed: false,
   markRead: false,
   markEvidenceRead: false,
@@ -426,7 +427,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const request = fast && action.type === 'advance'
         ? { ...action, days: Math.min(action.days, DAYS_PER_WEEK - state.currentDay % DAYS_PER_WEEK) }
         : action
-      result = applyAction(draft, index, request)
+      result = applyAction(draft, index, request.type === 'advance' ? { ...request, holdYearEnd: true } : request)
       if (fast) {
         weeklyHold = result.ok && !draft.finished && action.type === 'advance' && draft.resources.weekIndex > state.resources.weekIndex
         if (weeklyHold || (action.type !== 'advance' && action.type !== 'setSpeed')) {

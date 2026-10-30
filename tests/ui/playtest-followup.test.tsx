@@ -42,8 +42,8 @@ describe('the October playtest follow-up', () => {
     })
     render(<AppShell><p>Test content</p></AppShell>)
     const summary = screen.getByTestId('team-wellbeing-summary')
-    expect(within(summary).getByText('Engineering burning out')).toBeTruthy()
-    expect(within(summary).getByText('Identity burning out')).toBeTruthy()
+    expect(within(summary).getByText(/^Engineering burning out · recovering/)).toBeTruthy()
+    expect(within(summary).getByText(/^Identity burning out · recovering/)).toBeTruthy()
     fireEvent.click(within(summary).getByRole('button'))
     expect(useGameStore.getState().ui.screen).toBe('team')
   })
@@ -103,7 +103,8 @@ describe('the October playtest follow-up', () => {
     const engineering = screen.getByRole('heading', { name: 'Security engineering', exact: true }).closest('li')!
     expect(within(engineering).getByText(/Recovering slowly/)).toBeVisible()
     const identity = screen.getByRole('heading', { name: 'Identity and access', exact: true }).closest('li')!
-    expect(within(identity).getByText(/Morale is declining/)).toBeVisible()
+    expect(within(identity).getByText(/Recovering slowly/)).toBeVisible()
+    expect(within(identity).getByText(/1 vacancy/)).toBeVisible()
   })
 
   it('shows a closed reconstruction before year-end and opens the exact warning', async () => {

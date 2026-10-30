@@ -17,7 +17,8 @@ import { CYBER_FUNCTIONS, clamp01 } from '../types'
 
 export function functionStrain(state: GameState, fn: CyberFunction): number {
   const runtime = state.team.functions[fn]
-  if (!runtime || runtime.capacity <= 0) return 1
+  if (!runtime) return 0
+  if (runtime.capacity <= 0) return runtime.committed > 0 ? 1 : 0
   return clamp01(runtime.committed / runtime.capacity)
 }
 
@@ -282,7 +283,7 @@ export function nextFunctionMorale(state: GameState, fn: CyberFunction): number 
   const strain = functionStrain(state, fn)
   const workloadChange = strain > 0.7 ? -0.006 * (1 + (strain - 0.7) * 5) : strain < 0.5 ? 0.0012 : 0
   // Preserve the daily reducer's clamp before applying the vacancy penalty.
-  return clamp01(clamp01(runtime.morale + workloadChange) - 0.0015 * runtime.vacancies)
+  return clamp01(clamp01(runtime.morale + workloadChange) - 0.0015 * runtime.vacancies * strain)
 }
 
 export function updateTeamWellbeing(state: GameState): void {

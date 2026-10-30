@@ -2,9 +2,11 @@
  * Time controls (plan §9). Pause, three speeds and "advance to the next
  * meaningful event". The simulation pauses itself for anything material.
  */
-import { Button } from '@/components/ui/primitives'
+import { useState } from 'react'
+import { CAMPAIGN_DAYS } from '@/game/types'
+import { Button, Dialog } from '@/components/ui/primitives'
 import { livePauseReasons } from '@/store/selectors'
-import { useGameStore } from '@/store/game-store'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import type { GameSpeed, PauseReason } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
 import { Icon } from '@/components/ui/icons'
@@ -45,6 +47,8 @@ const PAUSE_REASON_TEXT: Record<PauseReason, string> = {
 }
 
 export function TimeControls({ compact = false }: { compact?: boolean }) {
+  const [closing, setClosing] = useState(false)
+  const index = useCampaignIndex()
   const state = useGameStore((store) => store.state)
   const dispatch = useGameStore((store) => store.dispatch)
   const advanceDays = useGameStore((store) => store.advanceDays)
@@ -60,6 +64,16 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         The year is over.
       </p>
     )
+  }
+
+  if (state.currentDay >= CAMPAIGN_DAYS) {
+    const waiting = state.decisions.openIds.map((id) => state.decisions.decisions[id]!).filter(Boolean)
+    return <><Button size="sm" variant="primary" onClick={() => waiting.length ? setClosing(true) : dispatch({ type: 'closeYear' })}>Close year</Button>
+      <span className="text-xs text-ink-muted">Final day held for reading and decisions.</span>
+      <Dialog open={closing} onClose={() => setClosing(false)} title="Close with unanswered decisions?" footer={<><Button variant="secondary" onClick={() => setClosing(false)}>Keep playing the final day</Button><Button variant="primary" onClick={() => { dispatch({ type: 'closeYear', allowUnanswered: true }); setClosing(false) }}>Close with these unanswered</Button></>}>
+        <p>These choices will take their authored defaults. No extra day will pass.</p>
+        <ul className="list-disc pl-5">{waiting.map((decision) => <li key={decision.id}>{index.decision.get(decision.defId)?.title}</li>)}</ul>
+      </Dialog></>
   }
 
   const paused = state.paused || state.speed === 'paused'
@@ -117,8 +131,8 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         variant="secondary"
         className="compact min-h-9"
         disabled={state.finished}
-        title="Advances once, up to 30 days, stopping at decisions, returned work and urgent updates. Choose a speed to keep running."
-        onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(30, true) }}
+        title="Advances once, up to 7 days, stopping at decisions and notable updates; December mail is shown before continuing. Choose a speed to keep running."
+        onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(7, true) }}
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}
       </Button>

@@ -59,7 +59,7 @@ export const TICK_ORDER = [
   'autosave',
 ] as const
 
-export function tickDay(state: GameState, index: ContentIndex): TickResult {
+export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = false): TickResult {
   const rng = createRng(state.seed, state.rngCursor)
   const highlights: string[] = []
   const pauseReasons = new Set<PauseReason>()
@@ -127,6 +127,10 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
           type: 'executive',
           priority: 'notable',
         })
+      }
+      if (entry.source === 'hiring') {
+        const capacity = state.history.entries.findLast((record) => record.kind === 'capacity' && record.day === day)
+        pushMessage(state, { from: 'People team', subject: 'Recruitment update', body: capacity?.summary ?? 'No further vacancy was filled at this review.', type: 'people', priority: 'notable' })
       }
       for (const interrupt of outcome.interrupts) pauseReasons.add(interrupt as PauseReason)
     }
@@ -496,7 +500,7 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   let yearEnded = false
   if (day >= CAMPAIGN_DAYS) {
     yearEnded = true
-    state.finished = true
+    state.finished = !holdYearEnd
     pauseReasons.add('year-end')
   }
 
@@ -526,6 +530,7 @@ function resolveByDefault(
   index: ContentIndex,
   decisionId: string,
   rng: ReturnType<typeof createRng>,
+  yearClose = false,
 ): void {
   const decision = state.decisions.decisions[decisionId]
   if (!decision) return
@@ -551,6 +556,7 @@ function resolveByDefault(
     rng,
     source: `decision-default:${def.id}`,
     decisionId,
+    linkedScenarioId: decision.scenarioId,
   })
   for (const delayed of option.delayedEffects ?? []) {
     state.pendingEffects.push({
@@ -571,7 +577,7 @@ function resolveByDefault(
   state.history.entries.push({
     day: state.currentDay,
     kind: 'decision-lapsed',
-    summary: `${def.title} lapsed; the organisation defaulted to "${option.label}".`,
+    summary: yearClose ? `${def.title} was left unanswered at year close; the organisation defaulted to "${option.label}".` : `${def.title} lapsed; the organisation defaulted to "${option.label}".`,
     refs: [decisionId],
   })
 
@@ -584,7 +590,7 @@ function resolveByDefault(
   pushMessage(state, {
     from: 'Nexora Group',
     subject: `Decided without you: ${def.title}`,
-    body: `The deadline passed with no answer from you, so the organisation went with "${option.label}". ${option.description} It is recorded as your decision by default, and the annual review will read it that way.`,
+    body: `${yearClose ? 'You closed the year with this unanswered' : 'The deadline passed with no answer from you'}, so the organisation went with "${option.label}". ${option.description} It is recorded as your decision by default, and the annual review will read it that way.`,
     type: 'executive',
     priority: 'urgent',
     decisionId,
@@ -622,4 +628,17 @@ export function eventWording(def: GameEventDef, occurrence: number): { title: st
   const texts = [{ title: def.title, body: def.body }, ...(def.variants ?? [])]
   const text = texts[(Math.max(1, occurrence) - 1) % texts.length]!
   return { title: text.title ?? def.title, body: text.body }
+}
+
+/** Close without another tick; acknowledged defaults retain their authored effects. */
+export function closePlayedYear(state: GameState, index: ContentIndex, allowUnanswered: boolean): boolean {
+  if (state.finished || state.currentDay !== CAMPAIGN_DAYS || (state.decisions.openIds.length > 0 && !allowUnanswered)) return false
+  const rng = createRng(state.seed, state.rngCursor)
+  for (const id of [...state.decisions.openIds]) resolveByDefault(state, index, id, rng, true)
+  state.rngCursor = rng.cursor
+  state.finished = true
+  state.paused = true
+  state.speed = 'paused'
+  state.pauseReasons = ['year-end']
+  return true
 }

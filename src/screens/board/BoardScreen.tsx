@@ -222,6 +222,7 @@ export function BoardScreen() {
       {state.reviews.quarters.length > 0 && (
         <section aria-labelledby="past">
           <SectionHeading><span id="past">Previous board meetings</span></SectionHeading>
+          <p className="text-sm text-ink-muted">These are submitted records, not additional open papers. Only the current paper above awaits submission.</p>
           <ul className="space-y-2">
             {state.reviews.quarters.map((quarter) => (
               <li key={quarter.quarter}>
@@ -260,7 +261,7 @@ export function BoardScreen() {
             <div className="col-span-2 sm:col-span-1"><dt className="text-xs text-ink-faint">Submit by</dt><dd className="mt-1 font-medium">{formatGameDate(((pendingQuarter ?? 0) + 1) * DAYS_PER_QUARTER - 1).label}</dd></div>
           </dl>
           <p className="text-sm text-ink-muted">Choose the agenda, programme recommendations and uncertainties you will disclose. Submitting records the paper and returns the committee’s response; recommendations do not start programmes automatically.</p>
-          <p className="text-sm" role="note" aria-label="Agenda guidance">Include all {requiredIds.length} required items, selected for a fresh paper. Add at most two optional updates: the useful range today is {requiredIds.length}–{requiredIds.length + optionalAllowance} agenda items. Material issues always take priority over a short agenda. Programme recommendations are counted separately.</p>
+          <p className="text-sm" role="note" aria-label="Agenda guidance">Include all {requiredIds.length} required items, selected for a fresh paper. Add at most two optional updates: the useful range today is {requiredIds.length}–{requiredIds.length + optionalAllowance} agenda items. Material issues always take priority over a short agenda. Accepted risks remain required: accepting exposure does not remove the board’s need to hear about it. Programme recommendations are counted separately.</p>
           <Disclosure summary={`Raised risk register (${raisedRisks.length})`}>
             <p className="mb-2 text-sm text-ink-muted">This register is separate from the agenda selection. Open raised risks can be selected below; closed entries remain here without becoming required agenda items.</p>
             {raisedRisks.length === 0 ? <p className="text-sm">No risk scenario has been raised yet. Forming a hypothesis alone does not raise it.</p> : <ul className="list-disc space-y-2 pl-5 text-sm">{raisedRisks.map((risk) => <li key={risk.id}>{risk.title} · {statusLabel(risk.status)} · {availableTopics.some((topic) => topic.id === `risk:${risk.id}`) ? 'available on the agenda below' : 'closed; not a current agenda item'}</li>)}</ul>}

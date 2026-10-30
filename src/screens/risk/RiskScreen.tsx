@@ -2,6 +2,7 @@
  * The risk workspace (plan §28.3): evidence, hypotheses, risk scenarios and the
  * assumptions underneath them — never a single flat spreadsheet.
  */
+import { assumptionEnquiries } from '@/game/assumptions/validation'
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState, Tab, TabPanel, Tabs } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -264,6 +265,7 @@ export function RiskScreen() {
                           </Button>
                         </div>
                       )}
+                      {assumption.status !== 'invalidated' && <p className="mt-2 text-sm text-ink-muted">{assumptionEnquiries(state, index, assumption.id).length > 0 ? `Test it through: ${assumptionEnquiries(state, index, assumption.id).join('; ')}. ` : 'This assumption is checked against recorded events; reaffirming it is not independent evidence. '}<Button variant="quiet" size="sm" onClick={() => setTab('investigate')}>Review enquiries before reaffirming</Button></p>}
                       {assumption.linkedScenarioIds.length > 0 && (
                         <p className="mt-2 text-xs text-ink-faint">
                           Supports {assumption.linkedScenarioIds

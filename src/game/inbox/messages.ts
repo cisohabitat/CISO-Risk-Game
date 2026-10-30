@@ -2,7 +2,8 @@
  * The inbox is a narrative surface, not the event database (plan §28.2).
  * Only things a CISO would actually be told land here.
  */
-import type { EventPriority, EventType, GameState, InboxMessage } from '../types'
+import { messageReturnKind } from './returns'
+import type { ContentIndex, EventPriority, EventType, GameState, InboxMessage } from '../types'
 
 export interface MessageDraft {
   from: string
@@ -53,4 +54,17 @@ export function pushMessage(state: GameState, draft: MessageDraft): InboxMessage
 
 export function unreadCount(state: GameState): number {
   return state.inbox.messages.filter((m) => !m.read).length
+}
+
+/** Reference mail stays readable/searchable but does not inflate the update badge. */
+export function isReferenceMail(state: GameState, index: ContentIndex, message: InboxMessage): boolean {
+  if (messageReturnKind(message, index) || message.signalCampaignId) return false
+  const event = message.eventId ? index.event.get(message.eventId) : undefined
+  if (event?.effectsOnReveal?.some((effect) => ['budget.change', 'capacity.change', 'team.vacancyFilled', 'team.departure', 'work.stop', 'programme.resolveBlocker'].includes(effect.type))) return false
+  if (message.decisionId) return !state.decisions.openIds.includes(message.decisionId)
+  return message.priority === 'routine'
+}
+
+export function unreadUpdateCount(state: GameState, index: ContentIndex): number {
+  return state.inbox.messages.filter((message) => !message.read && !isReferenceMail(state, index, message)).length
 }

@@ -19,7 +19,7 @@ import { CAMPAIGN_DAYS, clamp01, money, round2 } from '../types'
 import { recordBudgetMovement } from '../resources/activity'
 import { createRng } from './rng'
 import { applyEffects, recordAssumption, scheduledEffectDay } from './effects'
-import { tickDay, type TickResult } from './tick'
+import { closePlayedYear, tickDay, type TickResult } from './tick'
 export type { TickResult }
 import { createInitialState, type NewGameOptions } from './setup'
 import { canAfford, functionName, mostPressedFunction, refreshCommittedCapacity } from '../team/capacity'
@@ -32,10 +32,11 @@ import { messageReturnKind } from '../inbox/returns'
 import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
-import { dateOf, yearWord } from '../time'
+import { DECEMBER_START_DAY, dateOf, yearWord } from '../time'
 
 export type PlayerAction =
-  | { type: 'advance'; days: number; stopOnUpdate?: boolean }
+  | { type: 'advance'; days: number; stopOnUpdate?: boolean; holdYearEnd?: boolean }
+  | { type: 'closeYear'; allowUnanswered?: boolean }
   | { type: 'setSpeed'; speed: GameState['speed'] }
   | { type: 'resolveDecision'; decisionId: string; optionId: string; rationaleTagIds: string[]; note?: string }
   | { type: 'startInvestigation'; investigationId: string; leaderId: string }
@@ -165,6 +166,12 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       return { ok: true, message: '' }
     }
 
+    case 'closeYear': {
+      if (!closePlayedYear(state, index, action.allowUnanswered ?? false)) return fail('Finish the final day and answer pending decisions before closing, or explicitly acknowledge leaving them unanswered.')
+      commit()
+      return { ok: true, message: 'The year is closed. Final correspondence and the annual review are ready.' }
+    }
+
     case 'advance': {
       if (state.finished) return fail('The campaign year is over.')
       if (action.stopOnUpdate) {
@@ -181,7 +188,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         if (state.currentDay >= CAMPAIGN_DAYS) break
         const previousCounter = state.inbox.counter
         const previousBudget = state.resources.budgetRemaining
-        const result = tickDay(state, index)
+        const result = tickDay(state, index, action.holdYearEnd)
         ticks.push(result)
         if (result.pauseReasons.length > 0) break
         if (action.stopOnUpdate && state.resources.budgetRemaining !== previousBudget) {
@@ -197,7 +204,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         const update = action.stopOnUpdate && state.inbox.messages.find((message) =>
           Number(message.id.slice(4)) > previousCounter && (
             messageReturnKind(message, index) || message.signalCampaignId ||
-            message.priority === 'urgent' || message.priority === 'critical'
+            message.priority !== 'routine' || state.currentDay >= DECEMBER_START_DAY
           ),
         )
         if (update) {
@@ -719,6 +726,8 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const fn = state.team.functions[action.fn]
       if (!fn) return fail('That function does not exist.')
       if (fn.vacancies <= 0) return fail('There is no open vacancy in that team.')
+      const incoming = state.pendingEffects.flatMap((entry) => entry.effects).filter((effect) => effect.type === 'team.vacancyFilled' && effect.fn === action.fn).length
+      if (incoming >= fn.vacancies) return fail('Recruitment already covers the remaining vacancies in that team.')
       const cost = 120
       if (!spendBudget(state, cost, `Recruitment for ${functionName(action.fn)}`)) return fail('There is not enough budget to recruit.')
       state.pendingEffects.push({

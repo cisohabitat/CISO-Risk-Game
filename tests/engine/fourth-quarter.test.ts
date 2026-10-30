@@ -153,10 +153,10 @@ describe('an option the year does not allow', () => {
 
     const option = openDecisions(state, index).find((d) => d.defId === 'dec-q4-priorities')!.options.find((o) => o.id === 'opt-q4-priorities-programmes')!
     expect(option.affordable).toBe(false)
-    expect(option.blockedReason).toBe('You are not running a programme to lead with')
+    expect(option.blockedReason).toBe('No programme is under way or delivered; lead with risks or unknowns instead')
     const refused = applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: 'opt-q4-priorities-programmes', rationaleTagIds: index.decision.get('dec-q4-priorities')!.rationaleTagIds?.slice(0, 1) ?? ['rat-material'] })
     expect(refused.ok).toBe(false)
-    expect(refused.message).toBe('You are not running a programme to lead with')
+    expect(refused.message).toBe('No programme is under way or delivered; lead with risks or unknowns instead')
 
     runDays(state, index, 40)
     const decision = state.decisions.decisions[id]!

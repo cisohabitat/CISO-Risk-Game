@@ -52,6 +52,12 @@ it('shows incoming staff and their dates alongside unfilled roles', async () => 
   render(<TeamScreen />)
   const row = screen.getByRole('heading', { name: 'Identity and access', exact: true }).closest('li')!
   expect(within(row).getByText(/2 vacancies/)).toHaveTextContent('1 incoming · 1 not yet recruiting. Expected around')
+  const another = within(row).getByRole('button', { name: /Recruit another/ })
+  expect(another).toBeEnabled()
+  const before = useGameStore.getState().state!.resources.budgetRemaining
+  fireEvent.click(another)
+  expect(useGameStore.getState().state!.resources.budgetRemaining).toBe(before - 120)
+  expect(within(row).getByText(/2 vacancies/)).toHaveTextContent('2 incoming · 0 not yet recruiting')
   expect(within(row).getByRole('button', { name: 'Recruiting…' })).toBeDisabled()
 })
 

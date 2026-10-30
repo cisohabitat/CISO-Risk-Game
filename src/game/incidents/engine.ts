@@ -261,12 +261,17 @@ export function buildReconstruction(
   const warnings = incident.campaignId
     ? Object.keys(state.flags).filter((flag) => flag.startsWith(`signal.${incident.campaignId}.`)).length
     : 0
+  const firstWarning = state.inbox.messages.filter((message) => message.signalCampaignId === incident.campaignId).reduce((day, message) => Math.min(day, message.day), Infinity)
+  const hunts = state.team.assignments.filter((assignment) => assignment.refId === 'inv-threat-hunt' && assignment.startedDay >= firstWarning && assignment.startedDay < incident.startedDay)
+  const huntNote = hunts.some((assignment) => assignment.status === 'complete' && assignment.dueDay <= incident.startedDay)
+    ? 'a targeted hunt returned before impact, but the intrusion still reached the business'
+    : hunts.length > 0 ? 'a targeted hunt was commissioned before impact but had not returned' : 'no targeted hunt was commissioned between the first warning and impact'
   const weeks = Math.max(1, Math.round(ranFor / 7))
   // First, because the lists are cut at six and the narrative reads three:
   // how long it ran unseen is the line the year turns on.
   if (ranFor > 7 && warnings > 0) {
     hurt.unshift(
-      `The intrusion ran for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business. It raised ${warnings === 1 ? 'a warning' : `${warnings} warnings`}, and none of them was followed up`,
+      `The intrusion ran for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business. It raised ${warnings === 1 ? 'a warning' : `${warnings} warnings`}, and ${huntNote}`,
     )
   } else if (ranFor > 7) {
     hurt.unshift(`The intrusion was under way for ${weeks === 1 ? 'a week' : `${weeks} weeks`} before it reached the business, and nothing saw it`)

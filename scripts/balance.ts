@@ -12,11 +12,14 @@ const index = buildContentIndex(nexoraContent)
 const policies = { prevention: 'prog-identity', detection: 'prog-detection', recovery: 'prog-ransomware', governance: 'prog-thirdparty' } as const
 const runs = Number(process.argv[2] ?? 30)
 if (!Number.isInteger(runs) || runs < 1 || runs > 500) throw new Error('Choose 1–500 paired seeds per strategy and mode.')
+const requestedOpening = process.argv[3]
+if (requestedOpening && requestedOpening !== 'all' && !index.situation.has(requestedOpening)) throw new Error('Choose a known situation id or all.')
+const openings = requestedOpening === 'all' ? (index.content.situations ?? []).map((situation) => situation.id) : [requestedOpening]
 const rows = []
-for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
+for (const opening of openings) for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
   for (const [policy, programmeId] of Object.entries(policies)) {
     for (let seed = 0; seed < runs; seed += 1) {
-      const state = newGame(index, { seed: `balance-${seed}`, difficulty })
+      const state = newGame(index, { seed: `balance-${seed}`, difficulty, situation: opening })
       const seen = new Set<string>()
       const decisionDays: number[] = []
       const decisionsByQuarter = [0, 0, 0, 0]
@@ -66,7 +69,7 @@ for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
       }
       const review = buildAnnualReview(state, index)
       const gaps = [0, ...decisionDays, 364].slice(1).map((day, i) => day - [0, ...decisionDays][i]!)
-      rows.push({ difficulty, policy, seed: state.seed, programmeStarted: started, progress: state.programmes.programmes[programmeId]!.progress,
+      rows.push({ difficulty, policy, situation: state.situationId ?? 'default', seed: state.seed, programmeStarted: started, progress: state.programmes.programmes[programmeId]!.progress,
         incidents: Object.keys(state.incidents.incidents).length,
         worstConsequence: Math.max(0, ...Object.values(state.incidents.incidents).map((i) => i.consequence)),
         objectivesAchieved: Object.values(state.business.objectives).filter((o) => o.status === 'achieved').length,
@@ -78,5 +81,5 @@ for (const difficulty of ['guided', 'ciso', 'high-pressure'] as Difficulty[]) {
     }
   }
 }
-console.log(JSON.stringify({ runs, reserve: 350, policy: 'One fully funded programme, two enquiries, first affordable response, clear affordable blockers, resume when staffing can meet demand, attend board. Same seed set and policy across modes. Engine probes only; no engagement or fairness claim.', rows }, null, 2))
+console.log(JSON.stringify({ runs, openings: openings.map((opening) => opening ?? 'default'), reserve: 350, policy: 'One fully funded programme, two enquiries, first affordable response, clear affordable blockers, resume when staffing can meet demand, attend board. Same seed set and policy across modes. Engine probes only; no engagement or fairness claim.', rows }, null, 2))
 if (rows.some((row) => row.violations.length > 0)) process.exitCode = 1

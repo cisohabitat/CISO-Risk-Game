@@ -12,6 +12,7 @@ export function messageReturnKind(message: InboxMessage, index: ContentIndex): M
   else if (message.subject.startsWith('Followed up: ')) kind = 'consequence'
   else if (message.subject.startsWith('Your acceptance of ')) kind = 'acceptance'
   else if (message.subject.startsWith('Pulled back: ') || message.subject.startsWith('Paused: ')) kind = 'stopped'
+  else if (message.type === 'people' && message.subject === 'Recruitment update') kind = 'delivery'
   else if (message.type === 'programme' && (message.subject.startsWith('Delivered: ') || message.subject.startsWith('Milestone: '))) kind = 'delivery'
   else if (event?.followUp || tags.includes('consequence')) kind = 'consequence'
   // Skip ahead can carry a player from containment to closure in one

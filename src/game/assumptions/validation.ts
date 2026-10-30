@@ -313,3 +313,16 @@ export function unexaminedAssumptions(state: GameState, index: ContentIndex) {
     return !rule || !hasBeenRevealed(state, rule.revealedBy, assumption.createdDay)
   })
 }
+
+/** Public ways to examine an assumption, without exposing its hidden verdict. */
+export function assumptionEnquiries(state: GameState, index: ContentIndex, assumptionId: string): string[] {
+  const runtime = state.assumptions.assumptions[assumptionId]
+  const def = runtime && index.assumption.get(runtime.defId)
+  const reveal = def && VALIDATION_RULES[def.validationRuleId]?.revealedBy
+  if (!reveal) return []
+  return index.content.investigations.filter((enquiry) =>
+    reveal.kind === 'control-assessed' ? enquiry.assessesControlIds.includes(reveal.controlId)
+      : reveal.kind === 'edge-discovered' ? enquiry.revealsEdgeIds.includes(reveal.edgeId)
+        : reveal.kind === 'node-discovered' ? enquiry.revealsNodeIds.includes(reveal.nodeId) : false,
+  ).map((enquiry) => enquiry.name)
+}
