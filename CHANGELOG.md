@@ -20,6 +20,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Hold high-speed time after actions and when weekly attention renews. Keep each
+  open board paper announced across screens, preselect material items for fresh
+  drafts and explain the agenda range, reporting calendar and Q4 annual closure.
+- Give quarter-specific board responses, show system/dependency discovery totals
+  together in reviews, use full programme names and clarify partial business
+  delivery and Developing resilience without changing ratings or balance.
+
 - Record dated audit-programme checkpoint outcomes and retain them after later
   delivery. Stop showing past checkpoints as upcoming; older missing outcomes
   remain explicitly unknown.

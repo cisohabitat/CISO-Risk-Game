@@ -6,6 +6,24 @@ changes.
 
 ## Documentation
 
+- Preserve the 30 October product-manager High pressure retest and its quick-choice/
+  unused-attention caveats separately from controlled probes. At 2x/4x the UI
+  adapter holds after actions (including refusals) and at attention renewal;
+  keep explicit speed selection and headless engine policies unchanged. Refused
+  actions may pause but must never commit partial failed resource mutations.
+- Fresh board papers preselect material topics, while returned drafts retain
+  deliberate edits and the keyed omission guard. Agenda guidance allows every
+  material topic plus at most two optional updates; recommendations are separate.
+  Announce each pending paper throughout its submission window. Keep the three
+  follow-up papers and Q4 annual closure explicit; do not invent a fourth paper,
+  change deadlines or count a draft as submitted. Vary approval wording from
+  public quarter/material agenda without RNG or altered effects.
+- Discovery counts share one current snapshot for systems and dependencies;
+  show both in annual evidence and date live summaries. Material blind spots
+  are a subset of the dependency count. Use full programme names in review
+  evidence; preserve assessment scales, stored judgements and balance unless
+  measured strategy/mode evidence justifies a separately calibrated change.
+
 - The 30 October newcomer retest is a build-unidentified owner account, not an
   independent pilot. Keep its supplied findings separate from reproduction.
   The same text was later labelled CISO; do not count it as a second session.

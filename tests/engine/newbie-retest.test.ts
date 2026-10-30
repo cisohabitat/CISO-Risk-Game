@@ -69,8 +69,8 @@ it('never rounds an unfinished recovery programme to 100% in the review', () => 
   state.finished = true
   const dimension = buildAnnualReview(state, index).dimensions.find((item) => item.id === 'programme-execution')!
   expect(dimension.narrative).toContain('2 of 3 programmes')
-  expect(dimension.evidence).toContain(`${index.programme.get('prog-ransomware')!.shortName}: 99% delivered`)
-  const recovery = yearTimeline(state, index).find((lane) => lane.id === 'programmes')!.spans.find((span) => span.label === index.programme.get('prog-ransomware')!.shortName)!
+  expect(dimension.evidence).toContain(`${index.programme.get('prog-ransomware')!.name}: 99% delivered`)
+  const recovery = yearTimeline(state, index).find((lane) => lane.id === 'programmes')!.spans.find((span) => span.label === index.programme.get('prog-ransomware')!.name)!
   expect(recovery).toMatchObject({ complete: false, ending: 'still running at year end' })
 })
 it('records actual refunds and bounded cuts, and records no refused purchase', () => {

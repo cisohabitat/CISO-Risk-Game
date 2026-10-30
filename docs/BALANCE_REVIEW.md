@@ -1,5 +1,29 @@
 # Balance review — 22 October 2026
 
+## 30 October product-manager retest probe
+
+The build-unidentified High pressure account reports early burnout, three
+completed programmes and depleted budget. Quick choices and attention left unused
+after Q1 limit inference. `pnpm --silent audit:balance 30` was rerun on the current
+content: four declared policies × 30 matched seeds × three modes, with one fully
+funded programme, two enquiries, a discretionary £350k reserve and affordable
+blocker resolution. This does not reproduce the reported three-programme policy.
+
+| Mode | Team Weak / Developing / Solid / Strong (120 years) | Median / minimum remaining budget (£k) |
+|---|---|---|
+| Guided | 15 / 72 / 15 / 18 | 1700 / 1030 |
+| CISO | 21 / 73 / 19 / 7 | 880 / 240 |
+| High pressure | 17 / 87 / 11 / 5 | 630 / 0 |
+
+All 360 campaign-years passed invariants. Programme execution was Strong in 90
+and Solid in 30 years per mode under these single-programme policies. High
+pressure did not inevitably finish with Weak team sustainability, but these
+year-end records do not measure first burnout date, perceived fairness or the
+effect of spending all attention. One probe's zero budget does not validate the
+reported May depletion/seven priced-out decisions. No morale, duration, funding,
+incident-rate or assessment changes are made on this evidence. The reported
+run still needs an identified seed/build/save for causal reproduction.
+
 Owner-authorised balance pass over budget access, pacing, strategy viability, annual fairness and difficulty. Baseline: `d62a7aa`. Results are seeded engine probes, not evidence of human engagement or perceived fairness.
 
 ## Method

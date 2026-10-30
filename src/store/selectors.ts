@@ -1,4 +1,5 @@
 import { programmeDeliveryPercent } from '@/game/programmes/reporting'
+import { discoveryCounts } from '@/game/knowledge/discovery'
 import { boardPaperCounts } from '@/game/debrief/papers'
 /**
  * Derived, player-facing views of the game state (plan §40).
@@ -367,11 +368,8 @@ export function discoveredNodes(state: GameState, index: ContentIndex): Discover
 }
 
 export function undiscoveredCount(state: GameState): { nodes: number; edges: number } {
-  let nodes = 0
-  let edges = 0
-  for (const node of Object.values(state.organisation.nodes)) if (node.exists && !node.discovered) nodes += 1
-  for (const edge of Object.values(state.organisation.edges)) if (edge.exists && !edge.discovered) edges += 1
-  return { nodes, edges }
+  const counts = discoveryCounts(state)
+  return { nodes: counts.systems.remaining, edges: counts.dependencies.remaining }
 }
 
 export interface ProgrammeView {
@@ -1252,7 +1250,7 @@ export function yearTimeline(state: GameState, index: ContentIndex): TimelineLan
     spans.push({
       fromDay: runtime.startedDay,
       toDay: runtime.completedDay ?? state.currentDay,
-      label: def?.shortName ?? runtime.id,
+      label: def?.name ?? runtime.id,
       complete,
       ending: complete ? 'completed' : state.finished ? 'still running at year end' : 'still running',
     })

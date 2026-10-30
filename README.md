@@ -497,6 +497,22 @@ evidence reason asks what evidence, owner and date will move the call, without
 blocking or penalising a legitimate reason. Old saves lacking a checkpoint
 outcome explicitly retain that uncertainty rather than inventing it.
 
+The [30 October product-manager retest](docs/playtests/2026-10-30-owner-supplied-product-manager-retest.md)
+adds high-speed action and weekly attention holds. At 2×/4×, select a speed again
+after acting or attention renewal; 1× and headless simulation retain their rules.
+Fresh papers select material agenda items and explain the range of all required
+items plus up to two optional updates. Returned drafts keep your edits and the
+deliberate-omission safeguard. Every pending paper remains announced across
+workspaces. The calendar explains Q1–Q3 follow-up papers and Q4's annual closure,
+with opening dates separate from preparation and submission deadlines. Approvals
+refer to the reporting quarter and actual material agenda.
+
+Annual reviews show system and dependency discovery side by side, use full
+programme names and state achieved/missed/pending objective counts. Current
+discovery summaries are dated. Rating scales, morale, delivery rates and budgets
+are unchanged; [balance evidence](docs/BALANCE_REVIEW.md) records the declared
+paired probe and its limits rather than treating one run as a calibration.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

@@ -78,8 +78,8 @@ test('the year-end review keeps near-complete recovery below 100 percent', async
   await openPreparedCampaign(page, save)
   await expect(page.getByText('How the year is read')).toBeVisible()
   await expect(page.getByText(/2 of 3 programmes you started reached completion/)).toBeVisible()
-  await expect(page.getByText('Recovery uplift: 99% delivered', { exact: true })).toBeVisible()
-  await expect(page.getByText('Recovery uplift: 100% delivered', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Ransomware resilience and recovery: 99% delivered', { exact: true })).toBeVisible()
+  await expect(page.getByText('Ransomware resilience and recovery: 100% delivered', { exact: true })).toHaveCount(0)
   await expectNoHorizontalScroll(page)
 })
 

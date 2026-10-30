@@ -11,6 +11,7 @@ import { NodeInspector } from '@/components/organisation/NodeInspector'
 import { nodeTypeLabel, plural } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import { detailIsBelowTheList } from '@/lib/layout/stacked'
+import { shortDate } from '@/lib/formatting/labels'
 
 const OrgGraph = lazy(() => import('@/components/organisation/OrgGraph'))
 
@@ -55,7 +56,7 @@ export function OrganisationScreen() {
           <p className="document-kicker mb-2">Nexora Group</p>
           <h1 className="font-display text-3xl leading-tight">Organisation</h1>
           <p className="text-sm text-ink-muted">
-            {plural(nodes.length, 'system')} discovered.{' '}
+            As of {shortDate(state.currentDay)}: {plural(nodes.length, 'system')} discovered.{' '}
             {unknown.nodes + unknown.edges > 0
               ? `${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} you have not found.`
               : 'Nothing remains hidden.'}

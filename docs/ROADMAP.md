@@ -183,6 +183,17 @@ The reported budget sequence and missing January report still lack an identified
 save; old outcomes/transactions are not reconstructed. Human gates and grades
 remain open. [Findings](FINDINGS.md) records verification and limits.
 
+### Product-manager retest follow-through, 30 October
+
+The [30 October product-manager retest](playtests/2026-10-30-owner-supplied-product-manager-retest.md)
+adds action/weekly holds at high speed, continuous paper alerts, material defaults,
+agenda-range guidance and quarter-specific approval. Reporting/preparation/
+submission dates and Q4 annual closure are now explained. Reviews share system
+and dependency counts with live views, state partial objective delivery and use
+full programme names. These are clarity/clock fixes, not a new fourth paper or
+changed balance/ratings. Declared paired probes remain separate from the supplied
+run's unverified burnout and budget sequence; independent gates stay open.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,

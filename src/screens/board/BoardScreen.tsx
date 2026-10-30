@@ -34,6 +34,8 @@ export function BoardScreen() {
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
   const availableTopics = useMemo(() => (state ? materialTopics(state, index) : []), [state, index])
+  const requiredIds = availableTopics.filter((topic) => topic.material).map((topic) => topic.id)
+  const optionalAllowance = Math.min(2, availableTopics.length - requiredIds.length)
   // What the player has assessed each risk at, beside it on the agenda. Seven
   // identical rows meant choosing what the board hears from memory of
   // another screen.
@@ -92,7 +94,7 @@ export function BoardScreen() {
           <h1 className="mt-2 font-display text-3xl leading-tight">Board and executives</h1>
         </div>
         {pendingQuarter !== undefined && (
-          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); setPreparing(true) }}>
+          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); if (draft?.quarter !== pendingQuarter) setTopics(requiredIds); setPreparing(true) }}>
             Prepare the Q{pendingQuarter} board paper
             <span className="font-normal opacity-80"> · {FOCUS_COSTS.boardPreparation} attention</span>
           </Button>
@@ -113,9 +115,12 @@ export function BoardScreen() {
             <p className="mt-1 text-sm text-ink-muted text-pretty" data-testid="paper-deadline">
               Write it by {formatGameDate((pendingQuarter + 1) * DAYS_PER_QUARTER - 1).label}. After that the committee meets without it, and notices.
             </p>
+            <p className="mt-2 text-sm text-ink-muted">This reports the quarter just closed. It opened on {formatGameDate(pendingQuarter * DAYS_PER_QUARTER).label}; the submission window runs through the following quarter. “Prepared” records the day you submit, not the opening date.</p>
           </CardBody>
         </Card>
       )}
+
+      <p className="text-sm text-ink-muted">Board calendar: Q1, Q2 and Q3 each have a follow-up paper. Q4 closes in the annual review on {formatGameDate(364).label}; there is no separate Q4 paper or submission after year end.</p>
 
       <RiskAppetite />
       <Disclosure summary="Governance correspondence: insurance, appetite and intelligence">
@@ -251,6 +256,7 @@ export function BoardScreen() {
             <div className="col-span-2 sm:col-span-1"><dt className="text-xs text-ink-faint">Submit by</dt><dd className="mt-1 font-medium">{formatGameDate(((pendingQuarter ?? 0) + 1) * DAYS_PER_QUARTER - 1).label}</dd></div>
           </dl>
           <p className="text-sm text-ink-muted">Choose the agenda, programme recommendations and uncertainties you will disclose. Submitting records the paper and returns the committee’s response; recommendations do not start programmes automatically.</p>
+          <p className="text-sm" role="note" aria-label="Agenda guidance">Include all {requiredIds.length} required items, selected for a fresh paper. Add at most two optional updates: the useful range today is {requiredIds.length}–{requiredIds.length + optionalAllowance} agenda items. Material issues always take priority over a short agenda. Programme recommendations are counted separately.</p>
           {omitted.length > 0 && reviewOmissions && <section className="rounded-lg border border-band-high/50 bg-band-high-soft p-3" aria-label="Material omissions" role={reviewOmissions ? 'alert' : undefined}>
             <h2 ref={omissionHeading} tabIndex={-1} className="font-medium">{plural(omitted.length, 'material item')} not selected</h2>
             <p className="mt-2 text-sm">The board will not hear these items. Omitting material information affects its confidence; a draft is not a submitted paper.</p>

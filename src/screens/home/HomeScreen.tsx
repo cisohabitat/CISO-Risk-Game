@@ -141,6 +141,7 @@ export function HomeScreen() {
       <Disclosure summary="How a week works">
         <ol className="list-decimal space-y-2 pl-5">
           <li>Skip ahead advances once, up to thirty days, and holds for reading. Choose a speed to run between updates.</li>
+          <li>At 2× and 4×, an action holds time, including a refused action so you can read why. A new week also holds time when attention renews. Choose a speed again when you are ready.</li>
           <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
           <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>
           <li>Follow the results and prepare the quarterly board paper. Raising a risk makes it eligible; select its agenda item when writing the paper.</li>
@@ -319,7 +320,7 @@ export function HomeScreen() {
                 />
                 <p className="text-sm text-ink-muted text-pretty">
                   {unknown.nodes > 0 || unknown.edges > 0
-                    ? `There is more of Nexora you have not seen: ${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} remain undiscovered.`
+                    ? `As of ${view.dateLabel}, ${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} remain undiscovered. Systems and their connections are counted separately.`
                     : 'You have brought the whole estate into view.'}
                 </p>
                 {team.healthNote && <p className="mt-2 text-sm text-ink-muted">Available capacity does not mean morale has recovered. Open Team to see current commitments, recovery conditions, and ways to relieve strain.</p>}

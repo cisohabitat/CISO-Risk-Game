@@ -25,7 +25,7 @@ it('keeps board selections through a risk review and clears the draft at a campa
   fireEvent.click(screen.getByRole('button', { name: /Prepare the Q1/ }))
   const dialog = screen.getByRole('dialog')
   const first = within(dialog).getAllByRole('checkbox')[0]!
-  fireEvent.click(first)
+  if (!(first as HTMLInputElement).checked) fireEvent.click(first)
   const name = first.closest('label')!.textContent!
   fireEvent.click(within(dialog).getByRole('button', { name: 'Identity uplift', exact: true }))
   fireEvent.click(within(dialog).getByRole('button', { name: /Review emerging risks/ }))

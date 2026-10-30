@@ -9,12 +9,12 @@ async function expectReachable(control: Locator): Promise<void> {
   await expect(async () => {
     await control.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest' }))
     await expect(control).toBeInViewport({ timeout: 1_000 })
-    const reachable = await control.evaluate((element) => {
+    const hitTest = await control.evaluate((element) => {
       const rect = element.getClientRects()[0]!
       const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)
-      return element.contains(hit)
+      return { reachable: element.contains(hit), rect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height }, covering: hit?.outerHTML.slice(0, 250) }
     })
-    expect(reachable, `another surface covers ${await control.textContent()}`).toBe(true)
+    expect(hitTest.reachable, `another surface covers ${await control.textContent()}: ${JSON.stringify(hitTest)}`).toBe(true)
   }).toPass({ timeout: 15_000 })
 }
 

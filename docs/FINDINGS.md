@@ -16,6 +16,61 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Product-manager High pressure retest — 30 October 2026
+
+The supplied account is preserved in
+`docs/playtests/2026-10-30-owner-supplied-product-manager-retest.md`. Build, seed,
+scenario ID and participant independence remain unknown. It reports two incidents,
+all decisions answered, three objectives met, quick choices and unused attention
+after Q1. These caveats prevent a controlled strategy or fairness conclusion.
+
+Source/reproduction found fresh material checkboxes unticked, a generic approval,
+paper alerts limited to the last seven days, and no action/weekly stop in the UI
+clock adapter. At 2×/4× the adapter now holds after successful or refused actions
+and at weekly attention renewal. It bounds multi-day fast requests to the next
+renewal, preserves explicit speed selection, discards partial failed-action
+mutations and leaves headless policies and 1× unchanged. Keyboard Skip ahead
+uses the same explicit one-shot hold as the button.
+
+Fresh papers select all current material topics. Returned drafts retain edits,
+including deliberate omissions, and the existing keyed warning still applies.
+Guidance names the actual count plus up to two optional updates, separately from
+recommendations. Approval refers to the public agenda and reporting quarter;
+no effects or RNG draws change. Every pending paper is announced across screens
+from its opening day. The existing three-paper calendar is explicit: Q1 opens on
+day 91, Q2 on 182 and Q3 on 273, with the following quarter as submission window.
+The annual review closes Q4. No extra paper, changed deadlines or meeting credit
+is invented; preparation is dated at actual submission.
+
+Live summaries and review evidence share a systems/dependencies snapshot.
+Annual evidence presents both totals together and describes material unseen links
+as a subset, not unseen systems. Dated live summaries distinguish different
+moments. Same-instant screen disagreement is not reproduced from an identified
+save. Reviews use full programme names and state achieved/missed/pending objective
+counts. Three of five can remain Solid under the existing scale; Developing
+resilience describes damage before recovery, not a satisfactory event outcome.
+Stored judgements, ratings and simulation balance remain intact.
+
+`pnpm --silent audit:balance 30` ran 360 paired campaign-years with zero invariant
+violations. High pressure team sustainability was Weak/Developing/Solid/Strong
+in 17/87/11/5 of 120 years; remaining budget median £630k, minimum £0k. These
+one-programme/reserve policies do not reproduce the three-programme run or its
+first burnout date. They neither establish fairness nor support an unavoidable
+Weak finish. Full method and other modes are in `docs/BALANCE_REVIEW.md`.
+
+Verification: `pnpm check` passed 722 tests across 121 files, typecheck, lint,
+content validation (zero warnings), build and unchanged size gates. The final
+six-project browser run passed 729 checks with 51 project-specific skips in
+12.5 minutes. Two additional skips cover the new fast-control test on phone
+layouts, where those controls are unavailable; the paper flow runs everywhere.
+The focused run passed 44 checks with 22 applicable project skips. The full run
+caught an invalid status role on the now-persistent aside; a valid div live
+region and no empty-list spacing fix it without relaxing accessibility checks.
+An earlier focused WebKit map-attribution hit test failed once; its isolated,
+subsequent focused and final full runs passed with unchanged bounds/assertions.
+Failure diagnostics now retain the covering element and geometry. Independent
+human, physical-device and learning gates remain open.
+
 ### Newcomer retest follow-through — 30 October 2026
 
 The supplied retest is preserved in `docs/playtests/2026-10-30-owner-supplied-newcomer-retest.md`.

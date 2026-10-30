@@ -62,6 +62,7 @@ export function useKeyboardShortcuts(): void {
       }
       if (event.key === 'ArrowRight') {
         event.preventDefault()
+        dispatch({ type: 'setSpeed', speed: 'paused' })
         advanceDays(30, true)
         return
       }

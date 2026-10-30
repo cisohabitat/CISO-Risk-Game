@@ -14,17 +14,17 @@ export function DecisionDeadlines() {
   const quarter = state.reviews.pendingQuarter
   const boardDeadline = quarter === undefined ? undefined : (quarter + 1) * DAYS_PER_QUARTER - 1
   const boardDue = boardDeadline !== undefined && boardDeadline - state.currentDay <= 7
-  if (due.length === 0 && !boardDue) return null
-  return <aside aria-label="Decision deadlines" className="mb-4 rounded-lg border border-band-high/50 bg-band-high-soft p-3" role="status">
-    <p className="font-medium">Work approaching its deadline</p>
-    {boardDue && <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-sm">
-      <span>Q{quarter} board paper · submit by {shortDate(boardDeadline!)} · {state.currentDay > boardDeadline! ? 'overdue' : state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}. A draft is not a submission.</span>
+  const visible = due.length > 0 || quarter !== undefined
+  return <div aria-label="Decision deadlines" className={visible ? 'mb-4 rounded-lg border border-band-high/50 bg-band-high-soft p-3' : undefined} role="status">
+    {due.length > 0 && <p className="font-medium">Work approaching its deadline</p>}
+    {quarter !== undefined && <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+      <span>Q{quarter} board paper ready · reports Q{quarter} results · submit by {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}. A draft is not a submission.</span>
       <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('board')}>Review board paper</Button>
     </div>}
-    <p className="mt-1 text-sm">Pause time to review them. Unanswered decisions will be taken out of your hands at their deadline.</p>
-    <ul className="mt-2 space-y-2">{due.map((decision) => <li key={decision.id} className="flex flex-wrap items-center justify-between gap-2">
+    {due.length > 0 && <p className="mt-1 text-sm">Pause time to review them. Unanswered decisions will be taken out of your hands at their deadline.</p>}
+    {due.length > 0 && <ul className="mt-2 space-y-2">{due.map((decision) => <li key={decision.id} className="flex flex-wrap items-center justify-between gap-2">
       <span className="text-sm">{decision.title} · {decision.daysRemaining! <= 0 ? 'due today' : `due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}`}</span>
       <Button variant="secondary" size="sm" onClick={() => setUi({ openDecisionId: decision.id })}>Review: {decision.title}</Button>
-    </li>)}</ul>
-  </aside>
+    </li>)}</ul>}
+  </div>
 }

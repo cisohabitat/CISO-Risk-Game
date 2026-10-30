@@ -15,7 +15,7 @@ import type {
   ReasoningLine,
 } from '../types'
 import { clamp01, money } from '../types'
-import { ASSURANCE_LIFE_DAYS, blindSpots, undiscoveredMaterial, unexaminedMaterial } from '../knowledge/discovery'
+import { ASSURANCE_LIFE_DAYS, blindSpots, discoveryCounts, undiscoveredMaterial, unexaminedMaterial } from '../knowledge/discovery'
 import { calculateControlEffectiveness } from '../controls/effectiveness'
 import { effortAllocation, programmeRelevance, programmesThisYear } from './prioritisation'
 import { overallAssessment } from './assessment'
@@ -175,14 +175,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // read the same however hard the player looked.
   const examined = unexaminedMaterial(state, index)
   const examinedShare = examined.reachable > 0 ? examined.examined / examined.reachable : 0
-  let seenNodes = 0
-  let existingNodes = 0
-  for (const def of index.content.nodes) {
-    const node = state.organisation.nodes[def.id]
-    if (!node?.exists) continue
-    existingNodes += 1
-    if (node.discovered) seenNodes += 1
-  }
+  const discovery = discoveryCounts(state)
   const understandingScore = clamp01(0.3 * understanding + 0.2 * dependencies + 0.5 * examinedShare)
   dimensions.push({
     id: 'risk-understanding',
@@ -201,7 +194,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // above "0 of 32 things you could have examined yourself, you did",
       // which reads as a contradiction unless you already know the difference
       // between having seen something and having checked it.
-      `${seenNodes} of ${existingNodes} systems were ever brought into view`,
+      `${discovery.systems.discovered} of ${discovery.systems.total} systems discovered; ${discovery.systems.remaining} remain unseen`,
+      `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies discovered; ${discovery.dependencies.remaining} remain unseen. Knowing a system exists does not reveal all its connections; material unseen dependencies are counted separately under Material blind spots.`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       // Current and lapsed apart: "0 of 13 controls were independently
       // assessed" printed for a year that had assessed four of them, in
@@ -440,6 +434,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           : `${name} on ${dateOf(days[0]!)}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
       })
       lines.unshift('This dimension assesses impact and recovery. It does not establish that entry routes or identity and cloud exposures were fixed.')
+      if (tested && band(resilience) === 'developing') lines.unshift('Developing resilience means real damage before recovery; it is not a satisfactory outcome. Incident consequence describes the event, while this dimension describes how the organisation came through it.')
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
       // three and a half hours. Found by the second observed playtest.
@@ -497,7 +492,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const execution = relevanceLimited ? 0.74 : delivery
   const executionEvidence = started.map((programme) => {
     const def = index.programme.get(programme.id)
-    return `${def?.shortName ?? programme.id}: ${programmeDeliveryPercent(programme)}% delivered`
+    return `${def?.name ?? programme.id}: ${programmeDeliveryPercent(programme)}% delivered`
   })
   if (relevanceLimited) executionEvidence.unshift('Programme execution is capped at solid because delivery and relevance are assessed together.')
   if (started.length > 0 && !state.risks.initialMateriality) executionEvidence.unshift('The opening risk snapshot is unavailable; programme relevance uses the current risk picture.')
@@ -544,6 +539,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       const lines = index.content.objectives
         .filter((def) => state.business.objectives[def.id])
         .map((def) => `${def.name}: ${state.business.objectives[def.id]!.status}`)
+      lines.unshift(`${achieved} of ${objectives.length} objectives achieved; ${failed} missed; ${pending} still in delivery. This dimension describes delivery across the portfolio, not a pass on every objective.`)
       // Money committed beyond the year. It used to disappear into the floor on
       // `budget.change`, which left a player who spent their reserve and then
       // took unfunded emergency support indistinguishable from one who had

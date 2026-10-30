@@ -8,6 +8,16 @@ import { clamp01 } from '../types'
 import { evaluateCondition } from '../events/conditions'
 import { dateOf } from '../time'
 
+/** Counts describe one snapshot; discovering a system does not reveal its links. */
+export function discoveryCounts(state: GameState) {
+  const nodes = Object.values(state.organisation.nodes).filter((node) => node.exists)
+  const edges = Object.values(state.organisation.edges).filter((edge) => edge.exists)
+  return {
+    systems: { total: nodes.length, discovered: nodes.filter((node) => node.discovered).length, remaining: nodes.filter((node) => !node.discovered).length },
+    dependencies: { total: edges.length, discovered: edges.filter((edge) => edge.discovered).length, remaining: edges.filter((edge) => !edge.discovered).length },
+  }
+}
+
 export function revealNode(state: GameState, nodeId: string, confidence = 0.8, verified = false): boolean {
   const node = state.organisation.nodes[nodeId]
   if (!node || !node.exists) return false

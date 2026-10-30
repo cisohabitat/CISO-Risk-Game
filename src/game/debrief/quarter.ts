@@ -130,7 +130,12 @@ export function buildQuarterReview(
     reaction = `The board sat through a long list. These did not need its time this quarter: ${surplus.join('; ')}. The chair asks for fewer, sharper items next time.`
   } else {
     effects.push({ type: 'board.confidence', delta: 0.05 + 0.05 * coverage })
-    reaction = 'The board follows the argument and supports the direction you set out.'
+    const focus = input.quarter === 1
+      ? 'The chair asks you to turn this first picture into named owners and review dates.'
+      : input.quarter === 2
+        ? 'The chair asks what has changed since the last paper, and which commitments still need follow-through.'
+        : 'The chair asks which exposures and delivery commitments must carry into next year.'
+    reaction = `The board supports the direction in your Q${input.quarter} paper. ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => topics.find((topic) => topic.id === id)!.label).join('; ')}.` : ' The selected updates are noted; no current item was classified as material.'}`
   }
 
   if (input.communicateUncertainty) {

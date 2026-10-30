@@ -10,6 +10,12 @@ test('material omissions require an informed choice before submission', async ({
   await goTo(page, 'Board')
   await page.getByRole('button', { name: /Prepare the Q1 board paper/ }).click()
   const paper = page.getByRole('dialog')
+  // Checkbox text lives on the wrapping label, so select those labels directly.
+  const requiredInputs = paper.locator('label').filter({ hasText: 'Required: material to this committee' }).getByRole('checkbox')
+  for (const checkbox of await requiredInputs.all()) {
+    await expect(checkbox).toBeChecked()
+    await checkbox.uncheck()
+  }
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   const warning = paper.getByRole('alert')
   await expect(warning).toContainText('Omitting material information affects its confidence')

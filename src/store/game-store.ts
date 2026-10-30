@@ -6,7 +6,7 @@
 import type { DecisionReaction } from './decision-reactions'
 import { create } from 'zustand'
 import { produce } from 'immer'
-import { DAYS_PER_QUARTER } from '@/game/types'
+import { DAYS_PER_QUARTER, DAYS_PER_WEEK } from '@/game/types'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import type { beginNextYear as buildFollowingYear } from '@/game/engine/next-year'
@@ -418,11 +418,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const index = contentOf(get().index)
 
     let result: ActionResult = { ok: false, message: '' }
+    const fast = state.speed === '2x' || state.speed === '4x'
+    let weeklyHold = false
     const next = produce(state, (draft) => {
-      result = applyAction(draft, index, action)
+      const request = fast && action.type === 'advance'
+        ? { ...action, days: Math.min(action.days, DAYS_PER_WEEK - state.currentDay % DAYS_PER_WEEK) }
+        : action
+      result = applyAction(draft, index, request)
+      if (fast) {
+        weeklyHold = result.ok && !draft.finished && action.type === 'advance' && draft.resources.weekIndex > state.resources.weekIndex
+        if (weeklyHold || (action.type !== 'advance' && action.type !== 'setSpeed')) {
+          applyAction(draft, index, { type: 'setSpeed', speed: 'paused' })
+        }
+      }
     })
 
     if (!result.ok) {
+      if (fast) set({ state: produce(state, (draft) => { applyAction(draft, index, { type: 'setSpeed', speed: 'paused' }) }) })
       get().pushToast(result.message, 'warning')
       return result
     }
@@ -437,6 +449,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       } : {}),
     } })
     if (result.message) get().pushToast(result.message, 'info')
+    if (weeklyHold) get().pushToast('A new week: attention has renewed. Time is held so you can choose how to use it. Select a speed to continue.', 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
       void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
