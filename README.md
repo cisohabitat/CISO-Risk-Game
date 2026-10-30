@@ -528,6 +528,18 @@ give an affordable funding example, and actual meetings retain an in-place accou
 with observed reactions. Navigation to Board no longer implies a meeting happened.
 These changes do not add a live score or alter simulation balance or saved grades.
 
+CISO closing-retest follow-through: suggested hypotheses no longer inflate the
+attention total. Inbox totals distinguish all messages from unread badges, and
+Team keeps fractional workload visible. Blocker actions leave receipts; programme
+cards explain constraints that slow work and completion around an unpaid fix.
+Latest actual budget movement is visible, and one-shot Skip holds for refunds
+or explains a quiet advance. At played year end, December correspondence stays
+available before you explicitly open the annual review. The paper includes a
+raised-risk register separately from its selectable agenda, and Commit waits
+for the required reason. Objective dates retain their original commitment;
+[108 controlled campaign probes](docs/OBJECTIVE_REVIEW.md) show choice responsiveness
+without changing balance or existing grades.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

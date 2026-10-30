@@ -180,9 +180,18 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       for (let i = 0; i < action.days; i += 1) {
         if (state.currentDay >= CAMPAIGN_DAYS) break
         const previousCounter = state.inbox.counter
+        const previousBudget = state.resources.budgetRemaining
         const result = tickDay(state, index)
         ticks.push(result)
         if (result.pauseReasons.length > 0) break
+        if (action.stopOnUpdate && state.resources.budgetRemaining !== previousBudget) {
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['player']
+          result.shouldAutosave = true
+          const movement = state.history.entries.findLast((entry) => entry.kind === 'budget' && entry.day === state.currentDay)
+          return { ok: true, message: `Budget changed from ${money(previousBudget)} to ${money(state.resources.budgetRemaining)}. ${movement?.summary ?? 'Review the budget activity and correspondence.'}`, ticks }
+        }
         // Skip ahead reads only newly delivered public correspondence. Old unread
         // mail never blocks progress, and ordinary timed ticks retain their rules.
         const update = action.stopOnUpdate && state.inbox.messages.find((message) =>
@@ -199,7 +208,14 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           return { ok: true, message: `Update received: ${update.subject}`, ticks }
         }
       }
-      return { ok: true, message: '', ticks }
+      const quietStop = action.stopOnUpdate && ticks.length > 0 && !state.finished && ticks.every((tick) => tick.pauseReasons.length === 0)
+      if (quietStop) {
+        state.paused = true
+        state.speed = 'paused'
+        state.pauseReasons = ['player']
+        ticks.at(-1)!.shouldAutosave = true
+      }
+      return { ok: true, message: quietStop ? `Advanced ${ticks.length} days with no new decision or urgent return. Time is held; review current progress, budget and business dates before continuing.` : '', ticks }
     }
 
     case 'resolveDecision': {

@@ -20,6 +20,15 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Exclude suggested hypotheses from the attention total; distinguish unread
+  badges from total mail and show fractional team commitments.
+- Confirm blocker clearing, explain slow delivery around constraints and expose
+  actual budget movements. Hold one-shot skips for money changes and explain
+  quiet advances. Offer December correspondence before opening the annual review.
+- List all raised risks separately from agenda eligibility. Keep Commit disabled
+  until its reason is ready; show original business deadlines and label imposed
+  delays separately from actual completion dates.
+
 - Stop Skip ahead before a decision already waiting, with a cross-screen review
   route. Open first-week assessment guidance, make reason navigation clearer,
   enlarge radio targets and expose more contextual jargon help.

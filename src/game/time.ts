@@ -13,6 +13,7 @@ const MONTHS = [
 
 /** A real year, because the header shows the date to the player. */
 const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+export const DECEMBER_START_DAY = 334
 
 /**
  * Day 0 is the first Monday of the campaign year.

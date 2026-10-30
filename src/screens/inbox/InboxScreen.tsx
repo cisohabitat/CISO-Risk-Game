@@ -151,13 +151,13 @@ export function InboxScreen() {
           setQuery('')
           setMessageLimit(60)
         }}>Clear search</Button>}
-        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all mail in this filter, including older messages.</p>
+        <p id="message-search-help" className="w-full text-xs text-ink-faint">Searches all mail in this filter, including older messages. The navigation badge counts unread mail; this list can also include messages already read.</p>
       </div>
 
       {filter === 'unread' && messages.length > 0 && <p className="text-sm text-ink-muted">Messages stay in this view as you read them. Select Unread again to refresh.</p>}
       {filter === 'follow-ups' && <p className="text-sm text-ink-muted">Enquiry results, recorded follow-ups, acceptance updates, stopped work and incident reports, including messages you have read.</p>}
       {messages.length > 0 && <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-ink-faint" role="status">Showing {Math.min(shownCount, messages.length)} of {messages.length} messages</p>
+        <p className="text-xs text-ink-faint" role="status">Showing {Math.min(shownCount, messages.length)} of {messages.length} messages · {state.inbox.messages.filter((message) => !message.read).length} unread across all mail</p>
         {shownCount < messages.length && <Button variant="quiet" size="sm" onClick={() => {
           const next = messages[shownCount]
           setMessageLimit(shownCount + 60)

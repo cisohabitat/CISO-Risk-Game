@@ -6,6 +6,27 @@ changes.
 
 ## Documentation
 
+- The 30 October CISO closing retest has no identified build/seed/mode; retain
+  its source separately from reproduction. Suggested hypotheses are optional
+  leads, excluded from the attention total. Inbox badges count unread mail,
+  while lists include opened mail. Preserve fractional committed capacity and
+  explain zero capacity/vacancies without changing morale constants.
+- Programme constraints may slow rather than stop delivery. Record actual
+  clearing and completion around outstanding constraints without inventing a
+  purchase; keep bounded receipts separate from operational review evidence.
+  Show actual budget movements and stop one-shot Skip on a movement; quiet
+  one-shot skips hold with a factual receipt, adding no mail/events/RNG draws.
+- Played year-end transitions offer retained December correspondence before
+  explicit annual-review navigation. Compute/save the same review and leave
+  historical/prepared finished-save routing intact. Raised-risk registers include
+  closed entries, separately from current agenda eligibility. Commit submits;
+  reason navigation remains secondary and never masquerades as commitment.
+- Objective responsiveness is measured by `audit:objectives`; preserve its
+  asserted scenario, component/full-policy distinction and limitations in
+  `docs/OBJECTIVE_REVIEW.md`. Display the original objective deadline; recorded
+  delay is not an observed completion slip. Do not infer fairness or rebalance
+  from this small policy probe, or rewrite recorded annual judgements.
+
 - Preserve the newcomer-completion account as one session with corrected newbie
   attribution, not separate CISO/newbie participants. Build/seed/mode remain
   unknown; retain the 24-of-25 choice caveat and the reported late objectives.
@@ -54,13 +75,13 @@ changes.
   historical checkpoint from later completion. Unfinished percentages cap at 99
   everywhere; do not force status or rewrite stored annual judgements.
 - Exact unread counts differ from Inbox totals; explain the attention categories
-  and keep counted decisions, trade-offs and patterns reachable beyond previews.
+  and keep counted decisions, trade-offs reachable beyond previews; optional patterns remain separately reachable.
   Raised and emerging concerns are separate counts. A positive morale change
   can remain in Burning out: receipts and Team retain actual capacity and band.
 - Retain completed enquiry reports at return, named confirmations and duplicate
   hypothesis guards. Budget activity records bounded actual movement, not the
   advertised price or an invented old ledger. Quiet-week notes use current facts
-  and add no events, mail, pauses or RNG draws. Skip ahead is explicitly one-shot.
+  and add no events, mail or RNG draws. Ordinary time keeps its rules; one-shot Skip holds with a factual receipt.
 - Reconstruction may name declared unaddressed controls only on the used route,
   for a pre-impact recorded choice while the gap remains at reconstruction.
   Label defaults, exclude same-day/later/unrelated/repaired cases, and do not claim sole

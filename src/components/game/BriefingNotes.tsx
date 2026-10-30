@@ -13,7 +13,7 @@ export function BudgetActivity() {
     <p className="text-sm">Available today: {money(state.resources.budgetRemaining)}. These are recorded changes, including refunds and imposed cuts. Earlier correspondence can quote a different date or allocation.</p>
     {entries.length === 0 ? <p className="mt-2 text-sm text-ink-muted">No changes have been recorded in this ledger. Older saves do not reconstruct past transactions.</p> : <ol className="mt-3 space-y-2 text-sm">{entries.map((entry, i) => <li key={`${entry.day}-${i}`}><span className="text-ink-muted">{shortDate(entry.day)} · </span>{entry.summary}</li>)}</ol>}
     <p className="mt-2 text-xs text-ink-muted">Latest 20 retained entries; this is an activity record, not a full accounting ledger.</p>
-  </Disclosure></div>
+  </Disclosure>{entries[0] && <p className="text-xs text-ink-muted" role="note" aria-label="Latest budget movement">Latest recorded change, {shortDate(entries[0].day)}: {entries[0].summary}</p>}</div>
 }
 
 export function QuietWeekNote() {

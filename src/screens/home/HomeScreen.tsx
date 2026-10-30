@@ -56,8 +56,7 @@ export function HomeScreen() {
     view.openDecisions +
     (state.reviews.pendingQuarter !== undefined ? 1 : 0) +
     blocked.length +
-    pressing.length +
-    patterns.length
+    pressing.length
 
   return (
     <div className="space-y-6">
@@ -80,7 +79,8 @@ export function HomeScreen() {
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
-        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')} · {plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')}. These categories make up the attention total.</p>}
+        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}. These categories make up the attention total.</p>}
+        {patterns.length > 0 && <p className="mt-2 text-xs text-ink-muted">{plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')} to explore when useful; excluded from the attention total.</p>}
         {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}
       </header>
 

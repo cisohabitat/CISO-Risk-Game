@@ -507,9 +507,8 @@ test.describe('a first year at Nexora', () => {
     await startCampaign(page, 'e2e-full-year')
 
     for (let i = 0; i < 320; i += 1) {
-      // Finishing the year switches to the debrief automatically.
-      // The year view loads on demand, so the close may show its placeholder
-      // for a moment before the review; either means the year is over.
+      // The year closes on December correspondence before the player opens
+      // the annual review. The review module still loads on demand.
       if (await page.getByText(/Annual review|Opening your year/).first().isVisible().catch(() => false)) break
       const banner = page.getByRole('button', { name: 'Read the annual review' })
       if (await banner.isVisible().catch(() => false)) {
@@ -551,7 +550,11 @@ test.describe('a first year at Nexora', () => {
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }
 
-    await expect(page.getByText('How the year is read')).toBeVisible({ timeout: 15_000 })
+    const annualHeading = page.getByText('How the year is read')
+    const openAnnualReview = page.getByRole('button', { name: 'Read the annual review', exact: true })
+    await expect(annualHeading.or(openAnnualReview)).toBeVisible({ timeout: 15_000 })
+    if (await openAnnualReview.isVisible()) await openAnnualReview.click()
+    await expect(annualHeading).toBeVisible({ timeout: 15_000 })
     await expect(page.getByText('Annual review').first()).toBeVisible()
     await expect(page.getByText('What the business achieved')).toBeVisible()
 

@@ -11,7 +11,7 @@ import { stakeholderViews, visibleRisks } from '@/store/selectors'
 import { materialTopics } from '@/game/debrief/quarter'
 import { formatGameDate } from '@/game/time'
 import { DAYS_PER_QUARTER } from '@/game/types'
-import { bandTone, plural } from '@/lib/formatting/labels'
+import { bandTone, plural, statusLabel } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 import { Icon } from '@/components/ui/icons'
 import { PersonPortrait, RelationshipScale } from '@/components/game/Person'
@@ -48,6 +48,7 @@ export function BoardScreen() {
   // Why a risk the player can see is not on the agenda: it has not been raised.
   const emergingRisks = state ? Object.values(state.risks.scenarios).filter((s) => s.status === 'emerging').flatMap((risk) => { const def = index.riskScenario.get(risk.id); return def ? [{ id: risk.id, title: def.title }] : [] }) : []
   const emergingCount = emergingRisks.length
+  const raisedRisks = state ? visibleRisks(state, index).filter((risk) => risk.status !== 'emerging') : []
   const omitted = availableTopics.filter((topic) => topic.material && !topics.includes(topic.id))
   const omissionKey = `${state?.reviews.pendingQuarter}:${omitted.map((topic) => topic.id).sort().join('|')}`
   if (!state) return null
@@ -260,6 +261,10 @@ export function BoardScreen() {
           </dl>
           <p className="text-sm text-ink-muted">Choose the agenda, programme recommendations and uncertainties you will disclose. Submitting records the paper and returns the committee’s response; recommendations do not start programmes automatically.</p>
           <p className="text-sm" role="note" aria-label="Agenda guidance">Include all {requiredIds.length} required items, selected for a fresh paper. Add at most two optional updates: the useful range today is {requiredIds.length}–{requiredIds.length + optionalAllowance} agenda items. Material issues always take priority over a short agenda. Programme recommendations are counted separately.</p>
+          <Disclosure summary={`Raised risk register (${raisedRisks.length})`}>
+            <p className="mb-2 text-sm text-ink-muted">This register is separate from the agenda selection. Open raised risks can be selected below; closed entries remain here without becoming required agenda items.</p>
+            {raisedRisks.length === 0 ? <p className="text-sm">No risk scenario has been raised yet. Forming a hypothesis alone does not raise it.</p> : <ul className="list-disc space-y-2 pl-5 text-sm">{raisedRisks.map((risk) => <li key={risk.id}>{risk.title} · {statusLabel(risk.status)} · {availableTopics.some((topic) => topic.id === `risk:${risk.id}`) ? 'available on the agenda below' : 'closed; not a current agenda item'}</li>)}</ul>}
+          </Disclosure>
           {omitted.length > 0 && reviewOmissions && <section className="rounded-lg border border-band-high/50 bg-band-high-soft p-3" aria-label="Material omissions" role={reviewOmissions ? 'alert' : undefined}>
             <h2 ref={omissionHeading} tabIndex={-1} className="font-medium">{plural(omitted.length, 'material item')} not selected</h2>
             <p className="mt-2 text-sm">The board will not hear these items. Omitting material information affects its confidence; a draft is not a submitted paper.</p>
@@ -279,7 +284,7 @@ export function BoardScreen() {
               <p className="mb-3 text-sm text-ink-muted">Evidence for the committee to consider.</p>
               {emergingCount > 0 && (
                 <p className="mb-3 text-sm text-ink-muted">
-                  {plural(emergingCount, 'other concern')} not yet raised. Raised risks are listed separately below; this count excludes them. Raise an emerging concern from Risk before choosing it for the paper.
+                  {plural(emergingCount, 'other concern')} not yet raised. This count excludes raised risks. Check the raised risk register above; open raised items are available on the agenda below. Raise an emerging concern from Risk before choosing it for the paper.
                 </p>
               )}
               {emergingCount > 0 && <Disclosure summary="Which risks are still emerging?"><ul className="list-disc pl-5">{emergingRisks.map((risk) => <li key={risk.id}>{risk.title}</li>)}</ul></Disclosure>}

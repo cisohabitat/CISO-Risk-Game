@@ -387,7 +387,8 @@ export interface ProgrammeView {
   sponsorName?: string
   staffingLabel: string
   confidenceLabel: string
-  blockers: { id: string; name: string; description: string; resolution: string; budget?: number; focus?: number }[]
+  blockers: { id: string; name: string; description: string; resolution: string; budget?: number; focus?: number; progressNote: string }[]
+  latestBlockerNote?: string
   milestones: { id: string; name: string; description: string; complete: boolean }[]
   controlImpact: string[]
   capacityDemand: { fn: string; days: number }[]
@@ -419,6 +420,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
               ? 'Partly staffed'
               : 'Starved of people',
       confidenceLabel: deliveryConfidenceLabel(deliveryConfidence(runtime, index, state.currentDay)),
+      latestBlockerNote: state.history.entries.findLast((entry) => entry.kind === 'programme-blocker' && entry.refs?.includes(def.id))?.summary,
       blockers: activeBlockers.map((blocker) => {
         const blockerDef = def.blockers.find((b) => b.id === blocker.id)
         return {
@@ -428,6 +430,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
           resolution: blockerDef?.resolution.label ?? 'Resolve',
           budget: blockerDef?.resolution.budget,
           focus: blockerDef?.resolution.focus,
+          progressNote: !blockerDef ? 'The delivery impact of this constraint is not recorded.' : blockerDef.progressMultiplier === 0 ? 'This constraint stops delivery until resolved.' : 'This constraint slows delivery. Other work continues, so the programme may still finish without buying this separate fix.',
         }
       }),
       milestones: def.milestones.map((milestone) => ({
@@ -503,7 +506,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         fn,
         label: FUNCTION_LABELS[fn] ?? fn,
         capacity: runtime.capacity,
-        committed: Math.round(runtime.committed * 10) / 10,
+        committed: runtime.committed,
         band: capacityBand(functionStrain(state, fn)),
         moraleLabel:
           runtime.morale < 0.25
@@ -531,8 +534,9 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
         ],
         capacityChange: state.history.entries.findLast((entry) => entry.kind === 'capacity' && entry.refs?.includes(fn))?.summary,
         recoveryNote: state.finished ? 'Year-end snapshot; morale no longer changes this year.'
+          : runtime.capacity <= 0 ? 'This function has no delivery capacity and remains under pressure, even without assigned work. Review capacity losses and support; filled vacancies and available delivery time are separate.'
           : nextFunctionMorale(state, fn) > runtime.morale ? 'Recovering slowly at the current workload. Sustained relief takes time.'
-            : nextFunctionMorale(state, fn) < runtime.morale ? 'Morale is declining at the current workload and staffing. Reduce commitments or fill vacancies.'
+            : nextFunctionMorale(state, fn) < runtime.morale ? `Morale is declining${runtime.vacancies > 0 ? ` with ${runtime.vacancies} unfilled ${runtime.vacancies === 1 ? 'vacancy' : 'vacancies'}, even when little work is committed` : ' under the current load'}. Reduce commitments or review staffing. Capacity purchases do not remove later workload or vacancy pressure.`
               : 'Morale is holding at the current workload and staffing. More capacity alone does not mean recovery.',
       }
     }),
@@ -906,6 +910,7 @@ export interface CollisionView {
   objectiveName: string
   ownerName?: string
   daysUntilTarget: number
+  recordedDelayDays?: number
   /** The programme that would cover this objective's dependencies, if any. */
   programmeId?: string
   programmeName?: string
@@ -943,7 +948,7 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
   for (const def of index.content.objectives) {
     const runtime = state.business.objectives[def.id]
     if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue
-    const targetDay = runtime.targetDay + runtime.delayDays
+    const targetDay = runtime.targetDay
     const daysUntilTarget = targetDay - state.currentDay
     if (daysUntilTarget < 0 || daysUntilTarget > horizonDays) continue
 
@@ -1043,6 +1048,7 @@ export function collisions(state: GameState, index: ContentIndex, horizonDays = 
       objectiveName: def.name,
       ownerName: index.stakeholder.get(def.ownerStakeholderId)?.name,
       daysUntilTarget,
+      recordedDelayDays: runtime.delayDays,
       programmeId: best?.programmeId,
       programmeName: best?.programmeName,
       milestoneName: best?.milestoneName,

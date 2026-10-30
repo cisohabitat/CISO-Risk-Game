@@ -14,6 +14,7 @@ export interface ProgrammeTickResult {
   milestones: { programmeId: string; milestoneId: string; name: string; description: string }[]
   completed: string[]
   newBlockers: { programmeId: string; blockerId: string; name: string; description: string }[]
+  completedWithBlockers: { programmeId: string; names: string[] }[]
 }
 
 /** Share of the programme's weekly capacity demand that the team can meet. */
@@ -39,7 +40,7 @@ export function computeStaffing(state: GameState, index: ContentIndex, programme
 }
 
 export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng): ProgrammeTickResult {
-  const result: ProgrammeTickResult = { effects: [], milestones: [], completed: [], newBlockers: [] }
+  const result: ProgrammeTickResult = { effects: [], milestones: [], completed: [], newBlockers: [], completedWithBlockers: [] }
 
   for (const programme of Object.values(state.programmes.programmes)) {
     const def = index.programme.get(programme.id)
@@ -113,6 +114,8 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     }
 
     if (programme.progress >= 1) {
+      const names = programme.blockers.filter((blocker) => !blocker.resolved).map((blocker) => def.blockers.find((item) => item.id === blocker.id)?.name ?? blocker.id)
+      if (names.length > 0) result.completedWithBlockers.push({ programmeId: programme.id, names })
       programme.status = 'complete'
       programme.completedDay = state.currentDay
       // Delivered is delivered: a blocker the programme crawled past is over

@@ -158,6 +158,7 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
                     <h3 className="font-medium text-balance">{collision.objectiveName}</h3>
                   </div>
                   <p className="text-sm text-ink-muted text-pretty">{verdict.text}</p>
+                  {(collision.recordedDelayDays ?? 0) > 0 && <p className="text-xs text-ink-muted">{collision.recordedDelayDays} days of imposed delay recorded. The business commitment remains on its original date.</p>}
                   <Race collision={collision} tone={verdict.tone} />
                   {collision.exposedRisks.length > 0 && (
                     <p className="text-sm text-ink-faint text-pretty">

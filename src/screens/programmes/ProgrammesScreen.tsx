@@ -28,6 +28,7 @@ export function ProgrammesScreen() {
   const [starting, setStarting] = useState<ProgrammeView | undefined>()
   const [budget, setBudget] = useState(0)
   const [sponsorId, setSponsorId] = useState('')
+  const [blockerReceipt, setBlockerReceipt] = useState<{ gameId: string; text: string }>()
 
   const programmes = useMemo(() => (state ? programmeViews(state, index) : []), [state, index])
   // Which of the player's own risks each programme would move. A card listed
@@ -74,6 +75,7 @@ export function ProgrammesScreen() {
       </div>
 
       <ProgrammeCommitments />
+      {blockerReceipt?.gameId === state.gameId && <p role="status" aria-label="Blocker cleared" className="rounded border border-line p-3 text-sm">{blockerReceipt.text}</p>}
       {earlier.length > 0 && (
         <p className="text-sm text-ink-muted text-pretty">
           Delivered in an earlier year: {earlier.map((programme) => programme.name).join(', ')}.
@@ -99,6 +101,7 @@ export function ProgrammesScreen() {
                         {statusLabel(programme.status)}
                       </Badge>
                     </div>
+                    {programme.latestBlockerNote && <p className="text-xs text-ink-muted">Latest recorded blocker update: {programme.latestBlockerNote}</p>}
 
                     <Meter
                       label="Delivered"
@@ -122,6 +125,7 @@ export function ProgrammesScreen() {
                             <li key={blocker.id}>
                               <p className="text-sm font-medium">{blocker.name}</p>
                               <p className="mt-0.5 text-sm text-ink-muted text-pretty">{blocker.description}</p>
+                              <p className="mt-1 text-sm text-ink-muted">{blocker.progressNote}</p>
                               {/* Refused after the click, with £20k left and a
                                   £120k price on the button. Decisions already
                                   disable what the year cannot pay for. */}
@@ -133,9 +137,7 @@ export function ProgrammesScreen() {
                                   (blocker.budget ?? 0) > state.resources.budgetRemaining ||
                                   (blocker.focus ?? 0) > state.resources.focusRemaining
                                 }
-                                onClick={() =>
-                                  dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id })
-                                }
+                                onClick={() => { const before = useGameStore.getState().state!; const result = dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id }); const after = useGameStore.getState().state!; if (result.ok) setBlockerReceipt({ gameId: state.gameId, text: `${programme.name}: ${blocker.name} cleared. Used ${before.resources.focusRemaining - after.resources.focusRemaining} attention and ${money(before.resources.budgetRemaining - after.resources.budgetRemaining)} budget. ${result.message}` }) }}
                               >
                                 {blocker.resolution}
                                 {blocker.budget ? ` (${money(blocker.budget)})` : ''}

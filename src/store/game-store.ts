@@ -23,7 +23,7 @@ import {
   writeCampaign,
 } from './persistence'
 import { reportProblem } from './problems'
-import { formatGameDate } from '@/game/time'
+import { DECEMBER_START_DAY, formatGameDate } from '@/game/time'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -55,6 +55,8 @@ export interface QuarterTransition {
 }
 
 export interface UiState {
+  /** Final-month correspondence offered before navigating to the played year's review. */
+  yearEndUpdates?: { gameId: string; year: number; messageIds: string[] }
   /** Ephemeral confirmations, never written into a campaign save. */
   decisionReceipt?: DecisionReceipt
   quarterTransition?: QuarterTransition
@@ -281,7 +283,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameId: `game-${seed}-${Date.now().toString(36)}`,
       createdAtIso: new Date().toISOString(),
     })
-    set({ state, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
     try {
       await saveSafely(state, index)
       await get().refreshSaves()
@@ -333,7 +335,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       }
       if (backup && (await brokenRules(backup, index)).length === 0) {
         reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
-        set({ state: backup, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+        set({ state: backup, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
         get().pushToast(
           `That save was damaged, so the campaign opened from the one before it, on ${formatGameDate(backup.currentDay).label}.`,
           'warning',
@@ -344,7 +346,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return false
     }
     if (!state) return false
-    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+    set({ state, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
     return true
   },
 
@@ -364,7 +366,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       get().pushToast('That save failed validation. Your current campaign and saved progress were kept.', 'warning')
       return false
     }
-    set({ state, ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+    set({ state, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
     void saveSafely(state, index, { savedByPlayer: true }, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     return true
   },
@@ -444,6 +446,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ state: next, lastTicks: result.ticks ?? [], ui: {
       ...get().ui,
       ...(next.currentDay !== state.currentDay ? { decisionReceipt: undefined } : {}),
+      ...(next.finished && !state.finished ? { yearEndUpdates: { gameId: next.gameId, year: next.year ?? 1, messageIds: next.inbox.messages.filter((message) => message.day >= DECEMBER_START_DAY).map((message) => message.id) }, screen: 'inbox' as const, selectedMessageId: next.inbox.messages.find((message) => message.day >= DECEMBER_START_DAY)?.id } : {}),
       ...(quarter > previousQuarter && !next.finished ? {
         quarterTransition: { gameId: next.gameId, year: next.year ?? 1, quarter },
       } : {}),
@@ -463,7 +466,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   setScreen(screen) {
-    set((store) => ({ ui: { ...store.ui, screen, ...(screen !== 'risk' ? { riskTab: undefined } : {}) } }))
+    set((store) => ({ ui: { ...store.ui, screen, ...(screen === 'debrief' ? { yearEndUpdates: undefined } : {}), ...(screen !== 'risk' ? { riskTab: undefined } : {}) } }))
   },
 
   setUi(patch) {
@@ -493,7 +496,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state || state.reviews.annual) return
     const index = contentOf(get().index)
     const next = produce(state, (draft) => finishYear(draft, index))
-    set({ state: next, ui: { ...get().ui, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'debrief' } })
+    const handover = get().ui.yearEndUpdates
+    const holdsReview = handover?.gameId === next.gameId && handover.year === (next.year ?? 1)
+    set({ state: next, ui: { ...get().ui, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: holdsReview ? 'inbox' : 'debrief' } })
     void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
   },
 
@@ -514,7 +519,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // A second click or a different loaded campaign must not start another year.
     if (state !== source) return
     const next = beginNextYear(content, state)
-    set({ state: next, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state: next, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
     try {
       await saveSafely(next, content, {}, (message) => get().pushToast(message, 'warning'))
       await get().refreshSaves()
@@ -534,7 +539,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         // Already saved when the year closed; leaving is still allowed.
       }
     }
-    set({ state: null, lastTicks: [], ui: { ...get().ui, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state: null, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
     await get().refreshSaves()
   },
 }))

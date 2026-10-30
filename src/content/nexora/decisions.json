@@ -133,7 +133,7 @@
             { "type": "flag.set", "flag": "launch.conditional" },
             { "type": "event.schedule", "eventId": "evt-con-launch-conditions-honoured", "dayOffset": 70 }
           ] },
-        { "id": "opt-launch-oppose", "label": "Oppose the launch until the identity work is done", "description": "Refuse sign-off. The identity model has to change first.", "visibleKnownEffects": ["A public commitment will be missed", "You will need the CEO behind you"],
+        { "id": "opt-launch-oppose", "label": "Oppose the launch until the identity work is done", "description": "Refuse sign-off. The identity model has to change first.", "visibleKnownEffects": ["Puts a public commitment at risk; delay does not extend its deadline", "You will need the CEO behind you"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-digital", "delta": -0.18, "reason": "You blocked the launch." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-ceo", "delta": -0.08, "reason": "You cost the company a public date." },

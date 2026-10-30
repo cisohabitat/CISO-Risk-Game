@@ -17,13 +17,13 @@ import { Toasts } from '@/components/game/Toasts'
 import { CampaignFeedback } from '@/components/game/CampaignFeedback'
 import { IncidentCommand } from '@/components/game/IncidentCommand'
 import { DecisionDeadlines } from '@/components/game/DecisionDeadlines'
+import { YearEndUpdates } from '@/components/game/YearEndUpdates'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useGameClock } from '@/components/game/useGameClock'
 import { usePullToRefreshGuard } from '@/app/usePullToRefreshGuard'
 import { useKeyboardShortcuts } from '@/app/useKeyboardShortcuts'
 import { useGameStore } from '@/store/game-store'
-import { Button, Card, CardBody, Dialog, LoadingState } from '@/components/ui/primitives'
-import { yearWord } from '@/game/time'
+import { Dialog, LoadingState } from '@/components/ui/primitives'
 
 // The year view is opened a few times a year and read once at the close, so
 // it stays out of what the first screen waits for. It is fetched in the
@@ -97,20 +97,9 @@ export function App() {
         {/* The Briefing places teaching below the work waiting on the player,
             keeping the first decision reachable on small screens. */}
         {screen !== 'home' && <Onboarding compact />}
-        {/* Only once the review is written: while it loads, the year's end
-            is already on its way to the review screen, and a banner that
-            appeared for a moment and vanished under the pointer was worse
-            than none. */}
-        {state.finished && state.reviews.annual && screen !== 'debrief' && (
-          <Card className="mb-4 border-brass/50 bg-brass-soft/40">
-            <CardBody className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-pretty">Your {yearWord(state.year)} year is over. The review is written.</p>
-              <Button variant="primary" onClick={() => useGameStore.getState().setScreen('debrief')}>
-                Read the annual review
-              </Button>
-            </CardBody>
-          </Card>
-        )}
+        {/* Once the review is written, retain final correspondence until the
+            player explicitly opens it. Finished saves retain their route. */}
+        <YearEndUpdates />
         {/* Keyed by screen, so leaving a screen that failed clears the failure.
             The briefing is the way out unless it is the briefing that failed. */}
         <ScreenBoundary

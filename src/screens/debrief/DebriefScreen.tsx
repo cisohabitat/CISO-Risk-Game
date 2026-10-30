@@ -289,7 +289,7 @@ export function DebriefScreen() {
                       glyph={false}
                     >
                       {objectiveStatusLabel(runtime.status)}
-                      {runtime.delayDays > 0 && ` · ${runtime.delayDays}d of delay`}
+                      {runtime.delayDays > 0 && ` · ${runtime.delayDays}d of imposed delay recorded`}
                     </Badge>
                   </li>
                 )

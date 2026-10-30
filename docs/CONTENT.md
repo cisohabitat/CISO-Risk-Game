@@ -8,6 +8,15 @@ use current public concern links and affordability, never hidden outcome quality
 Plan-confidence wording distinguishes a declared commitment from funding or
 delivery; no additional score or purchase is implied.
 
+Closing-retest follow-through (30 October): describe objective-delay effects as
+risk to the original commitment; imposed delay can be absorbed by schedule float.
+Do not imply `delayDays` extends the deadline or equals observed lateness.
+Programme blocker multipliers distinguish slowing from stopping; a completion
+receipt must not invent purchase of an unresolved fix. Budget receipts quote
+actual recorded effects, without retroactively reconstructing older ledgers.
+All voiced transcripts, event eligibility and effect amounts remain unchanged.
+The objective probe and its limits are in `OBJECTIVE_REVIEW.md`.
+
 All campaign content is data. Nothing about Nexora is hard-coded into a React
 component or an engine module.
 

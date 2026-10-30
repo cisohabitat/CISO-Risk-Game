@@ -16,6 +16,54 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### CISO closing retest follow-through — 30 October 2026
+
+Source: `docs/playtests/2026-10-30-owner-supplied-ciso-closing-retest.md`.
+Build/seed/mode/scenario and participant independence are unknown. Earlier fixes
+were reported working; the remaining symptoms are not an identified-save replay.
+
+Suggested hypotheses were included in the attention headline. They now remain
+optional leads outside that sum. Inbox lists explicitly distinguish total mail
+from unread badges: opening one of 13 messages correctly leaves 12 unread.
+Team no longer rounds a fractional commitment to zero. Positive capacity with
+zero commitments and no vacancies recovers in the controlled fixture; zero
+capacity and vacancies have separate explanations. Fully staffed Engineering's
+reported later burnout is not reconstructed or retuned.
+
+Actual blocker clearing records a bounded receipt, and the UI confirms its real
+attention/budget use. A positive progress multiplier slows work; it does not
+freeze it. Existing completion clears constraints, now explained in both the
+programme card and delivery mail without claiming the separate fix was bought.
+The retained budget ledger's latest movement is visible outside its disclosure;
+Skip stops on actual money changes. Content includes £60k licence and £90k tool
+refunds, a possible £105k→£255k path, not proof of the reported run's cause.
+Quiet one-shot skips explain the interval and hold; no filler events or mail.
+
+Played closure retains December correspondence with direct reader routes before
+explicit review navigation. The annual review is still computed/saved with the
+same judgement; historical/prepared finished-save routing stays unchanged.
+The board paper now has an actual raised register including closed entries,
+separate from selectable/current material agenda items. Commit submits only;
+reason navigation is a distinct enabled secondary action.
+
+`docs/OBJECTIVE_REVIEW.md` records six component cases and 108 matched full
+campaign-policy probes over 12 seeds and three modes. Actual launch choices
+change outcomes; all 108 chosen options were recorded with no defaults and zero
+invariant violations. The collision display incorrectly extended a fixed
+commitment by recorded delay: corrected without changing engine delivery rates.
+Early clamped progress penalties can be absorbed by float; copy now describes
+risk to the commitment rather than guaranteeing a miss. No morale constants,
+programme rates, budget amounts, assessment weights or stored grades changed.
+
+Verification: `tests/engine/ciso-closing.test.ts`, `tests/ui/ciso-closing.test.tsx`
+and `tests/e2e/ciso-closing.spec.ts` cover receipts/refunds, workload precision,
+fixed commitments, option responsiveness, counts, raised entries and December
+handover. `pnpm check` passed: 125 files / 740 tests, content validation with
+zero warnings, production build and size gates. The complete six-project
+`pnpm test:e2e --workers=4` passed: 759 passed, 51 configured skips, no failures
+(810 scheduled). Chromium and WebKit both played a whole year through closure.
+`pnpm --silent audit:objectives 12` reproduced the recorded 108-campaign results.
+
 ### Newcomer completion follow-through — 30 October 2026
 
 The owner supplied the same account first labelled CISO and then corrected to

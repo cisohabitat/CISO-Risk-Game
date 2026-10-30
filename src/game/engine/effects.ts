@@ -254,6 +254,10 @@ export function applyEffect(
     case 'programme.resolveBlocker': {
       const programme = ownValue(state.programmes.programmes, effect.programmeId)
       if (!programme) break
+      const active = programme.blockers.find((blocker) => blocker.id === effect.blockerId && !blocker.resolved)
+      const def = index.programme.get(effect.programmeId)
+      const blockerDef = def?.blockers.find((blocker) => blocker.id === effect.blockerId)
+      if (active && def && blockerDef) state.history.entries.push({ day: state.currentDay, kind: 'programme-blocker', refs: [def.id], summary: `${def.name}: ${blockerDef.name} cleared. ${context.source === 'blocker' ? blockerDef.resolution.description : 'Recorded follow-through removed this constraint.'}` })
       for (const blocker of programme.blockers) {
         if (blocker.id === effect.blockerId) blocker.resolved = true
       }

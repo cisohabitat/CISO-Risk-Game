@@ -180,6 +180,9 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   for (const programmeId of programmeResult.completed) {
     const programme = index.programme.get(programmeId)
     if (!programme) continue
+    const closedConstraints = programmeResult.completedWithBlockers.find((item) => item.programmeId === programmeId)
+    const completionNote = closedConstraints ? ` The programme reached completion with these unresolved constraints: ${closedConstraints.names.join('; ')}. They closed with the completed programme; completion did not purchase a separate blocker fix.` : ''
+    if (completionNote) state.history.entries.push({ day, kind: 'programme-blocker', refs: [programmeId], summary: `${programme.name}:${completionNote}` })
     const strengthened = [...new Set(programme.milestones.flatMap((m) => (m.controlEffects ?? []).map((e) => e.controlId)))]
       .map((id) => index.control.get(id)?.name.toLowerCase())
       .filter((name): name is string => Boolean(name))
@@ -193,8 +196,8 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
       subject: `Delivered: ${programme.name}`,
       returnGroup: `programme:${programmeId}`,
       body: list
-        ? `${programme.name} is delivered. It strengthened ${list}. Controls drift when nothing maintains them, and an assessment is still the only way to know how well they now work.`
-        : `${programme.name} is delivered. An assessment is still the only way to know how well what it built now works.`,
+        ? `${programme.name} is delivered. It strengthened ${list}. Controls drift when nothing maintains them, and an assessment is still the only way to know how well they now work.${completionNote}`
+        : `${programme.name} is delivered. An assessment is still the only way to know how well what it built now works.${completionNote}`,
       type: 'programme',
       priority: 'notable',
     })
@@ -480,8 +483,8 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
   }
   // Receipts must not shorten the operational evidence used by the annual review.
   const checkpoints = state.history.entries.filter((entry) => entry.kind === 'programme-review')
-  const resources = state.history.entries.filter((entry) => entry.kind === 'budget' || entry.kind === 'capacity')
-  const operational = state.history.entries.filter((entry) => !['programme-review', 'budget', 'capacity'].includes(entry.kind))
+  const resources = state.history.entries.filter((entry) => ['budget', 'capacity', 'programme-blocker'].includes(entry.kind))
+  const operational = state.history.entries.filter((entry) => !['programme-review', 'budget', 'capacity', 'programme-blocker'].includes(entry.kind))
   if (operational.length > 600 || resources.length > 120) {
     state.history.entries = [
       ...checkpoints,

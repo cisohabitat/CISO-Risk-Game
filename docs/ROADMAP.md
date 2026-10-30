@@ -204,6 +204,19 @@ quoted risk-raising cost and actual meeting/funding feedback address reading
 load without a live grader or balance change. Reported late objectives and
 physical-device/learning outcomes remain unverified without identified evidence.
 
+### CISO closing retest follow-through, 30 October
+
+The [supplied closing account](playtests/2026-10-30-owner-supplied-ciso-closing-retest.md)
+has no identified build/seed/mode and does not establish independent pilot evidence.
+Implementation separates optional hypotheses from attention, unread from total
+mail, and raised-register membership from agenda eligibility. Actual blocker
+and budget receipts explain slow completion without a separate fix; a played
+year offers December updates before review navigation. Fractional workload and
+zero-capacity pressure are visible; no burnout retuning is claimed.
+[Objective probes](OBJECTIVE_REVIEW.md) show choice responsiveness and correct a
+displayed deadline error without changing delivery or grading. Independent
+learning/fairness gates remain open; this does not close the Phase 0 pilot.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,
