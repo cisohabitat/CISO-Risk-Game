@@ -67,7 +67,7 @@ describe('what the screens show', () => {
     expect(cards).toHaveLength(functions)
   })
 
-  it('caps the inbox badge', async () => {
+  it('shows the actual unread inbox count', async () => {
     await useGameStore.getState().startNewGame('ui-visual-badge', 'ciso')
     useGameStore.setState((store) => {
       const state = structuredClone(store.state!)
@@ -81,7 +81,7 @@ describe('what the screens show', () => {
       </AppShell>,
     )
     const rail = screen.getAllByRole('navigation', { name: 'Primary' })[0]!
-    expect(within(rail).getByText('9+')).toBeInTheDocument()
+    expect(within(rail).getByText(String(useGameStore.getState().state!.inbox.messages.filter((message) => !message.read).length))).toBeInTheDocument()
   })
 
   it('says what the quarter has produced', async () => {

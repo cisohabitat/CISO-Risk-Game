@@ -3,6 +3,7 @@
  * simulation resolves containment, consequence and recovery from the controls,
  * people and choices that were actually in place.
  */
+import { priorRouteChoices } from './prior-choices'
 import { evaluateCondition } from '../events/conditions'
 import { RISK_BAND_LABEL, consequenceBand } from '../risk/bands'
 import type { Condition } from '../types'
@@ -286,6 +287,8 @@ export function buildReconstruction(
     .slice(-6)
     .map((entry) => entry.decisionId)
 
+  const priorChoices = priorRouteChoices(state, index, incident)
+  hurt.splice(0, 0, ...priorChoices.map((choice) => choice.text))
   const narrative = [
     family?.headline ?? 'An incident ran its course.',
     path ? `The route ran ${pathSummary.map((s) => s.nodeName).join(' → ')}.` : '',
@@ -303,7 +306,7 @@ export function buildReconstruction(
     pathSummary,
     helped: helped.concat(authoredLines(state, index, family?.whatHelped)).slice(0, 6),
     hurt: hurt.concat(authoredLines(state, index, family?.whatHurt)).slice(0, 6),
-    relatedDecisionIds: relatedDecisions,
+    relatedDecisionIds: [...new Set([...priorChoices.map((choice) => choice.decisionId), ...relatedDecisions])],
     relatedAssumptionIds: relatedAssumptions,
     narrative,
   }

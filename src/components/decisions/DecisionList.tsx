@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Badge, Button, Card, CardBody, EmptyState } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand, openDecisions } from '@/store/selectors'
@@ -18,10 +19,11 @@ export function DecisionList({
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const setUi = useGameStore((store) => store.setUi)
+  const [expanded, setExpanded] = useState(false)
   if (!state) return null
 
   const decisions = openDecisions(state, index)
-  const shown = limit ? decisions.slice(0, limit) : decisions
+  const shown = limit && !expanded ? decisions.slice(0, limit) : decisions
 
   if (shown.length === 0) {
     // Beside a board paper that is due, "nothing needs an answer" is untrue.
@@ -51,13 +53,14 @@ export function DecisionList({
   }
 
   return (
-    <ul className="space-y-3">
+    <div className="space-y-3"><ul className="space-y-3">
       {shown.map((decision, position) => (
         <li key={decision.id} className="animate-rise">
           <Card className={emphasizeFirst && position === 0 ? `decision-lead ${decision.urgent ? 'decision-lead-urgent' : ''}` : decision.urgent ? 'border-band-high/50' : undefined}>
             <CardBody className={emphasizeFirst && position === 0 ? 'flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between' : 'flex flex-wrap items-start justify-between gap-3'}>
               <div className="min-w-0 flex-1">
                 {emphasizeFirst && position === 0 && <p className="document-kicker mb-2">Next decision</p>}
+                {decision.responseContext && <p className="mb-2 text-sm text-ink-muted">{decision.responseContext}</p>}
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className={emphasizeFirst && position === 0 ? 'font-display text-2xl leading-tight text-balance' : 'font-medium text-balance'}>{decision.title}</h3>
                   {decision.daysRemaining !== undefined && (
@@ -86,5 +89,7 @@ export function DecisionList({
         </li>
       ))}
     </ul>
+    {limit && !expanded && decisions.length > limit && <Button variant="secondary" size="sm" onClick={() => setExpanded(true)}>Show {decisions.length - limit} more {decisions.length - limit === 1 ? 'decision' : 'decisions'}</Button>}
+    </div>
   )
 }

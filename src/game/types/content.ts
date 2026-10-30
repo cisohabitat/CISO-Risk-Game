@@ -346,6 +346,8 @@ export interface DecisionOptionDef {
   programmeCommitment?: { programmeId: string; reviewAfterDays: number }
   /** Adopted governance delegation; never changes the underlying risk. */
   riskAppetite?: { statement: string; delegatedResidualCeiling: RiskBand }
+  /** Explicitly carried control gaps, named only when a later incident used that route. */
+  unaddressedControlIds?: string[]
   immediateEffects: GameEffect[]
   delayedEffects?: (EffectTiming & { effects: GameEffect[]; note?: string })[]
   requirements?: {

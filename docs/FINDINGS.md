@@ -16,6 +16,65 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Newcomer retest follow-through — 30 October 2026
+
+The supplied retest is preserved in `docs/playtests/2026-10-30-owner-supplied-newcomer-retest.md`.
+Its build, seed and participant independence remain unknown. It explicitly did
+not test a Q3 lapse; its positive deadline observations do not close that test.
+The owner later repeated the identical text labelled CISO. Both labels are
+preserved without counting it as another session or participant.
+
+Source checks found a stale checkpoint tense, no funded checkpoint snapshot,
+raw review rounding to 100 for unfinished work, a deliberately capped unread
+badge and preview lists smaller than the attention sum. Focused regressions now
+exercise actual dated funding review and later completion, history retention,
+near-complete recovery, bounded refunds/cuts, no refused-purchase log, actual
+recovery enquiry return, duplicate draft refusal, precise 17/82 unread counts,
+actual capacity purchase while burnout remains, in-place formation/commission
+feedback, reachable work beyond four decisions, quiet weeks and repeated reasons.
+
+`programme.review` records a dated public programme summary in history and the
+existing reminder. The panel keeps that outcome separate from today's delivery;
+old saves without it say so. Checkpoints survive history trimming and carry into Year Two as validated,
+optional dated records. Legacy records without them stay unknown. A shared
+status-aware percentage caps unfinished work at 99 without changing completion,
+annual weights or stored judgements. Actual budget movements and capacity changes
+are recorded at the operation; failed purchases record none. These records do
+not reconstruct old transactions. New enquiry completions retain the exact report
+body in the assignment's existing summary field, including the returned findings.
+Resource receipts retain at most 120 entries separately from the original
+operational-history allowance, so logging does not evict assessment evidence
+earlier. A historical promise cannot borrow a different year's checkpoint.
+
+Attention labels distinguish decisions, papers, blockers, collisions and patterns;
+preview lists can reveal the rest. Risk labels raised/emerging totals and Board
+labels other unraised concerns separately. Receipts state within-band morale
+movement and actual capacity, preserving slow recovery and vacancy effects.
+Quiet-week notes are derived UI, with no events, added mail or RNG draws. Skip
+is explicitly one-shot and holds for reading. Response papers name incident/date;
+repeated evidence reasons prompt for a plan without requiring or grading one.
+
+Explicit `unaddressedControlIds` metadata on existing no-op/defer options supports
+naming prior choices in reconstruction. Only a pre-impact recorded choice, on the
+used route, with a declared control still weak at reconstruction qualifies.
+Defaults are labelled; unrelated, same-day, later and repaired cases are excluded. This is
+association with a carried trade-off, not proof of sole causation. Metadata and
+wording change no underlying option effects. The £110k/£170k/£260k budget sequence
+and missing January report are not separately reproduced against an identified
+save, and no retroactive facts are invented.
+
+Verification: `pnpm check` passed 711 tests across 120 files, with typecheck,
+lint, content validation (zero warnings), build and size gates passing. The full
+six-project browser suite passed 719 checks with 49 existing project-specific
+skips in 12.3 minutes. The campaign-flow audit ran 24 unique campaign-years and
+24 deterministic replays over all 227 events and 152 options, with no unreferenced
+scheduled replies or duplicate authored bodies. The full run caught an ambiguous
+“Work in progress” test locator after adding the receipt; selecting the exact
+section heading preserves its assertion. The focused scrolling run also caught
+an extra-height Risk header at 1024px; inline counts restored the unchanged
+350px wheel assertion. Independent human, mobile-device, pacing and learning
+gates remain open.
+
 ### Board appetite follow-through — 30 October 2026
 
 The owner's next-step instruction continues the CISO report with a bounded board

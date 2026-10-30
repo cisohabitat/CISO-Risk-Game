@@ -48,7 +48,9 @@ export function recordYear(state: GameState): YearRecord {
     if (decision.selectedOptionId) decisions[decision.defId] = decision.selectedOptionId
   }
   const objectives = Object.values(state.business.objectives)
+  const programmeReviews = state.history.entries.filter((entry) => entry.kind === 'programme-review' && entry.refs?.[0]).map((entry) => ({ programmeId: entry.refs![0]!, day: entry.day, summary: entry.summary }))
   return {
+    ...(programmeReviews.length > 0 ? { programmeReviews } : {}),
     year: state.year ?? 1,
     gameId: state.gameId,
     headline: annual?.headline ?? '',

@@ -64,7 +64,7 @@ test.describe('a first year at Nexora', () => {
     const commissionDialog = page.getByRole('dialog')
     await expect(commissionDialog).toBeVisible()
     await commissionDialog.getByRole('button', { name: 'Commission the work' }).click()
-    await expect(page.getByText('Work in progress')).toBeVisible()
+    await expect(page.getByText('Work in progress', { exact: true })).toBeVisible()
 
     // Advance until the delegated work reports back.
     await page.getByRole('tab', { name: /^Evidence/ }).click()

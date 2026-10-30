@@ -13,7 +13,7 @@ import { NexoraMark } from '@/components/game/NexoraMark'
 import { Terms } from '@/components/game/Terms'
 import { cn } from '@/lib/utils/cn'
 import { formatGameDate } from '@/game/time'
-import { shortDate } from '@/lib/formatting/labels'
+import { shortDate, money } from '@/lib/formatting/labels'
 import type { InboxMessage } from '@/game/types'
 import { Icon, type IconName } from '@/components/ui/icons'
 import { messageReturnKind } from '@/store/selectors'
@@ -240,6 +240,7 @@ export function InboxScreen() {
                     {sender ? <><p className="font-semibold text-ink">{sender.name}</p><p className="mt-1 text-ink-muted">{sender.role}</p>{selected.from !== sender.name && selected.from !== `${sender.name}, ${sender.role}` && <p className="mt-1 text-xs text-ink-faint">{selected.from}</p>}</> : <p className="text-ink-muted">{selected.from}</p>}
                   </div>
                 </div>
+                {selected.body.includes('£') && selected.day < state.currentDay && <p className="mt-3 text-xs text-ink-muted">Correspondence dated {shortDate(selected.day)}. Available budget today: {money(state.resources.budgetRemaining)}; the message may refer to an earlier allocation. See Budget movements in Briefing for recorded changes.</p>}
                 <CharacterVoice key={`${state.gameId}:${selected.id}`} message={selected} />
                 <div className="correspondence-body mt-3 md:mt-6 space-y-4 text-pretty">
                   {selected.body.split('\n\n').map((paragraph, position) => (

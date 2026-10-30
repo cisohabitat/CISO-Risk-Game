@@ -42,7 +42,7 @@ export function RiskScreen() {
       <header>
         <p className="document-kicker mb-2">Risk register</p>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="font-display text-3xl leading-tight">Risk</h1>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1"><h1 className="font-display text-3xl leading-tight">Risk</h1><p className="text-xs text-ink-muted" role="status" aria-label="Risk register counts">{risks.filter((risk) => risk.status !== 'emerging').length} raised · {risks.filter((risk) => risk.status === 'emerging').length} emerging · {risks.length} total concerns</p></div>
           <Button id="risk-guide-toggle" variant="quiet" size="sm" aria-expanded={guideOpen} aria-controls="risk-start-guide" onClick={() => setGuideOpen((open) => !open)}>Where to start with Risk</Button>
         </div>
       </header>

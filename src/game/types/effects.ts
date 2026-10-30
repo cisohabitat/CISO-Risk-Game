@@ -31,6 +31,7 @@ export type GameEffect =
   | { type: 'control.monitoring'; controlId: string; delta: number }
   | { type: 'control.exceptions'; controlId: string; delta: number }
   | { type: 'control.assess'; controlId: string }
+  | { type: 'programme.review'; programmeId: string }
   | { type: 'programme.progress'; programmeId: string; delta: number }
   | { type: 'programme.status'; programmeId: string; status: 'proposed' | 'active' | 'paused' | 'complete' | 'at-risk' }
   | { type: 'programme.blocker'; programmeId: string; blockerId: string }

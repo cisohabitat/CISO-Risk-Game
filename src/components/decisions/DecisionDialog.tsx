@@ -36,6 +36,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
   const rationaleTags = index.content.rationaleTags.filter(
     (tag) => !decision.rationaleTagIds || decision.rationaleTagIds.includes(tag.id),
   )
+  const evidenceReasonUses = Object.values(state.decisions.decisions).filter((item) => item.resolvedDay !== undefined && !item.resolvedByDefault && item.rationaleTagIds.includes('rat-more-evidence')).length
   const selected = decision.options.find((option) => option.id === optionId)
   const needsRationale = decision.requiresRationale && tags.length === 0
   const moveTo = (id: string) => {
@@ -101,6 +102,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       }
     >
       <div className="decision-paper space-y-6">
+        {decision.responseContext && <p className="text-sm font-medium">{decision.responseContext}. This response has its own decisions.</p>}
         {state.currentDay < 7 && state.situationId && <p className="text-sm text-ink-muted">Opening situation: {index.content.situations?.find((situation) => situation.id === state.situationId)?.name ?? 'Your inherited organisation'}. The first task is to establish what you can verify for yourself.</p>}
         <p className="text-sm text-ink-muted">Time pauses while a paper or help dialog is open. Resume it explicitly after reading. {decision.requiresRationale ? 'This material decision requires at least one reason before you can commit; a note remains optional.' : 'Recording a reason is optional for this decision.'}</p>
         {decision.daysRemaining !== undefined && (
@@ -231,6 +233,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
               )
             })}
           </div>
+          {tags.includes('rat-more-evidence') && evidenceReasonUses >= 3 && <p className="mt-3 rounded border border-line p-3 text-sm" role="note">You have used this reason {evidenceReasonUses} times before. What evidence would change this call, who will obtain it, and when? Recording this reason does not commission an enquiry or extend a deadline.</p>}
           <label className="mt-3 block">
             <span className="sr-only">Optional note</span>
             <textarea

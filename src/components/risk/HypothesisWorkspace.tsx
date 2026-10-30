@@ -28,7 +28,7 @@ export function HypothesisWorkspace() {
   const hypotheses = Object.values(state.risks.hypotheses).sort((a, b) => b.createdDay - a.createdDay)
   const knownTags = new Set(evidence.flatMap((item) => item.tags))
   const templates = index.content.hypothesisTemplates.filter((template) =>
-    template.requiresTags.every((tag) => knownTags.has(tag)),
+    template.requiresTags.every((tag) => knownTags.has(tag)) && !hypotheses.some((hypothesis) => hypothesis.templateId === template.id && hypothesis.status !== 'rejected'),
   )
 
   const create = () => {

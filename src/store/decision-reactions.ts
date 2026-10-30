@@ -9,7 +9,7 @@
  * Delayed effects are not here: they belong to the organisation's response.
  */
 import { boardConfidenceLabel, relationshipBand, RELATIONSHIP_LABEL } from '@/game/stakeholders/relationships'
-import { functionTitle } from '@/game/team/capacity'
+import { functionTitle, moraleLabel } from '@/game/team/capacity'
 import type { ContentIndex, GameState } from '@/game/types'
 
 export interface DecisionReaction {
@@ -49,9 +49,10 @@ export function decisionReactions(before: GameState, after: GameState, index: Co
   for (const [fn, team] of Object.entries(after.team.functions)) {
     const earlier = before.team.functions[fn]
     if (!earlier) continue
+    if (team.capacity !== earlier.capacity) reactions.push({ text: `${functionTitle(fn)} capacity changed from ${earlier.capacity} to ${team.capacity} days a week. Current wellbeing: ${moraleLabel(team.morale)}.`, tone: team.capacity > earlier.capacity ? 'positive' : 'negative' })
     const delta = team.morale - earlier.morale
     if (Math.abs(delta) >= NOTICEABLE) {
-      reactions.push({ text: `${functionTitle(fn)} morale ${delta > 0 ? 'lifted' : 'fell'}.`, tone: delta > 0 ? 'positive' : 'negative' })
+      reactions.push({ text: `${functionTitle(fn)} morale ${delta > 0 ? 'lifted' : 'fell'}${moraleLabel(earlier.morale) === moraleLabel(team.morale) ? ` within the ${moraleLabel(team.morale)} band` : ` from ${moraleLabel(earlier.morale)} to ${moraleLabel(team.morale)}`}.`, tone: delta > 0 ? 'positive' : 'negative' })
     }
   }
 

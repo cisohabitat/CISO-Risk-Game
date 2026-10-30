@@ -20,6 +20,21 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Record dated audit-programme checkpoint outcomes and retain them after later
+  delivery. Stop showing past checkpoints as upcoming; older missing outcomes
+  remain explicitly unknown.
+- Show exact unread badges, explain the attention total and expose work beyond
+  list previews. Separate raised/emerging counts and unraised board concerns.
+- Report capacity changes and current wellbeing together; keep unfinished
+  programme percentages below 100 in annual reviews.
+- Confirm hypotheses and commissions in place, prevent duplicate working drafts,
+  and retain full completed enquiry reports. Add recorded budget activity and
+  factual quiet-week notes without extra simulated mail.
+- Name supported earlier route choices in incident reconstruction, identify each
+  response's incident and date, and coach repeated evidence reasons without a
+  new requirement. Explain the single-step Skip ahead control.
+
+
 - Answer the board's appetite request with a working delegation, see its boundary
   beside acceptances and in Board, and review accepted exceptions in later papers.
   A thirty-day follow-up checks the current register. Unknown risks are not

@@ -270,8 +270,7 @@ export function BoardScreen() {
               <p className="mb-3 text-sm text-ink-muted">Evidence for the committee to consider.</p>
               {emergingCount > 0 && (
                 <p className="mb-3 text-sm text-ink-muted">
-                  {plural(emergingCount, 'risk is', 'risks are')} emerging and not on the agenda: the board hears about
-                  risks you have raised, and an emerging one is raised from the Risk screen. This count does not include the raised risks listed below.
+                  {plural(emergingCount, 'other concern')} not yet raised. Raised risks are listed separately below; this count excludes them. Raise an emerging concern from Risk before choosing it for the paper.
                 </p>
               )}
               {emergingCount > 0 && <Disclosure summary="Which risks are still emerging?"><ul className="list-disc pl-5">{emergingRisks.map((risk) => <li key={risk.id}>{risk.title}</li>)}</ul></Disclosure>}

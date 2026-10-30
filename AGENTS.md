@@ -6,6 +6,30 @@ changes.
 
 ## Documentation
 
+- The 30 October newcomer retest is a build-unidentified owner account, not an
+  independent pilot. Keep its supplied findings separate from reproduction.
+  The same text was later labelled CISO; do not count it as a second session.
+  Bound resource receipts separately so they cannot evict operational evidence.
+  Programme checkpoint outcomes are recorded on delivery with `programme.review`,
+  retained in history, carried in optional YearRecord checkpoint records, and
+  rendered in the actual reminder. Validate carried records; keep original dates. Never infer a missed
+  historical checkpoint from later completion. Unfinished percentages cap at 99
+  everywhere; do not force status or rewrite stored annual judgements.
+- Exact unread counts differ from Inbox totals; explain the attention categories
+  and keep counted decisions, trade-offs and patterns reachable beyond previews.
+  Raised and emerging concerns are separate counts. A positive morale change
+  can remain in Burning out: receipts and Team retain actual capacity and band.
+- Retain completed enquiry reports at return, named confirmations and duplicate
+  hypothesis guards. Budget activity records bounded actual movement, not the
+  advertised price or an invented old ledger. Quiet-week notes use current facts
+  and add no events, mail, pauses or RNG draws. Skip ahead is explicitly one-shot.
+- Reconstruction may name declared unaddressed controls only on the used route,
+  for a pre-impact recorded choice while the gap remains at reconstruction.
+  Label defaults, exclude same-day/later/unrelated/repaired cases, and do not claim sole
+  causation. Repeated rationale coaching remains nonblocking and never labels a
+  reason correct. Response papers distinguish incident identity and date.
+
+
 - The 30 October next-step appetite slice uses option `riskAppetite` metadata,
   recorded current/historical selections and public `lastAssessed` bands only.
   Unknown assessments require discussion; never classify them as within appetite.

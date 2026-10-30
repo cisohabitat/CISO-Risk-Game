@@ -46,6 +46,7 @@ export function TeamScreen() {
                   </div>
                   <Meter label="Committed" value={fn.committed} max={fn.capacity}
                     valueLabel={`${fn.committed} of ${fn.capacity} days a week`} tone={capacityTone(fn.band)} />
+                  {fn.capacityChange && <p className="text-xs text-ink-muted">Latest recorded change: {fn.capacityChange} Wellbeing above is the current position.</p>}
                   <div className="flex min-h-11 flex-wrap items-center justify-between gap-2">
                     <p className={cn('text-sm', fn.vacancies > 0 && !fn.hiring ? 'text-band-elevated' : 'text-ink-muted')}>
                       {fn.vacancies > 0 ? `${plural(fn.vacancies, 'vacancy', 'vacancies')}${fn.hiring ? '' : ' unfilled'}` : 'Fully staffed'}

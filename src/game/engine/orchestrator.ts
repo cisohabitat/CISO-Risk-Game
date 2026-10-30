@@ -16,6 +16,7 @@ import type {
   PauseReason,
 } from '../types'
 import { CAMPAIGN_DAYS, clamp01, money, round2 } from '../types'
+import { recordBudgetMovement } from '../resources/activity'
 import { createRng } from './rng'
 import { applyEffects, recordAssumption, scheduledEffectDay } from './effects'
 import { tickDay, type TickResult } from './tick'
@@ -113,10 +114,12 @@ function spendFocus(state: GameState, amount: number): boolean {
   return true
 }
 
-function spendBudget(state: GameState, amount: number): boolean {
+function spendBudget(state: GameState, amount: number, label = 'Budget allocation'): boolean {
   if (amount <= 0) return true
   if (state.resources.budgetRemaining < amount) return false
-  state.resources.budgetRemaining = Math.round((state.resources.budgetRemaining - amount) * 100) / 100
+  const before = state.resources.budgetRemaining
+  state.resources.budgetRemaining = Math.round((before - amount) * 100) / 100
+  recordBudgetMovement(state, before, label)
   return true
 }
 
@@ -225,7 +228,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         return fail('That is not a reason this decision can be taken for.')
       }
 
-      if (requirements?.budget) spendBudget(state, requirements.budget)
+      if (requirements?.budget) spendBudget(state, requirements.budget, def.title)
       if (requirements?.focus) spendFocus(state, requirements.focus)
 
       // Emergency spend is allowed to exceed the year's allocation — that is
@@ -326,7 +329,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         return fail('There is not enough budget for that.')
       }
       spendFocus(state, def.focusCost)
-      spendBudget(state, def.budgetCost)
+      spendBudget(state, def.budgetCost, `Commissioned ${def.name}`)
       const assignment = startInvestigation(state, index, def, action.leaderId, rng)
       if (!assignment) return fail('That work could not be started.')
       state.history.entries.push({
@@ -342,6 +345,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
     case 'createHypothesis': {
       const template = index.hypothesisTemplate.get(action.templateId)
       if (!template) return fail('That hypothesis template is not available.')
+      if (Object.values(state.risks.hypotheses).some((hypothesis) => hypothesis.templateId === template.id && hypothesis.status !== 'rejected')) return fail('That working hypothesis is already recorded. Review it under Risk, Hypotheses.')
       if (state.resources.focusRemaining < 1) return fail('You have no attention left this week.')
       spendFocus(state, 1)
       state.risks.hypothesisCounter += 1
@@ -546,7 +550,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const budget = Math.max(0, Math.round(action.budget))
       if (!Number.isFinite(budget) || budget < minimumProgrammeFunding(def.budgetCost)) return fail(`A programme needs at least ${money(minimumProgrammeFunding(def.budgetCost))} to start.`)
       if (state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention) return fail('Standing a programme up takes more attention than you have left this week.')
-      if (!spendBudget(state, budget)) return fail('There is not enough budget left this year.')
+      if (!spendBudget(state, budget, `Started ${def.name}`)) return fail('There is not enough budget left this year.')
       spendFocus(state, FOCUS_COSTS.programmeIntervention)
       programme.budgetAllocated += budget
       programme.status = 'active'
@@ -591,7 +595,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       }
       if (!Number.isFinite(action.budget) || action.budget < programmeAccelerationCost(def.budgetCost)) return fail('Acceleration needs the quoted additional funding.')
       if (state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention) return fail('You have no attention left this week to push that programme.')
-      if (!spendBudget(state, action.budget)) return fail('There is not enough budget left this year.')
+      if (!spendBudget(state, action.budget, `Accelerated ${def.name}`)) return fail('There is not enough budget left this year.')
       spendFocus(state, FOCUS_COSTS.programmeIntervention)
       programme.budgetAllocated += action.budget
       programme.accelerated = true
@@ -616,7 +620,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const active = programme.blockers.find((b) => b.id === action.blockerId && !b.resolved)
       if (!blockerDef || !active) return fail('That blocker is not active.')
       if (blockerDef.resolution.focus && state.resources.focusRemaining < blockerDef.resolution.focus) return fail('Clearing that blocker needs attention you do not have this week.')
-      if (blockerDef.resolution.budget && !spendBudget(state, blockerDef.resolution.budget)) {
+      if (blockerDef.resolution.budget && !spendBudget(state, blockerDef.resolution.budget, `Resolved ${blockerDef.name} for ${def.name}`)) {
         return fail('There is not enough budget to clear that blocker.')
       }
       if (blockerDef.resolution.focus && !spendFocus(state, blockerDef.resolution.focus)) {
@@ -691,7 +695,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (!fn) return fail('That function does not exist.')
       if (fn.vacancies <= 0) return fail('There is no open vacancy in that team.')
       const cost = 120
-      if (!spendBudget(state, cost)) return fail('There is not enough budget to recruit.')
+      if (!spendBudget(state, cost, `Recruitment for ${functionName(action.fn)}`)) return fail('There is not enough budget to recruit.')
       state.pendingEffects.push({
         id: `hire-${action.fn}-${state.currentDay}`,
         day: state.currentDay + 60,

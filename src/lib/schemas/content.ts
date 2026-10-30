@@ -93,6 +93,7 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('control.monitoring'), controlId: id, delta: z.number() }),
   z.object({ type: z.literal('control.exceptions'), controlId: id, delta: z.number() }),
   z.object({ type: z.literal('control.assess'), controlId: id }),
+  z.object({ type: z.literal('programme.review'), programmeId: id }),
   z.object({ type: z.literal('programme.progress'), programmeId: id, delta: z.number() }),
   z.object({ type: z.literal('programme.status'), programmeId: id, status: z.enum(['proposed', 'active', 'paused', 'complete', 'at-risk']) }),
   z.object({ type: z.literal('programme.blocker'), programmeId: id, blockerId: id }),
@@ -418,6 +419,7 @@ export const decisionSchema = z.object({
       description: z.string(),
       visibleKnownEffects: z.array(z.string()).default([]),
       riskAppetite: z.object({ statement: z.string().min(1), delegatedResidualCeiling: z.enum(['low', 'moderate', 'elevated', 'high', 'severe']) }).optional(),
+      unaddressedControlIds: z.array(id).optional(),
       programmeCommitment: z.object({ programmeId: id, reviewAfterDays: z.number().int().positive() }).optional(),
       immediateEffects: z.array(effectSchema),
       delayedEffects: z.array(

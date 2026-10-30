@@ -168,6 +168,21 @@ full tabletop and operational-response metrics remain separate scope. Educator
 seed examples were remeasured rather than assumed stable under added content.
 Human validation and roadmap grades remain open.
 
+### Newcomer retest follow-through, 30 October
+
+A further [owner-supplied retest](playtests/2026-10-30-owner-supplied-newcomer-retest.md)
+reports improved raised-risk persistence, commissioning explanations and deadline
+visibility, while leaving Q3 lapse behaviour untested. Its build/seed/protocol
+remain unknown. The follow-through records checkpoint outcomes, fixes percentage
+rounding and counter meanings, exposes all counted work, clarifies capacity and
+wellbeing, retains enquiry reports and action confirmations, and adds budget
+activity and quiet-week notes from recorded facts. Supported earlier route
+choices are named in reconstruction; repeated responses/reasons receive context.
+No annual weights, incident rates, budget amounts or morale bonuses change.
+The reported budget sequence and missing January report still lack an identified
+save; old outcomes/transactions are not reconstructed. Human gates and grades
+remain open. [Findings](FINDINGS.md) records verification and limits.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,

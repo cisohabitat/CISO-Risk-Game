@@ -302,7 +302,8 @@
       "type": "board",
       "title": "The dates you gave the auditors",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "We committed to a funded programme with dates against the audit finding. The follow-up is scheduled and they will ask about the dates rather than the intent. I would rather we told them where we actually are than where we said we would be.",
+      "body": "We committed to a funded programme with dates against the audit finding. The follow-up is scheduled and they will ask about the dates rather than the intent. I would rather we told them where we actually are than where we said we would be.\n\n{{programmeReview:prog-identity}}",
+      "effectsOnReveal": [{ "type": "programme.review", "programmeId": "prog-identity" }],
       "priority": "notable",
       "availableFromDay": 0,
       "conditions": [

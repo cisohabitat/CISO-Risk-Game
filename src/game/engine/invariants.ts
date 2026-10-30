@@ -19,6 +19,14 @@ export function checkInvariants(state: GameState, index: ContentIndex): Invarian
   const violations: InvariantViolation[] = []
   const add = (rule: string, detail: string) => violations.push({ rule, detail })
 
+  for (const year of state.previousYears ?? []) {
+    if (year.programmeReviews === undefined) continue
+    if (!Array.isArray(year.programmeReviews)) { add('programme-review-record', 'Expected checkpoint records'); continue }
+    for (const review of year.programmeReviews) {
+      if (!review || typeof review !== 'object' || typeof review.programmeId !== 'string' || !index.programme.has(review.programmeId) || !Number.isInteger(review.day) || review.day < 0 || review.day > CAMPAIGN_DAYS || typeof review.summary !== 'string') add('programme-review-record', 'Invalid historical checkpoint')
+    }
+  }
+
   if (!Number.isFinite(state.currentDay) || state.currentDay < 0 || state.currentDay > CAMPAIGN_DAYS) {
     add('day-in-range', `currentDay=${state.currentDay}`)
   }

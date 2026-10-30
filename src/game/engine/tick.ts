@@ -224,6 +224,8 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     // to end reported "answered part of the question and raised others" and
     // nothing else; the findings were on another screen.
     const findings = enquiryFindings(state, index, completed)
+    const retained = state.team.assignments.find((assignment) => assignment.id === completed.assignmentId)
+    if (retained) retained.resultSummary = `${completed.summary}${findings}`
     pushMessage(state, {
       from: leader ? `${leader.name}, ${leader.role}` : 'Cyber team',
       subject: `Completed: ${completed.title}`,
@@ -476,8 +478,16 @@ export function tickDay(state: GameState, index: ContentIndex): TickResult {
     })
     if (state.history.weekly.length > 80) state.history.weekly.shift()
   }
-  if (state.history.entries.length > 600) {
-    state.history.entries = state.history.entries.slice(-500)
+  // Receipts must not shorten the operational evidence used by the annual review.
+  const checkpoints = state.history.entries.filter((entry) => entry.kind === 'programme-review')
+  const resources = state.history.entries.filter((entry) => entry.kind === 'budget' || entry.kind === 'capacity')
+  const operational = state.history.entries.filter((entry) => !['programme-review', 'budget', 'capacity'].includes(entry.kind))
+  if (operational.length > 600 || resources.length > 120) {
+    state.history.entries = [
+      ...checkpoints,
+      ...resources.slice(-120),
+      ...(operational.length > 600 ? operational.slice(-500) : operational),
+    ].sort((a, b) => a.day - b.day)
   }
 
   let yearEnded = false

@@ -1,3 +1,4 @@
+import { programmeDeliveryPercent } from '@/game/programmes/reporting'
 import { boardPaperCounts } from '@/game/debrief/papers'
 /**
  * Derived, player-facing views of the game state (plan §40).
@@ -151,6 +152,7 @@ export function topConcerns(state: GameState, index: ContentIndex, limit = 3): V
 export interface OpenDecisionView {
   id: string
   defId: string
+  responseContext?: string
   title: string
   description: string
   context: string
@@ -188,6 +190,7 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
       views.push({
         id,
         defId: def.id,
+        responseContext: runtime.incidentId && state.incidents.incidents[runtime.incidentId] ? `Response to ${index.incidentFamily.get(state.incidents.incidents[runtime.incidentId]!.familyId)?.name ?? 'an incident'} beginning ${formatGameDate(state.incidents.incidents[runtime.incidentId]!.startedDay).label}` : undefined,
         title: def.title,
         description: renderDecisionText(def.description, state, index, runtime),
         context: renderDecisionText(def.context, state, index, runtime),
@@ -405,7 +408,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
       rationale: def.rationale,
       status: runtime.status,
       finishedEarlier: runtime.status === 'complete' && (runtime.completedDay ?? 0) < 0,
-      progressPercent: runtime.status === 'complete' ? 100 : Math.min(99, Math.round(runtime.progress * 100)),
+      progressPercent: programmeDeliveryPercent(runtime),
       budgetCost: def.budgetCost,
       budgetAllocated: runtime.budgetAllocated,
       sponsorName: runtime.sponsorId ? index.stakeholder.get(runtime.sponsorId)?.name : undefined,
@@ -462,6 +465,7 @@ export interface TeamView {
     arrivingDays: number[]
     workload: string[]
     recoveryNote: string
+    capacityChange?: string
   }[]
   leaders: {
     id: string
@@ -527,6 +531,7 @@ export function teamView(state: GameState, index: ContentIndex): TeamView {
           ...state.team.assignments.filter((assignment) => assignment.status === 'running' && (assignment.capacityPerDay[fn] ?? 0) > 0).map((assignment) => assignment.title),
           ...(runtime.surge ? ['Unplanned work (fades over time)'] : []),
         ],
+        capacityChange: state.history.entries.findLast((entry) => entry.kind === 'capacity' && entry.refs?.includes(fn))?.summary,
         recoveryNote: state.finished ? 'Year-end snapshot; morale no longer changes this year.'
           : nextFunctionMorale(state, fn) > runtime.morale ? 'Recovering slowly at the current workload. Sustained relief takes time.'
             : nextFunctionMorale(state, fn) < runtime.morale ? 'Morale is declining at the current workload and staffing. Reduce commitments or fill vacancies.'
@@ -717,7 +722,7 @@ export function briefing(state: GameState, index: ContentIndex): BriefingView {
     residualExposure: residualBand(residual),
     recoveryConfidence: recoveryConfidenceLabel(recovery),
     recoveryNote: recoveryNote(state, index),
-    openDecisions: state.decisions.openIds.length,
+    openDecisions: openDecisions(state, index).length,
     unreadMessages: state.inbox.messages.filter((message) => !message.read).length,
     invalidatedAssumptions: Object.values(state.assumptions.assumptions).filter((a) => a.status === 'invalidated' && !a.acknowledged).length,
     reviewsDue: Object.values(state.risks.scenarios).filter(

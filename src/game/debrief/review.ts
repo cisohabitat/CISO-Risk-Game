@@ -1,3 +1,4 @@
+import { programmeDeliveryPercent } from '../programmes/reporting'
 import { boardPaperCounts } from './papers'
 /**
  * Quarterly board reviews and the annual CISO review (plan §26).
@@ -496,7 +497,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const execution = relevanceLimited ? 0.74 : delivery
   const executionEvidence = started.map((programme) => {
     const def = index.programme.get(programme.id)
-    return `${def?.shortName ?? programme.id}: ${Math.round(programme.progress * 100)}% delivered`
+    return `${def?.shortName ?? programme.id}: ${programmeDeliveryPercent(programme)}% delivered`
   })
   if (relevanceLimited) executionEvidence.unshift('Programme execution is capped at solid because delivery and relevance are assessed together.')
   if (started.length > 0 && !state.risks.initialMateriality) executionEvidence.unshift('The opening risk snapshot is unavailable; programme relevance uses the current risk picture.')
@@ -720,7 +721,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     const leadDef = lead ? index.programme.get(lead.id) : undefined
     if (leadDef) {
       narrative.push(
-        `Your clearest investment was ${leadDef.name}, which ended the year ${Math.round((lead?.progress ?? 0) * 100)}% delivered.`,
+        `Your clearest investment was ${leadDef.name}, which ended the year ${lead ? programmeDeliveryPercent(lead) : 0}% delivered.`,
       )
     }
   } else {

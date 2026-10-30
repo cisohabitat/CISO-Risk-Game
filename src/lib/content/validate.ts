@@ -202,6 +202,7 @@ export function validateCampaignContent(content: CampaignContent): ContentIssue[
     for (const tagId of decision.rationaleTagIds ?? []) ref(registry.rationaleTag, tagId, 'missing-rationale-tag', `decisions/${decision.id}`)
     for (const option of decision.options) {
       const where = `decisions/${decision.id}/${option.id}`
+      for (const controlId of option.unaddressedControlIds ?? []) ref(registry.control, controlId, 'missing-control', where)
       if (option.programmeCommitment) ref(registry.programme, option.programmeCommitment.programmeId, 'missing-programme', where)
       for (const effect of option.immediateEffects) checkEffect(effect, registry, where, error)
       for (const delayed of option.delayedEffects ?? []) {
@@ -455,6 +456,7 @@ function checkEffect(
     case 'control.assess':
       ref(registry.control, effect.controlId, 'missing-control')
       break
+    case 'programme.review':
     case 'programme.progress':
     case 'programme.status':
     case 'programme.blocker':

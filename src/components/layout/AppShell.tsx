@@ -111,11 +111,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                     // Keyed by the count, so it pops once when mail arrives.
                     <span
                       key={view.unreadMessages}
+                      data-testid="inbox-unread-count"
                       aria-label={`${view.unreadMessages} unread messages`}
                       title={`${view.unreadMessages} unread messages`}
                       className="animate-pop rounded-full bg-accent px-1.5 py-0.5 text-xs font-semibold text-ink-inverse tabular-nums"
                     >
-                      {view.unreadMessages > 9 ? '9+' : view.unreadMessages}
+                      {view.unreadMessages}
                     </span>
                   )}
                   {destination.id === 'home' && view.openDecisions > 0 && (
@@ -214,6 +215,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 onClick={() => go(destination.id)}
                 aria-current={screen === destination.id ? 'page' : undefined}
                 aria-label={destination.label}
+                aria-describedby={destination.id === 'inbox' && view.unreadMessages > 0 ? 'mobile-inbox-unread' : undefined}
                 className={cn(
                   'flex h-16 w-full flex-col items-center justify-center gap-0.5 text-[0.7rem] font-medium transition-colors',
                   screen === destination.id ? 'text-accent-ink' : 'text-ink-muted',
@@ -222,7 +224,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span aria-hidden="true" className="relative inline-flex">
                   <Icon name={destination.icon} size={20} />
                   {destination.id === 'inbox' && view.unreadMessages > 0 && (
-                    <span key={view.unreadMessages} className="animate-pop absolute -right-2 -top-1 h-2 w-2 rounded-full bg-accent" />
+                    <span id="mobile-inbox-unread" data-testid="inbox-unread-count" key={view.unreadMessages} title={`${view.unreadMessages} unread messages`} className="animate-pop absolute -right-3 -top-2 min-w-4 rounded-full bg-accent px-1 text-center text-[0.6rem] leading-4 text-ink-inverse">{view.unreadMessages}<span className="sr-only"> unread messages</span></span>
                   )}
                   {destination.id === 'home' && view.openDecisions > 0 && (
                     <span className="absolute -right-2 -top-1 h-2 w-2 rounded-full bg-brass" />

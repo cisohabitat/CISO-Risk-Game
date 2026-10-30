@@ -1023,6 +1023,24 @@
                         "properties": {
                           "type": {
                             "type": "string",
+                            "const": "programme.review"
+                          },
+                          "programmeId": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "programmeId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
                             "const": "programme.progress"
                           },
                           "programmeId": {
@@ -2869,6 +2887,13 @@
                   ],
                   "additionalProperties": false
                 },
+                "unaddressedControlIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
                 "programmeCommitment": {
                   "type": "object",
                   "properties": {
@@ -3178,6 +3203,24 @@
                         "required": [
                           "type",
                           "controlId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "programme.review"
+                          },
+                          "programmeId": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "programmeId"
                         ],
                         "additionalProperties": false
                       },
@@ -4472,6 +4515,24 @@
                               "required": [
                                 "type",
                                 "controlId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "programme.review"
+                                },
+                                "programmeId": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "programmeId"
                               ],
                               "additionalProperties": false
                             },
@@ -5932,6 +5993,24 @@
                   "properties": {
                     "type": {
                       "type": "string",
+                      "const": "programme.review"
+                    },
+                    "programmeId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "programmeId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
                       "const": "programme.progress"
                     },
                     "programmeId": {
@@ -7378,6 +7457,24 @@
                   "required": [
                     "type",
                     "controlId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "programme.review"
+                    },
+                    "programmeId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "programmeId"
                   ],
                   "additionalProperties": false
                 },

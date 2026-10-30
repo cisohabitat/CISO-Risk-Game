@@ -31,6 +31,7 @@ export function renderDecisionText(
   const incident = runtime?.incidentId ? state.incidents.incidents[runtime.incidentId] : undefined
   const incidentName = incident ? index.incidentFamily.get(incident.familyId)?.name : undefined
   return text
+    .replace(/\{\{programmeReview:([^}]+)\}\}/g, (_, id: string) => state.history.entries.findLast((entry) => entry.kind === 'programme-review' && entry.day === state.currentDay && entry.refs?.includes(id))?.summary ?? 'No dated programme review was recorded.')
     .replaceAll('{{closedIncident}}', incidentName ?? 'the earlier incident')
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))

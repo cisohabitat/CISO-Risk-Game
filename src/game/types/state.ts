@@ -579,6 +579,8 @@ export interface YearRecord {
   budgetTotal: number
   /** The starting situation the year began in, if it was the first. */
   situationId?: string
+  /** Actual dated programme checkpoints; absent in older records. */
+  programmeReviews?: { programmeId: string; day: number; summary: string }[]
   /** The option taken on each decision the year answered, by decision definition id. */
   decisions: Record<string, string>
 }

@@ -428,3 +428,21 @@ unchanged and use a scheduled discussion when extending an existing request.
 Use optional event `followUp: true` to classify an authored return for Briefing,
 Inbox and Skip ahead without adding spacing tags. This presentation metadata
 does not change event eligibility, RNG draws or the scheduled delivery date.
+
+## Checkpoint and reconstruction records
+
+`programme.review` records the current allocation, public delivery percentage and
+status for the referenced programme in history. A message containing
+`{{programmeReview:<programme-id>}}` renders that day's recorded outcome. This
+records a checkpoint; it does not fund, complete or close an audit finding. Old
+unrecorded checkpoints stay unknown. Actual snapshots carry in the optional
+`YearRecord.programmeReviews` field, with their original year/day; validate these
+records on import and never invent them for legacy saves. The published schema and deferred-save
+validator accept only registered programme references.
+
+An option may declare `unaddressedControlIds` to identify a control gap it leaves
+carried. Reconstruction names that recorded choice only before impact, on the
+used route, while the declared control still has a gap at reconstruction. This
+metadata changes no effects, rates or score. Do not infer an evasive choice from
+its label or claim that it alone caused an incident. Same-day ordering is not
+recorded, so exclude same-day choices from these attributions. Defaults remain defaults.

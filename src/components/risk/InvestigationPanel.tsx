@@ -4,7 +4,7 @@
  * changes what comes back.
  */
 import { useState } from 'react'
-import { Badge, Button, Card, CardBody, Dialog, EmptyState, SectionHeading } from '@/components/ui/primitives'
+import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
@@ -32,6 +32,7 @@ export function InvestigationPanel() {
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const [chosen, setChosen] = useState<InvestigationDef | undefined>()
+  const [receipt, setReceipt] = useState<string>()
   const [leaderId, setLeaderId] = useState<string>('')
 
   if (!state) return null
@@ -59,6 +60,7 @@ export function InvestigationPanel() {
     if (!chosen || !leaderId) return
     const result = dispatch({ type: 'startInvestigation', investigationId: chosen.id, leaderId })
     if (result.ok) {
+      setReceipt(result.message)
       setChosen(undefined)
       setLeaderId('')
     }
@@ -66,6 +68,10 @@ export function InvestigationPanel() {
 
   return (
     <div className="space-y-6">
+      {receipt && <p role="status" aria-label="Commission confirmation" className="rounded border border-line bg-surface-2 p-3 text-sm">{receipt} Work in progress below records the commission.</p>}
+      <Disclosure summary="Completed and stopped enquiries">
+        {state.team.assignments.filter((assignment) => assignment.status !== 'running').length === 0 ? <p className="text-sm">No enquiry has finished or been stopped yet.</p> : <ul className="space-y-4">{state.team.assignments.filter((assignment) => assignment.status !== 'running').slice().reverse().map((assignment) => <li key={assignment.id} className="text-sm"><h3 className="font-medium">{assignment.title} · {assignment.status === 'complete' ? 'Completed' : 'Stopped'}</h3><p className="mt-1 whitespace-pre-line">{assignment.resultSummary ?? 'Stopped before a report was delivered.'}</p>{assignment.status === 'complete' && <Button variant="quiet" size="sm" onClick={() => useGameStore.getState().setUi({ riskTab: 'evidence' })}>Review the evidence</Button>}</li>)}</ul>}
+      </Disclosure>
       {running.length > 0 && (
         <section aria-labelledby="running-work">
           <SectionHeading><span id="running-work">Work in progress</span></SectionHeading>

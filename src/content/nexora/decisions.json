@@ -190,7 +190,7 @@
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.03, "reason": "You did not disrupt operations." }
           ],
           "assumptionIds": ["asm-supplier-no-priv"] },
-        { "id": "opt-msp-nothing", "label": "Leave it for now", "description": "There are bigger problems this quarter.", "visibleKnownEffects": ["No disruption, and no conversation with the provider", "The standing accounts stay as they are"],
+        { "id": "opt-msp-nothing", "unaddressedControlIds": ["ctl-3p-access"], "label": "Leave it for now", "description": "There are bigger problems this quarter.", "visibleKnownEffects": ["No disruption, and no conversation with the provider", "The standing accounts stay as they are"],
           "immediateEffects": [ { "type": "flag.set", "flag": "msp.deferred" }, { "type": "event.schedule", "eventId": "evt-con-msp-deferred-returns", "dayOffset": 90 } ],
           "assumptionIds": ["asm-supplier-no-priv"] }
       ]
@@ -221,7 +221,7 @@
             { "type": "objective.progress", "objectiveId": "obj-cloud-migration", "delta": 0.05 }
           ],
           "assumptionIds": ["asm-retirement"] },
-        { "id": "opt-legacy-accept", "label": "Accept until retirement, with compensating controls", "description": "Accept the exposure until the platform is retired, with monitoring in the meantime.", "visibleKnownEffects": ["No operational disruption", "Depends on the retirement date holding"],
+        { "id": "opt-legacy-accept", "unaddressedControlIds": ["ctl-vuln", "ctl-segmentation"], "label": "Accept until retirement, with compensating controls", "description": "Accept the exposure until the platform is retired, with monitoring in the meantime.", "visibleKnownEffects": ["No operational disruption", "Depends on the retirement date holding"],
           "immediateEffects": [
             { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.04 },
             { "type": "risk.open", "scenarioId": "risk-legacy-outage" },
@@ -281,7 +281,7 @@
       "requiresRationale": true,
       "relatedNodeIds": ["node-sup-soc"],
       "options": [
-        { "id": "opt-soc-renew", "label": "Renew as-is", "description": "Keep the service and spend your energy elsewhere.", "visibleKnownEffects": ["No disruption", "The escalation quality problem persists"],
+        { "id": "opt-soc-renew", "unaddressedControlIds": ["ctl-soc"], "label": "Renew as-is", "description": "Keep the service and spend your energy elsewhere.", "visibleKnownEffects": ["No disruption", "The escalation quality problem persists"],
           "immediateEffects": [ { "type": "stakeholder.trust", "stakeholderId": "stk-procurement", "delta": 0.04, "reason": "You renewed without reopening the contract." } ] },
         { "id": "opt-soc-renegotiate", "label": "Renew with a rewritten scope", "description": "Same provider, different service: use cases tied to Nexora's attack paths, and escalation quality measured.", "visibleKnownEffects": ["Costs more", "Takes about ten weeks to take effect"],
           "immediateEffects": [

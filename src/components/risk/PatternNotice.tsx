@@ -6,6 +6,7 @@
  * what made it think that, and stops there: forming the hypothesis costs
  * attention, dismissing it is a real answer, and neither is done for them.
  */
+import { useState } from 'react'
 import { Button } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { patternSuggestions } from '@/store/selectors'
@@ -14,10 +15,14 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
   const state = useGameStore((store) => store.state)
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
+  const [expanded, setExpanded] = useState(false)
+  const [recorded, setRecorded] = useState<{ id: string; title: string; gameId: string; year: number }>()
   if (!state) return null
 
-  const suggestions = patternSuggestions(state, index).slice(0, limit)
-  if (suggestions.length === 0) return null
+  const allSuggestions = patternSuggestions(state, index)
+  const suggestions = expanded ? allSuggestions : allSuggestions.slice(0, limit)
+  const receipt = recorded?.gameId === state.gameId && recorded.year === (state.year ?? 1) ? recorded : undefined
+  if (suggestions.length === 0 && !receipt) return null
 
   // Forming one costs a unit of attention. The Investigations panel disables an
   // action the player cannot afford and says why in place; this card, the most
@@ -27,6 +32,8 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
   const noAttention = state.resources.focusRemaining < 1
 
   return (
+    <div className="space-y-3">
+    {receipt && <div role="status" aria-label="Hypothesis formed" className="rounded border border-line p-3 text-sm"><p>Draft formed: {receipt.title}. Forming a hypothesis does not raise a risk.</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => { useGameStore.getState().setUi({ riskTab: 'hypotheses' }); useGameStore.getState().setScreen('risk') }}>View working hypotheses</Button></div>}
     <ul className="space-y-3">
       {suggestions.map((suggestion) => (
         <li key={suggestion.templateId}>
@@ -67,13 +74,13 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
                   variant="secondary"
                   size="sm"
                   disabled={noAttention}
-                  onClick={() =>
-                    dispatch({
-                      type: 'createHypothesis',
-                      templateId: suggestion.templateId,
-                      evidenceIds: suggestion.evidence.map((item) => item.id),
-                    })
-                  }
+                  onClick={() => {
+                    const result = dispatch({ type: 'createHypothesis', templateId: suggestion.templateId, evidenceIds: suggestion.evidence.map((item) => item.id) })
+                    if (result.ok) {
+                      const hypothesis = Object.values(useGameStore.getState().state!.risks.hypotheses).find((item) => item.templateId === suggestion.templateId && item.status !== 'rejected')
+                      if (hypothesis) setRecorded({ id: hypothesis.id, title: hypothesis.title, gameId: state.gameId, year: state.year ?? 1 })
+                    }
+                  }}
                 >
                   {/* Its cost on the button, as decisions show theirs: two
                       playtesters spent a week's attention on these without
@@ -93,5 +100,7 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
         </li>
       ))}
     </ul>
+    {!expanded && allSuggestions.length > limit && <Button variant="quiet" size="sm" onClick={() => setExpanded(true)}>Show {allSuggestions.length - limit} more {allSuggestions.length - limit === 1 ? 'pattern' : 'patterns'}</Button>}
+    </div>
   )
 }

@@ -1,3 +1,4 @@
+import { BudgetActivity, QuietWeekNote } from '@/components/game/BriefingNotes'
 import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
  * Home / CISO briefing (plan §28.1): the day, what needs you, what changed and
@@ -78,6 +79,7 @@ export function HomeScreen() {
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
+        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')} · {plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')}. These categories make up the attention total.</p>}
         {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}
       </header>
 
@@ -138,6 +140,7 @@ export function HomeScreen() {
 
       <Disclosure summary="How a week works">
         <ol className="list-decimal space-y-2 pl-5">
+          <li>Skip ahead advances once, up to thirty days, and holds for reading. Choose a speed to run between updates.</li>
           <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
           <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>
           <li>Follow the results and prepare the quarterly board paper. Raising a risk makes it eligible; select its agenda item when writing the paper.</li>
@@ -146,6 +149,8 @@ export function HomeScreen() {
         <Button variant="secondary" size="sm" className="mt-3" onClick={() => setScreen('risk')}>Open Risk</Button>
       </Disclosure>
       <ProgrammeCommitments />
+      <BudgetActivity />
+      <QuietWeekNote />
       <Onboarding className="mb-0" />
 
       <CampaignFeedback kind="quarter" />

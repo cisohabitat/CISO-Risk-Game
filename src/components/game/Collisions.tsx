@@ -7,6 +7,7 @@
  * This says it in one line, which is the decision the job actually turns on:
  * what do you do in the gap?
  */
+import { useState } from 'react'
 import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { collisions, type CollisionView } from '@/store/selectors'
@@ -129,6 +130,7 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
   const index = useCampaignIndex()
   const setScreen = useGameStore((store) => store.setScreen)
   const setUi = useGameStore((store) => store.setUi)
+  const [expanded, setExpanded] = useState(false)
   if (!state) return null
 
   // Only the ones where something is actually going to be missed: a collision
@@ -141,7 +143,7 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
     <section aria-labelledby="collisions">
       <SectionHeading><span id="collisions">What is about to collide</span></SectionHeading>
       <ul className="space-y-3">
-        {pressing.slice(0, limit).map((collision) => {
+        {(expanded ? pressing : pressing.slice(0, limit)).map((collision) => {
           const verdict = verdictLine(collision)
           return (
             <li key={collision.objectiveId}>
@@ -209,6 +211,7 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
           )
         })}
       </ul>
+      {!expanded && pressing.length > limit && <Button variant="secondary" size="sm" className="mt-3" onClick={() => setExpanded(true)}>Show {pressing.length - limit} more {pressing.length - limit === 1 ? 'trade-off' : 'trade-offs'}</Button>}
     </section>
   )
 }

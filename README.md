@@ -474,6 +474,29 @@ covers residual delegation, not business-service tolerances, aggregate exposure,
 insurance purchasing or a claim that risk has been reduced. Classroom seed
 examples were recalibrated with the cohort harness after the added discussion.
 
+The [30 October newcomer retest](docs/playtests/2026-10-30-owner-supplied-newcomer-retest.md)
+was subsequently supplied with a CISO label; the identical account is retained
+as one reported retest with both labels. The follow-through
+adds dated programme checkpoint outcomes, exact unread badges, an attention
+breakdown and expandable work lists. Risk separates raised and emerging counts;
+Board names other unraised concerns separately from previously reported risks.
+Capacity receipts distinguish an improvement from a wellbeing-band crossing.
+New annual reviews keep unfinished programmes below 100%; stored reviews retain
+their judgement. Commissioning and hypothesis formation keep named confirmations,
+and completed/stopped enquiries retain their recorded reports in Investigate.
+
+Briefing now offers recorded budget movements and a factual quiet-week note.
+These do not reconstruct old transactions or add simulated events.
+Resource receipts have a separate retention allowance, preserving operational
+evidence used in the annual review. Skip ahead is
+a single advance that holds for reading; speed controls run between updates.
+Incident responses name their incident and date. Reconstruction can name earlier
+choices on the used route whose explicitly declared control gaps remain; it
+separates defaults and avoids claiming one choice proved the cause. Reusing the
+evidence reason asks what evidence, owner and date will move the call, without
+blocking or penalising a legitimate reason. Old saves lacking a checkpoint
+outcome explicitly retain that uncertainty rather than inventing it.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

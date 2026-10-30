@@ -6,7 +6,10 @@
  * reducer is an architectural regression.
  */
 import type { ContentIndex, CyberFunction, EffectTiming, FunctionTarget, GameEffect, GameState } from '../types'
-import { CYBER_FUNCTIONS, clamp01, round2 } from '../types'
+import { programmeDeliveryPercent } from '../programmes/reporting'
+import { minimumProgrammeFunding } from '../programmes/funding'
+import { recordBudgetMovement } from '../resources/activity'
+import { CYBER_FUNCTIONS, clamp01, round2, money } from '../types'
 import { revealEdge, revealEvidence, revealNode } from '../knowledge/discovery'
 import { openDecision } from '../decisions/open'
 import { createIncident } from '../incidents/create'
@@ -97,6 +100,7 @@ export function applyEffect(
   const { index } = context
   switch (effect.type) {
     case 'budget.change': {
+      const before = state.resources.budgetRemaining
       // Floored, like `focus.change` and `capacity.change` below, and like
       // `spendBudget`, which refuses any player action that would overdraw.
       // This case was the one resource effect without a floor, so a costly
@@ -105,6 +109,7 @@ export function applyEffect(
       // committed to programmes below zero. Nothing reacted to it and the
       // Briefing read "£-70k of £2.4m". You spend what the year actually has.
       state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + effect.amount))
+      recordBudgetMovement(state, before, effect.note ?? index.event.get(context.source.replace(/^event:/, ''))?.title ?? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title ?? 'Budget adjustment')
       if (effect.note) outcome.notes.push(effect.note)
       break
     }
@@ -119,6 +124,7 @@ export function applyEffect(
         const before = fn.capacity
         fn.capacity = Math.max(0, round2(fn.capacity + effect.delta))
         restoreTemporary(state, context, { ...effect, fn: target }, fn.capacity - before)
+        if (before !== fn.capacity) state.history.entries.push({ day: state.currentDay, kind: 'capacity', summary: `${functionName(target)} capacity changed from ${before} to ${fn.capacity} days a week.`, refs: [target] })
       }
       break
     }
@@ -212,6 +218,15 @@ export function applyEffect(
         exceptionRate: c.exceptionRate,
         assessedOnDay: state.currentDay,
       }
+      break
+    }
+    case 'programme.review': {
+      const programme = ownValue(state.programmes.programmes, effect.programmeId)
+      const def = index.programme.get(effect.programmeId)
+      if (!programme || !def) break
+      if (state.history.entries.some((entry) => entry.kind === 'programme-review' && entry.day === state.currentDay && entry.refs?.includes(def.id))) break
+      const phase = programme.status === 'complete' ? 'Delivered' : programme.status === 'proposed' ? 'Not started' : programme.status === 'paused' ? 'Paused' : programme.blockers.some((blocker) => !blocker.resolved) ? 'Blocked' : 'Under way'
+      state.history.entries.push({ day: state.currentDay, kind: 'programme-review', refs: [def.id], summary: `${def.name}: ${phase}; ${programmeDeliveryPercent(programme)}% delivered. Funding allocated ${money(programme.budgetAllocated)}; minimum start ${money(minimumProgrammeFunding(def.budgetCost))}, full funding ${money(def.budgetCost)}. This checkpoint does not establish closure of the audit finding.` })
       break
     }
     case 'programme.progress': {

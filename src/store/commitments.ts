@@ -20,6 +20,9 @@ export function programmeCommitments(state: GameState, index: ContentIndex) {
     seen.add(def.id)
     const minimum = minimumProgrammeFunding(def.budgetCost)
     const status = work.status === 'complete' ? 'Delivered' : work.status === 'proposed' ? 'Funding not arranged' : work.status === 'paused' ? 'Delivery paused' : work.blockers.some((blocker) => !blocker.resolved) ? 'Delivery blocked' : work.budgetAllocated < def.budgetCost ? 'Partially funded delivery' : 'Delivery under way'
-    return [{ id: record.id, title: definition!.title, programmeId: def.id, programmeName: def.name, status, reviewDay: record.day === undefined ? undefined : record.day + promise.reviewAfterDays, year: record.year, historical: record.historical, minimum, fullCost: def.budgetCost, allocated: work.budgetAllocated, shortfall: Math.max(0, minimum - Math.max(0, state.resources.budgetRemaining)), proposed: work.status === 'proposed' }]
+    const reviewDay = record.day === undefined ? undefined : record.day + promise.reviewAfterDays
+    const review = record.historical ? undefined : state.history.entries.findLast((entry) => entry.kind === 'programme-review' && entry.day === reviewDay && entry.refs?.includes(def.id))
+    const previousReview = record.historical ? state.previousYears?.find((year) => year.year === record.year)?.programmeReviews?.findLast((entry) => entry.programmeId === def.id) : undefined
+    return [{ reviewYear: review ? state.year ?? 1 : previousReview ? record.year : undefined, reviewedDay: review?.day ?? previousReview?.day, reviewOutcome: review?.summary ?? previousReview?.summary, id: record.id, title: definition!.title, programmeId: def.id, programmeName: def.name, status, reviewDay: record.day === undefined ? undefined : record.day + promise.reviewAfterDays, year: record.year, historical: record.historical, minimum, fullCost: def.budgetCost, allocated: work.budgetAllocated, shortfall: Math.max(0, minimum - Math.max(0, state.resources.budgetRemaining)), proposed: work.status === 'proposed' }]
   })
 }
