@@ -1,16 +1,19 @@
-import { Disclosure } from '@/components/ui/primitives'
-import { useGameStore } from '@/store/game-store'
+import { Button, Disclosure } from '@/components/ui/primitives'
+import { useCampaignIndex, useGameStore } from '@/store/game-store'
+import { minimumProgrammeFunding } from '@/game/programmes/funding'
 import { money, shortDate } from '@/lib/formatting/labels'
 
 export function BudgetActivity() {
   const state = useGameStore((store) => store.state)
+  const index = useCampaignIndex()
   if (!state) return null
   const entries = state.history.entries.filter((entry) => entry.kind === 'budget').slice(-20).reverse()
-  return <Disclosure summary="Budget movements">
+  const example = index.content.programmes.find((programme) => state.programmes.programmes[programme.id]?.status === 'proposed' && minimumProgrammeFunding(programme.budgetCost) <= state.resources.budgetRemaining)
+  return <div className="space-y-2"><p className="text-sm text-ink-muted">{example ? `An available funding quote: ${example.name} needs ${money(minimumProgrammeFunding(example.budgetCost))} minimum to start, or ${money(example.budgetCost)} in full. This is an example, not a recommendation; it still needs attention and staffing.` : 'No unstarted programme fits the remaining minimum funding. Existing work, enquiries and future obligations still need review.'} <Button variant="quiet" size="sm" onClick={() => useGameStore.getState().setScreen('programmes')}>Compare programme quotes</Button></p><Disclosure summary="Budget movements">
     <p className="text-sm">Available today: {money(state.resources.budgetRemaining)}. These are recorded changes, including refunds and imposed cuts. Earlier correspondence can quote a different date or allocation.</p>
     {entries.length === 0 ? <p className="mt-2 text-sm text-ink-muted">No changes have been recorded in this ledger. Older saves do not reconstruct past transactions.</p> : <ol className="mt-3 space-y-2 text-sm">{entries.map((entry, i) => <li key={`${entry.day}-${i}`}><span className="text-ink-muted">{shortDate(entry.day)} · </span>{entry.summary}</li>)}</ol>}
     <p className="mt-2 text-xs text-ink-muted">Latest 20 retained entries; this is an activity record, not a full accounting ledger.</p>
-  </Disclosure>
+  </Disclosure></div>
 }
 
 export function QuietWeekNote() {

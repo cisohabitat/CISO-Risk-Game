@@ -149,6 +149,9 @@
     }
   ],
   "glossary": [
+    { "id": "gls-assumed-breach", "term": "Assumed-breach test, assumed breach", "definition": "A controlled security test that starts as if an attacker already has some access. It checks whether the organisation can detect, contain and recover from that position.", "section": "subject" },
+    { "id": "gls-quarantine", "term": "Quarantined zone, quarantine", "definition": "A deliberately separated part of the network with tightly limited connections. It lets teams investigate or repair uncertain systems before trusting them with wider access.", "section": "subject" },
+    { "id": "gls-change-window", "term": "Change window, maintenance window", "definition": "An agreed period to change or test a live service, with the people needed to handle disruption and restore it if the work goes wrong.", "section": "subject" },
     { "id": "gls-unallocated", "term": "Unallocated capacity", "definition": "Room for more work in a team function after its current commitments. Spare capacity does not establish that morale is healthy; check wellbeing separately." },
     { "id": "gls-recovery-confidence", "term": "Recovery confidence", "definition": "How much confidence there is that services can be restored. Plans and supplier statements are weaker evidence than an independent test or an actual restore." },
     { "id": "gls-uplift", "term": "Uplift", "definition": "An improvement in a capability or control. A programme delivers it through funded work; buying the programme is not the same as completing it.", "section": "subject" },
@@ -184,7 +187,7 @@
     {"id": "gls-workload-identity", "term": "Workload identity", "definition": "The identity a running program uses to reach other systems. Over-permissioned, it lets a compromised application read far more than it needs.", "section": "subject"},
     {"id": "gls-jump-server", "term": "Jump server", "definition": "A hardened machine administrators go through to reach production. Everything behind it depends on how well it is controlled.", "section": "subject"},
     {"id": "gls-vault", "term": "Privileged access vault, PAM", "definition": "A system that holds administrative credentials and hands them out for a session, recording who took what. Privileged access management is the practice around it.", "section": "subject"},
-    {"id": "gls-break-glass", "term": "Break-glass access", "definition": "An emergency route to privileged access that is normally closed: requested, time-limited and recorded. The alternative is permanent standing access nobody watches.", "section": "subject"},
+    {"id": "gls-break-glass", "term": "Break-glass access, break-glass, break glass", "definition": "An emergency route to privileged access that is normally closed: requested, time-limited and recorded. The alternative is permanent standing access nobody watches.", "section": "subject"},
     {"id": "gls-remote-access", "term": "Remote access, VPN", "definition": "How staff and suppliers reach the internal network from outside. Out-of-hours use of a vendor's remote access is worth a question.", "section": "subject"},
     {"id": "gls-endpoint", "term": "Endpoint, EDR", "definition": "A laptop, workstation or server. Endpoint detection and response is the software that watches what runs on it and can stop or isolate it.", "section": "subject"},
     {"id": "gls-telemetry", "term": "Logging and telemetry, telemetry", "definition": "The record of what systems did: who logged in, what ran, what connected where. Where it is missing, an intrusion can reach business impact unseen.", "section": "subject"},

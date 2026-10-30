@@ -1,5 +1,13 @@
 # Authoring campaign content
 
+Newcomer-completion follow-through (30 October): recovery-confidence help links
+to the existing entry; break-glass aliases reuse its ID, with three additional
+definitions for assumed-breach tests, quarantine and change windows. Preserve
+authored event/decision IDs, effects and voiced transcripts. Starter enquiries
+use current public concern links and affordability, never hidden outcome quality.
+Plan-confidence wording distinguishes a declared commitment from funding or
+delivery; no additional score or purchase is implied.
+
 All campaign content is data. Nothing about Nexora is hard-coded into a React
 component or an engine module.
 

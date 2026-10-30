@@ -6,6 +6,26 @@ changes.
 
 ## Documentation
 
+- Preserve the newcomer-completion account as one session with corrected newbie
+  attribution, not separate CISO/newbie participants. Build/seed/mode remain
+  unknown; retain the 24-of-25 choice caveat and the reported late objectives.
+- `stopOnUpdate` must hold before any already-open decision, without ticking,
+  RNG draws or deadline extensions. Give it a cross-screen review route and the
+  scoped pending-decision pause reason. Explicit ordinary time can still wait;
+  headless advances without that flag keep their rules.
+- Open qualitative assessment guidance in week one, not a live grader. Keep
+  reason navigation visibly secondary and functional; test real radio hit targets.
+  Reuse existing glossary IDs and surface context links. Capacity nudges use
+  current commitments; enquiry forecasts include proposed work. Acknowledge
+  workload pressure without forbidding deliberate delegation or inventing
+  specialism. Risk raising quotes its existing cost before commitment.
+  Guided's three-item starter menu uses current affordability and public concern
+  links only; keep the full enquiry menu reachable and costs unchanged.
+- Meeting receipts use actual accounts/reactions and attention spent; navigation
+  links must not imply a meeting occurred. Budget examples quote minimum/full
+  funding from current proposed programmes, never a hidden recommendation or
+  staffing guarantee. Preserve simulation balance and recorded annual grades.
+
 - Preserve the 30 October product-manager High pressure retest and its quick-choice/
   unused-attention caveats separately from controlled probes. At 2x/4x the UI
   adapter holds after actions (including refusals) and at attention renewal;

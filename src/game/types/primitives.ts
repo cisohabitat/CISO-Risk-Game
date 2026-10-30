@@ -139,6 +139,7 @@ export type IncidentPhase =
   | 'closed'
 
 export type PauseReason =
+  | 'pending-decision'
   | 'incident'
   | 'board-decision'
   | 'decision-deadline'

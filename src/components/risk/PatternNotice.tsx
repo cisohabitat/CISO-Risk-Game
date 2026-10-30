@@ -33,6 +33,7 @@ export function PatternNotice({ limit = 1 }: { limit?: number }) {
 
   return (
     <div className="space-y-3">
+    {allSuggestions.length > 1 && <p className="text-sm text-ink-muted">{allSuggestions.length} possible leads, not tasks due today. Start with one question supported by evidence; forming every draft will spend attention without settling what matters.</p>}
     {receipt && <div role="status" aria-label="Hypothesis formed" className="rounded border border-line p-3 text-sm"><p>Draft formed: {receipt.title}. Forming a hypothesis does not raise a risk.</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => { useGameStore.getState().setUi({ riskTab: 'hypotheses' }); useGameStore.getState().setScreen('risk') }}>View working hypotheses</Button></div>}
     <ul className="space-y-3">
       {suggestions.map((suggestion) => (

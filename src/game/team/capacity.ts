@@ -218,7 +218,7 @@ export function outlookBecause(leader: LeaderRuntime, strain: number): string {
   if (leader.workload > 0.55) return 'Too much else on'
   if (capacityBand(strain) !== 'available' && capacityBand(strain) !== 'committed') return 'The team as a whole is stretched'
   if (leader.morale < 0.45) return 'Running low'
-  return 'Not their strongest ground'
+  return 'Expected answer quality is limited'
 }
 
 /** Extra days a delegated assignment slips, given workload and reliability. */

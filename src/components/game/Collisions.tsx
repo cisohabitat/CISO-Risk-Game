@@ -202,7 +202,7 @@ export function Collisions({ limit = 2 }: { limit?: number }) {
                     <Button variant="quiet" size="sm" onClick={() => setScreen('board')}>
                       {/* Named, because the date belongs to a person rather than
                           to "the business", and that is who has to be talked to. */}
-                      {collision.ownerName ? `Talk to ${collision.ownerName.split(' ')[0]}` : 'Talk to the business'}
+                      {collision.ownerName ? `Find ${collision.ownerName.split(' ')[0]} in Board` : 'Open Board to meet the business'}
                     </Button>
                   </div>
                 </CardBody>

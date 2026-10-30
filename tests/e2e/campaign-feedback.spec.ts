@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { expectNoHorizontalScroll, startCampaign } from './helpers'
+import { expectNoHorizontalScroll, startCampaign, recordFirstAvailableDecision } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 test('a committed choice leaves a readable, dismissible receipt', async ({ page }) => {
@@ -32,6 +32,7 @@ test('a committed choice leaves a readable, dismissible receipt', async ({ page 
 test('a played quarter boundary adds a recap below the work waiting on you', async ({ page }) => {
   await openPreparedCampaign(page, prepareCampaign('e2e-quarter-feedback', 'day:90'))
   await expect(page.getByRole('heading', { name: /in the record/ })).toHaveCount(0)
+  for (let i = 0; i < 20 && await recordFirstAvailableDecision(page); i += 1) { /* Read the waiting papers before skipping. */ }
   await page.getByRole('button', { name: 'Skip ahead', exact: true }).click()
   const recap = page.getByRole('region', { name: 'Q1 in the record. Q2 ahead.' })
   await expect(recap).toBeVisible()

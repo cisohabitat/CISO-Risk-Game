@@ -21,6 +21,7 @@ const SPEEDS: { value: GameSpeed; label: string; title: string }[] = [
  * takes the colour of what stopped the clock.
  */
 const PAUSE_REASON_TONE: Record<PauseReason, string> = {
+  'pending-decision': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
   incident: 'border-band-severe/50 bg-band-severe-soft text-band-severe',
   'board-decision': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
   'decision-deadline': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
@@ -32,6 +33,7 @@ const PAUSE_REASON_TONE: Record<PauseReason, string> = {
 }
 
 const PAUSE_REASON_TEXT: Record<PauseReason, string> = {
+  'pending-decision': 'A decision is waiting',
   incident: 'An incident needs you',
   'board-decision': 'The board needs an answer',
   'decision-deadline': 'A decision is due',

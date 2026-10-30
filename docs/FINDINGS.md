@@ -16,6 +16,59 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Newcomer completion follow-through — 30 October 2026
+
+The owner supplied the same account first labelled CISO and then corrected to
+newbie; `docs/playtests/2026-10-30-owner-supplied-newcomer-completion.md` retains
+it as one session. Build/seed/mode and independence are unknown. Preserve the
+reported After-the-breach opening, one achieved objective, no incidents, two
+completed programmes and 24-of-25 deliberate-choice caveat. The late-objective
+sequence is not causally reproduced from an identified save.
+
+Skip inspected new updates but missed existing open decisions. `stopOnUpdate`
+now holds before ticking, drawing RNG or crossing any waiting decision's date;
+a scoped pause reason exposes its review action on Risk and other screens.
+Explicit ordinary time still permits deliberate waiting/defaults. No deadline,
+RNG policy or headless advance without that flag changes.
+
+Qualitative assessment guidance opens in week one and explains Mixed without
+running the grader mid-year. Reasons use a secondary, enabled navigation button
+that scrolls and focuses the actual reason; commitment still requires it. Radio
+targets are larger and tested by circle coordinates rather than label clicks.
+Recovery confidence already had a definition but no metric link. Reuse the
+existing break-glass entry with broader term matching; add assumed-breach,
+quarantine and change-window definitions and enquiry term links.
+
+Briefing/Investigate nudge when commitments stretch the team. The commissioning
+dialog distinguishes today's workload from its forecast including proposed
+work, strain and morale; workload pressure needs acknowledgement, preserving
+intentional delegation. Limited answer quality no longer implies an unsupported
+specialism calculation. Guided offers a three-enquiry starter menu using current
+affordability and public concern links; the whole menu remains reachable.
+Suggestions are leads, not all tasks due today. Raising quotes its existing two
+attention before spending; cancelling changes nothing and success leaves a named
+receipt. Current funding examples quote actual minimum/full prices, not hidden
+recommendations or staffing guarantees.
+
+“Talk to Priya” only opened Board, so its label now describes navigation. Actual
+meetings retain their existing account, attention cost and observed reactions
+beside the executive. They add no relationship effects or extra simulated mail.
+Promise wording distinguishes a confidence response to the declared plan from
+funded delivery; the existing dated checkpoint remains separate. Budgets,
+morale, business friction, annual weights and stored grades stay unchanged.
+
+Verification: `pnpm check` passed 729 tests across 123 files, typecheck, lint,
+content validation (zero warnings), build and unchanged size budgets. The final
+six-project browser suite passed 741 checks with 51 project-specific skips in
+13.4 minutes. A focused cross-browser run passed 40 checks with eight applicable
+skips for Risk Skip, real radio hit testing, reasons, raising, enquiry progression
+and scrolling; a second run passed 30 progression/save/full-year checks with no
+skips. Legacy quarter, pricing, save and exploration tests had relied on Skip
+silently passing waiting decisions. They now record visible first-available
+choices through the UI; assertions and bounds remain unchanged, with no engine
+injection or new bypass. Independent human, physical-device and learning gates
+remain open.
+
 ### Product-manager High pressure retest — 30 October 2026
 
 The supplied account is preserved in

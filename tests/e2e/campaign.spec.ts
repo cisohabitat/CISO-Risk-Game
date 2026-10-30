@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign } from './helpers'
+import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign, recordFirstAvailableDecision } from './helpers'
 import { openPreparedCampaign, prepareCampaign, SAVE_ROW } from './prepared'
 
 /**
@@ -97,6 +97,7 @@ test.describe('a first year at Nexora', () => {
       await dialog.getByRole('button', { name: 'Record it' }).click()
       await expect(page.getByText('Working hypotheses')).toBeVisible()
       await page.getByRole('button', { name: 'Raise as a risk scenario' }).first().click()
+      await page.getByRole('dialog', { name: 'Raise this risk scenario?' }).getByRole('button', { name: /^Raise this risk ·/ }).click()
       await page.getByRole('tab', { name: 'Risk scenarios' }).click()
       await expect(page.getByRole('tabpanel')).toContainText(/residual|Open/i)
     }
@@ -493,6 +494,7 @@ test.describe('a first year at Nexora', () => {
   test('time advances, events arrive and the clock pauses for what matters', async ({ page }) => {
     await startCampaign(page, 'e2e-time')
     for (let i = 0; i < 6; i += 1) {
+      await recordFirstAvailableDecision(page)
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }
     await goTo(page, 'Inbox')
@@ -656,6 +658,7 @@ test.describe('a first year at Nexora', () => {
       if (await offer.isVisible().catch(() => false)) break
       const skip = page.getByRole('button', { name: 'Skip ahead' })
       if (!(await skip.isVisible().catch(() => false))) break
+      await recordFirstAvailableDecision(page)
       await skip.click()
       const got = page.getByRole('button', { name: 'Got it' })
       if (await got.isVisible().catch(() => false)) await got.click()
@@ -770,6 +773,7 @@ test.describe('a first year at Nexora', () => {
         await expect(dialog).toBeHidden()
       }
       if (!found) {
+        await recordFirstAvailableDecision(page)
         await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
       }
     }
@@ -792,6 +796,7 @@ test.describe('a first year at Nexora', () => {
         }
         await page.keyboard.press('Escape')
         await expect(dialog).toBeHidden()
+        await recordFirstAvailableDecision(page)
       }
       await page.getByRole('button', { name: /Skip ahead|Advance to next event/ }).first().click()
     }

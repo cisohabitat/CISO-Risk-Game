@@ -18,6 +18,7 @@ import { PersonPortrait, RelationshipScale } from '@/components/game/Person'
 import { cn } from '@/lib/utils/cn'
 import { FOCUS_COSTS } from '@/game/engine/orchestrator'
 import { NexoraMark } from '@/components/game/NexoraMark'
+import { decisionReactions } from '@/store/decision-reactions'
 
 export function BoardScreen() {
   const state = useGameStore((store) => store.state)
@@ -29,6 +30,7 @@ export function BoardScreen() {
   const [recommendations, setRecommendations] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.recommendations ?? [] : [])
   const [omissionsAcknowledged, setOmissionsAcknowledged] = useState<string>('')
   const [reviewOmissions, setReviewOmissions] = useState(false)
+  const [meetingReceipt, setMeetingReceipt] = useState<{ personId: string; gameId: string; text: string }>()
   const omissionHeading = useRef<HTMLHeadingElement>(null)
   const [uncertainty, setUncertainty] = useState(draft?.quarter === state?.reviews.pendingQuarter ? draft?.uncertainty ?? true : true)
 
@@ -152,7 +154,7 @@ export function BoardScreen() {
                         size="sm"
                         className="compact min-h-9"
                         aria-label={`${approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}: ${person.name}, ${FOCUS_COSTS.executiveIntervention} attention`}
-                        onClick={() => dispatch({ type: 'meetStakeholder', stakeholderId: person.id, approach })}
+                        onClick={() => { const before = useGameStore.getState().state!; const result = dispatch({ type: 'meetStakeholder', stakeholderId: person.id, approach }); const after = useGameStore.getState().state!; if (result.ok) setMeetingReceipt({ personId: person.id, gameId: state.gameId, text: `Meeting with ${person.name} recorded. Used ${before.resources.focusRemaining - after.resources.focusRemaining} attention. ${result.message} ${decisionReactions(before, after, index).map((reaction) => reaction.text).join(' ')}` }) }}
                       >
                         {approach === 'listen' ? 'Listen' : approach === 'brief' ? 'Brief them' : 'Press for a commitment'}
                         {/* Every meeting spends attention and no button said so (AI tablet playtest). */}
@@ -160,6 +162,7 @@ export function BoardScreen() {
                       </Button>
                     ))}
                   </div>
+                  {meetingReceipt?.personId === person.id && meetingReceipt.gameId === state.gameId && <p role="status" aria-label="Meeting recorded" className="rounded border border-line p-3 text-sm">{meetingReceipt.text}</p>}
                   <Disclosure summary={`Profile and history: ${person.name}`}>
                     <div className="space-y-3">
                       <p className="text-sm italic text-ink-faint text-pretty">{person.voice}</p>

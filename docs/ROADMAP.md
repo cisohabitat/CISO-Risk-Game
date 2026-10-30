@@ -194,6 +194,16 @@ full programme names. These are clarity/clock fixes, not a new fourth paper or
 changed balance/ratings. Declared paired probes remain separate from the supplied
 run's unverified burnout and budget sequence; independent gates stay open.
 
+### Newcomer completion follow-through, 30 October
+
+The [newcomer completion account](playtests/2026-10-30-owner-supplied-newcomer-completion.md)
+is one session with corrected newbie attribution, not an independent CISO pilot.
+Its next slice protects existing decisions from Skip, opens week-one assessment
+guidance and nudges stretched teams. A Guided starter menu, contextual terms,
+quoted risk-raising cost and actual meeting/funding feedback address reading
+load without a live grader or balance change. Reported late objectives and
+physical-device/learning outcomes remain unverified without identified evidence.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,

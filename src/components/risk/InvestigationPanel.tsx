@@ -4,6 +4,8 @@
  * changes what comes back.
  */
 import { useState } from 'react'
+import { CapacityNotice } from '@/components/game/CapacityNotice'
+import { Terms } from '@/components/game/Terms'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
@@ -34,12 +36,16 @@ export function InvestigationPanel() {
   const [chosen, setChosen] = useState<InvestigationDef | undefined>()
   const [receipt, setReceipt] = useState<string>()
   const [leaderId, setLeaderId] = useState<string>('')
+  const [overloadAccepted, setOverloadAccepted] = useState(false)
+  const [showAll, setShowAll] = useState(false)
 
   if (!state) return null
 
   // What delegated work comes back with depends on the whole team, not just
   // how busy the one person leading it is.
   const strain = teamStrain(state)
+  const assigned = chosen && leaderId && state.team.leaders[leaderId] ? leaderAsAssigned(state, state.team.leaders[leaderId]!, chosen.capacityPerDay) : undefined
+  const overloadWarning = Boolean(assigned && (assigned.workload > 0.55 || strain > 0.7))
   const running = state.team.assignments.filter((assignment) => assignment.status === 'running')
   // Coached modes point at the enquiries that speak to the biggest thing on
   // the player's list; the others get the same connection without the badge.
@@ -56,8 +62,14 @@ export function InvestigationPanel() {
       ([fn, demand]) => (demand ?? 0) > availableCapacity(state, fn as never),
     )
 
+  const affordable = available.filter((investigation) => !capacityShort(investigation) && state.resources.focusRemaining >= investigation.focusCost && state.resources.budgetRemaining >= investigation.budgetCost)
+  const linked = affordable.filter((investigation) => topConcern && enquirySpeaksTo(state, index, investigation.id).some((risk) => risk.id === topConcern))
+  const starter = [...new Map([...linked, ...affordable, ...available].map((investigation) => [investigation.id, investigation])).values()].slice(0, 3)
+  const shown = coached && !showAll ? starter : available
+
   const start = () => {
     if (!chosen || !leaderId) return
+    if (overloadWarning && !overloadAccepted) return
     const result = dispatch({ type: 'startInvestigation', investigationId: chosen.id, leaderId })
     if (result.ok) {
       setReceipt(result.message)
@@ -68,6 +80,7 @@ export function InvestigationPanel() {
 
   return (
     <div className="space-y-6">
+      <CapacityNotice />
       {receipt && <p role="status" aria-label="Commission confirmation" className="rounded border border-line bg-surface-2 p-3 text-sm">{receipt} Work in progress below records the commission.</p>}
       <Disclosure summary="Completed and stopped enquiries">
         {state.team.assignments.filter((assignment) => assignment.status !== 'running').length === 0 ? <p className="text-sm">No enquiry has finished or been stopped yet.</p> : <ul className="space-y-4">{state.team.assignments.filter((assignment) => assignment.status !== 'running').slice().reverse().map((assignment) => <li key={assignment.id} className="text-sm"><h3 className="font-medium">{assignment.title} · {assignment.status === 'complete' ? 'Completed' : 'Stopped'}</h3><p className="mt-1 whitespace-pre-line">{assignment.resultSummary ?? 'Stopped before a report was delivered.'}</p>{assignment.status === 'complete' && <Button variant="quiet" size="sm" onClick={() => useGameStore.getState().setUi({ riskTab: 'evidence' })}>Review the evidence</Button>}</li>)}</ul>}
@@ -107,6 +120,8 @@ export function InvestigationPanel() {
       <section aria-labelledby="available-work">
         <SectionHeading><span id="available-work">Lines of enquiry</span></SectionHeading>
         <p className="mb-4 text-sm text-ink-muted">Commission a check to gather evidence before deciding what to do. Choose a leader, allow time for the work, then read the result in your Inbox and assess it in Risk.</p>
+        <p className="mb-4 text-sm">Start with one question, not every enquiry. Choose one check that speaks to a concern you can explain, read its result, then decide what is still uncertain. The list is a menu, not a weekly checklist.</p>
+        {coached && available.length > 3 && <div className="mb-4 text-sm"><p>{showAll ? 'The full menu is open.' : 'A short starting menu is shown. Affordable checks linked to your visible top concern come first; this does not establish which evidence will come back clean.'}</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => setShowAll((value) => !value)}>{showAll ? 'Return to starter view' : `Show all ${available.length} available enquiries`}</Button></div>}
         {available.length === 0 ? (
           <EmptyState
             title="Nothing left to commission"
@@ -114,7 +129,7 @@ export function InvestigationPanel() {
           />
         ) : (
           ENQUIRY_THEMES.map((theme) => {
-            const inTheme = available.filter((investigation) => investigation.theme === theme.id)
+            const inTheme = shown.filter((investigation) => investigation.theme === theme.id)
             if (inTheme.length === 0) return null
             return (
           <section key={theme.id} aria-labelledby={`theme-${theme.id}`} className="mb-6 last:mb-0">
@@ -135,6 +150,7 @@ export function InvestigationPanel() {
                         {onTopConcern && <Badge tone="accent" glyph={false}>Speaks to your top concern</Badge>}
                       </div>
                       <p className="mt-1 flex-1 text-sm text-ink-muted text-pretty">{investigation.description}</p>
+                      <Terms text={`${investigation.name} ${investigation.description}`} className="mt-2" />
                       {/* One risk to a line, as the programme cards list what
                           they treat: run together with semicolons in the
                           smallest type, three risk titles were unreadable. */}
@@ -185,6 +201,7 @@ export function InvestigationPanel() {
                         disabled={short || noFocus || noBudget}
                         onClick={() => {
                           setChosen(investigation)
+                          setOverloadAccepted(false)
                           // Offered the leader whose work would come back best. It
                           // used to be whoever ran the area, which the quality of
                           // delegated work does not read.
@@ -220,11 +237,13 @@ export function InvestigationPanel() {
           footer={
             <>
               <Button variant="quiet" onClick={() => setChosen(undefined)}>Cancel</Button>
-              <Button variant="primary" disabled={!leaderId} onClick={start}>Commission the work</Button>
+              <Button variant="primary" disabled={!leaderId || (overloadWarning && !overloadAccepted)} aria-describedby={overloadWarning ? 'commission-overload' : undefined} onClick={start}>Commission the work</Button>
             </>
           }
         >
           <p className="mb-4 rounded-lg border border-line p-3 text-sm text-ink-muted">This uses {chosen.focusCost} attention{chosen.budgetCost > 0 ? ` and ${money(chosen.budgetCost)} budget` : ' and no budget'}. Allow about {chosen.durationDays} days; workload and delegation can affect the result. Findings arrive in your Inbox.</p>
+          <p className="mb-3 text-sm text-ink-muted">Team shows workload today. These forecasts include this proposed enquiry and the team's strain, morale and expected answer quality; having room does not guarantee a strong answer.</p>
+          {overloadWarning && <div id="commission-overload" className="mb-4 rounded border border-band-elevated p-3 text-sm"><p>This adds work to an already busy leader or stretched team. It may slip or return a thin answer. Choose another lead, wait, or review Team.</p><label className="mt-2 flex min-h-11 items-center gap-2"><input type="checkbox" checked={overloadAccepted} onChange={(event) => setOverloadAccepted(event.target.checked)} />I understand and commission despite the workload</label></div>}
           <fieldset className="space-y-2">
             <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Delegate to</legend>
             {index.content.leaders.map((leader) => {
@@ -242,7 +261,7 @@ export function InvestigationPanel() {
                     name="leader"
                     value={leader.id}
                     checked={leaderId === leader.id}
-                    onChange={() => setLeaderId(leader.id)}
+                    onChange={() => { setLeaderId(leader.id); setOverloadAccepted(false) }}
                     className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
                     style={{ minHeight: 0 }}
                   />

@@ -27,7 +27,8 @@ it('shows the live attention balance and required rationale for the platform lau
   expect(screen.getByText(/Why\? \(at least one reason\)/)).toBeVisible()
   fireEvent.click(screen.getAllByRole('radio')[0]!)
   const commit = screen.getByRole('button', { name: 'Record why first' })
-  expect(commit).toHaveAttribute('aria-disabled', 'true')
+  expect(commit).not.toHaveAttribute('aria-disabled')
+  expect(commit).toBeEnabled()
   fireEvent.click(commit)
   expect(document.activeElement?.closest('#decision-why-reasons')).not.toBeNull()
   expect(useGameStore.getState().state!.decisions.openIds).toContain(decision.id)
@@ -94,6 +95,7 @@ it('quotes paid and free enquiry costs before anything is commissioned', () => {
   for (const fn of Object.values(state.team.functions)) { fn.capacity = 1; fn.committed = 0 }
   useGameStore.setState({ state })
   const view = render(<InvestigationPanel />)
+  fireEvent.click(screen.getByRole('button', { name: /^Show all .* available enquiries/ }))
   const buttons = screen.getAllByRole('button', { name: /^Commission:/ }).filter((button) => !button.hasAttribute('disabled'))
   const paid = buttons.find((button) => {
     const name = button.getAttribute('aria-label')!.replace('Commission: ', '')

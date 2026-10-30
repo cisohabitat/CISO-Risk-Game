@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
-import { goTo, startCampaign } from './helpers'
+import { goTo, startCampaign, recordFirstAvailableDecision } from './helpers'
 import { prepareCampaign, SAVE_ROW, storePreparedCampaign } from './prepared'
 
 /**
@@ -28,6 +28,7 @@ async function records(page: Page): Promise<Record[]> {
 
 test('a campaign whose save is damaged opens from the save before it', async ({ page }) => {
   await startCampaign(page, 'e2e-recovery')
+  await recordFirstAvailableDecision(page)
   const skip = page.getByRole('button', { name: 'Skip ahead' })
   await skip.click()
   await skip.click()
@@ -74,6 +75,7 @@ test('a campaign whose save is damaged opens from the save before it', async ({ 
 
 test('a campaign can be exported mid-year and brought back', async ({ page }) => {
   await startCampaign(page, 'e2e-midyear-export')
+  await recordFirstAvailableDecision(page)
   await page.getByRole('button', { name: 'Skip ahead' }).click()
   await goTo(page, 'Your year')
 

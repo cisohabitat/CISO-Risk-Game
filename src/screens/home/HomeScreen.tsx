@@ -1,4 +1,5 @@
 import { BudgetActivity, QuietWeekNote } from '@/components/game/BriefingNotes'
+import { CapacityNotice } from '@/components/game/CapacityNotice'
 import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
  * Home / CISO briefing (plan §28.1): the day, what needs you, what changed and
@@ -150,13 +151,15 @@ export function HomeScreen() {
         <Button variant="secondary" size="sm" className="mt-3" onClick={() => setScreen('risk')}>Open Risk</Button>
       </Disclosure>
       <ProgrammeCommitments />
+      <CapacityNotice />
       <BudgetActivity />
       <QuietWeekNote />
       <Onboarding className="mb-0" />
 
       <CampaignFeedback kind="quarter" />
 
-      <Disclosure summary="How to judge your year">
+      <Disclosure summary="How to judge your year" defaultOpen={state.currentDay <= 7}>
+        <p className="mb-2">“Mixed first year” means that useful capability and defensible choices can coexist with serious gaps. Strong individual dimensions do not cancel weak business delivery or an unsustainable team. Programme completion is one part of the year, not its win condition.</p>
         <p>Due decisions and the board paper have deadlines. Concerns and patterns are leads to examine, rather than extra decisions to answer today. Unread counts also include reference mail; check message priorities and Follow-ups when choosing what to read next.</p>
         <p>Your task is to understand Nexora’s risks, make defensible trade-offs and leave the organisation able to respond. A quiet year alone does not establish that it is secure.</p>
         <p className="mt-2">The annual review weighs eight dimensions equally: risk understanding, prioritisation, resilience, cyber programme execution, business enablement, communication and escalation, team sustainability, and material blind spots.</p>
@@ -191,6 +194,7 @@ export function HomeScreen() {
           />
           <Standing
             label="Recovery confidence"
+            onInfo={() => openGlossary('gls-recovery-confidence')}
             value={view.recoveryConfidence}
             tone={view.recoveryConfidence === 'Limited' ? 'high' : view.recoveryConfidence === 'Partial' ? 'elevated' : 'low'}
             note={view.recoveryNote}

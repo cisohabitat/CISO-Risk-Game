@@ -20,6 +20,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Stop Skip ahead before a decision already waiting, with a cross-screen review
+  route. Open first-week assessment guidance, make reason navigation clearer,
+  enlarge radio targets and expose more contextual jargon help.
+- Nudge before overloading the team, acknowledge stretched delegation, confirm
+  risk-raising costs, show a current programme funding example and retain meeting
+  receipts. Explain leads versus weekly tasks and confidence in a declared plan.
+
 - Hold high-speed time after actions and when weekly attention renews. Keep each
   open board paper announced across screens, preselect material items for fresh
   drafts and explain the agenda range, reporting calendar and Q4 annual closure.

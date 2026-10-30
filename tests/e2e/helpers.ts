@@ -1,5 +1,21 @@
 import { expect, type Page } from '@playwright/test'
 
+/** Declared UI policy for checks that need to progress past a waiting decision. */
+export async function recordFirstAvailableDecision(page: Page): Promise<boolean> {
+  const decide = page.getByRole('button', { name: /^Decide: / }).first()
+  if (!await decide.isVisible().catch(() => false)) return false
+  await decide.click()
+  const dialog = page.getByRole('dialog')
+  const option = dialog.locator('input[type="radio"]:not(:disabled)').first()
+  await expect(option, 'no affordable option for the declared test policy').toBeVisible()
+  await option.check()
+  const reason = dialog.locator('#decision-why-reasons button').first()
+  if (await reason.isVisible().catch(() => false)) await reason.click()
+  await dialog.getByRole('button', { name: 'Commit to this', exact: true }).click()
+  await expect(dialog).toBeHidden()
+  return true
+}
+
 export async function startCampaign(page: Page, seed = 'e2e-seed'): Promise<void> {
   await page.goto('/')
   await beginCampaign(page, seed)

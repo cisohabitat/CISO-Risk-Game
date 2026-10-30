@@ -21,11 +21,14 @@ export function HypothesisWorkspace() {
   const [creating, setCreating] = useState(false)
   const [templateId, setTemplateId] = useState('')
   const [picked, setPicked] = useState<string[]>([])
+  const [raisingId, setRaisingId] = useState<string>()
+  const [raisedReceipt, setRaisedReceipt] = useState<string>()
 
   const evidence = useMemo(() => (state ? evidenceList(state, index) : []), [state, index])
   if (!state) return null
 
   const hypotheses = Object.values(state.risks.hypotheses).sort((a, b) => b.createdDay - a.createdDay)
+  const raising = hypotheses.find((hypothesis) => hypothesis.id === raisingId)
   const knownTags = new Set(evidence.flatMap((item) => item.tags))
   const templates = index.content.hypothesisTemplates.filter((template) =>
     template.requiresTags.every((tag) => knownTags.has(tag)) && !hypotheses.some((hypothesis) => hypothesis.templateId === template.id && hypothesis.status !== 'rejected'),
@@ -43,6 +46,8 @@ export function HypothesisWorkspace() {
 
   return (
     <div className="space-y-6">
+      {raisedReceipt && <p role="status" aria-label="Risk raised" className="rounded border border-line p-3 text-sm">{raisedReceipt}</p>}
+      {raising && <Dialog open title="Raise this risk scenario?" onClose={() => setRaisingId(undefined)} description={`This uses ${FOCUS_COSTS.deepRiskReview} attention, with no budget cost. It puts the scenario in your raised register, eligible for a board agenda; it does not submit a paper.`} footer={<><Button onClick={() => setRaisingId(undefined)}>Cancel</Button><Button variant="primary" disabled={state.resources.focusRemaining < FOCUS_COSTS.deepRiskReview} onClick={() => { const result = dispatch({ type: 'convertHypothesis', hypothesisId: raising.id }); if (result.ok) { setRaisedReceipt(`${raising.title} is now linked to a raised risk scenario. Used ${FOCUS_COSTS.deepRiskReview} attention. Review its assessment and choose it explicitly for a board paper.`); setRaisingId(undefined) } }}>Raise this risk · {FOCUS_COSTS.deepRiskReview} attention</Button></>}><p className="text-sm">{raising.title}</p><p className="mt-2 text-sm text-ink-muted">{state.resources.focusRemaining} attention remains this week. Cancelling spends nothing.</p></Dialog>}
       <section aria-labelledby="hypotheses">
         <SectionHeading
           action={
@@ -136,8 +141,8 @@ export function HypothesisWorkspace() {
                             variant="primary"
                             size="sm"
                             className="compact min-h-9"
-                            aria-disabled={state.resources.focusRemaining < FOCUS_COSTS.deepRiskReview || undefined}
-                            onClick={() => dispatch({ type: 'convertHypothesis', hypothesisId: hypothesis.id })}
+                            disabled={state.resources.focusRemaining < FOCUS_COSTS.deepRiskReview}
+                            onClick={() => setRaisingId(hypothesis.id)}
                           >
                             Raise as a risk scenario
                             <span className="font-normal opacity-80">

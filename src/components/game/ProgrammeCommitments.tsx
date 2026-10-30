@@ -15,6 +15,7 @@ export function ProgrammePromiseQuote({ programmeId, reviewAfterDays }: { progra
     <span className="mt-1 block">Minimum to start {money(minimum)} · full funding {money(programme.budgetCost)} · currently available {money(Math.max(0, state.resources.budgetRemaining))}.</span>
     <span className="mt-1 block">Already allocated: {money(state.programmes.programmes[programmeId]?.budgetAllocated ?? 0)}.</span>
     <span className="mt-1 block">This reply reserves no money or staffing. Review the actual allocation and delivery plan in Programmes. A funding/progress review follows in {reviewAfterDays} days; this is not its completion deadline.</span>
+    <span className="mt-1 block">Any immediate confidence response is to the plan you declared, not evidence that it has been funded or delivered. The later checkpoint records where you actually stand.</span>
     {state.resources.budgetRemaining < minimum && state.programmes.programmes[programmeId]?.status === 'proposed' && <span className="mt-1 block font-medium text-band-high">The minimum allocation is currently unaffordable. Recording a promise does not remove that gap.</span>}
   </span>
 }

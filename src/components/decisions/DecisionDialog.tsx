@@ -90,11 +90,10 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
               never heard why the decision would not commit. Pressed, it
               takes them to the reasons. */}
           <Button
-            variant="primary"
+            variant={needsRationale ? 'secondary' : 'primary'}
             disabled={!optionId || !selected?.affordable}
-            aria-disabled={needsRationale || undefined}
             aria-describedby={needsRationale ? 'decision-why' : undefined}
-            onClick={needsRationale ? () => document.querySelector<HTMLElement>('#decision-why-reasons button')?.focus() : submit}
+            onClick={needsRationale ? () => { const reason = document.querySelector<HTMLElement>('#decision-why-reasons button'); reason?.scrollIntoView?.({ block: 'center' }); reason?.focus() } : submit}
           >
             {needsRationale ? 'Record why first' : 'Commit to this'}
           </Button>
@@ -151,8 +150,8 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                 checked={optionId === option.id}
                 disabled={!option.affordable}
                 onChange={() => setOptionId(option.id)}
-                className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
-                style={{ minHeight: 0 }}
+                className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--accent)]"
+                style={{ minHeight: 0, pointerEvents: 'auto', position: 'relative', zIndex: 1 }}
               />
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-start justify-between gap-2"><span className="font-display text-xl leading-tight text-balance">{option.label}</span>{optionId === option.id && <span className="rounded border border-accent px-2 py-1 text-xs font-semibold text-accent-ink" aria-hidden="true">✓ Selected</span>}</span>

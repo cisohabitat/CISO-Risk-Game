@@ -513,6 +513,21 @@ discovery summaries are dated. Rating scales, morale, delivery rates and budgets
 are unchanged; [balance evidence](docs/BALANCE_REVIEW.md) records the declared
 paired probe and its limits rather than treating one run as a calibration.
 
+The [newcomer completion report](docs/playtests/2026-10-30-owner-supplied-newcomer-completion.md)
+adds a pre-skip check for decisions already waiting, with a review route on every
+screen. Explicit running time can still wait deliberately. Week-one guidance is
+open; reasons navigate to the actual controls, radios have direct hit targets,
+and recovery/emergency-access/testing/window jargon has contextual help.
+Briefing and Investigate flag stretched capacity; commissioning acknowledges
+workload pressure and distinguishes present workload from forecast answer quality.
+Enquiries and hypothesis suggestions are leads to choose between, not a task list.
+Guided starts with three enquiry choices drawn from affordable work and visible
+concern links; the complete menu stays one click away.
+Risk raising confirms its existing attention cost before spending. Budget quotes
+give an affordable funding example, and actual meetings retain an in-place account
+with observed reactions. Navigation to Board no longer implies a meeting happened.
+These changes do not add a live score or alter simulation balance or saved grades.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

@@ -7,7 +7,8 @@ import { openPreparedCampaign, prepareCampaign } from './prepared'
 test('a newcomer can understand the review, follow evidence and revisit dismissed teaching', async ({ page }) => {
   const save = prepareCampaign('newcomer-reading', 'day:1', 'guided')
   await openPreparedCampaign(page, save)
-  await page.getByRole('button', { name: 'How to judge your year', exact: true }).click()
+  const guidance = page.getByRole('button', { name: 'How to judge your year', exact: true })
+  if (await guidance.getAttribute('aria-expanded') === 'false') await guidance.click()
   await expect(page.getByText(/The annual review weighs eight dimensions equally/)).toBeVisible()
   await goTo(page, 'Risk')
   await expect(page.getByText(/you still choose the agenda in the board paper/)).toBeVisible()

@@ -167,6 +167,15 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
 
     case 'advance': {
       if (state.finished) return fail('The campaign year is over.')
+      if (action.stopOnUpdate) {
+        const waiting = state.decisions.openIds.map((id) => state.decisions.decisions[id]).find((decision) => decision && decision.resolvedDay === undefined)
+        if (waiting) {
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['pending-decision']
+          return { ok: true, message: `Skip held: ${index.decision.get(waiting.defId)?.title ?? 'a decision'} is waiting. Review it before skipping ahead; choosing a speed still lets you deliberately let time pass.`, ticks: [] }
+        }
+      }
       const ticks: TickResult[] = []
       for (let i = 0; i < action.days; i += 1) {
         if (state.currentDay >= CAMPAIGN_DAYS) break

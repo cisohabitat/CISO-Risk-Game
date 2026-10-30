@@ -1416,6 +1416,8 @@ export function enquirySpeaksTo(state: GameState, index: ContentIndex, investiga
 export function livePauseReasons(state: GameState): PauseReason[] {
   return state.pauseReasons.filter((reason) => {
     switch (reason) {
+      case 'pending-decision':
+        return state.decisions.openIds.some((id) => state.decisions.decisions[id]?.resolvedDay === undefined)
       case 'incident':
         return Object.values(state.incidents.incidents).some((incident) => incident.phase !== 'closed')
       case 'programme-blocked':
