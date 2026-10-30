@@ -41,17 +41,18 @@ sit-after-breach`) before relying on the table.
 `pnpm cohort 30 ciso class` played thirty seeds in *The inherited mess* as a
 light, engaged year (answer what is asked, file each board paper, run the
 identity programme, commission two enquiries), and the same seeds again with
-a player who does nothing. On 9 October 2026, after the threat variety
-(a disruption actor, six more routes and three more kinds of incident)
-moved every seed's year:
+a player who does nothing. Recalibrated on 30 October 2026 after the appetite
+follow-through: scheduled governance mail can change later event eligibility and
+therefore later seeded incident draws. These are engine observations, not a
+promise about a student's choices or an independently observed classroom.
 
 | Seed | Played engaged | Played idle | Use it for |
 |---|---|---|---|
 | `class-15` | No incident; credible year | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. |
 | `class-7`, `class-20` | One incident (platform tampering 24 March; data exposure 22 December) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? |
-| `class-5` | Ransomware 4 July (severe) | Ransomware 21 May, then data theft in June and October | **The crisis year.** Ransomware either way; the difference is what was ready for it and what followed. |
-| `class-12` | Destructive attack 27 September (severe) | Ransomware 6 August | **The disruption year.** An attacker who wants the warehouses stopped, not paid. Nothing to negotiate: what was there to fall back on? |
-| `class-21` | No incident | Payment diversion 24 April and 27 September | **The fraud year.** The same weakness twice for a player who never closed it: money sent elsewhere on instructions that looked like Nexora's own. |
+| `class-5` | Ransomware 4 July (severe) | Ransomware 22 May, then targeted data theft 8 July | **The crisis year.** Ransomware either way; the difference is what was ready for it and what followed. |
+| `class-12` | No incident | Ransomware 6 August | **The recovery conversation.** Compare the clean engaged run with the idle ransomware. What was tested, and what would the review still ask even without an incident? |
+| `class-21` | No incident | Payment diversion 24 April; legacy platform compromise 20 July | **Two routes.** Fraud is followed by a different weakness. Does treating or discussing the first incident establish that the rest of the estate is covered? |
 | `class-10` | Destructive attack 12 October, data exposure 27 November | Data exposure 30 May | **The comparison year.** The same world gives an engaged player two late incidents and an idle one an early data exposure. Put two students' reviews side by side. |
 
 Treat the dates as typical rather than promised: a student who plays

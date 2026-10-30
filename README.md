@@ -458,9 +458,21 @@ movement are explained. Delivered insurance/appetite/intelligence correspondence
 is reachable from Board. Failed decorative artwork disappears cleanly.
 
 The reports still need identified-build human retests. Insurance purchasing,
-formal appetite policy, a full tabletop and historical detection/response metrics
+full service-specific appetite policy, a full tabletop and historical detection/response metrics
 remain separate feature proposals; broad balance claims are not established by
 these differently configured runs. See [measured findings](docs/FINDINGS.md).
+
+The board appetite request now schedules a decision about the residual-risk
+boundary for delegated acceptance: through Moderate or through Elevated, with a
+deferral option. The adopted statement stays in Board and beside risk acceptance;
+unknown assessments are never labelled within appetite. Accepted exceptions are
+named in later paper feedback, using the existing material-omission consequence
+without charging it twice. A thirty-day review checks the current register.
+Statements carry through existing Year Two choice history until replaced; old
+saves without a recorded adoption remain without one. This first policy slice
+covers residual delegation, not business-service tolerances, aggregate exposure,
+insurance purchasing or a claim that risk has been reduced. Classroom seed
+examples were recalibrated with the cohort harness after the added discussion.
 
 ## Contributor requirements
 
@@ -546,8 +558,8 @@ schemas and a referential integrity pass. These counts include both years:
 | Evidence items (including deliberate noise) | 54 |
 | Hypothesis templates / risk scenarios | 17 / 17 |
 | Lines of enquiry | 18 |
-| Decisions / decision options | 49 / 149 |
-| Events | 223 |
+| Decisions / decision options | 50 / 152 |
+| Events | 227 |
 
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.

@@ -2845,6 +2845,30 @@
                     "type": "string"
                   }
                 },
+                "riskAppetite": {
+                  "type": "object",
+                  "properties": {
+                    "statement": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "delegatedResidualCeiling": {
+                      "type": "string",
+                      "enum": [
+                        "low",
+                        "moderate",
+                        "elevated",
+                        "high",
+                        "severe"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statement",
+                    "delegatedResidualCeiling"
+                  ],
+                  "additionalProperties": false
+                },
                 "programmeCommitment": {
                   "type": "object",
                   "properties": {
@@ -5529,6 +5553,9 @@
       "items": {
         "type": "object",
         "properties": {
+          "followUp": {
+            "type": "boolean"
+          },
           "boardReference": {
             "type": "boolean"
           },

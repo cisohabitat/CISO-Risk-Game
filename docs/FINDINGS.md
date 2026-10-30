@@ -16,6 +16,49 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Board appetite follow-through — 30 October 2026
+
+The owner's next-step instruction continues the CISO report with a bounded board
+appetite loop. The existing voiced request remains unchanged. A scheduled
+follow-up opens the decision rather than reclassifying the texture letter as a
+random-pool decision. Moderate/Elevated residual delegation options carry authored
+`riskAppetite` metadata; deferring leaves the request unresolved and costs 0.03
+board confidence. An earlier adopted statement survives a deferred replacement.
+
+Board and acceptance UI derive the working statement from recorded decisions and
+Year Two history, comparing only public `lastAssessed` values. Unassessed risks
+are unknown, never within appetite. Accepted exceptions stay material and are
+named in paper reactions; the existing omission penalty is not charged twice.
+Reporting does not establish board approval. A conditional thirty-day return
+checks the current acceptance register. Event `followUp` metadata uses the shared
+Inbox/Briefing/Skip ahead classifier without changing tag-based spacing.
+
+Initial direct attachment of the decision to the letter changed pool pacing and
+failed educator and Q4 callback regressions. The scheduled follow-up restored Q4
+callback checks and most fixed examples. The 30-seed CISO cohort was remeasured;
+the facilitator table and exact class-21 expectations now record fraud followed
+by a different legacy-platform route. Classroom scripts remain engine probes,
+not observed student outcomes. The 360-campaign balance probe had zero invariant
+violations; the content-flow probe completed 24 unique campaign-years plus their
+replays, with no unreferenced scheduled replies or duplicate authored bodies.
+
+Focused engine/UI checks cover adoption without treatment/funding, rationale,
+public-band comparisons, unknowns, actual Skip ahead stopping, defaults, dated
+reviews, no double omission charge, review purity and Year Two carry-over. The
+six browser/layout projects passed the new adoption → Board → exact-risk route.
+Verification: `pnpm check` passed 694 unit/content/UI tests, content validation,
+production build and unchanged size limits. Focused browser coverage passed 6/6;
+the full six-project suite passed 689 checks with 49 existing skips (738 scheduled,
+12.0 minutes). Chromium, WebKit, both tablets and both phone widths ran; no test,
+project, assertion or layout bound was relaxed. Local WebKit used the previously
+provisioned `/tmp` libraries and host-preflight skip flag; actual browser tests
+ran. The updated shared-classifier content-flow audit repeated all 24 unique
+campaign-years with deterministic replays and no unreferenced or duplicate bodies.
+
+This implements residual delegation, not aggregate exposure, service tolerances
+or an exception approval workflow. Existing annual weights and stored assessments
+are unchanged.
+
 ### Combined CISO/product-manager follow-through — 30 October 2026
 
 Two supplied reports are preserved under `docs/playtests/2026-10-29-owner-supplied-*`.

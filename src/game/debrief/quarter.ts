@@ -6,6 +6,7 @@
  * needs: the board paper is part of every quarter, so it loads with the game,
  * and the annual review loads with the screen that shows it.
  */
+import { appetiteExceptions } from '../risk/appetite'
 import { formatGameDate } from '../time'
 import type { ContentIndex, GameEffect, GameState, QuarterReviewState } from '../types'
 import { compareBands, consequenceBand, residualBand } from '../risk/bands'
@@ -141,6 +142,14 @@ export function buildQuarterReview(
     } else {
       effects.push({ type: 'board.confidence', delta: 0.02 })
     }
+  }
+
+  const exceptions = appetiteExceptions(state, index)
+  if (exceptions.length > 0) {
+    const omittedExceptions = exceptions.filter((risk) => !input.topics.includes(`risk:${risk.id}`))
+    reaction += omittedExceptions.length > 0
+      ? ` The appetite statement also needed an exception discussion: ${omittedExceptions.map((risk) => risk.title).join('; ')}.`
+      : ' The committee has heard the accepted exceptions to delegated appetite. Reporting them does not establish approval or reduce the exposure.'
   }
 
   for (const recommendationId of input.recommendations) {

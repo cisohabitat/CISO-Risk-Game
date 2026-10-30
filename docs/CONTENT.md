@@ -405,3 +405,26 @@ What the pipeline cannot check is whether the organisation teaches something
 Nexora does not. Pick a sector where the lesson differs — a hospital puts
 safety and a regulator where Nexora puts payments and growth — and ask two
 players who finished a Nexora year which lesson was new.
+
+## Authored appetite delegation
+
+An option may carry `riskAppetite: { statement, delegatedResidualCeiling }` with
+one of the five public residual bands. A resolved selection records the adopted
+working delegation; no new save field, hidden assessment, control effect or
+purchase is implied. Current selections take precedence over previous-year
+choice history; a deferral option omits the metadata and preserves an earlier
+adoption. Historical records do not provide an adoption day. With multiple
+policy choices in one year, authors should use one replacement decision: annual
+history retains selected options but not their resolution ordering.
+
+Board and acceptance UI compare the last recorded public assessment to the
+boundary. No assessment means unknown, never within appetite. Accepted risks
+remain material; paper feedback adds context to the existing omission penalty,
+not another charge or an approval record. Schedule follow-ups with conditions
+that remain true on delivery. Do not attach `decisionId` to an existing texture
+letter merely to open discussion: that reclassifies its pacing. Keep voiced bodies
+unchanged and use a scheduled discussion when extending an existing request.
+
+Use optional event `followUp: true` to classify an authored return for Briefing,
+Inbox and Skip ahead without adding spacing tags. This presentation metadata
+does not change event eligibility, RNG draws or the scheduled delivery date.

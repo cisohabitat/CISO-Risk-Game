@@ -7,6 +7,7 @@ import { beginNextYear } from '../src/game/engine/next-year'
 import { checkInvariants } from '../src/game/engine/invariants'
 import { finishYear } from '../src/game/debrief/review'
 import { completeQuarterIfDue, rationaleFor } from './play-helpers'
+import { messageReturnKind } from '../src/game/inbox/returns'
 import { CAMPAIGN_DAYS, type GameState } from '../src/game/types'
 
 const index = buildContentIndex(nexoraContent)
@@ -84,7 +85,7 @@ function summarise(state: GameState) {
     decisionArrivalGapDays: Math.max(...days.slice(1).map((day, i) => day - days[i]!)),
     messages: state.inbox.messages.length,
     repeatedCorrespondence: [...groups.values()].filter((group) => group.count > 1).sort((a, b) => b.count - a.count),
-    callbacksReceived: state.inbox.messages.filter((message) => message.eventId && index.event.get(message.eventId)?.tags.includes('consequence')).map((message) => message.eventId),
+    callbacksReceived: state.inbox.messages.filter((message) => message.eventId && messageReturnKind(message, index) === 'consequence').map((message) => message.eventId),
     pendingReplies: state.events.scheduled.map((entry) => entry.eventId),
     programmes: Object.values(state.programmes.programmes).filter((programme) => programme.status !== 'proposed').map((programme) => ({ id: programme.id, status: programme.status })),
     headline: review.headline,

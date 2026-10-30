@@ -6,6 +6,19 @@ changes.
 
 ## Documentation
 
+- The 30 October next-step appetite slice uses option `riskAppetite` metadata,
+  recorded current/historical selections and public `lastAssessed` bands only.
+  Unknown assessments require discussion; never classify them as within appetite.
+  Acceptance remains possible with reasons; reporting is not board approval.
+  Every accepted risk stays material. Name omitted exceptions using the existing
+  omission penalty, without adding a second charge. Keep the voiced appetite
+  request unchanged and schedule its discussion outside the random event pool.
+  Event `followUp` metadata classifies returns without spacing tags; keep
+  Briefing, Inbox and Skip ahead on the shared return classifier.
+  Prior statements carry in decision history; deferring a replacement preserves
+  them. Recalibrate educator seeds if the authored follow-through changes a year.
+
+
 - Combined-report follow-through (30 October): realtime callbacks recheck campaign,
   speed and pause before advancing; modal/hidden-tab holds require explicit resume.
   Board warnings use the 91-day quarter windows, with a pause before the final

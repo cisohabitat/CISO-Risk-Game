@@ -417,6 +417,7 @@ export const decisionSchema = z.object({
       label: z.string(),
       description: z.string(),
       visibleKnownEffects: z.array(z.string()).default([]),
+      riskAppetite: z.object({ statement: z.string().min(1), delegatedResidualCeiling: z.enum(['low', 'moderate', 'elevated', 'high', 'severe']) }).optional(),
       programmeCommitment: z.object({ programmeId: id, reviewAfterDays: z.number().int().positive() }).optional(),
       immediateEffects: z.array(effectSchema),
       delayedEffects: z.array(
@@ -439,6 +440,7 @@ export const decisionSchema = z.object({
 })
 
 export const eventSchema = z.object({
+  followUp: z.boolean().optional(),
   boardReference: z.boolean().optional(),
   incidentContext: z.literal('latest-closed').optional(),
   id,

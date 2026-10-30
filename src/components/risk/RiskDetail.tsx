@@ -2,6 +2,7 @@
  * A risk scenario, and what the CISO can do about it: treat it, accept it with
  * recorded assumptions, or give it to an executive to own (plan §12.3, §13).
  */
+import { RiskAcceptanceAppetite } from '@/components/game/RiskAppetite'
 import { useEffect, useRef, useState } from 'react'
 import { detailIsBelowTheList, returnToWorkspaceList } from '@/lib/layout/stacked'
 import { Badge, Button, Card, CardBody, Dialog, Fact, SectionHeading } from '@/components/ui/primitives'
@@ -79,6 +80,7 @@ export function RiskDetail({ risk }: { risk: VisibleRisk }) {
           <Badge tone="neutral" glyph={false}>{statusLabel(risk.status)}</Badge>
         </div>
 
+        {risk.status === 'accepted' && <RiskAcceptanceAppetite scenarioId={risk.id} />}
         <div>
           <h2 className="text-lg font-semibold text-balance">{risk.title}</h2>
           <p className="reading-copy mt-2 text-sm text-ink-muted text-pretty">{risk.statement}</p>
@@ -227,6 +229,7 @@ export function RiskDetail({ risk }: { risk: VisibleRisk }) {
         }
       >
         <div className="space-y-5">
+          <RiskAcceptanceAppetite scenarioId={risk.id} />
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">Why</p>
             <div className="flex flex-wrap gap-2">

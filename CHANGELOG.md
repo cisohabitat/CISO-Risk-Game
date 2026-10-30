@@ -20,6 +20,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Answer the board's appetite request with a working delegation, see its boundary
+  beside acceptances and in Board, and review accepted exceptions in later papers.
+  A thirty-day follow-up checks the current register. Unknown risks are not
+  labelled tolerable; adopting a statement does not fund or improve controls.
+
+
 - Hold time while reading a decision or other modal and when the browser tab is
   hidden; prevent queued callbacks from overrunning an incident/decision pause.
 - Warn before board papers lapse and require a deliberate acknowledgement before

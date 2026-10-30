@@ -89,6 +89,10 @@ end-to-end suite is serving. Do not run the two at once; finish one first.
 
 **The feature set is complete and the major systems are frozen.** The remaining
 work is playtesting, tightening and rewriting unclear text — not new mechanics.
+On 30 October 2026 the owner's next-step instruction continues the supplied
+CISO report with residual-risk appetite delegation: a board decision, recorded
+statement, acceptance guidance and paper follow-through. It does not add insurer
+purchasing, business-service tolerances or an exception approval workflow.
 On 21 October 2026 the owner authorised one AI-accelerated exploit scenario.
 It extends the existing checkout decision through authored conditions/effects,
 shortens its response window and adds an access-restriction option and replies;

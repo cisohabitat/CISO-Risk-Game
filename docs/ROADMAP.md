@@ -153,6 +153,21 @@ authored balance change; broad evasive-option, burnout and strategy claims still
 need controlled evidence. New insurer/appetite-policy/tabletop/metrics mechanics
 remain proposals. No independent-pilot or physical-device gate is closed here.
 
+### Next-step appetite slice, 30 October
+
+The owner's “ok next” continues the report backlog with board appetite. The
+existing voiced letter remains intact and schedules a discussion; Moderate and
+Elevated residual delegation choices record a statement, and deferral remains
+possible. Board and risk acceptance show that statement, unassessed acceptances
+and accepted exceptions. Paper feedback names exceptions using the existing
+omission consequence, without an additional penalty or automatic approval.
+A thirty-day review reads the current acceptance register; earlier statements
+survive through Year Two history. This implements residual delegation only.
+Aggregate exposure, service-specific tolerances, exception approvals, insurance,
+full tabletop and operational-response metrics remain separate scope. Educator
+seed examples were remeasured rather than assumed stable under added content.
+Human validation and roadmap grades remain open.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,
@@ -218,7 +233,7 @@ evidence rather than hope, that this is happening. Concretely:
 | **Evidence** | Decisions about the design rest on players, not simulation | **D.** Five playtests are an AI driving a browser; one human has played one year. Nothing in `docs/PLAYTEST.md`'s open questions has an answer. | **D.** Kit built (session log, protocol, synthesis); one owner-supplied unfinished newcomer report received on 29 October, with build and independence unknown. Independent pilot and synthesis remain outstanding. |
 | **Teaches itself** | A newcomer finishes Q1 without the guide and can say what they learned | **Unknown.** This is the question the playtests exist to ask. The lessons, glossary-at-point-of-confusion and `/guide` are in place. | **Unknown.** A voice guide holds every string; the 320px first session is fixed; whether it teaches still needs people. |
 | **Systems** | A simulation that is honest, deterministic and never contradicts itself | **A.** Pure engine, seeded RNG, one effect reducer, hidden truth kept hidden, bands not numbers; soak 1000 clean; the review has been held to agreeing with itself by test. | **A.** Saves now carry a backup and are checked against the invariants before they are written. |
-| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 49 decisions, 223 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
+| **Content and writing** | Every line in the organisation's own voice; no two years the same | **B+.** One organisation (Nexora: 38 nodes, 52 edges, 13 controls), 38 decisions, 176 events, 18 enquiries, 6 programmes, 14 risks, 5 incident families, 8 attack paths, 4 starting situations. Q3 is the lightest quarter, June the thinnest month. | **B+.** The content passed the voice rules as written; four actors, 8 incident families, 14 attack paths, 17 risks, 50 decisions, 227 events, and a second year of its own; still one organisation; Q3 and June unchanged. |
 | **Replay** | A second year, a second organisation, a reason to come back | **C+.** A finished year can lead to another; situations differ in budget, threat and one decision each; there is one organisation. | **B.** Seed links and a shareable year give a reason to compare and come back; a second year remembers the first, and reads differently after a strong year than after an idle one. Still one organisation. |
 | **Presentation** | A visual identity you would recognise, motion that explains, sound that is optional | **A−** on screens (five visual rounds, measured in `docs/FINDINGS.md`); no motion design, no sound, generic type pairing, monograms rather than people. | **A−.** Arrival motion, optional sound, an editorial review, twelve larger portraits, a Nexora mark, self-hosted display typography, distinct document layouts, incident scenes and illustrated empty states; human art review remains open. |
 | **Accessibility** | WCAG 2.2 AA verified with assistive-technology users, not just axe | **B+.** Axe clean on every screen, keyboard-complete, status regions announced; never tested with a screen-reader user. | **B+.** A keyboard walk of the dependency map and a public statement; still never tested with assistive-technology users. |

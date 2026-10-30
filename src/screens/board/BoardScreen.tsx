@@ -3,6 +3,7 @@
  * in the executives' own words; quarterly preparation is an exercise in what to
  * put in front of people, not in writing a document.
  */
+import { RiskAppetite } from '@/components/game/RiskAppetite'
 import { useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -116,6 +117,7 @@ export function BoardScreen() {
         </Card>
       )}
 
+      <RiskAppetite />
       <Disclosure summary="Governance correspondence: insurance, appetite and intelligence">
         <p className="text-sm">Use the reports already received when preparing the paper. A report or recommendation does not itself buy cover, change policy or commission a test.</p>
         {state.inbox.messages.filter((message) => message.eventId && index.event.get(message.eventId)?.boardReference).length === 0 ? <p className="mt-2 text-sm">No correspondence in these categories has been received yet.</p> : <ul className="mt-2 space-y-2">{state.inbox.messages.filter((message) => message.eventId && index.event.get(message.eventId)?.boardReference).map((message) => <li key={message.id}><Button variant="quiet" size="sm" onClick={() => { useGameStore.getState().setUi({ selectedMessageId: message.id }); useGameStore.getState().setScreen('inbox') }}>{message.subject}</Button></li>)}</ul>}

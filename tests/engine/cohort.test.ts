@@ -32,9 +32,9 @@ describe('the facilitator pack names seeds that still give the years it says', (
     expect(idleYear('class-12')).toEqual([{ family: 'Ransomware and service encryption', month: 8 }])
   })
 
-  it('class-21 is the same payment diversion twice', () => {
+  it('class-21 follows payment diversion with a legacy-platform incident', () => {
     const year = idleYear('class-21')
     expect(year).toHaveLength(2)
-    expect(new Set(year.map((incident) => incident.family))).toEqual(new Set(['Payment diversion']))
+    expect(year).toEqual([{ family: 'Payment diversion', month: 4 }, { family: 'Legacy platform compromise and outage', month: 7 }])
   })
 })
