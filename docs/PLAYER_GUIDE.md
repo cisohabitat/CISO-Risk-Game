@@ -155,9 +155,11 @@ sentence, not the colour.
   day one this reads *none of it yet*, and it is the single most honest number on
   the screen. You inherited a picture; you have not confirmed any of it.
 
-**The clock** (top). `1× 2× 4×` run time forward; **Skip ahead** jumps to the
-next thing that needs you, which is how most people play. Time pauses by itself
-whenever something important happens.
+**The clock** (top). `1× 2× 4×` run time forward. **Skip ahead** advances once,
+up to seven days, stopping by the next attention renewal or an important update.
+Guided holds at each new week, even at `1×`, so you can read and choose. At `2×`
+and `4×`, actions and attention renewal also hold time. Choose a speed again
+when you are ready.
 
 ---
 

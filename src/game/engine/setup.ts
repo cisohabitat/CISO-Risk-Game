@@ -80,6 +80,8 @@ export interface DifficultyProfile {
    * mechanic *is*, which every mode still needs on first encounter.
    */
   showsDecisionCoaching: boolean
+  /** UI-only reading hold at weekly attention renewal, including normal speed. */
+  holdsAtWeeklyRenewal: boolean
 }
 
 /** The two identity engineering roles every briefing names; the other three vacancies fall elsewhere. */
@@ -100,6 +102,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.62,
     investigationSpeed: 0.85,
     showsDecisionCoaching: true,
+    holdsAtWeeklyRenewal: true,
   },
   ciso: {
     budgetMultiplier: 1,
@@ -112,6 +115,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.5,
     investigationSpeed: 1,
     showsDecisionCoaching: false,
+    holdsAtWeeklyRenewal: false,
   },
   // High pressure makes the world harsher and leaves the player's levers close
   // to intact. Squeezing both — as this used to — cuts the very channels
@@ -128,6 +132,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.38,
     investigationSpeed: 1.1,
     showsDecisionCoaching: false,
+    holdsAtWeeklyRenewal: false,
   },
 }
 

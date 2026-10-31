@@ -7,6 +7,7 @@
  * month at a time; and a letter inside the glossary changing the screen
  * behind it. None of them now fires from a dialog or from a focused control.
  */
+import { UI_SKIP_DAYS } from '@/game/time'
 import { useEffect } from 'react'
 import { shortcutsEnabled } from '@/lib/settings/shortcuts'
 import { useGameStore, type Screen } from '@/store/game-store'
@@ -63,7 +64,7 @@ export function useKeyboardShortcuts(): void {
       if (event.key === 'ArrowRight') {
         event.preventDefault()
         dispatch({ type: 'setSpeed', speed: 'paused' })
-        advanceDays(30, true)
+        advanceDays(UI_SKIP_DAYS, true)
         return
       }
       const key = event.key.toLowerCase()

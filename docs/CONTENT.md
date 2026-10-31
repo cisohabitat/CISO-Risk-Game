@@ -26,6 +26,13 @@ Assumption enquiry suggestions expose public examination routes, never a hidden
 verdict. Accepted risk still needs disclosure, and stopped work retains sunk
 cost. Voiced message transcripts and difficulty profiles remain unchanged.
 
+Guided follow-through (31 October): delivery watch uses observed public progress
+and an explicit average-pace assumption. It does not expose hidden service health,
+change authored outcomes or guarantee completion. Exploration prompts concern
+visible unexamined areas, not a quota of enquiries. Scenario prose, effects,
+rates and voiced transcripts remain unchanged; Q1 reporting still opens after
+its 13-week period on day 91 / Week 14.
+
 All campaign content is data. Nothing about Nexora is hard-coded into a React
 component or an engine module.
 

@@ -11,10 +11,11 @@ interface StartHeroProps {
   onContinue?: () => void
   resumeLabel?: string
   savingUnavailable: boolean
+  selectionLabel: string
 }
 
 /** The title screen is the start screen itself; artwork never gates play. */
-export function StartHero({ disabled, beginning, continuing, onBegin, onContinue, resumeLabel, savingUnavailable }: StartHeroProps) {
+export function StartHero({ disabled, beginning, continuing, onBegin, onContinue, resumeLabel, savingUnavailable, selectionLabel }: StartHeroProps) {
   const [artFailed, setArtFailed] = useState(false)
   return (
     <header className="start-hero">
@@ -34,8 +35,9 @@ export function StartHero({ disabled, beginning, continuing, onBegin, onContinue
         <div className="start-actions">
           <p className="start-intro">Lead Nexora through a year of cyber risk, limited resources, and difficult decisions.</p>
           {savingUnavailable && <p className="start-storage" role="status">Saving is unavailable in this browser. You can still play in this tab.</p>}
+          <p className="start-resume" id="start-selection" data-testid="start-selection" aria-live="polite">New year: {selectionLabel}</p>
           <div className="start-buttons">
-            <button type="button" className="start-play" disabled={disabled} aria-busy={beginning} onClick={onBegin}>
+            <button type="button" className="start-play" disabled={disabled} aria-busy={beginning} aria-describedby="start-selection" onClick={onBegin}>
               <span>{beginning ? 'Opening your year…' : 'Begin your first year'}</span><span aria-hidden="true">→</span>
             </button>
             {onContinue && (

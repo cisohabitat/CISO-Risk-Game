@@ -555,6 +555,16 @@ observed choice consequences are clearer. Matched difficulty probes and limits
 are in [the five-run review](docs/FIVE_RUN_REVIEW.md). Use `pnpm audit:balance 30 all`
 to compare the same policies across all four openings.
 
+Guided follow-through (31 October): the hero shows its selected setup and build
+ID; saved campaigns still require explicit Continue. Button and keyboard skips
+share a seven-day boundary, and Guided pauses normal time at weekly attention
+renewal. A delivery watch flags dates at risk at the observed average pace, and
+coaching prompts another unexamined area without requiring every enquiry.
+Week-one budget activity opens, recovery has an inline explanation, and optional
+agenda guidance quotes the items actually available. The
+[reported four-scenario account](docs/playtests/2026-10-31-owner-supplied-guided-four-scenarios.md)
+is kept separate from current-source reproduction and independent pilot evidence.
+
 ## Contributor requirements
 
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.

@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -7,13 +8,27 @@ import { guidePage } from './scripts/guide/plugin.ts'
 // Static-first build: no SSR, no server runtime. Output in dist/ is deployable
 // to any CDN (see docs/HOSTING.md for the Vercel Hobby constraints). The
 // player's guide is built beside the game as dist/guide.html, served at /guide.
+function buildRevision(): string {
+  try {
+    const revision = (process.env.VERCEL_GIT_COMMIT_SHA || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })).trim()
+    return /^[a-f0-9]{40}$/i.test(revision) ? revision.slice(0, 7) : 'local'
+  } catch { return 'local' }
+}
+
 export default defineConfig({
+  define: { __APP_REVISION__: JSON.stringify(buildRevision()) },
   plugins: [react(), tailwindcss(), guidePage()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   build: {
     target: 'es2022',
+    // WebKit can retain a failed modulepreload across reloads. Let the save
+    // validator's native import load its dependencies so a retry can recover.
+    // Keep preloading for the larger campaign and screen chunks.
+    modulePreload: {
+      resolveDependencies: (filename, dependencies) => /(?:^|\/)migrations-[^/]+\.js$/.test(filename) ? [] : dependencies,
+    },
     sourcemap: false,
     chunkSizeWarningLimit: 700,
     rolldownOptions: {

@@ -16,6 +16,50 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Guided four-scenario follow-through — 31 October 2026
+
+The [supplied report](playtests/2026-10-31-owner-supplied-guided-four-scenarios.md)
+is one account with unknown builds/seeds. It includes three morning runs without
+lapsed decisions, an earlier After-the-breach run that may overlap prior reports,
+and an unfinished CISO run. It does not close the independent pilot gate.
+
+The keyboard shortcut still requested 30 days while the button requested seven.
+UI skips now share `UI_SKIP_DAYS`, clip at attention renewal, and Guided normal
+time holds at that boundary through explicit profile metadata. Headless advances
+retain their rules. The Q1 window is still day 91 / Week 14, now explained ahead.
+
+Current source already shared both start handlers and had no startup save-load
+call. Real browser regressions verify selected mode/scenario and title after
+reload with explicit Continue. The hero shows its selection and disables pickers
+while opening; a validated short commit ID makes future reports identifiable.
+Vercel inspection found READY production at `b3a54f5`; an old tab's loaded code is
+still unknown, so the supplied startup failures are not claimed reproduced.
+
+The live tracker existed, but modest projected misses could stay quiet. Delivery
+watch now infers risk from observed public progress over at least seven delivery
+days. It states the constant-average assumption and does not read hidden health,
+mutate outcome/status, consume RNG or compute a live grade. Guided coaching
+counts visible unverified entities and offers another enquiry without a quota.
+First-week budget activity opens with each actual purchase, recovery has inline
+wording, unavailable commission buttons reference their explanation, and agenda
+guidance quotes actual optional availability. Two optional choices remain possible;
+no omission/noise effect or fixed deadline changes.
+
+The full browser run also caught added introductory copy pushing the first
+decision out of the initial 320px viewport; supporting guidance now follows the
+urgent action area. WebKit retained a failed validator modulepreload across
+reloads. Omitting modulepreload only for the small save-validator chunk restored
+native-import retry, with the original record-preservation/reload test unchanged.
+Both failures passed the focused Chromium/WebKit regression run (four checks).
+
+Final verification: `pnpm check` passed all 128 files / 766 unit tests, typecheck,
+lint, content validation (zero warnings), production build and size budgets.
+The full six-project `pnpm test:e2e --workers=6` passed 801 tests with 51
+intentional skips in 12.6 minutes, including the unchanged save-recovery test and
+the 320px first-decision assertion. Exact campaign outcomes, the reported silent
+multiweek drift outside the shortcut, and perceived scenario fairness remain
+unidentified; no rates, budgets or stored grades change.
+
 ### Five-run CISO follow-through — 30 October 2026
 
 The [supplied five-campaign account](playtests/2026-10-30-owner-supplied-five-run-ciso-review.md)

@@ -1,3 +1,4 @@
+import { APP_REVISION } from '@/lib/release'
 /**
  * Responsive application shell (plan §28).
  *
@@ -162,6 +163,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </dl>
           <details className="sidebar-tools max-h-[35dvh] overflow-y-auto">
             <summary className="cursor-pointer rounded-lg px-2 py-2 text-sm font-medium hover:bg-surface-2">Help and settings</summary>
+            <p className="px-2 text-xs text-ink-faint" data-testid="build-revision">Build {APP_REVISION}</p>
             <div className="space-y-2 pt-2">
               {/* A pair, drawn alike: the guide was bare text under a boxed button. */}
               <div className="grid grid-cols-2 gap-2">
@@ -250,6 +252,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <Dialog open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
         <div className="mb-4 rounded-lg border border-line p-3 text-sm">
+          <p className="text-xs text-ink-faint" data-testid="build-revision">Build {APP_REVISION}</p>
           <p>Workload capacity: {view.teamCapacity}</p>
           <p className="mt-2 font-medium">Team wellbeing</p>
           {wellbeing.length > 0 ? wellbeing.map((note) => <p key={note} className="text-ink-muted">{note}</p>) : <p className="text-ink-muted">All functions holding up or better</p>}

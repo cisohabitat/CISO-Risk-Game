@@ -60,7 +60,7 @@ test('commissioning confirms the job and its budget movement', async ({ page }) 
   await expectNoHorizontalScroll(page)
   await goTo(page, 'Briefing')
   const budget = page.getByRole('button', { name: 'Budget movements', exact: true })
-  await budget.click()
+  if (await budget.getAttribute('aria-expanded') !== 'true') await budget.click()
   await expect(budget.locator('..').getByText(/Commissioned Recovery test for a critical service: £80k spent or withdrawn/)).toBeVisible()
 })
 

@@ -2,6 +2,7 @@
  * Time controls (plan §9). Pause, three speeds and "advance to the next
  * meaningful event". The simulation pauses itself for anything material.
  */
+import { UI_SKIP_DAYS } from '@/game/time'
 import { useState } from 'react'
 import { CAMPAIGN_DAYS } from '@/game/types'
 import { Button, Dialog } from '@/components/ui/primitives'
@@ -132,7 +133,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         className="compact min-h-9"
         disabled={state.finished}
         title="Advances once, up to 7 days, stopping at decisions and notable updates; December mail is shown before continuing. Choose a speed to keep running."
-        onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(7, true) }}
+        onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(UI_SKIP_DAYS, true) }}
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}
       </Button>

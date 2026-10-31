@@ -228,6 +228,16 @@ new reviews. Reference mail and recent Briefing cards are distinct from current
 work. No difficulty-profile tuning is inferred from the five runs; independent
 human-learning/fairness gates remain open.
 
+### Guided four-scenario follow-through, 31 October
+
+The [supplied account](playtests/2026-10-31-owner-supplied-guided-four-scenarios.md)
+includes three morning runs and an earlier night; builds/seeds and independence
+remain unknown. UI pacing now shares one skip boundary and Guided weekly hold.
+Delivery/exploration prompts, visible setup/build metadata, week-one receipts
+and agenda/refusal explanations improve discoverability. Start/reload failures
+were not reproduced on current source. No scenario balance or grade changes are
+inferred; independent learning and perceived-difficulty gates remain open.
+
 ## 20 October review follow-through
 
 The owner authorised the B-and-below review roadmap: clarity, mobile reading,

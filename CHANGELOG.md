@@ -20,6 +20,14 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Show the chosen mode/scenario beside the hero start action and display the
+  loaded build ID. Verify both start actions and explicit Continue after reload.
+- Unify button/keyboard skip bounds and hold Guided normal time at weekly renewal.
+- Flag delivery dates at risk from public observed pace, prompt further Guided
+  exploration, open first-week budget receipts and explain recovery inline.
+- Associate unavailable enquiries with their refusal text and show actual optional
+  agenda availability and selection counts without changing board effects.
+
 - Keep the final day open for decisions until Close year; acknowledge unanswered
   defaults explicitly. Limit UI skips to seven days and hold for notable updates.
 - Show business commitments during play and enforce their original deadlines.

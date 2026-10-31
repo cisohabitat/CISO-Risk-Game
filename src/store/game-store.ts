@@ -1,3 +1,4 @@
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 /**
  * The application store is an adapter around the engine, not the engine itself
  * (plan §32.4). It owns UI state and persistence; every change to the canonical
@@ -23,7 +24,7 @@ import {
   writeCampaign,
 } from './persistence'
 import { reportProblem } from './problems'
-import { DECEMBER_START_DAY, formatGameDate } from '@/game/time'
+import { DECEMBER_START_DAY, UI_SKIP_DAYS, formatGameDate } from '@/game/time'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -422,15 +423,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     let result: ActionResult = { ok: false, message: '' }
     const fast = state.speed === '2x' || state.speed === '4x'
+    const weeklyReading = DIFFICULTY_PROFILES[state.difficulty].holdsAtWeeklyRenewal
     let weeklyHold = false
     const next = produce(state, (draft) => {
-      const request = fast && action.type === 'advance'
-        ? { ...action, days: Math.min(action.days, DAYS_PER_WEEK - state.currentDay % DAYS_PER_WEEK) }
+      const request = action.type === 'advance' && (fast || weeklyReading || action.stopOnUpdate)
+        ? { ...action, days: Math.min(action.days, action.stopOnUpdate ? UI_SKIP_DAYS : action.days, DAYS_PER_WEEK - state.currentDay % DAYS_PER_WEEK) }
         : action
       result = applyAction(draft, index, request.type === 'advance' ? { ...request, holdYearEnd: true } : request)
-      if (fast) {
+      if (fast || weeklyReading) {
         weeklyHold = result.ok && !draft.finished && action.type === 'advance' && draft.resources.weekIndex > state.resources.weekIndex
-        if (weeklyHold || (action.type !== 'advance' && action.type !== 'setSpeed')) {
+        if (weeklyHold || (fast && action.type !== 'advance' && action.type !== 'setSpeed')) {
           applyAction(draft, index, { type: 'setSpeed', speed: 'paused' })
         }
       }

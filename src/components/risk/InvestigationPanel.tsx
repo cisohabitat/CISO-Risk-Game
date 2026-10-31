@@ -186,7 +186,7 @@ export function InvestigationPanel() {
                         )}
                       </dl>
                       {(short || noFocus || noBudget) && (
-                        <p className="mt-2 text-xs text-band-elevated">
+                        <p id={`commission-unavailable-${investigation.id}`} role="note" className="mt-2 text-xs text-band-elevated">
                           {short
                             ? 'The team it needs has no spare capacity.'
                             : noFocus
@@ -200,6 +200,7 @@ export function InvestigationPanel() {
                         className="mt-3 self-start"
                         aria-label={`Commission: ${investigation.name}`}
                         disabled={short || noFocus || noBudget}
+                        aria-describedby={short || noFocus || noBudget ? `commission-unavailable-${investigation.id}` : undefined}
                         onClick={() => {
                           setChosen(investigation)
                           setOverloadAccepted(false)

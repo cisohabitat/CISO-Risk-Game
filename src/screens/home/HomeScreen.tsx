@@ -1,3 +1,4 @@
+import { DeliveryWatch, GuidedExploration } from '@/components/game/GuidedProgress'
 import { ObjectiveTracker } from '@/components/game/ObjectiveTracker'
 import { BudgetActivity, QuietWeekNote } from '@/components/game/BriefingNotes'
 import { CapacityNotice } from '@/components/game/CapacityNotice'
@@ -140,12 +141,15 @@ export function HomeScreen() {
         )}
       </section>
 
+      <p className="text-xs text-ink-muted">Inbox counts correspondence separately from the attention total, including reports and reference reading.</p>
+      <DeliveryWatch />
+      <GuidedExploration />
       <ObjectiveTracker />
 
       <Disclosure summary="How a week works">
         <ol className="list-decimal space-y-2 pl-5">
           <li>Skip ahead advances once, up to seven days, and holds for reading. Choose a speed to run between updates.</li>
-          <li>At 2× and 4×, an action holds time, including a refused action so you can read why. A new week also holds time when attention renews. Choose a speed again when you are ready.</li>
+          <li>Guided also holds at each new week at 1×. At 2× and 4×, an action holds time, including a refused action so you can read why. A new week also holds time when attention renews. Choose a speed again when you are ready.</li>
           <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
           <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>
           <li>Follow the results and prepare the quarterly board paper. Raising a risk makes it eligible; select its agenda item when writing the paper.</li>
@@ -200,7 +204,7 @@ export function HomeScreen() {
             onInfo={() => openGlossary('gls-recovery-confidence')}
             value={view.recoveryConfidence}
             tone={view.recoveryConfidence === 'Limited' ? 'high' : view.recoveryConfidence === 'Partial' ? 'elevated' : 'low'}
-            note={view.recoveryNote}
+            note={['Confidence that services can be restored. Programmes build capability; a recovery test checks it.', view.recoveryNote].filter(Boolean).join(' ')}
           />
         </dl>
         {/* What the quarter has produced, so a quarter of work reads

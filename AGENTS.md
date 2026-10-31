@@ -6,6 +6,32 @@ changes.
 
 ## Documentation
 
+- Preserve the 31 October four-scenario Guided account as one supplied report;
+  the previous-night campaign may overlap earlier accounts. No-lapse applies to
+  three morning runs; the CISO run is unfinished. Do not infer exact builds or
+  independent participants. Current-source start/reload paths passed controlled
+  browser tests; do not claim their reported failures were reproduced.
+- UI skip button, shortcut and adapter share `UI_SKIP_DAYS` and stop by attention
+  renewal. `holdsAtWeeklyRenewal` is explicit difficulty-profile metadata for
+  Guided at 1x; keep ordinary headless advances and other mode policies intact.
+- Delivery watch projects public progress since delivery began, only after seven
+  delivery days. Label the average-pace assumption; never expose hidden health,
+  call a projection certain, mutate objectives or run the grader mid-year.
+  Exploration coaching counts visible unverified entities, not hidden material
+  IDs or an enquiry quota. Keep Q1 opening day 91 / Week 14 and paper deadlines.
+- Show selected setup beside the hero action; both start buttons retain their
+  shared handler and disable pickers during opening. Reload lists saves until
+  explicit Continue. Build IDs expose only a validated short commit hash, with
+  a local fallback; never print environment values or infer an old tab's build.
+- First-week budget activity opens with actual receipts. Keep old-ledger limits,
+  accessible commissioning refusal descriptions, actual optional agenda counts,
+  deliberate omissions and optional-overload effects. Preserve existing grades,
+  rates, authored scenario effects and voice transcripts.
+- Keep the first decision reachable in the initial 320px viewport; place added
+  guidance after urgent actions. Save-validator imports omit modulepreload to
+  recover from a failed download on WebKit reload; retain other chunk preloads
+  and the failed-download save-preservation/recovery test.
+
 - Expanded wellbeing must not shrink the navigation pane. Keep intrinsic menu
   height and a bounded resource scroller, with the existing short-window whole-rail
   fallback; retain Chromium/WebKit navigation and independent-scroll bounds.

@@ -14,13 +14,13 @@ import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
 import { readSeedLink } from '@/lib/seed-link'
 import { StartHero } from './StartHero'
-import { APP_VERSION, RELEASE_NOTES_URL } from '@/lib/release'
+import { APP_VERSION, APP_REVISION, RELEASE_NOTES_URL } from '@/lib/release'
 
 const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
     id: 'guided',
     label: 'Guided',
-    description: 'More budget, more capacity, a calmer threat environment and plainer explanations of the mechanics.',
+    description: 'More budget, more capacity, a calmer threat environment and plainer explanations of the mechanics. Time holds each new week so you can read and choose.',
   },
   {
     id: 'ciso',
@@ -115,6 +115,7 @@ export function StartScreen() {
         onBegin={begin}
         onContinue={latestSave ? () => void open(latestSave.key, () => loadGame(latestSave.key)) : undefined}
         resumeLabel={latestSave ? `Latest save · ${formatGameDate(latestSave.day).label} · ${latestSave.seed}` : undefined}
+        selectionLabel={`${DIFFICULTIES.find((option) => option.id === difficulty)?.label ?? difficulty} · ${situation === 'surprise' ? 'Surprise me' : situationName(situation) ?? 'The inherited mess'}`}
         savingUnavailable={savingUnavailable}
       />
       <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -234,7 +235,7 @@ export function StartScreen() {
               )}
             </div>
 
-            <fieldset>
+            <fieldset disabled={opening !== undefined}>
               <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
                 How hard should it be?
               </legend>
@@ -266,7 +267,7 @@ export function StartScreen() {
             </fieldset>
 
             {situations.length > 0 && (
-              <fieldset>
+              <fieldset disabled={opening !== undefined}>
                 <legend className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
                   What are you walking into?
                 </legend>
@@ -388,7 +389,7 @@ export function StartScreen() {
         </Card>
 
         <p className="mt-3 text-center text-sm text-ink-muted">
-          <a href="/about#release-and-build" className="underline underline-offset-2">v{APP_VERSION}</a>
+          <a href="/about#release-and-build" className="underline underline-offset-2">v{APP_VERSION}</a> · <span data-testid="build-revision">build {APP_REVISION}</span>
           <span aria-hidden="true"> · </span>
           <a href={RELEASE_NOTES_URL} className="underline underline-offset-2">Release notes</a>
           <span aria-hidden="true"> · </span>
