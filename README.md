@@ -35,6 +35,8 @@ readers link to Evidence and converted hypotheses link to their risk scenario.
 Save hardening rejects malicious deferred effects and unsafe object references
 before campaign activation. File and IndexedDB loads share the pre-migration
 checks; effect execution uses own-property lookups as a second boundary.
+Tooling pins patched minimatch 11.0.1 for GHSA-g3hv-75wg-m249; the CI security
+audit remains mandatory at moderate severity and above.
 Invalid imports preserve the current campaign and stored saves. Migration and
 validation code load on demand; a saved-list loading failure keeps records and
 offers reload/retry guidance. Overlapping saved-list refreshes retain the newest

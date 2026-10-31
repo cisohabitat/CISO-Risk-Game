@@ -18,6 +18,17 @@ fault.
 
 ### Guided four-scenario follow-through — 31 October 2026
 
+The playtest fixes at `15d23d6` passed local verification, but CI run
+`41157780199` stopped its verification job at the moderate security audit:
+GHSA-g3hv-75wg-m249 affects minimatch below 11.0.1 through ESLint. The follow-up
+pins only affected minimatch versions to 11.0.1 and regenerates the lockfile,
+retaining the audit gate. `pnpm audit:security` then reported no known
+vulnerabilities. Follow-up `pnpm check` passed all 128 files / 766 unit tests,
+lint, typecheck, content validation, build and size limits. The full six-project
+browser suite passed 801 tests with 51 intentional skips in 12.6 minutes.
+All six browser shards and their aggregate also passed in the original CI run;
+its failed audit was the isolated verification blocker.
+
 The [supplied report](playtests/2026-10-31-owner-supplied-guided-four-scenarios.md)
 is one account with unknown builds/seeds. It includes three morning runs without
 lapsed decisions, an earlier After-the-breach run that may overlap prior reports,

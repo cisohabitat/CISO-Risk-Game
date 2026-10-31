@@ -14,6 +14,8 @@ The game as it stands after the roadmap's engineering phases
 
 ### Security
 
+- Pin patched minimatch 11.0.1 in tooling for GHSA-g3hv-75wg-m249, keeping the
+  mandatory CI security audit enabled.
 - Reject crafted deferred-save effects and unsafe object references before
   activation; keep stored progress intact. Guard reducer map lookups against
   inherited properties and reject executable URLs in built documentation.

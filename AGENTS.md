@@ -702,6 +702,10 @@ changes.
 
 ## Verification and deployment
 
+- Keep the scoped `minimatch@<11.0.1` override until upstream tooling resolves a
+  patched version; GHSA-g3hv-75wg-m249 fails the moderate-level CI audit. Do not
+  suppress the advisory or weaken that gate. Recheck lint after changing it.
+
 - The start footer reads its version from `package.json`; `/release-notes`
   is built from `CHANGELOG.md`. About shows build-time UTC date and the public
   commit SHA (Vercel/CI metadata or local Git), never arbitrary environment data.
