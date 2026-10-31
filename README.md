@@ -8,6 +8,13 @@ and a CEO who wants three answers in twenty-three minutes.
 
 **▶ Play it: [ciso-risk-game.vercel.app](https://ciso-risk-game.vercel.app)**
 
+The [four-scenario CISO follow-through](docs/playtests/2026-10-31-owner-supplied-ciso-four-scenarios.md)
+adds year-end loading and failure recovery, explicit empty-paper acknowledgement,
+spare-attention enquiry guidance and timed budget receipts. Review evidence
+separates incident outcomes from recovery exercises and reconciles material
+dependencies with the full undiscovered count. Scenario balance remains an open
+playtest question; historical annual judgements keep their original assessment.
+
 No account, no sign-in, nothing to install. The whole simulation runs in your
 browser and your campaign saves to the device you played it on. New to it?
 [`docs/PLAYER_GUIDE.md`](docs/PLAYER_GUIDE.md) assumes you know nothing about

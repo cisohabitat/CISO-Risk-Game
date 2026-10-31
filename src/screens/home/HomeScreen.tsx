@@ -331,7 +331,7 @@ export function HomeScreen() {
                 />
                 <p className="text-sm text-ink-muted text-pretty">
                   {unknown.nodes > 0 || unknown.edges > 0
-                    ? `As of ${view.dateLabel}, ${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} remain undiscovered. Systems and their connections are counted separately.`
+                    ? `As of ${view.dateLabel}, ${plural(unknown.nodes, 'system')} and ${plural(unknown.edges, 'dependency', 'dependencies')} remain undiscovered. Systems and their connections are counted separately. The annual review's material unseen items are a subset of these totals, not extra items.`
                     : 'You have brought the whole estate into view.'}
                 </p>
                 {team.healthNote && <p className="mt-2 text-sm text-ink-muted">Available capacity does not mean morale has recovered. Open Team to see current commitments, recovery conditions, and ways to relieve strain.</p>}

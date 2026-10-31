@@ -1,6 +1,6 @@
 import { existsSync, unlinkSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
-import { goTo, startCampaign } from './helpers'
+import { acknowledgeEmptyPaper, goTo, startCampaign } from './helpers'
 
 /**
  * Not an assertion suite: captures the screens so the visual language can be
@@ -89,6 +89,7 @@ test.describe('screenshots', () => {
       if (await board.isVisible().catch(() => false)) {
         await board.click()
         const dialog = page.getByRole('dialog')
+        await acknowledgeEmptyPaper(dialog)
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         await expect(dialog).toBeHidden()
         continue

@@ -26,7 +26,7 @@ it('shows the live attention balance and required rationale for the platform lau
   expect(screen.getByText(/2 attention available now/)).toBeVisible()
   expect(screen.getByText(/Why\? \(at least one reason\)/)).toBeVisible()
   fireEvent.click(screen.getAllByRole('radio')[0]!)
-  const commit = screen.getByRole('button', { name: 'Record why first' })
+  const commit = screen.getByRole('button', { name: 'Go to reasons' })
   expect(commit).not.toHaveAttribute('aria-disabled')
   expect(commit).toBeEnabled()
   fireEvent.click(commit)

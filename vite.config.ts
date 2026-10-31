@@ -24,10 +24,10 @@ export default defineConfig({
   build: {
     target: 'es2022',
     // WebKit can retain a failed modulepreload across reloads. Let the save
-    // validator's native import load its dependencies so a retry can recover.
+    // validator and annual review use native imports so a retry can recover.
     // Keep preloading for the larger campaign and screen chunks.
     modulePreload: {
-      resolveDependencies: (filename, dependencies) => /(?:^|\/)migrations-[^/]+\.js$/.test(filename) ? [] : dependencies,
+      resolveDependencies: (filename, dependencies) => /(?:^|\/)(?:migrations|review)-[^/]+\.js$/.test(filename) ? [] : dependencies,
     },
     sourcemap: false,
     chunkSizeWarningLimit: 700,

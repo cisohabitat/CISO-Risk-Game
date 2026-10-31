@@ -217,8 +217,8 @@ never refused, it takes what is left, and the card says how much that is.
 
 **Record why.** Below the options is a *Why?* panel with reasons like *"The
 consequence is material"* or *"Compensating controls are sufficient"*. On serious
-decisions this is mandatory and the button reads **Record why first** until you
-pick one.
+decisions at least one reason is mandatory. **Go to reasons** moves you to that
+panel; **Commit to this** becomes available when the choice and reason are ready.
 
 This is not paperwork. At the end of the year the game takes every reason you
 gave, checks it against what actually happened, and tells you which of your

@@ -1,5 +1,5 @@
 import { test } from '@playwright/test'
-import { goTo, startCampaign } from './helpers'
+import { acknowledgeEmptyPaper, goTo, startCampaign } from './helpers'
 
 /**
  * Not a check: one campaign played with intent, photographed as it goes, so the
@@ -93,6 +93,7 @@ test.describe('playthrough', () => {
           await page.waitForTimeout(300)
           await shot('board-paper')
         }
+        await acknowledgeEmptyPaper(dialog)
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         continue
       }

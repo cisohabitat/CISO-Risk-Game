@@ -30,12 +30,15 @@ export function BoardScreen() {
   const [recommendations, setRecommendations] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.recommendations ?? [] : [])
   const [omissionsAcknowledged, setOmissionsAcknowledged] = useState<string>('')
   const [reviewOmissions, setReviewOmissions] = useState(false)
+  const [emptyAcknowledged, setEmptyAcknowledged] = useState(false)
   const [meetingReceipt, setMeetingReceipt] = useState<{ personId: string; gameId: string; text: string }>()
   const omissionHeading = useRef<HTMLHeadingElement>(null)
   const [uncertainty, setUncertainty] = useState(draft?.quarter === state?.reviews.pendingQuarter ? draft?.uncertainty ?? true : true)
 
   const people = useMemo(() => (state ? stakeholderViews(state, index) : []), [state, index])
   const availableTopics = useMemo(() => (state ? materialTopics(state, index) : []), [state, index])
+  // Known material omissions keep their existing, stronger acknowledgement.
+  const emptyPaper = topics.length === 0 && recommendations.length === 0 && !availableTopics.some((topic) => topic.material)
   const requiredIds = availableTopics.filter((topic) => topic.material).map((topic) => topic.id)
   const optionalAllowance = Math.min(2, availableTopics.length - requiredIds.length)
   // What the player has assessed each risk at, beside it on the agenda. Seven
@@ -69,6 +72,7 @@ export function BoardScreen() {
 
   const submit = () => {
     if (pendingQuarter === undefined) return
+    if (emptyPaper && !emptyAcknowledged) return
     if (omitted.length > 0 && omissionsAcknowledged !== omissionKey) {
       setReviewOmissions(true)
       requestAnimationFrame(() => { omissionHeading.current?.focus(); omissionHeading.current?.scrollIntoView({ block: 'center' }) })
@@ -97,7 +101,7 @@ export function BoardScreen() {
           <h1 className="mt-2 font-display text-3xl leading-tight">Board and executives</h1>
         </div>
         {pendingQuarter !== undefined && (
-          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); if (draft?.quarter !== pendingQuarter) setTopics(requiredIds); setPreparing(true) }}>
+          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); if (draft?.quarter !== pendingQuarter) setTopics(requiredIds); setEmptyAcknowledged(false); setPreparing(true) }}>
             Prepare the Q{pendingQuarter} board paper
             <span className="font-normal opacity-80"> · {FOCUS_COSTS.boardPreparation} attention</span>
           </Button>
@@ -246,7 +250,7 @@ export function BoardScreen() {
         footer={
           <>
             <Button variant="quiet" onClick={closePaper}>Cancel</Button>
-            <Button variant="primary" onClick={submit}>Take it to the board</Button>
+            <Button variant="primary" disabled={emptyPaper && !emptyAcknowledged} aria-describedby={emptyPaper ? 'empty-paper-notice' : undefined} onClick={submit}>Take it to the board</Button>
           </>
         }
       >
@@ -374,6 +378,10 @@ export function BoardScreen() {
             </span>
           </label>
           <section aria-labelledby="paper-submission" className="paper-submission border-t-2 border-ink pt-5">
+            {emptyPaper && <div id="empty-paper-notice" className="mb-4 rounded-lg border border-band-elevated/50 p-3 text-sm">
+              <p>This paper has no agenda topics or programme recommendations. An empty paper does not establish that nothing is wrong. Review and raise risks before preparing the agenda, or explicitly record the empty submission.</p>
+              <label className="mt-3 flex items-start gap-3"><input type="checkbox" checked={emptyAcknowledged} onChange={(event) => setEmptyAcknowledged(event.currentTarget.checked)} className="mt-1 shrink-0" /><span>I intend to submit an empty paper.</span></label>
+            </div>}
             <h3 id="paper-submission" className="document-kicker"><span aria-hidden="true" className="paper-number">03</span>Your submission</h3>
             <dl className="mt-4 grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
               <div><dt className="text-ink-faint">Agenda topics</dt><dd className="mt-1 font-medium">{topics.length} selected</dd></div>

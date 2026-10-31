@@ -22,6 +22,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Show year-end review loading and recovery instructions, hold time during the
+  download and protect another campaign from a delayed review. Acknowledge empty
+  papers, clarify recovery/discovery evidence, offer spare-attention enquiry
+  guidance across modes, and announce recorded budget movements during time.
+- Label rationale navigation "Go to reasons"; commitment remains a separate action.
 - Show the chosen mode/scenario beside the hero start action and display the
   loaded build ID. Verify both start actions and explicit Continue after reload.
 - Unify button/keyboard skip bounds and hold Guided normal time at weekly renewal.

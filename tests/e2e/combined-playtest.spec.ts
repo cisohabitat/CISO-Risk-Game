@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import type { GameState } from '../../src/game/types'
-import { goTo, expectNoHorizontalScroll } from './helpers'
+import { acknowledgeEmptyPaper, goTo, expectNoHorizontalScroll } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 test('material omissions require an informed choice before submission', async ({ page }) => {
@@ -16,12 +16,14 @@ test('material omissions require an informed choice before submission', async ({
     await expect(checkbox).toBeChecked()
     await checkbox.uncheck()
   }
+  await acknowledgeEmptyPaper(paper)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   const warning = paper.getByRole('alert')
   await expect(warning).toContainText('Omitting material information affects its confidence')
   await expect(warning.getByRole('checkbox')).not.toBeChecked()
   await expectNoHorizontalScroll(page)
   await warning.getByRole('button', { name: 'Include all material items' }).click()
+  await acknowledgeEmptyPaper(paper)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   await expect(paper).toBeHidden()
 })

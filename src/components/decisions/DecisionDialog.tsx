@@ -85,15 +85,12 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
           <Button variant="quiet" onClick={onClose}>
             Not yet
           </Button>
-          {/* Waiting for a reason, the button stays reachable and says what
-              it waits for: disabled, Tab skipped it, and a keyboard player
-              never heard why the decision would not commit. Pressed, it
-              takes them to the reasons. */}
+          {/* Rationale navigation remains reachable while commitment is disabled. */}
           {needsRationale && optionId && selected?.affordable && <Button
             variant="secondary"
             aria-describedby={needsRationale ? 'decision-why' : undefined}
             onClick={() => { const reason = document.querySelector<HTMLElement>('#decision-why-reasons button'); reason?.scrollIntoView?.({ block: 'center' }); reason?.focus() }}
-          >Record why first</Button>}
+          >Go to reasons</Button>}
           <Button variant="primary" disabled={!optionId || !selected?.affordable || needsRationale} aria-describedby={needsRationale ? 'decision-why' : undefined} onClick={submit}>Commit to this</Button>
         </>
       }

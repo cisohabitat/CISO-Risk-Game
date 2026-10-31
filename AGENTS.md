@@ -6,6 +6,19 @@ changes.
 
 ## Documentation
 
+- Preserve the four CISO campaigns supplied on 31 October as one account with
+  unknown builds/seeds; the following High pressure run is unfinished. Review
+  loading must hold time, show progress/failure recovery and ignore a replaced
+  campaign after its import resolves. Keep explicit early write-up available.
+- An empty agenda without material topics needs explicit acknowledgement;
+  retain the stronger keyed material-omission guard and existing engine effects.
+  Distinguish incident outcomes from a separate recovery exercise without
+  changing grades. Material discovery counts are subsets of the same snapshot.
+- Spare-attention enquiry guidance applies across modes using public visible
+  entities; do not introduce an enquiry quota or rebalance from these runs.
+  Announce actual timed budget movements with recorded provenance. Keep report
+  dates, weekly counters, skip bounds, recap flow and stored reviews intact.
+
 - Preserve the 31 October four-scenario Guided account as one supplied report;
   the previous-night campaign may overlap earlier accounts. No-lapse applies to
   three morning runs; the CISO run is unfinished. Do not infer exact builds or

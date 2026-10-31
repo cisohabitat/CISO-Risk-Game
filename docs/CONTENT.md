@@ -1,5 +1,11 @@
 # Authoring campaign content
 
+CISO four-scenario follow-through (31 October): review evidence distinguishes
+incident outcomes from a separate recovery exercise and explains material
+dependencies as a subset of all undiscovered dependencies. Empty-paper UI
+acknowledgement preserves the existing chair response and material-omission
+effects. Keep scenario outcomes, grades and authored timings unchanged.
+
 Newcomer-completion follow-through (30 October): recovery-confidence help links
 to the existing entry; break-glass aliases reuse its ID, with three additional
 definitions for assumed-breach tests, quarantine and change windows. Preserve

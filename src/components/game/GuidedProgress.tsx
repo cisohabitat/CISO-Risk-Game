@@ -20,13 +20,15 @@ export function DeliveryWatch() {
 
 export function GuidedExploration() {
   const state = useGameStore((store) => store.state)
-  if (!state || state.finished || !DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching) return null
+  if (!state || state.finished) return null
+  const guided = DIFFICULTY_PROFILES[state.difficulty].showsDecisionCoaching
   const unchecked = [...Object.values(state.organisation.nodes), ...Object.values(state.organisation.edges)].filter((item) => item.exists && item.discovered && !item.verified).length
   const returned = state.team.assignments.filter((assignment) => assignment.kind === 'investigation' && assignment.status === 'complete').length
-  const explore = state.currentDay >= 21 && unchecked > 0
-  const boardSoon = state.currentDay >= 70 && state.currentDay < DAYS_PER_QUARTER
+  const explore = state.currentDay >= 21 && unchecked > 0 && (guided || state.resources.focusRemaining > 0)
+  const boardSoon = guided && state.currentDay >= 70 && state.currentDay < DAYS_PER_QUARTER
   if (!explore && !boardSoon) return null
-  return <aside aria-label="Next checks on Guided" className="rounded-lg border border-line p-3 text-sm">
+  return <aside aria-label={guided ? 'Next checks on Guided' : 'Next checks'} className="rounded-lg border border-line p-3 text-sm">
+    {explore && <p className="mb-2 text-sm text-ink-muted">{state.resources.focusRemaining} attention remains this week. Unused attention does not carry forward. An enquiry can check a concern; its quote shows the attention, budget and team capacity it needs.</p>}
     {explore && <><p className="font-medium">One report does not cover the whole organisation</p><p className="mt-1">{returned} {returned === 1 ? 'enquiry has' : 'enquiries have'} returned. {unchecked} {unchecked === 1 ? 'visible system or dependency still has' : 'visible systems and dependencies still have'} not been independently examined. Choose another area you are relying on; completing every enquiry is not a requirement or a guarantee of a strong year.</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => { useGameStore.getState().setScreen('risk'); useGameStore.getState().setUi({ riskTab: 'investigate' }) }}>Choose the next enquiry</Button></>}
     {boardSoon && <p className="mt-2">The first board paper opens after the 13-week reporting period, in Week 14 on {formatGameDate(DAYS_PER_QUARTER).label}. Use the time to assess and raise the risks you want to report.</p>}
   </aside>

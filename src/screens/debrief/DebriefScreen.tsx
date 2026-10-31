@@ -39,6 +39,8 @@ export function DebriefScreen() {
   const pushToast = useGameStore((store) => store.pushToast)
   const [sharing, setSharing] = useState<SharedYear>()
   const [closingEarly, setClosingEarly] = useState(false)
+  const [writingReview, setWritingReview] = useState(false)
+  const [reviewError, setReviewError] = useState(false)
   const [judgementLimit, setJudgementLimit] = useState(14)
   const judgementList = useRef<HTMLUListElement>(null)
   const timeline = useMemo(() => (state ? yearTimeline(state, index) : []), [state, index])
@@ -84,7 +86,7 @@ export function DebriefScreen() {
             </p>
             {/* A primary button from the first day, one tap from ending the
                 year (AI tablet playtest). It asks first. */}
-            <Button variant="secondary" onClick={() => setClosingEarly(true)}>
+            <Button variant="secondary" disabled={writingReview} onClick={() => { setReviewError(false); setClosingEarly(true) }}>
               Write up the year now
             </Button>
           </CardBody>
@@ -109,25 +111,31 @@ export function DebriefScreen() {
 
         <Dialog
           open={closingEarly}
-          onClose={() => setClosingEarly(false)}
+          onClose={() => { if (!writingReview) setClosingEarly(false) }}
           title="End the year now?"
           description="The year closes today and the review is written. What is still running stops, and the year cannot be reopened."
           footer={
             <>
-              <Button variant="quiet" onClick={() => setClosingEarly(false)}>Keep playing</Button>
+              <Button variant="quiet" disabled={writingReview} onClick={() => setClosingEarly(false)}>Keep playing</Button>
               <Button
                 variant="primary"
-                onClick={() => {
-                  setClosingEarly(false)
-                  void finishCampaign()
+                disabled={writingReview}
+                aria-busy={writingReview}
+                onClick={async () => {
+                  setWritingReview(true)
+                  setReviewError(false)
+                  await finishCampaign()
+                  setWritingReview(false)
+                  setReviewError(!useGameStore.getState().state?.reviews.annual)
                 }}
               >
-                End the year and write it up
+                {writingReview ? 'Writing your review…' : 'End the year and write it up'}
               </Button>
             </>
           }
         >
-          {null}
+          {writingReview && <p role="status">Preparing the annual review. Time is held while it loads.</p>}
+          {reviewError && <p role="alert">The review could not be prepared. Your campaign is kept. Choose Keep playing to export it, then reload and Continue to try again.</p>}
         </Dialog>
       </div>
     )

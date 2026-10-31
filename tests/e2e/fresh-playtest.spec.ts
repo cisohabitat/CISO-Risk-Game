@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import type { GameState } from '../../src/game/types'
-import { expectNoHorizontalScroll, goTo } from './helpers'
+import { acknowledgeEmptyPaper, expectNoHorizontalScroll, goTo } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 test('a board draft survives reviewing emerging risks at every viewport', async ({ page }) => {
@@ -23,10 +23,12 @@ test('a board draft survives reviewing emerging risks at every viewport', async 
   expect(await paper.getByRole('checkbox').first().evaluate((input) => input.closest('label')!.textContent)).toBe(selectedLabel)
   await expect(paper.getByRole('button', { name: 'Identity uplift', exact: true })).toHaveAttribute('aria-pressed', 'true')
   await expectNoHorizontalScroll(page)
+  await acknowledgeEmptyPaper(paper)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   const omissions = paper.getByRole('alert')
   if (await omissions.isVisible()) {
     await omissions.getByRole('button', { name: 'Include all material items' }).click()
+    await acknowledgeEmptyPaper(paper)
     await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   }
   await expect(paper).toBeHidden()

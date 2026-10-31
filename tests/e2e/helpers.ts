@@ -1,4 +1,10 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
+
+/** A test policy that deliberately submits a paper with nothing assessed. */
+export async function acknowledgeEmptyPaper(paper: Locator): Promise<void> {
+  const acknowledgement = paper.getByRole('checkbox', { name: 'I intend to submit an empty paper.' })
+  if (await acknowledgement.isVisible()) await acknowledgement.check()
+}
 
 /** Declared UI policy for checks that need to progress past a waiting decision. */
 export async function recordFirstAvailableDecision(page: Page): Promise<boolean> {

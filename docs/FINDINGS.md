@@ -16,6 +16,50 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### CISO four-scenario follow-through — 31 October 2026
+
+The [supplied account](playtests/2026-10-31-owner-supplied-ciso-four-scenarios.md)
+describes four completed CISO campaigns without lapses and an unfinished High
+pressure campaign. Build/seed/session exports are unidentified. It is one account,
+not four independent participants or a controlled comparison with Guided.
+
+Review preparation previously awaited an unhandled deferred import before
+checking which campaign was active. It now holds time before download, guards
+the source snapshot, and surfaces a kept-campaign/export/reload route on failure.
+The confirmation shows progress and disables repeat submissions. Native imports
+for the review avoid WebKit's failed-modulepreload retry problem without eager
+loading it. Explicit early write-up and the December handover remain available.
+
+An unassessed empty paper now requires explicit acknowledgement. Known material
+omissions keep the existing stronger keyed guard and effects. The original empty
+paper chair response is preserved. Rationale navigation says "Go to reasons";
+commitment remains disabled until its actual requirements are met.
+
+Incident outcomes can legitimately earn Strong resilience without a separate
+exercise. New evidence states that distinction; neither scoring nor past saved
+judgements change. Material hidden dependencies are labelled as a subset of the
+all-dependency count in new review evidence. The live Briefing explains that
+relationship using its existing totals, without exposing an additional hidden
+material classification. Source counters already used the same discovery
+snapshot and date formatter.
+
+All modes now offer an enquiry route when attention remains and visible areas
+are unverified, without a quota or hidden recommendations. Normal timed budget
+movements get UI notifications using their actual recorded source; new receipts
+open the budget disclosure. No budget totals, morale rates, objectives or RNG
+rules were changed. Current-source one-shot skips remain capped at seven days;
+the recap is already inline rather than an overlay. Exact multiweek jumps and
+uniform enquiry dates cannot be replayed without the played save/build.
+
+Verification: `pnpm audit:security` reported no known vulnerabilities.
+`pnpm check` passed all 130 files / 774 tests, typecheck, lint, content validation
+(zero warnings), production build and size limits. The full six-project browser
+suite passed 825 tests with 51 intentional skips in 12.9 minutes. Focused review,
+empty-paper and omission checks passed 23 tests with one viewport-specific skip.
+Fault injection demonstrates the loading/recovery paths; it does not identify
+the exact cause in the unidentified played build. No balance or stored judgement
+change is claimed.
+
 ### Guided four-scenario follow-through — 31 October 2026
 
 The playtest fixes at `15d23d6` passed local verification, but CI run

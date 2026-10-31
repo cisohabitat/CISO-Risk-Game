@@ -7,7 +7,7 @@ import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import type { DecisionReaction } from './decision-reactions'
 import { create } from 'zustand'
 import { produce } from 'immer'
-import { DAYS_PER_QUARTER, DAYS_PER_WEEK } from '@/game/types'
+import { DAYS_PER_QUARTER, DAYS_PER_WEEK, money } from '@/game/types'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import type { beginNextYear as buildFollowingYear } from '@/game/engine/next-year'
@@ -455,6 +455,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       } : {}),
     } })
     if (result.message) get().pushToast(result.message, 'info')
+    if (action.type === 'advance' && !action.stopOnUpdate && next.resources.budgetRemaining !== state.resources.budgetRemaining) {
+      const movements = next.history.entries.filter((entry) => entry.kind === 'budget' && entry.day > state.currentDay)
+      get().pushToast(`Budget changed from ${money(state.resources.budgetRemaining)} to ${money(next.resources.budgetRemaining)}. ${movements.map((entry) => entry.summary).join(' ') || 'Review Budget movements on the Briefing.'}`, 'info')
+    }
     if (weeklyHold) get().pushToast('A new week: attention has renewed. Time is held so you can choose how to use it. Select a speed to continue.', 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
@@ -493,16 +497,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   async finishCampaign() {
-    // The review loads with the year's end, not with the first screen.
-    const { finishYear } = await import('@/game/debrief/review')
-    const { state } = get()
-    if (!state || state.reviews.annual) return
-    const index = contentOf(get().index)
-    const next = produce(state, (draft) => finishYear(draft, index))
-    const handover = get().ui.yearEndUpdates
-    const holdsReview = handover?.gameId === next.gameId && handover.year === (next.year ?? 1)
-    set({ state: next, ui: { ...get().ui, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: holdsReview ? 'inbox' : 'debrief' } })
-    void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
+    if (!get().state || get().state?.reviews.annual) return
+    // Hold before downloading. A delayed review must not close another loaded
+    // campaign, or quietly consume weeks while the player waits for a result.
+    if (!get().state?.finished) get().dispatch({ type: 'setSpeed', speed: 'paused' })
+    const source = get().state!
+    try {
+      const { finishYear } = await import('@/game/debrief/review')
+      if (get().state !== source) return
+      const index = contentOf(get().index)
+      const next = produce(source, (draft) => finishYear(draft, index))
+      const handover = get().ui.yearEndUpdates
+      const holdsReview = handover?.gameId === next.gameId && handover.year === (next.year ?? 1)
+      set({ state: next, ui: { ...get().ui, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: holdsReview ? 'inbox' : 'debrief' } })
+      void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning'))
+    } catch {
+      if (get().state === source) get().pushToast('The annual review could not be prepared. Your campaign is kept. Export it before reloading to try again.', 'warning')
+    }
   },
 
   async beginNextYear() {

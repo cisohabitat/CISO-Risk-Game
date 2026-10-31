@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { expectNoHorizontalScroll, goTo, offscreenControls, startCampaign, recordFirstAvailableDecision } from './helpers'
+import { acknowledgeEmptyPaper, expectNoHorizontalScroll, goTo, offscreenControls, startCampaign, recordFirstAvailableDecision } from './helpers'
 import { openPreparedCampaign, prepareCampaign, SAVE_ROW } from './prepared'
 
 /**
@@ -270,7 +270,7 @@ test.describe('a first year at Nexora', () => {
         await decide.click()
         const dialog = page.getByRole('dialog')
         await dialog.getByRole('radio').first().check()
-        const why = dialog.getByRole('button', { name: /Record why first/ })
+        const why = dialog.getByRole('button', { name: /Go to reasons/ })
         if (await why.isVisible().catch(() => false)) await dialog.getByRole('button', { pressed: false }).first().click()
         await dialog.getByRole('button', { name: /Commit to this/ }).click()
         continue
@@ -387,7 +387,7 @@ test.describe('a first year at Nexora', () => {
     // The panel rises into place; measure it once it has arrived.
     await dialog.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)))
     const viewport = page.viewportSize()!
-    const commit = dialog.getByRole('button', { name: /Commit to this|Record why first/ })
+    const commit = dialog.getByRole('button', { name: /Commit to this|Go to reasons/ })
 
     // Capped: the panel fits the screen and the footer is on it without scrolling.
     const panel = (await dialog.boundingBox())!
@@ -538,9 +538,11 @@ test.describe('a first year at Nexora', () => {
       if (await board.isVisible().catch(() => false)) {
         await board.click()
         const dialog = page.getByRole('dialog')
+        await acknowledgeEmptyPaper(dialog)
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         if (await dialog.getByRole('alert').isVisible()) {
           await dialog.getByRole('button', { name: 'Include all material items' }).click()
+          await acknowledgeEmptyPaper(dialog)
           await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         }
         await expect(dialog).toBeHidden()
@@ -720,8 +722,8 @@ test.describe('a first year at Nexora', () => {
         await decide.first().click()
         await page.getByRole('radio').first().check()
         // Some decisions require a reason, and the button says so by renaming
-        // itself "Record why first" rather than sitting dead.
-        const why = page.getByRole('button', { name: /Record why first/ }).first()
+        // itself "Go to reasons" rather than sitting dead.
+        const why = page.getByRole('button', { name: /Go to reasons/ }).first()
         if (await why.isVisible().catch(() => false)) {
           await why.focus()
           await why.press('Enter')

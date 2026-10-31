@@ -13,6 +13,12 @@ start until they have.
 
 ## Status reviewed 29 October 2026
 
+31 October CISO follow-through: [four supplied campaigns](playtests/2026-10-31-owner-supplied-ciso-four-scenarios.md)
+add evidence for clearer year-end recovery, deliberate empty papers and spare
+attention guidance. Builds/seeds remain unknown. Scenario budget pressure,
+business delivery and engagement with enquiries remain human playtest questions;
+the unfinished High pressure run is not a difficulty comparison or a closed gate.
+
 This review checks repository sources and recorded findings, not a new playtest,
 performance run or release verification. The 9 October column below is historical;
 the current column describes implementation separately from human validation.

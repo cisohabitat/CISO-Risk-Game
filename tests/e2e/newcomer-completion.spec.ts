@@ -31,7 +31,7 @@ test('the radio itself selects an option and the reasons action scrolls and focu
   const box = await radio.boundingBox()
   await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2)
   await expect(radio).toBeChecked()
-  const why = dialog.getByRole('button', { name: 'Record why first', exact: true })
+  const why = dialog.getByRole('button', { name: 'Go to reasons', exact: true })
   await expect(dialog.getByRole('button', { name: 'Commit to this', exact: true })).toBeDisabled()
   await expect(why).toBeEnabled()
   await why.click()

@@ -69,7 +69,10 @@ describe('resilience is not awarded for a quiet year', () => {
     const state = newGame(index, { seed: 'res-ev' })
     runDays(state, index, 364)
     const dimension = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
-    expect(dimension.evidence.join(' | ')).toMatch(/[Rr]ecovery (was never exercised|exercises? completed)/)
+    expect(dimension.evidence.join(' | ')).toMatch(/[Rr]ecovery (was never exercised|exercises? completed)|No separate recovery exercise was recorded/)
+    if (dimension.evidence.some((line) => line.startsWith('No separate recovery exercise was recorded'))) {
+      expect(state.incidents.order.length).toBeGreaterThan(0)
+    }
     expect(dimension.evidence.join(' | ')).toMatch(/recovery controls carried assurance you established yourself/)
   })
 })

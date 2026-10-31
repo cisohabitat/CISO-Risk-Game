@@ -473,7 +473,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       lines.push(
         exerciseCount > 0
           ? `${exerciseCount} recovery exercise${exerciseCount === 1 ? '' : 's'} completed${which}`
-          : 'Recovery was never exercised',
+          : tested
+            ? 'No separate recovery exercise was recorded. This assessment uses the incident outcomes above; it does not demonstrate a rehearsed restore.'
+            : 'Recovery was never exercised',
       )
       lines.push(
         `${selfAssured.length} of ${recoveryControls.length} recovery controls carried assurance you established yourself`,
@@ -672,7 +674,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           : 'You saw all of what mattered, but much of it was taken on trust rather than examined.',
     evidence: [
       ...(unseen.systems.length > 0 ? [`${unseen.systems.length} material system${unseen.systems.length === 1 ? ' was' : 's were'} never discovered`] : []),
-      ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, separately from the system count`] : []),
+      ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, separately from the system count. This is a subset of ${discovery.dependencies.remaining} undiscovered dependenc${discovery.dependencies.remaining === 1 ? 'y' : 'ies'} in total, not an additional count.`] : []),
       ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
         (a) => `"${quotedInline(a.statement)}" was relied on from ${dateOf(a.createdDay)}, not tested after that, and not true`,

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import type { GameState } from '../../src/game/types'
-import { goTo, expectNoHorizontalScroll } from './helpers'
+import { acknowledgeEmptyPaper, goTo, expectNoHorizontalScroll } from './helpers'
 import { openPreparedCampaign, prepareCampaign } from './prepared'
 
 test('Q3 announces its paper on every screen and starts with its material agenda selected', async ({ page }) => {
@@ -20,6 +20,7 @@ test('Q3 announces its paper on every screen and starts with its material agenda
   expect(await required.count()).toBeGreaterThan(0)
   for (const item of await required.all()) await expect(item).toBeChecked()
   await expectNoHorizontalScroll(page)
+  await acknowledgeEmptyPaper(paper)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   await expect(paper).toBeHidden()
   await expect(page.getByRole('status', { name: 'Decision deadlines' })).not.toContainText('Q3 board paper ready')

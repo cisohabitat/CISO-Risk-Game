@@ -11,7 +11,7 @@ test('a committed choice leaves a readable, dismissible receipt', async ({ page 
   await expect(dialog.locator('.decision-option[data-selected="true"]')).toHaveCount(1)
   await expect(dialog.locator('.decision-option[data-selected="true"]')).toContainText('Selected')
   await expect(dialog.getByText(/^Selected:/)).toBeInViewport()
-  await expect(dialog.getByRole('button', { name: /^(Record why first|Commit to this)$/ })).toBeInViewport()
+  await expect(dialog.getByRole('button', { name: /^(Go to reasons|Commit to this)$/ })).toBeInViewport()
   await expectNoHorizontalScroll(page)
   await dialog.getByRole('button', { name: 'More evidence is required' }).click()
   await dialog.getByRole('button', { name: 'Commit to this', exact: true }).click()
