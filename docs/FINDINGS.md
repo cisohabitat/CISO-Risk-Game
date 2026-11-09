@@ -16,6 +16,34 @@ Note how often a finding turned out to be in the harness rather than the game.
 Check what the simulated player actually did before concluding the game is at
 fault.
 
+### Campaign UI transition refactor — 9 November 2026
+
+After the failed environment was restored, the checkout was recloned at
+`de99bb6`. Six campaign transitions repeated the same inline UI cleanup:
+new game, normal load, backup recovery, import, next year and leaving. A private
+`resetCampaignUi` helper now owns that shared cleanup. Its explicit message
+selection option preserves the three clear-versus-three retain paths, while
+view preferences, notices and each caller's tick handling keep their behaviour.
+
+Annual review preparation deliberately retains its narrower cleanup so December
+correspondence and feedback survive until the player opens the review. Seven
+public-store transition checks passed before the refactor; the same checks and
+existing feedback/review regressions passed after it (22 focused checks).
+No simulation, save format, balance, content or review rules changed.
+
+Verification: `pnpm check` passed (131 files, 781 tests, typecheck, lint,
+content validation, build and unchanged size gates); the security audit reported
+no known vulnerabilities. The complete `pnpm test:e2e --workers=3` run passed
+825 cases with 51 existing project-specific skips across Chromium, WebKit,
+tablets and phones (28.9 minutes). Real WebKit used privately unpacked Debian
+runtime libraries; only its system-library preflight was disabled.
+
+An earlier four-worker run failed the unchanged pull-to-refresh edge check and
+was stopped. The same check then passed five repetitions against the original
+revision and five against this refactor in isolated previews. The fresh full
+run above passed without retries or assertion changes. The initial failure's
+cause was not established; neither the gesture code nor its test was changed.
+
 ### CISO four-scenario follow-through — 31 October 2026
 
 The [supplied account](playtests/2026-10-31-owner-supplied-ciso-four-scenarios.md)

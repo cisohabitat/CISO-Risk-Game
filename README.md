@@ -576,6 +576,11 @@ is kept separate from current-source reproduction and independent pilot evidence
 
 ## Contributor requirements
 
+Campaign transitions share a private UI-reset helper in the store. New games,
+new years and leaving clear message selection; save loading, recovery and import
+retain the existing selection policy. Annual review preparation keeps its
+separate December handover. Transition tests cover these lifecycle boundaries.
+
 Keep [`AGENTS.md`](AGENTS.md) and this README updated in every change set.
 Follow the repository instructions and keep documentation consistent with the
 implementation and release workflow.

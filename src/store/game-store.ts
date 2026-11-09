@@ -233,6 +233,27 @@ export function shouldAutosave(action: PlayerAction, ticks: TickResult[]): boole
   return ticks.some((tick) => tick.shouldAutosave) || SAVES_ON[action.type]
 }
 
+/** Clear campaign work while retaining view preferences and storage notices. */
+function resetCampaignUi(
+  ui: UiState,
+  { clearMessageSelection = false }: { clearMessageSelection?: boolean } = {},
+): UiState {
+  return {
+    ...ui,
+    yearEndUpdates: undefined,
+    decisionReceipt: undefined,
+    quarterTransition: undefined,
+    boardDraft: undefined,
+    riskTab: undefined,
+    selectedProgrammeId: undefined,
+    openDecisionId: undefined,
+    glossaryOpen: false,
+    glossaryTerm: undefined,
+    screen: 'home',
+    ...(clearMessageSelection ? { selectedMessageId: undefined } : {}),
+  }
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   index: null,
   state: null,
@@ -285,7 +306,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameId: `game-${seed}-${Date.now().toString(36)}`,
       createdAtIso: new Date().toISOString(),
     })
-    set({ state, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state, lastTicks: [], ui: resetCampaignUi(get().ui, { clearMessageSelection: true }) })
     try {
       await saveSafely(state, index)
       await get().refreshSaves()
@@ -337,7 +358,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       }
       if (backup && (await brokenRules(backup, index)).length === 0) {
         reportProblem({ kind: 'save-recovered', detail: `${key}: ${failure instanceof Error ? failure.message : String(failure)}` })
-        set({ state: backup, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+        set({ state: backup, ui: resetCampaignUi(get().ui) })
         get().pushToast(
           `That save was damaged, so the campaign opened from the one before it, on ${formatGameDate(backup.currentDay).label}.`,
           'warning',
@@ -348,7 +369,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return false
     }
     if (!state) return false
-    set({ state, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+    set({ state, ui: resetCampaignUi(get().ui) })
     return true
   },
 
@@ -368,7 +389,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       get().pushToast('That save failed validation. Your current campaign and saved progress were kept.', 'warning')
       return false
     }
-    set({ state, ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home' } })
+    set({ state, ui: resetCampaignUi(get().ui) })
     void saveSafely(state, index, { savedByPlayer: true }, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())
     return true
   },
@@ -533,7 +554,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // A second click or a different loaded campaign must not start another year.
     if (state !== source) return
     const next = beginNextYear(content, state)
-    set({ state: next, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state: next, lastTicks: [], ui: resetCampaignUi(get().ui, { clearMessageSelection: true }) })
     try {
       await saveSafely(next, content, {}, (message) => get().pushToast(message, 'warning'))
       await get().refreshSaves()
@@ -553,7 +574,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         // Already saved when the year closed; leaving is still allowed.
       }
     }
-    set({ state: null, lastTicks: [], ui: { ...get().ui, yearEndUpdates: undefined, decisionReceipt: undefined, quarterTransition: undefined, boardDraft: undefined, riskTab: undefined, selectedProgrammeId: undefined, openDecisionId: undefined, glossaryOpen: false, glossaryTerm: undefined, screen: 'home', selectedMessageId: undefined } })
+    set({ state: null, lastTicks: [], ui: resetCampaignUi(get().ui, { clearMessageSelection: true }) })
     await get().refreshSaves()
   },
 }))

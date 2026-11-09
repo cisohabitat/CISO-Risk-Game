@@ -6,6 +6,12 @@ changes.
 
 ## Documentation
 
+- Campaign switches share `resetCampaignUi` in the store. Keep its existing
+  selection policy: new campaigns, new years and leaving clear the selected
+  message; loading/importing/recovering saves retain it. Preserve view
+  preferences and notices. Annual review preparation has narrower cleanup and
+  retains the December handover; do not route it through the campaign reset.
+
 - Preserve the four CISO campaigns supplied on 31 October as one account with
   unknown builds/seeds; the following High pressure run is unfinished. Review
   loading must hold time, show progress/failure recovery and ignore a replaced
