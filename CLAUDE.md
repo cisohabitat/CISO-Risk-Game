@@ -215,7 +215,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   a first ransomware year is in `docs/PLAYTEST.md`.
 
 - **The campaign content now loads on demand, not with the first screen.**
-  The code/CSS/font critical path is 192.7 kB against a 221 kB limit (`pnpm size`, 25 October) including
+  The code/CSS/font critical path is 209.7 kB against a 221 kB limit (`pnpm size`, 14 November; it was 192.7 kB on 25 October, and the Briefing panels added since are most of the rise) including
   the self-hosted display font (the first portrait pass was 184.1 kB against
   185 for JS/CSS; the annual review loads with the review screen), and
   content no longer adds to it. The approved title screen additionally fetches
@@ -224,7 +224,8 @@ been fixed and moved to `docs/FINDINGS.md`.
   background campaign prefetch, visit budgets are 450/410 KiB.
   The campaign chunk has its own budget, 92 kB. It reached 91.2 kB; on
   28 October Year Two's events and decisions became a download of their own
-  (8.3 kB, fetched when a second year begins), and the campaign is 84.6 kB.
+  (8.3 kB, fetched when a second year begins), and the campaign was 84.6 kB; on
+  14 November it is 86.9 kB.
   It is fetched while the start
   screen is up. The start screen appears about a fifth sooner (Slow 3G 9.4 s
   to 7.7 s). The cost is one round trip for somebody who presses Begin

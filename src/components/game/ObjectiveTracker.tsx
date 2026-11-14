@@ -10,7 +10,7 @@ export function ObjectiveTracker() {
   const index = useCampaignIndex()
   if (!state) return null
   return <section id="objective-tracker" tabIndex={-1} aria-label="Business objectives" className="scroll-mt-36"><h2 className="mb-2 font-display text-xl">Business objectives</h2>
-    <p className="mb-3 text-sm text-ink-muted">Original commitments stay fixed. An imposed delay reduces progress; available schedule margin can absorb it, so it is not necessarily an actual late delivery. These results count in your annual assessment.</p>
+    <p className="mb-3 text-sm text-ink-muted">What the business has promised this year. Delays you cause eat into their margin, and the results count in your annual review.</p>
     <ul className="grid gap-3 sm:grid-cols-2">{index.content.objectives.flatMap((def) => {
       const runtime = state.business.objectives[def.id]
       if (!runtime) return []

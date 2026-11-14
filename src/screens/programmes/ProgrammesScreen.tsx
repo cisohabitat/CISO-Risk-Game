@@ -375,7 +375,7 @@ export function ProgrammesScreen() {
 
             <p className="text-sm text-ink-muted text-pretty">
               It will need {plural(starting.capacityDemand.length, 'team')} for about{' '}
-              {Math.round(starting.durationDays / 30)} months at the base rate. Funding, staffing, blockers, acceleration and recorded delivery decisions change the actual date; this is not a fixed completion promise.
+              {Math.round(starting.durationDays / 30)} months at the base rate; funding, staffing and blockers move the date.
             </p>
           </div>
         </Dialog>

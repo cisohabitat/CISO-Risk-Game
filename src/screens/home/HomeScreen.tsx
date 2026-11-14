@@ -81,8 +81,8 @@ export function HomeScreen() {
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
-        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}. These categories make up the attention total.</p>}
-        {patterns.length > 0 && <p className="mt-2 text-xs text-ink-muted">{plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')} to explore when useful; excluded from the attention total.</p>}
+        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}.</p>}
+        {patterns.length > 0 && <p className="mt-2 text-xs text-ink-muted">{plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')} to explore when you have time.</p>}
         {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}
       </header>
 
@@ -141,7 +141,6 @@ export function HomeScreen() {
         )}
       </section>
 
-      <p className="text-xs text-ink-muted">Inbox counts correspondence separately from the attention total, including reports and reference reading.</p>
       <DeliveryWatch />
       <GuidedExploration />
       <ObjectiveTracker />
@@ -168,9 +167,9 @@ export function HomeScreen() {
       <Disclosure summary="How to judge your year" defaultOpen={state.currentDay <= 7}>
         <p className="mb-2">“Mixed first year” means that useful capability and defensible choices can coexist with serious gaps. Strong individual dimensions do not cancel weak business delivery or an unsustainable team. Programme completion is one part of the year, not its win condition.</p>
         <p>Due decisions and the board paper have deadlines. Concerns and patterns are leads to examine, rather than extra decisions to answer today. The Inbox badge counts unread updates; reference correspondence stays in All, Unread and Reference. Check priorities and Follow-ups when choosing what to read next.</p>
-        <p>Your task is to understand Nexora’s risks, make defensible trade-offs and leave the organisation able to respond. A quiet year alone does not establish that it is secure.</p>
+        <p>Your task is to understand Nexora’s risks, make defensible trade-offs and leave the organisation able to respond. A quiet year is not proof of a safe one.</p>
         <p className="mt-2">The annual review weighs eight dimensions equally. Weak business enablement, prioritisation or team sustainability caps the overall verdict at Mixed. The dimensions are: risk understanding, prioritisation, resilience, cyber programme execution, business enablement, communication and escalation, team sustainability, and material blind spots.</p>
-        <p className="mt-2">During the year, look for evidence behind your risk claims, progress on relevant programmes, tested recovery, honest board papers and a team that can sustain the work. Your quarter recap records strengths, concerns and a practical next step. The year-end review judges the whole year; the number of choices made is not a quality rating.</p>
+        <p className="mt-2">During the year, look for evidence behind your risk claims, progress on relevant programmes, tested recovery, honest board papers and a team that can sustain the work. Your quarter recap records strengths, concerns and a next step. The year-end review judges the whole year.</p>
         <p className="mt-2">For a first step, open Risk and read the evidence behind one concern. Decide what you still need to investigate before committing your attention or budget.</p>
       </Disclosure>
 

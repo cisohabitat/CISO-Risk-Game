@@ -25,6 +25,6 @@ export function QuietWeekNote() {
   const enquiries = state.team.assignments.filter((assignment) => assignment.status === 'running').length
   return <aside aria-label="A quieter week" className="rounded-lg border border-line bg-surface-2 p-3 text-sm">
     <p className="font-medium">A quieter week for decisions</p>
-    <p className="mt-1">No new decision has arrived in the last seven days. {running} programmes and {enquiries} enquiries are running. {state.reviews.pendingQuarter === undefined ? 'Use the space to review evidence, owners and upcoming risk reviews.' : `The Q${state.reviews.pendingQuarter} board paper still needs submission.`} A quiet decision list does not establish that risk has fallen.</p>
+    <p className="mt-1">No new decision has arrived in the last seven days. {running} programmes and {enquiries} enquiries are running. {state.reviews.pendingQuarter === undefined ? 'Use the space to review evidence, owners and upcoming risk reviews.' : `The Q${state.reviews.pendingQuarter} board paper still needs submission.`}</p>
   </aside>
 }

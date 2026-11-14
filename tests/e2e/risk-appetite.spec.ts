@@ -18,9 +18,9 @@ test('an appetite decision follows through to Board and the accepted risk', asyn
   risk.acceptedUntilDay = state.currentDay + 60
   risk.lastAssessed = { day: state.currentDay, residual: 0.3, exposure: 0.3, consequence: 0.4 }
   await openPreparedCampaign(page, save)
-  await page.getByRole('button', { name: 'Decide: A risk appetite the committee can use', exact: true }).click()
+  await page.getByRole('button', { name: 'Decide: How much risk can you accept without asking?', exact: true }).click()
   const paper = page.getByRole('dialog')
-  await paper.getByRole('radio', { name: /Delegate through Moderate/ }).check()
+  await paper.getByRole('radio', { name: /Draw the line at Moderate/ }).check()
   await paper.getByRole('button', { name: 'The consequence is material' }).click()
   await paper.getByRole('button', { name: 'Commit to this', exact: true }).click()
   await expect(paper).toBeHidden()
@@ -32,6 +32,6 @@ test('an appetite decision follows through to Board and the accepted risk', asyn
   await page.getByRole('button', { name: /^Review:/ }).last().click()
   const detail = page.getByRole('note', { name: 'Risk appetite check' })
   await expect(detail).toContainText('Outside delegated appetite')
-  await expect(detail).toContainText('does not establish board approval')
+  await expect(detail).toContainText('put it in the board paper')
   await expectNoHorizontalScroll(page)
 })

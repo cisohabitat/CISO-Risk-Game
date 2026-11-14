@@ -154,7 +154,7 @@ export function buildQuarterReview(
     const omittedExceptions = exceptions.filter((risk) => !input.topics.includes(`risk:${risk.id}`))
     reaction += omittedExceptions.length > 0
       ? ` The appetite statement also needed an exception discussion: ${omittedExceptions.map((risk) => risk.title).join('; ')}.`
-      : ' The committee has heard the accepted exceptions to delegated appetite. Reporting them does not establish approval or reduce the exposure.'
+      : ' The committee has heard the risks accepted above its line.'
   }
 
   for (const recommendationId of input.recommendations) {

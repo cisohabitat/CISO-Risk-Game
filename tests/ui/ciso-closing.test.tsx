@@ -24,7 +24,7 @@ it('counts a real decision separately from a large set of optional hypotheses', 
   useGameStore.setState({ state })
   render(<HomeScreen />)
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('1 thing needs your attention')
-  expect(screen.getByText(/excluded from the attention total/)).toBeVisible()
+  expect(screen.getByText(/to explore when you have time/)).toBeVisible()
   expect(screen.getByLabelText('Attention breakdown')).not.toHaveTextContent('hypoth')
 })
 it('explains a thirteen-message list with twelve unread after its first message opens', () => {

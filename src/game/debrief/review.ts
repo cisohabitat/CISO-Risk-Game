@@ -196,7 +196,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // which reads as a contradiction unless you already know the difference
       // between having seen something and having checked it.
       `${discovery.systems.discovered} of ${discovery.systems.total} systems discovered; ${discovery.systems.remaining} remain unseen`,
-      `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies discovered; ${discovery.dependencies.remaining} remain unseen. Knowing a system exists does not reveal all its connections; material unseen dependencies are counted separately under Material blind spots.`,
+      `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies discovered; ${discovery.dependencies.remaining} remain unseen`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       // Current and lapsed apart: "0 of 13 controls were independently
       // assessed" printed for a year that had assessed four of them, in
@@ -434,8 +434,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           ? `${name} on ${dateOf(days[0]!)}, and again on ${list} — the same weakness, still open`
           : `${name} on ${dateOf(days[0]!)}, and again on ${list}, by ${routes.size === runs.length ? 'a different route each time' : 'more than one route'}`
       })
-      lines.unshift('This dimension assesses impact and recovery. It does not establish that entry routes or identity and cloud exposures were fixed.')
-      if (tested && band(resilience) === 'developing') lines.unshift('Developing resilience means real damage before recovery; it is not a satisfactory outcome. Incident consequence describes the event, while this dimension describes how the organisation came through it.')
+      lines.unshift('Resilience is how the organisation came through, not whether the way in was closed.')
+      if (tested && band(resilience) === 'developing') lines.unshift('Developing resilience means real damage before recovery.')
       // The dimension counted a production restore as an exercise; this line
       // did not, and said "never exercised" under a restore that came back in
       // three and a half hours. Found by the second observed playtest.
@@ -461,7 +461,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       ]
       const readinessReviews = exercises.filter((assignment) => assignment.refId === 'inv-ir-readiness').length
       const exerciseCount = exercises.length - readinessReviews + restores.length
-      if (readinessReviews > 0) lines.push(`${readinessReviews} incident-response readiness review${readinessReviews === 1 ? '' : 's'} completed; a plan review is not a full tabletop exercise`)
+      if (readinessReviews > 0) lines.push(`${readinessReviews} incident-response readiness review${readinessReviews === 1 ? '' : 's'} completed`)
       const which =
         restores.length === 0
           ? ''
@@ -542,7 +542,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       const lines = index.content.objectives
         .filter((def) => state.business.objectives[def.id])
         .map((def) => `${def.name}: ${state.business.objectives[def.id]!.status}`)
-      lines.unshift(`${achieved} of ${objectives.length} objectives achieved; ${failed} missed; ${pending} still in delivery. This dimension describes delivery across the portfolio, not a pass on every objective.`)
+      lines.unshift(`${achieved} of ${objectives.length} objectives achieved; ${failed} missed; ${pending} still in delivery`)
       // Money committed beyond the year. It used to disappear into the floor on
       // `budget.change`, which left a player who spent their reserve and then
       // took unfunded emergency support indistinguishable from one who had
@@ -674,7 +674,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           : 'You saw all of what mattered, but much of it was taken on trust rather than examined.',
     evidence: [
       ...(unseen.systems.length > 0 ? [`${unseen.systems.length} material system${unseen.systems.length === 1 ? ' was' : 's were'} never discovered`] : []),
-      ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, separately from the system count. This is a subset of ${discovery.dependencies.remaining} undiscovered dependenc${discovery.dependencies.remaining === 1 ? 'y' : 'ies'} in total, not an additional count.`] : []),
+      ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, of ${discovery.dependencies.remaining} unseen in all`] : []),
       ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
         (a) => `"${quotedInline(a.statement)}" was relied on from ${dateOf(a.createdDay)}, not tested after that, and not true`,

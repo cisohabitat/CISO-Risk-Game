@@ -25,5 +25,5 @@ it('reconciles material hidden dependencies with the larger all-dependency total
   const material = undiscoveredMaterial(state, index).dependencies.length
   const dimension = buildAnnualReview(state, index).dimensions.find((item) => item.id === 'blind-spots')!
   expect(total).toBeGreaterThan(material)
-  expect(dimension.evidence.join(' ')).toContain(`subset of ${total} undiscovered dependencies in total`)
+  expect(dimension.evidence.join(' ')).toContain(`of ${total} unseen in all`)
 })

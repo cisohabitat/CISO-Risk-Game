@@ -19,7 +19,7 @@ test('material omissions require an informed choice before submission', async ({
   await acknowledgeEmptyPaper(paper)
   await paper.getByRole('button', { name: 'Take it to the board', exact: true }).click()
   const warning = paper.getByRole('alert')
-  await expect(warning).toContainText('Omitting material information affects its confidence')
+  await expect(warning).toContainText('leaving out something material costs its confidence')
   await expect(warning.getByRole('checkbox')).not.toBeChecked()
   await expectNoHorizontalScroll(page)
   await warning.getByRole('button', { name: 'Include all material items' }).click()

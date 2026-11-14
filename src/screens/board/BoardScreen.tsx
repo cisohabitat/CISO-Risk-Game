@@ -272,7 +272,7 @@ export function BoardScreen() {
           </Disclosure>
           {omitted.length > 0 && reviewOmissions && <section className="rounded-lg border border-band-high/50 bg-band-high-soft p-3" aria-label="Material omissions" role={reviewOmissions ? 'alert' : undefined}>
             <h2 ref={omissionHeading} tabIndex={-1} className="font-medium">{plural(omitted.length, 'material item')} not selected</h2>
-            <p className="mt-2 text-sm">The board will not hear these items. Omitting material information affects its confidence; a draft is not a submitted paper.</p>
+            <p className="mt-2 text-sm">The board will not hear these items, and leaving out something material costs its confidence.</p>
             <ul className="mt-2 list-disc pl-5 text-sm">{omitted.map((topic) => <li key={topic.id}>{topic.label}</li>)}</ul>
             <Button variant="secondary" size="sm" className="mt-3" onClick={() => setTopics((current) => [...new Set([...current, ...omitted.map((topic) => topic.id)])])}>Include all material items</Button>
             <label className="mt-3 flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={omissionsAcknowledged === omissionKey} onChange={(event) => setOmissionsAcknowledged(event.target.checked ? omissionKey : '')} />I understand and deliberately omit these items</label>
@@ -379,7 +379,7 @@ export function BoardScreen() {
           </label>
           <section aria-labelledby="paper-submission" className="paper-submission border-t-2 border-ink pt-5">
             {emptyPaper && <div id="empty-paper-notice" className="mb-4 rounded-lg border border-band-elevated/50 p-3 text-sm">
-              <p>This paper has no agenda topics or programme recommendations. An empty paper does not establish that nothing is wrong. Review and raise risks before preparing the agenda, or explicitly record the empty submission.</p>
+              <p>This paper raises nothing. Raise risks first, or submit it empty on purpose.</p>
               <label className="mt-3 flex items-start gap-3"><input type="checkbox" checked={emptyAcknowledged} onChange={(event) => setEmptyAcknowledged(event.currentTarget.checked)} className="mt-1 shrink-0" /><span>I intend to submit an empty paper.</span></label>
             </div>}
             <h3 id="paper-submission" className="document-kicker"><span aria-hidden="true" className="paper-number">03</span>Your submission</h3>

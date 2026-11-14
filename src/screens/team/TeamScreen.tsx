@@ -76,7 +76,7 @@ export function TeamScreen() {
         </ul>
       </section>
 
-      <p className="text-sm text-ink-muted">Hiring is not the only way to relieve workload. Pause competing programmes or avoid stacking new enquiries, then check each function’s recovery outlook. Vacancies can still prevent morale recovering; spare capacity alone does not establish wellbeing.</p>
+      <p className="text-sm text-ink-muted">Hiring is not the only way to relieve workload: pause competing programmes or stop stacking enquiries, then watch each function’s recovery outlook.</p>
       <Button variant="secondary" onClick={() => useGameStore.getState().setScreen('programmes')}>Review programme workload</Button>
 
       <section aria-labelledby="leaders">

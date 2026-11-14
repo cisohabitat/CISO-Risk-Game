@@ -11,11 +11,11 @@ export function RiskAppetite() {
   const adopted = adoptedAppetite(state, index)
   const exceptions = appetiteExceptions(state, index)
   return <Disclosure summary="Risk appetite and accepted exceptions">
-    {!adopted ? <p className="text-sm">No formal delegation has been adopted. Acceptances remain individual judgements and belong in the board paper; silence does not establish tolerance.</p> : <div className="space-y-3 text-sm">
+    {!adopted ? <p className="text-sm">No line has been agreed. Each acceptance is your own judgement, and belongs in the board paper.</p> : <div className="space-y-3 text-sm">
       <p className="font-medium">{adopted.policy.statement}</p>
       <p className="text-ink-muted">Recorded in Year {adopted.year}{adopted.day === undefined ? '; the historical choice has no recorded day.' : ` on ${shortDate(adopted.day)}.`} Delegated residual ceiling: {RISK_BAND_LABEL[adopted.policy.delegatedResidualCeiling]}.</p>
-      <p>Acceptance carries risk; it does not reduce it. All accepted risks remain material to the board. An agenda entry reports an exception; it does not establish approval or test the controls.</p>
-      {exceptions.length === 0 ? <p>No current acceptance exceeds the recorded residual ceiling or lacks an assessment. This does not establish that undiscovered risks are within appetite.</p> : <ul className="space-y-2">{exceptions.map((risk) => <li key={risk.id}>
+      <p>Accepting a risk does not reduce it. Every accepted risk still goes in the board paper.</p>
+      {exceptions.length === 0 ? <p>No accepted risk is above the agreed line.</p> : <ul className="space-y-2">{exceptions.map((risk) => <li key={risk.id}>
         <p>{risk.title} · {risk.position === 'unassessed' ? 'assessment needed before judging appetite' : 'outside delegated appetite'}</p>
         <Button variant="quiet" size="sm" onClick={() => {
           useGameStore.getState().setUi({ selectedScenarioId: risk.id, riskTab: 'risks' })
@@ -37,6 +37,6 @@ export function RiskAcceptanceAppetite({ scenarioId }: { scenarioId: string }) {
   return <div className="rounded border border-line bg-surface-2 p-3 text-sm" role="note" aria-label="Risk appetite check">
     <p className="font-medium">{position === 'outside' ? 'Outside delegated appetite' : position === 'unassessed' ? 'Appetite needs an assessment' : 'Within the delegated residual band'}</p>
     <p className="mt-1">{adopted.policy.statement}</p>
-    <p className="mt-1">{position === 'within' ? 'The owner, assumptions and review date still matter. Acceptance remains material to the board.' : 'You can record an exception, with reasons and a review date. Include it in the board paper; recording it here does not establish board approval.'}</p>
+    <p className="mt-1">{position === 'within' ? 'Keep the owner and review date current.' : 'This is above the line: record an exception, with reasons and a review date, and put it in the board paper.'}</p>
   </div>
 }

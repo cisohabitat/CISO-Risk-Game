@@ -417,6 +417,11 @@ changes.
   campaign, and leave the original campaign available for export/comparison.
 - Paused-work guidance must describe the actual lack of delivery progress,
   without promising that resuming alone clears staffing or blockers.
+- Do not answer a playtester's misreading with a disclaimer sentence. Fix the
+  label or layout first; where a note is still needed, keep it to one short
+  sentence in the game's voice (`docs/VOICE.md`, "What the game never says").
+  On 14 November a subtraction pass cut 26 such lines that had accumulated in
+  two weeks of fixes.
 - Decision option effect lines name what each option buys as well as what it
   costs, true to its effects and without a verdict (`docs/CONTENT.md`,
   "Every option buys something and costs something").

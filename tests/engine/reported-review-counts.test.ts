@@ -39,7 +39,7 @@ it('separates hidden dependencies from a fully discovered system inventory', () 
   expect(unseen.systems).toHaveLength(0)
   expect(unseen.dependencies.length).toBeGreaterThan(0)
   const dimension = buildAnnualReview(state, index).dimensions.find((item) => item.id === 'blind-spots')!
-  expect(dimension.evidence.some((line) => line.includes('dependencies were never discovered, separately from the system count'))).toBe(true)
+  expect(dimension.evidence.some((line) => line.includes('dependencies were never discovered, of '))).toBe(true)
   expect(dimension.evidence.some((line) => line.includes('systems and dependencies'))).toBe(false)
 })
 it('delivers an unfunded-promise consequence only while the programme is unstarted', () => {

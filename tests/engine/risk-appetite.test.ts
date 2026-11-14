@@ -61,7 +61,7 @@ it('names omitted exceptions and distinguishes reporting from approval without a
   expect(omitted.boardReaction).toContain(index.riskScenario.get(risk.id)!.title)
   expect(omitted.effects.filter((effect) => effect.type === 'board.confidence')).toEqual([{ type: 'board.confidence', delta: -0.06 }])
   const covered = buildQuarterReview(state, index, { quarter: 1, topics: [`risk:${risk.id}`], recommendations: [], communicateUncertainty: false })
-  expect(covered.boardReaction).toContain('does not establish approval')
+  expect(covered.boardReaction).toContain('The committee has heard the risks accepted above its line')
   expect(JSON.stringify(state)).toBe(before)
 })
 it('retains the adopted statement across a year boundary and a deferred replacement', () => {

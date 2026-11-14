@@ -80,7 +80,7 @@ export function CampaignFeedbackView({ kind }: { kind: 'decision' | 'quarter' })
       <div className="border-t border-line pt-3 sm:border-t-0 sm:border-l sm:pl-4 sm:pt-0"><h3 className="document-kicker">What needs attention</h3>
         <p className="mt-2 text-xs text-ink-faint">Current position · {shortDate(state.currentDay)}</p>
         {concerns.length > 0 ? <ul className="mt-2 space-y-2 text-sm">{concerns.map((line) => <li key={line}>{line}</li>)}</ul>
-          : <p className="mt-2 text-sm text-ink-muted">No concerns in these records. This does not establish that all risks are controlled.</p>}
+          : <p className="mt-2 text-sm text-ink-muted">No concerns in these records.</p>}
         <p className="mt-2 text-sm text-ink-muted">{plural(outstanding.length, 'open decision')} · {plural(blocked.length, 'blocked programme')}</p>
       </div>
     </div>

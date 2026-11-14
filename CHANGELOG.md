@@ -22,6 +22,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Cut the disclaimers that had built up around the Briefing, Board, Risk,
+  Team and Programmes screens and the year-end review ("These categories make
+  up the attention total", "A draft is not a submission", "This is a subset of
+  … not an additional count"). Where a note was doing real work it is now one
+  short sentence. The risk-appetite decision is rewritten in the game's voice:
+  "How much risk can you accept without asking?"
+
 - Show year-end review loading and recovery instructions, hold time during the
   download and protect another campaign from a delayed review. Acknowledge empty
   papers, clarify recovery/discovery evidence, offer spare-attention enquiry

@@ -122,7 +122,7 @@ export function InvestigationPanel() {
         <SectionHeading><span id="available-work">Lines of enquiry</span></SectionHeading>
         <p className="mb-4 text-sm text-ink-muted">Commission a check to gather evidence before deciding what to do. Choose a leader, allow time for the work, then read the result in your Inbox and assess it in Risk.</p>
         <p className="mb-4 text-sm">Start with one question, not every enquiry. Choose one check that speaks to a concern you can explain, read its result, then decide what is still uncertain. The list is a menu, not a weekly checklist.</p>
-        {coached && available.length > 3 && <div className="mb-4 text-sm"><p>{showAll ? 'The full menu is open.' : 'A short starting menu is shown. Affordable checks linked to your visible top concern come first; this does not establish which evidence will come back clean.'}</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => setShowAll((value) => !value)}>{showAll ? 'Return to starter view' : `Show all ${available.length} available enquiries`}</Button></div>}
+        {coached && available.length > 3 && <div className="mb-4 text-sm"><p>{showAll ? 'The full menu is open.' : 'A short starting menu, with checks linked to your top concern first.'}</p><Button variant="secondary" size="sm" className="mt-2" onClick={() => setShowAll((value) => !value)}>{showAll ? 'Return to starter view' : `Show all ${available.length} available enquiries`}</Button></div>}
         {available.length === 0 ? (
           <EmptyState
             title="Nothing left to commission"

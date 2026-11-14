@@ -74,6 +74,7 @@ that person at work — not like the game.
 | A score, points, a percentage on an assessment | No universal cyber score (plan §2.9) | A band in words |
 | "Hackers", "cyber-attack!", "you've been hacked" | Cartoon register (plan §3.3) | The actor's objective and what they did |
 | "Click", "tap", "press" in content | Content is the organisation, not the UI | The action itself: "commission", "decide" |
+| "This does not establish…", "not an additional count", "a draft is not a submission" | A disclaimer answers a misreading by adding a sentence, and enough of them bury the screen | Fix the layout or the label; if a sentence is still needed, one short one in the world's voice ("Accepting a risk does not reduce it") |
 | What the player has not discovered | Hidden truth stays hidden | What they know, with how they know it |
 
 A character may say any of these words in character — the CFO's

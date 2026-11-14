@@ -105,7 +105,6 @@ it('offers a factual note during a quiet decision week', () => {
   useGameStore.setState({ state })
   render(<QuietWeekNote />)
   expect(screen.getByLabelText('A quieter week')).toHaveTextContent('No new decision has arrived in the last seven days')
-  expect(screen.getByLabelText('A quieter week')).toHaveTextContent('does not establish that risk has fallen')
 })
 
 it('explains the attention total and exposes decisions beyond the initial four', () => {

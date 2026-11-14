@@ -20,7 +20,7 @@ export function DecisionDeadlines() {
   return <div aria-label="Decision deadlines" className={visible ? 'mb-4 rounded-lg border border-band-high/50 bg-band-high-soft p-3' : undefined} role="status">
     {due.length > 0 && <p className="font-medium">{skipHeld ? 'Skip ahead is held for a waiting decision' : 'Work approaching its deadline'}</p>}
     {quarter !== undefined && <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-      <span>Q{quarter} board paper ready · reports Q{quarter} results · submit by {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}. A draft is not a submission.</span>
+      <span>Q{quarter} board paper ready · reports Q{quarter} results · submit by {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}.</span>
       <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('board')}>Review board paper</Button>
     </div>}
     {due.length > 0 && <p className="mt-1 text-sm">Pause time to review them. Unanswered decisions will be taken out of your hands at their deadline.</p>}
