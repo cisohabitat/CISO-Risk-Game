@@ -59,9 +59,11 @@ export function record(kind: SessionEvent['kind'], data: Record<string, unknown>
   if (!isRecording()) return
   const target = current()
   if (target.events.length >= LIMIT) return
-  const day = useGameStore.getState().state?.currentDay
+  const campaign = useGameStore.getState().state
+  const day = campaign?.currentDay
   const at = Date.now() - Date.parse(target.startedAt)
-  target.events.push({ at, ...(day === undefined ? {} : { day }), kind, ...data })
+  // Tagged with its campaign, so an export can hold this campaign only.
+  target.events.push({ at, ...(day === undefined ? {} : { day }), ...(campaign ? { gameId: campaign.gameId } : {}), kind, ...data })
   try {
     localStorage.setItem(KEY, JSON.stringify(target))
   } catch {
@@ -121,8 +123,15 @@ function campaignOf(state: NonNullable<ReturnType<typeof useGameStore.getState>[
   return { gameId: state.gameId, seed: state.seed, difficulty: state.difficulty, situation: state.situationId ?? null }
 }
 
-export function sessionLogJson(): string {
-  return JSON.stringify(current(), null, 2)
+/**
+ * The log as a file. With a campaign open, only that campaign's events: the
+ * log lives in the browser, and an export once carried every campaign played
+ * on the device since recording began (15-run playtest, November).
+ */
+export function sessionLogJson(gameId = useGameStore.getState().state?.gameId): string {
+  const whole = current()
+  if (!gameId) return JSON.stringify(whole, null, 2)
+  return JSON.stringify({ ...whole, events: whole.events.filter((event) => event.gameId === gameId) }, null, 2)
 }
 
 export function clearSessionLog(): void {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { readSeedLink, seedLinkUrl } from '@/lib/seed-link'
+import { readSeedLink, seedLinkUrl, withoutSeedLink } from '@/lib/seed-link'
 import { shareYear } from '@/lib/share-year'
 
 /** Phase 6 of docs/ROADMAP.md: a year as a link, and a finished year to send. */
@@ -54,4 +54,9 @@ describe('a finished year, to send', () => {
   it('has no score in it, because there is none', () => {
     expect(shared.text).not.toMatch(/\bscore\b|\bpoints?\b|\d+\s*(%|\/\s*\d)/i)
   })
+})
+
+it('drops the seed link from the address once its campaign begins, keeping the rest', () => {
+  expect(withoutSeedLink('https://example.test/?seed=corvus-70788&mode=ciso&situation=sit-new-money&playtest')).toBe('/?playtest=')
+  expect(withoutSeedLink('https://example.test/?seed=quarry-1')).toBe('/')
 })

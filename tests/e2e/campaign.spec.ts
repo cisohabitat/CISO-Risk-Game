@@ -534,10 +534,13 @@ test.describe('a first year at Nexora', () => {
         continue
       }
 
-      const board = page.getByRole('button', { name: /Prepare the Q\d board paper/ })
+      // A paper in its final week holds Skip ahead, so a player answers it.
+      const board = page.getByRole('button', { name: /(Prepare|Open) the Q\d board paper/ }).first()
       if (await board.isVisible().catch(() => false)) {
         await board.click()
         const dialog = page.getByRole('dialog')
+        // "Open" changes screen first; read the paper once it is there.
+        await expect(dialog.getByRole('button', { name: 'Take it to the board' })).toBeVisible()
         await acknowledgeEmptyPaper(dialog)
         await dialog.getByRole('button', { name: 'Take it to the board' }).click()
         if (await dialog.getByRole('alert').isVisible()) {

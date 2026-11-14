@@ -42,3 +42,15 @@ export function seedLinkUrl(origin: string, link: Required<Pick<SeedLink, 'seed'
   if (link.situation) params.set('situation', link.situation)
   return `${origin}/?${params.toString()}`
 }
+
+/**
+ * The address without its seed link, once the campaign it asked for has begun.
+ * Kept in the address, it set the seed and situation again on every return to
+ * the start screen, so a later campaign replayed the shared one unasked
+ * (15-run playtest, November). Other parameters, such as `playtest`, stay.
+ */
+export function withoutSeedLink(href: string): string {
+  const url = new URL(href)
+  for (const key of ['seed', 'mode', 'situation']) url.searchParams.delete(key)
+  return `${url.pathname}${url.search}${url.hash}`
+}

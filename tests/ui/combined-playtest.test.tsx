@@ -19,7 +19,7 @@ it.each([1, 2, 3])('announces the Q%i paper from its opening date, not just near
   useGameStore.setState({ state })
   render(<DecisionDeadlines />)
   expect(screen.getByRole('status')).toHaveTextContent(`Q${quarter} board paper ready`)
-  expect(screen.getByRole('button', { name: 'Review board paper' })).toBeVisible()
+  expect(screen.getByRole('button', { name: `Open the Q${quarter} board paper` })).toBeVisible()
 })
 it('preserves deliberate agenda edits when returning from Risk', () => {
   const state = structuredClone(useGameStore.getState().state!)
@@ -62,9 +62,10 @@ it('warns of the paper deadline even when no decision is open', () => {
   state.decisions.openIds = []
   useGameStore.setState({ state })
   render(<DecisionDeadlines />)
-  expect(screen.getByText(/Q1 board paper/)).toBeVisible()
-  fireEvent.click(screen.getByRole('button', { name: 'Review board paper' }))
+  expect(screen.getByText(/Q1 board paper ready/)).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: 'Open the Q1 board paper' }))
   expect(useGameStore.getState().ui.screen).toBe('board')
+  expect(useGameStore.getState().ui.openBoardPaper).toBe(true)
 })
 it('quotes an unaffordable promise before recording it and keeps the actual funding gap visible', () => {
   const store = useGameStore.getState()

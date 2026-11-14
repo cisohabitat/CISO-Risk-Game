@@ -359,6 +359,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // in the debrief phase before the incident closes, and the response panel
   // calls recovery of 0.95 "Recovered"; a year ending in either window said
   // "still running" beside restored services (practitioner playtest, November).
+  // A supplier's breach is not an incident in Nexora's estate, and the review
+  // said "no material incident" beside a confirmed People Cloud breach of
+  // staff data (15-run playtest, November). Say whose it was.
+  const supplierBreach = state.events.firedEventIds.includes('evt-org-hr-provider-incident')
+  const quietYear = supplierBreach
+    ? "No incident reached Nexora's own systems this year; the breach at People Cloud was the supplier's"
+    : 'No material incident reached the business this year'
   const stillRunning = incidents.some((i) => i.phase !== 'closed' && i.phase !== 'debrief' && !(i.phase === 'recovery' && i.recovery >= RESPONSE_DONE))
   // A production restore taken in the fourth quarter is an exercise as much
   // as a commissioned test is; it is recorded as a flag by the decision.
@@ -412,9 +419,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         } as const)[band(resilience)]
       : exercised
         ? restoreOverran
-          ? 'No material incident reached the business this year. The production restore you ran went past its window, and that is the clearest evidence you have of how recovery would have gone.'
-          : 'No material incident reached the business this year. What recovery capability you did exercise is the only evidence you have that it would have held.'
-        : 'No material incident reached the business this year, and recovery was never exercised. That is an outcome, not a demonstrated capability.',
+          ? `${quietYear}. The production restore you ran went past its window, and that is the clearest evidence you have of how recovery would have gone.`
+          : `${quietYear}. What recovery capability you did exercise is the only evidence you have that it would have held.`
+        : `${quietYear}, and recovery was never exercised. That is an outcome, not a demonstrated capability.`,
     // Grouped by family, because the same kind of incident twice is not two
     // facts, it is one: the same door, still open. Listed flat it read as
     // three identical rows — "Customer data exposure on day 88", "…on day
@@ -565,6 +572,19 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const quarters = [...new Map(state.reviews.quarters.filter((paper) => paper.completed).map((paper) => [paper.quarter, paper])).values()]
   const boardConfidence = state.stakeholders.boardConfidence
   const communication = clamp01(0.6 * boardConfidence + 0.4 * clamp01(quarters.length / 3))
+  // What was kept quiet, named beside the band rather than folded into it: a
+  // year read "the board came to rely on your judgement" after an extortion
+  // demand it never heard about (15-run playtest, November).
+  const QUIET: Record<string, { option: string; line: string }> = {
+    'dec-sit-breach-extortion': { option: 'opt-extortion-silent', line: 'You did not tell the regulator about the extortion demand.' },
+    'dec-cardholder-scope': { option: 'opt-card-fix', line: 'You fixed the card data quietly rather than telling the card-acquiring bank.' },
+    'dec-inc-recall': { option: 'opt-recall-absorb', line: 'You absorbed the misdirected payment inside finance rather than report it.' },
+    'dec-inc-statement': { option: 'opt-statement-quiet', line: 'You fixed the skimmed checkout quietly rather than tell customers.' },
+    'dec-sit-tidy-numbers': { option: 'opt-tidy-quiet', line: "You corrected your predecessor's figure without telling the committee it had changed." },
+  }
+  const keptQuiet = Object.values(state.decisions.decisions)
+    .filter((decision) => decision.selectedOptionId !== undefined && QUIET[decision.defId]?.option === decision.selectedOptionId)
+    .map((decision) => QUIET[decision.defId]!.line)
   dimensions.push({
     id: 'communication',
     label: 'Communication and escalation',
@@ -574,7 +594,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative: (() => {
       switch (band(communication)) {
         case 'strong':
-          return 'The board came to rely on your judgement, including when you told them what you did not know.'
+          return keptQuiet.length > 0
+            ? 'The board came to rely on your papers, though not everything reached it from you.'
+            : 'The board came to rely on your judgement, including when you told them what you did not know.'
         case 'solid':
           return 'The board followed your argument, and took what you brought them seriously.'
         case 'developing':
@@ -587,6 +609,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       `${papers.submitted} quarterly review${papers.submitted === 1 ? '' : 's'} submitted; ${papers.offered} offered`,
       ...(papers.missed > 0 ? [`${papers.missed} board paper${papers.missed === 1 ? '' : 's'} missed at the submission deadline`] : []),
       ...(papers.awaiting > 0 ? [`${papers.awaiting} paper${papers.awaiting === 1 ? '' : 's'} still awaiting submission`] : []),
+      ...keptQuiet,
     ],
   })
 
@@ -786,7 +809,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       again.length > 0
         ? `You arrived after a breach, to a board asking whether it could happen again. It did: ransomware again on ${dateOf(again[0]!.startedDay)}.`
         : incidents.length > 0
-          ? 'You arrived after a breach, to a board asking whether it could happen again. Not the same way: this year\'s incidents were of other kinds.'
+          ? `You arrived after a breach, to a board asking whether it could happen again. Not by ransomware: this year it was ${[...new Set(incidents.map((i) => (index.incidentFamily.get(i.familyId)?.name ?? 'an incident').toLowerCase()))].join(' and ')}.`
           : 'You arrived after a breach, to a board asking whether it could happen again. This year, it did not.',
     )
   } else if (situation?.id === 'sit-new-money') {

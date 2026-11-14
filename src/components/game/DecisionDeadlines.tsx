@@ -21,12 +21,15 @@ export function DecisionDeadlines() {
     {due.length > 0 && <p className="font-medium">{skipHeld ? 'Skip ahead is held for a waiting decision' : 'Work approaching its deadline'}</p>}
     {quarter !== undefined && <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
       <span>Q{quarter} board paper ready · reports Q{quarter} results · submit by {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}.</span>
-      <Button variant="secondary" size="sm" onClick={() => useGameStore.getState().setScreen('board')}>Review board paper</Button>
+      {screen !== 'board' && <Button variant="secondary" size="sm" onClick={() => { useGameStore.getState().dispatch({ type: 'setSpeed', speed: 'paused' }); setUi({ openBoardPaper: true }); useGameStore.getState().setScreen('board') }}>Open the Q{quarter} board paper</Button>}
     </div>}
     {due.length > 0 && <p className="mt-1 text-sm">Pause time to review them. Unanswered decisions will be taken out of your hands at their deadline.</p>}
     {due.length > 0 && <ul className="mt-2 space-y-2">{due.map((decision) => <li key={decision.id} className="flex flex-wrap items-center justify-between gap-2">
       <span className="text-sm">{decision.title} · {decision.daysRemaining === undefined ? 'no fixed deadline' : decision.daysRemaining <= 0 ? 'due today' : `due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}`}</span>
-      <Button variant="secondary" size="sm" onClick={() => setUi({ openDecisionId: decision.id })}>{skipHeld && screen !== 'home' ? 'Decide' : 'Review'}: {decision.title}</Button>
+      {/* The Briefing's own list already carries this decision's button; a
+          second one there, named differently, read as a duplicate (15-run
+          playtest, November). */}
+      {screen !== 'home' && <Button variant="secondary" size="sm" onClick={() => setUi({ openDecisionId: decision.id })}>Decide: {decision.title}</Button>}
     </li>)}</ul>}
   </div>
 }

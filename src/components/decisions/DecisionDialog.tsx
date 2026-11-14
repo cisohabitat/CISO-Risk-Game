@@ -43,6 +43,13 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
     const target = document.getElementById(id)
     target?.scrollIntoView({ block: 'start' })
     target?.focus({ preventScroll: true })
+    // When the section was already in view the jump showed nothing, and the
+    // buttons read as broken (15-run playtest, November). One quiet pulse,
+    // as a changed value gets, unless motion is reduced.
+    const colour = target ? getComputedStyle(target).getPropertyValue('--accent-soft').trim() : ''
+    if (target?.animate && colour && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      target.animate([{ backgroundColor: 'transparent' }, { backgroundColor: colour, offset: 0.25 }, { backgroundColor: 'transparent' }], { duration: 1000, easing: 'ease-out' })
+    }
   }
 
   const submit = () => {

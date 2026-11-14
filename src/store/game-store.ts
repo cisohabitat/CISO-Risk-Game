@@ -64,6 +64,8 @@ export interface UiState {
   screen: Screen
   riskTab?: string
   boardDraft?: { quarter: number; topics: string[]; recommendations: string[]; uncertainty: boolean }
+  /** Asks the Board screen to open the pending paper when it next shows. */
+  openBoardPaper?: boolean
   selectedNodeId?: string
   selectedScenarioId?: string
   selectedMessageId?: string

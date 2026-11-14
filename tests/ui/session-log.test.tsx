@@ -20,6 +20,17 @@ describe('the playtest session log', () => {
     beginFresh()
   })
 
+  it('exports only the open campaign, not every campaign played on the device', async () => {
+    const first = useGameStore.getState().state!.gameId
+    useGameStore.getState().setScreen('risk')
+    await useGameStore.getState().startNewGame('session-log-second', 'ciso')
+    useGameStore.getState().setScreen('team')
+    const second = useGameStore.getState().state!.gameId
+    expect(events().length).toBeGreaterThan(0)
+    expect(events().every((event) => event.gameId === second)).toBe(true)
+    expect((JSON.parse(sessionLogJson(first)) as SessionLog).events.some((event) => event.screen === 'risk')).toBe(true)
+  })
+
   it('opens on the campaign and the screen', () => {
     const [campaign, screen] = events()
     expect(campaign).toMatchObject({ kind: 'campaign', seed: 'session-log', difficulty: 'ciso', day: 1 })

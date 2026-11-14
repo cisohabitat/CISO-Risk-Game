@@ -27,7 +27,9 @@ a file. Nothing is sent anywhere.
 - **Turn it on** with the facilitator's link, the game's address with
   `?playtest` on the end (for example `https://ciso-risk-game.vercel.app/?playtest`).
   The player sees "Record this session for a playtest" already ticked under
-  **Replay settings** on the start screen, and can untick it.
+  **Replay settings** on the start screen, and can untick it. Without the
+  link it starts unticked for every new campaign: the choice is made per
+  campaign, not remembered from the last one.
 - **While it runs**, a red dot and "Recording this session for a playtest" sit
   at the foot of the left-hand rail (under **More** on a phone), with
   **Export log** and **Stop and export**.
@@ -39,7 +41,9 @@ What it records: the campaign's seed, mode and situation; every screen opened;
 every action taken (decisions, enquiries, programmes, board papers, lessons
 dismissed, speed changes and skips ahead, but not the clock's own daily ticks);
 every time the clock stopped and why; every glossary entry opened; the end of
-the year. Each line carries the game day and the time since the log began.
+the year. Each line carries the game day, the time since the log began and
+its campaign, and an export holds only the open campaign's lines: a log kept
+in a shared browser does not hand over somebody else's year.
 What it never records: a decision's optional typed note, or anything else the
 player typed.
 

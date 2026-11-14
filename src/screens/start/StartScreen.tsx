@@ -9,10 +9,10 @@ import { situationChoices, situationName } from '@/lib/content/situations'
 import { storageAvailable, type SaveSummary } from '@/store/persistence'
 import type { Difficulty } from '@/game/types'
 import { cn } from '@/lib/utils/cn'
-import { setRecording, useRecording } from '@/store/session-recording'
+import { playtestRequested, setRecording } from '@/store/session-recording'
 import { formatGameDate, yearWord } from '@/game/time'
 import { savedAtLabel } from '@/lib/formatting/saved-at'
-import { readSeedLink } from '@/lib/seed-link'
+import { readSeedLink, withoutSeedLink } from '@/lib/seed-link'
 import { StartHero } from './StartHero'
 import { APP_VERSION, APP_REVISION, RELEASE_NOTES_URL } from '@/lib/release'
 
@@ -63,7 +63,11 @@ export function StartScreen() {
   const [link] = useState(() => readSeedLink(window.location.search, situations.map((choice) => choice.id)))
   const [seed, setSeed] = useState(() => link.seed ?? randomSeed())
   const [difficulty, setDifficulty] = useState<Difficulty>(link.mode ?? 'ciso')
-  const recording = useRecording()
+  // Chosen for this campaign, not remembered from the last one: the switch
+  // stayed on in the browser, so a later campaign recorded without anybody
+  // ticking anything (15-run playtest, November). A facilitator's link still
+  // turns it on.
+  const [recordThis, setRecordThis] = useState(playtestRequested)
   const [situation, setSituation] = useState<string>(link.situation ?? situations[0]?.id ?? 'surprise')
   // What the player has asked to delete: one campaign, or everything.
   const [pendingDelete, setPendingDelete] = useState<SaveSummary | 'all' | undefined>()
@@ -82,7 +86,7 @@ export function StartScreen() {
     }
   }
   const latestSave = saves[0]
-  const begin = () => void open('new', () => startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined))
+  const begin = () => void open('new', () => { setRecording(recordThis); if (link.seed) window.history.replaceState(window.history.state, '', withoutSeedLink(window.location.href)); return startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined) })
   const savingUnavailable = !storageAvailable()
 
   useEffect(() => {
@@ -305,7 +309,7 @@ export function StartScreen() {
               arriving as the new CISO, and a first-time player asked to choose
               one before they have started is being asked about the machinery.
             */}
-            <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recording || Boolean(link.seed) || undefined}>
+            <details className="rounded-lg border border-line bg-surface-2/60 p-3" open={recordThis || Boolean(link.seed) || undefined}>
               <summary className="cursor-pointer text-sm font-medium">Replay settings</summary>
               <div className="mt-3">
                 <label htmlFor="campaign-seed" className="mb-2 block text-sm font-semibold uppercase tracking-[0.12em] text-ink-faint">
@@ -332,8 +336,8 @@ export function StartScreen() {
               <label className="mt-4 flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
-                  checked={recording}
-                  onChange={(event) => setRecording(event.target.checked)}
+                  checked={recordThis}
+                  onChange={(event) => setRecordThis(event.target.checked)}
                   className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
                   style={{ minHeight: 0 }}
                   aria-describedby="recording-help"
@@ -341,7 +345,7 @@ export function StartScreen() {
                 <span>
                   <span className="block text-sm font-medium">Record this session for a playtest</span>
                   <span id="recording-help" className="mt-0.5 block text-sm text-ink-muted text-pretty">
-                    Notes what you open and decide, and when, on this device only. Nothing is sent anywhere; you export
+                    Notes what you open and decide in this campaign, and when, on this device only. Nothing is sent anywhere; you export
                     the file and hand it over yourself. No names or typed notes are kept.
                   </span>
                 </span>

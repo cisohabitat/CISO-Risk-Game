@@ -40,9 +40,11 @@ it('keeps the SOC deadline visible and links to its exact decision', () => {
   const decision = openDecision(state, store.index!, 'dec-soc-contract')!
   decision.deadlineDay = state.currentDay + 1
   useGameStore.setState({ state })
+  // On the Briefing the decision list carries the button; elsewhere the strip does.
+  useGameStore.getState().setScreen('risk')
   render(<DecisionDeadlines />)
   expect(screen.getByText(/SOC contract renewal · due in 1 day/)).toBeVisible()
-  fireEvent.click(screen.getByRole('button', { name: 'Review: The SOC contract renewal' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Decide: The SOC contract renewal' }))
   expect(useGameStore.getState().ui.openDecisionId).toBe(decision.id)
 })
 

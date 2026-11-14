@@ -10,9 +10,8 @@ test('Q3 announces its paper on every screen and starts with its material agenda
   Object.values(save.state.risks.scenarios)[0]!.status = 'accepted'
   await openPreparedCampaign(page, save)
   await expect(page.getByRole('status', { name: 'Decision deadlines' })).toContainText('Q3 board paper ready')
-  await page.getByRole('button', { name: 'Review board paper', exact: true }).click()
+  await page.getByRole('button', { name: 'Open the Q3 board paper', exact: true }).click()
   await expect(page.getByText(/Q4 closes in the annual review/)).toBeVisible()
-  await page.getByRole('button', { name: /Prepare the Q3 board paper/ }).click()
   const paper = page.getByRole('dialog')
   await expect(paper.getByLabel('Agenda guidance')).toContainText('No optional agenda updates are available today')
   await expect(paper.getByLabel('Agenda guidance')).toContainText('0 optional updates selected')

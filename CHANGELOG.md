@@ -22,6 +22,17 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Session recording is chosen per campaign, and an exported log holds only the
+  open campaign, not every campaign played in the browser.
+- The annual review names a supplier's breach instead of calling the year
+  incident-free, names what the board or regulator did not hear from you, and
+  names the incidents of a post-breach year rather than "other kinds".
+- A board paper in its final week holds Skip ahead, as a waiting decision
+  does. "Open the board paper" opens it. The Briefing shows each waiting
+  decision once, and names the starting situation beside the date.
+- A shared seed link applies once; returning to the start screen no longer
+  sets up the same campaign again.
+
 - The annual review no longer says an incident was "still running" once its
   services are restored; it counts an incident as running only while the
   business is still affected, as the response panel does.

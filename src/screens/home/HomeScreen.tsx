@@ -80,7 +80,9 @@ export function HomeScreen() {
               : 'Nothing is waiting on you today.'
             : `${plural(wantsYou, 'thing')} ${wantsYou === 1 ? 'needs' : 'need'} your attention.`}
         </h1>
-        <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}</p>
+        {/* The situation, named from the first morning: "Surprise me" told the
+            player its pick only inside a decision paper (15-run playtest, November). */}
+        <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}{state.situationId && index.situation.get(state.situationId) ? ` · ${index.situation.get(state.situationId)!.name}` : ''}</p>
         {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}.</p>}
         {patterns.length > 0 && <p className="mt-2 text-xs text-ink-muted">{plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')} to explore when you have time.</p>}
         {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}

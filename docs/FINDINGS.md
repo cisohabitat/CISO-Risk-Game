@@ -4486,3 +4486,24 @@ incident-mechanics change for the owner.
 never started its second programme (decisions had spent the budget by the time
 the first passed halfway), so it printed the same row as `relevant`. A harness
 fault, fixed 28 October.
+
+## 15 November 2026 — 15-run matrix
+
+Recorded in `docs/playtests/2026-11-15-owner-supplied-fifteen-run-matrix.md`,
+with each finding and how it was closed. Played on `1bbb558`, two weeks behind
+`main`: the hosted build had not been updated since 30 October.
+
+Closed with a failing-first test each: session recording remembered across
+campaigns and exports carrying every campaign in the browser
+(`tests/ui/session-log.test.tsx`); review lines contradicting the year
+(`tests/engine/review-matches-events.test.ts`); a decision listed twice on the
+Briefing and "Review board paper" not opening the paper
+(`tests/e2e/fifteen-run.spec.ts`); board papers not holding Skip ahead
+(`tests/engine/paper-holds-skip.test.ts`); a shared seed link applying on every
+return to the start screen (`tests/content/seed-link.test.ts`).
+
+Measured and left: 39 of 39 budget rises over 20 CISO years are in the
+Briefing's budget ledger with a reason, so the rises are explained but folded
+where players do not look. Not reproduced: a dead Decide button, a stale
+incident view, the overload acknowledgement being bypassable and a 46-day
+Skip (every skip is capped at seven days).

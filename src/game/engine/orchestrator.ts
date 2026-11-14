@@ -15,7 +15,7 @@ import type {
   HypothesisRuntime,
   PauseReason,
 } from '../types'
-import { CAMPAIGN_DAYS, clamp01, money, round2 } from '../types'
+import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, clamp01, money, round2 } from '../types'
 import { recordBudgetMovement } from '../resources/activity'
 import { createRng } from './rng'
 import { applyEffects, recordAssumption, scheduledEffectDay } from './effects'
@@ -181,6 +181,17 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           state.speed = 'paused'
           state.pauseReasons = ['pending-decision']
           return { ok: true, message: `Skip held: ${index.decision.get(waiting.defId)?.title ?? 'a decision'} is waiting. Review it before skipping ahead; choosing a speed still lets you deliberately let time pass.`, ticks: [] }
+        }
+        // A paper in its final week holds Skip as a decision does. It used to
+        // pause once, two days out, and the next Skip carried the year past
+        // the deadline: one 15-run playtest year missed two papers that way.
+        const quarter = state.reviews.pendingQuarter
+        const paperDue = quarter === undefined ? undefined : (quarter + 1) * DAYS_PER_QUARTER - 1
+        if (quarter !== undefined && paperDue !== undefined && paperDue - state.currentDay <= 7) {
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['board-decision']
+          return { ok: true, message: `Skip held: the Q${quarter} board paper is due ${paperDue === state.currentDay ? 'today' : `in ${paperDue - state.currentDay} days`}. Submit it before skipping ahead; choosing a speed still lets the deadline pass.`, ticks: [] }
         }
       }
       const ticks: TickResult[] = []

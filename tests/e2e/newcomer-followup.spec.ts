@@ -49,7 +49,7 @@ test('an impending decision remains visible across screens and time pauses befor
     await expect(page.getByRole('button', { name: 'Resume time', exact: true })).toBeVisible()
   }
   await expect(notice.getByText(/due in 1 day/).first()).toBeVisible()
-  await notice.getByRole('button', { name: /^Review:/ }).first().click()
+  await notice.getByRole('button', { name: /^Decide:/ }).first().click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await expect(page.getByRole('dialog').getByText(/This is due today|Due in 1 day/)).toBeVisible()
 })

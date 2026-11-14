@@ -669,6 +669,10 @@ schemas and a referential integrity pass. These counts include both years:
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.
 
+Session recording is chosen per campaign, and an exported log holds the open
+campaign only. A board paper in its final week holds Skip ahead as a waiting
+decision does.
+
 The annual review calls an incident still running only while the business is
 affected; restored services read as recovered there as on the response panel.
 

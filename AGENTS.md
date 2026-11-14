@@ -417,6 +417,13 @@ changes.
   campaign, and leave the original campaign available for export/comparison.
 - Paused-work guidance must describe the actual lack of delivery progress,
   without promising that resuming alone clears staffing or blockers.
+- Session recording is chosen per campaign on the start screen (a
+  `/?playtest` link pre-ticks it), and every logged event carries `gameId`;
+  `sessionLogJson` exports the open campaign only. Do not add a log line
+  without going through `record`.
+- Skip ahead holds for a waiting decision and for a board paper in its final
+  week (`advance` with `stopOnUpdate`). A shared seed link is removed from the
+  address once its campaign begins (`withoutSeedLink`).
 - "Contained" and "Recovered" on the response panel and "still running" in the
   annual review share one threshold, `RESPONSE_DONE` in
   `src/game/incidents/thresholds.ts`; change it there, not in either reader.

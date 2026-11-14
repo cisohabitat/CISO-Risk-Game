@@ -4,7 +4,7 @@
  * put in front of people, not in writing a document.
  */
 import { RiskAppetite } from '@/components/game/RiskAppetite'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, Dialog, Disclosure, EmptyState, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { stakeholderViews, visibleRisks } from '@/store/selectors'
@@ -25,8 +25,13 @@ export function BoardScreen() {
   const index = useCampaignIndex()
   const dispatch = useGameStore((store) => store.dispatch)
   const draft = useGameStore((store) => store.ui.boardDraft)
-  const [preparing, setPreparing] = useState(Boolean(draft && draft.quarter === state?.reviews.pendingQuarter))
-  const [topics, setTopics] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.topics ?? [] : [])
+  // "Review board paper" on the deadline strip opened this screen and left the
+  // player to find the paper (15-run playtest, November); it opens the paper.
+  const [asked] = useState(() => useGameStore.getState().ui.openBoardPaper === true && state?.reviews.pendingQuarter !== undefined)
+  const [preparing, setPreparing] = useState(Boolean(draft && draft.quarter === state?.reviews.pendingQuarter) || asked)
+  const [topics, setTopics] = useState<string[]>(() => draft?.quarter === state?.reviews.pendingQuarter
+    ? draft?.topics ?? []
+    : asked && state ? materialTopics(state, index).filter((topic) => topic.material).map((topic) => topic.id) : [])
   const [recommendations, setRecommendations] = useState<string[]>(draft?.quarter === state?.reviews.pendingQuarter ? draft?.recommendations ?? [] : [])
   const [omissionsAcknowledged, setOmissionsAcknowledged] = useState<string>('')
   const [reviewOmissions, setReviewOmissions] = useState(false)
@@ -54,6 +59,9 @@ export function BoardScreen() {
   const raisedRisks = state ? visibleRisks(state, index).filter((risk) => risk.status !== 'emerging') : []
   const omitted = availableTopics.filter((topic) => topic.material && !topics.includes(topic.id))
   const omissionKey = `${state?.reviews.pendingQuarter}:${omitted.map((topic) => topic.id).sort().join('|')}`
+  const openPaper = () => { dispatch({ type: 'setSpeed', speed: 'paused' }); if (draft?.quarter !== state?.reviews.pendingQuarter) setTopics(requiredIds); setEmptyAcknowledged(false); setPreparing(true) }
+  // The request is read once, as the screen opens with the paper showing.
+  useEffect(() => { if (useGameStore.getState().ui.openBoardPaper) useGameStore.getState().setUi({ openBoardPaper: undefined }) }, [])
   if (!state) return null
 
   const pendingQuarter = state.reviews.pendingQuarter
@@ -101,7 +109,7 @@ export function BoardScreen() {
           <h1 className="mt-2 font-display text-3xl leading-tight">Board and executives</h1>
         </div>
         {pendingQuarter !== undefined && (
-          <Button variant="primary" onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); if (draft?.quarter !== pendingQuarter) setTopics(requiredIds); setEmptyAcknowledged(false); setPreparing(true) }}>
+          <Button variant="primary" onClick={openPaper}>
             Prepare the Q{pendingQuarter} board paper
             <span className="font-normal opacity-80"> · {FOCUS_COSTS.boardPreparation} attention</span>
           </Button>
