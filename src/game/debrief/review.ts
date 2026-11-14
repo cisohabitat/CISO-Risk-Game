@@ -22,6 +22,7 @@ import { effortAllocation, programmeRelevance, programmesThisYear } from './prio
 import { overallAssessment } from './assessment'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
+import { RESPONSE_DONE } from '../incidents/thresholds'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export { programmesThisYear } from './prioritisation'
@@ -354,7 +355,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         ) / recoveryControls.length
 
   const tested = incidents.length > 0
-  const stillRunning = incidents.some((i) => i.phase !== 'closed')
+  // Running means the business is still affected. Restored services sit a day
+  // in the debrief phase before the incident closes, and the response panel
+  // calls recovery of 0.95 "Recovered"; a year ending in either window said
+  // "still running" beside restored services (practitioner playtest, November).
+  const stillRunning = incidents.some((i) => i.phase !== 'closed' && i.phase !== 'debrief' && !(i.phase === 'recovery' && i.recovery >= RESPONSE_DONE))
   // A production restore taken in the fourth quarter is an exercise as much
   // as a commissioned test is; it is recorded as a flag by the decision.
   const restoreTaken = state.flags['recovery.tested'] === true

@@ -4459,3 +4459,30 @@ preflight could not see that private prefix, so that preflight was disabled.
 The actual WebKit browser tests ran normally; CI uses standard installed runtime
 libraries and keeps its normal preflight. No CI checks or layout assertions were
 relaxed.
+
+## 14 November 2026 — practitioner playtest
+
+**"Still running" beside restored services.** Reported by a security
+practitioner (`docs/playtests/2026-11-14-owner-supplied-practitioner.md`): a
+ransomware year closed with services restored and the review said the incident
+"was still running when the year was written up". The review counted any
+incident not yet closed as running; restored services spend a day in debrief
+before closing, and recovery of 0.95 already reads "Recovered" on the response
+panel. Running now means the business is still affected, with one threshold
+shared by both (`src/game/incidents/thresholds.ts`). Closed by
+`tests/engine/incident-still-running.test.ts`, which fails without the fix.
+
+**Board submission replies twice: not reproduced.** One committee reply per
+paper in the engine and through the interface (prepared `board` save, desktop
+Chromium). Open until the practitioner's screenshot shows the path.
+
+**The December pile-up is an incident's response set.** Over 40 CISO seeds
+answered at each deadline, 8 years had three or more decisions due within three
+days after day 300; each cluster was one incident's response decisions, which
+open together with two-day deadlines. Left as measured: staggering them is an
+incident-mechanics change for the owner.
+
+**Earlier this month, in the probe:** `scripts/tune.ts`'s `balanced` policy
+never started its second programme (decisions had spent the budget by the time
+the first passed halfway), so it printed the same row as `relevant`. A harness
+fault, fixed 28 October.

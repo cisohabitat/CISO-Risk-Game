@@ -417,6 +417,9 @@ changes.
   campaign, and leave the original campaign available for export/comparison.
 - Paused-work guidance must describe the actual lack of delivery progress,
   without promising that resuming alone clears staffing or blockers.
+- "Contained" and "Recovered" on the response panel and "still running" in the
+  annual review share one threshold, `RESPONSE_DONE` in
+  `src/game/incidents/thresholds.ts`; change it there, not in either reader.
 - Do not answer a playtester's misreading with a disclaimer sentence. Fix the
   label or layout first; where a note is still needed, keep it to one short
   sentence in the game's voice (`docs/VOICE.md`, "What the game never says").

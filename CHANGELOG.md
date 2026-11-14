@@ -22,6 +22,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The annual review no longer says an incident was "still running" once its
+  services are restored; it counts an incident as running only while the
+  business is still affected, as the response panel does.
+
 - Cut the disclaimers that had built up around the Briefing, Board, Risk,
   Team and Programmes screens and the year-end review ("These categories make
   up the attention total", "A draft is not a submission", "This is a subset of

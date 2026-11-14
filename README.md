@@ -669,6 +669,9 @@ schemas and a referential integrity pass. These counts include both years:
 `pnpm validate:content` checks for missing ids, duplicate ids, impossible event
 conditions, unreachable decisions, invalid effect targets and dependency cycles.
 
+The annual review calls an incident still running only while the business is
+affected; restored services read as recovered there as on the response panel.
+
 Interface text answers a likely misreading by fixing the label or layout, not
 by adding a disclaimer; where a note is needed it is one short sentence in the
 game's voice (`docs/VOICE.md`).

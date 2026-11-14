@@ -1,3 +1,4 @@
+import { RESPONSE_DONE } from '@/game/incidents/thresholds'
 import { unreadUpdateCount } from '@/game/inbox/messages'
 import { programmeDeliveryPercent } from '@/game/programmes/reporting'
 import { discoveryCounts } from '@/game/knowledge/discovery'
@@ -869,7 +870,7 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
   }
 
   const progressLabel = (value: number, done: string, most: string, some: string, none: string): string =>
-    value >= 0.95 ? done : value >= 0.6 ? most : value >= 0.25 ? some : none
+    value >= RESPONSE_DONE ? done : value >= 0.6 ? most : value >= 0.25 ? some : none
 
   return {
     id: incident.id,
