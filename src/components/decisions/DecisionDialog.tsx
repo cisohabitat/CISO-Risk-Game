@@ -6,7 +6,7 @@ import { ProgrammePromiseQuote } from '@/components/game/ProgrammeCommitments'
  * stay hidden until they arrive. For material decisions the player records why,
  * using quick-select rationale tags rather than mandatory prose.
  */
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Dialog } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { Terms } from '@/components/game/Terms'
@@ -28,6 +28,20 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
     return openDecisions(state, index).find((item) => item.id === decisionId)
   }, [state, index, decisionId])
 
+  // The jump links help only where the paper scrolls. On a desktop the whole
+  // paper usually fits, and two buttons that changed nothing visible read as
+  // broken in two playtests (15-run matrix and its replay, November).
+  const nav = useRef<HTMLElement>(null)
+  const [scrolls, setScrolls] = useState(true)
+  useEffect(() => {
+    const area = nav.current?.closest<HTMLElement>('.scroll-area')
+    if (!area || typeof ResizeObserver === 'undefined') return
+    const check = () => setScrolls(area.scrollHeight > area.clientHeight + 40)
+    const observer = new ResizeObserver(check)
+    observer.observe(area)
+    for (const child of Array.from(area.children)) observer.observe(child)
+    return () => observer.disconnect()
+  }, [])
   if (!state || !decision) return null
 
   // Only the reasons this decision can be taken for. Offering the whole
@@ -88,7 +102,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
       descriptionInBody
       footer={
         <>
-          <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}` : 'Choose an option to continue'}</span>
+          <span className="mr-auto w-full text-sm text-ink-muted sm:w-auto" aria-live="polite">{selected ? `Selected: ${selected.label}${needsRationale && selected.affordable ? '. This decision needs at least one reason before you commit.' : ''}` : 'Choose an option to continue'}</span>
           <Button variant="quiet" onClick={onClose}>
             Not yet
           </Button>
@@ -113,10 +127,10 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
               : `Due in ${decision.daysRemaining} day${decision.daysRemaining === 1 ? '' : 's'}.`}
           </p>
         )}
-        <nav aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
+        <nav ref={nav} aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
           <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available now (of {state.resources.focusPerWeek} per week)</span>
-          <Button variant="quiet" size="sm" onClick={() => moveTo('decision-options')}>Compare options</Button>
-          <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>
+          {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-options')}>Compare options</Button>}
+          {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>}
         </nav>
         <section aria-labelledby="decision-context" className="decision-context">
           <h3 id="decision-context" className="document-kicker mb-2"><span aria-hidden="true" className="paper-number">01</span>The situation</h3>

@@ -16,7 +16,7 @@ const TOLERANCE_DRAG = 0.02
  * met all five (15-run playtest, November). At 0.15 two programmes fit the
  * margin and building more still shows in delivery.
  */
-const PROGRAMME_DRAG = 0.15
+const PROGRAMME_DRAG = 0.08
 
 export interface ObjectiveTickResult {
   achieved: string[]

@@ -64,6 +64,15 @@ function authoredLines(
     .map((line) => (typeof line === 'string' ? line : line.text))
 }
 
+/**
+ * Days of delivery every objective loses per unit of consequence above the
+ * floor: a moderate incident stays with the security team, a severe one takes
+ * the organisation with it (0.5 costs 12 days, 0.7 costs 24, 0.9 costs 36).
+ */
+const DIVERSION_DAYS = 60
+/** Below this consequence the response stays with the security team. */
+const DIVERSION_FLOOR = 0.3
+
 export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): IncidentTickResult {
   const result: IncidentTickResult = { effects: [], transitions: [], openDecisionIds: [], interrupts: false }
 
@@ -109,6 +118,18 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
         applyServiceDisruption(state, index, incident, result.effects)
         if (incident.containment >= 1 || daysInPhase > family.baseDurationDays * 2) {
           enter('consequence', 'The actor has been pushed out. The damage is now being counted.')
+          // The whole organisation was in the response, not only the services
+          // it touched: every objective in delivery loses days to it, scaled
+          // by how bad it was. Without this a cost-cutter's ransomware year met
+          // all five objectives (fresh-build 15-run replay, November).
+          if (incident.consequence >= DIVERSION_FLOOR) {
+            const days = Math.round(DIVERSION_DAYS * (incident.consequence - DIVERSION_FLOOR))
+            for (const objective of index.content.objectives) {
+              const runtime = state.business.objectives[objective.id]
+              if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue
+              result.effects.push({ type: 'objective.delay', objectiveId: objective.id, days })
+            }
+          }
         }
         break
       }

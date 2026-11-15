@@ -88,6 +88,7 @@ export function StartScreen() {
   const latestSave = saves[0]
   const begin = () => void open('new', () => { setRecording(recordThis); if (link.seed) window.history.replaceState(window.history.state, '', withoutSeedLink(window.location.href)); return startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined) })
   const savingUnavailable = !storageAvailable()
+  const selectionLabel = `${DIFFICULTIES.find((option) => option.id === difficulty)?.label ?? difficulty} · ${situation === 'surprise' ? 'Surprise me' : situationName(situation) ?? 'The inherited mess'}`
 
   useEffect(() => {
     void refreshSaves()
@@ -119,7 +120,7 @@ export function StartScreen() {
         onBegin={begin}
         onContinue={latestSave ? () => void open(latestSave.key, () => loadGame(latestSave.key)) : undefined}
         resumeLabel={latestSave ? `Latest save · ${formatGameDate(latestSave.day).label} · ${latestSave.seed}` : undefined}
-        selectionLabel={`${DIFFICULTIES.find((option) => option.id === difficulty)?.label ?? difficulty} · ${situation === 'surprise' ? 'Surprise me' : situationName(situation) ?? 'The inherited mess'}`}
+        selectionLabel={selectionLabel}
         savingUnavailable={savingUnavailable}
       />
       <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -352,6 +353,10 @@ export function StartScreen() {
               </label>
             </details>
 
+            {/* The difficulty and the situation are separate choices; a player
+                who picked a situation began at the default difficulty without
+                noticing (fresh-build 15-run replay, run 3). Both, beside Begin. */}
+            <p className="text-sm text-ink-muted" data-testid="begin-selection">You will begin: <span className="font-medium text-ink">{selectionLabel}</span></p>
             <Button
               variant="primary"
               size="lg"

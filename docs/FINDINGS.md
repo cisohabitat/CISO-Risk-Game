@@ -4526,3 +4526,16 @@ CI (run 410, WebKit included). The 15-run matrix had found production on
 `1bbb558`; deployment from `main` resumed rather than being broken. Still a
 person's step (`docs/HOSTING.md`, 13–14): `pnpm test:e2e:live` against the
 deployed URL and the Functions tab showing no invocations.
+
+## 15 November 2026 — fresh-build replay of the 15-run matrix
+
+Recorded in `docs/playtests/2026-11-15-owner-supplied-fresh-build-replay.md`.
+The practitioner's double board reply, unreproduced on 14 November, was a
+paper submitted twice: the engine accepted any quarter. Closed by
+`tests/engine/paper-once.test.ts`. Run 4's seven silent lapses traced to a
+held Skip read as a dead button; the header's pause chip now opens what holds
+the clock (auto-opening on Skip was tried and dropped: it blocked the Risk
+screen's hold). The
+cost-cutter balance was closed with an organisation-wide incident diversion
+(60 days per unit of consequence above 0.3) and programme drag at 0.08: idle
+3.3 and two-at-once 3.2 objectives on 25 CISO seeds, ladder monotone.

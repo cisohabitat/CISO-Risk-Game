@@ -145,17 +145,26 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
           // the header and repeated what the Briefing leads with; still
           // announced. On a 768px tablet it squeezed the date and budget to
           // "8 Febru…" and "£1.7m le…" whenever it showed (AI tablet playtest).
-          <span
-            data-reason={reasons[0]}
-            className={cn(
+          // What holds the clock, as a way in: a hold reported only in words
+          // read as a dead Skip button, and a player who switched to a speed
+          // instead let seven decisions lapse (15-run replay, run 4).
+          (() => {
+            const className = cn(
               'rounded-full border px-2.5 py-1 text-xs font-medium max-lg:sr-only',
               blocked && reasons[0] !== 'incident'
                 ? 'border-band-high/40 bg-band-high-soft text-band-high'
                 : PAUSE_REASON_TONE[reasons[0]!],
-            )}
-          >
-            {PAUSE_REASON_TEXT[reasons[0]!]}
-          </span>
+            )
+            const waiting = state.decisions.openIds.find((id) => state.decisions.decisions[id]?.resolvedDay === undefined)
+            const opens = (reasons[0] === 'pending-decision' || reasons[0] === 'decision-deadline') && waiting
+              ? () => useGameStore.getState().setUi({ openDecisionId: waiting })
+              : reasons[0] === 'board-decision' && state.reviews.pendingQuarter !== undefined && useGameStore.getState().ui.screen !== 'board'
+                ? () => { useGameStore.getState().setUi({ openBoardPaper: true }); useGameStore.getState().setScreen('board') }
+                : undefined
+            return opens
+              ? <button type="button" data-reason={reasons[0]} className={cn(className, 'compact cursor-pointer hover:brightness-95')} onClick={opens}>{PAUSE_REASON_TEXT[reasons[0]!]}</button>
+              : <span data-reason={reasons[0]} className={className}>{PAUSE_REASON_TEXT[reasons[0]!]}</span>
+          })()
         )}
       </span>
     </div>

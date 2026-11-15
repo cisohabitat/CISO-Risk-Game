@@ -418,12 +418,17 @@ changes.
 - Paused-work guidance must describe the actual lack of delivery progress,
   without promising that resuming alone clears staffing or blockers.
 - Each running programme slows every business objective by its friction times
-  `PROGRAMME_DRAG` (0.15, owner-approved 15 November). Change it there and
+  `PROGRAMME_DRAG` (0.08, owner-approved 15 November), and a material incident
+  costs every objective in delivery `DIVERSION_DAYS` per unit of consequence
+  above 0.3 (`src/game/incidents/engine.ts`). Change it there and
   re-run `pnpm tsx scripts/tune.ts 25` and `pnpm ladder sweep 15`. A delay
   larger than an objective's progress so far is owed as days of no progress
   (`delayOwedDays`), so an early delay is never free.
 - The annual review caps team sustainability at solid with three or more
   vacancies, and prioritisation at solid when no enquiry was commissioned.
+- `completeQuarterReview` accepts only the pending quarter. The header's
+  pause chip opens what holds the clock (a waiting decision, the board paper);
+  a held Skip does not open a dialog itself, so the Risk screen's hold stays.
 - Session recording is chosen per campaign on the start screen (a
   `/?playtest` link pre-ticks it), and every logged event carries `gameId`;
   `sessionLogJson` exports the open campaign only. Do not add a log line

@@ -22,6 +22,16 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- A board paper is recorded once, however often it is submitted: the
+  committee's reply no longer arrives twice, and its attention is spent once.
+- The header's "A decision is waiting" and board-paper chips open what is
+  holding the clock, so a held Skip ahead no longer looks like a dead button.
+- A serious incident now costs the whole business time, not only the
+  services it touched, so an idle year that is hit pays for it in objectives.
+  Security programmes slow delivery less.
+- The decision footer says when a reason is needed; the start screen shows
+  difficulty and situation together above Begin; "Prepare it" opens the paper.
+
 - Security programmes slow the business less: two at once now fit inside a
   business objective's schedule margin, so building the usual programmes no
   longer costs nearly every objective. Running more at once still shows, and

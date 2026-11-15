@@ -13,6 +13,7 @@ describe('replies to commitments made near year end', () => {
   it('judges late risk-led priorities against papers from the year that made the commitment', () => {
     const state = newGame(index, { seed: 'late-priorities-papers' })
     state.currentDay = 350
+    state.reviews.pendingQuarter = 3
     expect(applyAction(state, index, {
       type: 'completeQuarterReview', quarter: 3, topics: [], recommendations: [], communicateUncertainty: true,
     }).ok).toBe(true)

@@ -110,7 +110,9 @@ export function HomeScreen() {
                   What the board hears about this quarter, and what they do not, is your call.
                 </p>
               </div>
-              <Button variant="primary" size="sm" onClick={() => setScreen('board')}>
+              {/* Opens the paper, as the deadline strip does; it opened the Board
+                  screen and left the player to find it (15-run replay, run 10). */}
+              <Button variant="primary" size="sm" onClick={() => { useGameStore.getState().dispatch({ type: 'setSpeed', speed: 'paused' }); useGameStore.getState().setUi({ openBoardPaper: true }); setScreen('board') }}>
                 Prepare it
               </Button>
             </CardBody>

@@ -786,6 +786,12 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
     }
 
     case 'completeQuarterReview': {
+      // Only the paper that is pending. A second submission of the same
+      // quarter (a double press, or the omission warning's own button) was
+      // recorded again: the committee's reply came twice in the inbox and the
+      // Board history, and the attention was spent twice (practitioner and
+      // 15-run replay playtests, November).
+      if (state.reviews.pendingQuarter !== action.quarter) return fail(`The Q${action.quarter} paper is not awaiting submission.`)
       if (!spendFocus(state, FOCUS_COSTS.boardPreparation)) {
         return fail('Board preparation takes attention you do not have this week.')
       }
