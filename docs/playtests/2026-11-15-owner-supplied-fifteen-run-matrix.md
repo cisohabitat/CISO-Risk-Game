@@ -70,7 +70,28 @@ Checked and left alone:
   and the draws, and different choices (here, risks raised later) take a
   different path through them.
 
-For the owner, not changed:
+Changed on the owner's instruction ("fix and deploy", 15 November):
+
+- **Programme drag on business delivery** cut from 0.25 to 0.15 of each
+  programme's friction, and **early delays made real**: a delay larger than
+  the progress made so far is owed as days of no progress, where before it
+  was clamped away (opposing the launch on day 22 cost nothing). Over 25 CISO
+  seeds, objectives met: business-first 4.7 (was 4.3), defensive 4.4 (4.2),
+  middle-option idle 3.9 (4.8), one programme 3.6 (4.0), two at once 3.3
+  (2.8). The ladder's objectives missed per programme stay monotone,
+  0.41 / 0.45 / 0.58 across guided, CISO and high pressure.
+- **Team sustainability** is capped at solid with three or more posts empty at
+  year end, with a line saying so.
+- **Prioritisation** is capped at solid in a year with no enquiry.
+
+Left as they were, with the reason:
+
+- Communication strong in a year of severe incidents: the board judges what
+  it is told (`CLAUDE.md`, "Incidents do not move the board"); what the
+  player kept from it is now named.
+- Inbox volume: needs authored content cut or merged, not a fix.
+
+The original list for the owner:
 
 - **Cost-cutting meets every business objective.** Runs 3, 5, 10 and 12 spent
   almost nothing, met 5/5 objectives and were punished only by the review's

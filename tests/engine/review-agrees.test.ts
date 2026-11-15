@@ -166,6 +166,8 @@ describe('the annual review, in the situations a played year rarely reaches', ()
     }
     const def = index.programme.get('prog-ransomware')!
     expect(applyAction(state, index, { type: 'startProgramme', programmeId: def.id, budget: def.budgetCost }).ok).toBe(true)
+    // A strong year has looked before aiming.
+    state.team.assignments.push({ id: 'enquiry', kind: 'investigation', refId: index.content.investigations.find((item) => /recovery/i.test(item.name))!.id, title: 'An enquiry', leaderId: index.content.leaders[0]!.id, startedDay: 1, dueDay: 20, progress: 1, capacityPerDay: {}, status: 'complete' } as never)
     const prioritisation = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'prioritisation')!
     expect(prioritisation.band, 'the arrangement did not reach the strong band this sentence belongs to').toBe('strong')
     expect(prioritisation.narrative).toContain('Recovery fails when it is needed among it')

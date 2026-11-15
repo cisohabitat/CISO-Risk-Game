@@ -364,7 +364,13 @@ export function applyEffect(
       // business promised the market stays where it was.
       objective.delayDays += effect.days
       const span = Math.max(30, def.targetDay - Math.round(def.targetDay * 0.12))
-      objective.progress = clamp01(objective.progress - effect.days / span)
+      // What progress cannot pay is owed in days of no progress. Taken only
+      // from progress, a delay early in delivery cost nothing: opposing the
+      // launch on day 22 took 45 days from an objective at 1% delivered.
+      const lost = effect.days / span
+      const owed = Math.max(0, lost - objective.progress)
+      objective.progress = clamp01(objective.progress - lost)
+      if (owed > 0) objective.delayOwedDays = (objective.delayOwedDays ?? 0) + Math.round(owed * span)
       break
     }
     case 'objective.status': {

@@ -255,7 +255,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // of it by seed — an undirected year reading as an exemplary one on half the
   // runs, and unreadably on the rest. The top band is for having aimed.
   const aim = Math.pow(effort.allocation, 1.4)
-  const prioritisation = clamp01(decidedTerm * (0.32 + 0.68 * aim) * (0.9 + 0.1 * recordedTerm))
+  // Aimed well without looking is a good guess, not prioritisation: a year
+  // with no enquiry at all read "what you committed to was what mattered"
+  // (15-run playtest, November). Without one, solid at most.
+  const enquiries = state.team.assignments.filter((assignment) => assignment.kind !== 'programme-oversight').length
+  const prioritisation = Math.min(enquiries === 0 ? 0.74 : 1, clamp01(decidedTerm * (0.32 + 0.68 * aim) * (0.9 + 0.1 * recordedTerm)))
   dimensions.push({
     id: 'prioritisation',
     label: 'Prioritisation',
@@ -276,6 +280,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         case 'strong':
           return `What you committed to was what mattered${biggest ? `, ${biggest} among it` : ''}.${lapses}`
         case 'solid':
+          if (enquiries === 0 && aim >= 0.6) return `What you committed to mattered, though you commissioned no enquiry to know it would.${lapses}`
           return effort.missed
             ? `Most of your effort went where it counted, though ${effort.missed.title} never had any of it${missedStanding(state, index, effort.missed.id)}.${lapses}`
             : `Most of your effort went where it counted.${lapses}`
@@ -631,7 +636,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // nobody happened to be overloaded on the last day of the year, and a
   // low-strain term carried the score. You cannot call a team sustainable when
   // part of it is finished, however rested the rest of it looks.
-  const ceiling = spent.length >= 2 ? 0.29 : spent.length === 1 ? 0.51 : 1
+  // Rested because little was asked of it is not the same as able to do it
+  // again: a cost-cutter's team, three posts held empty, read "strong" (15-run
+  // playtest, November). With three or more vacancies it can be solid at most.
+  const vacancies = functions.reduce((sum, fn) => sum + fn.vacancies, 0)
+  const ceiling = spent.length >= 2 ? 0.29 : spent.length === 1 ? 0.51 : vacancies >= 3 ? 0.74 : 1
   const sustainability = Math.min(ceiling, clamp01(0.55 * morale + 0.45 * (1 - strain)))
   dimensions.push({
     id: 'team-sustainability',
@@ -645,7 +654,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       spent.length > 0
         ? `Your ${spent.map((fn) => functionName(fn.fn)).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
         : sustainability >= 0.52
-          ? morale > 0.6
+          ? vacancies >= 3
+            ? `Your team ends the year rested, with ${vacancies} posts empty; a year that asked more of it would find the gap.`
+            : morale > 0.6
             ? 'Your team ends the year in a state where they could do this again next year.'
             : `Your team ends the year intact, with less in reserve than ${laterYear ? 'another' : 'a second'} year like this one would need.`
           : morale > 0.6

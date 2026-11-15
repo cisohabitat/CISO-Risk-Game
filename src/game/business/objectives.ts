@@ -8,6 +8,15 @@ import { clamp01 } from '../types'
 
 /** Weight of the patience shortfall in delivery friction. Tuned on the ladder. */
 const TOLERANCE_DRAG = 0.02
+/**
+ * How much each running security programme slows every objective, times its
+ * own `businessFriction`. At 0.25, identity and ransomware together used up an
+ * objective's whole schedule margin, so a player who built the usual two
+ * programmes met 0–3 of 5 objectives at 87–97% delivered while a cost-cutter
+ * met all five (15-run playtest, November). At 0.15 two programmes fit the
+ * margin and building more still shows in delivery.
+ */
+const PROGRAMME_DRAG = 0.15
 
 export interface ObjectiveTickResult {
   achieved: string[]
@@ -52,7 +61,7 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
       if (programme.status !== 'active' && programme.status !== 'at-risk') continue
       const programmeDef = index.programme.get(programme.id)
       if (!programmeDef) continue
-      friction += programmeDef.businessFriction * 0.25
+      friction += programmeDef.businessFriction * PROGRAMME_DRAG
     }
     // How much patience the organisation has left for security work, as a
     // standing drag rather than a cliff. The old term bit only below 0.45,
@@ -67,7 +76,10 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
     // delivery date out rather than quietly making the objective easier.
     const span = Math.max(30, def.targetDay - startDay)
     const rate = (1 / (span * 0.9)) * support * clamp01(1 - friction)
-    runtime.progress = clamp01(runtime.progress + rate)
+    // A delay owed from before there was progress to take it from.
+    const owed = runtime.delayOwedDays ?? 0
+    if (owed > 0) runtime.delayOwedDays = owed - 1
+    else runtime.progress = clamp01(runtime.progress + rate)
 
     if (runtime.progress >= 1) {
       runtime.status = 'achieved'

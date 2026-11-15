@@ -22,6 +22,14 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Security programmes slow the business less: two at once now fit inside a
+  business objective's schedule margin, so building the usual programmes no
+  longer costs nearly every objective. Running more at once still shows, and
+  a delay you cause early in a project now costs it even before much has been
+  delivered.
+- The annual review no longer calls a team strong with three or more posts
+  left empty, or prioritisation strong in a year with no enquiry.
+
 - Session recording is chosen per campaign, and an exported log holds only the
   open campaign, not every campaign played in the browser.
 - The annual review names a supplier's breach instead of calling the year

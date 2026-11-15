@@ -350,6 +350,12 @@ describe('reviews', () => {
             rationaleTagIds: [def.rationaleTagIds?.[0] ?? 'rat-within-tolerance'],
           })
         }
+        // Aiming means having looked: a strong year needs an enquiry.
+        if (style === 'aims' && day === 6) {
+          for (const investigation of index.content.investigations) {
+            if (applyAction(state, index, { type: 'startInvestigation', investigationId: investigation.id, leaderId: index.content.leaders[0]!.id }).ok) break
+          }
+        }
         if (style === 'aims' && started < 2 && day > 5) {
           const def = index.programme.get(ranked[started]!.id)
           if (!def) throw new Error(`${ranked[started]!.id} is not a real programme id`)

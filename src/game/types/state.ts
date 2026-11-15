@@ -458,6 +458,11 @@ export interface BusinessObjectiveRuntime {
   status: 'planned' | 'active' | 'at-risk' | 'achieved' | 'failed'
   targetDay: number
   delayDays: number
+  /**
+   * Days of delivery still owed to a delay that arrived before there was
+   * progress to take it from. Absent in older saves.
+   */
+  delayOwedDays?: number
   conditionsAttached: string[]
   securitySupported: boolean
 }

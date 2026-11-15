@@ -4507,3 +4507,15 @@ Briefing's budget ledger with a reason, so the rises are explained but folded
 where players do not look. Not reproduced: a dead Decide button, a stale
 incident view, the overload acknowledgement being bypassable and a 46-day
 Skip (every skip is capped at seven days).
+
+**Owner follow-up, 15 November.** Programme drag on business delivery cut
+from 0.25 to 0.15 of friction. Lowering it exposed a defect the old drag had
+hidden: `objective.delay` took days only from progress already made and was
+clamped at zero, so opposing the launch on day 22 cost nothing
+(`tests/engine/ciso-closing.test.ts` caught it). The unpaid part is now owed
+as days of no progress. On 25 CISO seeds, objectives met: business-first 4.7,
+defensive 4.4, middle-option idle 3.9 (was 4.8), one programme 3.6, two at
+once 3.3 (was 2.8); the ladder stays monotone per programme
+(0.41 / 0.45 / 0.58). Team sustainability capped at solid with
+three or more vacancies, prioritisation at solid with no enquiry
+(`tests/engine/review-scoring-caps.test.ts`).

@@ -417,6 +417,13 @@ changes.
   campaign, and leave the original campaign available for export/comparison.
 - Paused-work guidance must describe the actual lack of delivery progress,
   without promising that resuming alone clears staffing or blockers.
+- Each running programme slows every business objective by its friction times
+  `PROGRAMME_DRAG` (0.15, owner-approved 15 November). Change it there and
+  re-run `pnpm tsx scripts/tune.ts 25` and `pnpm ladder sweep 15`. A delay
+  larger than an objective's progress so far is owed as days of no progress
+  (`delayOwedDays`), so an early delay is never free.
+- The annual review caps team sustainability at solid with three or more
+  vacancies, and prioritisation at solid when no enquiry was commissioned.
 - Session recording is chosen per campaign on the start screen (a
   `/?playtest` link pre-ticks it), and every logged event carries `gameId`;
   `sessionLogJson` exports the open campaign only. Do not add a log line
