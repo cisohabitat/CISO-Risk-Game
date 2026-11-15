@@ -7,7 +7,8 @@ import { Badge, Button, Card, CardBody, Dialog, Disclosure } from '@/components/
 import { useGameStore } from '@/store/game-store'
 import { situationChoices, situationName } from '@/lib/content/situations'
 import { storageAvailable, type SaveSummary } from '@/store/persistence'
-import type { Difficulty } from '@/game/types'
+import { money, type Difficulty } from '@/game/types'
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { cn } from '@/lib/utils/cn'
 import { playtestRequested, setRecording } from '@/store/session-recording'
 import { formatGameDate, yearWord } from '@/game/time'
@@ -88,6 +89,15 @@ export function StartScreen() {
   const latestSave = saves[0]
   const begin = () => void open('new', () => { setRecording(recordThis); if (link.seed) window.history.replaceState(window.history.state, '', withoutSeedLink(window.location.href)); return startNewGame(seed.trim() || randomSeed(), difficulty, situations.length > 0 ? situation : undefined) })
   const savingUnavailable = !storageAvailable()
+  // The budget the year will open with, once the campaign (fetched while this
+  // screen is up) says what the base is: it appeared only in the first
+  // briefing (42e2b80 playtest, runs 6, 9 and 12). Read from the mode's
+  // profile, as the engine does; "Surprise me" depends on what it picks.
+  const baseBudget = useGameStore((store) => store.index?.content.meta.startingBudget)
+  const chosenSituation = situationChoices.find((choice) => choice.id === situation)
+  const openingBudget = baseBudget !== undefined && (chosenSituation || situations.length === 0)
+    ? Math.round(baseBudget * DIFFICULTY_PROFILES[difficulty].budgetMultiplier) + (chosenSituation?.budgetDelta ?? 0)
+    : undefined
   const selectionLabel = `${DIFFICULTIES.find((option) => option.id === difficulty)?.label ?? difficulty} · ${situation === 'surprise' ? 'Surprise me' : situationName(situation) ?? 'The inherited mess'}`
 
   useEffect(() => {
@@ -356,7 +366,7 @@ export function StartScreen() {
             {/* The difficulty and the situation are separate choices; a player
                 who picked a situation began at the default difficulty without
                 noticing (fresh-build 15-run replay, run 3). Both, beside Begin. */}
-            <p className="text-sm text-ink-muted" data-testid="begin-selection">You will begin: <span className="font-medium text-ink">{selectionLabel}</span></p>
+            <p className="text-sm text-ink-muted" data-testid="begin-selection">You will begin: <span className="font-medium text-ink">{selectionLabel}</span>{openingBudget !== undefined ? <> · a cyber budget of <span className="font-medium text-ink">{money(openingBudget)}</span></> : situation === 'surprise' ? ' · the budget depends on the situation' : ''}</p>
             <Button
               variant="primary"
               size="lg"

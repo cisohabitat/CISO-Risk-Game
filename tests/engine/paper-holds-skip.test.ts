@@ -17,14 +17,25 @@ function atDaysBeforeDeadline(days: number) {
 
 it('holds Skip ahead in a paper\'s final week', () => {
   const state = atDaysBeforeDeadline(5)
+  state.reviews.paperNoticedQuarter = 2
   const result = applyAction(state, index, { type: 'advance', days: 7, stopOnUpdate: true })
   expect(result.message).toContain('the Q2 board paper is due in 5 days')
   expect(state.currentDay).toBe(3 * DAYS_PER_QUARTER - 6)
   expect(state.pauseReasons).toEqual(['board-decision'])
 })
 
+it('holds Skip once for a paper it has not stopped for, then lets it run', () => {
+  const state = atDaysBeforeDeadline(60)
+  const first = applyAction(state, index, { type: 'advance', days: 7, stopOnUpdate: true })
+  expect(first.message).toContain('the Q2 board paper is ready')
+  expect(state.currentDay).toBe(3 * DAYS_PER_QUARTER - 61)
+  applyAction(state, index, { type: 'advance', days: 7, stopOnUpdate: true })
+  expect(state.currentDay).toBeGreaterThan(3 * DAYS_PER_QUARTER - 61)
+})
+
 it('lets Skip run while the deadline is further off, and a chosen speed run past it', () => {
   const early = atDaysBeforeDeadline(30)
+  early.reviews.paperNoticedQuarter = 2
   applyAction(early, index, { type: 'advance', days: 7, stopOnUpdate: true })
   expect(early.currentDay).toBeGreaterThan(3 * DAYS_PER_QUARTER - 31)
   const late = atDaysBeforeDeadline(2)

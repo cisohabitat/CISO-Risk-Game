@@ -724,7 +724,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const capabilityTested = exercises.length > 0 || restoreTaken || sandboxRestore ||
     (tested && !stillRunning && resilience >= 0.52)
   const assessment = overallAssessment(dimensions, capabilityTested)
-  const headline = chooseHeadline(dimensions, incidents.length > 0)
+  const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning)
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`
 
@@ -879,6 +879,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
 
   // Name only observed authored follow-through from a recorded selection.
+  // Each follow-up belongs to one choice: a decision taken in two incidents
+  // claimed the same messages twice, and the review printed the same "Recorded
+  // cost" line twice (42e2b80 playtest, run 12).
+  const claimed = new Set<string>()
   for (const entry of state.history.decisionsLog) {
     const runtime = state.decisions.decisions[entry.decisionId]
     const def = runtime && index.decision.get(runtime.defId)
@@ -896,6 +900,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       if (!event || !negative(event.effectsOnReveal ?? [])) continue
       returns.push(...state.inbox.messages.filter((message) => message.eventId === event.id && message.day >= entry.day))
     }
+    const own = [...new Map(returns.filter((message) => !claimed.has(message.id)).map((message) => [message.id, message])).values()]
+    for (const message of own) claimed.add(message.id)
+    returns.length = 0
+    returns.push(...own)
     if (returns.length > 0) narrative.push(`Recorded cost of "${option.label}" in "${def.title}"${runtime.resolvedByDefault ? ' (deadline default)' : ''}: ${returns.map((message) => `${message.subject} on ${dateOf(message.day)}`).join('; ')}.`)
   }
 
@@ -948,7 +956,7 @@ function previousYearLine(state: GameState): string | undefined {
  * dimensions that actually diverged: the strongest, the weakest, and the
  * tension between them.
  */
-export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean): string {
+export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false): string {
   const score = (id: string) => {
     const dimension = dimensions.find((d) => d.id === id)
     return dimension ? bandValue(dimension.band) : 0.5
@@ -994,16 +1002,23 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   if (strong('programme-execution') && failing('team-sustainability')) {
     return 'You built the capability on people who cannot do it again.'
   }
+  // What happened before what was missed. Blind spots are weak in most years,
+  // and tested first they named five very different years alike: a quiet
+  // year that built both programmes, a month of ransomware, five incidents,
+  // and a year that closed mid-ransomware (42e2b80 playtest, November).
+  if (stillRunning) return 'The year closed with an incident still running.'
   if (hadIncident && strong('resilience')) return 'Tested, and it held.'
   if (failing('team-sustainability')) return 'Delivered on the backs of people who cannot do it again.'
-  if (hadIncident && weakest.id === 'resilience') return 'Tested, and it did not hold.'
-  if (failing('blind-spots')) return 'A year spent acting on a picture you never verified.'
+  if (hadIncident && (weakest.id === 'resilience' || weak('resilience'))) return 'Tested, and it did not hold.'
+  if (!hadIncident && business >= 0.68 && programme >= 0.68) {
+    return 'A quiet year that bought the organisation real capability.'
+  }
+  if (failing('blind-spots')) {
+    return hadIncident ? 'A year spent acting on a picture you never verified.' : 'A quiet year, on a picture nobody checked.'
+  }
   if (weak('risk-understanding')) return 'A year of decisions taken on an inherited picture.'
   if (strong('communication') && strong('risk-understanding')) {
     return 'You made cyber risk legible to the people who decide.'
-  }
-  if (!hadIncident && business >= 0.68 && programme >= 0.68) {
-    return 'A quiet year that bought the organisation real capability.'
   }
   if (!hadIncident) return 'A quiet year. Whether that was judgement or fortune is worth asking.'
 

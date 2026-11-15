@@ -22,6 +22,14 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- A rehearsed recovery shortens how long a serious incident takes the
+  business away from its own work; an unrehearsed one lengthens it.
+- The annual headline now follows the year that was played: a year that
+  closed mid-incident, an incident that held or did not, or a quiet year,
+  before what went unexamined. Each recorded cost is listed once.
+- Skip ahead stops once for a newly opened board paper; the start screen
+  shows the opening budget; "Compare options" lays the options side by side.
+
 - A board paper is recorded once, however often it is submitted: the
   committee's reply no longer arrives twice, and its attention is spent once.
 - The header's "A decision is waiting" and board-paper chips open what is

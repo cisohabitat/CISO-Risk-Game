@@ -203,9 +203,9 @@ been fixed and moved to `docs/FINDINGS.md`.
   that way.** The ladder's business row is confounded by how much the player
   builds: guided affords 2.7 programmes against high pressure's 1.3, and a
   programme costs delivery, so guided misses about as many objectives as high
-  pressure does. Per programme started the ladder is monotone — 0.32 / 0.55 /
-  0.89 across the modes since 15 November (0.78 / 0.82 / 1.67 before), and
-  objectives missed are now monotone too (0.87 / 1.07 / 1.13) — and
+  pressure does. Per programme started the ladder is monotone — 0.34 / 0.59 /
+  0.89 across the modes since 16 November (0.78 / 0.82 / 1.67 before), and
+  objectives missed are now monotone too (0.93 / 1.13 / 1.13) — and
   `pnpm ladder sweep` prints both. Read the per programme figure, or compare
   modes at equal build. On 15 November the owner had each programme's drag on
   delivery cut from 0.25 to 0.08 of its friction (`PROGRAMME_DRAG` in
@@ -215,9 +215,10 @@ been fixed and moved to `docs/FINDINGS.md`.
   became days owed (`delayOwedDays`): opposing the launch on day 22 had cost
   nothing. A material incident now diverts the whole organisation: every
   objective in delivery loses 60 days per unit of consequence above 0.3
-  (`DIVERSION_DAYS` in `src/game/incidents/engine.ts`). On 25 CISO seeds
-  (`scripts/tune.ts`) objectives met now read business-first 4.6, defensive
-  4.3, middle-option idle 3.3 (was 4.8), two programmes at once 3.2 (was 2.8).
+  (`DIVERSION_DAYS` in `src/game/incidents/engine.ts`), scaled since 16
+  November by how ready recovery was. On 25 CISO seeds (`scripts/tune.ts`)
+  objectives met now read business-first 4.6, defensive 4.3, middle-option
+  idle 3.1 (was 4.8), two programmes at once 3.2 (was 2.8).
 
 - **Incidents do not move the board.** Board confidence changes through the
   papers, a missed paper and authored decisions; an incident, however bad,

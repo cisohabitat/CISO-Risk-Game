@@ -123,7 +123,12 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
           // by how bad it was. Without this a cost-cutter's ransomware year met
           // all five objectives (fresh-build 15-run replay, November).
           if (incident.consequence >= DIVERSION_FLOOR) {
-            const days = Math.round(DIVERSION_DAYS * (incident.consequence - DIVERSION_FLOOR))
+            // A rehearsed recovery gets people back to their own work sooner:
+            // the passive year that met every objective after three weeks of
+            // ransomware, and the prepared one held to one of five, read the
+            // same response the same way (42e2b80 playtest, runs 11 and 8).
+            const preparedness = 1.5 - recoveryStrength(state, index)
+            const days = Math.round(DIVERSION_DAYS * (incident.consequence - DIVERSION_FLOOR) * preparedness)
             for (const objective of index.content.objectives) {
               const runtime = state.business.objectives[objective.id]
               if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue

@@ -420,7 +420,11 @@ changes.
 - Each running programme slows every business objective by its friction times
   `PROGRAMME_DRAG` (0.08, owner-approved 15 November), and a material incident
   costs every objective in delivery `DIVERSION_DAYS` per unit of consequence
-  above 0.3 (`src/game/incidents/engine.ts`). Change it there and
+  above 0.3, times (1.5 − recovery strength) (`src/game/incidents/engine.ts`).
+- The annual headline tells the year before what it missed: an incident still
+  running, an incident held or not, a quiet capable year, then blind spots
+  (`chooseHeadline`). Skip holds once for a pending paper it has not stopped
+  for (`paperNoticedQuarter`). Change it there and
   re-run `pnpm tsx scripts/tune.ts 25` and `pnpm ladder sweep 15`. A delay
   larger than an objective's progress so far is owed as days of no progress
   (`delayOwedDays`), so an early delay is never free.

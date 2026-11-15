@@ -4539,3 +4539,14 @@ screen's hold). The
 cost-cutter balance was closed with an organisation-wide incident diversion
 (60 days per unit of consequence above 0.3) and programme drag at 0.08: idle
 3.3 and two-at-once 3.2 objectives on 25 CISO seeds, ladder monotone.
+
+## 16 November 2026 — 15-run matrix on 42e2b80
+
+Recorded in `docs/playtests/2026-11-16-owner-supplied-42e2b80-matrix.md`.
+Closed: incident diversion scaled by recovery readiness (idle 3.1, two
+programmes 3.2 objectives on 25 CISO seeds; ladder monotone; soak clean);
+headline order and duplicated recorded costs
+(`tests/engine/review-headlines.test.ts`); Skip holding once for a newly
+pending paper (`tests/engine/paper-holds-skip.test.ts`). Not reproduced:
+committee responses duplicated in history, through submission, reload and
+resume; the Board history lists one row per quarter as a safeguard.

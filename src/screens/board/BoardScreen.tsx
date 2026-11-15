@@ -236,7 +236,10 @@ export function BoardScreen() {
           <SectionHeading><span id="past">Previous board meetings</span></SectionHeading>
           <p className="text-sm text-ink-muted">These are submitted records, not additional open papers. Only the current paper above awaits submission.</p>
           <ul className="space-y-2">
-            {state.reviews.quarters.map((quarter) => (
+            {/* One row per quarter, as the annual review counts them: a
+                duplicated committee response was reported in six runs of the
+                42e2b80 playtest and could not be reproduced. */}
+            {[...new Map(state.reviews.quarters.map((quarter) => [quarter.quarter, quarter])).values()].map((quarter) => (
               <li key={quarter.quarter}>
                 <div className="record-row sm:grid sm:grid-cols-[8rem_1fr] sm:gap-4">
                     <p className="font-medium">Quarter {quarter.quarter}</p>

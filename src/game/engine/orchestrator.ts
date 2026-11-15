@@ -182,6 +182,18 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           state.pauseReasons = ['pending-decision']
           return { ok: true, message: `Skip held: ${index.decision.get(waiting.defId)?.title ?? 'a decision'} is waiting. Review it before skipping ahead; choosing a speed still lets you deliberately let time pass.`, ticks: [] }
         }
+        // A paper Skip has not yet stopped for holds it once. The quarter-end
+        // pause stops a running Skip, but a player who crossed the quarter at
+        // speed and then pressed Skip went past an open paper (42e2b80
+        // playtest, runs 9 and 13).
+        const pending = state.reviews.pendingQuarter
+        if (pending !== undefined && state.reviews.paperNoticedQuarter !== pending) {
+          state.reviews.paperNoticedQuarter = pending
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['board-decision']
+          return { ok: true, message: `Skip held: the Q${pending} board paper is ready. Prepare it now, or press Skip ahead again to continue; it is due by the end of Q${pending + 1}.`, ticks: [] }
+        }
         // A paper in its final week holds Skip as a decision does. It used to
         // pause once, two days out, and the next Skip carried the year past
         // the deadline: one 15-run playtest year missed two papers that way.

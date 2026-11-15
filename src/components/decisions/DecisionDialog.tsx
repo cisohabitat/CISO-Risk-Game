@@ -22,6 +22,10 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
   const [optionId, setOptionId] = useState<string | undefined>()
   const [tags, setTags] = useState<string[]>([])
   const [note, setNote] = useState('')
+  // "Compare options" only scrolled to the options, which on most screens are
+  // already in view: two playtests read it as a dead button. It now lays the
+  // options side by side, cost and known effects in one table.
+  const [comparing, setComparing] = useState(false)
 
   const decision: OpenDecisionView | undefined = useMemo(() => {
     if (!state) return undefined
@@ -129,7 +133,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         )}
         <nav ref={nav} aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
           <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available now (of {state.resources.focusPerWeek} per week)</span>
-          {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-options')}>Compare options</Button>}
+          <Button variant="quiet" size="sm" aria-expanded={comparing} aria-controls="decision-comparison" onClick={() => setComparing((value) => !value)}>{comparing ? 'Hide comparison' : 'Compare options'}</Button>
           {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>}
         </nav>
         <section aria-labelledby="decision-context" className="decision-context">
@@ -149,6 +153,17 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
             <span aria-hidden="true" className="paper-number">02</span>
             Your options
           </legend>
+          {comparing && <div id="decision-comparison" className="mb-3 overflow-x-auto rounded-lg border border-line">
+            <table className="w-full text-left text-sm">
+              <caption className="sr-only">The options side by side</caption>
+              <thead className="bg-surface-2 text-xs text-ink-faint"><tr><th scope="col" className="p-2 font-medium">Option</th><th scope="col" className="p-2 font-medium">Costs</th><th scope="col" className="p-2 font-medium">Known effects</th></tr></thead>
+              <tbody>{decision.options.map((option) => <tr key={option.id} className="border-t border-line align-top">
+                <th scope="row" className="p-2 font-medium text-pretty">{option.label}</th>
+                <td className="p-2 tabular-nums text-ink-muted">{[option.budgetCost !== undefined ? money(option.budgetCost) : '', option.focusCost !== undefined ? `${option.focusCost} attention` : ''].filter(Boolean).join(' · ') || 'None stated'}</td>
+                <td className="p-2 text-ink-muted text-pretty">{option.visibleKnownEffects.join('; ') || 'None stated'}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>}
           {decision.options.map((option) => (
             <label
               key={option.id}
