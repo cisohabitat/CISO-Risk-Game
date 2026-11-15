@@ -4519,3 +4519,10 @@ once 3.3 (was 2.8); the ladder stays monotone per programme
 (0.41 / 0.45 / 0.58). Team sustainability capped at solid with
 three or more vacancies, prioritisation at solid with no enquiry
 (`tests/engine/review-scoring-caps.test.ts`).
+
+**Hosted build, 15 November.** The owner reports the live site serving
+`6abd39e`, the revision that passed `pnpm check`, the local browser suite and
+CI (run 410, WebKit included). The 15-run matrix had found production on
+`1bbb558`; deployment from `main` resumed rather than being broken. Still a
+person's step (`docs/HOSTING.md`, 13–14): `pnpm test:e2e:live` against the
+deployed URL and the Functions tab showing no invocations.
