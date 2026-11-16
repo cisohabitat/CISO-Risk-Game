@@ -18,7 +18,7 @@ test('the accelerated exploit decision explains uncertainty, costs and all respo
   await expect(paper).toContainText('SOC capacity until the announced patch window')
   await paper.getByRole('radio', { name: /Restrict the affected route until patching/ }).check()
   await expect(paper).toContainText('Delays platform launch work')
-  await paper.getByRole('button', { name: 'Your reasons', exact: true }).click()
+  await paper.getByRole('button', { name: 'Jump to your reasons', exact: true }).click()
   await paper.getByRole('button', { name: 'The consequence is material', exact: true }).click()
   await expect(paper.getByRole('button', { name: 'Commit to this', exact: true })).toBeInViewport()
   await paper.getByRole('button', { name: 'Commit to this', exact: true }).click()

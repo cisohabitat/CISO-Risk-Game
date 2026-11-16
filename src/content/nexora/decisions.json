@@ -67,7 +67,7 @@
       "title": "The CEO wants your three risks",
       "description": "Twenty-three minutes is up. Marianne Okafor wants to know what she should be worried about.",
       "context": "You have had a morning's notice and whatever days you took since. What you say now sets expectations for the year, and she will remember whether you pretended to know more than you did.",
-      "deadlineDays": 1,
+      "deadlineDays": 2,
       "defaultOptionId": "opt-ceo-vague",
       "requiresRationale": false, "rationaleTagIds": ["rat-more-evidence", "rat-material", "rat-exec-ownership", "rat-precedent", "rat-regulatory"],
       "relatedNodeIds": [],

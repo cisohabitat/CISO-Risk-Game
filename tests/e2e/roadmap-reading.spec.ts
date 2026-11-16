@@ -110,7 +110,7 @@ test('decision shortcuts reach options and reasons without losing the fixed acti
   await paper.getByRole('button', { name: 'Hide comparison', exact: true }).click()
   await expect(paper.getByRole('table', { name: 'The options side by side' })).toHaveCount(0)
   await paper.getByRole('radio').first().check()
-  await paper.getByRole('button', { name: 'Your reasons', exact: true }).click()
+  await paper.getByRole('button', { name: 'Jump to your reasons', exact: true }).click()
   await expect(paper.locator('#decision-why')).toBeFocused()
   await expect(paper.locator('#decision-why')).toBeInViewport()
   await expect(paper.getByRole('button', { name: 'Commit to this', exact: true })).toBeInViewport()

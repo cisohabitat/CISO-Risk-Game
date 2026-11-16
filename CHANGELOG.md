@@ -22,6 +22,11 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- "The CEO wants your three risks" has two days, like every other decision,
+  so the clock stops the day before it would be decided for you.
+- Submitting a board paper says the committee's reply is in your inbox,
+  rather than repeating it over the inbox.
+
 - A rehearsed recovery shortens how long a serious incident takes the
   business away from its own work; an unrehearsed one lengthens it.
 - The annual headline now follows the year that was played: a year that

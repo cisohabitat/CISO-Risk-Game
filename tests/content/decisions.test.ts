@@ -192,3 +192,16 @@ describe('blockers do not retell a decision', () => {
     }
   })
 })
+
+describe('a decision always gets a stop before it lapses', () => {
+  // The CEO's three risks had one day: the clock stopped as it arrived, and a
+  // player who pressed a speed then lost it the next morning with no "due
+  // tomorrow" stop (535a241 playtest, run 10). Incident decisions open with
+  // two days whatever their own figure says.
+  it('gives every decision opened by content at least two days', () => {
+    for (const decision of parseCampaignContent(nexoraContentRaw).decisions) {
+      if (decision.id.startsWith('dec-inc-') || decision.deadlineDays === undefined) continue
+      expect(decision.deadlineDays, decision.id).toBeGreaterThanOrEqual(2)
+    }
+  })
+})

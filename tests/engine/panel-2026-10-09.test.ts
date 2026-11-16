@@ -20,7 +20,9 @@ describe('the board paper', () => {
     })
     expect(result.ok).toBe(true)
     const kept = state.inbox.messages.find((m) => m.subject === 'The committee on your Q1 paper')
-    expect(kept?.body).toBe(result.message)
+    expect(kept?.body).toBe(state.reviews.quarters.at(-1)!.boardReaction)
+    // The notification points to the reply rather than repeating it over the inbox.
+    expect(result.message).toBe("Q1 paper submitted. The committee's reply is in your inbox.")
   })
 })
 

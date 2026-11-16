@@ -4550,3 +4550,11 @@ headline order and duplicated recorded costs
 pending paper (`tests/engine/paper-holds-skip.test.ts`). Not reproduced:
 committee responses duplicated in history, through submission, reload and
 resume; the Board history lists one row per quarter as a safeguard.
+
+## 16 November 2026 — 15-run matrix on 535a241
+
+Recorded in `docs/playtests/2026-11-16-owner-supplied-535a241-matrix.md`.
+The one silent lapse was the CEO's three risks, the only one-day decision;
+now two days, held by a content test. The duplicated committee replies seen
+mid-run were the submission notification repeating the reply over the
+inbox. Balance left for a human playtest after four rounds of agent retests.

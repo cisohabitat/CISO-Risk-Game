@@ -430,6 +430,8 @@ changes.
   (`delayOwedDays`), so an early delay is never free.
 - The annual review caps team sustainability at solid with three or more
   vacancies, and prioritisation at solid when no enquiry was commissioned.
+- Every content decision has a deadline of two days or more, so the clock
+  stops the day before it lapses (`tests/content/decisions.test.ts`).
 - `completeQuarterReview` accepts only the pending quarter. The header's
   pause chip opens what holds the clock (a waiting decision, the board paper);
   a held Skip does not open a dialog itself, so the Risk screen's hold stays.

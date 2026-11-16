@@ -831,7 +831,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       })
       state.pauseReasons = state.pauseReasons.filter((r: PauseReason) => r !== 'quarter-end')
       commit()
-      return { ok: true, message: review.boardReaction }
+      // The reply itself is in the inbox; the notification only says where.
+      // Carrying the reply too, it sat over the inbox showing the same words,
+      // and testers reported the committee answering twice (535a241 playtest).
+      return { ok: true, message: `Q${action.quarter} paper submitted. The committee's reply is in your inbox.` }
     }
 
     case 'dismissPattern': {

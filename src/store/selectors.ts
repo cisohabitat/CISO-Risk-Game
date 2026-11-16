@@ -219,7 +219,7 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
           } else if (requirements?.condition && !evaluateCondition(state, index, requirements.condition)) {
             blockedReason = requirements.conditionUnmet ?? 'Not open to you as the year stands'
           } else if (requirements?.focus && state.resources.focusRemaining < requirements.focus) {
-            blockedReason = 'No attention left this week'
+            blockedReason = 'This takes attention, and none is left this week'
           } else if (requirements?.minTrustStakeholderId && requirements.minTrust !== undefined) {
             const person = state.stakeholders.stakeholders[requirements.minTrustStakeholderId]
             if (!person || person.trust < requirements.minTrust) {

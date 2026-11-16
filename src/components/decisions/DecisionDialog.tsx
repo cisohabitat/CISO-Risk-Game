@@ -134,7 +134,7 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
         <nav ref={nav} aria-label="Decision paper" className="flex flex-wrap items-center gap-2 border-b border-line pb-3">
           <span className="mr-auto text-sm text-ink-muted">{decision.options.length} options · {state.resources.focusRemaining} attention available now (of {state.resources.focusPerWeek} per week)</span>
           <Button variant="quiet" size="sm" aria-expanded={comparing} aria-controls="decision-comparison" onClick={() => setComparing((value) => !value)}>{comparing ? 'Hide comparison' : 'Compare options'}</Button>
-          {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Your reasons</Button>}
+          {scrolls && <Button variant="quiet" size="sm" onClick={() => moveTo('decision-why')}>Jump to your reasons</Button>}
         </nav>
         <section aria-labelledby="decision-context" className="decision-context">
           <h3 id="decision-context" className="document-kicker mb-2"><span aria-hidden="true" className="paper-number">01</span>The situation</h3>

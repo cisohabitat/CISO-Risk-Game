@@ -671,7 +671,8 @@ conditions, unreachable decisions, invalid effect targets and dependency cycles.
 
 Security programmes slow business delivery a little, in proportion to how many
 run at once; a serious incident costs every objective in delivery time, scaled
-by how bad it was. A board paper is recorded once per quarter. A rehearsed recovery shortens
+by how bad it was. A board paper is recorded once per quarter, and every decision gives at least
+two days with a stop before it lapses. A rehearsed recovery shortens
 the business time an incident costs. "Compare options" in a decision paper
 shows the options side by side.
 
