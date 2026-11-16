@@ -282,6 +282,7 @@ export const programmeSchema = z.object({
       chancePerDay: z.number().min(0).max(0.5),
       progressMultiplier: unit,
       unlessCondition: conditionSchema.optional(),
+      liftsAtQuarterEnd: z.boolean().optional(),
       resolution: z.object({
         label: z.string(),
         budget: z.number().optional(),

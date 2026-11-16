@@ -166,6 +166,8 @@ export interface ProgrammeBlockerDef {
   progressMultiplier: number
   /** It does not arise while this holds: an earlier choice already dealt with it. */
   unlessCondition?: Condition
+  /** It ends by itself when the quarter closes, as its fiction says it will. */
+  liftsAtQuarterEnd?: boolean
   resolution: {
     label: string
     budget?: number

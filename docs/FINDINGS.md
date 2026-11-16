@@ -4558,3 +4558,11 @@ The one silent lapse was the CEO's three risks, the only one-day decision;
 now two days, held by a content test. The duplicated committee replies seen
 mid-run were the submission notification repeating the reply over the
 inbox. Balance left for a human playtest after four rounds of agent retests.
+
+## 17 November 2026 — 15-run matrix on f364f2e
+
+Recorded in `docs/playtests/2026-11-17-owner-supplied-f364f2e-matrix.md`. The
+reported replay regression was the replayer acting a day later: pace alone
+leaves a year byte-identical (day, week and Skip steps compared), one day's
+difference in a programme start does not. The quarter-close freeze now lifts
+at the quarter boundary (`tests/engine/quarter-freeze.test.ts`).

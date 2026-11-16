@@ -2062,6 +2062,9 @@
                 "unlessCondition": {
                   "$ref": "#/$defs/__schema0"
                 },
+                "liftsAtQuarterEnd": {
+                  "type": "boolean"
+                },
                 "resolution": {
                   "type": "object",
                   "properties": {

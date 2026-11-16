@@ -4,7 +4,7 @@
  * blockers appear that need executive help rather than more money.
  */
 import type { ContentIndex, GameEffect, GameState, ProgrammeRuntime } from '../types'
-import { clamp01 } from '../types'
+import { DAYS_PER_QUARTER, clamp01 } from '../types'
 import type { Rng } from '../engine/rng'
 import { computeCommitted } from '../team/capacity'
 import { evaluateCondition } from '../events/conditions'
@@ -74,6 +74,15 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     let blockerMultiplier = 1
     for (const active of programme.blockers) {
       if (active.resolved) continue
+      // A freeze "until the quarter's books are closed" held identity work for
+      // months, because only the player's action cleared it (f364f2e
+      // playtest, runs 6 and 13). It lifts when the quarter does.
+      const lifting = def.blockers.find((b) => b.id === active.id)
+      if (lifting?.liftsAtQuarterEnd && state.currentDay % DAYS_PER_QUARTER === 0 && state.currentDay > active.startedDay) {
+        active.resolved = true
+        state.history.entries.push({ day: state.currentDay, kind: 'programme-blocker', refs: [def.id], summary: `${def.name}: ${lifting.name} lifted as the quarter closed.` })
+        continue
+      }
       const blockerDef = def.blockers.find((b) => b.id === active.id)
       if (blockerDef) blockerMultiplier *= blockerDef.progressMultiplier
     }

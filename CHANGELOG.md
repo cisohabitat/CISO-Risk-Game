@@ -22,6 +22,9 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The identity programme's quarter-close change freeze lifts when the quarter
+  closes, as it says it will, instead of holding the work until you act.
+
 - "The CEO wants your three risks" has two days, like every other decision,
   so the clock stops the day before it would be decided for you.
 - Submitting a board paper says the committee's reply is in your inbox,
