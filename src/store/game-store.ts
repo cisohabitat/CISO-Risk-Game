@@ -1,4 +1,3 @@
-import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 /**
  * The application store is an adapter around the engine, not the engine itself
  * (plan §32.4). It owns UI state and persistence; every change to the canonical
@@ -7,7 +6,7 @@ import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import type { DecisionReaction } from './decision-reactions'
 import { create } from 'zustand'
 import { produce } from 'immer'
-import { DAYS_PER_QUARTER, DAYS_PER_WEEK, money } from '@/game/types'
+import { DAYS_PER_QUARTER, money } from '@/game/types'
 import type { ContentIndex, Difficulty, GameState } from '@/game/types'
 import type { ActionResult, PlayerAction, TickResult } from '@/game/engine/orchestrator'
 import type { beginNextYear as buildFollowingYear } from '@/game/engine/next-year'
@@ -24,7 +23,7 @@ import {
   writeCampaign,
 } from './persistence'
 import { reportProblem } from './problems'
-import { DECEMBER_START_DAY, UI_SKIP_DAYS, formatGameDate } from '@/game/time'
+import { DECEMBER_START_DAY, formatGameDate } from '@/game/time'
 
 export type Screen = 'home' | 'inbox' | 'risk' | 'organisation' | 'programmes' | 'team' | 'board' | 'debrief'
 
@@ -446,18 +445,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     let result: ActionResult = { ok: false, message: '' }
     const fast = state.speed === '2x' || state.speed === '4x'
-    const weeklyReading = DIFFICULTY_PROFILES[state.difficulty].holdsAtWeeklyRenewal
-    let weeklyHold = false
+    // No weekly holds: since 17 November time stops only for what needs the
+    // player (the owner's decision on how time moves).
     const next = produce(state, (draft) => {
-      const request = action.type === 'advance' && (fast || weeklyReading || action.stopOnUpdate)
-        ? { ...action, days: Math.min(action.days, action.stopOnUpdate ? UI_SKIP_DAYS : action.days, DAYS_PER_WEEK - state.currentDay % DAYS_PER_WEEK) }
-        : action
-      result = applyAction(draft, index, request.type === 'advance' ? { ...request, holdYearEnd: true } : request)
-      if (fast || weeklyReading) {
-        weeklyHold = result.ok && !draft.finished && action.type === 'advance' && draft.resources.weekIndex > state.resources.weekIndex
-        if (weeklyHold || (fast && action.type !== 'advance' && action.type !== 'setSpeed')) {
-          applyAction(draft, index, { type: 'setSpeed', speed: 'paused' })
-        }
+      result = applyAction(draft, index, action.type === 'advance' ? { ...action, holdYearEnd: true } : action)
+      if (fast && action.type !== 'advance' && action.type !== 'setSpeed') {
+        applyAction(draft, index, { type: 'setSpeed', speed: 'paused' })
       }
     })
 
@@ -478,11 +471,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
       } : {}),
     } })
     if (result.message) get().pushToast(result.message, 'info')
-    if (action.type === 'advance' && !action.stopOnUpdate && next.resources.budgetRemaining !== state.resources.budgetRemaining) {
+    // Named, not stopped for: Skip ahead runs on, and the change is said here.
+    if (action.type === 'advance' && next.resources.budgetRemaining !== state.resources.budgetRemaining) {
       const movements = next.history.entries.filter((entry) => entry.kind === 'budget' && entry.day > state.currentDay)
       get().pushToast(`Budget changed from ${money(state.resources.budgetRemaining)} to ${money(next.resources.budgetRemaining)}. ${movements.map((entry) => entry.summary).join(' ') || 'Review Budget movements on the Briefing.'}`, 'info')
     }
-    if (weeklyHold) get().pushToast('A new week: attention has renewed. Time is held so you can choose how to use it. Select a speed to continue.', 'info')
 
     if (shouldAutosave(action, result.ticks ?? [])) {
       void saveSafely(next, index, {}, (message) => get().pushToast(message, 'warning')).then(() => get().refreshSaves())

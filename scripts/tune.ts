@@ -163,6 +163,9 @@ function main(): void {
     const before: Record<string, number> = {}
     const after: Record<string, number> = {}
     let relevanceCaps = 0
+    let gatesMet = 0
+    let gatesChecked = 0
+    let allMet = 0
     for (let i = 0; i < runs; i += 1) {
       const state = play(index, `tune-${i}`, policy, difficulty)
       const review = buildAnnualReview(state, index)
@@ -183,7 +186,12 @@ function main(): void {
       if (incidentList.length === 0) noIncidentRuns += 1
       worstConsequence += incidentList.reduce((max, inc) => Math.max(max, inc.consequence), 0)
       violations += checkInvariants(state, index).length
-      objectivesAchieved += Object.values(state.business.objectives).filter((o) => o.status === 'achieved').length
+      const objectives = Object.values(state.business.objectives)
+      const achieved = objectives.filter((o) => o.status === 'achieved').length
+      objectivesAchieved += achieved
+      if (achieved === objectives.length) allMet += 1
+      gatesChecked += objectives.filter((o) => o.gate !== undefined).length
+      gatesMet += objectives.filter((o) => o.gate === 'met').length
       boardConfidence += state.stakeholders.boardConfidence
       evidence += state.evidence.order.length
       programmesComplete += Object.values(state.programmes.programmes).filter((p) => p.status === 'complete').length
@@ -192,7 +200,7 @@ function main(): void {
     const m = incidents / runs
     const se = Math.sqrt(perRun.reduce((a, b) => a + (b - m) ** 2, 0) / Math.max(1, runs - 1) / runs)
     console.log(
-      `${policy.padEnd(10)} incidents/run ${m.toFixed(2)} ±${se.toFixed(2)}  clean-years ${((noIncidentRuns / runs) * 100).toFixed(0)}%  worst-consequence ${(worstConsequence / runs).toFixed(2)}  objectives ${(objectivesAchieved / runs).toFixed(1)}/5  board ${(boardConfidence / runs).toFixed(2)}  evidence ${(evidence / runs).toFixed(0)}  programmes-done ${(programmesComplete / runs).toFixed(1)}  violations ${violations}`,
+      `${policy.padEnd(10)} incidents/run ${m.toFixed(2)} ±${se.toFixed(2)}  clean-years ${((noIncidentRuns / runs) * 100).toFixed(0)}%  worst-consequence ${(worstConsequence / runs).toFixed(2)}  objectives ${(objectivesAchieved / runs).toFixed(1)}/5 (all ${((allMet / runs) * 100).toFixed(0)}%)  gates met ${gatesMet}/${gatesChecked}  board ${(boardConfidence / runs).toFixed(2)}  evidence ${(evidence / runs).toFixed(0)}  programmes-done ${(programmesComplete / runs).toFixed(1)}  violations ${violations}`,
     )
   }
 }

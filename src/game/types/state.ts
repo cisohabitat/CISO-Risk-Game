@@ -465,6 +465,8 @@ export interface BusinessObjectiveRuntime {
   delayOwedDays?: number
   conditionsAttached: string[]
   securitySupported: boolean
+  /** How the objective's security gate was answered, once checked. Absent before, and in older saves. */
+  gate?: 'met' | 'unmet'
 }
 
 export interface BusinessState {
@@ -510,7 +512,7 @@ export interface QuarterReviewState {
 export interface ReviewState {
   quarters: QuarterReviewState[]
   pendingQuarter?: number
-  /** The last pending paper Skip ahead has stopped for. Absent in older saves. */
+  /** Unused since 17 November, when Skip ahead stopped holding once per paper; kept so older saves load. */
   paperNoticedQuarter?: number
   /** Quarters whose paper was never written; the committee met without one. */
   missedQuarters?: number

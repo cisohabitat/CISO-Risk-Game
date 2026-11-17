@@ -22,6 +22,16 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Skip ahead now runs to the next thing that needs you: a decision, a board
+  paper, an incident or a blocked programme. It says what it stopped for.
+  There is no longer a seven-day limit or a pause at each new week, and
+  letters wait in the Inbox.
+
+- The platform launch, the Kestrel integration and the Nordic market entry
+  now have a security check before their date. If the check finds the work
+  done, delivery speeds up a little; if not, it loses six weeks. Backing the
+  business without conditions is no longer free.
+
 - The identity programme's quarter-close change freeze lifts when the quarter
   closes, as it says it will, instead of holding the work until you act.
 

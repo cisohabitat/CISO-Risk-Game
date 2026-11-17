@@ -20,19 +20,24 @@ it('holds fast time after spending attention and after a refused action', async 
   expect(useGameStore.getState().state!.paused).toBe(true)
   expect(useGameStore.getState().state!.resources.budgetRemaining).toBe(budget)
 })
-it('holds at the next attention renewal rather than fast-forwarding across weeks', async () => {
+// Since 17 November a weekly renewal of attention is not a stop: time runs
+// on to what needs the player, and attention is full again when it gets there.
+it('runs across the weekly attention renewal instead of holding at it', async () => {
   await useGameStore.getState().startNewGame('fast-week', 'high-pressure')
-  const state = structuredClone(useGameStore.getState().state!)
+  const store = useGameStore.getState()
+  const state = structuredClone(store.state!)
   state.currentDay = 6
   state.resources.focusRemaining = 0
+  state.decisions.openIds = []; state.pendingEffects = []
+  state.threats.actors = {}; state.threats.campaigns = []
+  state.events.suppressedEventIds = store.index!.content.events.map((event) => event.id)
   useGameStore.setState({ state })
   useGameStore.getState().dispatch({ type: 'setSpeed', speed: '4x' })
   useGameStore.getState().advanceDays(30)
-  const held = useGameStore.getState().state!
-  expect(held.currentDay).toBe(7)
-  expect(held.resources.focusRemaining).toBe(held.resources.focusPerWeek)
-  expect(held.speed).toBe('paused')
-  expect(useGameStore.getState().ui.toasts.some((toast) => toast.message.includes('A new week'))).toBe(true)
+  const ran = useGameStore.getState().state!
+  expect(ran.currentDay).toBe(36)
+  expect(ran.resources.focusRemaining).toBe(ran.resources.focusPerWeek)
+  expect(useGameStore.getState().ui.toasts.some((toast) => toast.message.includes('A new week'))).toBe(false)
 })
 it('keeps normal speed and explicit speed selection under player control', async () => {
   await useGameStore.getState().startNewGame('normal-actions', 'high-pressure')

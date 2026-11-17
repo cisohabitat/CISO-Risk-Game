@@ -11,21 +11,25 @@ import type { Difficulty } from '@/game/types'
 beforeEach(async () => { await useGameStore.getState().startNewGame('ciso-four-scenarios', 'ciso') })
 afterEach(cleanup)
 
-it.each<Difficulty>(['ciso', 'high-pressure'])('caps one-shot skips in every workspace on %s', async (difficulty) => {
+// Skip ahead runs to the next stop and names it, in every workspace; it was
+// capped at seven days until 17 November.
+it.each<Difficulty>(['ciso', 'high-pressure'])('runs Skip to the next stop in every workspace on %s', async (difficulty) => {
   await useGameStore.getState().startNewGame('ciso-skip-bound', difficulty)
   const store = useGameStore.getState()
   for (const workspace of ['home', 'risk', 'team', 'board'] as const) {
     const state = structuredClone(store.state!)
     state.currentDay = 147; state.resources.weekIndex = 21
     state.decisions.openIds = []; state.pendingEffects = []
+    state.reviews.pendingQuarter = undefined
     state.threats.actors = {}; state.threats.campaigns = []
     state.events.suppressedEventIds = store.index!.content.events.map((event) => event.id)
     for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
     useGameStore.setState({ state })
     store.setScreen(workspace)
-    const result = useGameStore.getState().dispatch({ type: 'advance', days: 50, stopOnUpdate: true })
+    const result = useGameStore.getState().dispatch({ type: 'advance', days: 364, stopOnUpdate: true })
     expect(result.ok).toBe(true)
-    expect(useGameStore.getState().state!.currentDay - 147).toBeLessThanOrEqual(7)
+    expect(useGameStore.getState().state!.currentDay).toBe(2 * 91)
+    expect(result.message).toContain('Q2 board paper is ready')
     expect(useGameStore.getState().state!.speed).toBe('paused')
   }
 })

@@ -23,6 +23,13 @@ actual recorded effects, without retroactively reconstructing older ledgers.
 All voiced transcripts, event eligibility and effect amounts remain unchanged.
 The objective probe and its limits are in `OBJECTIVE_REVIEW.md`.
 
+An objective may carry a `gate` (17 November). The gate has a `checkDay`, a
+`condition` in the usual vocabulary, `delayDays` lost when the condition does
+not hold, `progress` gained when it does, and a `met` and an `unmet` letter
+from the objective's owner. Write both letters as the business asking its
+question: a go-live review, an auditor or a bank. Do not write them as the
+game marking the player.
+
 Five-run follow-through (30 October): recruitment quotes a single identity hire
 in 60 days, not all five vacancies. Priorities can cite delivered programmes as
 well as work under way. The watch option declares controls it leaves open for
@@ -48,7 +55,7 @@ component or an engine module.
 src/content/nexora/
 ├─ meta.json            campaign identity, budget, opening briefing
 ├─ organisation.json    nodes, dependencies, business services
-├─ people.json          executives, cyber leaders, business objectives
+├─ people.json          executives, cyber leaders, business objectives (and their security gates)
 ├─ controls.json        security controls and what they mitigate
 ├─ programmes.json      cyber programmes, milestones, blockers
 ├─ threats.json         threat actors, attack paths, incident families

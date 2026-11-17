@@ -28,11 +28,10 @@ import { remember } from '../stakeholders/relationships'
 import { meetingAccount } from '../stakeholders/meeting'
 import { computeStaffing } from '../programmes/progression'
 import { pushMessage } from '../inbox/messages'
-import { messageReturnKind } from '../inbox/returns'
 import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
-import { DECEMBER_START_DAY, dateOf, yearWord } from '../time'
+import { dateOf, yearWord } from '../time'
 
 export type PlayerAction =
   | { type: 'advance'; days: number; stopOnUpdate?: boolean; holdYearEnd?: boolean }
@@ -141,6 +140,43 @@ export function budgetBlockReason(state: GameState, option: DecisionOptionDef): 
  * Applies a player action in place. Callers own immutability (the store uses
  * Immer); the engine itself only needs determinism.
  */
+/** What a Skip ahead stopped for, in one line. */
+function describeStop(state: GameState, index: ContentIndex, reasons: PauseReason[]): string {
+  const date = dateOf(state.currentDay)
+  const pending = state.reviews.pendingQuarter
+  for (const reason of reasons) {
+    switch (reason) {
+      case 'decision-deadline': {
+        const open = state.decisions.openIds.map((id) => state.decisions.decisions[id]).filter((decision) => decision && decision.resolvedDay === undefined)
+        const arrived = open.find((decision) => decision!.createdDay === state.currentDay)
+        if (arrived) return `Stopped on ${date}: ${index.decision.get(arrived.defId)?.title ?? 'a decision'} needs a decision.`
+        const due = open.find((decision) => decision!.deadlineDay !== undefined && decision!.deadlineDay - state.currentDay <= 1)
+        if (due) return `Stopped on ${date}: ${index.decision.get(due.defId)?.title ?? 'a decision'} is due tomorrow.`
+        break
+      }
+      case 'quarter-end':
+        if (pending !== undefined) return `Stopped on ${date}: the Q${pending} board paper is ready, due by the end of Q${pending + 1}.`
+        break
+      case 'board-decision':
+        if (pending !== undefined) return `Stopped on ${date}: the Q${pending} board paper is due in 2 days.`
+        break
+      case 'incident': {
+        const latest = state.inbox.messages.findLast((message) => message.type === 'incident' && message.day === state.currentDay)
+        return `Stopped on ${date}: ${latest?.subject ?? 'an incident has moved on'}.`
+      }
+      case 'programme-blocked':
+        return `Stopped on ${date}: a programme is blocked.`
+      case 'assumption-invalidated':
+        return `Stopped on ${date}: an assumption you recorded no longer holds.`
+      case 'year-end':
+        return `Stopped on ${date}: the last day of the year.`
+      default:
+        break
+    }
+  }
+  return `Stopped on ${date}.`
+}
+
 export function applyAction(state: GameState, index: ContentIndex, action: PlayerAction): ActionResult {
   const rng = createRng(state.seed, state.rngCursor)
   const commit = () => {
@@ -182,18 +218,6 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           state.pauseReasons = ['pending-decision']
           return { ok: true, message: `Skip held: ${index.decision.get(waiting.defId)?.title ?? 'a decision'} is waiting. Review it before skipping ahead; choosing a speed still lets you deliberately let time pass.`, ticks: [] }
         }
-        // A paper Skip has not yet stopped for holds it once. The quarter-end
-        // pause stops a running Skip, but a player who crossed the quarter at
-        // speed and then pressed Skip went past an open paper (42e2b80
-        // playtest, runs 9 and 13).
-        const pending = state.reviews.pendingQuarter
-        if (pending !== undefined && state.reviews.paperNoticedQuarter !== pending) {
-          state.reviews.paperNoticedQuarter = pending
-          state.paused = true
-          state.speed = 'paused'
-          state.pauseReasons = ['board-decision']
-          return { ok: true, message: `Skip held: the Q${pending} board paper is ready. Prepare it now, or press Skip ahead again to continue; it is due by the end of Q${pending + 1}.`, ticks: [] }
-        }
         // A paper in its final week holds Skip as a decision does. It used to
         // pause once, two days out, and the next Skip carried the year past
         // the deadline: one 15-run playtest year missed two papers that way.
@@ -209,43 +233,27 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const ticks: TickResult[] = []
       for (let i = 0; i < action.days; i += 1) {
         if (state.currentDay >= CAMPAIGN_DAYS) break
-        const previousCounter = state.inbox.counter
-        const previousBudget = state.resources.budgetRemaining
         const result = tickDay(state, index, action.holdYearEnd)
         ticks.push(result)
-        if (result.pauseReasons.length > 0) break
-        if (action.stopOnUpdate && state.resources.budgetRemaining !== previousBudget) {
+        if (result.pauseReasons.length > 0) {
+          // Skip ahead runs to the next thing that needs the player and says
+          // what it was (owner's decision, 17 November: one rule in place of a
+          // seven-day cap, mail and budget stops and weekly holds, which
+          // players read as "does nothing" or "jumped six weeks").
+          return { ok: true, message: action.stopOnUpdate ? describeStop(state, index, result.pauseReasons) : '', ticks }
+        }
+        // A paper entering its final week is the one stop the clock itself does
+        // not make.
+        const pending = state.reviews.pendingQuarter
+        if (action.stopOnUpdate && pending !== undefined && (pending + 1) * DAYS_PER_QUARTER - 1 - state.currentDay === 7) {
           state.paused = true
           state.speed = 'paused'
-          state.pauseReasons = ['player']
+          state.pauseReasons = ['board-decision']
           result.shouldAutosave = true
-          const movement = state.history.entries.findLast((entry) => entry.kind === 'budget' && entry.day === state.currentDay)
-          return { ok: true, message: `Budget changed from ${money(previousBudget)} to ${money(state.resources.budgetRemaining)}. ${movement?.summary ?? 'Review the budget activity and correspondence.'}`, ticks }
-        }
-        // Skip ahead reads only newly delivered public correspondence. Old unread
-        // mail never blocks progress, and ordinary timed ticks retain their rules.
-        const update = action.stopOnUpdate && state.inbox.messages.find((message) =>
-          Number(message.id.slice(4)) > previousCounter && (
-            messageReturnKind(message, index) || message.signalCampaignId ||
-            message.priority !== 'routine' || state.currentDay >= DECEMBER_START_DAY
-          ),
-        )
-        if (update) {
-          state.paused = true
-          state.speed = 'paused'
-          state.pauseReasons = ['player']
-          result.shouldAutosave = true
-          return { ok: true, message: `Update received: ${update.subject}`, ticks }
+          return { ok: true, message: `Stopped on ${dateOf(state.currentDay)}: the Q${pending} board paper is due in 7 days.`, ticks }
         }
       }
-      const quietStop = action.stopOnUpdate && ticks.length > 0 && !state.finished && ticks.every((tick) => tick.pauseReasons.length === 0)
-      if (quietStop) {
-        state.paused = true
-        state.speed = 'paused'
-        state.pauseReasons = ['player']
-        ticks.at(-1)!.shouldAutosave = true
-      }
-      return { ok: true, message: quietStop ? `Advanced ${ticks.length} days with no new decision or urgent return. Time is held; review current progress, budget and business dates before continuing.` : '', ticks }
+      return { ok: true, message: '', ticks }
     }
 
     case 'resolveDecision': {

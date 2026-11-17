@@ -4566,3 +4566,67 @@ reported replay regression was the replayer acting a day later: pace alone
 leaves a year byte-identical (day, week and Skip steps compared), one day's
 difference in a programme start does not. The quarter-close freeze now lifts
 at the quarter boundary (`tests/engine/quarter-freeze.test.ts`).
+
+## 17 November 2026 — Skip to the next event, and security gates on objectives
+
+The owner chose B2 and A2 from the decision paper on six playtest rounds.
+
+**Skip ahead.** Six rounds reported Skip as either doing nothing or jumping
+six weeks. That was the sum of these rules:
+- a seven-day cap;
+- a once-per-paper hold;
+- stops for budget changes and notable mail;
+- weekly holds at speed, and on Guided at `1×`.
+
+One press now runs to the next pause reason and names it ("Stopped on …").
+The pause reasons are:
+- a decision arriving or due;
+- a quarter's paper, and a paper's final week;
+- an incident;
+- a blocked programme;
+- an invalidated assumption;
+- the year end.
+
+The waiting-decision and final-week guards stay. Mail and refunds wait in the
+Inbox and the budget toast. Tests that asserted the old holds now assert the
+new rule (`skip-updates`, `paper-holds-skip`, `clock-safety`,
+`ciso-four-scenarios`, `newbie-oct31`). `profile.holdsAtWeeklyRenewal` and
+the store's weekly hold are gone. `paperNoticedQuarter` is kept only so
+older saves load.
+
+**Security gates.** An idle or business-first year met every objective unless
+an incident landed. Three first-year objectives now carry an authored gate,
+checked once on its day while the objective is in delivery:
+
+| Objective | Check day | Gate | Condition |
+|---|---|---|---|
+| Platform launch | 130 | Go-live review | launch conditions, compensate or oppose, or MFA coverage of 0.8 or more |
+| Kestrel integration | 230 | Integration auditors | quarantine or due diligence, or segmentation coverage of 0.7 or more |
+| Nordic market | 235 | Acquiring bank | the card-data decision answered, or data protection coverage of 0.5 or more |
+
+If the gate is met, the objective gains 0.04 progress and is marked
+security-supported. If it is unmet, the objective loses 45 days. Either way
+the owner writes once. `tests/engine/objective-gates.test.ts` covers all
+three gates and the once-only check.
+
+Tune results on 25 CISO seeds, objectives met before → after:
+
+| Policy | 30-day delay | 45-day delay | 60-day delay |
+|---|---|---|---|
+| Business-first | 4.6 → 4.4 (all five met 56%) | 4.0 (36%) | 3.8 (16%) |
+| Defensive | 4.3 → 4.5 | 4.4 | 4.4 |
+| Middle-option idle | 3.1 → 3.3 | 3.3 | 3.2 |
+| Two at once | 3.2 → 3.3 | 3.3 | 3.3 |
+
+45 days was kept. At 60 days, backing the business started to read as a
+penalty in itself. Business-first passes 18 of 38 gates; the middle-option
+policies pass 41–55 of 44–56.
+
+The ladder over 15 seeds now reads:
+- objectives missed 0.93 / 0.93 / 0.93 (was 0.93 / 1.13 / 1.13);
+- missed per programme 0.34 / 0.48 / 0.74 (was 0.34 / 0.59 / 0.89).
+
+The soak was clean over 300 first years and 100 two-year runs. The middle
+option never meets all five objectives, because opposing the launch delays
+it. Whether a gate letter reads as the business's voice rather than a
+penalty is a playtest question.

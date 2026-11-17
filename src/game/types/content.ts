@@ -72,6 +72,23 @@ export interface BusinessObjectiveDef {
   value: number
   /** The year of the job the business plans this for. Omitted: the first. */
   year?: number
+  /** A security condition the business checks before the date (owner, 17 November). */
+  gate?: ObjectiveGateDef
+}
+
+/**
+ * A point in delivery where the business asks whether security has done its
+ * part, as a go-live sign-off or an acquirer's due diligence does. Checked once,
+ * on `checkDay`: met speeds delivery a little; unmet costs `delayDays`.
+ */
+export interface ObjectiveGateDef {
+  checkDay: number
+  condition: Condition
+  delayDays: number
+  /** Progress gained when the condition holds; also marks the objective security-supported. */
+  progress: number
+  met: { subject: string; body: string }
+  unmet: { subject: string; body: string }
 }
 
 export interface StakeholderDef {

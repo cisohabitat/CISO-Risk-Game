@@ -17,27 +17,25 @@ function quiet() {
 }
 
 describe('Skip ahead public updates', () => {
-  it('stops at a returned result and can continue without reading the backlog', () => {
+  // Since 17 November Skip ahead runs to what needs the player (a decision,
+  // a board paper, an incident, a blocked programme); mail waits in the inbox.
+  it('runs past a returned result, which waits in the inbox', () => {
     const { state, index } = quiet()
     state.pendingEffects.push({ id: 'skip-result', day: 243, source: 'decision:dec-pentest-scope', note: 'The report is in.', effects: [] })
     const result = applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
     expect(result.ok).toBe(true)
-    expect(state.currentDay).toBe(243)
-    expect(result.message).toContain('Followed up: Penetration test scope')
-    expect(state.paused).toBe(true)
-    expect(result.ticks!.at(-1)!.shouldAutosave).toBe(true)
-    applyAction(state, index, { type: 'advance', days: 1, stopOnUpdate: true })
-    expect(state.currentDay).toBe(244)
+    expect(state.currentDay).toBe(270)
+    expect(state.inbox.messages.some((message) => message.subject === 'Followed up: Penetration test scope')).toBe(true)
   })
 
-  it('holds for a missed business commitment rather than skipping its notable letter', () => {
+  it('runs past a missed business commitment, whose letter waits in the inbox', () => {
     const { state, index } = quiet()
     const objective = state.business.objectives['obj-platform-launch']!
     objective.status = 'active'; objective.progress = 0.5
     state.currentDay = objective.targetDay
-    const result = applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
-    expect(state.currentDay).toBe(objective.targetDay + 1)
-    expect(result.message).toContain('Update received: Missed:')
+    applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
+    expect(state.currentDay).toBeGreaterThan(objective.targetDay + 1)
+    expect(state.inbox.messages.some((message) => message.subject.startsWith('Missed:'))).toBe(true)
   })
 
   it('does not change normal ticking or ordinary advance semantics', () => {

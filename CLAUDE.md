@@ -89,6 +89,14 @@ end-to-end suite is serving. Do not run the two at once; finish one first.
 
 **The feature set is complete and the major systems are frozen.** The remaining
 work is playtesting, tightening and rewriting unclear text — not new mechanics.
+On 17 November 2026 the owner chose two design changes from the decision
+paper on six playtest rounds. First, Skip ahead runs to the next thing that
+needs the player and names it, with no seven-day cap, weekly hold or mail
+stop. Second, three first-year objectives carry a security gate
+(`gate` on an objective in `people.json`, checked in tick step 4): the
+platform launch, the Kestrel integration and the Nordic market. Each is
+checked once on its day. If the condition holds, delivery gains a little;
+if not, it costs 45 days.
 On 30 October 2026 the owner's next-step instruction continues the supplied
 CISO report with residual-risk appetite delegation: a board decision, recorded
 statement, acceptance guidance and paper follow-through. It does not add insurer
@@ -204,8 +212,8 @@ been fixed and moved to `docs/FINDINGS.md`.
   builds: guided affords 2.7 programmes against high pressure's 1.3, and a
   programme costs delivery, so guided misses about as many objectives as high
   pressure does. Per programme started the ladder is monotone — 0.34 / 0.59 /
-  0.89 across the modes since 16 November (0.78 / 0.82 / 1.67 before), and
-  objectives missed are now monotone too (0.93 / 1.13 / 1.13) — and
+  0.89 across the modes from 16 November (0.78 / 0.82 / 1.67 before), and
+  0.34 / 0.48 / 0.74 since the gates of 17 November — and
   `pnpm ladder sweep` prints both. Read the per programme figure, or compare
   modes at equal build. On 15 November the owner had each programme's drag on
   delivery cut from 0.25 to 0.08 of its friction (`PROGRAMME_DRAG` in
@@ -216,9 +224,17 @@ been fixed and moved to `docs/FINDINGS.md`.
   nothing. A material incident now diverts the whole organisation: every
   objective in delivery loses 60 days per unit of consequence above 0.3
   (`DIVERSION_DAYS` in `src/game/incidents/engine.ts`), scaled since 16
-  November by how ready recovery was. On 25 CISO seeds (`scripts/tune.ts`)
-  objectives met now read business-first 4.6, defensive 4.3, middle-option
-  idle 3.1 (was 4.8), two programmes at once 3.2 (was 2.8).
+  November by how ready recovery was. Since 17 November three objectives
+  carry security gates. On 25 CISO seeds (`scripts/tune.ts`), objectives met
+  now read:
+  - business-first 4.0 (was 4.6), with all five met in 36% of years (was 56%)
+    and 18 of 38 gates passed;
+  - defensive 4.4 (was 4.3);
+  - middle-option idle 3.3 (was 3.1);
+  - two programmes at once 3.3 (was 3.2).
+
+  The ladder's objectives missed read 0.93 in every mode (was 0.93 / 1.13 /
+  1.13), and missed per programme 0.34 / 0.48 / 0.74.
 
 - **Incidents do not move the board.** Board confidence changes through the
   papers, a missed paper and authored decisions; an incident, however bad,

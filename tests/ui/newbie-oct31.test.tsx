@@ -35,22 +35,20 @@ it.each(['sit-inherited-mess', 'sit-new-money', 'sit-tidy', 'sit-after-breach'])
   await waitFor(() => expect(useGameStore.getState().state?.situationId).toBe(situationId))
   expect(useGameStore.getState().state!.difficulty).toBe('guided')
 })
-it('bounds an oversized UI skip at a week while leaving headless advances unchanged', () => {
+it('runs a UI skip as far as a headless advance when nothing needs the player', () => {
   const original = quiet(329)
   useGameStore.getState().advanceDays(30, true)
-  expect(useGameStore.getState().state!.currentDay).toBe(336)
-  expect(useGameStore.getState().state!.speed).toBe('paused')
+  expect(useGameStore.getState().state!.currentDay).toBe(359)
   const headless = structuredClone(original)
   runDays(headless, useGameStore.getState().index!, 30)
   expect(headless.currentDay).toBe(359)
 })
-it('holds normal Guided time at attention renewal and announces the Q1 paper in Week 14', () => {
+it('runs Guided time past attention renewal and stops for the Q1 paper in Week 14', () => {
   quiet(5)
   const store = useGameStore.getState()
   store.dispatch({ type: 'setSpeed', speed: '1x' })
   store.advanceDays(30)
-  expect(useGameStore.getState().state!.currentDay).toBe(7)
-  expect(useGameStore.getState().state!.paused).toBe(true)
+  expect(useGameStore.getState().state!.currentDay).toBe(35)
   quiet(90)
   store.advanceDays(30, true)
   const state = useGameStore.getState().state!

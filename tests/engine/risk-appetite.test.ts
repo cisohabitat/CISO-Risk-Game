@@ -91,10 +91,9 @@ it.each([true, false])('checks current acceptances at the scheduled review (acce
   const other = accepted ? 'evt-con-appetite-no-acceptances' : 'evt-con-appetite-accepted'
   // Isolate this scheduled review from earlier spine messages in the day-jump fixture.
   state.events.suppressedEventIds = index.content.events.filter((event) => event.id !== expected && event.id !== other).map((event) => event.id)
-  // The shared follow-up classifier must stop a skip even for read ordinary mail.
-  const advanced = applyAction(state, index, { type: 'advance', days: 5, stopOnUpdate: true })
-  expect(advanced.ticks).toHaveLength(1)
-  expect(advanced.message).toBe(`Update received: ${index.event.get(expected)!.title}`)
+  // The review fires on its day; since 17 November Skip ahead runs past mail
+  // to what needs the player, so the day is advanced directly.
+  applyAction(state, index, { type: 'advance', days: 1 })
   expect(state.events.firedEventIds).toContain(expected)
   expect(messageReturnKind(state.inbox.messages.find((message) => message.eventId === expected)!, index)).toBe('consequence')
   expect(state.events.firedEventIds).not.toContain(other)

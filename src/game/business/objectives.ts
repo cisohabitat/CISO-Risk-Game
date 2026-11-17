@@ -3,8 +3,9 @@
  * can protect, enable, delay or condition them — and the annual review reports
  * business outcomes alongside risk outcomes, so "block everything" loses.
  */
-import type { ContentIndex, GameState } from '../types'
+import type { ContentIndex, GameEffect, GameState } from '../types'
 import { clamp01 } from '../types'
+import { evaluateCondition } from '../events/conditions'
 
 /** Weight of the patience shortfall in delivery friction. Tuned on the ladder. */
 const TOLERANCE_DRAG = 0.02
@@ -95,6 +96,39 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
     }
   }
   return result
+}
+
+export interface GateCheck {
+  objectiveId: string
+  met: boolean
+  effects: GameEffect[]
+}
+
+/**
+ * Security gates on objectives (owner, 17 November). An idle year used to
+ * meet every objective unless an incident landed, and was then rated
+ * Difficult beside a 5/5: the business did not depend on security at all.
+ * A gate is checked once, on its day, for an objective still in delivery;
+ * the change goes through the effect reducer.
+ */
+export function checkObjectiveGates(state: GameState, index: ContentIndex): GateCheck[] {
+  const checks: GateCheck[] = []
+  for (const def of index.content.objectives) {
+    const gate = def.gate
+    const runtime = state.business.objectives[def.id]
+    if (!gate || !runtime || runtime.gate !== undefined || state.currentDay < gate.checkDay) continue
+    if (runtime.status !== 'active' && runtime.status !== 'at-risk') continue
+    const met = evaluateCondition(state, index, gate.condition)
+    runtime.gate = met ? 'met' : 'unmet'
+    checks.push({
+      objectiveId: def.id,
+      met,
+      effects: met
+        ? [{ type: 'objective.progress', objectiveId: def.id, delta: gate.progress }]
+        : [{ type: 'objective.delay', objectiveId: def.id, days: gate.delayDays }],
+    })
+  }
+  return checks
 }
 
 /** Service health recovers gradually once an incident stops suppressing it. */

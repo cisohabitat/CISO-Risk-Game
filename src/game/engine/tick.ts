@@ -11,7 +11,7 @@ import { createRng } from './rng'
 import { applyEffects, scheduledEffectDay } from './effects'
 import { applyDrift } from '../controls/effectiveness'
 import { maintainedControlIds, tickProgrammes } from '../programmes/progression'
-import { recoverServiceHealth, tickObjectives } from '../business/objectives'
+import { checkObjectiveGates, recoverServiceHealth, tickObjectives } from '../business/objectives'
 import { tickAssignments } from '../team/assignments'
 import { enquiryFindings } from '../team/findings'
 import { refreshCommittedCapacity, updateTeamWellbeing } from '../team/capacity'
@@ -157,6 +157,23 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',
       subject: `Missed: ${def.name}`,
       body: `${def.name} has missed the date the business set for it. It carries into next year, and the annual review will count it among the objectives missed.`,
+      type: 'business',
+      priority: 'notable',
+      relatedNodeIds: [],
+    })
+  }
+  for (const check of checkObjectiveGates(state, index)) {
+    const def = index.objective.get(check.objectiveId)
+    const gate = def?.gate
+    if (!def || !gate) continue
+    const owner = index.stakeholder.get(def.ownerStakeholderId)
+    const text = check.met ? gate.met : gate.unmet
+    queued.push(...check.effects)
+    highlights.push(check.met ? `${def.name}: security sign-off given.` : `${def.name}: held for a security condition.`)
+    pushMessage(state, {
+      from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',
+      subject: text.subject,
+      body: text.body,
       type: 'business',
       priority: 'notable',
       relatedNodeIds: [],

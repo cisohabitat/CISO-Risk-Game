@@ -19,17 +19,18 @@ function quiet() {
   for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
   return state
 }
-it('stops for recorded refunds and explains a 105 to 255 budget path without inventing money', () => {
+it('records refunds in the ledger as Skip runs past them, without inventing money', () => {
   const state = quiet()
   state.resources.budgetRemaining = 105
   state.pendingEffects.push(
     { id: 'licence-return', day: 242, source: 'test', effects: [{ type: 'budget.change', amount: 60, note: 'An unused licence has been cancelled.' }] },
     { id: 'duplicate-return', day: 244, source: 'test', effects: [{ type: 'budget.change', amount: 90, note: 'A duplicate tool has been cancelled.' }] },
   )
-  expect(applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true }).message).toContain('£105k to £165k')
-  expect(state.currentDay).toBe(242)
-  expect(applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true }).message).toContain('£165k to £255k')
-  expect(state.currentDay).toBe(244)
+  // Since 17 November Skip runs to what needs the player; a refund does not,
+  // and the store names it instead (budget toast).
+  applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
+  expect(state.currentDay).toBeGreaterThanOrEqual(244)
+  expect(state.resources.budgetRemaining).toBe(255)
   expect(state.history.entries.filter((entry) => entry.kind === 'budget')).toHaveLength(2)
 })
 it('records slow completion around an unpaid constraint without charging for the fix', () => {

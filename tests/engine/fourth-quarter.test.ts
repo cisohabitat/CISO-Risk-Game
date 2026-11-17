@@ -85,16 +85,21 @@ describe('the fourth quarter arises from the player\'s position', () => {
     for (let s = 0; s < 30 && !(quiet && loud); s += 1) {
       const state = newGame(index, { seed: `q4-budget-${s}`, difficulty: 'guided' })
       let asked = false
+      let askedDay = Infinity
       for (let day = 0; day < 364; day += 1) {
         runDays(state, index, 1)
         const opened = answerEverything(state, index, 'dec-q4-next-year-budget')
         if (opened.includes('dec-q4-next-year-budget')) {
+          if (!asked) askedDay = state.currentDay
           asked = true
           const id = state.decisions.openIds.find((d) => state.decisions.decisions[d]!.defId === 'dec-q4-next-year-budget')!
           applyAction(state, index, { type: 'resolveDecision', decisionId: id, optionId: 'opt-q4-budget-hold', rationaleTagIds: ['rat-material'] })
         }
       }
-      const incidents = Object.keys(state.incidents.incidents).length
+      // Quiet when finance asked: an incident that starts after the question
+      // (q4-budget-2 since the objective gates: asked on day 300, ransomware
+      // on day 342) does not make the question wrong when it was put.
+      const incidents = Object.values(state.incidents.incidents).filter((incident) => incident.startedDay < askedDay).length
       if (incidents === 0) { expect(asked, `${state.seed}: a quiet year and finance never asked`).toBe(true); quiet ??= state }
       else { expect(asked, `${state.seed}: ${incidents} incident(s) and finance called it quiet`).toBe(false); loud ??= state }
     }

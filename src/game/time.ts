@@ -14,8 +14,11 @@ const MONTHS = [
 /** A real year, because the header shows the date to the player. */
 const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 export const DECEMBER_START_DAY = 334
-/** Maximum one-shot UI skip; button, shortcut and adapter share this bound. */
-export const UI_SKIP_DAYS = 7
+/**
+ * How far one Skip ahead may run: to the next thing that needs the player, at
+ * most the rest of the year. It was a seven-day cap until 17 November.
+ */
+export const UI_SKIP_DAYS = 364
 
 /**
  * Day 0 is the first Monday of the campaign year.

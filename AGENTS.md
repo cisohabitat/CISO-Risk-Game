@@ -63,9 +63,12 @@ changes.
   tick/runDays automatic closure and historical finished-save routing intact.
   Automatic review waits for closure; preserve explicitly requested early
   write-up and do not rewrite stored judgements.
-- UI Skip quotes seven days. It holds for notable returns and December mail;
-  factual quiet-week and objective updates replace multiweek blind jumps, not
-  invented events or extra decisions. Existing pending-decision guards remain.
+- Skip ahead runs to the next pause reason (a decision arriving or due, a
+  quarter's paper, a paper's final week, an incident, a blocked programme,
+  an invalidated assumption, the year end) and names it ("Stopped on …").
+  Since 17 November there is no seven-day cap, no weekly hold and no stop
+  for mail or refunds; those wait in the Inbox and the budget toast.
+  Existing pending-decision and final-week paper guards remain.
 - Weak business enablement now shares the Mixed ceiling with prioritisation and
   team sustainability. Keep eight equal weights and existing other safeguards.
   Objective commitments expire before a following day's progress can complete
@@ -372,9 +375,9 @@ changes.
   names that response. Validate decision incident references before activating an
   imported save; missing, non-string and inherited-property references are
   invalid. An older review must not enter a newer response record.
-- Skip ahead and the right-arrow shortcut request `stopOnUpdate`; only newly
-  delivered results, follow-ups, programme delivery, provenance-linked warnings
-  and urgent mail end the skip. Old unread mail must never block progress.
+- Skip ahead and the right-arrow shortcut request `stopOnUpdate`, which adds
+  the final-week paper stop and names the stop; mail never ends a skip (it
+  did until 17 November). Old unread mail must never block progress.
   Ordinary timed ticks and headless advances retain their existing semantics.
   Programme milestones create factual correspondence shared by Briefing and
   Inbox through `src/game/inbox/returns.ts`. Do not add filler decisions or claim
@@ -442,7 +445,13 @@ changes.
   `sessionLogJson` exports the open campaign only. Do not add a log line
   without going through `record`.
 - Skip ahead holds for a waiting decision and for a board paper in its final
-  week (`advance` with `stopOnUpdate`). A shared seed link is removed from the
+  week (`advance` with `stopOnUpdate`); otherwise it runs to the next pause
+  reason and says what it stopped for.
+- An objective's `gate` (checkDay, condition, delayDays, progress, met and
+  unmet letters) is checked once in tick step 4 by `checkObjectiveGates`; its
+  change goes through the effect reducer, and `gate` on the runtime records
+  the answer. Gate a later objective only with the owner's say and a
+  `scripts/tune.ts` run (it prints gates met). A shared seed link is removed from the
   address once its campaign begins (`withoutSeedLink`).
 - "Contained" and "Recovered" on the response panel and "still running" in the
   annual review share one threshold, `RESPONSE_DONE` in

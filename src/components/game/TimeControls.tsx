@@ -132,7 +132,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         variant="secondary"
         className="compact min-h-9"
         disabled={state.finished}
-        title="Advances once, up to 7 days, stopping at decisions and notable updates; December mail is shown before continuing. Choose a speed to keep running."
+        title="Runs to the next thing that needs you: a decision, a board paper, an incident or a blocked programme, and says which. Choose a speed to watch time pass."
         onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(UI_SKIP_DAYS, true) }}
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}

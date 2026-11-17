@@ -185,6 +185,14 @@ export const objectiveSchema = z.object({
   ownerStakeholderId: id,
   value: unit,
   year: z.number().int().min(1).optional(),
+  gate: z.object({
+    checkDay: z.number().int().positive(),
+    condition: conditionSchema,
+    delayDays: z.number().int().positive(),
+    progress: unit,
+    met: z.object({ subject: z.string(), body: z.string() }),
+    unmet: z.object({ subject: z.string(), body: z.string() }),
+  }).optional(),
 })
 
 export const stakeholderSchema = z.object({
