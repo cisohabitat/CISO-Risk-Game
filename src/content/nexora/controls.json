@@ -6,7 +6,12 @@
       "baseCoverage": 0.62, "baseConfigurationQuality": 0.6, "baseOperationalEffectiveness": 0.65, "baseMonitoringQuality": 0.4, "baseExceptionRate": 0.3, "variance": 0.12,
       "targetNodeIds": ["node-idp", "node-net-remote", "node-app-portal", "node-mgmt-server"],
       "mitigates": { "credential-stuffing": 0.8, "phishing": 0.55, "supplier-remote-access": 0.5 },
-      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0004, "driftKind": "coverage-erosion", "driftFloor": 0.78
+      "detectionStrength": 0.15, "recoveryStrength": 0, "driftPerDay": 0.0004, "driftKind": "coverage-erosion", "driftFloor": 0.78,
+      "reconstructionLines": {
+        "missing": "MFA was missing where the actor signed in: the account used was never enrolled for a second factor",
+        "bypassed": "MFA was bypassed: the account used sat on the standing exception list, so no second factor was asked for",
+        "ineffective": "MFA was in place but ineffective: a second factor was asked for and approved, because prompts could be repeated until one was accepted"
+      }
     },
     {
       "id": "ctl-pam", "name": "Privileged access management", "shortName": "PAM", "category": "privileged-access",

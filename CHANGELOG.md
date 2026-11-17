@@ -22,6 +22,16 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The card data found outside the payment environment is named. It is full
+  card numbers with expiry dates; no security codes, PINs or stripe data
+  were found.
+- An incident's reconstruction says whether MFA was missing, bypassed or in
+  place but ineffective. A ransomware reconstruction says how the encryption
+  ran and spread.
+- The board paper reminder names the committee it goes to ("reports Q1
+  results to the Q2 committee"). The unfunded audit promise says it was
+  found at that morning's review.
+
 - Skip ahead now runs to the next thing that needs you: a decision, a board
   paper, an incident or a blocked programme. It says what it stopped for.
   There is no longer a seven-day limit or a pause at each new week, and

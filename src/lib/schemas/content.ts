@@ -249,6 +249,7 @@ export const controlSchema = z.object({
   driftPerDay: z.number().min(0).max(0.01),
   driftKind: z.enum(['coverage-erosion', 'operational-decay', 'exception-accumulation']),
   driftFloor: z.number().min(0).max(1),
+  reconstructionLines: z.object({ missing: z.string().optional(), bypassed: z.string().optional(), ineffective: z.string().optional() }).optional(),
 })
 
 const controlEffectSchema = z.object({

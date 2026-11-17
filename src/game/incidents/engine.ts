@@ -261,18 +261,33 @@ export function buildReconstruction(
       }
     }) ?? []
 
+  // Generic lines for the controls on the route, after the family's own
+  // lines, and none for a control the family already speaks about: the
+  // ransomware family's EDR line said what a generic one would repeat.
+  const controlHelped: string[] = []
+  const controlHurt: string[] = []
+  const authoredControls = new Set(
+    [...(family?.whatHelped ?? []), ...(family?.whatHurt ?? [])]
+      .flatMap((line) => (typeof line !== 'string' && evaluateCondition(state, index, line.when) ? [line.when] : []))
+      .flatMap((when) => ('controlId' in when && typeof when.controlId === 'string' ? [when.controlId] : [])),
+  )
   for (const def of index.content.controls) {
     const runtime = state.controls.controls[def.id]
-    if (!runtime) continue
+    if (!runtime || authoredControls.has(def.id)) continue
     const relevant = path?.steps.some((step) => step.controlIds.includes(def.id)) ?? false
     if (!relevant) continue
     if (runtime.coverage > 0.7 && runtime.operationalEffectiveness > 0.6) {
-      helped.push(`${def.name} was in place and operating across most of the estate`)
-    } else if (runtime.coverage < 0.4) {
-      hurt.push(`${def.name} covered only part of the estate`)
-    } else if (runtime.exceptionRate > 0.3) {
-      hurt.push(`${def.name} carried a large standing exception population`)
+      controlHelped.push(`${def.name} was in place and operating across most of the estate`)
+      continue
     }
+    // A control on the route that did not hold failed in one of three ways,
+    // and a practitioner wants to know which (14 November): MFA at its
+    // starting levels sat between the old two thresholds and was not
+    // mentioned at all.
+    const lines = def.reconstructionLines
+    if (runtime.coverage < 0.6) controlHurt.push(lines?.missing ?? `${def.name} covered only part of the estate`)
+    else if (runtime.exceptionRate >= 0.25) controlHurt.push(lines?.bypassed ?? `${def.name} carried a large standing exception population`)
+    else controlHurt.push(lines?.ineffective ?? `${def.name} was in place but not working well enough to stop it`)
   }
   if (incident.commandActivated) helped.push('Incident command was stood up early')
   else hurt.push('Incident command was never formally stood up')
@@ -320,6 +335,8 @@ export function buildReconstruction(
 
   const priorChoices = priorRouteChoices(state, index, incident)
   hurt.splice(0, 0, ...priorChoices.map((choice) => choice.text))
+  helped.push(...authoredLines(state, index, family?.whatHelped), ...controlHelped)
+  hurt.push(...authoredLines(state, index, family?.whatHurt), ...controlHurt)
   const narrative = [
     family?.headline ?? 'An incident ran its course.',
     path ? `The route ran ${pathSummary.map((s) => s.nodeName).join(' → ')}.` : '',
@@ -335,8 +352,8 @@ export function buildReconstruction(
       ? state.inbox.messages.filter((message) => message.signalCampaignId === incident.campaignId && message.day <= incident.startedDay).map((message) => message.id)
       : [],
     pathSummary,
-    helped: helped.concat(authoredLines(state, index, family?.whatHelped)).slice(0, 6),
-    hurt: hurt.concat(authoredLines(state, index, family?.whatHurt)).slice(0, 6),
+    helped: helped.slice(0, 6),
+    hurt: hurt.slice(0, 6),
     relatedDecisionIds: [...new Set([...priorChoices.map((choice) => choice.decisionId), ...relatedDecisions])],
     relatedAssumptionIds: relatedAssumptions,
     narrative,

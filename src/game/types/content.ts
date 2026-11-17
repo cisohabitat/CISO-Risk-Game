@@ -153,6 +153,12 @@ export interface SecurityControlDef {
    * settles at roughly two thirds of its peak rather than decaying to nothing.
    */
   driftFloor: number
+  /**
+   * What the reconstruction says when this control was on the route and did
+   * not hold: missing (too little coverage), bypassed (a standing exception)
+   * or ineffective (in place, not working). Omitted lines use a generic one.
+   */
+  reconstructionLines?: { missing?: string; bypassed?: string; ineffective?: string }
 }
 
 export interface ControlEffectDef {

@@ -689,6 +689,9 @@ security check before their date: a go-live review, the integration auditors
 and the acquiring bank. A check that finds the work done speeds delivery a
 little. One that does not costs six weeks.
 
+An incident's reconstruction says, for each control on the route that did not
+hold, whether it was missing, bypassed or in place but ineffective.
+
 The annual review calls an incident still running only while the business is
 affected; restored services read as recovered there as on the response panel.
 

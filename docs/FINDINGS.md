@@ -4630,3 +4630,38 @@ The soak was clean over 300 first years and 100 two-year runs. The middle
 option never meets all five objectives, because opposing the launch delays
 it. Whether a gate letter reads as the business's voice rather than a
 penalty is a playtest question.
+
+## 17 November 2026 — small fixes from the playtest rounds
+
+Text and timing only; no simulation change.
+
+- **Card data type (practitioner).** The evidence, the discovery letter and
+  the decision now say what was found: full card numbers with expiry dates,
+  unencrypted. They also say what was not found: security codes, PINs or
+  magnetic-stripe data. So the scope question is stored cardholder data, not
+  data that may never be kept.
+- **MFA missing, bypassed or ineffective (practitioner).** Before, the
+  reconstruction named a control on the route only below 0.4 coverage or
+  above 0.3 exceptions. MFA starts near 0.62 and 0.3, so it was usually
+  mentioned not at all. Every control on the route that did not hold is now
+  classed:
+  - missing: coverage below 0.6;
+  - bypassed: exceptions of 0.25 or more;
+  - otherwise, ineffective.
+
+  `reconstructionLines` on a control gives authored wording; MFA has all
+  three.
+- **Ransomware's cause (practitioner).** The family's authored lines said
+  only what made recovery hard. They now also say whether encryption tooling
+  ran unwatched (EDR) and whether a flat network let it spread
+  (segmentation), each conditioned on the control. The family's lines now
+  come before the generic control lines, which were cutting them off at six.
+  A control that a family line already speaks about gets no generic line.
+  Covered by `tests/engine/reconstruction-causes.test.ts`, whose MFA case
+  fails on the old thresholds.
+- **"Still unfunded" the day it was funded (15-run matrices).** The letter
+  is delivered at the start of the day, before the player acts. It now says
+  "this morning's funding review" and that starting the programme today will
+  be seen, late.
+- **"Submit by" read as wrong for the Q1 paper.** The Briefing reminder now
+  says the paper reports Q1 results to the Q2 committee.

@@ -85,3 +85,13 @@ command and honest reporting. The credibility list splits in two:
   and telemetry, contingency budget and staged programme options, separating
   data theft from encryption in one incident, and governance tracked through
   owners and measured effectiveness rather than completion percentages.
+
+## Follow-up, 17 November
+
+The authored-text items are done:
+- the card data is named as full card numbers with expiry dates, with no
+  security codes, PINs or stripe data;
+- the reconstruction says whether MFA was missing, bypassed or ineffective;
+- a ransomware reconstruction says how the encryption ran and spread.
+
+The new mechanics remain the owner's call.

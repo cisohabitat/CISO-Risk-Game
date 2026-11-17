@@ -990,7 +990,7 @@
     {
       "id": "dec-cardholder-scope",
       "title": "Card data outside the payment environment",
-      "description": "Unencrypted card data has been found in application logs outside the defined payment environment. Our card-acquiring bank does not know.",
+      "description": "Full card numbers with expiry dates have been found, unencrypted, in application logs outside the defined payment environment. No security codes, PINs or magnetic-stripe data were found. Either the logs come into the assessed scope or the numbers come out of them. Our card-acquiring bank does not know.",
       "context": "This is a compliance question and a risk question, and they have different answers.",
       "deadlineDays": 7,
       "defaultOptionId": "opt-card-fix",

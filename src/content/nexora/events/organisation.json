@@ -788,7 +788,7 @@
       "type": "discovery",
       "title": "Card data outside the payment environment",
       "from": "Fenella Osei, Head of Cyber Risk and Governance",
-      "body": "A discovery scan found unencrypted card data in two application log stores outside the defined payment environment. The regulated boundary is wider than the one we have been describing.",
+      "body": "A discovery scan found full card numbers with expiry dates, unencrypted, in two application log stores outside the defined payment environment. It found no security codes, PINs or magnetic-stripe data, so this is stored cardholder data rather than data that must never be kept. The regulated boundary is still wider than the one we have been describing.",
       "priority": "urgent",
       "availableFromDay": 92,
       "conditions": [{ "kind": "event.notFired", "eventId": "evt-biz-merchant-complaint" }],

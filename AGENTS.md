@@ -447,6 +447,10 @@ changes.
 - Skip ahead holds for a waiting decision and for a board paper in its final
   week (`advance` with `stopOnUpdate`); otherwise it runs to the next pause
   reason and says what it stopped for.
+- An incident reconstruction classes each control on the route that did not
+  hold as missing, bypassed or ineffective; authored wording goes in the
+  control's `reconstructionLines`. A family's own lines come before the
+  generic control lines, and replace them for a control they name.
 - An objective's `gate` (checkDay, condition, delayDays, progress, met and
   unmet letters) is checked once in tick step 4 by `checkObjectiveGates`; its
   change goes through the effect reducer, and `gate` on the runtime records

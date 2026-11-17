@@ -655,6 +655,21 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1
+          },
+          "reconstructionLines": {
+            "type": "object",
+            "properties": {
+              "missing": {
+                "type": "string"
+              },
+              "bypassed": {
+                "type": "string"
+              },
+              "ineffective": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "required": [
