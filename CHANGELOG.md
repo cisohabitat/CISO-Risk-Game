@@ -22,6 +22,15 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Incident decisions now come in waves. A ransomware incident asks first for
+  incident command and cutting the actor off. Two days later the first
+  findings arrive, with the question of outside help. The ransom note comes
+  four days in, with a letter on what recovery can actually do: whether the
+  backups were reachable, whether a restore was ever timed, and whether
+  anyone can say data left. Data breaches, intrusions, wiper attacks and a
+  tampered checkout follow the same rhythm. Payment recalls and cutting off a
+  supplier stay immediate.
+
 - The card data found outside the payment environment is named. It is full
   card numbers with expiry dates; no security codes, PINs or stripe data
   were found.

@@ -447,6 +447,11 @@ changes.
 - Skip ahead holds for a waiting decision and for a board paper in its final
   week (`advance` with `stopOnUpdate`); otherwise it runs to the next pause
   reason and says what it stopped for.
+- Incident response decisions open in waves. `responseDecisionIds` stays the
+  family's full list. `responseStages` names which decisions wait
+  `afterDays` from escalation, each with an authored findings letter
+  conditioned on state. Keep decisions whose point is speed (recall,
+  isolate, shutdown) out of later stages.
 - An incident reconstruction classes each control on the route that did not
   hold as missing, bypassed or ineffective; authored wording goes in the
   control's `reconstructionLines`. A family's own lines come before the

@@ -17,6 +17,8 @@ export interface IncidentTickResult {
   /** Phase transitions worth telling the player about. */
   transitions: { incidentId: string; phase: IncidentRuntime['phase']; note: string }[]
   openDecisionIds: { incidentId: string; decisionId: string }[]
+  /** Findings letters that arrive with a later response stage. */
+  findings: { incidentId: string; from: string; subject: string; body: string }[]
   interrupts: boolean
 }
 
@@ -74,7 +76,7 @@ const DIVERSION_DAYS = 60
 const DIVERSION_FLOOR = 0.3
 
 export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): IncidentTickResult {
-  const result: IncidentTickResult = { effects: [], transitions: [], openDecisionIds: [], interrupts: false }
+  const result: IncidentTickResult = { effects: [], transitions: [], openDecisionIds: [], findings: [], interrupts: false }
 
   for (const incidentId of state.incidents.order) {
     const incident = state.incidents.incidents[incidentId]
@@ -82,6 +84,20 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
     const family = index.incidentFamily.get(incident.familyId)
     if (!family) continue
     const daysInPhase = state.currentDay - incident.phaseEnteredDay
+
+    // Later response stages open as the organisation learns more, while
+    // the incident is still being handled.
+    const stages = family.responseStages ?? []
+    if (incident.responseStartedDay !== undefined && incident.phase !== 'debrief') {
+      while ((incident.stagesOpened ?? 0) < stages.length) {
+        const stage = stages[incident.stagesOpened ?? 0]!
+        if (state.currentDay - incident.responseStartedDay < stage.afterDays) break
+        for (const decisionId of stage.decisionIds) result.openDecisionIds.push({ incidentId, decisionId })
+        result.findings.push({ incidentId, from: stage.from, subject: stage.subject, body: authoredLines(state, index, stage.findings).join(' ') })
+        incident.stagesOpened = (incident.stagesOpened ?? 0) + 1
+        result.interrupts = true
+      }
+    }
 
     const enter = (phase: IncidentRuntime['phase'], note: string) => {
       incident.phase = phase
@@ -101,9 +117,12 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
         break
       }
       case 'escalation': {
+        const later = new Set(stages.flatMap((stage) => stage.decisionIds))
         for (const decisionId of family.responseDecisionIds) {
-          result.openDecisionIds.push({ incidentId, decisionId })
+          if (!later.has(decisionId)) result.openDecisionIds.push({ incidentId, decisionId })
         }
+        incident.responseStartedDay = state.currentDay
+        incident.stagesOpened = 0
         enter('containment', 'Response decisions are live; containment work has started.')
         result.interrupts = true
         break

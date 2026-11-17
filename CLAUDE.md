@@ -96,7 +96,10 @@ stop. Second, three first-year objectives carry a security gate
 (`gate` on an objective in `people.json`, checked in tick step 4): the
 platform launch, the Kestrel integration and the Nordic market. Each is
 checked once on its day. If the condition holds, delivery gains a little;
-if not, it costs 45 days.
+if not, it costs 45 days. The same day the owner had incident response
+decisions open in waves (`responseStages` on an incident family): ransomware
+opens command and isolation at once, outside help two days later with the
+first findings, and the ransom four days in with what recovery can do.
 On 30 October 2026 the owner's next-step instruction continues the supplied
 CISO report with residual-risk appetite delegation: a board decision, recorded
 statement, acceptance guidance and paper follow-through. It does not add insurer

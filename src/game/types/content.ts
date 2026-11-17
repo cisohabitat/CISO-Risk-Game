@@ -265,6 +265,14 @@ export interface IncidentFamilyDef {
   regulatoryInterest: number
   responseDecisionIds: string[]
   /**
+   * Response decisions that wait for what the organisation learns (owner,
+   * 17 November). A decision named here opens `afterDays` after the response
+   * began, with a findings letter; the rest open at escalation. All four
+   * ransomware decisions used to open at once, the ransom before anyone knew
+   * whether the backups held.
+   */
+  responseStages?: ResponseStageDef[]
+  /**
    * Authored lines for the reconstruction. A bare string is always true of
    * this family; a conditioned one is said only when the state agrees, so
    * "data held longer than the retention policy allowed" is not said to a
@@ -273,6 +281,15 @@ export interface IncidentFamilyDef {
    */
   whatHelped: (string | { text: string; when: Condition })[]
   whatHurt: (string | { text: string; when: Condition })[]
+}
+
+export interface ResponseStageDef {
+  afterDays: number
+  decisionIds: string[]
+  from: string
+  subject: string
+  /** The letter's sentences, in order; a conditioned one only when the state agrees. */
+  findings: (string | { text: string; when: Condition })[]
 }
 
 export interface EvidenceDef {

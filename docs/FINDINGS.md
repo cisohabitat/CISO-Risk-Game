@@ -4665,3 +4665,35 @@ Text and timing only; no simulation change.
   be seen, late.
 - **"Submit by" read as wrong for the Q1 paper.** The Briefing reminder now
   says the paper reports Q1 results to the Q2 committee.
+
+## 17 November 2026 — incident decisions in waves
+
+The owner chose this from the design review. All of an incident's response
+decisions opened at escalation with two-day deadlines. For ransomware that
+was command, isolation, outside help and the ransom. So a December incident
+put four decisions due within two days (practitioner account), and the ransom
+was asked before anything was known about recovery.
+
+`responseStages` on a family now holds decisions back `afterDays` from
+escalation. Each stage arrives with a findings letter whose sentences are
+conditioned on state: scope from EDR and logging; backups, a timed restore
+and egress monitoring for the ransom; egress for a breach; backups and
+segmentation for a wiper; deployment records for a tampered checkout.
+
+Measured over 150 CISO years left to run (`waves-*` seeds, a probe not kept):
+
+| Most incident decisions due within two days | Before | After |
+|---|---|---|
+| 4 or more | 52 years | 1 year (two incidents overlapping) |
+| 3 | 1 | 1 |
+
+- Mean incident consequence was 0.495 before and 0.488 after.
+- No stage was left unopened in 223.
+- Tune (25 CISO seeds) and ladder (15 seeds) are within noise of the gates
+  run: missed per programme 0.34 / 0.45 / 0.74.
+- The soak was clean over 300 first years and 100 two-year runs.
+- `tests/engine/response-stages.test.ts` covers the ransomware waves.
+
+Reading a transcript caught one sentence that claimed outbound traffic had
+been seen while the condition was weak egress monitoring. It now says
+nothing was watching closely enough to tell.

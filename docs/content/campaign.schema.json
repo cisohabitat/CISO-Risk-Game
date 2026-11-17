@@ -2451,6 +2451,68 @@
               "minLength": 1
             }
           },
+          "responseStages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "afterDays": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "decisionIds": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "from": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "findings": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "when": {
+                            "$ref": "#/$defs/__schema0"
+                          }
+                        },
+                        "required": [
+                          "text",
+                          "when"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "afterDays",
+                "decisionIds",
+                "from",
+                "subject",
+                "findings"
+              ],
+              "additionalProperties": false
+            }
+          },
           "whatHelped": {
             "type": "array",
             "items": {

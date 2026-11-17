@@ -426,6 +426,10 @@ export interface IncidentRuntime {
   externalSupport: boolean
   commandActivated: boolean
   boardInformedDay?: number
+  /** The day response decisions first opened. Absent before escalation, and in older saves. */
+  responseStartedDay?: number
+  /** How many of the family's later response stages have opened. */
+  stagesOpened?: number
 }
 
 export interface IncidentState {

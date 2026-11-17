@@ -371,6 +371,16 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       pinned: transition.phase !== 'closed',
     })
   }
+  for (const finding of incidentResult.findings) {
+    pushMessage(state, {
+      from: finding.from,
+      incidentId: finding.incidentId,
+      subject: finding.subject,
+      body: finding.body,
+      type: 'incident',
+      priority: 'critical',
+    })
+  }
   for (const { decisionId, incidentId } of incidentResult.openDecisionIds) {
     const decision = openDecision(state, index, decisionId, { deadlineDays: 2, incidentId })
     if (decision) {

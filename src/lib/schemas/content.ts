@@ -348,6 +348,13 @@ export const incidentFamilySchema = z.object({
   baseDurationDays: z.number().int().positive(),
   regulatoryInterest: unit,
   responseDecisionIds: z.array(id),
+  responseStages: z.array(z.object({
+    afterDays: z.number().int().positive(),
+    decisionIds: z.array(id).min(1),
+    from: z.string(),
+    subject: z.string(),
+    findings: z.array(z.string().or(z.object({ text: z.string(), when: conditionSchema }))).min(1),
+  })).optional(),
   whatHelped: z.array(z.string().or(z.object({ text: z.string(), when: conditionSchema }))),
   whatHurt: z.array(z.string().or(z.object({ text: z.string(), when: conditionSchema }))),
 })
