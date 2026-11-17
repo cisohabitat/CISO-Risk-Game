@@ -31,7 +31,9 @@ for (const setup of [{ mode: 'Guided', id: 'guided', scenario: 'A tidy inheritan
   })
 }
 
-test('the Right Arrow shortcut cannot skip from Week 48 to the year close', async ({ page }) => {
+// Since 17 November Skip runs to the next stop; with nothing pending from
+// Week 48 that is the final day, which it must reach without closing the year.
+test('the Right Arrow shortcut cannot skip from Week 48 past the year close', async ({ page }) => {
   const save = prepareCampaign('bounded-shortcut', 'day:1', 'guided') as { state: GameState }
   save.state.currentDay = 329
   save.state.resources.weekIndex = 47
@@ -42,8 +44,8 @@ test('the Right Arrow shortcut cannot skip from Week 48 to the year close', asyn
   await openPreparedCampaign(page, save)
   await page.locator('#main').focus()
   await page.keyboard.press('ArrowRight')
-  await expect(page.locator('.morning-brief')).toContainText('Week 49')
-  await expect(page.getByRole('heading', { name: /Finish your final day|The year has closed/ })).toHaveCount(0)
+  await expect(page.locator('.morning-brief')).toContainText('31 December')
+  await expect(page.getByRole('heading', { name: 'The year has closed' })).toHaveCount(0)
   await expectNoHorizontalScroll(page)
 })
 

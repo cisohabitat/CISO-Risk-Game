@@ -145,7 +145,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 1180, height: 820
     test.skip(!['desktop-chromium', 'desktop-webkit'].includes(info.project.name), 'both engines at the reported landscape sizes')
     test.setTimeout(120_000)
     await page.setViewportSize(viewport)
-    const save = prepareCampaign('incident-banner-scroll', 'incident') as { state: GameState }
+    const save = prepareCampaign('incident-banner-scroll-3', 'incident') as { state: GameState }
     for (const message of save.state.inbox.messages) message.body = Array(10).fill(message.body).join('\n\n')
     await openPreparedCampaign(page, save)
     // Create the real receipt via the decision UI. Keep both it and guidance
