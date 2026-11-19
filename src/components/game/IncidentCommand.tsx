@@ -137,17 +137,22 @@ export function IncidentCommand() {
         <div className="incident-board flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface p-3 text-sm" aria-label="The board">
           <p className="min-w-0 flex-1 text-pretty">
             {incident.board.briefedDay !== undefined
-              ? `Board briefed on ${shortDate(incident.board.briefedDay)}${incident.board.heardElsewhere ? ', after it had heard elsewhere.' : '.'}`
+              ? `Board briefed on ${shortDate(incident.board.briefedDay)}${incident.board.heardElsewhere ? ', after it had heard elsewhere.' : incident.board.tone === 'reassuring' ? ': you told it the incident is in hand.' : ': what is known and what is not.'}`
               : incident.board.heardElsewhere
                 ? 'The board heard about this elsewhere first. It still expects your account.'
                 : incident.board.expectedBy !== undefined
-                  ? `The board expects to hear from you by ${shortDate(incident.board.expectedBy)}, before it hears elsewhere.`
+                  ? `The board expects to hear from you by ${shortDate(incident.board.expectedBy)}, before it hears elsewhere. How you put it is remembered when the incident closes.`
                   : 'The board will expect to hear from you once this is confirmed.'}
           </p>
           {incident.board.canBrief && (
-            <Button variant="secondary" size="sm" className="w-full sm:w-auto" onClick={() => dispatch({ type: 'briefBoard', incidentId: incident.id })}>
-              Brief the board · 1 attention
-            </Button>
+            <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+              <Button variant="secondary" size="sm" className="w-full sm:w-auto" onClick={() => dispatch({ type: 'briefBoard', incidentId: incident.id, tone: 'candid' })}>
+                Brief the board: what we know and do not · 1 attention
+              </Button>
+              <Button variant="secondary" size="sm" className="w-full sm:w-auto" onClick={() => dispatch({ type: 'briefBoard', incidentId: incident.id, tone: 'reassuring' })}>
+                Brief the board: it is in hand · 1 attention
+              </Button>
+            </div>
           )}
         </div>
 

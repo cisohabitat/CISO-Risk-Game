@@ -100,6 +100,15 @@ if not, it costs 45 days. The same day the owner had incident response
 decisions open in waves (`responseStages` on an incident family): ransomware
 opens command and isolation at once, outside help two days later with the
 first findings, and the ransom four days in with what recovery can do.
+On 19 November 2026 the owner made the board incident-aware
+(`src/game/incidents/board.ts`). Briefing it is now a choice between candour
+and reassurance. The owner also accepted a design list:
+- the review names briefings and security checks;
+- one "After the incident" reflection per incident, at most two a year;
+- emergency spend is labelled unbudgeted and reported to the CFO;
+- check previews vary by difficulty;
+- the board is slow to warm for a quarter after a material incident;
+- one Year Two check, on the service desk assistant.
 On 30 October 2026 the owner's next-step instruction continues the supplied
 CISO report with residual-risk appetite delegation: a board decision, recorded
 statement, acceptance guidance and paper follow-through. It does not add insurer
@@ -251,9 +260,14 @@ been fixed and moved to `docs/FINDINGS.md`.
   For a player who writes every paper and briefs, over 30 seeds a mode,
   the year-end board reads 0.475 / 0.481 / 0.464 after a material incident
   against 0.519 / 0.560 / 0.541 without (guided, CISO, high pressure).
-  The ladder still reads 0.77–0.78 in every mode, because its policy's
-  executive trust pulls the board back over the following months. Whether
-  a ransomware year now feels heard is a playtest question.
+  The ladder still reads 0.78 in every mode, and this is the game working
+  rather than a dial failing. The ladder handles incidents well: it briefs
+  candidly, answers the response and covers the incident in its next paper.
+  Its CISO years with a material incident end at a mean of 0.795, against
+  0.768 without. A well-handled incident builds standing; a badly handled
+  one costs it. Since 19 November the board warms at a quarter of the usual
+  pace for 91 days after a material incident closes. Whether a ransomware
+  year now feels heard is a playtest question.
 
 - **The campaign content now loads on demand, not with the first screen.**
   The code/CSS/font critical path is 209.7 kB against a 221 kB limit (`pnpm size`, 14 November; it was 192.7 kB on 25 October, and the Briefing panels added since are most of the rise) including

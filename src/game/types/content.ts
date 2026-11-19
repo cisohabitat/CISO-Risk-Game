@@ -85,6 +85,8 @@ export interface ObjectiveGateDef {
   checkDay: number
   /** Who checks and what they will ask, shown on the objective before the day (19 November). */
   preview: string
+  /** Who runs the check, as it reads mid-sentence: "the go-live review". */
+  by: string
   condition: Condition
   delayDays: number
   /** Progress gained when the condition holds; also marks the objective security-supported. */

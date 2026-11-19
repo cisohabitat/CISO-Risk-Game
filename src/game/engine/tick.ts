@@ -405,10 +405,13 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
     const outcome = applyEffects(state, fired.effects, { index, rng, source: `event:${fired.def.id}` })
     for (const interrupt of outcome.interrupts) pauseReasons.add(interrupt as PauseReason)
 
-    const incident = fired.def.incidentContext === 'latest-closed'
+    // The latest closed incident this decision has not yet been asked about,
+    // so a second incident gets its own reflection (19 November).
+    const closed = fired.def.incidentContext === 'latest-closed'
       ? Object.values(state.incidents.incidents).filter((entry) => entry.phase === 'closed')
-        .sort((a, b) => (b.resolvedDay ?? b.phaseEnteredDay) - (a.resolvedDay ?? a.phaseEnteredDay))[0]
-      : undefined
+        .sort((a, b) => (b.resolvedDay ?? b.phaseEnteredDay) - (a.resolvedDay ?? a.phaseEnteredDay))
+      : []
+    const incident = closed.find((entry) => !Object.values(state.decisions.decisions).some((d) => d.defId === fired.def.decisionId && d.incidentId === entry.id)) ?? closed[0]
     const incidentId = incident?.id
     let decisionRuntimeId: string | undefined
     if (fired.def.decisionId) {

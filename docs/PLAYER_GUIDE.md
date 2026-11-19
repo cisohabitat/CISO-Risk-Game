@@ -440,7 +440,9 @@ what it does not: the attack path. You only ever see what your own people have
 actually told you.
 
 The bar also tells you when the board expects to hear from you: within three
-days of the response starting. **Brief the board** costs one attention. If
+days of the response starting. Briefing costs one attention, and you choose
+how to put it: what we know and do not, or that it is in hand. The committee
+remembers which when the incident closes. If
 you don't, it hears from the Chief Executive's office first, and remembers.
 When the incident closes, the committee writes. A material incident costs
 its confidence either way. It costs less if an earlier paper put that risk

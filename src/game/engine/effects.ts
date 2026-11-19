@@ -544,6 +544,10 @@ export function applyEffect(
       state.stakeholders.boardConfidence = clamp01(state.stakeholders.boardConfidence + effect.delta)
       break
     }
+    case 'board.wary': {
+      state.stakeholders.boardWaryUntilDay = Math.max(state.stakeholders.boardWaryUntilDay ?? 0, state.currentDay + effect.days)
+      break
+    }
     case 'operationalTolerance': {
       state.stakeholders.operationalTolerance = clamp01(state.stakeholders.operationalTolerance + effect.delta)
       break

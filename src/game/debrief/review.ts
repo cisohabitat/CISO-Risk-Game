@@ -22,7 +22,7 @@ import { effortAllocation, programmeRelevance, programmesThisYear } from './prio
 import { overallAssessment } from './assessment'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
-import { RESPONSE_DONE } from '../incidents/thresholds'
+import { BOARD_MATERIAL, RESPONSE_DONE } from '../incidents/thresholds'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export { programmesThisYear } from './prioritisation'
@@ -545,20 +545,28 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // whatever the player did, including a year that built nothing, and read
     // "Some of that" against a single missed objective.
     narrative: (() => {
-      if (failed === 0 && pending === 0) return 'The business met its commitments with security alongside it rather than in the way.'
+      const held = index.content.objectives.filter((def) => state.business.objectives[def.id]?.gate === 'unmet').map((def) => def.name)
+      const heldLine = held.length > 0 ? ` ${held.length === 1 ? 'One objective was' : `${held.length} objectives were`} held at a security check because the work it asked about had not been done: ${held.join('; ')}.` : ''
+      if (failed === 0 && pending === 0) return `The business met its commitments with security alongside it rather than in the way.${heldLine}`
       if (failed === 0) {
-        return `No business objective was missed, and ${pending === 1 ? 'one was' : `${pending} were`} still in delivery when the year was written up.`
+        return `No business objective was missed, and ${pending === 1 ? 'one was' : `${pending} were`} still in delivery when the year was written up.${heldLine}`
       }
       const missed = failed === 1 ? 'One business objective was missed.' : `${failed} business objectives were missed.`
       const built = programmesThisYear(state).length > 0
       return built
-        ? `${missed} Security programmes you chose to run were part of the pressure on ${failed === 1 ? 'it' : 'them'}.`
-        : `${missed} None of it was friction you imposed: you ran no security programme.`
+        ? `${missed} Security programmes you chose to run were part of the pressure on ${failed === 1 ? 'it' : 'them'}.${heldLine}`
+        : `${missed} None of it was friction you imposed: you ran no security programme.${heldLine}`
     })(),
     evidence: (() => {
       const lines = index.content.objectives
         .filter((def) => state.business.objectives[def.id])
         .map((def) => `${def.name}: ${state.business.objectives[def.id]!.status}`)
+      // The security checks the business ran (17 November), each named.
+      for (const def of index.content.objectives) {
+        const gate = state.business.objectives[def.id]?.gate
+        if (!def.gate || gate === undefined) continue
+        lines.push(gate === 'met' ? `${def.name}: ${def.gate.by} cleared it` : `${def.name}: held by ${def.gate.by}, ${def.gate.delayDays} days lost`)
+      }
       lines.unshift(`${achieved} of ${objectives.length} objectives achieved; ${failed} missed; ${pending} still in delivery`)
       // Money committed beyond the year. It used to disappear into the floor on
       // `budget.change`, which left a player who spent their reserve and then
@@ -576,7 +584,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // 6. Communication and escalation.
   const quarters = [...new Map(state.reviews.quarters.filter((paper) => paper.completed).map((paper) => [paper.quarter, paper])).values()]
   const boardConfidence = state.stakeholders.boardConfidence
-  const communication = clamp01(0.6 * boardConfidence + 0.4 * clamp01(quarters.length / 3))
+  // How the board heard about each incident (19 November). One it heard of
+  // elsewhere first cannot read as a board that relied on you.
+  const incidentNews = Object.values(state.incidents.incidents).flatMap((incident) => {
+    const name = index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'
+    if (incident.boardHeardElsewhereDay !== undefined) return [{ elsewhere: true, line: `The board heard about the ${name} elsewhere before it heard from you${incident.boardInformedDay !== undefined ? `; your briefing followed on ${dateOf(incident.boardInformedDay)}` : ''}.` }]
+    // A reassurance that did not hold reads as a board misled, not informed.
+    if (incident.boardInformedDay !== undefined && incident.boardBriefingTone === 'reassuring' && incident.phase === 'closed' && incident.consequence >= BOARD_MATERIAL) return [{ elsewhere: true, line: `You told the board on ${dateOf(incident.boardInformedDay)} that the ${name} was in hand, and it was not.` }]
+    if (incident.boardInformedDay !== undefined) return [{ elsewhere: false, line: `You briefed the board on the ${name} on ${dateOf(incident.boardInformedDay)}, before it heard elsewhere.` }]
+    return []
+  })
+  const heardElsewhere = incidentNews.some((news) => news.elsewhere)
+  const communication = Math.min(heardElsewhere ? 0.74 : 1, clamp01(0.6 * boardConfidence + 0.4 * clamp01(quarters.length / 3)))
   // What was kept quiet, named beside the band rather than folded into it: a
   // year read "the board came to rely on your judgement" after an extortion
   // demand it never heard about (15-run playtest, November).
@@ -603,7 +622,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
             ? 'The board came to rely on your papers, though not everything reached it from you.'
             : 'The board came to rely on your judgement, including when you told them what you did not know.'
         case 'solid':
-          return 'The board followed your argument, and took what you brought them seriously.'
+          return heardElsewhere
+            ? 'The board followed your papers, but heard about an incident from someone else before it heard from you.'
+            : 'The board followed your argument, and took what you brought them seriously.'
         case 'developing':
           return 'The board listened, but never quite came to depend on you.'
         default:
@@ -614,6 +635,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       `${papers.submitted} quarterly review${papers.submitted === 1 ? '' : 's'} submitted; ${papers.offered} offered`,
       ...(papers.missed > 0 ? [`${papers.missed} board paper${papers.missed === 1 ? '' : 's'} missed at the submission deadline`] : []),
       ...(papers.awaiting > 0 ? [`${papers.awaiting} paper${papers.awaiting === 1 ? '' : 's'} still awaiting submission`] : []),
+      ...incidentNews.map((news) => news.line),
       ...keptQuiet,
     ],
   })

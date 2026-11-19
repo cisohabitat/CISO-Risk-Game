@@ -61,3 +61,41 @@ it('reads a material incident more kindly when a paper had warned of its route',
   expect(warned.drop).toBeLessThan(unwarned.drop)
   expect(unwarned.drop).toBeGreaterThan(0.05)
 })
+
+it('makes reassurance a wager: kinder when it holds, costlier when it does not', () => {
+  const close = (tone: 'candid' | 'reassuring', consequence: number) => {
+    const { state, index, incident } = live(`board-tone-${tone}-${consequence}`)
+    applyAction(state, index, { type: 'briefBoard', incidentId: incident.id, tone })
+    let before = state.stakeholders.boardConfidence
+    for (let day = 0; day < 120 && incident.phase !== 'closed'; day += 1) {
+      before = state.stakeholders.boardConfidence
+      incident.consequence = consequence
+      runDays(state, index, 1)
+    }
+    const letter = state.inbox.messages.find((m) => m.subject === 'The committee on the ransomware and service encryption')!
+    return { change: state.stakeholders.boardConfidence - before, letter: letter.body }
+  }
+  const failed = close('reassuring', 0.8)
+  const candidBad = close('candid', 0.8)
+  expect(failed.letter).toContain('it was told the incident was in hand, and it was not')
+  expect(failed.change).toBeLessThan(candidBad.change)
+  const held = close('reassuring', 0.1)
+  const candidSmall = close('candid', 0.1)
+  expect(held.letter).toContain('your reassurance held')
+  expect(held.change).toBeGreaterThan(candidSmall.change)
+})
+
+it('stays wary for a quarter after a material incident: warms slowly, cools as fast as ever', () => {
+  const warm = (wary: boolean) => {
+    const index = testIndex()
+    const state = newGame(index, { seed: 'board-wary' })
+    state.currentDay = 100
+    state.stakeholders.boardConfidence = 0.3
+    for (const person of Object.values(state.stakeholders.stakeholders)) person.trust = 0.8
+    if (wary) state.stakeholders.boardWaryUntilDay = 191
+    state.events.suppressedEventIds = index.content.events.map((event) => event.id)
+    runDays(state, index, 60)
+    return state.stakeholders.boardConfidence
+  }
+  expect(warm(true)).toBeLessThan(warm(false) - 0.05)
+})

@@ -691,7 +691,8 @@ and the acquiring bank. A check that finds the work done speeds delivery a
 little. One that does not costs six weeks. The objectives panel shows each
 check, and what it will ask, before its day.
 
-The board expects to hear about an incident within three days. It reacts to
+The board expects to hear about an incident within three days, and how you put
+it (what is known and not, or that it is in hand) is remembered at close. It reacts to
 how it was told: briefed early and warned in an earlier paper, it takes a
 material incident better than one it heard about elsewhere. Incident decisions
 open in waves, each later wave with a findings letter:

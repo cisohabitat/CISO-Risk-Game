@@ -1019,13 +1019,19 @@
       "availableFromDay": 30,
       "conditions": [
         {
-          "kind": "incident.resolvedCountAtLeast",
-          "value": 1
+          "kind": "incident.closedWithoutDecision",
+          "decisionId": "dec-post-incident"
+        },
+        {
+          "kind": "event.firedFewerThan",
+          "eventId": "evt-org-post-incident",
+          "value": 2
         }
       ],
       "weight": 30,
       "pinned": false,
-      "oncePerCampaign": true,
+      "oncePerCampaign": false,
+      "cooldownDays": 14,
       "decisionId": "dec-post-incident",
       "relatedNodeIds": [],
       "tags": [

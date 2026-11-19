@@ -22,6 +22,21 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- Briefing the board is a choice. You can tell it what is known and what is
+  not, or that the incident is in hand. Reassurance is kinder if the
+  incident stays small, and costs you if it does not. A material incident
+  leaves the board slow to warm for a quarter.
+- The annual review names how the board heard of each incident, and each
+  security check the business ran.
+- Every incident gets its own "After the incident" reflection, up to two a
+  year.
+- Emergency incident spend beyond the budget is labelled unbudgeted, and the
+  CFO writes when it happens. Ordinary options that cannot be afforded say
+  why only emergency spend can go past the allocation.
+- On High pressure, the objectives panel shows only who runs each security
+  check and when, not what it will ask.
+- Year Two adds a data protection review of the service desk assistant.
+
 - The Business objectives panel shows each security check before it
   happens: who checks, when, and what they will ask. Afterwards it says
   whether the check cleared or held.

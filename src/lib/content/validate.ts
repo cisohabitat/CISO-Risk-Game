@@ -412,10 +412,12 @@ function checkCondition(
     case 'decision.optionTaken':
     case 'decision.resolved':
     case 'lastYear.optionTaken':
+    case 'incident.closedWithoutDecision':
       ref(registry.decision, condition.decisionId, 'missing-decision')
       break
     case 'event.fired':
     case 'event.notFired':
+    case 'event.firedFewerThan':
       ref(registry.event, condition.eventId, 'missing-event')
       break
     case 'situation.is':

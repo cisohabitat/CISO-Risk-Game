@@ -77,4 +77,6 @@ export type GameEffect =
   | { type: 'history.note'; kind: string; summary: string }
   | { type: 'decision.open'; decisionId: string; deadlineDays?: number }
   | { type: 'board.confidence'; delta: number }
+  /** The board warms slowly for this many days (19 November, after a material incident). */
+  | { type: 'board.wary'; days: number }
   | { type: 'operationalTolerance'; delta: number }

@@ -34,7 +34,7 @@ export function leastCommissioned(
  */
 export function briefBoardOnIncidents(state: GameState, index: ContentIndex): void {
   for (const incident of Object.values(state.incidents.incidents)) {
-    if (canBriefBoard(incident)) applyAction(state, index, { type: 'briefBoard', incidentId: incident.id })
+    if (canBriefBoard(incident)) applyAction(state, index, { type: 'briefBoard', incidentId: incident.id, tone: 'candid' })
   }
 }
 

@@ -214,7 +214,10 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
           let blockedReason: string | undefined
           if (treatment === 'discretionary' && budgetCost > 0 && state.resources.budgetRemaining < budgetCost) {
             // "(£90k)" read as what was left, to a playtester with £50k left.
-            blockedReason = `Costs ${money(budgetCost)}, more than the ${money(Math.max(0, state.resources.budgetRemaining))} left this year`
+            // Only emergency incident spend may go past the allocation; saying
+            // so answers "why could the ransom response overspend and this
+            // not?" (playtest matrices, November).
+            blockedReason = `Costs ${money(budgetCost)}, more than the ${money(Math.max(0, state.resources.budgetRemaining))} left this year. Only emergency incident spend can go past the allocation`
           } else if (requirements?.budget && state.resources.budgetRemaining < requirements.budget) {
             blockedReason = 'Not enough budget remains this year'
           } else if (requirements?.condition && !evaluateCondition(state, index, requirements.condition)) {
@@ -835,7 +838,7 @@ export interface IncidentCommandView {
   /** Choices already made in this incident, so the record is visible while it runs. */
   taken: { day: number; title: string; option: string }[]
   /** The board: briefed on a day, still to be told (and by when), or not yet a board matter. */
-  board: { briefedDay?: number; heardElsewhere: boolean; canBrief: boolean; expectedBy?: number }
+  board: { briefedDay?: number; heardElsewhere: boolean; canBrief: boolean; expectedBy?: number; tone?: 'candid' | 'reassuring' }
 }
 
 /**
@@ -909,6 +912,7 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
     taken: taken.sort((a, b) => a.day - b.day),
     board: {
       briefedDay: incident.boardInformedDay,
+      tone: incident.boardBriefingTone,
       heardElsewhere: incident.boardHeardElsewhereDay !== undefined,
       canBrief: canBriefBoard(incident),
       expectedBy: incident.responseStartedDay !== undefined ? incident.responseStartedDay + BOARD_BRIEFING_DAYS : undefined,

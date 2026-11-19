@@ -80,6 +80,9 @@ describe('funding', () => {
     // The £220k it could not meet is carried, not absorbed by the floor.
     expect(state.resources.unfundedCommitment).toBe(220)
     expect(checkInvariants(state, index)).toEqual([])
+    // Reported to the CFO, as the option says (19 November).
+    const letter = state.inbox.messages.find((message) => message.subject === `Unbudgeted: ${index.decision.get('dec-inc-external')!.title}`)
+    expect(letter?.body).toContain('beyond the cyber allocation')
   })
 
   it('records no shortfall when an emergency is affordable', () => {

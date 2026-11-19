@@ -242,6 +242,12 @@ export interface StakeholderRuntime {
 export interface StakeholderState {
   stakeholders: Record<string, StakeholderRuntime>
   boardConfidence: number
+  /**
+   * Until this day the board is slow to warm again, after a material incident
+   * (19 November): it followed executive trust back up within weeks, so a
+   * ransomware year ended where a quiet one did. Absent in older saves.
+   */
+  boardWaryUntilDay?: number
   operationalTolerance: number
 }
 
@@ -426,6 +432,8 @@ export interface IncidentRuntime {
   externalSupport: boolean
   commandActivated: boolean
   boardInformedDay?: number
+  /** How the CISO put it to the board: what is known and not, or that it is in hand. Absent: candid. */
+  boardBriefingTone?: 'candid' | 'reassuring'
   /** The day the board heard about it from someone else first. Absent in older saves. */
   boardHeardElsewhereDay?: number
   /** The day response decisions first opened. Absent before escalation, and in older saves. */

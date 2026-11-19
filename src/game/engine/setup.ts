@@ -80,6 +80,12 @@ export interface DifficultyProfile {
    * mechanic *is*, which every mode still needs on first encounter.
    */
   showsDecisionCoaching: boolean
+  /**
+   * How much of a security check the objectives panel shows before its day
+   * (19 November): `full` names what it will ask, which points at the work;
+   * `who` gives only who checks and when.
+   */
+  gatePreview: 'full' | 'who'
 }
 
 /** The two identity engineering roles every briefing names; the other three vacancies fall elsewhere. */
@@ -100,6 +106,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.62,
     investigationSpeed: 0.85,
     showsDecisionCoaching: true,
+    gatePreview: 'full',
   },
   ciso: {
     budgetMultiplier: 1,
@@ -112,6 +119,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.5,
     investigationSpeed: 1,
     showsDecisionCoaching: false,
+    gatePreview: 'full',
   },
   // High pressure makes the world harsher and leaves the player's levers close
   // to intact. Squeezing both — as this used to — cuts the very channels
@@ -128,6 +136,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     executiveTolerance: 0.38,
     investigationSpeed: 1.1,
     showsDecisionCoaching: false,
+    gatePreview: 'who',
   },
 }
 

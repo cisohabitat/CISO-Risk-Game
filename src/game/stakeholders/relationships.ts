@@ -38,9 +38,11 @@ export function tickRelationships(state: GameState): void {
   const trusts = Object.values(state.stakeholders.stakeholders).map((p) => p.trust)
   if (trusts.length > 0) {
     const avg = trusts.reduce((sum, v) => sum + v, 0) / trusts.length
-    state.stakeholders.boardConfidence = clamp01(
-      state.stakeholders.boardConfidence + (avg - state.stakeholders.boardConfidence) * 0.004,
-    )
+    // Wary for a quarter after a material incident: it warms at a quarter of
+    // the usual pace, and cools as fast as ever.
+    const gap = avg - state.stakeholders.boardConfidence
+    const wary = gap > 0 && state.currentDay < (state.stakeholders.boardWaryUntilDay ?? -1)
+    state.stakeholders.boardConfidence = clamp01(state.stakeholders.boardConfidence + gap * (wary ? 0.001 : 0.004))
   }
   // Patience recovers towards the level this organisation actually has, and
   // no further. It used to climb 0.0015 a day with no ceiling, which is +0.55

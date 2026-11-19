@@ -453,6 +453,22 @@ changes.
   of the route, whether it was briefed in time), and `briefBoard` costs one
   attention. Harnesses that write papers also brief
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
+- `briefBoard` takes a `tone`. Candid earns 0.02 at close. Reassuring
+  earns 0.03 if the incident stays below material and costs 0.05 if it does
+  not, and the review reads a failed reassurance as the board misled. Keep
+  it a wager that loses when it matters.
+- `board.wary` (an effect) slows the board's warming for a period; the
+  close of a material incident sets 91 days.
+- The review's communication dimension names each briefing and each time
+  the board heard elsewhere; either of the latter caps it below strong.
+  Business enablement names each security check by its `by`.
+- "After the incident" fires once per closed incident, at most twice a year
+  (`incident.closedWithoutDecision`, `event.firedFewerThan`).
+- Emergency spend beyond the allocation writes a CFO letter ("Unbudgeted:").
+  A blocked discretionary option says only emergency incident spend can go
+  past the allocation.
+- `gatePreview` in the difficulty profile sets how much of a check the
+  objectives panel shows: `full` on Guided and CISO, `who` on High pressure.
 - Incident response decisions open in waves. `responseDecisionIds` stays the
   family's full list. `responseStages` names which decisions wait
   `afterDays` from escalation, each with an authored findings letter

@@ -1,3 +1,4 @@
+import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { objectivePace } from '@/game/business/pace'
 import { Badge, Card, CardBody } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
@@ -25,7 +26,7 @@ export function ObjectiveTracker() {
             seen coming rather than met in a letter (19 November). */}
         {def.gate && (runtime.gate !== undefined
           ? <p className="mt-1 text-sm">Security check, {shortDate(def.gate.checkDay)}: {runtime.gate === 'met' ? 'cleared.' : `held; ${def.gate.delayDays} days lost.`}</p>
-          : runtime.status !== 'achieved' && runtime.status !== 'failed' && <p className="mt-1 text-sm">Security check on {shortDate(def.gate.checkDay)}: {def.gate.preview}</p>)}
+          : runtime.status !== 'achieved' && runtime.status !== 'failed' && <p className="mt-1 text-sm">Security check on {shortDate(def.gate.checkDay)}: {DIFFICULTY_PROFILES[state.difficulty].gatePreview === 'full' ? def.gate.preview : `by ${def.gate.by}.`}</p>)}
         {runtime.securitySupported && <p className="mt-1 text-xs text-ink-muted">Security support is recorded for this objective.</p>}
       </CardBody></Card></li>
     })}</ul>

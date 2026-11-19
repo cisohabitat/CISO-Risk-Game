@@ -4749,3 +4749,60 @@ Two gaps were left by the 17 November changes:
   with a link to the earliest.
 
 `tests/ui/skip-and-gates.test.tsx` covers both.
+
+## 19 November 2026 — the design list, in the owner's order
+
+**1. The review read none of the new behaviours by name.** Communication
+was built from board confidence and papers, and business enablement from
+objectives met. Communication now lists each briefing, each time the board
+heard elsewhere, and each reassurance that did not hold. Either of the
+latter two caps it below strong, as keeping a matter quiet already did.
+Business enablement names each security check by who ran it, and says when
+one held an objective. `tests/engine/review-new-behaviours.test.ts`.
+
+**2. Briefing the board was a free right answer.** It now has a tone:
+- candid earns 0.02 at close;
+- reassuring earns 0.03 if the incident stays below material, and costs 0.05
+  if it does not, with the committee saying so.
+
+That makes reassurance a wager that loses exactly when it matters.
+`tests/engine/board-incidents.test.ts`.
+
+**3. One reflection a year.** The event is now repeatable. Two new
+conditions gate it: a closed incident without the decision, and fewer than
+two firings this year. It attaches to the closed incident not yet asked
+about. `tests/engine/reflection-per-incident.test.ts`.
+
+**4. Emergency spend looked arbitrary.** The over-budget option now says
+"unbudgeted, reported to the CFO and carried into next year". The CFO writes
+when it happens. A blocked discretionary option says only emergency incident
+spend can go past the allocation.
+
+**5. Smaller items.**
+- High pressure shows only who checks and when (`gatePreview`).
+- After a material incident the board warms at a quarter of the usual pace
+  for 91 days (`board.wary`).
+- On the ladder this changed nothing, and the ladder is right. Over 15
+  seeds a mode, CISO years with a material incident end at a mean of 0.795
+  against 0.768 without, because the ladder handles incidents well and the
+  executives' trust rises with it.
+- The tuning harness's passive style, which never briefs or writes a paper,
+  ends at 0.10.
+
+**6. The Year Two check.** It was first put on the partner interface (check
+on day 165). Over 30 idle CISO second years, that objective is met 18 times
+without a check and 0 with one: its margin is too thin for any delay. It
+moved to the service desk assistant, which has its own decision (assess,
+sign as it stands, or pilot) and is met 29 times in 30 unchecked.
+
+With the check on day 225, signing often finished before it and escaped,
+while the assessment's own 21 days left the careful path missing 13 times:
+no better than signing. At check day 160 and 0.12 progress when met:
+
+| Answer | Met in 30 |
+|---|---|
+| Assess first | 24 |
+| Sign as it stands | 17 |
+| Pilot | 17 |
+
+The soak was clean over 300 first years and 100 two-year runs.

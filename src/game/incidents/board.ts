@@ -12,6 +12,14 @@ import { BOARD_BRIEFING_DAYS, BOARD_MATERIAL, BOARD_REGULATORY } from './thresho
 export const BOARD_CHAIR = 'Sir Alan Whitcombe, Chair, Board Risk Committee'
 const HEARD_ELSEWHERE = -0.06
 const BRIEFED_EARLY = 0.02
+/**
+ * Reassurance is a wager: a little more than candour when the incident stays
+ * small, and a cost when the board was told it was in hand and it was not.
+ */
+const REASSURANCE_HELD = 0.03
+const REASSURANCE_FAILED = -0.05
+/** How long the board is slow to warm again after a material incident closes. */
+const BOARD_WARY_DAYS = 91
 
 export interface BoardLetter { subject: string; body: string }
 
@@ -60,6 +68,7 @@ export function boardOnClose(state: GameState, index: ContentIndex, incident: In
   const effects: GameEffect[] = []
   const lines: string[] = []
   if (material) {
+    effects.push({ type: 'board.wary', days: BOARD_WARY_DAYS })
     const warned = warnedIn(state, index, incident)
     const cost = 0.06 + 0.14 * Math.min(1, (incident.consequence - BOARD_MATERIAL) / (1 - BOARD_MATERIAL))
     effects.push({ type: 'board.confidence', delta: -(warned !== undefined ? cost * 0.6 : cost) })
@@ -70,9 +79,14 @@ export function boardOnClose(state: GameState, index: ContentIndex, incident: In
   } else {
     lines.push('The committee notes that the incident was contained before it cost the business much.')
   }
-  if (told) {
+  if (told && incident.boardBriefingTone === 'reassuring') {
+    effects.push({ type: 'board.confidence', delta: material ? REASSURANCE_FAILED : REASSURANCE_HELD })
+    lines.push(material
+      ? 'It heard about it from you first, but it was told the incident was in hand, and it was not.'
+      : 'It heard about it from you first, and your reassurance held.')
+  } else if (told) {
     effects.push({ type: 'board.confidence', delta: BRIEFED_EARLY })
-    lines.push('It heard about it from you first, which is what it needed.')
+    lines.push('It heard about it from you first, with what was known and what was not, which is what it needed.')
   } else if (incident.boardHeardElsewhereDay !== undefined) {
     lines.push('It heard about it elsewhere first, and has not forgotten that.')
   }

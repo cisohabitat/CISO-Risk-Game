@@ -136,6 +136,8 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       )
     case 'incident.resolvedCountAtLeast':
       return Object.values(state.incidents.incidents).filter((i) => i.phase === 'closed').length >= condition.value
+    case 'incident.closedWithoutDecision':
+      return Object.values(state.incidents.incidents).some((incident) => incident.phase === 'closed' && !Object.values(state.decisions.decisions).some((d) => d.defId === condition.decisionId && d.incidentId === incident.id))
     case 'campaign.yearAtLeast':
       return (state.year ?? 1) >= condition.year
     case 'lastYear.optionTaken':
@@ -209,6 +211,8 @@ export function evaluateCondition(state: GameState, index: ContentIndex, conditi
       )
     case 'event.fired':
       return state.events.firedEventIds.includes(condition.eventId)
+    case 'event.firedFewerThan':
+      return (state.events.firedCount?.[condition.eventId] ?? (state.events.firedEventIds.includes(condition.eventId) ? 1 : 0)) < condition.value
     case 'event.notFired':
       return !state.events.firedEventIds.includes(condition.eventId)
     case 'not':

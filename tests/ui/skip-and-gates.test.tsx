@@ -45,3 +45,14 @@ it('lists the unread letters one Skip ahead carried past', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Read the earliest' }))
   expect(useGameStore.getState().ui.screen).toBe('inbox')
 })
+
+it('shows only who checks and when on High pressure', async () => {
+  await useGameStore.getState().startNewGame('gates-high', 'high-pressure')
+  const state = structuredClone(useGameStore.getState().state!)
+  state.business.objectives['obj-platform-launch']!.status = 'active'
+  useGameStore.setState({ state })
+  render(<ObjectiveTracker />)
+  const region = screen.getByRole('region', { name: 'Business objectives' })
+  expect(region).toHaveTextContent('by the go-live review.')
+  expect(region).not.toHaveTextContent('It will ask who can administer checkout')
+})

@@ -44,6 +44,8 @@ export type Condition =
   /** The year began in this starting situation. */
   | { kind: 'situation.is'; situationId: string }
   | { kind: 'incident.resolvedCountAtLeast'; value: number }
+  /** A closed incident has not yet had this decision opened about it (19 November). */
+  | { kind: 'incident.closedWithoutDecision'; decisionId: string }
   /** This is at least the given year of the job: 2 for a year that follows another. */
   | { kind: 'campaign.yearAtLeast'; year: number }
   /** Last year, the player answered this decision with this option. */
@@ -75,6 +77,8 @@ export type Condition =
   | { kind: 'decision.resolved'; decisionId: string }
   | { kind: 'event.fired'; eventId: string }
   | { kind: 'event.notFired'; eventId: string }
+  /** This event has fired fewer than `value` times this year. */
+  | { kind: 'event.firedFewerThan'; eventId: string; value: number }
   | { kind: 'not'; condition: Condition }
   | { kind: 'all'; conditions: Condition[] }
   | { kind: 'any'; conditions: Condition[] }

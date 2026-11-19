@@ -313,6 +313,9 @@
               "preview": {
                 "type": "string"
               },
+              "by": {
+                "type": "string"
+              },
               "condition": {
                 "$ref": "#/$defs/__schema0"
               },
@@ -362,6 +365,7 @@
             "required": [
               "checkDay",
               "preview",
+              "by",
               "condition",
               "delayDays",
               "progress",
@@ -2083,6 +2087,25 @@
                         "required": [
                           "type",
                           "delta"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "board.wary"
+                          },
+                          "days": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 364
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "days"
                         ],
                         "additionalProperties": false
                       },
@@ -4344,6 +4367,25 @@
                         "properties": {
                           "type": {
                             "type": "string",
+                            "const": "board.wary"
+                          },
+                          "days": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 364
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "days"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
                             "const": "operationalTolerance"
                           },
                           "delta": {
@@ -5648,6 +5690,25 @@
                               "required": [
                                 "type",
                                 "delta"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "board.wary"
+                                },
+                                "days": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 364
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "days"
                               ],
                               "additionalProperties": false
                             },
@@ -7118,6 +7179,25 @@
                   "required": [
                     "type",
                     "delta"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "board.wary"
+                    },
+                    "days": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 364
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "days"
                   ],
                   "additionalProperties": false
                 },
@@ -8598,6 +8678,25 @@
                   "properties": {
                     "type": {
                       "type": "string",
+                      "const": "board.wary"
+                    },
+                    "days": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 364
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "days"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
                       "const": "operationalTolerance"
                     },
                     "delta": {
@@ -9228,6 +9327,24 @@
           "properties": {
             "kind": {
               "type": "string",
+              "const": "incident.closedWithoutDecision"
+            },
+            "decisionId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "decisionId"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
               "const": "campaign.yearAtLeast"
             },
             "year": {
@@ -9667,6 +9784,30 @@
           "required": [
             "kind",
             "eventId"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "event.firedFewerThan"
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "eventId",
+            "value"
           ],
           "additionalProperties": false
         },

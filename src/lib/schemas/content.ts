@@ -44,6 +44,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('incident.noneWithin'), days: z.number().int().positive() }),
     z.object({ kind: z.literal('situation.is'), situationId: z.string() }),
     z.object({ kind: z.literal('incident.resolvedCountAtLeast'), value: z.number().int() }),
+    z.object({ kind: z.literal('incident.closedWithoutDecision'), decisionId: id }),
     z.object({ kind: z.literal('campaign.yearAtLeast'), year: z.number().int().min(1) }),
     z.object({ kind: z.literal('lastYear.optionTaken'), decisionId: id, optionId: id }),
     z.object({ kind: z.literal('lastYear.dimensionBand'), dimensionId: id, band: z.enum(['weak', 'developing', 'solid', 'strong']) }),
@@ -67,6 +68,7 @@ export const conditionSchema: z.ZodType = z.lazy(() =>
     z.object({ kind: z.literal('decision.resolved'), decisionId: id }),
     z.object({ kind: z.literal('event.fired'), eventId: id }),
     z.object({ kind: z.literal('event.notFired'), eventId: id }),
+    z.object({ kind: z.literal('event.firedFewerThan'), eventId: id, value: z.number().int().positive() }),
     z.object({ kind: z.literal('not'), condition: conditionSchema }),
     z.object({ kind: z.literal('all'), conditions: z.array(conditionSchema) }),
     z.object({ kind: z.literal('any'), conditions: z.array(conditionSchema) }),
@@ -135,6 +137,7 @@ export const effectSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('history.note'), kind: z.string(), summary: z.string() }),
   z.object({ type: z.literal('decision.open'), decisionId: id, deadlineDays: z.number().int().optional() }),
   z.object({ type: z.literal('board.confidence'), delta: z.number() }),
+  z.object({ type: z.literal('board.wary'), days: z.number().int().positive().max(364) }),
   z.object({ type: z.literal('operationalTolerance'), delta: z.number() }),
 ])
 
@@ -188,6 +191,7 @@ export const objectiveSchema = z.object({
   gate: z.object({
     checkDay: z.number().int().positive(),
     preview: z.string(),
+    by: z.string(),
     condition: conditionSchema,
     delayDays: z.number().int().positive(),
     progress: unit,

@@ -52,3 +52,25 @@ it('does not check an objective already delivered', () => {
   runDays(state, index, 2)
   expect(state.business.objectives['obj-platform-launch']!.gate).toBeUndefined()
 })
+
+it('carries a security check into the second year, on the service desk assistant', async () => {
+  const index = testIndex()
+  const { beginNextYear } = await import('@/game/engine/next-year')
+  const { finishYear } = await import('@/game/debrief/review')
+  const first = newGame(index, { seed: 'objective-gates-y2' })
+  first.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  runDays(first, index, 364)
+  finishYear(first, index)
+  const second = beginNextYear(index, first)
+  expect(second.business.objectives['obj-y2-assistant']).toBeDefined()
+  second.currentDay = 159
+  second.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  second.decisions.openIds = []
+  second.threats.actors = {}; second.threats.campaigns = []
+  second.pendingEffects = []
+  Object.assign(second.business.objectives['obj-y2-assistant']!, { status: 'active', progress: 0.5 })
+  second.controls.controls['ctl-dlp']!.coverage = 0.2
+  runDays(second, index, 2)
+  expect(second.business.objectives['obj-y2-assistant']!.gate).toBe('unmet')
+  expect(second.inbox.messages.some((message) => message.subject === 'Data protection review: assistant held')).toBe(true)
+})

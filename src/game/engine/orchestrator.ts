@@ -49,7 +49,7 @@ export type PlayerAction =
   | { type: 'acceptRisk'; scenarioId: string; rationaleTagIds: string[]; assumptionDefIds: string[]; days: number }
   | { type: 'treatRisk'; scenarioId: string; programmeId: string }
   | { type: 'escalateRisk'; scenarioId: string; stakeholderId: string }
-  | { type: 'briefBoard'; incidentId: string }
+  | { type: 'briefBoard'; incidentId: string; tone?: 'candid' | 'reassuring' }
   | { type: 'startProgramme'; programmeId: string; budget: number; sponsorId?: string }
   | { type: 'setProgrammeStatus'; programmeId: string; status: 'active' | 'paused' }
   | { type: 'accelerateProgramme'; programmeId: string; budget: number }
@@ -304,6 +304,16 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         const shortfall = round2(Math.max(0, optionBudgetCost(option) - state.resources.budgetRemaining))
         if (shortfall > 0) {
           state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment + shortfall)
+          // Reported, as the option says it will be (19 November).
+          const cfo = index.stakeholder.get('stk-cfo')
+          pushMessage(state, {
+            from: cfo ? `${cfo.name}, ${cfo.role}` : 'Finance',
+            subject: `Unbudgeted: ${def.title}`,
+            body: `${money(shortfall)} of this response goes beyond the cyber allocation. Finance will carry it as unbudgeted spend into next year's plan. I would rather hear about the next one before it is committed.`,
+            type: 'executive',
+            priority: 'notable',
+            relatedNodeIds: [],
+          })
         }
       }
 
@@ -575,6 +585,8 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (!canBriefBoard(incident)) return fail(incident.boardInformedDay !== undefined ? 'The board has already been briefed on this incident.' : 'There is nothing confirmed to brief the board on yet.')
       if (!spendFocus(state, FOCUS_COSTS.escalation)) return fail('You have no attention left this week.')
       incident.boardInformedDay = state.currentDay
+      incident.boardBriefingTone = action.tone ?? 'candid'
+      const reassuring = incident.boardBriefingTone === 'reassuring'
       const name = index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'
       const late = incident.boardHeardElsewhereDay !== undefined
       pushMessage(state, {
@@ -583,7 +595,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         subject: `Briefing received: the ${name}`,
         body: late
           ? 'The committee has your account now. It would have preferred to hear it from you first. Keep it informed as the response moves.'
-          : 'Thank you for coming to the committee early, before the facts are settled. It will hold its questions while the response needs you, and expects to hear when anything material changes.',
+          : reassuring
+            ? 'Thank you for coming to the committee early. It is glad to hear the incident is in hand, and will hold you to that when the response is over.'
+            : 'Thank you for coming to the committee early, before the facts are settled. It will hold its questions while the response needs you, and expects to hear when anything material changes.',
         type: 'board',
         priority: 'notable',
         relatedNodeIds: [],
