@@ -239,12 +239,21 @@ been fixed and moved to `docs/FINDINGS.md`.
   The ladder's objectives missed read 0.93 in every mode (was 0.93 / 1.13 /
   1.13), and missed per programme 0.34 / 0.48 / 0.74.
 
-- **Incidents do not move the board.** Board confidence changes through the
-  papers, a missed paper and authored decisions; an incident, however bad,
-  does not touch it directly. The ladder reads board 0.79 in every mode while
-  incidents run 0.60 / 0.80 / 1.13. That keeps the board judging what it is
-  told rather than luck, which may be the lesson; whether it feels right after
-  a first ransomware year is in `docs/PLAYTEST.md`.
+- **The board hears about incidents, but recovers by year end.** Since
+  19 November (`src/game/incidents/board.ts`):
+  - an incident the board is not briefed on within three days costs 0.06
+    when it hears elsewhere;
+  - a material one (consequence 0.3 or more) costs 0.06–0.20 when it
+    closes, at 0.6 times that if an earlier paper raised a risk on its
+    route;
+  - a briefing in time earns back 0.02.
+
+  For a player who writes every paper and briefs, over 30 seeds a mode,
+  the year-end board reads 0.475 / 0.481 / 0.464 after a material incident
+  against 0.519 / 0.560 / 0.541 without (guided, CISO, high pressure).
+  The ladder still reads 0.77–0.78 in every mode, because its policy's
+  executive trust pulls the board back over the following months. Whether
+  a ransomware year now feels heard is a playtest question.
 
 - **The campaign content now loads on demand, not with the first screen.**
   The code/CSS/font critical path is 209.7 kB against a 221 kB limit (`pnpm size`, 14 November; it was 192.7 kB on 25 October, and the Briefing panels added since are most of the rise) including

@@ -7,6 +7,7 @@
  * the top of the content file — so the harnesses reported a player who ran one
  * threat hunt ninety times and never opened the other seventeen.
  */
+import { canBriefBoard } from '../src/game/incidents/board'
 import { applyAction } from '../src/game/engine/orchestrator'
 import { materialTopics } from '../src/game/debrief/review'
 import type { ContentIndex, GameState, InvestigationDef } from '../src/game/types'
@@ -26,7 +27,19 @@ export function leastCommissioned(
  * Harnesses that skip this measure a CISO who never went to the board, which
  * reads as a communication failure that no play could avoid.
  */
+/**
+ * An engaged player tells the board about a live incident. Every harness that
+ * writes the papers also briefs, so its board reads what a diligent CISO's
+ * would (owner, 19 November: the board is incident-aware).
+ */
+export function briefBoardOnIncidents(state: GameState, index: ContentIndex): void {
+  for (const incident of Object.values(state.incidents.incidents)) {
+    if (canBriefBoard(incident)) applyAction(state, index, { type: 'briefBoard', incidentId: incident.id })
+  }
+}
+
 export function completeQuarterIfDue(state: GameState, index: ContentIndex): boolean {
+  briefBoardOnIncidents(state, index)
   const quarter = state.reviews.pendingQuarter
   if (quarter === undefined) return false
   const topics = materialTopics(state, index)

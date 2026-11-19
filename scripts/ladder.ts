@@ -17,6 +17,7 @@
  * `--years 2` plays the same philosophy into a second year that follows the
  * first (src/game/engine/next-year.ts) and reports, or prints, that year.
  */
+import { briefBoardOnIncidents } from './play-helpers'
 import { buildContentIndex } from '../src/game/engine/content-index'
 import { newGame, applyAction, runDays } from '../src/game/engine/orchestrator'
 import { beginNextYear } from '../src/game/engine/next-year'
@@ -183,7 +184,9 @@ function playYear(appetite: Appetite, state: GameState) {
       }
     }
 
-    // The board, every quarter, with everything material on it.
+    // The board hears about every incident from the CISO, and every quarter
+    // gets a paper with everything material on it.
+    briefBoardOnIncidents(state, index)
     if (state.reviews.pendingQuarter !== undefined) {
       const quarter = state.reviews.pendingQuarter
       const topics = materialTopics(state, index).filter((t) => t.material)

@@ -1,4 +1,5 @@
-import { RESPONSE_DONE } from '@/game/incidents/thresholds'
+import { BOARD_BRIEFING_DAYS, RESPONSE_DONE } from '@/game/incidents/thresholds'
+import { canBriefBoard } from '@/game/incidents/board'
 import { unreadUpdateCount } from '@/game/inbox/messages'
 import { programmeDeliveryPercent } from '@/game/programmes/reporting'
 import { discoveryCounts } from '@/game/knowledge/discovery'
@@ -833,6 +834,8 @@ export interface IncidentCommandView {
   awaiting: { decisionId: string; title: string }[]
   /** Choices already made in this incident, so the record is visible while it runs. */
   taken: { day: number; title: string; option: string }[]
+  /** The board: briefed on a day, still to be told (and by when), or not yet a board matter. */
+  board: { briefedDay?: number; heardElsewhere: boolean; canBrief: boolean; expectedBy?: number }
 }
 
 /**
@@ -904,6 +907,12 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
     timeline,
     awaiting,
     taken: taken.sort((a, b) => a.day - b.day),
+    board: {
+      briefedDay: incident.boardInformedDay,
+      heardElsewhere: incident.boardHeardElsewhereDay !== undefined,
+      canBrief: canBriefBoard(incident),
+      expectedBy: incident.responseStartedDay !== undefined ? incident.responseStartedDay + BOARD_BRIEFING_DAYS : undefined,
+    },
   }
 }
 

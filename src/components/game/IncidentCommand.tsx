@@ -31,6 +31,7 @@ export function IncidentCommand() {
   const setUi = useGameStore((store) => store.setUi)
   const screen = useGameStore((store) => store.ui.screen)
   const setScreen = useGameStore((store) => store.setScreen)
+  const dispatch = useGameStore((store) => store.dispatch)
   // Once the year is over nothing can be decided, and the panel sat above the
   // annual review offering a response log. The review says the incident was
   // still running when the year was written up.
@@ -130,6 +131,25 @@ export function IncidentCommand() {
             </ul>
           </div>
         )}
+
+        {/* The board reacts to how it hears about an incident, not to the
+            incident alone (owner, 19 November). */}
+        <div className="incident-board flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface p-3 text-sm" aria-label="The board">
+          <p className="min-w-0 flex-1 text-pretty">
+            {incident.board.briefedDay !== undefined
+              ? `Board briefed on ${shortDate(incident.board.briefedDay)}${incident.board.heardElsewhere ? ', after it had heard elsewhere.' : '.'}`
+              : incident.board.heardElsewhere
+                ? 'The board heard about this elsewhere first. It still expects your account.'
+                : incident.board.expectedBy !== undefined
+                  ? `The board expects to hear from you by ${shortDate(incident.board.expectedBy)}, before it hears elsewhere.`
+                  : 'The board will expect to hear from you once this is confirmed.'}
+          </p>
+          {incident.board.canBrief && (
+            <Button variant="secondary" size="sm" className="w-full sm:w-auto" onClick={() => dispatch({ type: 'briefBoard', incidentId: incident.id })}>
+              Brief the board · 1 attention
+            </Button>
+          )}
+        </div>
 
         <Disclosure key={`${incident.id}:${screen}`} summary="Response journal" defaultOpen={screen === 'home'}>
           {screen !== 'home' && <div className="mb-3 flex flex-wrap items-start justify-between gap-3">

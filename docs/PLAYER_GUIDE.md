@@ -438,6 +438,13 @@ Note what the bar shows — *containment*, *recovery*, *affected services* — a
 what it does not: the attack path. You only ever see what your own people have
 actually told you.
 
+The bar also tells you when the board expects to hear from you: within three
+days of the response starting. **Brief the board** costs one attention. If
+you don't, it hears from the Chief Executive's office first, and remembers.
+When the incident closes, the committee writes. A material incident costs
+its confidence either way. It costs less if an earlier paper put that risk
+in front of it, and a briefing in time earns a little back.
+
 If no response decision is open, the bar says so: *Nothing waits on you yet*,
 and why. On the day an incident is escalated to you, its first decisions
 arrive when the clock next moves; once you have answered them, the response

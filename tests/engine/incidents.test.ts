@@ -41,9 +41,12 @@ describe('incident engine', () => {
     expect(seen.has('recovery')).toBe(true)
     expect(incident.reconstruction).toBeDefined()
     expect(incident.resolvedDay).toBeDefined()
-    const phaseUpdates = state.inbox.messages.filter((message) => message.incidentId === incident.id)
+    // The board's letters about the incident (19 November) carry it too, as board mail.
+    const linked = state.inbox.messages.filter((message) => message.incidentId === incident.id)
+    const phaseUpdates = linked.filter((message) => message.type !== 'board')
     expect(phaseUpdates.length).toBeGreaterThan(0)
     expect(phaseUpdates.every((message) => message.type === 'incident')).toBe(true)
+    expect(linked.filter((message) => message.type === 'board').every((message) => message.from.includes('Board Risk Committee'))).toBe(true)
   })
 
   it('produces a materially different outcome when the controls were better', () => {

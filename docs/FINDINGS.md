@@ -4697,3 +4697,37 @@ Measured over 150 CISO years left to run (`waves-*` seeds, a probe not kept):
 Reading a transcript caught one sentence that claimed outbound traffic had
 been seen while the condition was weak egress monitoring. It now says
 nothing was watching closely enough to tell.
+
+## 19 November 2026 — the board hears about incidents
+
+"Incidents do not move the board" was a known weakness, and testers read it
+as a bug. The owner chose to make the board incident-aware. The design keeps
+the board judging how it was told, not luck (`src/game/incidents/board.ts`):
+
+- **Not briefed:** three days into a response nobody has briefed, an
+  incident that matters (consequence 0.3 or more, or regulatory interest 0.5
+  or more) costs 0.06, with a letter from the chair.
+- **Brief the board** (one attention) can be used once per incident, from
+  escalation to recovery.
+- **When a material incident closes:** it costs 0.06–0.20, scaled by
+  consequence, and 0.6 times that if a paper submitted before the incident
+  raised a risk on its route. A briefing in time earns back 0.02. The
+  committee's letter says which of these applied.
+
+The first values (0.03–0.10, halved when warned) moved the ladder by 0.01.
+A probe over 30 seeds a mode found each closing letter cost about 0.08 at
+the values kept. The ladder still reads 0.77–0.78 in every mode, because the
+board follows executive trust back at 0.4% a day.
+
+For a player who writes every paper and briefs, the year-end board reads:
+
+| Mode | After a material incident | Without |
+|---|---|---|
+| Guided | 0.475 | 0.519 |
+| CISO | 0.481 | 0.560 |
+| High pressure | 0.464 | 0.541 |
+
+The tuning harness's passive style, which never briefs and never writes a
+paper, ends at 0.15, against 0.25 before.
+`tests/engine/board-incidents.test.ts` covers hearing elsewhere, the
+briefing, and the warned and unwarned close.

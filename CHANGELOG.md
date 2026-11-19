@@ -22,6 +22,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The board now hears about incidents. **Brief the board** on the incident
+  bar costs one attention. Leave it more than three days and the board hears
+  from the Chief Executive's office first. When a material incident closes,
+  the committee writes. It is kinder if an earlier paper had warned it of
+  that route, and kinder still if you told it first.
+
 - Incident decisions now come in waves. A ransomware incident asks first for
   incident command and cutting the actor off. Two days later the first
   findings arrive, with the question of outside help. The ransom note comes

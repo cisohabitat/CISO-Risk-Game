@@ -377,8 +377,8 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       incidentId: finding.incidentId,
       subject: finding.subject,
       body: finding.body,
-      type: 'incident',
-      priority: 'critical',
+      type: finding.board ? 'board' : 'incident',
+      priority: finding.board ? 'notable' : 'critical',
     })
   }
   for (const { decisionId, incidentId } of incidentResult.openDecisionIds) {

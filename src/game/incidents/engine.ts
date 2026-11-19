@@ -4,6 +4,7 @@
  * people and choices that were actually in place.
  */
 import { priorRouteChoices } from './prior-choices'
+import { BOARD_CHAIR, boardHearsElsewhere, boardOnClose } from './board'
 import { evaluateCondition } from '../events/conditions'
 import { RISK_BAND_LABEL, consequenceBand } from '../risk/bands'
 import type { Condition } from '../types'
@@ -17,8 +18,8 @@ export interface IncidentTickResult {
   /** Phase transitions worth telling the player about. */
   transitions: { incidentId: string; phase: IncidentRuntime['phase']; note: string }[]
   openDecisionIds: { incidentId: string; decisionId: string }[]
-  /** Findings letters that arrive with a later response stage. */
-  findings: { incidentId: string; from: string; subject: string; body: string }[]
+  /** Findings letters that arrive with a later response stage, and the board's letters. */
+  findings: { incidentId: string; from: string; subject: string; body: string; board?: boolean }[]
   interrupts: boolean
 }
 
@@ -84,6 +85,12 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
     const family = index.incidentFamily.get(incident.familyId)
     if (!family) continue
     const daysInPhase = state.currentDay - incident.phaseEnteredDay
+
+    const heard = boardHearsElsewhere(state, incident, family)
+    if (heard) {
+      result.effects.push(...heard.effects)
+      result.findings.push({ incidentId, from: BOARD_CHAIR, ...heard.letter, board: true })
+    }
 
     // Later response stages open as the organisation learns more, while
     // the incident is still being handled.
@@ -175,6 +182,11 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
       case 'debrief': {
         incident.reconstruction = buildReconstruction(state, index, incident)
         incident.resolvedDay = state.currentDay
+        const reading = boardOnClose(state, index, incident, family)
+        if (reading) {
+          result.effects.push(...reading.effects)
+          result.findings.push({ incidentId, from: BOARD_CHAIR, ...reading.letter, board: true })
+        }
         // "Post-incident review complete" was the whole account a player got
         // of an incident a Skip ahead had carried them through. The facts the
         // player was entitled to — how long, which services, how bad, what

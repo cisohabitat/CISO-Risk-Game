@@ -5,6 +5,7 @@
  *
  * Everything here is pure: same state + same action = same result.
  */
+import { BOARD_CHAIR, canBriefBoard } from '../incidents/board'
 import { minimumProgrammeFunding, programmeAccelerationCost } from '../programmes/funding'
 import type {
   ContentIndex,
@@ -48,6 +49,7 @@ export type PlayerAction =
   | { type: 'acceptRisk'; scenarioId: string; rationaleTagIds: string[]; assumptionDefIds: string[]; days: number }
   | { type: 'treatRisk'; scenarioId: string; programmeId: string }
   | { type: 'escalateRisk'; scenarioId: string; stakeholderId: string }
+  | { type: 'briefBoard'; incidentId: string }
   | { type: 'startProgramme'; programmeId: string; budget: number; sponsorId?: string }
   | { type: 'setProgrammeStatus'; programmeId: string; status: 'active' | 'paused' }
   | { type: 'accelerateProgramme'; programmeId: string; budget: number }
@@ -562,6 +564,33 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       scenario.notes.unshift(`Treatment: ${index.programme.get(action.programmeId)?.name ?? action.programmeId}.`)
       answeredOnRiskScreen(state, action.scenarioId, 'opt-renewal-reassess', [])
       return { ok: true, message: 'Risk linked to its treatment programme.' }
+    }
+
+    // Telling the board about a live incident (owner, 19 November). Within
+    // three days of the response it hears from the CISO first; after that it
+    // has already heard elsewhere (src/game/incidents/board.ts).
+    case 'briefBoard': {
+      const incident = state.incidents.incidents[action.incidentId]
+      if (!incident) return fail('That incident is not running.')
+      if (!canBriefBoard(incident)) return fail(incident.boardInformedDay !== undefined ? 'The board has already been briefed on this incident.' : 'There is nothing confirmed to brief the board on yet.')
+      if (!spendFocus(state, FOCUS_COSTS.escalation)) return fail('You have no attention left this week.')
+      incident.boardInformedDay = state.currentDay
+      const name = index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'
+      const late = incident.boardHeardElsewhereDay !== undefined
+      pushMessage(state, {
+        from: BOARD_CHAIR,
+        incidentId: incident.id,
+        subject: `Briefing received: the ${name}`,
+        body: late
+          ? 'The committee has your account now. It would have preferred to hear it from you first. Keep it informed as the response moves.'
+          : 'Thank you for coming to the committee early, before the facts are settled. It will hold its questions while the response needs you, and expects to hear when anything material changes.',
+        type: 'board',
+        priority: 'notable',
+        relatedNodeIds: [],
+      })
+      state.history.entries.push({ day: state.currentDay, kind: 'board-briefing', summary: `Briefed the board on the ${name}.`, refs: [incident.id] })
+      commit()
+      return { ok: true, message: late ? 'Board briefed, after it had heard elsewhere. The chair’s reply is in your inbox.' : 'Board briefed. The chair’s reply is in your inbox.' }
     }
 
     case 'escalateRisk': {

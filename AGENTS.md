@@ -447,6 +447,12 @@ changes.
 - Skip ahead holds for a waiting decision and for a board paper in its final
   week (`advance` with `stopOnUpdate`); otherwise it runs to the next pause
   reason and says what it stopped for.
+- The board is incident-aware (`src/game/incidents/board.ts`): it reacts to
+  how it was told, not to luck. It hears elsewhere three days into an
+  unbriefed response, writes at close (severity, whether a paper had warned
+  of the route, whether it was briefed in time), and `briefBoard` costs one
+  attention. Harnesses that write papers also brief
+  (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
 - Incident response decisions open in waves. `responseDecisionIds` stays the
   family's full list. `responseStages` names which decisions wait
   `afterDays` from escalation, each with an authored findings letter

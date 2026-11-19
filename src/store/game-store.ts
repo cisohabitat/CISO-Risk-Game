@@ -157,6 +157,7 @@ const SAVES_ON: Record<PlayerAction['type'], boolean> = {
   markRead: false,
   markEvidenceRead: false,
   reaffirmAssumption: true,
+  briefBoard: true,
   resolveDecision: true,
   startInvestigation: true,
   createHypothesis: true,
