@@ -1,6 +1,6 @@
 import { DeliveryWatch, GuidedExploration } from '@/components/game/GuidedProgress'
 import { ObjectiveTracker } from '@/components/game/ObjectiveTracker'
-import { BudgetActivity, QuietWeekNote } from '@/components/game/BriefingNotes'
+import { BudgetActivity, QuietWeekNote, SkippedMail } from '@/components/game/BriefingNotes'
 import { CapacityNotice } from '@/components/game/CapacityNotice'
 import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
@@ -224,6 +224,7 @@ export function HomeScreen() {
               playtest followed this screen and Skip ahead, and missed a thin
               enquiry result, an unraised hypothesis and a successful follow-up
               for weeks, because each was in an inbox it was not reading. */}
+          <SkippedMail />
           <CameBack />
 
           <section aria-labelledby="concerns">

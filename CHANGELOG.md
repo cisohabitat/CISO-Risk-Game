@@ -22,6 +22,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The Business objectives panel shows each security check before it
+  happens: who checks, when, and what they will ask. Afterwards it says
+  whether the check cleared or held.
+- After a Skip ahead, the Briefing lists the unread letters that arrived on
+  the way (warnings, the board, the business), and the stop notice counts
+  them.
+
 - The board now hears about incidents. **Brief the board** on the incident
   bar costs one attention. Leave it more than three days and the board hears
   from the Chief Executive's office first. When a material incident closes,

@@ -158,7 +158,8 @@ sentence, not the colour.
 **The clock** (top). `1× 2× 4×` run time forward. **Skip ahead** runs to the next
 thing that needs you (a decision, a board paper, an incident or a blocked
 programme) and says what it stopped for. Letters and results that need no
-answer wait in the Inbox. Your attention renews each week whether or not you
+answer wait in the Inbox, and the Briefing lists what arrived while you
+skipped. Your attention renews each week whether or not you
 stop there. At `2×` and `4×`, taking an action pauses time; choose a speed
 again when you are ready.
 
@@ -582,7 +583,11 @@ If you want a plan for your first playthrough:
   loudest findings in the game are deliberately irrelevant.
 - **Blocking the business on principle.** Security friction costs the company its
   objectives, and that is scored too. *Support, with conditions* is usually
-  available and usually better than refusal.
+  available and usually better than refusal. Some objectives also face a
+  security check of their own before their date: a go-live review, an
+  auditor, a bank. The Business objectives panel shows each one and what it
+  will ask. Work done before the check speeds delivery; no answer costs six
+  weeks.
 - **Ignoring your team.** Burning out a function is invisible until the annual
   review tells you the year was delivered on people who cannot do it again.
 

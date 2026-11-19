@@ -83,6 +83,8 @@ export interface BusinessObjectiveDef {
  */
 export interface ObjectiveGateDef {
   checkDay: number
+  /** Who checks and what they will ask, shown on the objective before the day (19 November). */
+  preview: string
   condition: Condition
   delayDays: number
   /** Progress gained when the condition holds; also marks the objective security-supported. */

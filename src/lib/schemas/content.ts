@@ -187,6 +187,7 @@ export const objectiveSchema = z.object({
   year: z.number().int().min(1).optional(),
   gate: z.object({
     checkDay: z.number().int().positive(),
+    preview: z.string(),
     condition: conditionSchema,
     delayDays: z.number().int().positive(),
     progress: unit,

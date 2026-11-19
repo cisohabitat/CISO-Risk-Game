@@ -21,6 +21,11 @@ export function ObjectiveTracker() {
         <p className="mt-1 text-sm">{Math.floor(runtime.progress * 100)}% delivered{runtime.delayDays > 0 ? ` · ${runtime.delayDays} days of imposed delay recorded` : ''}.</p>
         {pace?.atRisk && <p className="mt-1 text-sm text-band-elevated">The date looks at risk at the average pace observed so far. Review competing work and the delay already recorded; the pace can improve.</p>}
         {runtime.status === 'failed' && <p className="mt-1 text-sm">Delivery was incomplete when the original commitment passed. Recorded delay, concurrent security work and service disruption can all consume the margin.</p>}
+        {/* A security check is shown before it happens, so its cost can be
+            seen coming rather than met in a letter (19 November). */}
+        {def.gate && (runtime.gate !== undefined
+          ? <p className="mt-1 text-sm">Security check, {shortDate(def.gate.checkDay)}: {runtime.gate === 'met' ? 'cleared.' : `held; ${def.gate.delayDays} days lost.`}</p>
+          : runtime.status !== 'achieved' && runtime.status !== 'failed' && <p className="mt-1 text-sm">Security check on {shortDate(def.gate.checkDay)}: {def.gate.preview}</p>)}
         {runtime.securitySupported && <p className="mt-1 text-xs text-ink-muted">Security support is recorded for this objective.</p>}
       </CardBody></Card></li>
     })}</ul>

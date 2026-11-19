@@ -310,6 +310,9 @@
                 "exclusiveMinimum": 0,
                 "maximum": 9007199254740991
               },
+              "preview": {
+                "type": "string"
+              },
               "condition": {
                 "$ref": "#/$defs/__schema0"
               },
@@ -358,6 +361,7 @@
             },
             "required": [
               "checkDay",
+              "preview",
               "condition",
               "delayDays",
               "progress",

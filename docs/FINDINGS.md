@@ -4731,3 +4731,21 @@ The tuning harness's passive style, which never briefs and never writes a
 paper, ends at 0.15, against 0.25 before.
 `tests/engine/board-incidents.test.ts` covers hearing elsewhere, the
 briefing, and the warned and unwarned close.
+
+## 19 November 2026 — security checks shown in advance; what a skip carried past
+
+Two gaps were left by the 17 November changes:
+
+- **The security checks were met only as letters.** The design paper had
+  warned against a cost players cannot see coming, and the checks were one.
+  Each gate now has an authored `preview` (who checks, and what they will
+  ask). The Business objectives panel shows it with the check's date, and
+  afterwards whether the check cleared or held, and how many days that cost.
+- **Skip ran past the mail, and nothing said what it passed.** Came back to
+  you lists the player's own results and follow-ups, not warnings, board
+  letters or business letters. The store now records the letters each
+  Skip ahead delivered (`ui.skipSummary`). The stop notice counts them, and
+  the Briefing's "While you skipped" panel lists the unread ones by kind,
+  with a link to the earliest.
+
+`tests/ui/skip-and-gates.test.tsx` covers both.

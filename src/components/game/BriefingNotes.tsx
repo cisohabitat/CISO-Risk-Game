@@ -28,3 +28,38 @@ export function QuietWeekNote() {
     <p className="mt-1">No new decision has arrived in the last seven days. {running} programmes and {enquiries} enquiries are running. {state.reviews.pendingQuarter === undefined ? 'Use the space to review evidence, owners and upcoming risk reviews.' : `The Q${state.reviews.pendingQuarter} board paper still needs submission.`}</p>
   </aside>
 }
+
+/** The kinds of letter a skip can carry past, named for the summary. */
+const SKIPPED_KIND: Record<string, string> = {
+  threat: 'warning',
+  board: 'from the board',
+  incident: 'incident update',
+  business: 'business letter',
+  executive: 'from an executive',
+}
+
+/**
+ * What arrived while the last Skip ahead ran (19 November). Since 17 November
+ * Skip runs past the mail; Came back to you lists the player's own results,
+ * and this the rest: warnings, the board, the business.
+ */
+export function SkippedMail() {
+  const state = useGameStore((store) => store.state)
+  const summary = useGameStore((store) => store.ui.skipSummary)
+  const setUi = useGameStore((store) => store.setUi)
+  if (!state || !summary || summary.gameId !== state.gameId) return null
+  const messages = state.inbox.messages.filter((message) => summary.messageIds.includes(message.id))
+  const unread = messages.filter((message) => !message.read)
+  if (unread.length === 0) return null
+  const counts = new Map<string, number>()
+  for (const message of unread) {
+    const kind = SKIPPED_KIND[message.type] ?? 'other letter'
+    counts.set(kind, (counts.get(kind) ?? 0) + 1)
+  }
+  const parts = [...counts].map(([kind, n]) => kind.startsWith('from ') ? `${n} ${kind}` : `${n} ${kind}${n === 1 ? '' : 's'}`)
+  const first = unread.toSorted((a, b) => a.day - b.day)[0]!
+  return <section aria-label="While you skipped" className="rounded-lg border border-line bg-surface p-3 text-sm">
+    <p className="text-pretty"><span className="font-medium">While you skipped, {shortDate(summary.fromDay)} to {shortDate(summary.toDay)}:</span> {parts.join(', ')}, unread.</p>
+    <Button variant="quiet" size="sm" onClick={() => { setUi({ selectedMessageId: first.id }); useGameStore.getState().setScreen('inbox') }}>Read the earliest</Button>
+  </section>
+}

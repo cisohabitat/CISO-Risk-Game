@@ -462,6 +462,11 @@ changes.
   hold as missing, bypassed or ineffective; authored wording goes in the
   control's `reconstructionLines`. A family's own lines come before the
   generic control lines, and replace them for a control they name.
+- `ui.skipSummary` records the letters one Skip ahead carried past; the
+  Briefing's `SkippedMail` lists the unread ones beside Came back to you.
+- An objective's gate carries a `preview` shown on the objective tracker
+  before its day, so the cost can be seen coming. Keep it to who checks and
+  what they will ask, not what answers it.
 - An objective's `gate` (checkDay, condition, delayDays, progress, met and
   unmet letters) is checked once in tick step 4 by `checkObjectiveGates`; its
   change goes through the effect reducer, and `gate` on the runtime records

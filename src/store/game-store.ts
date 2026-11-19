@@ -60,6 +60,11 @@ export interface UiState {
   /** Ephemeral confirmations, never written into a campaign save. */
   decisionReceipt?: DecisionReceipt
   quarterTransition?: QuarterTransition
+  /**
+   * What arrived while one Skip ahead ran (19 November). Skip runs past the
+   * mail since 17 November, so a warning or a board letter could sit unseen.
+   */
+  skipSummary?: { gameId: string; fromDay: number; toDay: number; messageIds: string[] }
   screen: Screen
   riskTab?: string
   boardDraft?: { quarter: number; topics: string[]; recommendations: string[]; uncertainty: boolean }
@@ -461,17 +466,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return result
     }
 
+    // What one Skip ahead carried past: every letter that arrived on the way.
+    const skipped = action.type === 'advance' && action.stopOnUpdate && next.currentDay - state.currentDay > 1
+    const earlier = new Set(state.inbox.messages.map((message) => message.id))
+    const arrived = skipped ? next.inbox.messages.filter((message) => !earlier.has(message.id)).map((message) => message.id) : []
     const quarter = Math.min(4, Math.floor(next.currentDay / DAYS_PER_QUARTER) + 1)
     const previousQuarter = Math.min(4, Math.floor(state.currentDay / DAYS_PER_QUARTER) + 1)
     set({ state: next, lastTicks: result.ticks ?? [], ui: {
       ...get().ui,
-      ...(next.currentDay !== state.currentDay ? { decisionReceipt: undefined } : {}),
+      ...(next.currentDay !== state.currentDay ? { decisionReceipt: undefined, skipSummary: arrived.length > 0 ? { gameId: next.gameId, fromDay: state.currentDay, toDay: next.currentDay, messageIds: arrived } : undefined } : {}),
       ...(next.finished && !state.finished ? { yearEndUpdates: { gameId: next.gameId, year: next.year ?? 1, messageIds: next.inbox.messages.filter((message) => message.day >= DECEMBER_START_DAY).map((message) => message.id) }, screen: 'inbox' as const, selectedMessageId: next.inbox.messages.find((message) => message.day >= DECEMBER_START_DAY)?.id } : {}),
       ...(quarter > previousQuarter && !next.finished ? {
         quarterTransition: { gameId: next.gameId, year: next.year ?? 1, quarter },
       } : {}),
     } })
-    if (result.message) get().pushToast(result.message, 'info')
+    if (result.message) get().pushToast(arrived.length > 0 ? `${result.message} ${arrived.length === 1 ? 'One letter' : `${arrived.length} letters`} arrived on the way; the Briefing lists ${arrived.length === 1 ? 'it' : 'them'}.` : result.message, 'info')
     // Named, not stopped for: Skip ahead runs on, and the change is said here.
     if (action.type === 'advance' && next.resources.budgetRemaining !== state.resources.budgetRemaining) {
       const movements = next.history.entries.filter((entry) => entry.kind === 'budget' && entry.day > state.currentDay)
