@@ -260,6 +260,10 @@ export function BoardScreen() {
         description="Pick what the committee sees. It expects every risk rated high or with a high consequence, every risk accepted on its behalf, any incident or failed assumption it has not yet been told about, a programme blocked on an unresolved dependency, and a team past its limit. The rest is your call."
         footer={
           <>
+            {/* Beside the button, where the eye is: the first press scrolled a
+                warning into the paper and read as a button that did nothing
+                (4653160 playtest, run 13). */}
+            {reviewOmissions && omitted.length > 0 && omissionsAcknowledged !== omissionKey && <span role="status" className="mr-auto w-full text-sm text-band-high sm:w-auto">{plural(omitted.length, 'material item')} not on the agenda. Include {omitted.length === 1 ? 'it' : 'them'}, or tick to omit, in the warning above.</span>}
             <Button variant="quiet" onClick={closePaper}>Cancel</Button>
             <Button variant="primary" disabled={emptyPaper && !emptyAcknowledged} aria-describedby={emptyPaper ? 'empty-paper-notice' : undefined} onClick={submit}>Take it to the board</Button>
           </>

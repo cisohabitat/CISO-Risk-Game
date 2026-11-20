@@ -39,6 +39,9 @@ export function computeStaffing(state: GameState, index: ContentIndex, programme
   return total > 0 ? clamp01(met / total) : 1
 }
 
+/** How long before a quarter ends a quarter-close blocker can arise. */
+const QUARTER_CLOSE_DAYS = 21
+
 export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng): ProgrammeTickResult {
   const result: ProgrammeTickResult = { effects: [], milestones: [], completed: [], newBlockers: [], completedWithBlockers: [] }
 
@@ -59,7 +62,11 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
       // contract (AI second-year re-test). The draw is still made, so the
       // rest of the year's draws do not move.
       const drawn = rng.chance(blocker.chancePerDay * exposureToBlockers)
-      if (drawn && !(blocker.unlessCondition && evaluateCondition(state, index, blocker.unlessCondition))) {
+      // A freeze "over the quarter close" arises in a quarter's last three
+      // weeks: drawn on any day, it held identity work for eight weeks
+      // (4653160 playtest, run 9). The draw is still made either way.
+      const closing = !blocker.liftsAtQuarterEnd || state.currentDay % DAYS_PER_QUARTER >= DAYS_PER_QUARTER - QUARTER_CLOSE_DAYS
+      if (drawn && closing && !(blocker.unlessCondition && evaluateCondition(state, index, blocker.unlessCondition))) {
         programme.blockers.push({ id: blocker.id, startedDay: state.currentDay, resolved: false })
         programme.status = 'at-risk'
         result.newBlockers.push({

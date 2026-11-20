@@ -22,7 +22,7 @@ it('names how the board heard of each incident, and caps a board that heard else
   missed.phase = 'closed'; missed.boardHeardElsewhereDay = 200
   review = buildAnnualReview(state, index)
   communication = review.dimensions.find((d) => d.id === 'communication')!
-  expect(communication.evidence.join(' ')).toContain('The board heard about the ransomware and service encryption elsewhere')
+  expect(communication.evidence.join(' ')).toContain('The board heard about the ransomware and service encryption of')
   expect(communication.band).not.toBe('strong')
 })
 

@@ -56,5 +56,19 @@ export function decisionReactions(before: GameState, after: GameState, index: Co
     }
   }
 
+  // Work a choice stopped, named where the choice is confirmed: "Stop
+  // something" paused the ransomware programme and only a letter said so
+  // (4653160 playtest, run 14).
+  for (const [id, programme] of Object.entries(after.programmes.programmes)) {
+    const earlier = before.programmes.programmes[id]
+    if (earlier && (earlier.status === 'active' || earlier.status === 'at-risk') && programme.status === 'paused') {
+      reactions.push({ text: `${index.programme.get(id)?.name ?? 'A programme'} paused. Resume it from Programmes when the team can carry it.`, tone: 'negative' })
+    }
+  }
+  for (const assignment of after.team.assignments) {
+    const earlier = before.team.assignments.find((candidate) => candidate.id === assignment.id)
+    if (earlier?.status === 'running' && assignment.status === 'abandoned') reactions.push({ text: `Enquiry pulled back: ${assignment.title}.`, tone: 'negative' })
+  }
+
   return reactions
 }

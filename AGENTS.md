@@ -453,6 +453,8 @@ changes.
   of the route, whether it was briefed in time), and `briefBoard` costs one
   attention. Harnesses that write papers also brief
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
+- A blocker with `liftsAtQuarterEnd` arises only in a quarter's last 21
+  days; its draw is still made every day so the year does not shift.
 - `briefBoard` takes a `tone`. Candid earns 0.02 at close. Reassuring
   earns 0.03 if the incident stays below material and costs 0.05 if it does
   not, and the review reads a failed reassurance as the board misled. Keep

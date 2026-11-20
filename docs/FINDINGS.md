@@ -4806,3 +4806,18 @@ no better than signing. At check day 160 and 0.12 progress when met:
 | Pilot | 17 |
 
 The soak was clean over 300 first years and 100 two-year runs.
+
+## 20 November 2026 — 15-run matrix on 4653160
+
+Recorded in `docs/playtests/2026-11-20-owner-supplied-4653160-matrix.md`.
+
+Fixed:
+- the communication review's incident lines are dated, so two of one kind
+  no longer repeat (none repeat in 120 harness years);
+- the decision receipt names work a choice stopped;
+- the board paper's submit button names missing material items;
+- the quarter-close freeze arises only in a quarter's last 21 days (it
+  lasted eight weeks in run 9);
+- next year's budget cut says this year is unchanged.
+
+Not reproduced: Skip ran past no new decision in 1,262 harness skips.

@@ -587,7 +587,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // How the board heard about each incident (19 November). One it heard of
   // elsewhere first cannot read as a board that relied on you.
   const incidentNews = Object.values(state.incidents.incidents).flatMap((incident) => {
-    const name = index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'
+    // Dated: two incidents of one kind read as one line twice (4653160 playtest).
+    const name = `${index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'} of ${dateOf(incident.startedDay)}`
     if (incident.boardHeardElsewhereDay !== undefined) return [{ elsewhere: true, line: `The board heard about the ${name} elsewhere before it heard from you${incident.boardInformedDay !== undefined ? `; your briefing followed on ${dateOf(incident.boardInformedDay)}` : ''}.` }]
     // A reassurance that did not hold reads as a board misled, not informed.
     if (incident.boardInformedDay !== undefined && incident.boardBriefingTone === 'reassuring' && incident.phase === 'closed' && incident.consequence >= BOARD_MATERIAL) return [{ elsewhere: true, line: `You told the board on ${dateOf(incident.boardInformedDay)} that the ${name} was in hand, and it was not.` }]

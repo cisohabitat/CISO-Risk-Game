@@ -22,6 +22,13 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- A decision receipt names any programme it paused or enquiry it pulled back.
+- The board paper's submit button says when material items are missing.
+- The quarter-close change freeze arises only in a quarter's last three
+  weeks.
+- Accepting next year's budget cut says this year's budget is unchanged.
+- Two incidents of one kind no longer make two identical review lines.
+
 - Briefing the board is a choice. You can tell it what is known and what is
   not, or that the incident is in hand. Reassurance is kinder if the
   incident stays small, and costs you if it does not. A material incident
