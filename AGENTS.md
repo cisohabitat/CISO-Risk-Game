@@ -455,7 +455,9 @@ changes.
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
 - `wantsYouCount` (selectors) is the one count of what wants the player;
   the Briefing masthead and the rail badge both read it.
-- Releases follow `docs/release/RELEASING.md`. 0.1.0-rc.1 was cut on
+- Releases follow `docs/release/RELEASING.md`; the tag, the GitHub Release
+  and the live suite come from the hand-run Release workflow
+  (`.github/workflows/release.yml`), not from a local tag push. 0.1.0-rc.1 was cut on
   22 November 2026; keep an "Unreleased" heading at the top of the CHANGELOG
   (`tests/e2e/release-pages.spec.ts` reads it).
 - A blocker whose resolution has a `budget` holds its programme at

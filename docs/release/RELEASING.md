@@ -27,8 +27,14 @@ point on `main` with notes, cut about monthly while people are playing.
 1. Move the **Unreleased** section of `CHANGELOG.md` under a version and date;
    write it for players, not developers.
 2. Bump `version` in `package.json` to match.
-3. Commit, run both required suites for that commit, tag `vX.Y.Z`, and push
-   both. The host deploys `main`. Confirm both CI jobs pass.
+3. Commit, run both required suites for that commit, and push. The host
+   deploys `main`. Confirm both CI jobs pass. Then run the **Release** workflow
+   (`.github/workflows/release.yml`, by hand, on `main`, with the version). It
+   checks `package.json` and the CHANGELOG match, builds, tags `vX.Y.Z` on
+   that commit, publishes the GitHub Release with the notes and the `dist/`
+   ZIP (a pre-release when the version has a suffix), and runs
+   `pnpm test:e2e:live` against the deployment. That covers steps 4–6 below
+   apart from looking at the pages yourself.
 4. Check the live site: the start screen, `/guide`, `/about`,
    `/accessibility`, a seed link, and one campaign started and saved.
 5. Check `/release-notes` and About's **Release and build** section. The version

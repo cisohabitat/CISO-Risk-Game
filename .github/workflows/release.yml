@@ -1,0 +1,69 @@
+name: Release
+
+# Cuts a named release from main (docs/release/RELEASING.md, "Cutting it",
+# steps 3–6): tags the commit, publishes a GitHub Release with that version's
+# CHANGELOG notes and a ZIP of the built dist/, then runs the live suite
+# against the deployment. Run it by hand once CI is green on the commit and
+# package.json carries the version.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version without the v, matching package.json (e.g. 0.1.0-rc.1)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Tag and publish the release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Check the version, the branch and that the tag is new
+        run: |
+          test "$GITHUB_REF" = refs/heads/main || { echo "Run this from main."; exit 1; }
+          actual=$(node -p "require('./package.json').version")
+          test "$actual" = "$VERSION" || { echo "package.json says $actual, not $VERSION."; exit 1; }
+          ! git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null || { echo "v$VERSION already exists."; exit 1; }
+          grep -q "^## $VERSION " CHANGELOG.md || { echo "CHANGELOG.md has no section for $VERSION."; exit 1; }
+      - run: pnpm build
+      - name: Package dist and the notes
+        run: |
+          (cd dist && zip -qr "../ciso-first-year-$VERSION.zip" .)
+          awk -v v="## $VERSION " 'index($0, v) == 1 { on = 1; next } on && /^## / { exit } on { print }' CHANGELOG.md > notes.md
+          test -s notes.md
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=""
+          case "$VERSION" in *-*) prerelease="--prerelease" ;; esac
+          gh release create "v$VERSION" "ciso-first-year-$VERSION.zip" \
+            --target "$GITHUB_SHA" --title "$VERSION" --notes-file notes.md $prerelease
+
+  live:
+    name: Live suite against the deployment
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: ./.github/actions/setup
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e:live
+        env:
+          BASE_URL: https://ciso-risk-game.vercel.app
