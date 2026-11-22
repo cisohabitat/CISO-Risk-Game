@@ -33,16 +33,18 @@ it('records refunds in the ledger as Skip runs past them, without inventing mone
   expect(state.resources.budgetRemaining).toBe(255)
   expect(state.history.entries.filter((entry) => entry.kind === 'budget')).toHaveLength(2)
 })
-it('records slow completion around an unpaid constraint without charging for the fix', () => {
+// Since 22 November a blocker with a price holds the programme instead
+// (paid-blocker-hold.test.ts); one without a price is still crawled past.
+it('records slow completion around an unpriced constraint without charging for anything', () => {
   const state = quiet()
   const programme = state.programmes.programmes['prog-identity']!
-  Object.assign(programme, { status: 'at-risk', startedDay: 1, progress: 0.99999, budgetAllocated: 850, blockers: [{ id: 'blk-identity-legacy', startedDay: 100, resolved: false }] })
+  Object.assign(programme, { status: 'at-risk', startedDay: 1, progress: 0.99999, budgetAllocated: 850, blockers: [{ id: 'blk-identity-exec', startedDay: state.currentDay - 1, resolved: false }] })
   state.resources.budgetRemaining = 105
   tickDay(state, index)
   expect(programme.status).toBe('complete')
   expect(state.resources.budgetRemaining).toBe(105)
   expect(programmeViews(state, index).find((item) => item.id === programme.id)!.latestBlockerNote).toContain('completion did not purchase a separate blocker fix')
-  expect(state.inbox.messages.find((message) => message.subject.startsWith('Delivered: Identity'))!.body).toContain('Legacy applications cannot federate')
+  expect(state.inbox.messages.find((message) => message.subject.startsWith('Delivered: Identity'))!.body).toContain('A change freeze over the quarter close')
 })
 it('records actual manual clearing once, while a refused paid fix records nothing', () => {
   const state = quiet()

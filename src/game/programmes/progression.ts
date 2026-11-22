@@ -15,6 +15,8 @@ export interface ProgrammeTickResult {
   completed: string[]
   newBlockers: { programmeId: string; blockerId: string; name: string; description: string }[]
   completedWithBlockers: { programmeId: string; names: string[] }[]
+  /** Programmes that reached the hold this day, with the paid blockers holding them. */
+  held: { programmeId: string; blockers: { name: string; label: string; budget: number }[] }[]
 }
 
 /** Share of the programme's weekly capacity demand that the team can meet. */
@@ -39,11 +41,14 @@ export function computeStaffing(state: GameState, index: ContentIndex, programme
   return total > 0 ? clamp01(met / total) : 1
 }
 
+/** How far a programme gets while a blocker with a price stands. */
+export const PAID_BLOCKER_HOLD = 0.9
+
 /** How long before a quarter ends a quarter-close blocker can arise. */
 const QUARTER_CLOSE_DAYS = 21
 
 export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng): ProgrammeTickResult {
-  const result: ProgrammeTickResult = { effects: [], milestones: [], completed: [], newBlockers: [], completedWithBlockers: [] }
+  const result: ProgrammeTickResult = { effects: [], milestones: [], completed: [], newBlockers: [], completedWithBlockers: [], held: [] }
 
   for (const programme of Object.values(state.programmes.programmes)) {
     const def = index.programme.get(programme.id)
@@ -108,6 +113,18 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
 
     const before = programme.progress
     programme.progress = clamp01(programme.progress + delta)
+    // A blocker with a price cannot be crawled past (owner, 22 November): the
+    // programme holds short of completion, and of its last milestone, until
+    // it is paid for. Identity finished without its £120k shim in three
+    // playtest rounds, and paying only ever bought speed.
+    const paid = programme.blockers
+      .filter((blocker) => !blocker.resolved)
+      .map((blocker) => def.blockers.find((item) => item.id === blocker.id))
+      .filter((blocker): blocker is NonNullable<typeof blocker> => (blocker?.resolution.budget ?? 0) > 0)
+    if (paid.length > 0 && programme.progress > PAID_BLOCKER_HOLD) {
+      programme.progress = Math.max(before, PAID_BLOCKER_HOLD)
+      if (before < PAID_BLOCKER_HOLD) result.held.push({ programmeId: programme.id, blockers: paid.map((blocker) => ({ name: blocker.name, label: blocker.resolution.label, budget: blocker.resolution.budget! })) })
+    }
 
     // Spend tracks delivery, so a paused programme stops burning budget.
     const spendThisDay = programme.budgetAllocated * (programme.progress - before)

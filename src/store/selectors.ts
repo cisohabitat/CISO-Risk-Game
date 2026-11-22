@@ -1,3 +1,4 @@
+import { PAID_BLOCKER_HOLD } from '@/game/programmes/progression'
 import { BOARD_BRIEFING_DAYS, RESPONSE_DONE } from '@/game/incidents/thresholds'
 import { canBriefBoard } from '@/game/incidents/board'
 import { unreadUpdateCount } from '@/game/inbox/messages'
@@ -436,7 +437,7 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
           resolution: blockerDef?.resolution.label ?? 'Resolve',
           budget: blockerDef?.resolution.budget,
           focus: blockerDef?.resolution.focus,
-          progressNote: !blockerDef ? 'The delivery impact of this constraint is not recorded.' : blockerDef.progressMultiplier === 0 ? 'This constraint stops delivery until resolved.' : 'This constraint slows delivery. Other work continues, so the programme may still finish without buying this separate fix.',
+          progressNote: !blockerDef ? 'The delivery impact of this constraint is not recorded.' : blockerDef.progressMultiplier === 0 ? 'This constraint stops delivery until resolved.' : (blockerDef.resolution.budget ?? 0) > 0 ? `This constraint slows delivery, and the programme cannot finish, or reach its last milestone, past ${Math.round(PAID_BLOCKER_HOLD * 100)}% until it is paid for.` : 'This constraint slows delivery. Other work continues, so the programme may still finish without buying this separate fix.',
         }
       }),
       milestones: def.milestones.map((milestone) => ({

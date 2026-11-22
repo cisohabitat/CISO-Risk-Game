@@ -697,7 +697,8 @@ how it was told: briefed early and warned in an earlier paper, it takes a
 material incident better than one it heard about elsewhere. Incident decisions
 open in waves, each later wave with a findings letter:
 ransomware asks about the ransom only once there is word on what recovery can
-do. The Briefing's rail badge counts everything the Briefing says needs you. A decision's receipt names any work it stopped, and the board paper's submit
+do. A programme blocked by something with a price (a compatibility shim, a
+licence) holds at 90% until you pay for it. The Briefing's rail badge counts everything the Briefing says needs you. A decision's receipt names any work it stopped, and the board paper's submit
 button says when material items are missing. An incident's reconstruction says, for each control on the route that did not
 hold, whether it was missing, bypassed or in place but ineffective.
 

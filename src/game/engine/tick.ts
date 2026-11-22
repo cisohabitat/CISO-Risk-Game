@@ -6,7 +6,7 @@
  * One tick = one in-game day. There is no real-time loop anywhere in the game.
  */
 import type { ContentIndex, GameEffect, GameEventDef, GameState, PauseReason } from '../types'
-import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, DAYS_PER_WEEK, clamp01 } from '../types'
+import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, DAYS_PER_WEEK, clamp01, money } from '../types'
 import { createRng } from './rng'
 import { applyEffects, scheduledEffectDay } from './effects'
 import { applyDrift } from '../controls/effectiveness'
@@ -193,6 +193,19 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       returnGroup: `programme:${milestone.programmeId}`,
       body: `${programme?.name ?? 'The programme'} reached ${milestone.name}. Review the delivery path in Programmes; further milestones may still be outstanding.`,
       type: 'programme', priority: 'notable',
+    })
+  }
+  for (const hold of programmeResult.held) {
+    const programme = index.programme.get(hold.programmeId)
+    const named = hold.blockers.map((blocker) => `${blocker.name} (${blocker.label.toLowerCase()}, ${money(blocker.budget)})`).join('; ')
+    highlights.push(`${programme?.shortName ?? hold.programmeId} is held short of completion.`)
+    pushMessage(state, {
+      from: programme?.name ?? 'Programme office',
+      subject: `Held short of completion: ${programme?.name ?? hold.programmeId}`,
+      returnGroup: `programme:${hold.programmeId}`,
+      body: `The programme has done all it can around ${hold.blockers.length === 1 ? 'this' : 'these'}: ${named}. It cannot finish, and its last milestone will not land, until ${hold.blockers.length === 1 ? 'it is' : 'they are'} paid for on the Programmes screen.`,
+      type: 'programme',
+      priority: 'notable',
     })
   }
   // Enquiries announce themselves when they finish; a programme, the largest

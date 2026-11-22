@@ -22,6 +22,10 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- A programme blocked by something with a price, such as Identity's
+  compatibility shim, now holds at 90% until you pay for it, and says so.
+  It no longer finishes, and counts as delivered, regardless.
+
 - The Briefing's rail badge counts everything the Briefing says needs you,
   board papers and blocked programmes included.
 - "Review incident recap" goes to the recap. A late-December incident no

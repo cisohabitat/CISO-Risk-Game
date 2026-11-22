@@ -184,6 +184,19 @@ function playYear(appetite: Appetite, state: GameState) {
       }
     }
 
+    // A blocker with a price holds a programme short of completion (22
+    // November); a careful CISO pays for it once a reserve still remains.
+    for (const programme of Object.values(state.programmes.programmes)) {
+      if (programme.status !== 'active' && programme.status !== 'at-risk') continue
+      for (const blocker of programme.blockers.filter((b) => !b.resolved)) {
+        const budget = index.programme.get(programme.id)?.blockers.find((b) => b.id === blocker.id)?.resolution.budget ?? 0
+        if (budget > 0 && state.resources.budgetRemaining - budget >= 100) {
+          const r = applyAction(state, index, { type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id })
+          if (r.ok) log.push(`d${state.currentDay} unblock ${index.programme.get(programme.id)?.name}`)
+        }
+      }
+    }
+
     // The board hears about every incident from the CISO, and every quarter
     // gets a paper with everything material on it.
     briefBoardOnIncidents(state, index)

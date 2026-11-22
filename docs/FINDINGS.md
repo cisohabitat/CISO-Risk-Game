@@ -4838,3 +4838,26 @@ Fixed:
 - the budget list shows the whole year.
 
 The open design question is blocked programmes completing.
+
+## 22 November 2026 — a paid blocker holds its programme
+
+Three playtest rounds reported programmes finishing with a priced blocker
+unresolved; Identity finished without its £120k compatibility shim. Paying
+had only ever bought speed. The owner chose option 2 of three.
+
+A blocker whose fix has a price now holds the programme at 0.9, short of its
+last milestone, until paid. The programme writes one letter naming the
+blocker and its price, and the Programmes screen says so. The priced
+blockers are Identity's shim (£120k), Ransomware's cost (£150k), Detection's
+licence (£130k) and Third-party's contract (£60k). Blockers without a price
+still close at completion. `tests/engine/paid-blocker-hold.test.ts`.
+
+Ladder over 15 seeds a mode, programmes finished:
+- a player who never pays: 1.9 / 1.6 / 1.1 before, 1.4 / 1.2 / 1.0 after;
+- with the ladder now paying such blockers when £100k would remain:
+  1.7 / 1.3 / 1.1, with programmes started 2.3 / 1.8 / 1.1 (Guided was 2.7,
+  since fixes now cost money).
+
+Missed per programme reads 0.37 / 0.41 / 1.06. In the tuning harness, whose
+styles never pay, programmes done fell: balanced 1.2 to 1.0, minor 1.0 to
+0.6. Objectives were unchanged. The soak was clean.

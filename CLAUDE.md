@@ -109,6 +109,10 @@ and reassurance. The owner also accepted a design list:
 - check previews vary by difficulty;
 - the board is slow to warm for a quarter after a material incident;
 - one Year Two check, on the service desk assistant.
+On 22 November 2026 the owner chose that a blocker with a price holds its
+programme at 90%, short of its last milestone, until it is paid for
+(`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers
+without a price still close when the programme completes.
 On 30 October 2026 the owner's next-step instruction continues the supplied
 CISO report with residual-risk appetite delegation: a board decision, recorded
 statement, acceptance guidance and paper follow-through. It does not add insurer
