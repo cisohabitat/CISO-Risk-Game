@@ -22,6 +22,12 @@ The game as it stands after the roadmap's engineering phases
 
 ### Playing
 
+- The Briefing's rail badge counts everything the Briefing says needs you,
+  board papers and blocked programmes included.
+- "Review incident recap" goes to the recap. A late-December incident no
+  longer dates the board briefing "34 Dec".
+- The Briefing's budget list shows every movement of the year.
+
 - A decision receipt names any programme it paused or enquiry it pulled back.
 - The board paper's submit button says when material items are missing.
 - The quarter-close change freeze arises only in a quarter's last three

@@ -4821,3 +4821,20 @@ Fixed:
 - next year's budget cut says this year is unchanged.
 
 Not reproduced: Skip ran past no new decision in 1,262 harness skips.
+
+## 22 November 2026 — 15-run matrix on 4398537
+
+Recorded in `docs/playtests/2026-11-22-owner-supplied-4398537-matrix.md`.
+
+The seed replay now reproduces the whole year, which confirms the
+17 November finding: a seed reproduces a year for the same choices on the
+same days.
+
+Fixed:
+- the rail badge and the masthead share `wantsYouCount`;
+- a briefing deadline past the year end reads "before the year closes";
+- the recap button scrolls to the reconstruction;
+- the 28 October letter says "so far this year";
+- the budget list shows the whole year.
+
+The open design question is blocked programmes completing.

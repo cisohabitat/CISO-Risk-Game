@@ -10,7 +10,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ChangeHighlight } from '@/components/ui/ChangeHighlight'
 import { DESTINATIONS, GUIDE_URL, destinationFor } from '@/app/navigation'
 import { type Screen, useCampaignIndex, useGameStore } from '@/store/game-store'
-import { briefing, teamWellbeingNotes } from '@/store/selectors'
+import { briefing, teamWellbeingNotes, wantsYouCount } from '@/store/selectors'
 import { TimeControls } from '@/components/game/TimeControls'
 import { Badge, Button, Dialog, buttonClass } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils/cn'
@@ -50,6 +50,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (!state) return null
   const view = briefing(state, index)
+  const wantsYou = wantsYouCount(state, index)
   const wellbeing = teamWellbeingNotes(state)
   const primary = DESTINATIONS.filter((destination) => destination.primary)
   const secondary = DESTINATIONS.filter((destination) => !destination.primary)
@@ -117,9 +118,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                       {view.unreadMessages}
                     </span>
                   )}
-                  {destination.id === 'home' && view.openDecisions > 0 && (
-                    <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass tabular-nums">
-                      {view.openDecisions}
+                  {destination.id === 'home' && wantsYou > 0 && (
+                    <span className="rounded-full bg-brass px-1.5 py-0.5 text-xs font-semibold text-on-brass tabular-nums" aria-label={`${wantsYou} ${wantsYou === 1 ? 'thing needs' : 'things need'} your attention`}>
+                      {wantsYou}
                     </span>
                   )}
                   {/* The rail badges the Briefing and the Inbox when they want

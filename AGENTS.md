@@ -453,6 +453,8 @@ changes.
   of the route, whether it was briefed in time), and `briefBoard` costs one
   attention. Harnesses that write papers also brief
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
+- `wantsYouCount` (selectors) is the one count of what wants the player;
+  the Briefing masthead and the rail badge both read it.
 - A blocker with `liftsAtQuarterEnd` arises only in a quarter's last 21
   days; its draw is still made every day so the year does not shift.
 - `briefBoard` takes a `tone`. Candid earns 0.02 at close. Reassuring

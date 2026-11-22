@@ -17,7 +17,7 @@ import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
+import { wantsYouCount, briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
 import { attentionLeft, bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge, statusLabel } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
@@ -54,11 +54,7 @@ export function HomeScreen() {
   // A blocked programme waits on the player too. Blockers reached a playtester
   // only through the inbox and a board paper line, never here.
   const blocked = programmeViews(state, index).filter((p) => p.blockers.length > 0 && (p.status === 'active' || p.status === 'at-risk'))
-  const wantsYou =
-    view.openDecisions +
-    (state.reviews.pendingQuarter !== undefined ? 1 : 0) +
-    blocked.length +
-    pressing.length
+  const wantsYou = wantsYouCount(state, index)
 
   return (
     <div className="space-y-6">
@@ -140,7 +136,12 @@ export function HomeScreen() {
         {!state.finished && Object.values(state.incidents.incidents).some((incident) => incident.reconstruction) && (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-y border-line py-3 text-sm">
             <p>An incident debrief is available, including its recorded response choices.</p>
-            <Button variant="secondary" size="sm" onClick={() => setScreen('debrief')}>Review incident recap</Button>
+            <Button variant="secondary" size="sm" onClick={() => {
+              // To the recap itself: it sits below the year timeline, and the
+              // button landed on the timeline (4398537 playtest, run 8).
+              setScreen('debrief')
+              requestAnimationFrame(() => document.getElementById('incidents')?.scrollIntoView?.({ block: 'start' }))
+            }}>Review incident recap</Button>
           </div>
         )}
       </section>

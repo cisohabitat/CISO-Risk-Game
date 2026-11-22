@@ -1456,3 +1456,15 @@ export function livePauseReasons(state: GameState): PauseReason[] {
     }
   })
 }
+
+/**
+ * How many things want the player on the Briefing: open decisions, a pending
+ * board paper, blocked programmes and uncovered collisions. One count for the
+ * masthead and the rail badge, which counted decisions alone and read 1 beside
+ * "3 things need your attention" (4398537 playtest).
+ */
+export function wantsYouCount(state: GameState, index: ContentIndex): number {
+  const blocked = programmeViews(state, index).filter((p) => p.blockers.length > 0 && (p.status === 'active' || p.status === 'at-risk')).length
+  const pressing = collisions(state, index).filter((collision) => collision.verdict !== 'covered').length
+  return openDecisions(state, index).length + (state.reviews.pendingQuarter !== undefined ? 1 : 0) + blocked + pressing
+}

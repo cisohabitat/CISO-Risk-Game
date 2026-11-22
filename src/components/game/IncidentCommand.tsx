@@ -14,6 +14,7 @@ import { Button, Card, CardBody, Disclosure } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentCommand } from '@/store/selectors'
 import { plural, shortDate } from '@/lib/formatting/labels'
+import { CAMPAIGN_DAYS } from '@/game/types'
 import { IncidentIllustration } from './IncidentIllustration'
 
 function idleLine(phase: string, decided: boolean): string {
@@ -141,7 +142,7 @@ export function IncidentCommand() {
               : incident.board.heardElsewhere
                 ? 'The board heard about this elsewhere first. It still expects your account.'
                 : incident.board.expectedBy !== undefined
-                  ? `The board expects to hear from you by ${shortDate(incident.board.expectedBy)}, before it hears elsewhere. How you put it is remembered when the incident closes.`
+                  ? `The board expects to hear from you ${incident.board.expectedBy >= CAMPAIGN_DAYS ? 'before the year closes' : `by ${shortDate(incident.board.expectedBy)}`}, before it hears elsewhere. How you put it is remembered when the incident closes.`
                   : 'The board will expect to hear from you once this is confirmed.'}
           </p>
           {incident.board.canBrief && (
