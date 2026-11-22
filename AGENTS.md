@@ -455,6 +455,9 @@ changes.
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
 - `wantsYouCount` (selectors) is the one count of what wants the player;
   the Briefing masthead and the rail badge both read it.
+- Releases follow `docs/release/RELEASING.md`. 0.1.0-rc.1 was cut on
+  22 November 2026; keep an "Unreleased" heading at the top of the CHANGELOG
+  (`tests/e2e/release-pages.spec.ts` reads it).
 - A blocker whose resolution has a `budget` holds its programme at
   `PAID_BLOCKER_HOLD` (0.9) until resolved, with one "Held short of
   completion" letter. The ladder pays such blockers when £100k would remain.

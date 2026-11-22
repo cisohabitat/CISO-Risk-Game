@@ -4,10 +4,16 @@ What changed for players, newest first. Each release is cut with the checklist
 in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 `docs/FINDINGS.md`.
 
-## Unreleased — first public release candidate
+## Unreleased
+
+Nothing yet since 0.1.0-rc.1.
+
+## 0.1.0-rc.1 — 22 November 2026 — first public release candidate
 
 The game as it stands after the roadmap's engineering phases
-(`docs/ROADMAP.md`, Phases 0–7). Version 0.1.0 until the owner tags a release.
+(`docs/ROADMAP.md`, Phases 0–7), and the design changes the owner chose in
+November from six rounds of AI playtests. A release candidate: for people
+to play and report against, before 0.1.0.
 
 - Patch Zod to 4.6.7 and the test tooling’s Undici to 8.12.3 for the
   24 October security advisories.

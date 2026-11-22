@@ -134,8 +134,12 @@ test.describe('player guide', () => {
     await dismissNote(page)
     await expect(page.getByText(/board paper is due/i).first()).toBeVisible()
     await page.getByRole('button', { name: 'Prepare it' }).first().click()
-    await page.getByRole('button', { name: /Prepare the Q\d board paper/ }).first().click()
-    await expect(page.getByRole('dialog')).toBeVisible()
+    // "Prepare it" opens the paper itself now; the Board screen's own button
+    // is only needed when it lands on the screen without the dialog.
+    const dialog = page.getByRole('dialog')
+    await page.waitForTimeout(400)
+    if (!(await dialog.isVisible())) await page.getByRole('button', { name: /Prepare the Q\d board paper/ }).first().click()
+    await expect(dialog).toBeVisible()
     await page.waitForTimeout(250)
     await shot(page, '08-board')
   })
@@ -152,6 +156,9 @@ test.describe('player guide', () => {
     await openPreparedCampaign(page, prepareCampaign(SEED, 'incident'))
     await dismissNote(page)
     await expect(page.getByText('Incident active').first()).toBeVisible()
+    // Dismissing the note scrolls to where it sat; the picture is of the
+    // incident bar at the top of the Briefing.
+    await page.evaluate(() => { window.scrollTo(0, 0); document.getElementById('main')?.scrollTo(0, 0) })
     await shot(page, '09-incident')
 
     await openPreparedCampaign(page, prepareCampaign(SEED, 'year-end'))

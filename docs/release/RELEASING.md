@@ -12,8 +12,10 @@ point on `main` with notes, cut about monthly while people are playing.
    reason in `docs/HOSTING.md`.
 2. `pnpm test:e2e` — the full browser suite, including Chromium and WebKit.
 3. `pnpm soak 1000` — no crash or broken invariant.
-4. `pnpm coverage 60` — authored content still reached (98% of events, 96% of
-   decisions when last measured).
+4. `pnpm coverage 60 --years 2` — authored content still reached (95% of
+   events and 100% of decisions on 22 November 2026, for 0.1.0-rc.1; most of
+   the rest sits behind options the harness does not take). A one-year run
+   cannot reach Year Two and reads lower (80% and 86%).
 5. `pnpm screenshots` and `pnpm playthrough` — look at them. Then
    `pnpm guide:shots` so the guide and the About page show the game as it is.
 6. `tests/engine/cohort.test.ts` passing means the facilitator's seed table
