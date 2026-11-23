@@ -453,6 +453,11 @@ changes.
   of the route, whether it was briefed in time), and `briefBoard` costs one
   attention. Harnesses that write papers also brief
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
+- A security check on an objective is a stop (`objective-check`), named by
+  its letter. The review caps communication below strong for anything kept
+  quiet and business enablement at solid for a missed objective. A board
+  briefing is late by date (`briefedInTime`), not only when the board heard
+  elsewhere.
 - `wantsYouCount` (selectors) is the one count of what wants the player;
   the Briefing masthead and the rail badge both read it.
 - Releases follow `docs/release/RELEASING.md`; the tag, the GitHub Release

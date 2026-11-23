@@ -697,7 +697,7 @@ how it was told: briefed early and warned in an earlier paper, it takes a
 material incident better than one it heard about elsewhere. Incident decisions
 open in waves, each later wave with a findings letter:
 ransomware asks about the ransom only once there is word on what recovery can
-do. Releases are cut by the hand-run Release workflow, which tags, publishes the
+do. Skip ahead also stops on the day a business security check runs. Releases are cut by the hand-run Release workflow, which tags, publishes the
 notes with a ZIP of the built site, and tests the live deployment. The first
 release candidate is 0.1.0-rc.1 (22 November 2026); `CHANGELOG.md`
 has its notes. A programme blocked by something with a price (a compatibility shim, a

@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import { testIndex } from './helpers'
-import { newGame, runDays } from '@/game/engine/orchestrator'
+import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 
 // Security gates on business objectives (owner, 17 November): checked once on
 // their day; met speeds delivery a little, unmet costs six weeks.
@@ -73,4 +73,15 @@ it('carries a security check into the second year, on the service desk assistant
   runDays(second, index, 2)
   expect(second.business.objectives['obj-y2-assistant']!.gate).toBe('unmet')
   expect(second.inbox.messages.some((message) => message.subject === 'Data protection review: assistant held')).toBe(true)
+})
+
+// 16fe0ee playtest (M-02): a check that cost an objective 45 days passed
+// silently inside a 40-day Skip ahead. It stops a skip now, and says which.
+it('stops Skip ahead on the day of a security check, naming it', () => {
+  const { state, index } = at(220)
+  state.reviews.pendingQuarter = undefined
+  state.controls.controls['ctl-dlp']!.coverage = 0.2
+  const result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
+  expect(state.currentDay).toBe(230)
+  expect(result.message).toContain('Kestrel: auditors')
 })

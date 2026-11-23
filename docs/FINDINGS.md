@@ -4861,3 +4861,24 @@ Ladder over 15 seeds a mode, programmes finished:
 Missed per programme reads 0.37 / 0.41 / 1.06. In the tuning harness, whose
 styles never pay, programmes done fell: balanced 1.2 to 1.0, minor 1.0 to
 0.6. Objectives were unchanged. The soak was clean.
+
+## 23 November 2026 — 15-run matrix on 16fe0ee (pass 8)
+
+Recorded in `docs/playtests/2026-11-23-owner-supplied-16fe0ee-matrix.md`.
+
+The worst finding was my own regression. On 20 November, text meant for the
+28 October cut ("this year's budget is unchanged") was matched by a shared
+phrase into the 31 May option, which charges £110k. The CHANGELOG had said
+the reverse. `tests/content/budget-wording.test.ts` now guards against it.
+
+Fixed the same day:
+- a security check stops Skip;
+- headline guards on business and on the risk picture;
+- the discovery wording;
+- the wording for a risk that was never surfaced;
+- the unfunded amount in the sidebar;
+- concealment and missed-objective caps;
+- lateness by date for the board briefing;
+- the board's reply echoes optional topics.
+
+The tuning harness, the ladder and the soak are unchanged.

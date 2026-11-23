@@ -27,6 +27,8 @@ it('holds Skip ahead in a paper\'s final week', () => {
 it('runs Skip to the day a paper enters its final week, and says so', () => {
   const state = atDaysBeforeDeadline(60)
   state.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  // Security checks stop a skip too (23 November); this test is about the paper.
+  for (const objective of Object.values(state.business.objectives)) objective.gate = 'met'
   const result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
   expect(state.currentDay).toBe(3 * DAYS_PER_QUARTER - 1 - 7)
   expect(result.message).toContain('the Q2 board paper is due in 7 days')

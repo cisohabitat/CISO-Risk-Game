@@ -5,7 +5,7 @@
  *
  * Everything here is pure: same state + same action = same result.
  */
-import { BOARD_CHAIR, canBriefBoard } from '../incidents/board'
+import { BOARD_CHAIR, briefedInTime, canBriefBoard } from '../incidents/board'
 import { minimumProgrammeFunding, programmeAccelerationCost } from '../programmes/funding'
 import type {
   ContentIndex,
@@ -170,6 +170,10 @@ function describeStop(state: GameState, index: ContentIndex, reasons: PauseReaso
         return `Stopped on ${date}: a programme is blocked.`
       case 'assumption-invalidated':
         return `Stopped on ${date}: an assumption you recorded no longer holds.`
+      case 'objective-check': {
+        const latest = state.inbox.messages.findLast((message) => message.type === 'business' && message.day === state.currentDay)
+        return `Stopped on ${date}: ${latest?.subject ?? 'a business security check ran'}.`
+      }
       case 'year-end':
         return `Stopped on ${date}: the last day of the year.`
       default:
@@ -588,7 +592,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       incident.boardBriefingTone = action.tone ?? 'candid'
       const reassuring = incident.boardBriefingTone === 'reassuring'
       const name = index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'
-      const late = incident.boardHeardElsewhereDay !== undefined
+      const late = !briefedInTime(incident)
       pushMessage(state, {
         from: BOARD_CHAIR,
         incidentId: incident.id,

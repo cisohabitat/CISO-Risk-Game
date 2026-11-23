@@ -156,8 +156,8 @@ sentence, not the colour.
   the screen. You inherited a picture; you have not confirmed any of it.
 
 **The clock** (top). `1× 2× 4×` run time forward. **Skip ahead** runs to the next
-thing that needs you (a decision, a board paper, an incident or a blocked
-programme) and says what it stopped for. Letters and results that need no
+thing that needs you (a decision, a board paper, an incident, a blocked
+programme or a business security check) and says what it stopped for. Letters and results that need no
 answer wait in the Inbox, and the Briefing lists what arrived while you
 skipped. Your attention renews each week whether or not you
 stop there. At `2×` and `4×`, taking an action pauses time; choose a speed

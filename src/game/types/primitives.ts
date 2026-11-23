@@ -145,6 +145,8 @@ export type PauseReason =
   | 'decision-deadline'
   | 'assumption-invalidated'
   | 'programme-blocked'
+  /** A business security check on an objective ran today (16fe0ee playtest, M-02). */
+  | 'objective-check'
   | 'quarter-end'
   | 'year-end'
   | 'player'

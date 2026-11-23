@@ -50,3 +50,19 @@ it('reads a reassurance that did not hold as the board misled', () => {
   expect(communication.evidence.join(' ')).toContain('was in hand, and it was not')
   expect(communication.band).not.toBe('strong')
 })
+
+// 16fe0ee playtest: concealment sat beside "strong" communication (M-11), and
+// "strong" business enablement beside a missed objective (m-13).
+it('caps communication below strong when something was kept quiet, and enablement when an objective was missed', () => {
+  const index = testIndex()
+  const state = newGame(index, { seed: 'review-caps' })
+  state.currentDay = 363
+  state.stakeholders.boardConfidence = 0.95
+  for (const quarter of [1, 2, 3]) state.reviews.quarters.push({ quarter, day: quarter * 91, topicsChosen: [], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true })
+  expect(buildAnnualReview(state, index).dimensions.find((d) => d.id === 'communication')!.band).toBe('strong')
+  state.decisions.decisions['quiet'] = { id: 'quiet', defId: 'dec-cardholder-scope', createdDay: 100, selectedOptionId: 'opt-card-fix', resolvedDay: 101, resolvedByDefault: false, rationaleTagIds: [], assumptionIds: [] }
+  expect(buildAnnualReview(state, index).dimensions.find((d) => d.id === 'communication')!.band).not.toBe('strong')
+  for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
+  state.business.objectives['obj-new-market']!.status = 'failed'
+  expect(buildAnnualReview(state, index).dimensions.find((d) => d.id === 'business-enablement')!.band).not.toBe('strong')
+})

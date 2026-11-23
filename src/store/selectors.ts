@@ -839,7 +839,7 @@ export interface IncidentCommandView {
   /** Choices already made in this incident, so the record is visible while it runs. */
   taken: { day: number; title: string; option: string }[]
   /** The board: briefed on a day, still to be told (and by when), or not yet a board matter. */
-  board: { briefedDay?: number; heardElsewhere: boolean; canBrief: boolean; expectedBy?: number; tone?: 'candid' | 'reassuring' }
+  board: { briefedDay?: number; heardElsewhere: boolean; canBrief: boolean; expectedBy?: number; today: number; tone?: 'candid' | 'reassuring' }
 }
 
 /**
@@ -913,6 +913,7 @@ export function incidentCommand(state: GameState, index: ContentIndex): Incident
     taken: taken.sort((a, b) => a.day - b.day),
     board: {
       briefedDay: incident.boardInformedDay,
+      today: state.currentDay,
       tone: incident.boardBriefingTone,
       heardElsewhere: incident.boardHeardElsewhereDay !== undefined,
       canBrief: canBriefBoard(incident),

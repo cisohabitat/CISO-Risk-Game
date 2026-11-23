@@ -196,8 +196,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // above "0 of 32 things you could have examined yourself, you did",
       // which reads as a contradiction unless you already know the difference
       // between having seen something and having checked it.
-      `${discovery.systems.discovered} of ${discovery.systems.total} systems discovered; ${discovery.systems.remaining} remain unseen`,
-      `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies discovered; ${discovery.dependencies.remaining} remain unseen`,
+      // Known, not discovered: correspondence reveals systems as well as
+      // enquiries, and "38 of 38 discovered" read as the player's work beside
+      // "0 of 28 you examined" (16fe0ee playtest, M-06).
+      `${discovery.systems.discovered} of ${discovery.systems.total} systems known by the year end, from correspondence and enquiries; ${discovery.systems.remaining} never came to light`,
+      `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies known by the year end; ${discovery.dependencies.remaining} never came to light`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       // Current and lapsed apart: "0 of 13 controls were independently
       // assessed" printed for a year that had assessed four of them, in
@@ -309,8 +312,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // Named, because "you prioritised badly" is not a finding a player can do
       // anything with. The biggest thing nobody went near is.
       if (effort.missed) {
+        // A risk that never reached the register is named as what the year
+        // reveals, not as one the player ignored: "nothing you did went near
+        // it" was said of risks nobody could see (16fe0ee playtest, M-07).
+        const surfaced = state.risks.scenarios[effort.missed.id] !== undefined
         lines.push(
-          `${effort.missed.title} was among the largest risks ${laterYear ? 'the year began with' : 'you inherited'}, and nothing you did went near it`,
+          surfaced
+            ? `${effort.missed.title} was among the largest risks ${laterYear ? 'the year began with' : 'you inherited'}, and nothing you did went near it`
+            : `A risk that never reached your register was among the largest ${laterYear ? 'the year began with' : 'you inherited'}: ${effort.missed.title}. Nothing you did went near it`,
         )
       }
       return lines
@@ -535,7 +544,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // a target past the last day. "Met all five" used to count these as met.
   const pending = objectives.length - achieved - failed
   // An objective still in delivery is neither credit nor failure: half of each.
-  const enablement = clamp01(objectives.length === 0 ? 0.5 : (achieved + pending * 0.5) / objectives.length)
+  // A missed objective caps the band at solid: "strong" sat beside a missed
+  // objective 55 days late (16fe0ee playtest, m-13).
+  const enablement = Math.min(failed > 0 ? 0.74 : 1, clamp01(objectives.length === 0 ? 0.5 : (achieved + pending * 0.5) / objectives.length))
   dimensions.push({
     id: 'business-enablement',
     label: 'Business enablement',
@@ -610,14 +621,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const keptQuiet = Object.values(state.decisions.decisions)
     .filter((decision) => decision.selectedOptionId !== undefined && QUIET[decision.defId]?.option === decision.selectedOptionId)
     .map((decision) => QUIET[decision.defId]!.line)
+  // Something kept from the board, a bank or a regulator caps the band below
+  // strong, as hearing of an incident elsewhere does: concealment sat beside
+  // "strong" in 16fe0ee playtest runs 05, 10 and 12 (M-11).
+  const communicationScore = keptQuiet.length > 0 ? Math.min(0.74, communication) : communication
   dimensions.push({
     id: 'communication',
     label: 'Communication and escalation',
-    band: band(communication),
+    band: band(communicationScore),
     // Band-led, for the same reason: this read "STRONG — the board listened,
     // but never quite came to depend on you."
     narrative: (() => {
-      switch (band(communication)) {
+      switch (band(communicationScore)) {
         case 'strong':
           return keptQuiet.length > 0
             ? 'The board came to rely on your papers, though not everything reached it from you.'
@@ -1030,10 +1045,18 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   // year that built both programmes, a month of ransomware, five incidents,
   // and a year that closed mid-ransomware (42e2b80 playtest, November).
   if (stillRunning) return 'The year closed with an incident still running.'
-  if (hadIncident && strong('resilience')) return 'Tested, and it held.'
+  // "Tested, and it held." sat beside a Mixed year with missed objectives, and
+  // beside four incidents on an unverified picture (16fe0ee playtest, M-04).
+  if (hadIncident && strong('resilience')) {
+    if (weak('business-enablement')) return 'It held under attack, and the business paid for it in delivery.'
+    // Risk understanding, not blind spots: blind spots read weak in most
+    // years, and would have taken the line from nearly every one.
+    if (weak('risk-understanding')) return 'It held, on a picture you never verified.'
+    return 'Tested, and it held.'
+  }
   if (failing('team-sustainability')) return 'Delivered on the backs of people who cannot do it again.'
   if (hadIncident && (weakest.id === 'resilience' || weak('resilience'))) return 'Tested, and it did not hold.'
-  if (!hadIncident && business >= 0.68 && programme >= 0.68) {
+  if (!hadIncident && business >= 0.68 && programme >= 0.68 && !failing('resilience')) {
     return 'A quiet year that bought the organisation real capability.'
   }
   if (failing('blind-spots')) {

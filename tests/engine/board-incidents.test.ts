@@ -99,3 +99,22 @@ it('stays wary for a quarter after a material incident: warms slowly, cools as f
   }
   expect(warm(true)).toBeLessThan(warm(false) - 0.05)
 })
+
+// 16fe0ee playtest (m-24): a briefing three days past the deadline was thanked
+// for coming "early" when the board had not heard elsewhere.
+it('calls a briefing after the window late, even when the board never heard elsewhere', () => {
+  const { state, index, incident } = live('board-late')
+  incident.consequence = 0.1
+  const family = index.incidentFamily.get(incident.familyId)!
+  const regulatory = family.regulatoryInterest
+  ;(family as { regulatoryInterest: number }).regulatoryInterest = 0
+  try {
+    runDays(state, index, 5)
+    expect(incident.boardHeardElsewhereDay).toBeUndefined()
+    applyAction(state, index, { type: 'briefBoard', incidentId: incident.id })
+    const reply = state.inbox.messages.find((m) => m.subject.startsWith('Briefing received'))!
+    expect(reply.body).toContain('would have preferred to hear it from you first')
+  } finally {
+    ;(family as { regulatoryInterest: number }).regulatoryInterest = regulatory
+  }
+})

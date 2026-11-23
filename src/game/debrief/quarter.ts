@@ -88,6 +88,9 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
   return out
 }
 
+/** An agenda label inside a listed sentence: an assumption's own full stop made "Q3.." (16fe0ee playtest). */
+const listed = (label: string): string => label.replace(/\.$/, '')
+
 export function buildQuarterReview(
   state: GameState,
   index: ContentIndex,
@@ -110,7 +113,7 @@ export function buildQuarterReview(
     // "One material item was not on the agenda" without saying which was
     // feedback nobody could act on; the third observed playthrough asked
     // twice. Name them.
-    const names = missed.map((id) => topics.find((t) => t.id === id)?.label ?? id)
+    const names = missed.map((id) => listed(topics.find((t) => t.id === id)?.label ?? id))
     reaction = `The board accepted the papers, but ${names.length === 1 ? 'one material item was' : `${names.length} material items were`} not on the agenda: ${names.join('; ')}. They will find out another way.`
   } else if (input.topics.length === 0 && materialIds.length === 0) {
     // A paper with nothing in it. Nothing was missed, so it is not the failure
@@ -124,7 +127,7 @@ export function buildQuarterReview(
     effects.push({ type: 'board.confidence', delta: -0.02 })
     // It said which items were missing but not which were surplus, so a
     // player who had covered everything could not tell what to leave out.
-    const surplus = noise.map((id) => topics.find((t) => t.id === id)?.label ?? id)
+    const surplus = noise.map((id) => listed(topics.find((t) => t.id === id)?.label ?? id))
     // A list of titles, each capitalised: "…and A destructive attack … did not
     // need its time" read as a slip (AI second-year re-test).
     reaction = `The board sat through a long list. These did not need its time this quarter: ${surplus.join('; ')}. The chair asks for fewer, sharper items next time.`
@@ -135,7 +138,11 @@ export function buildQuarterReview(
       : input.quarter === 2
         ? 'The chair asks what has changed since the last paper, and which commitments still need follow-through.'
         : 'The chair asks which exposures and delivery commitments must carry into next year.'
-    reaction = `The board supports the direction in your Q${input.quarter} paper. ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => topics.find((topic) => topic.id === id)!.label).join('; ')}.` : ' The selected updates are noted; no current item was classified as material.'}`
+    // Optional topics the player chose are named too: they were dropped from
+    // the reply, and testers read the paper as unread (16fe0ee playtest, M-03).
+    const optional = noise.map((id) => topics.find((topic) => topic.id === id)?.label).filter((label): label is string => Boolean(label)).map(listed)
+    const alsoNoted = optional.length > 0 ? ` It also noted: ${optional.join('; ')}.` : ''
+    reaction = `The board supports the direction in your Q${input.quarter} paper. ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => listed(topics.find((topic) => topic.id === id)!.label)).join('; ')}.` : optional.length > 0 ? '' : ' The selected updates are noted; no current item was classified as material.'}${alsoNoted}`
   }
 
   if (input.communicateUncertainty) {

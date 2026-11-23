@@ -6,7 +6,19 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
-Nothing yet since 0.1.0-rc.1.
+- Fixed: offering a smaller contribution to the cost programme on 31 May
+  said this year's budget was unchanged, and took £110k from it. It now says
+  it comes from this year's budget.
+- A business security check stops Skip ahead and names itself.
+- Emergency spend past the budget shows in the sidebar as unbudgeted.
+- The annual review's headline no longer calls a year that cost the business
+  "Tested, and it held". Its discovery line says what was known, not what you
+  discovered. A risk that never reached your register is named as one, not
+  as one you ignored. Keeping something from the board or a regulator stops
+  communication reading strong, and a missed objective stops business
+  enablement reading strong.
+- A briefing to the board after its deadline is called late. The board's
+  reply to a paper names the optional topics you chose.
 
 ## 0.1.0-rc.1 — 22 November 2026 — first public release candidate
 

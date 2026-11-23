@@ -32,3 +32,11 @@ it('prints each recorded cost once, however often its decision came up', () => {
   const lines = buildAnnualReview(state, index).narrative.filter((line) => line.startsWith('Recorded cost'))
   expect(lines).toHaveLength(1)
 })
+
+// 16fe0ee playtest (M-04): an upbeat line beside a year that contradicted it.
+it('does not call a year that held under attack a clean success when the business or the picture paid', () => {
+  expect(chooseHeadline(profile({ resilience: 'strong', 'business-enablement': 'weak' }), true)).toBe('It held under attack, and the business paid for it in delivery.')
+  expect(chooseHeadline(profile({ resilience: 'strong', 'business-enablement': 'solid', 'programme-execution': 'solid', 'risk-understanding': 'weak' }), true)).toBe('It held, on a picture you never verified.')
+  expect(chooseHeadline(profile({ resilience: 'strong', 'business-enablement': 'solid', 'programme-execution': 'solid', 'risk-understanding': 'solid' }), true)).toBe('Tested, and it held.')
+  expect(chooseHeadline(profile({ resilience: 'weak', 'programme-execution': 'strong', 'business-enablement': 'strong' }), false)).not.toBe('A quiet year that bought the organisation real capability.')
+})

@@ -169,6 +169,9 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
     const owner = index.stakeholder.get(def.ownerStakeholderId)
     const text = check.met ? gate.met : gate.unmet
     queued.push(...check.effects)
+    // A check that costs an objective 45 days stops a Skip ahead: it passed
+    // silently inside 40-day jumps in eight runs (16fe0ee playtest, M-02).
+    pauseReasons.add('objective-check')
     highlights.push(check.met ? `${def.name}: security sign-off given.` : `${def.name}: held for a security condition.`)
     pushMessage(state, {
       from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',

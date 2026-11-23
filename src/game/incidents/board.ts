@@ -32,8 +32,13 @@ export function canBriefBoard(incident: IncidentRuntime): boolean {
   return incident.boardInformedDay === undefined && ['escalation', 'containment', 'consequence', 'recovery'].includes(incident.phase)
 }
 
-function briefedInTime(incident: IncidentRuntime): boolean {
-  return incident.boardInformedDay !== undefined && incident.boardHeardElsewhereDay === undefined
+/** Briefed within the window, and before the board heard elsewhere. */
+export function briefedInTime(incident: IncidentRuntime): boolean {
+  if (incident.boardInformedDay === undefined || incident.boardHeardElsewhereDay !== undefined) return false
+  // Late by the date as well: an incident the board never heard of elsewhere
+  // was still thanked for coming "early" three days past its deadline
+  // (16fe0ee playtest, m-24).
+  return incident.responseStartedDay === undefined || incident.boardInformedDay <= incident.responseStartedDay + BOARD_BRIEFING_DAYS
 }
 
 /** The paper, if any, that put this incident's route in front of the board before it happened. */
@@ -89,6 +94,8 @@ export function boardOnClose(state: GameState, index: ContentIndex, incident: In
     lines.push('It heard about it from you first, with what was known and what was not, which is what it needed.')
   } else if (incident.boardHeardElsewhereDay !== undefined) {
     lines.push('It heard about it elsewhere first, and has not forgotten that.')
+  } else if (incident.boardInformedDay !== undefined) {
+    lines.push('It heard about it from you, later than it expected to.')
   }
   return { effects, letter: { subject: `The committee on the ${family.name.toLowerCase()}`, body: lines.join(' ') } }
 }

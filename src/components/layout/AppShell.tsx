@@ -142,6 +142,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               <dt className="text-xs text-ink-faint">Budget left</dt>
               <dd className="font-medium tabular-nums"><ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)}</ChangeHighlight></dd>
             </div>
+            {/* Emergency spend past the allocation: £0k left read the same
+                as £280k overspent (16fe0ee playtest, M-08). */}
+            {state.resources.unfundedCommitment > 0 && (
+              <p className="text-right text-xs text-band-elevated" data-testid="unfunded-commitment">{money(state.resources.unfundedCommitment)} unbudgeted, carried into next year</p>
+            )}
             <div className="flex items-baseline justify-between gap-2">
               <dt className="text-xs text-ink-faint">Your week</dt>
               <dd className="font-medium tabular-nums">
@@ -343,7 +348,7 @@ function ShellHeader() {
   const view = briefing(state, index)
 
   const resources = <dl className="header-resources grid grid-cols-[auto_auto] gap-x-3 text-xs lg:hidden" aria-label="Available resources">
-    <div><dt className="text-[0.65rem] text-ink-faint">Budget</dt><dd className="tabular-nums"><ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)}</ChangeHighlight></dd></div>
+    <div><dt className="text-[0.65rem] text-ink-faint">Budget</dt><dd className="tabular-nums"><ChangeHighlight key={`${state.gameId}:budget`} value={view.budgetRemaining}>{money(view.budgetRemaining)}</ChangeHighlight>{state.resources.unfundedCommitment > 0 && <span className="text-band-elevated"> (−{money(state.resources.unfundedCommitment)})</span>}</dd></div>
     <div><dt className="text-[0.65rem] text-ink-faint">Attention</dt><dd className="tabular-nums"><ChangeHighlight key={`${state.gameId}:attention`} value={view.focusRemaining}>{attentionLeft(view.focusRemaining, view.focusPerWeek, true)}</ChangeHighlight></dd></div>
   </dl>
 
