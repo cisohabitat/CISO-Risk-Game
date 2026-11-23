@@ -65,7 +65,7 @@ test('delivery warnings and enquiry coaching appear during Guided play with a li
   if (await all.isVisible()) await all.click()
   const triage = page.getByRole('button', { name: 'Commission: Vulnerability triage by exposure', exact: true })
   await expect(triage).toBeDisabled()
-  await expect(triage).toHaveAccessibleDescription('The team it needs has no spare capacity.')
+  await expect(triage).toHaveAccessibleDescription('The engineering team has no spare capacity this week.')
   await expectNoHorizontalScroll(page)
 })
 
