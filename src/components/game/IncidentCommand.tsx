@@ -12,7 +12,7 @@
  */
 import { Button, Card, CardBody, Disclosure } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { incidentCommand } from '@/store/selectors'
+import { incidentCommands } from '@/store/selectors'
 import { plural, shortDate } from '@/lib/formatting/labels'
 import { CAMPAIGN_DAYS } from '@/game/types'
 import { IncidentIllustration } from './IncidentIllustration'
@@ -38,10 +38,15 @@ export function IncidentCommand() {
   // still running when the year was written up.
   if (!state || state.finished) return null
 
-  const incident = incidentCommand(state, index)
-  if (!incident) return null
+  // One panel per open incident. Two overlapping incidents showed only the
+  // first, and the second's board briefing could not be given until the
+  // board had heard elsewhere (80611b8 playtest, MJ-14).
+  const incidents = incidentCommands(state, index)
+  if (incidents.length === 0) return null
 
-  return (
+  return (<>{incidents.map((incident, position) => {
+    const headingId = position === 0 ? 'incident-command' : `incident-command-${incident.id}`
+    return (
     <Card
       // Keyed by the incident, so a new one arrives rather than appearing.
       key={incident.id}
@@ -49,7 +54,7 @@ export function IncidentCommand() {
       // Announced once when it appears, then left alone: a live region that
       // re-reads on every tick would talk over the player all day.
       role="region"
-      aria-labelledby="incident-command"
+      aria-labelledby={headingId}
     >
       {/* The band stays pinned while the panel scrolls with the page. The
           whole panel was sticky, and twice a player mid-incident found it
@@ -60,7 +65,7 @@ export function IncidentCommand() {
       <CardBody className="space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h2 id="incident-command" tabIndex={-1} className="scroll-mt-36 font-display text-xl leading-tight text-balance">
+            <h2 id={headingId} tabIndex={-1} className="scroll-mt-36 font-display text-xl leading-tight text-balance">
               {incident.name}
             </h2>
             <p className="mt-1 text-sm text-ink-muted text-pretty">
@@ -204,5 +209,6 @@ export function IncidentCommand() {
         </Disclosure>
       </CardBody>
     </Card>
-  )
+    )
+  })}</>)
 }

@@ -12,7 +12,7 @@ import { enquirySpeaksTo, topConcerns } from '@/store/selectors'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { ENQUIRY_THEMES } from '@/game/types'
 import { evaluateCondition } from '@/game/events/conditions'
-import { availableCapacity, delegationOutlook, delegationQuality, leaderAsAssigned, teamStrain, type DelegationOutlook, outlookBecause } from '@/game/team/capacity'
+import { availableCapacity, functionName, delegationOutlook, delegationQuality, leaderAsAssigned, teamStrain, type DelegationOutlook, outlookBecause } from '@/game/team/capacity'
 import { money } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import type { InvestigationDef } from '@/game/types'
@@ -61,6 +61,21 @@ export function InvestigationPanel() {
     Object.entries(investigation.capacityPerDay).some(
       ([fn, demand]) => (demand ?? 0) > availableCapacity(state, fn as never),
     )
+
+  // Which function is short, and what of yours is holding it. "The team it
+  // needs has no spare capacity" left a player all year with no route out,
+  // and pausing a programme by accident was how one found it (80611b8
+  // playtest, MJ-18).
+  const shortBecause = (investigation: InvestigationDef): string => {
+    const fn = Object.entries(investigation.capacityPerDay).find(([f, demand]) => (demand ?? 0) > availableCapacity(state, f as never))?.[0]
+    if (!fn) return 'The team it needs has no spare capacity.'
+    const holding = Object.values(state.programmes.programmes)
+      .filter((p) => (p.status === 'active' || p.status === 'at-risk') && ((index.programme.get(p.id)?.capacityDemand as Record<string, number | undefined> | undefined)?.[fn] ?? 0) > 0)
+      .map((p) => index.programme.get(p.id)?.shortName ?? p.id)
+    return holding.length > 0
+      ? `The ${functionName(fn)} team has no spare capacity: ${holding.join(' and ')} ${holding.length === 1 ? 'is' : 'are'} using it. Pausing a programme frees it.`
+      : `The ${functionName(fn)} team has no spare capacity this week.`
+  }
 
   const affordable = available.filter((investigation) => !capacityShort(investigation) && state.resources.focusRemaining >= investigation.focusCost && state.resources.budgetRemaining >= investigation.budgetCost)
   const linked = affordable.filter((investigation) => topConcern && enquirySpeaksTo(state, index, investigation.id).some((risk) => risk.id === topConcern))
@@ -188,7 +203,7 @@ export function InvestigationPanel() {
                       {(short || noFocus || noBudget) && (
                         <p id={`commission-unavailable-${investigation.id}`} role="note" className="mt-2 text-xs text-band-elevated">
                           {short
-                            ? 'The team it needs has no spare capacity.'
+                            ? shortBecause(investigation)
                             : noFocus
                               ? 'No attention left this week.'
                               : `Costs ${money(investigation.budgetCost)}, more than the ${money(Math.max(0, state.resources.budgetRemaining))} left this year.`}

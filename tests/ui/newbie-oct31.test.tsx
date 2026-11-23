@@ -86,7 +86,7 @@ it('connects an unavailable triage button to its capacity explanation', async ()
   render(<InvestigationPanel />)
   const button = screen.getByRole('button', { name: 'Commission: Vulnerability triage by exposure' })
   expect(button).toBeDisabled()
-  expect(button).toHaveAccessibleDescription('The team it needs has no spare capacity.')
+  expect(button).toHaveAccessibleDescription('The engineering team has no spare capacity this week.')
 })
 it.each([1, 2])('describes the actual %s optional items and permits each selection', (count) => {
   const state = quiet(91)

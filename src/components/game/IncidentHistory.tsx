@@ -2,7 +2,7 @@
 import { Badge, Button, Card, CardBody, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { incidentViews } from '@/store/selectors'
-import { shortDate, statusLabel } from '@/lib/formatting/labels'
+import { plural, shortDate, statusLabel } from '@/lib/formatting/labels'
 import { IncidentIllustration } from './IncidentIllustration'
 
 export function IncidentHistory() {
@@ -80,7 +80,7 @@ export function IncidentHistory() {
                                 return <li key={id}>{message ? <>
                                   <Button variant="quiet" size="sm" onClick={() => openMessage(id)}>Open warning: {shortDate(message.day)} · {message.subject}</Button>
                                   <p className="text-ink-muted">{message.body}</p>
-                                  <p className="text-xs text-ink-faint">Raised {Math.max(0, incident.startedDay - message.day)} days before business impact. At the time, Risk and Investigate offered ways to check the signal; the route was not yet known.</p>
+                                  <p className="text-xs text-ink-faint">Raised {plural(Math.max(0, incident.startedDay - message.day), 'day', 'days')} before business impact. At the time, Risk and Investigate offered ways to check the signal; the route was not yet known.</p>
                                 </> : <p className="text-ink-muted">The linked warning has aged out of the Inbox.</p>}</li>
                               })}
                             </ul>

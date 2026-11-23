@@ -20,21 +20,24 @@ function idleYear(seed: string): { family: string; month: number }[] {
 }
 
 describe('the facilitator pack names seeds that still give the years it says', () => {
-  it('class-15, class-7 and class-20 are quiet years for a player who does nothing', () => {
-    for (const seed of ['class-15', 'class-7', 'class-20']) expect(idleYear(seed), seed).toEqual([])
+  it('class-15, class-3 and class-20 are quiet years for a player who does nothing', () => {
+    for (const seed of ['class-15', 'class-3', 'class-20']) expect(idleYear(seed), seed).toEqual([])
   })
 
   it('class-5 opens with a ransomware in May', () => {
     expect(idleYear('class-5')[0]).toEqual({ family: 'Ransomware and service encryption', month: 5 })
   })
 
-  it('class-12 is an August ransomware', () => {
-    expect(idleYear('class-12')).toEqual([{ family: 'Ransomware and service encryption', month: 8 }])
+  it('class-2 is an October ransomware that comes back in December', () => {
+    expect(idleYear('class-2')).toEqual([
+      { family: 'Ransomware and service encryption', month: 10 },
+      { family: 'Ransomware and service encryption', month: 12 },
+    ])
   })
 
   it('class-21 follows payment diversion with a legacy-platform incident', () => {
     const year = idleYear('class-21')
     expect(year).toHaveLength(2)
-    expect(year).toEqual([{ family: 'Payment diversion', month: 4 }, { family: 'Legacy platform compromise and outage', month: 7 }])
+    expect(year).toEqual([{ family: 'Payment diversion', month: 4 }, { family: 'Legacy platform compromise and outage', month: 9 }])
   })
 })

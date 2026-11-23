@@ -108,7 +108,15 @@ export function applyEffect(
       // options carry a negative amount — could push a player who had already
       // committed to programmes below zero. Nothing reacted to it and the
       // Briefing read "£-70k of £2.4m". You spend what the year actually has.
-      state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + effect.amount))
+      // Money that comes back pays the unbudgeted spend first: a £400k grant
+      // and a £90k refund went to "available" while £260k and £140k stayed
+      // owed to finance (80611b8 playtest, MJ-11).
+      const repaid = effect.amount > 0 ? Math.min(effect.amount, state.resources.unfundedCommitment) : 0
+      if (repaid > 0) {
+        state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment - repaid)
+        state.history.entries.push({ day: state.currentDay, kind: 'budget', summary: `${money(repaid)} paid against the unbudgeted spend; ${money(state.resources.unfundedCommitment)} still owed to finance.` })
+      }
+      state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + effect.amount - repaid))
       recordBudgetMovement(state, before, effect.note ?? index.event.get(context.source.replace(/^event:/, ''))?.title ?? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title ?? 'Budget adjustment')
       if (effect.note) outcome.notes.push(effect.note)
       break
@@ -468,7 +476,7 @@ export function applyEffect(
         fn.vacancies -= 1
         const previousCapacity = fn.capacity
         fn.capacity = round2(fn.capacity + 1)
-        state.history.entries.push({ day: state.currentDay, kind: 'capacity', refs: [effect.fn], summary: `${functionName(effect.fn)} vacancy filled: capacity ${previousCapacity} to ${fn.capacity} days per week; ${fn.vacancies} vacancies remain.` })
+        state.history.entries.push({ day: state.currentDay, kind: 'capacity', refs: [effect.fn], summary: `${functionName(effect.fn)} vacancy filled: capacity ${previousCapacity} to ${fn.capacity} days per week; ${fn.vacancies} ${fn.vacancies === 1 ? 'vacancy remains' : 'vacancies remain'}.` })
       }
       break
     }

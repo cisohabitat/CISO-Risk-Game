@@ -175,7 +175,7 @@ describe('the close answers the question the situation asked', () => {
     expect(review(state)).toMatch(/took all 4 your predecessor had improved on trust/)
     state.currentDay = 40
     state.controls.controls['ctl-mfa']!.believed!.assessedOnDay = 30
-    expect(review(state)).toContain('Of the 4 your predecessor had improved, you checked 1 for yourself.')
+    expect(review(state)).toContain('Of the 4 your predecessor had improved, 1 was independently checked during the year.')
   })
 
   it('says nothing of the kind in the usual year', () => {

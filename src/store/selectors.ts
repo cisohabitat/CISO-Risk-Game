@@ -850,8 +850,17 @@ export interface IncidentCommandView {
  * own knowledge of the path. Reading the attack path here would put the hidden
  * graph on screen, which is the one thing the UI may never do.
  */
-export function incidentCommand(state: GameState, index: ContentIndex): IncidentCommandView | undefined {
-  const incident = Object.values(state.incidents.incidents).find((candidate) => candidate.phase !== 'closed')
+/** Every incident still open, oldest first, as the command view shows it. */
+export function incidentCommands(state: GameState, index: ContentIndex): IncidentCommandView[] {
+  return Object.values(state.incidents.incidents)
+    .filter((candidate) => candidate.phase !== 'closed')
+    .map((incident) => incidentCommand(state, index, incident.id)!)
+}
+
+export function incidentCommand(state: GameState, index: ContentIndex, incidentId?: string): IncidentCommandView | undefined {
+  const incident = incidentId
+    ? state.incidents.incidents[incidentId]
+    : Object.values(state.incidents.incidents).find((candidate) => candidate.phase !== 'closed')
   if (!incident) return undefined
   const family = index.incidentFamily.get(incident.familyId)
 

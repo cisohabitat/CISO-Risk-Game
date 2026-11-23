@@ -25,6 +25,9 @@ export interface ObjectiveTickResult {
   atRisk: string[]
 }
 
+/** How far an objective delivers before its security check has run. */
+export const GATE_HOLD = 0.99
+
 export function tickObjectives(state: GameState, index: ContentIndex): ObjectiveTickResult {
   const result: ObjectiveTickResult = { achieved: [], failed: [], atRisk: [] }
 
@@ -81,6 +84,11 @@ export function tickObjectives(state: GameState, index: ContentIndex): Objective
     const owed = runtime.delayOwedDays ?? 0
     if (owed > 0) runtime.delayOwedDays = owed - 1
     else runtime.progress = clamp01(runtime.progress + rate)
+    // An objective with a security check still to come waits for it. Idle
+    // delivery finished the Kestrel join on day 206 and the Nordic launch on
+    // day 230, before their checks on days 230 and 235, so the checks never
+    // ran for the player they were written for (80611b8 playtest, MJ-03).
+    if (def.gate && runtime.gate === undefined) runtime.progress = Math.min(runtime.progress, GATE_HOLD)
 
     if (runtime.progress >= 1) {
       runtime.status = 'achieved'

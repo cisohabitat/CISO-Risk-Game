@@ -172,7 +172,12 @@ export function clamp(value: number, min: number, max: number): number {
  * one so there is still a single implementation.
  */
 export function money(amount: number): string {
-  if (Math.abs(amount) >= 1000) return `£${(amount / 1000).toFixed(amount % 1000 === 0 ? 0 : 1)}m`
+  // Two places where tenths would hide a change: a £60k refund read "£3.4m
+  // available (was £3.4m)", and £2.38m read as £2.4m (80611b8 playtest, MN-01).
+  if (Math.abs(amount) >= 1000) {
+    const rounded = Math.round(amount / 10) * 10
+    return `£${(rounded / 1000).toFixed(rounded % 1000 === 0 ? 0 : rounded % 100 === 0 ? 1 : 2)}m`
+  }
   return `£${Math.round(amount)}k`
 }
 

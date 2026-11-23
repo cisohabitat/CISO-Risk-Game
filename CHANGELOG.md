@@ -6,6 +6,22 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+- Fixed: a business security check never ran if the objective had already
+  been delivered before its date. An idle year finished the launch, the
+  Kestrel join and the Nordic launch first and skipped all three checks. An
+  objective now waits at 99% for its check.
+- Fixed: the same kind of incident could open twice a few days apart and ask
+  every response decision twice. A second attack of a kind already being
+  handled joins that response.
+- Two incidents at once now get a panel each, with its own board briefing.
+- The review no longer says nothing you did went near a risk you put in a
+  board paper. Each further thing kept from the board, a bank or a regulator
+  costs the communication rating a band.
+- Money that comes back pays off unbudgeted spend first. Budget figures show
+  £3.46m rather than £3.5m where tenths would hide a change.
+- An enquiry greyed out for capacity names the programme holding the team.
+- "Review incident recap" lands on the recap.
+
 ## 0.1.0-rc.2 — 23 November 2026 — second release candidate
 
 Fixes from the eighth round of AI playtests, on rc.1.

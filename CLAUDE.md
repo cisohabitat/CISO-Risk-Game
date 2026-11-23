@@ -241,16 +241,21 @@ been fixed and moved to `docs/FINDINGS.md`.
   objective in delivery loses 60 days per unit of consequence above 0.3
   (`DIVERSION_DAYS` in `src/game/incidents/engine.ts`), scaled since 16
   November by how ready recovery was. Since 17 November three objectives
-  carry security gates. On 25 CISO seeds (`scripts/tune.ts`), objectives met
-  now read:
-  - business-first 4.0 (was 4.6), with all five met in 36% of years (was 56%)
-    and 18 of 38 gates passed;
-  - defensive 4.4 (was 4.3);
-  - middle-option idle 3.3 (was 3.1);
-  - two programmes at once 3.3 (was 3.2).
+  carry security gates. Since 23 November an objective waits at 99% for its
+  check (`GATE_HOLD`): idle delivery had finished all three before their
+  dates, so the players the gates were for never met them. On 25 CISO seeds
+  (`scripts/tune.ts`), objectives met now read:
+  - business-first 3.0 (was 4.0), all five met in no year (was 36%);
+  - defensive 3.3 (was 4.3). The harness connects Kestrel on schedule when
+    it cannot afford the £120k quarantine, and fails that check;
+  - middle-option idle 3.3 (unchanged);
+  - two programmes at once 2.4 (was 3.3).
 
-  The ladder's objectives missed read 0.93 in every mode (was 0.93 / 1.13 /
-  1.13), and missed per programme 0.34 / 0.48 / 0.74.
+  A player who takes the launch conditions and the Kestrel quarantine meets
+  all five in 18 / 13 / 9 of 25 years (guided, CISO, high pressure), about
+  what an ungated year managed. The ladder's objectives missed read 0.93 /
+  1.47 / 1.20, and missed per programme 0.40 / 0.81 / 1.13 (was 0.37 / 0.41
+  / 1.06).
 
 - **The board hears about incidents, but recovers by year end.** Since
   19 November (`src/game/incidents/board.ts`):

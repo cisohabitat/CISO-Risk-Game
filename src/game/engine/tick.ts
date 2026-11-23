@@ -27,7 +27,7 @@ import { effectsAsPaid } from '../decisions/cost'
 import { pushMessage } from '../inbox/messages'
 import { recomputeUnderstanding } from '../knowledge/discovery'
 import { refreshHypothesisConfidence, refreshScenarioAssessments } from '../risk/review'
-import { createIncident } from '../incidents/create'
+import { activeIncidents, createIncident } from '../incidents/create'
 
 export interface TickResult {
   day: number
@@ -356,6 +356,15 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
   }
   for (const breach of threatResult.breaches) {
     const campaign = state.threats.campaigns.find((c) => c.id === breach.campaignId)
+    // A second campaign reaching the same kind of harm while the first is
+    // still being handled joins that response rather than opening another:
+    // two actors on the customer data two days apart asked every response
+    // decision twice and spent a debrief on the copy (80611b8 playtest, MJ-13).
+    const running = activeIncidents(state).find((i) => i.familyId === breach.familyId && i.phase !== 'debrief')
+    if (running) {
+      if (campaign) campaign.incidentId = running.id
+      continue
+    }
     const incident = createIncident(state, index, {
       familyId: breach.familyId,
       campaign,

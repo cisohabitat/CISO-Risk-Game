@@ -140,7 +140,16 @@ export function HomeScreen() {
               // To the recap itself: it sits below the year timeline, and the
               // button landed on the timeline (4398537 playtest, run 8).
               setScreen('debrief')
-              requestAnimationFrame(() => document.getElementById('incidents')?.scrollIntoView?.({ block: 'start' }))
+              // The year screen loads on demand, so the recap may not exist
+              // on the next frame; one try landed on the top of Your year in
+              // seven runs (80611b8 playtest, MN-07). Try for about a second.
+              let tries = 0
+              const land = () => {
+                const target = document.getElementById('incidents')
+                if (target) target.scrollIntoView?.({ block: 'start' })
+                else if ((tries += 1) < 60) requestAnimationFrame(land)
+              }
+              requestAnimationFrame(land)
             }}>Review incident recap</Button>
           </div>
         )}

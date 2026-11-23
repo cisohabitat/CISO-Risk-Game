@@ -453,6 +453,16 @@ changes.
   of the route, whether it was briefed in time), and `briefBoard` costs one
   attention. Harnesses that write papers also brief
   (`briefBoardOnIncidents` in `scripts/play-helpers.ts`).
+- An objective with a `gate` still to run delivers no further than
+  `GATE_HOLD` (0.99) until its check. A breach of a family already being
+  handled joins that incident (`activeIncidents` in tick step 11), so one
+  kind of incident is never open twice. The command view is one panel per
+  open incident (`incidentCommands`). Positive `budget.change` pays
+  `unfundedCommitment` first. In the review, communication is capped by
+  lapses (kept quiet, heard elsewhere, reassured wrongly): one at solid, two
+  at developing, three at weak. A risk in a submitted paper or escalated
+  counts as gone near (`effortAllocation`). `money()` shows two places at
+  £1m and over when tenths would hide the amount.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

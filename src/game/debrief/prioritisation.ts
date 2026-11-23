@@ -232,6 +232,15 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
     }
   }
 
+  // So does putting the risk in front of the board. A risk raised on 2 April,
+  // reported in the Q2 paper and briefed to the chair was still "a risk
+  // nothing you did went near" (80611b8 playtest, MJ-06).
+  for (const paper of state.reviews.quarters) {
+    if (!paper.completed) continue
+    for (const topic of paper.topicsChosen) if (index.riskScenario.has(topic)) addressed.add(topic)
+  }
+  for (const [id, scenario] of Object.entries(state.risks.scenarios)) if (scenario.escalatedToBoard) addressed.add(id)
+
   const missed = ranked.find((s) => !addressed.has(s.id) && s.materiality > 0)
 
   return { allocation, raw, floor, commitments, biggest, missed }

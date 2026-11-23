@@ -4882,3 +4882,31 @@ Fixed the same day:
 - the board's reply echoes optional topics.
 
 The tuning harness, the ladder and the soak are unchanged.
+
+## 23 November 2026 — 15-run matrix on 80611b8 (pass 9)
+
+Recorded in `docs/playtests/2026-11-24-owner-supplied-80611b8-matrix.md`.
+
+The worst finding was a hole in the 17 November gates. A check ran only for
+an objective still in delivery. Delivery with no programme drag finished
+the launch, the Kestrel join and the Nordic launch days before their checks,
+so the idle and cost-cutting players the gates were written for never met
+them. An objective with a check to come now delivers to 99% and waits for
+it (`GATE_HOLD`). The tuning harness's programme builders, which cannot
+afford the Kestrel quarantine on day 200, now fail that check. A gate-aware
+player meets all five objectives about as often as an ungated year did.
+
+Fixed the same day:
+- a breach of a kind already being handled joins that incident (0 duplicates
+  in 80 years, against 3);
+- one command panel per open incident;
+- risks in a submitted paper or escalated count as gone near;
+- concealment lapses cost a band each;
+- refunds pay unbudgeted spend first;
+- the briefing line says whether it was in time;
+- greyed enquiries name the programme holding the team;
+- money shows two places where tenths would hide a change;
+- plurals, the ledger's ".:", and the incident recap scroll.
+
+Ladder, missed per programme: 0.40 / 0.81 / 1.13 (was 0.37 / 0.41 / 1.06).
+The soak is clean. The facilitator seed table was re-picked.

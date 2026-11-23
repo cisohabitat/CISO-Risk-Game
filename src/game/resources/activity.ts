@@ -8,6 +8,6 @@ export function recordBudgetMovement(state: GameState, before: number, label: st
   state.history.entries.push({
     day: state.currentDay,
     kind: 'budget',
-    summary: `${label}: ${money(Math.abs(delta))} ${delta > 0 ? 'returned or added' : 'spent or withdrawn'}; ${money(after)} available (was ${money(before)}).`,
+    summary: `${label.replace(/\.$/, '')}: ${money(Math.abs(delta))} ${delta > 0 ? 'returned or added' : 'spent or withdrawn'}; ${money(after)} available (was ${money(before)}).`,
   })
 }

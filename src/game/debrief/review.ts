@@ -23,6 +23,7 @@ import { overallAssessment } from './assessment'
 import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
 import { BOARD_MATERIAL, RESPONSE_DONE } from '../incidents/thresholds'
+import { briefedInTime } from '../incidents/board'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export { programmesThisYear } from './prioritisation'
@@ -603,7 +604,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     if (incident.boardHeardElsewhereDay !== undefined) return [{ elsewhere: true, line: `The board heard about the ${name} elsewhere before it heard from you${incident.boardInformedDay !== undefined ? `; your briefing followed on ${dateOf(incident.boardInformedDay)}` : ''}.` }]
     // A reassurance that did not hold reads as a board misled, not informed.
     if (incident.boardInformedDay !== undefined && incident.boardBriefingTone === 'reassuring' && incident.phase === 'closed' && incident.consequence >= BOARD_MATERIAL) return [{ elsewhere: true, line: `You told the board on ${dateOf(incident.boardInformedDay)} that the ${name} was in hand, and it was not.` }]
-    if (incident.boardInformedDay !== undefined) return [{ elsewhere: false, line: `You briefed the board on the ${name} on ${dateOf(incident.boardInformedDay)}, before it heard elsewhere.` }]
+    if (incident.boardInformedDay !== undefined) return [{ elsewhere: false, line: `You briefed the board on the ${name} on ${dateOf(incident.boardInformedDay)}${briefedInTime(incident) ? ', inside the time it expected' : ', later than it expected'}.` }]
     return []
   })
   const heardElsewhere = incidentNews.some((news) => news.elsewhere)
@@ -624,7 +625,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // Something kept from the board, a bank or a regulator caps the band below
   // strong, as hearing of an incident elsewhere does: concealment sat beside
   // "strong" in 16fe0ee playtest runs 05, 10 and 12 (M-11).
-  const communicationScore = keptQuiet.length > 0 ? Math.min(0.74, communication) : communication
+  // Each further lapse costs a band: six runs that hid something read "solid"
+  // whether they had hidden one thing or four (80611b8 playtest, MJ-07).
+  const lapses = keptQuiet.length + incidentNews.filter((news) => news.elsewhere).length
+  const COMMUNICATION_CAP = [1, 0.74, 0.51, 0.29]
+  const communicationScore = Math.min(COMMUNICATION_CAP[Math.min(lapses, 3)]!, communication)
   dimensions.push({
     id: 'communication',
     label: 'Communication and escalation',
@@ -642,7 +647,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
             ? 'The board followed your papers, but heard about an incident from someone else before it heard from you.'
             : 'The board followed your argument, and took what you brought them seriously.'
         case 'developing':
-          return 'The board listened, but never quite came to depend on you.'
+          return lapses >= 2
+            ? 'The board listened, but more than once heard something from someone else first, or not at all.'
+            : 'The board listened, but never quite came to depend on you.'
         default:
           return 'The board ended the year unsure whether they were hearing the whole picture.'
       }
@@ -875,7 +882,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative.push(
       checked === 0
         ? `You inherited better controls than most, and took all ${improved.length} your predecessor had improved on trust.`
-        : `You inherited better controls than most. Of the ${improved.length} your predecessor had improved, you checked ${checked} for yourself.`,
+        : `You inherited better controls than most. Of the ${improved.length} your predecessor had improved, ${checked} ${checked === 1 ? 'was' : 'were'} independently checked during the year.`,
     )
   }
 

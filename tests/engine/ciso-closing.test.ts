@@ -5,7 +5,9 @@ import { nextFunctionMorale } from '@/game/team/capacity'
 import { teamView, programmeViews } from '@/store/selectors'
 import { collisions } from '@/store/selectors'
 import { openDecision } from '@/game/decisions/open'
-import { tickObjectives } from '@/game/business/objectives'
+import { checkObjectiveGates, tickObjectives } from '@/game/business/objectives'
+import { applyEffects } from '@/game/engine/effects'
+import { createRng } from '@/game/engine/rng'
 import { testIndex } from './helpers'
 
 const index = testIndex()
@@ -96,6 +98,8 @@ it('makes actual launch choices change objective outcomes under matched programm
         expect(applyAction(state, index, { type: 'resolveDecision', decisionId: decision.id, optionId, rationaleTagIds }).ok).toBe(true)
       }
       tickObjectives(state, index)
+      // An objective waits for its security check (80611b8 playtest, MJ-03).
+      for (const check of checkObjectiveGates(state, index)) applyEffects(state, check.effects, { index, rng: createRng(state.seed, state.rngCursor), source: 'gate' })
     }
     return state.business.objectives['obj-platform-launch']!.status
   })
