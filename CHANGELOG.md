@@ -6,6 +6,10 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+## 0.1.0-rc.2 — 23 November 2026 — second release candidate
+
+Fixes from the eighth round of AI playtests, on rc.1.
+
 - Fixed: offering a smaller contribution to the cost programme on 31 May
   said this year's budget was unchanged, and took £110k from it. It now says
   it comes from this year's budget.
