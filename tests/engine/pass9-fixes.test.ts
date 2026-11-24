@@ -83,7 +83,7 @@ describe('80611b8 playtest fixes', () => {
     const state = newGame(index, { seed: 'paper-credit' })
     const missed = effortAllocation(state, index).missed
     expect(missed).toBeDefined()
-    state.reviews.quarters.push({ quarter: 1, day: 91, topicsChosen: [missed!.id], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true })
+    state.reviews.quarters.push({ quarter: 1, day: 91, topicsChosen: [`risk:${missed!.id}`], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true })
     expect(effortAllocation(state, index).missed?.id).not.toBe(missed!.id)
   })
 

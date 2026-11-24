@@ -11,6 +11,7 @@ import type { ContentIndex, DecisionRuntime, GameState } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
 import { functionName, functionTitle, leaderForFunction, mostPressedFunction } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
+import { stopCandidate } from '../team/assignments'
 import { carriedAcceptances } from '../risk/carried'
 
 /**
@@ -36,6 +37,7 @@ export function renderDecisionText(
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
+    .replaceAll('{{stopTarget}}', stopTarget(state, index))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
     .replaceAll('{{acceptedRisks}}', acceptedRisks(state, index))
@@ -45,6 +47,13 @@ export function renderDecisionText(
     // A quarter's paper still waiting to go in is the next meeting, whatever
     // the calendar says comes after it.
     .replaceAll('{{nextBoard}}', state.reviews.pendingQuarter !== undefined ? 'this week' : nextBoard(state.currentDay))
+}
+
+/** What "Stop something" would stop today, named. */
+function stopTarget(state: GameState, index: ContentIndex): string {
+  const target = stopCandidate(state, index, mostPressedFunction(state))
+  if (!target) return 'nothing: no enquiry or programme is running on that team'
+  return target.kind === 'investigation' ? `the enquiry "${target.title}", abandoned` : `${target.title}, paused`
 }
 
 /** "Name, Role" of whoever runs the most pressed function. */

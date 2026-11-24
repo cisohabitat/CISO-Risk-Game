@@ -4910,3 +4910,29 @@ Fixed the same day:
 
 Ladder, missed per programme: 0.40 / 0.81 / 1.13 (was 0.37 / 0.41 / 1.06).
 The soak is clean. The facilitator seed table was re-picked.
+
+## 24 November 2026 — 15-run matrix on baf4cf9 (pass 10)
+
+Recorded in `docs/playtests/2026-11-25-owner-supplied-baf4cf9-matrix.md`.
+
+The worst finding was my own again. On 23 November board-paper topics were
+credited against risk ids, but papers store them as `risk:<id>`, so the
+credit never matched, and its test used the bare id and passed. A risk
+raised, briefed and put in two papers was still "nothing you did went near
+it". Fixed, with the test using the real form.
+
+Fixed the same day:
+- handling an incident on a risk's route credits it;
+- "A material risk the board has not heard about" counts only what the
+  paper requires (`materialScenario`);
+- "Stop something" names its target, and "most-pressed" is resolved once per
+  batch, so the morale lift lands on the team relieved;
+- ledger lines for emergency commitments, and the close names what is owed;
+- unseen held attacks are labelled;
+- the recorded-cost sentence;
+- the business-enablement text beside held checks;
+- the objective card's support line and its display at 99% or 100%;
+- "missed" for "failed";
+- the empty-paper notice;
+- the risks option for next year's priorities;
+- help text promising weekly holds.

@@ -6,6 +6,8 @@ import { finishYear } from '@/game/debrief/review'
 import { CAMPAIGN_DAYS, SAVE_SCHEMA_VERSION } from '@/game/types'
 import { migrateSave } from '@/store/migrations'
 import { testIndex } from './helpers'
+import { applyEffects } from '@/game/engine/effects'
+import { createRng } from '@/game/engine/rng'
 
 const index = testIndex()
 
@@ -17,6 +19,8 @@ describe('replies to commitments made near year end', () => {
     expect(applyAction(state, index, {
       type: 'completeQuarterReview', quarter: 3, topics: [], recommendations: [], communicateUncertainty: true,
     }).ok).toBe(true)
+    // Leading with risks needs one in the register (baf4cf9 playtest, MN-32).
+    applyEffects(state, [{ type: 'risk.open', scenarioId: index.content.riskScenarios[0]!.id }], { index, rng: createRng(state.seed, state.rngCursor), source: 'test' })
     const decision = openDecision(state, index, 'dec-q4-priorities')!
     expect(applyAction(state, index, {
       type: 'resolveDecision', decisionId: decision.id,

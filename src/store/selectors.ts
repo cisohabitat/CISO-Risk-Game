@@ -234,8 +234,8 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
           return {
             id: option.id,
             label: option.label,
-            description: option.description,
-            visibleKnownEffects: option.visibleKnownEffects,
+            description: renderDecisionText(option.description, state, index, runtime),
+            visibleKnownEffects: option.visibleKnownEffects.map((text) => renderDecisionText(text, state, index, runtime)),
             programmeCommitment: option.programmeCommitment,
             budgetCost: budgetCost > 0 ? budgetCost : undefined,
             focusCost: requirements?.focus || undefined,

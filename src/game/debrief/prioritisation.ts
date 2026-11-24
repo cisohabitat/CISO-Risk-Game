@@ -237,9 +237,20 @@ export function effortAllocation(state: GameState, index: ContentIndex): EffortA
   // nothing you did went near" (80611b8 playtest, MJ-06).
   for (const paper of state.reviews.quarters) {
     if (!paper.completed) continue
-    for (const topic of paper.topicsChosen) if (index.riskScenario.has(topic)) addressed.add(topic)
+    for (const topic of paper.topicsChosen) {
+      const id = topic.replace(/^risk:/, '')
+      if (index.riskScenario.has(id)) addressed.add(id)
+    }
   }
   for (const [id, scenario] of Object.entries(state.risks.scenarios)) if (scenario.escalatedToBoard) addressed.add(id)
+  // And handling an incident on the risk's own route. The logistics partner
+  // compromise was the year's first incident, responded to and briefed, and
+  // the close said nothing the player did went near it (baf4cf9 playtest,
+  // MJ-06, run 14).
+  for (const incident of Object.values(state.incidents.incidents)) {
+    if (!incident.pathId || (incident.decisionsTaken.length === 0 && incident.boardInformedDay === undefined)) continue
+    for (const scenario of index.content.riskScenarios) if (scenario.attackPathIds.includes(incident.pathId)) addressed.add(scenario.id)
+  }
 
   const missed = ranked.find((s) => !addressed.has(s.id) && s.materiality > 0)
 

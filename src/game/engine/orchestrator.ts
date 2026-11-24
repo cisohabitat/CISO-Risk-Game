@@ -308,6 +308,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         const shortfall = round2(Math.max(0, optionBudgetCost(option) - state.resources.budgetRemaining))
         if (shortfall > 0) {
           state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment + shortfall)
+          // In the ledger too: it showed the repayments and never the
+          // commitments, so the debt rose between them unexplained
+          // (baf4cf9 playtest, MJ-11).
+          state.history.entries.push({ day: state.currentDay, kind: 'budget', summary: `${def.title}: ${money(shortfall)} committed beyond the allocation; ${money(state.resources.unfundedCommitment)} now owed to finance.` })
           // Reported, as the option says it will be (19 November).
           const cfo = index.stakeholder.get('stk-cfo')
           pushMessage(state, {

@@ -21,7 +21,7 @@ const DIFFICULTIES: { id: Difficulty; label: string; description: string }[] = [
   {
     id: 'guided',
     label: 'Guided',
-    description: 'More budget, more capacity, a calmer threat environment and plainer explanations of the mechanics. Time holds each new week so you can read and choose.',
+    description: 'More budget, more capacity, a calmer threat environment and plainer explanations of the mechanics.',
   },
   {
     id: 'ciso',

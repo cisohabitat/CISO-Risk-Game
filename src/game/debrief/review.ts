@@ -24,6 +24,7 @@ import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
 import { BOARD_MATERIAL, RESPONSE_DONE } from '../incidents/thresholds'
 import { briefedInTime } from '../incidents/board'
+import { objectiveStatusLabel } from '../business/objectives'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
 export { programmesThisYear } from './prioritisation'
@@ -478,8 +479,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           ...named,
           ...(unmapped > 0 ? [unmapped === 1 ? 'one place you had not mapped' : `${unmapped} places you had not mapped`] : []),
         ]
+        // Most of these were never seen: a review that names them reads as
+        // citing something the player was never shown (baf4cf9 playtest,
+        // MJ-15), so it says the year end is when they come to light.
+        const unseen = held.filter((c) => !c.detected).length
+        const seenNote = unseen === 0 ? '' : unseen === held.length
+          ? `; ${held.length === 1 ? 'it was not' : 'none was'} seen at the time, and the year end is the first you hear of ${held.length === 1 ? 'it' : 'them'}`
+          : `; ${unseen} of them ${unseen === 1 ? 'was' : 'were'} not seen at the time`
         lines.push(
-          `${held.length} attack${held.length === 1 ? '' : 's'} gave up at a control that held, at ${where.length > 1 ? `${where.slice(0, -1).join(', ')} and ${where.at(-1)}` : where[0]}`,
+          `${held.length} attack${held.length === 1 ? '' : 's'} gave up at a control that held, at ${where.length > 1 ? `${where.slice(0, -1).join(', ')} and ${where.at(-1)}` : where[0]}${seenNote}`,
         )
       }
       const restores = [
@@ -567,12 +575,17 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       const built = programmesThisYear(state).length > 0
       return built
         ? `${missed} Security programmes you chose to run were part of the pressure on ${failed === 1 ? 'it' : 'them'}.${heldLine}`
-        : `${missed} None of it was friction you imposed: you ran no security programme.${heldLine}`
+        // "None of it was friction you imposed" sat beside 45 to 100 days
+        // of delay from checks the year's own choices failed (baf4cf9
+        // playtest, MJ-08): no programme drag is not no part in it.
+        : held.length > 0
+          ? `${missed} None of it was programme drag, because you ran no security programme; the delay came from security work that was not done.${heldLine}`
+          : `${missed} None of it was friction you imposed: you ran no security programme.${heldLine}`
     })(),
     evidence: (() => {
       const lines = index.content.objectives
         .filter((def) => state.business.objectives[def.id])
-        .map((def) => `${def.name}: ${state.business.objectives[def.id]!.status}`)
+        .map((def) => `${def.name}: ${objectiveStatusLabel(state.business.objectives[def.id]!.status).toLowerCase()}`)
       // The security checks the business ran (17 November), each named.
       for (const def of index.content.objectives) {
         const gate = state.business.objectives[def.id]?.gate
@@ -897,6 +910,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       `From ${formatGameDate(pricedOut[0]!.createdDay).label}, the year offered things the budget could no longer pay for: ${pricedOut.length === 1 ? 'one decision' : `${pricedOut.length} decisions`} held an option out of reach.`,
     )
   }
+  // Emergency spend still owed at the close. £750k carried into next year
+  // was named only inside one dimension's evidence (baf4cf9 playtest, MJ-11).
+  if (state.resources.unfundedCommitment > 0) {
+    narrative.push(`You end the year owing finance ${money(state.resources.unfundedCommitment)} of emergency spend beyond the allocation. Next year's plan starts by paying it back.`)
+  }
 
   // Each situation asks one decision of its own; the close says how it was
   // answered and what came of it, so the year's opening is not forgotten by
@@ -949,7 +967,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     for (const message of own) claimed.add(message.id)
     returns.length = 0
     returns.push(...own)
-    if (returns.length > 0) narrative.push(`Recorded cost of "${option.label}" in "${def.title}"${runtime.resolvedByDefault ? ' (deadline default)' : ''}: ${returns.map((message) => `${message.subject} on ${dateOf(message.day)}`).join('; ')}.`)
+    // Said as what came back and when, in date order. "Recorded cost of 'Fix
+    // it quietly' in 'Card data...': Followed up: Card data... on 10
+    // September" read as a mail title, not a sentence (baf4cf9 playtest, MN-19).
+    returns.sort((a, b) => a.day - b.day)
+    const what = (message: (typeof returns)[number]) => (message.subject.startsWith('Followed up: ') ? message.body : message.subject).trim().replace(/\.$/, '')
+    if (returns.length > 0) narrative.push(`"${option.label}"${runtime.resolvedByDefault ? ', taken by default,' : ''} on "${def.title}" came back later: ${returns.map((message) => `on ${dateOf(message.day)}, ${what(message).charAt(0).toLowerCase()}${what(message).slice(1)}`).join('; ')}.`)
   }
 
   const businessOutcome =

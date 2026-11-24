@@ -127,5 +127,5 @@ it('names an observed delayed consequence of a quiet fix in the annual account',
   const runtime = openDecision(state, index, def.id)!
   expect(applyAction(state, index, { type: 'resolveDecision', decisionId: runtime.id, optionId: 'opt-card-fix', rationaleTagIds: [def.rationaleTagIds?.[0] ?? index.content.rationaleTags[0]!.id] }).ok).toBe(true)
   runDays(state, index, 120)
-  expect(buildAnnualReview(state, index).narrative.join(' ')).toContain('Recorded cost of "Fix it quietly"')
+  expect(buildAnnualReview(state, index).narrative.join(' ')).toContain('"Fix it quietly" on ')
 })

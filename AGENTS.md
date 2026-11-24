@@ -463,6 +463,13 @@ changes.
   at developing, three at weak. A risk in a submitted paper or escalated
   counts as gone near (`effortAllocation`). `money()` shows two places at
   £1m and over when tenths would hide the amount.
+- Board paper topics are stored as `risk:<id>`; strip the prefix before
+  comparing with scenario ids. `materialScenario` (`src/game/risk/unreported.ts`)
+  is the one definition of a risk the paper requires; `unreportedScenarios`
+  counts only those. `"most-pressed"` is resolved once per effect batch
+  (`EffectContext.pressed`). `{{stopTarget}}` names what "Stop something" would
+  stop (`stopCandidate`); option descriptions and known effects go through
+  `renderDecisionText`.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

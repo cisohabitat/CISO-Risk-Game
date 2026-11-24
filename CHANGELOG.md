@@ -6,6 +6,23 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+- Fixed: a risk you put in a board paper was still reviewed as one nothing
+  you did went near. So was a risk whose route an incident took, once you
+  had handled the incident.
+- Fixed: a risk the board paper let you leave out as optional opened "A
+  material risk the board has not heard about". Only risks the paper requires
+  count now.
+- "Stop something" says what it will stop, and lifts the morale of the team
+  it relieves rather than another one.
+- Emergency spend beyond the allocation has its own ledger line, and the
+  close says what is owed.
+- The review says when attacks that gave up were never seen at the time, and
+  reads what a past choice cost as a sentence.
+- An objective waiting for its security check says so, and shows 100% only
+  once achieved. "Security support is recorded" now reads "A decision of
+  yours moved this objective on".
+- The help no longer promises weekly holds or a seven-day Skip ahead.
+
 - Fixed: a business security check never ran if the objective had already
   been delivered before its date. An idle year finished the launch, the
   Kestrel join and the Nordic launch first and skipped all three checks. An

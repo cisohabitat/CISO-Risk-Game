@@ -91,6 +91,24 @@ export type StoppedWork =
  * which frees its people until the player resumes it. Budget already spent
  * stays spent — the delay is the cost, which is what "stop something" means.
  */
+/**
+ * What "Stop something" would stop on a function, without stopping it, so the
+ * option can name it before it is chosen: it paused a programme started the
+ * day before without saying which (baf4cf9 playtest, MJ-19).
+ */
+export function stopCandidate(state: GameState, index: ContentIndex, fn: CyberFunction): StoppedWork | undefined {
+  const running = state.team.assignments.filter(
+    (assignment) => assignment.status === 'running' && assignment.kind === 'investigation' && (assignment.capacityPerDay[fn] ?? 0) > 0,
+  )
+  const enquiry = running.reduce<AssignmentState | undefined>((latest, a) => (!latest || a.startedDay > latest.startedDay ? a : latest), undefined)
+  if (enquiry) return { kind: 'investigation', id: enquiry.id, title: enquiry.title }
+  const live = Object.values(state.programmes.programmes).filter(
+    (programme) => (programme.status === 'active' || programme.status === 'at-risk') && (index.programme.get(programme.id)?.capacityDemand[fn] ?? 0) > 0,
+  )
+  const programme = live.reduce<(typeof live)[number] | undefined>((latest, c) => (!latest || (c.startedDay ?? 0) > (latest.startedDay ?? 0) ? c : latest), undefined)
+  return programme ? { kind: 'programme', id: programme.id, title: index.programme.get(programme.id)?.name ?? programme.id } : undefined
+}
+
 export function stopWork(state: GameState, index: ContentIndex, fn: CyberFunction): StoppedWork | undefined {
   const running = state.team.assignments.filter(
     (assignment) => assignment.status === 'running' && assignment.kind === 'investigation',

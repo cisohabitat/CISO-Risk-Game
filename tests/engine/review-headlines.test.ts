@@ -29,7 +29,7 @@ it('prints each recorded cost once, however often its decision came up', () => {
     state.history.decisionsLog.push({ decisionId: id, optionId: 'opt-card-fix', day } as never)
   }
   state.inbox.messages.push({ id: 'msg-follow', day: 200, from: 'Nexora Group', subject: `Followed up: ${def.title}`, body: note, type: 'decision', priority: 'notable', read: false } as never)
-  const lines = buildAnnualReview(state, index).narrative.filter((line) => line.startsWith('Recorded cost'))
+  const lines = buildAnnualReview(state, index).narrative.filter((line) => line.includes('came back later'))
   expect(lines).toHaveLength(1)
 })
 

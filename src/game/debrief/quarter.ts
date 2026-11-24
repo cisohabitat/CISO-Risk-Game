@@ -9,7 +9,7 @@
 import { appetiteExceptions } from '../risk/appetite'
 import { formatGameDate } from '../time'
 import type { ContentIndex, GameEffect, GameState, QuarterReviewState } from '../types'
-import { compareBands, consequenceBand, residualBand } from '../risk/bands'
+import { materialScenario } from '../risk/unreported'
 import { teamStrain } from '../team/capacity'
 
 export interface QuarterReviewInput {
@@ -36,16 +36,7 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
     // than for one who did nothing, because their own work pushed residual
     // under the bar and took the risk off the agenda. "Choose material
     // topics" (plan §28.7) needs something to choose between.
-    const residual = residualBand(scenario.lastAssessed?.residual ?? 0)
-    const consequence = consequenceBand(scenario.lastAssessed?.consequence ?? 0)
-    const material =
-      compareBands(residual, 'high') >= 0 ||
-      // A severe-consequence risk you believe you have controlled is exactly
-      // what a board needs to know you are relying on.
-      compareBands(consequence, 'high') >= 0 ||
-      // Accepting risk is done on the organisation's behalf, so the
-      // organisation hears about it.
-      scenario.status === 'accepted'
+    const material = materialScenario(scenario)
     out.push({ id: `risk:${scenario.id}`, label: def.title, material })
   }
   // An incident or a failed assumption is news once. Reported in a paper and

@@ -394,7 +394,9 @@ export function BoardScreen() {
           </label>
           <section aria-labelledby="paper-submission" className="paper-submission border-t-2 border-ink pt-5">
             {emptyPaper && <div id="empty-paper-notice" className="mb-4 rounded-lg border border-band-elevated/50 p-3 text-sm">
-              <p>This paper raises nothing. Raise risks first, or submit it empty on purpose.</p>
+              {/* "Raise risks first" sat beside nine selectable risks
+                  (baf4cf9 playtest, CS-16). */}
+              <p>{availableTopics.length > 0 ? 'This paper raises nothing yet. Choose topics from the agenda above, or submit it empty on purpose.' : 'This paper raises nothing. Raise risks first, or submit it empty on purpose.'}</p>
               <label className="mt-3 flex items-start gap-3"><input type="checkbox" checked={emptyAcknowledged} onChange={(event) => setEmptyAcknowledged(event.currentTarget.checked)} className="mt-1 shrink-0" /><span>I intend to submit an empty paper.</span></label>
             </div>}
             <h3 id="paper-submission" className="document-kicker"><span aria-hidden="true" className="paper-number">03</span>Your submission</h3>

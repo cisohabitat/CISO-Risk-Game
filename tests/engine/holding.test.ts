@@ -80,7 +80,7 @@ describe('a step that holds', () => {
     state.organisation.nodes['node-ci-pipeline']!.discovered = false
     const evidence = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!.evidence
     const line = evidence.find((e) => e.includes('gave up at a control that held'))
-    expect(line).toBe(`2 attacks gave up at a control that held, at ${index.node.get('node-sup-logistics')!.name} and one place you had not mapped`)
+    expect(line).toBe(`2 attacks gave up at a control that held, at ${index.node.get('node-sup-logistics')!.name} and one place you had not mapped; none was seen at the time, and the year end is the first you hear of them`)
     expect(line).not.toContain(index.node.get('node-ci-pipeline')!.name)
   })
 })

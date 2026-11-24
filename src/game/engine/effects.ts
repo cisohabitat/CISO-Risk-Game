@@ -27,8 +27,14 @@ function resolveScenario(target: string, context: EffectContext): string {
   return context.linkedScenarioId ?? target
 }
 
-function resolveFunction(state: GameState, target: FunctionTarget): CyberFunction {
-  return target === 'most-pressed' ? mostPressedFunction(state) : target
+// "Most pressed" is read once per batch. Read per effect, "Stop something"
+// relieved one function and then lifted the morale of whichever was most
+// pressed afterwards: Identity was paused and Incident response cheered
+// (baf4cf9 playtest, MJ-19).
+function resolveFunction(state: GameState, target: FunctionTarget, context: EffectContext): CyberFunction {
+  if (target !== 'most-pressed') return target
+  context.pressed ??= mostPressedFunction(state)
+  return context.pressed
 }
 
 export interface EffectContext {
@@ -44,6 +50,8 @@ export interface EffectContext {
    * renewal is authored once and fires for any scenario.
    */
   linkedScenarioId?: string
+  /** The function "most-pressed" means for this batch, fixed at first use. */
+  pressed?: CyberFunction
 }
 
 export interface EffectOutcome {
@@ -77,7 +85,8 @@ export function applyEffects(
   context: EffectContext,
 ): EffectOutcome {
   const outcome: EffectOutcome = { notes: [], interrupts: [] }
-  for (const effect of effects) applyEffect(state, effect, context, outcome)
+  const batch: EffectContext = { ...context, pressed: undefined }
+  for (const effect of effects) applyEffect(state, effect, batch, outcome)
   return outcome
 }
 
@@ -126,7 +135,7 @@ export function applyEffect(
       break
     }
     case 'capacity.change': {
-      const target = resolveFunction(state, effect.fn)
+      const target = resolveFunction(state, effect.fn, context)
       const fn = ownValue(state.team.functions, target)
       if (fn) {
         const before = fn.capacity
@@ -140,7 +149,7 @@ export function applyEffect(
       // "Stop something" has to stop something. The overload decision's option
       // used to lift morale and hand back an attention point while every
       // enquiry kept running and the function that was breaking stayed broken.
-      const fn = resolveFunction(state, effect.fn ?? 'most-pressed')
+      const fn = resolveFunction(state, effect.fn ?? 'most-pressed', context)
       const stopped = stopWork(state, index, fn)
       if (!stopped) break
       refreshCommittedCapacity(state, index)
@@ -429,7 +438,7 @@ export function applyEffect(
     }
     case 'team.morale': {
       if (effect.fn) {
-        const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
+        const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn, context))
         if (fn) fn.morale = clamp01(fn.morale + effect.delta)
       } else {
         for (const fn of CYBER_FUNCTIONS) {
@@ -442,14 +451,14 @@ export function applyEffect(
     case 'team.workload': {
       // Committed capacity is derived from real work, so unplanned load is
       // modelled as a surge that decays rather than a permanent commitment.
-      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
+      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn, context))
       if (fn) fn.surge = Math.max(0, (fn.surge ?? 0) + effect.delta)
       break
     }
     case 'leader.morale': {
       const leaderId =
         effect.leaderId === 'most-pressed'
-          ? leaderForFunction(index, mostPressedFunction(state))
+          ? leaderForFunction(index, resolveFunction(state, 'most-pressed', context))
           : effect.leaderId
       const leader = leaderId ? ownValue(state.team.leaders, leaderId) : undefined
       if (leader) leader.morale = clamp01(leader.morale + effect.delta)
@@ -463,7 +472,7 @@ export function applyEffect(
     // A resignation that only took capacity left the function reading "Fully
     // staffed" with nothing to recruit (second-year AI playtest).
     case 'team.departure': {
-      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn))
+      const fn = ownValue(state.team.functions, resolveFunction(state, effect.fn, context))
       if (fn && fn.capacity >= 1) {
         fn.capacity = round2(fn.capacity - 1)
         fn.vacancies += 1
