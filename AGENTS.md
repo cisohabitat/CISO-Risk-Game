@@ -488,6 +488,16 @@ changes.
   - `resolveProgrammeBlocker` with `descope` sets `descoped`, and the last
     milestone is skipped.
   - `objective.delay` takes an optional `cause`, kept in `delayLog`.
+- Second design list of 25 November:
+  - `quietYearFloor` (Guided) is passed to `overallAssessment` as a floor.
+  - `objective.delay` adds `delayOwedDays` only.
+  - December decisions `dec-q4-change-freeze` and `dec-q4-holiday-cover`.
+  - `evt-biz-merchant-complaint-late` on day 214.
+  - `ACCEPTANCE_RENEWAL_DAYS` (182).
+  - `{{overloadHistory}}`.
+  - `incidentName` (selectors) numbers repeats.
+  - Board replies escalate on repeated empty papers.
+  - `chooseHeadline` takes `{ missed, incidents }`.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

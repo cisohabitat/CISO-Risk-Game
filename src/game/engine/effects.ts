@@ -37,6 +37,9 @@ function resolveFunction(state: GameState, target: FunctionTarget, context: Effe
   return context.pressed
 }
 
+/** How long an acceptance taken through a decision lasts before it is reviewed. */
+export const ACCEPTANCE_RENEWAL_DAYS = 182
+
 export interface EffectContext {
   index: ContentIndex
   rng: Rng
@@ -392,14 +395,11 @@ export function applyEffect(
       objective.delayLog = same
         ? log.map((entry) => (entry === same ? { ...entry, days: entry.days + effect.days } : entry))
         : [...log, { day: state.currentDay, days: effect.days, cause }]
-      const span = Math.max(30, def.targetDay - Math.round(def.targetDay * 0.12))
-      // What progress cannot pay is owed in days of no progress. Taken only
-      // from progress, a delay early in delivery cost nothing: opposing the
-      // launch on day 22 took 45 days from an objective at 1% delivered.
-      const lost = effect.days / span
-      const owed = Math.max(0, lost - objective.progress)
-      objective.progress = clamp01(objective.progress - lost)
-      if (owed > 0) objective.delayOwedDays = (objective.delayOwedDays ?? 0) + Math.round(owed * span)
+      // A delay is days of no progress, never progress taken back: "90% to
+      // 74%" after a held check read as work undone (owner, 25 November:
+      // design issue O). Days owed also cost a delay that arrives before
+      // there is progress to take it from, which the old subtraction missed.
+      objective.delayOwedDays = (objective.delayOwedDays ?? 0) + Math.max(0, effect.days)
       break
     }
     case 'objective.status': {
@@ -434,9 +434,11 @@ export function applyEffect(
       const scenario = ownValue(state.risks.scenarios, resolveScenario(effect.scenarioId, context))
       if (!scenario) break
       scenario.status = effect.status
-      // Accepting through an effect is a renewal: a quarter, reviewed at the end of it.
+      // Accepting through an effect is a renewal: six months, reviewed at the
+      // end of it. A quarter put the warehouse acceptance in front of the
+      // player three times a year (owner, 25 November: design issue P).
       if (effect.status === 'accepted') {
-        scenario.acceptedUntilDay = state.currentDay + 90
+        scenario.acceptedUntilDay = state.currentDay + ACCEPTANCE_RENEWAL_DAYS
         scenario.nextReviewDay = scenario.acceptedUntilDay
       } else {
         scenario.acceptedUntilDay = undefined

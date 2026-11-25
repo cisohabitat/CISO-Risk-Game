@@ -158,7 +158,7 @@ describe('reports the player has already overtaken', () => {
     // does: the set moved when the threat variety, then the mid-year incident
     // floor (25 November), moved every
     // seed's draws.
-    for (const seed of ['overtaken-2', 'overtaken-4']) {
+    for (const seed of ['overtaken-4', 'overtaken-5']) {
       const state = newGame(index, { seed })
       applyAction(state, index, {
         type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id,

@@ -14,7 +14,8 @@ it('counts systems and dependencies separately in the same annual snapshot', () 
   const counts = discoveryCounts(state)
   expect(undiscoveredCount(state)).toEqual({ nodes: 0, edges: counts.dependencies.total })
   const evidence = buildAnnualReview(state, index).dimensions.find((item) => item.id === 'risk-understanding')!.evidence
-  expect(evidence).toContain(`${counts.systems.total} of ${counts.systems.total} systems known by the year end, from correspondence and enquiries; 0 never came to light`)
+  const examined = Object.values(state.organisation.nodes).filter((node) => node.exists && node.verified).length
+  expect(evidence).toContain(`${counts.systems.total} of ${counts.systems.total} systems known by the year end; ${examined === 0 ? 'none' : examined} examined by your own enquiries, the rest named in correspondence or inherited; 0 never came to light`)
   expect(evidence.some((line) => line.startsWith(`0 of ${counts.dependencies.total} dependencies known by the year end; ${counts.dependencies.total} never came to light`))).toBe(true)
 })
 it('varies approved papers by reporting quarter without changing their effects', () => {

@@ -38,6 +38,7 @@ export function renderDecisionText(
     .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
     .replaceAll('{{stopTarget}}', stopTarget(state, index))
+    .replaceAll('{{overloadHistory}}', overloadHistory(state, index))
     .replaceAll('{{scenario}}', scenario ?? 'the risk')
     .replaceAll('{{unseenRisk}}', unseenRisk(state, index) ?? 'a risk')
     .replaceAll('{{acceptedRisks}}', acceptedRisks(state, index))
@@ -47,6 +48,23 @@ export function renderDecisionText(
     // A quarter's paper still waiting to go in is the next meeting, whatever
     // the calendar says comes after it.
     .replaceAll('{{nextBoard}}', state.reviews.pendingQuarter !== undefined ? 'this week' : nextBoard(state.currentDay))
+}
+
+const ORDINAL = ['', '', 'second', 'third', 'fourth', 'fifth']
+
+/**
+ * The overload decision remembers it has been asked before: it came three
+ * times a year word for word (owner, 25 November: design issue P).
+ */
+function overloadHistory(state: GameState, index: ContentIndex): string {
+  const earlier = Object.values(state.decisions.decisions)
+    .filter((decision) => decision.defId === 'dec-team-overload' && decision.selectedOptionId !== undefined)
+    .sort((a, b) => a.createdDay - b.createdDay)
+  if (earlier.length === 0) return ''
+  const last = earlier.at(-1)!
+  const label = index.decision.get('dec-team-overload')?.options.find((option) => option.id === last.selectedOptionId)?.label
+  const time = ORDINAL[earlier.length + 1] ?? 'latest'
+  return ` This is the ${time} time this year they have said so.${label ? ` Last time the answer was "${label}".` : ''}`
 }
 
 /** What "Stop something" would stop today, named. */

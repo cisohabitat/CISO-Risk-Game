@@ -124,7 +124,12 @@ playtest rounds to be fixed (`docs/playtests/2026-11-25-design-list.md`):
   last stage;
 - each objective delay records its cause.
 
-Board-reply and headline variety remain writing work.
+The same day a second list followed: a Guided quiet-year floor at Mixed;
+delays that pause delivery rather than take it back; two December decisions;
+the card-data question by 2 August; six-month acceptance renewals; numbered
+repeat incidents; and board replies and headlines that read the year. With
+both lists, a competent CISO player meets 2.6 objectives and 8 of 25 years
+are Difficult (was 0 before 25 November).
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers
@@ -275,9 +280,10 @@ been fixed and moved to `docs/FINDINGS.md`.
   0.40 / 0.81 / 1.19). A competent CISO player (launch conditions, Kestrel
   quarantine, identity programme, a recovery test, every paper briefed) met
   3.1 objectives and was never Difficult; with the floor and the objective
-  cap they meet 2.6, and 6 of 25 years are Difficult. Each of those met 0 or
-  1 objective after a severe incident, and 2 had their incident from the
-  floor. Whether that weight is right is a playtest question.
+  cap they meet 2.6, and 8 of 25 years are Difficult since delays began to
+  pause delivery (6 before). The six measured first each met 0 or 1
+  objective after a severe incident. Whether that weight is right is a
+  playtest question.
 
 - **The board hears about incidents, but recovers by year end.** Since
   19 November (`src/game/incidents/board.ts`):

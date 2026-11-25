@@ -794,6 +794,19 @@ export function assumptionViews(state: GameState) {
     })
 }
 
+const NTH = ['', 'first', 'second', 'third', 'fourth', 'fifth']
+
+/**
+ * An incident's name, numbered when it is not the year's first of its kind:
+ * two "Ransomware" in one year with the same decisions read as a duplicate
+ * (owner, 25 November: design issue Q).
+ */
+export function incidentName(state: GameState, index: ContentIndex, incident: { id: string; familyId: string; startedDay: number }): string {
+  const name = index.incidentFamily.get(incident.familyId)?.name ?? 'Incident'
+  const earlier = Object.values(state.incidents.incidents).filter((other) => other.familyId === incident.familyId && other.startedDay >= 0 && (other.startedDay < incident.startedDay || (other.startedDay === incident.startedDay && other.id < incident.id))).length
+  return earlier === 0 ? name : `${name} (${NTH[earlier + 1] ?? 'another'} this year)`
+}
+
 export function incidentViews(state: GameState, index: ContentIndex) {
   return state.incidents.order
     .map((id) => {
@@ -802,7 +815,7 @@ export function incidentViews(state: GameState, index: ContentIndex) {
       const family = index.incidentFamily.get(incident.familyId)
       return {
         id,
-        name: family?.name ?? 'Incident',
+        name: incidentName(state, index, incident),
         headline: family?.headline ?? '',
         phase: incident.phase,
         startedDay: incident.startedDay,
@@ -866,7 +879,6 @@ export function incidentCommand(state: GameState, index: ContentIndex, incidentI
     ? state.incidents.incidents[incidentId]
     : Object.values(state.incidents.incidents).find((candidate) => candidate.phase !== 'closed')
   if (!incident) return undefined
-  const family = index.incidentFamily.get(incident.familyId)
 
   const timeline = state.inbox.messages.toReversed()
     .filter((message) => message.incidentId === incident.id)
@@ -894,7 +906,7 @@ export function incidentCommand(state: GameState, index: ContentIndex, incidentI
 
   return {
     id: incident.id,
-    name: family?.name ?? 'Incident',
+    name: incidentName(state, index, incident),
     phase: incident.phase,
     phaseLabel: statusLabel(incident.phase),
     startedDay: incident.startedDay,

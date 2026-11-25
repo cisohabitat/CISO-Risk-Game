@@ -4974,3 +4974,22 @@ is now spread over the two months before by a seed hash.
 Costs on CISO, for the same competent player:
 - incidents 1.44 → 1.80;
 - objectives 3.1 → 2.6.
+
+## 25 November 2026 — the second design list
+
+Recorded in `docs/playtests/2026-11-25-design-list.md`. The owner asked for
+J to Q and H, in the recommended order.
+
+Two tests had been passing for the wrong reason:
+- "remembers a good paper for a season" passed because a launch-success
+  event landed inside its window;
+- the launch-choice test sat three days inside a date.
+
+Both moved when delays began to pause delivery. They now isolate what they
+measure.
+
+Measured:
+- the card-data decision fell after the Nordic check in 14 of 60 CISO years,
+  and now in 0;
+- the longest Skip jump fell from 69 to 39 days;
+- the competent CISO player's Difficult years rose from 6 to 8 of 25.

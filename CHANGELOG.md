@@ -6,6 +6,20 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+The owner's second design list of 25 November
+(`docs/playtests/2026-11-25-design-list.md`):
+- On Guided, a quiet year that delivered four or five objectives is not
+  rated below Mixed.
+- The review says how many systems your own enquiries examined.
+- A delay pauses an objective's delivery and never takes progress back.
+- December has two decisions: the change freeze, and cover over Christmas.
+- The card-data question always comes before the Nordic bank's check.
+- A renewed acceptance lasts six months. The team-overload decision
+  remembers being asked before.
+- A second incident of the same kind is numbered.
+- Board replies change when papers stay empty or improve. A headline no
+  longer says the business got its year when it missed two objectives.
+
 ## 0.1.0-rc.4 — 25 November 2026 — fourth release candidate
 
 The owner's design list of 25 November, and fixes from the eleventh round of AI playtests, on rc.3.

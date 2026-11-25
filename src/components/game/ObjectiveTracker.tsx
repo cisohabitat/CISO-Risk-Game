@@ -23,6 +23,7 @@ export function ObjectiveTracker() {
             its day and the status follows the next, so the card read "In
             delivery" at 100% (baf4cf9 playtest, CS-15). */}
         <p className="mt-1 text-sm">{runtime.status === 'achieved' ? 100 : Math.min(99, Math.floor(runtime.progress * 100))}% delivered{runtime.delayDays > 0 ? ` · ${runtime.delayDays} days of imposed delay recorded` : ''}.</p>
+        {(runtime.delayOwedDays ?? 0) > 0 && runtime.status !== 'achieved' && runtime.status !== 'failed' && <p className="mt-1 text-sm text-band-elevated">Delivery paused for {runtime.delayOwedDays} more {runtime.delayOwedDays === 1 ? 'day' : 'days'}.</p>}
         {/* Where the delay came from (owner, 25 November: design issue I).
             Older saves recorded only the total. */}
         {runtime.delayDays > 0 && (runtime.delayLog?.length ?? 0) > 0 && <ul className="mt-1 space-y-0.5 text-xs text-ink-muted" aria-label="Where the delay came from">

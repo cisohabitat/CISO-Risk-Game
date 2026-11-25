@@ -37,7 +37,9 @@
       "priority": "urgent",
       "availableFromDay": 210,
       "conditions": [
-        { "kind": "incident.none" },
+        {
+          "kind": "incident.none"
+        },
         {
           "kind": "programme.progressAtLeast",
           "programmeId": "prog-ransomware",
@@ -99,7 +101,13 @@
       "priority": "urgent",
       "availableFromDay": 300,
       "conditions": [
-        { "kind": "not", "condition": { "kind": "situation.is", "situationId": "sit-after-breach" } },
+        {
+          "kind": "not",
+          "condition": {
+            "kind": "situation.is",
+            "situationId": "sit-after-breach"
+          }
+        },
         {
           "kind": "incident.none"
         },
@@ -965,6 +973,46 @@
         "fourth-quarter"
       ],
       "scheduledOnly": true
+    },
+    {
+      "id": "evt-q4-change-freeze",
+      "type": "business",
+      "title": "The December change freeze",
+      "from": "Helen Brandt, Chief Operating Officer",
+      "body": "The peak trading freeze starts on the 8th, as every year. Anything your team wants in production before January has to be in by then. Tell me this week what you need, and what you can live without.",
+      "priority": "notable",
+      "availableFromDay": 334,
+      "conditions": [],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-change-freeze",
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "business",
+        "fourth-quarter"
+      ]
+    },
+    {
+      "id": "evt-q4-holiday-cover",
+      "type": "people",
+      "title": "Cover over Christmas",
+      "from": "Jo Mbeki, Head of Security Operations",
+      "body": "I need the Christmas rota settled. Last year two people covered ten days between them and one of them has since left. I can make it work again, but I would rather you decided how.",
+      "priority": "notable",
+      "availableFromDay": 344,
+      "conditions": [],
+      "weight": 30,
+      "pinned": true,
+      "oncePerCampaign": true,
+      "decisionId": "dec-q4-holiday-cover",
+      "effectsOnReveal": [],
+      "relatedNodeIds": [],
+      "tags": [
+        "people",
+        "fourth-quarter"
+      ]
     }
   ]
 }

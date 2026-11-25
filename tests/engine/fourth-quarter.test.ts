@@ -57,7 +57,7 @@ describe('an acceptance that runs out', () => {
     expect(renewed.ok, renewed.message).toBe(true)
     const scenario = state.risks.scenarios['risk-supplier-ransomware']!
     expect(scenario.status).toBe('accepted')
-    expect(scenario.acceptedUntilDay).toBe(state.currentDay + 90)
+    expect(scenario.acceptedUntilDay).toBe(state.currentDay + 182)
   })
 })
 

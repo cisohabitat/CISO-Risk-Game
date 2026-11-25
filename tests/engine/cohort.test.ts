@@ -35,9 +35,7 @@ describe('the facilitator pack names seeds that still give the years it says', (
     ])
   })
 
-  it('class-21 follows payment diversion with a legacy-platform incident', () => {
-    const year = idleYear('class-21')
-    expect(year).toHaveLength(2)
-    expect(year).toEqual([{ family: 'Payment diversion', month: 4 }, { family: 'Legacy platform compromise and outage', month: 9 }])
+  it('class-10 follows a data exposure with a destructive attack', () => {
+    expect(idleYear('class-10')).toEqual([{ family: 'Customer data exposure', month: 5 }, { family: 'Destructive attack', month: 10 }])
   })
 })

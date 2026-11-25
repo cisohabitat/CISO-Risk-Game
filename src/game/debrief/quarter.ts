@@ -113,7 +113,19 @@ export function buildQuarterReview(
     // papers to the board, was credited the full bump each time, and ended
     // the year at 0.62 confidence against 0.64 for one who raised and covered
     // everything. The board heard nothing and asks when it will.
-    reaction = 'The board notes that nothing has yet been assessed. The chair asks what the quarter found, and when they will hear what it means.'
+    // The same words three quarters running read as a template; an empty
+    // paper again is a pattern, and the board says so (owner, 25 November:
+    // design issue H).
+    const emptyBefore = state.reviews.quarters.filter((paper) => paper.completed && paper.topicsChosen.length === 0 && paper.recommendationIds.length === 0).length
+    if (emptyBefore === 0) {
+      reaction = 'The board notes that nothing has yet been assessed. The chair asks what the quarter found, and when they will hear what it means.'
+    } else if (emptyBefore === 1) {
+      effects.push({ type: 'board.confidence', delta: -0.02 })
+      reaction = 'For the second quarter running, the paper raises nothing. The chair asks to see you before the next committee, to hear what you are looking at.'
+    } else {
+      effects.push({ type: 'board.confidence', delta: -0.03 })
+      reaction = 'Another paper with nothing in it. The committee has stopped expecting your papers to tell it anything, and the chair says so in the minutes.'
+    }
   } else if (noise.length > 2) {
     effects.push({ type: 'board.confidence', delta: -0.02 })
     // It said which items were missing but not which were surplus, so a
@@ -133,7 +145,16 @@ export function buildQuarterReview(
     // the reply, and testers read the paper as unread (16fe0ee playtest, M-03).
     const optional = noise.map((id) => topics.find((topic) => topic.id === id)?.label).filter((label): label is string => Boolean(label)).map(listed)
     const alsoNoted = optional.length > 0 ? ` It also noted: ${optional.join('; ')}.` : ''
-    reaction = `The board supports the direction in your Q${input.quarter} paper. ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => listed(topics.find((topic) => topic.id === id)!.label)).join('; ')}.` : optional.length > 0 ? '' : ' The selected updates are noted; no current item was classified as material.'}${alsoNoted}`
+    // The opening reads what the paper did, not only the quarter it is for.
+    const previous = state.reviews.quarters.filter((paper) => paper.completed).at(-1)
+    const opening = previous && previous.topicsChosen.length === 0 && covered.length > 0
+      ? `The board notes that this paper, unlike the last, gives it something to weigh.`
+      : covered.length >= 3 && coverage >= 1
+        ? `The board thanks you for a complete Q${input.quarter} paper.`
+        : covered.length === 0 && optional.length > 0
+          ? `The board reads your Q${input.quarter} paper as a progress note rather than a risk report.`
+          : `The board supports the direction in your Q${input.quarter} paper.`
+    reaction = `${opening} ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => listed(topics.find((topic) => topic.id === id)!.label)).join('; ')}.` : optional.length > 0 ? '' : ' The selected updates are noted; no current item was classified as material.'}${alsoNoted}`
   }
 
   if (input.communicateUncertainty) {

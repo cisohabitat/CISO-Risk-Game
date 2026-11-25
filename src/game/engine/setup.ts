@@ -95,6 +95,13 @@ export interface DifficultyProfile {
    * Absent on Guided.
    */
   incidentFloorDay?: number
+  /**
+   * The lowest verdict a quiet, delivered year can get: no incident and four
+   * of five objectives or more. Engaged Guided players who filed every paper
+   * and ran a programme were rated Difficult on three weak dimensions
+   * (owner, 25 November: design issue J). Absent on CISO and High pressure.
+   */
+  quietYearFloor?: 'Mixed'
 }
 
 /** The two identity engineering roles every briefing names; the other three vacancies fall elsewhere. */
@@ -116,6 +123,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     investigationSpeed: 0.85,
     showsDecisionCoaching: true,
     gatePreview: 'full',
+    quietYearFloor: 'Mixed',
   },
   ciso: {
     budgetMultiplier: 1,

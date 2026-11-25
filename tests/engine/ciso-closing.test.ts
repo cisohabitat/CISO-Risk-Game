@@ -89,7 +89,7 @@ it('keeps the displayed business commitment fixed when a decision records delay'
   expect(after.recordedDelayDays).toBe(45)
 })
 it('makes actual launch choices change objective outcomes under matched programme friction', () => {
-  const outcomes = ['opt-launch-support', 'opt-launch-oppose'].map((optionId) => {
+  const outcomes = ['opt-launch-conditions', 'opt-launch-oppose'].map((optionId) => {
     const state = newGame(index, { seed: 'objective-component', difficulty: 'ciso', situation: 'sit-after-breach' })
     for (let day = 2; day <= 364; day += 1) {
       state.currentDay = day

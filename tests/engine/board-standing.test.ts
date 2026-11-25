@@ -77,6 +77,10 @@ describe('the board standing', () => {
     fileIfDue(state)
     const gained = state.stakeholders.boardConfidence - before
     expect(gained).toBeGreaterThan(0)
+    // The paper's own memory, not the season's news: this passed for months
+    // only because the launch-success event landed by day 182 and lifted
+    // confidence (25 November, when delays began to pause delivery).
+    state.events.suppressedEventIds = index.content.events.map((event) => event.id)
     runDays(state, index, 90)
     expect(state.stakeholders.boardConfidence - before).toBeGreaterThan(gained * 0.6)
   })

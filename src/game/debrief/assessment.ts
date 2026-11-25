@@ -5,7 +5,7 @@ const VALUES = { weak: 0.2, developing: 0.45, solid: 0.68, strong: 0.88 } as con
 const ORDER: Assessment[] = ['Difficult', 'Mixed', 'Credible', 'Exceptional']
 
 /** Equal weights, with minimum standards that a good average cannot conceal. */
-export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean, objectives?: { met: number; total: number }): {
+export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean, objectives?: { met: number; total: number }, floor?: Assessment): {
   label: Assessment
   reason?: string
 } {
@@ -36,5 +36,8 @@ export function overallAssessment(dimensions: AnnualReviewDimension[], capabilit
     ceiling = 'Credible'
     reason = 'recovery capability was not demonstrated by a completed exercise or a closed incident the organisation absorbed'
   }
-  return ORDER.indexOf(base) > ORDER.indexOf(ceiling) ? { label: ceiling, reason } : { label: base }
+  const capped: { label: Assessment; reason?: string } = ORDER.indexOf(base) > ORDER.indexOf(ceiling) ? { label: ceiling, reason } : { label: base }
+  // A floor the mode sets for a quiet, delivered year (design issue J).
+  if (floor && ORDER.indexOf(capped.label) < ORDER.indexOf(floor)) return { label: floor, reason: 'a quiet year that delivered for the business is not rated below this on this difficulty' }
+  return capped
 }

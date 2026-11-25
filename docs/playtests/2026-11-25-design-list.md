@@ -74,3 +74,53 @@ of those six met 0 or 1 objective after a severe incident (ransomware at
 
 Whether a CISO year should always be tested, and at this weight, is the
 question to put to people.
+
+## The second list, the same day: J to Q, and H
+
+The owner asked for these to be done in the recommended order.
+
+| | Issue | Change |
+|---|---|---|
+| J | Engaged Guided years with no incident and 4 of 5 objectives rated Difficult on three weak dimensions | `quietYearFloor: 'Mixed'` on Guided: such a year is not rated below Mixed. |
+| L | "38 of 38 systems known" read as the player's work | The line says how many were examined by the player's own enquiries; the rest were named in correspondence or inherited. |
+| O | A held check took progress from 90% to 74% | A delay pauses delivery for its days (`delayOwedDays`); progress never goes back. The card says how long it is paused. |
+| K | The fourth quarter was empty, and Skip ran 69 days to 31 December | Two December decisions: the peak-trading change freeze (1 December) and cover over Christmas (11 December). |
+| N | The card-data decision could come after the Nordic check | If the merchant's question has not come by 2 August, it comes then, with the evidence. |
+| P | The warehouse acceptance renewed three times a year; the overload decision repeated word for word | Acceptances renewed through a decision run six months (`ACCEPTANCE_RENEWAL_DAYS`). The overload decision says how many times it has been asked and what was answered last time. |
+| Q | Two incidents of one kind read as a duplicate | The second is named "(second this year)". |
+| H | Board replies and headlines templated | An empty paper a second and third time draws a different reply, at a small cost. A full paper, a paper after an empty one, and an optional-only paper open differently. "The business got its year" is not used with two objectives missed; three or more incidents that held have their own headline. |
+
+### Measured
+
+- **Card-data decision after the Nordic check.** 60 CISO years: 14 before,
+  0 after.
+- **December decisions.** Both open in 60 of 60 years.
+- **Skip ahead, 20 CISO years.**
+
+  | | Before | After |
+  |---|---|---|
+  | Longest jump (days) | 69 | 39 |
+  | Jumps of 30 days or more, a year | 1.9 | 1.6 |
+  | Stops a year | 35.1 | 37.6 |
+
+- **The competent player.** Over 25 years a mode, objectives are 4.8 / 2.6 /
+  3.1 (Guided / CISO / High pressure).
+
+  | Mode | Credible | Mixed | Difficult |
+  |---|---|---|---|
+  | Guided | 24 | 1 | 0 |
+  | CISO | 8 | 9 | 8 |
+  | High pressure | 11 | 8 | 6 |
+
+  CISO's Difficult years rose from 6 to 8. A delay pausing for its stated 45
+  days is a little harsher than the progress it used to take, which cost
+  about 40. On "objective-component", supporting the launch without
+  conditions now misses its date by a day rather than meeting it with three
+  to spare.
+- **Ladder.** Incidents 0.67 / 1.47 / 1.93, objectives missed 0.80 / 1.87 /
+  1.67.
+- **Soak.** Clean: 300 years and 80 two-year campaigns.
+- **Coverage.** 94% of events and 100% of decisions.
+- **Facilitator table.** Re-picked again. `class-10` is now the two-routes
+  row.
+

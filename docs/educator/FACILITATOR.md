@@ -42,7 +42,8 @@ sit-after-breach`) before relying on the table.
 light, engaged year (answer what is asked, file each board paper, run the
 identity programme, commission two enquiries), and the same seeds again with
 a player who does nothing. Recalibrated on 25 November 2026, when CISO and
-High pressure years gained an incident by mid-year: a change to the year's
+High pressure years gained an incident by mid-year and delays began to pause
+delivery rather than take it back: a change to the year's
 events changes later seeded incident draws. The two quiet rows are Guided
 (`pnpm cohort 30 guided class`). These are engine observations, not a
 promise about a student's choices or an independently observed classroom.
@@ -51,10 +52,9 @@ promise about a student's choices or an independently observed classroom.
 |---|---|---|---|
 | `class-12`, Guided | No incident | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. Send it with `&mode=guided`: since 25 November a CISO or High pressure year always has an incident by mid-year. |
 | `class-1`, Guided | Two data exposures (22 August, 24 September) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? Also Guided. |
-| `class-5` | Ransomware 6 June (severe) | Ransomware 22 May | **The crisis year.** Ransomware either way; the difference is what was ready for it. |
-| `class-26` | Ransomware 20 May and 24 October | Ransomware 25 March, 23 July and 12 December | **The recovery conversation.** Ransomware either way, but how often, and what could recovery do each time? What was tested between the first and the second? |
-| `class-21` | Supplier-driven disruption 31 May | Payment diversion 24 April; legacy platform compromise 6 September | **Two routes.** Fraud is followed by a different weakness. Does treating or discussing the first incident establish that the rest of the estate is covered? |
-| `class-10` | Legacy platform compromise 7 May, data exposure 21 July, supplier disruption 8 October | Data exposure 7 May, ransomware 19 October | **The comparison year.** The same world, two very different autumns. Put two students' reviews side by side. |
+| `class-5` | Ransomware 6 June (severe), then platform tampering 3 October | Ransomware 22 May | **The crisis year.** Ransomware either way; the difference is what was ready for it, and what came after. |
+| `class-26` | Ransomware 20 May and 23 October | Ransomware 25 March, 23 July and 12 December | **The recovery conversation.** Ransomware either way, but how often, and what could recovery do each time? What was tested between the first and the second? |
+| `class-10` | Legacy platform compromise 7 May, data exposure 21 July, supplier disruption 8 October | Data exposure 7 May, then a destructive attack 31 October | **Two routes, and the comparison year.** The idle year's data exposure is followed by a different weakness; the engaged year meets three. Does treating the first establish that the rest of the estate is covered? Put two students' reviews side by side. |
 
 Treat the dates as typical rather than promised: a student who plays
 differently meets a different year, which is the point. Re-run

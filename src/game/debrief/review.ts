@@ -24,6 +24,7 @@ import { unexaminedAssumptions } from '../assumptions/validation'
 import { residualBand } from '../risk/bands'
 import { BOARD_MATERIAL, RESPONSE_DONE } from '../incidents/thresholds'
 import { briefedInTime } from '../incidents/board'
+import { DIFFICULTY_PROFILES } from '../engine/setup'
 import { objectiveStatusLabel } from '../business/objectives'
 import { functionName, moraleLabel, teamStrain } from '../team/capacity'
 
@@ -201,7 +202,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // Known, not discovered: correspondence reveals systems as well as
       // enquiries, and "38 of 38 discovered" read as the player's work beside
       // "0 of 28 you examined" (16fe0ee playtest, M-06).
-      `${discovery.systems.discovered} of ${discovery.systems.total} systems known by the year end, from correspondence and enquiries; ${discovery.systems.remaining} never came to light`,
+      // Who did the finding, said apart: "38 of 38 systems known" after no
+      // enquiry read as the player's work (owner, 25 November: design L).
+      (() => {
+        const examinedSystems = Object.values(state.organisation.nodes).filter((node) => node.exists && node.discovered && node.verified).length
+        return `${discovery.systems.discovered} of ${discovery.systems.total} systems known by the year end; ${examinedSystems === 0 ? 'none' : examinedSystems} examined by your own enquiries, the rest named in correspondence or inherited; ${discovery.systems.remaining} never came to light`
+      })(),
       `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies known by the year end; ${discovery.dependencies.remaining} never came to light`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
       // Current and lapsed apart: "0 of 13 controls were independently
@@ -788,8 +794,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
 
   const capabilityTested = exercises.length > 0 || restoreTaken || sandboxRestore ||
     (tested && !stillRunning && resilience >= 0.52)
-  const assessment = overallAssessment(dimensions, capabilityTested, { met: achieved, total: objectives.length })
-  const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning)
+  const quietFloor = DIFFICULTY_PROFILES[state.difficulty].quietYearFloor
+  const assessment = overallAssessment(dimensions, capabilityTested, { met: achieved, total: objectives.length },
+    quietFloor && incidents.length === 0 && achieved * 5 >= objectives.length * 4 ? quietFloor : undefined)
+  const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning, { missed: failed, incidents: incidents.length })
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`
 
@@ -1031,7 +1039,7 @@ function previousYearLine(state: GameState): string | undefined {
  * dimensions that actually diverged: the strongest, the weakest, and the
  * tension between them.
  */
-export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false): string {
+export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false, year: { missed?: number; incidents?: number } = {}): string {
   const score = (id: string) => {
     const dimension = dimensions.find((d) => d.id === id)
     return dimension ? bandValue(dimension.band) : 0.5
@@ -1065,8 +1073,12 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   // players who finished on the same overall band. Single-dimension verdicts
   // follow, and only when they are severe — otherwise one common failure would
   // describe nearly every year.
+  // "The business got its year" sat over two missed objectives (owner,
+  // 25 November: design issue H).
   if (strong('business-enablement') && weak('programme-execution')) {
-    return 'The business got its year. The security programme did not.'
+    return (year.missed ?? 0) >= 2
+      ? 'Neither the business nor the security programme got the year it planned.'
+      : 'The business got its year. The security programme did not.'
   }
   if (strong('programme-execution') && weak('business-enablement')) {
     return 'You built the capability, and the business paid for it in delivery.'
@@ -1086,6 +1098,7 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   // beside four incidents on an unverified picture (16fe0ee playtest, M-04).
   if (hadIncident && strong('resilience')) {
     if (weak('business-enablement')) return 'It held under attack, and the business paid for it in delivery.'
+    if ((year.incidents ?? 0) >= 3) return `Tested ${year.incidents === 3 ? 'three' : 'four or more'} times, and it held.`
     // Risk understanding, not blind spots: blind spots read weak in most
     // years, and would have taken the line from nearly every one.
     if (weak('risk-understanding')) return 'It held, on a picture you never verified.'
