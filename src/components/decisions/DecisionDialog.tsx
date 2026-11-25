@@ -192,7 +192,10 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                       uncertainty. "Expensive" told the player nothing they could
                       weigh against the budget bar on the same screen. */}
                   {option.budgetCost !== undefined && (
-                    <span className="text-sm tabular-nums"><span className="mb-1 block text-xs text-ink-faint">Budget cost</span>{money(option.budgetCost)}</span>
+                    // A cut capped at what is left says what it actually takes:
+                    // "Budget cost £220k" sat over "this gives nothing"
+                    // (73ad569 playtest, CS-19).
+                    <span className="text-sm tabular-nums"><span className="mb-1 block text-xs text-ink-faint">Budget cost</span>{money(option.takesOnly ?? option.budgetCost)}</span>
                   )}
                   {/* Attention is spent when the option is taken; two options
                       spent it without their text saying so. */}

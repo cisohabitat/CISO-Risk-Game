@@ -639,6 +639,10 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         { index, rng, source: 'escalation' },
       )
       scenario.ownerStakeholderId = action.stakeholderId
+      // Taken to the board's chair, the board has heard it. The flag was read
+      // and never set, so "A material risk the board has not heard about"
+      // came eleven days after a briefing (73ad569 playtest, MN-32).
+      if (action.stakeholderId === 'stk-board') scenario.escalatedToBoard = true
       state.history.entries.push({
         day: state.currentDay,
         kind: 'escalation',

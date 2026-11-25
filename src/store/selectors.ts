@@ -437,7 +437,11 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
           resolution: blockerDef?.resolution.label ?? 'Resolve',
           budget: blockerDef?.resolution.budget,
           focus: blockerDef?.resolution.focus,
-          progressNote: !blockerDef ? 'The delivery impact of this constraint is not recorded.' : blockerDef.progressMultiplier === 0 ? 'This constraint stops delivery until resolved.' : (blockerDef.resolution.budget ?? 0) > 0 ? `This constraint slows delivery, and the programme cannot finish, or reach its last milestone, past ${Math.round(PAID_BLOCKER_HOLD * 100)}% until it is paid for.` : 'This constraint slows delivery. Other work continues, so the programme may still finish without buying this separate fix.',
+          progressNote: !blockerDef ? 'The delivery impact of this constraint is not recorded.' : blockerDef.progressMultiplier === 0 ? 'This constraint stops delivery until resolved.' : (blockerDef.resolution.budget ?? 0) > 0 ? (runtime.progress > PAID_BLOCKER_HOLD
+                  // Arriving past the hold, it holds where it found the
+                  // programme: "cannot pass 90%" sat over 99% (73ad569 playtest, MJ-22).
+                  ? 'This constraint stops the programme finishing, or reaching its last milestone, until it is paid for.'
+                  : `This constraint slows delivery, and the programme cannot finish, or reach its last milestone, past ${Math.round(PAID_BLOCKER_HOLD * 100)}% until it is paid for.`) : 'This constraint slows delivery. Other work continues, so the programme may still finish without buying this separate fix.',
         }
       }),
       milestones: def.milestones.map((milestone) => ({

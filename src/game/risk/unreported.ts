@@ -23,6 +23,9 @@ export function unreportedScenarios(state: GameState): RiskScenarioRuntime[] {
   const reported = new Set(state.reviews.quarters.filter((review) => review.completed).flatMap((review) => review.topicsChosen))
   return Object.values(state.risks.scenarios)
     .filter((s) => s.status !== 'emerging' && s.status !== 'closed' && !reported.has(`risk:${s.id}`))
+    // Briefed to the chair counts as heard: "A material risk the board has
+    // not heard about" came eleven days after one (73ad569 playtest, MN-32).
+    .filter((s) => !s.escalatedToBoard)
     // Only what the paper would have required. A third raised risk the paper
     // let the player leave out as optional opened "A material risk the board
     // has not heard about" two days later (baf4cf9 playtest, MJ-20).

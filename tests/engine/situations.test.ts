@@ -261,7 +261,7 @@ describe('each situation brings a decision of its own', () => {
       ['sit-after-breach', 'opt-extortion-silent', /you refused and said nothing\. They published/],
       ['sit-after-breach', 'opt-extortion-pay', /you paid, and within two months they were back/],
       ['sit-new-money', 'opt-flagship-buy', /you bought the platform, and by the summer it was a console nobody watched/],
-      ['sit-new-money', 'opt-flagship-programmes', /you put the money into the programmes instead/],
+      ['sit-new-money', 'opt-flagship-programmes', /you (put the money into the programmes instead|said the money would go into the programmes, and started none)/],
       ['sit-new-money', 'opt-flagship-plan', /you showed them the plan/],
       ['sit-tidy', 'opt-tidy-restate', /You restated your predecessor's coverage figure/],
       ['sit-tidy', 'opt-tidy-quiet', /quietly, and the chair found the change/, true],

@@ -73,7 +73,7 @@ export function InvestigationPanel() {
       .filter((p) => (p.status === 'active' || p.status === 'at-risk') && ((index.programme.get(p.id)?.capacityDemand as Record<string, number | undefined> | undefined)?.[fn] ?? 0) > 0)
       .map((p) => index.programme.get(p.id)?.shortName ?? p.id)
     return holding.length > 0
-      ? `The ${functionName(fn)} team has no spare capacity: ${holding.join(' and ')} ${holding.length === 1 ? 'is' : 'are'} using it. Pausing a programme frees it.`
+      ? `The ${functionName(fn)} team has no spare capacity: ${holding.join(' and ')} ${holding.length === 1 ? 'is' : 'are'} using it. Pausing a programme frees the team; its money stays committed.`
       : `The ${functionName(fn)} team has no spare capacity this week.`
   }
 

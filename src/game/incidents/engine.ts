@@ -334,10 +334,17 @@ export function buildReconstruction(
     ? Object.keys(state.flags).filter((flag) => flag.startsWith(`signal.${incident.campaignId}.`)).length
     : 0
   const firstWarning = state.inbox.messages.filter((message) => message.signalCampaignId === incident.campaignId).reduce((day, message) => Math.min(day, message.day), Infinity)
-  const hunts = state.team.assignments.filter((assignment) => assignment.refId === 'inv-threat-hunt' && assignment.startedDay >= firstWarning && assignment.startedDay < incident.startedDay)
+  // Any hunt that ran while the intrusion was under way counts, whenever it
+  // was commissioned: hunts on 5 February and 19 August were followed by "no
+  // targeted hunt was commissioned between the first warning and impact"
+  // (73ad569 playtest, MJ-04).
+  const intrusionFrom = Math.min(campaign?.startedDay ?? firstWarning, firstWarning)
+  const hunts = state.team.assignments.filter((assignment) => assignment.refId === 'inv-threat-hunt'
+    && assignment.startedDay < incident.startedDay
+    && (assignment.dueDay ?? assignment.startedDay) >= intrusionFrom)
   const huntNote = hunts.some((assignment) => assignment.status === 'complete' && assignment.dueDay <= incident.startedDay)
-    ? 'a targeted hunt returned before impact, but the intrusion still reached the business'
-    : hunts.length > 0 ? 'a targeted hunt was commissioned before impact but had not returned' : 'no targeted hunt was commissioned between the first warning and impact'
+    ? 'a targeted hunt returned while it was under way, but did not find it, and the intrusion still reached the business'
+    : hunts.length > 0 ? 'a targeted hunt was under way before impact but had not returned' : 'no targeted hunt ran between the first warning and impact'
   const weeks = Math.max(1, Math.round(ranFor / 7))
   // First, because the lists are cut at six and the narrative reads three:
   // how long it ran unseen is the line the year turns on.

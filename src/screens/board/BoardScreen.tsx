@@ -312,6 +312,10 @@ export function BoardScreen() {
               <div className="space-y-2">
                 {availableTopics.map((topic) => {
                   const active = topics.includes(topic.id)
+                  // The cap the guidance states is the cap the paper keeps: a
+                  // third optional item could be ticked, and the board then
+                  // asked for "fewer, sharper items" (73ad569 playtest, MJ-20).
+                  const capped = !active && !topic.material && topics.filter((id) => availableTopics.some((t) => t.id === id && !t.material)).length >= 2
                   return (
                     <label
                       key={topic.id}
@@ -323,11 +327,13 @@ export function BoardScreen() {
                       <input
                         type="checkbox"
                         checked={active}
+                        disabled={capped}
+                        aria-describedby={capped ? `optional-cap-note-${topic.id}` : undefined}
                         onChange={(event) => { const checked = event.currentTarget.checked; setTopics((current) => checked ? [...new Set([...current, topic.id])] : current.filter((id) => id !== topic.id)) }}
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
                         style={{ minHeight: 0 }}
                       />
-                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}<span className="mt-1 block text-xs text-ink-muted">{topic.material ? 'Required: material to this committee' : 'Optional update'}</span>{state.reviews.quarters.some((paper) => paper.completed && paper.topicsChosen.includes(topic.id)) && <span className="mt-1 block text-xs text-ink-muted">Previously reported; still available for this paper</span>}</span>
+                      <span className="min-w-[8rem] flex-1 text-pretty">{topic.label}<span className="mt-1 block text-xs text-ink-muted">{topic.material ? 'Required: material to this committee' : capped ? <span id={`optional-cap-note-${topic.id}`}>Optional update. Two are already chosen; untick one to swap.</span> : 'Optional update'}</span>{state.reviews.quarters.some((paper) => paper.completed && paper.topicsChosen.includes(topic.id)) && <span className="mt-1 block text-xs text-ink-muted">Previously reported; still available for this paper</span>}</span>
                       {riskBands.has(topic.id) ? (
                         <Badge tone={bandTone(riskBands.get(topic.id)!)} className="shrink-0 self-start">
                           {RISK_BAND_LABEL[riskBands.get(topic.id)!]} residual

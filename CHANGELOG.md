@@ -6,6 +6,18 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+- Fixed: briefing the board's chair on a risk never counted as the board
+  having heard it, so "A material risk the board has not heard about" could
+  follow a briefing. It counts now.
+- Fixed: an incident reconstruction blamed you for no hunt when one had run
+  during the intrusion. Any hunt under way then counts.
+- The board paper keeps its stated limit of two optional updates.
+- A default forced because every other option was beyond the budget is said
+  to be so, not blamed as a choice.
+- Smaller wording fixes: a priced blocker that arrived past 90%, a capped
+  cut's cost, what pausing a programme frees, and the New money close when
+  no programme was started.
+
 ## 0.1.0-rc.3 — 25 November 2026 — third release candidate
 
 Fixes from the ninth and tenth rounds of AI playtests, on rc.2 and after.

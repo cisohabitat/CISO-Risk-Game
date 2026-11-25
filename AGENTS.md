@@ -470,6 +470,10 @@ changes.
   (`EffectContext.pressed`). `{{stopTarget}}` names what "Stop something" would
   stop (`stopCandidate`); option descriptions and known effects go through
   `renderDecisionText`.
+- `escalateRisk` to `stk-board` sets `escalatedToBoard`; `unreportedScenarios`
+  and `effortAllocation` read it. The reconstruction credits any
+  `inv-threat-hunt` whose window overlaps the intrusion. The board paper
+  disables a third optional topic.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

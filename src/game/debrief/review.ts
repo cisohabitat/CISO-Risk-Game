@@ -1156,7 +1156,10 @@ function situationDecisionLine(state: GameState): string | undefined {
             ? `${lead} you bought the platform, and by the summer it was a console nobody watched.`
             : `${lead} you bought the platform.`
       case 'opt-flagship-programmes':
-        return `${lead} you put the money into the programmes instead.`
+        // Said of a year that then started none (73ad569 playtest, MJ-15).
+        return programmesThisYear(state).length > 0
+          ? `${lead} you put the money into the programmes instead.`
+          : `${lead} you said the money would go into the programmes, and started none.`
       case 'opt-flagship-plan':
         return `${lead} you showed them the plan and asked them to wait for it.`
     }

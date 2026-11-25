@@ -4936,3 +4936,22 @@ Fixed the same day:
 - the empty-paper notice;
 - the risks option for next year's priorities;
 - help text promising weekly holds.
+
+## 25 November 2026 — 15-run matrix on 73ad569 (pass 11, rc.3)
+
+Recorded in `docs/playtests/2026-11-25-owner-supplied-73ad569-matrix.md`.
+
+`escalatedToBoard` was read by the unreported-risk check, and since 23
+November by the review's credit, but nothing ever set it. A risk briefed to
+the chair was still "a material risk the board has not heard about".
+Escalating to `stk-board` now sets it.
+
+Fixed the same day:
+- the reconstruction credits hunts that overlapped the intrusion;
+- the paper enforces two optional updates;
+- a default forced by an empty budget is named as such;
+- wording: a blocker that arrived past 90%, a capped cut's cost, pausing a
+  programme, and the New money close with no programme.
+
+The £400k twice, "in hand" scored by outcome, and Skip held with a decision
+open were checked: they are the owner's design or work as built.
