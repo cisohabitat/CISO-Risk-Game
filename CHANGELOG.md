@@ -6,6 +6,10 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+## 0.1.0-rc.4 — 25 November 2026 — fourth release candidate
+
+The owner's design list of 25 November, and fixes from the eleventh round of AI playtests, on rc.3.
+
 Design changes the owner chose on 25 November from eleven rounds of AI
 playtests (`docs/playtests/2026-11-25-design-list.md`):
 - A SOC warning and an incident closing now stop Skip ahead. Recent warnings
