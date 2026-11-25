@@ -274,7 +274,10 @@ export function applyEffect(
       const active = programme.blockers.find((blocker) => blocker.id === effect.blockerId && !blocker.resolved)
       const def = index.programme.get(effect.programmeId)
       const blockerDef = def?.blockers.find((blocker) => blocker.id === effect.blockerId)
-      if (active && def && blockerDef) state.history.entries.push({ day: state.currentDay, kind: 'programme-blocker', refs: [def.id], summary: `${def.name}: ${blockerDef.name} cleared. ${context.source === 'blocker' ? blockerDef.resolution.description : 'Recorded follow-through removed this constraint.'}` })
+      if (effect.descope) programme.descoped = true
+      if (active && def && blockerDef) state.history.entries.push({ day: state.currentDay, kind: 'programme-blocker', refs: [def.id], summary: effect.descope
+        ? `${def.name}: ${blockerDef.name} worked around rather than paid for. The programme can finish, without its last stage.`
+        : `${def.name}: ${blockerDef.name} cleared. ${context.source === 'blocker' ? blockerDef.resolution.description : 'Recorded follow-through removed this constraint.'}` })
       for (const blocker of programme.blockers) {
         if (blocker.id === effect.blockerId) blocker.resolved = true
       }
@@ -380,6 +383,15 @@ export function applyEffect(
       // A delay costs delivery, it does not move the commitment: the date the
       // business promised the market stays where it was.
       objective.delayDays += effect.days
+      // Named for the card. A decision's delay is named for the decision.
+      const fromDecision = index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title
+      const cause = effect.cause ?? (fromDecision ? `your decision on "${fromDecision}"` : index.event.get(context.source.replace(/^event:/, ''))?.title ?? 'other delivery pressure')
+      // One line per cause: an incident's disruption is a day at a time.
+      const log = objective.delayLog ?? []
+      const same = log.find((entry) => entry.cause === cause)
+      objective.delayLog = same
+        ? log.map((entry) => (entry === same ? { ...entry, days: entry.days + effect.days } : entry))
+        : [...log, { day: state.currentDay, days: effect.days, cause }]
       const span = Math.max(30, def.targetDay - Math.round(def.targetDay * 0.12))
       // What progress cannot pay is owed in days of no progress. Taken only
       // from progress, a delay early in delivery cost nothing: opposing the

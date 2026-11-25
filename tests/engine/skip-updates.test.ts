@@ -9,6 +9,8 @@ function quiet() {
   const state = newGame(index, { seed: 'skip-public-updates' })
   state.currentDay = 240
   state.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  // Isolated from the mid-year incident floor (25 November, design F).
+  state.flags['incident.floor'] = true
   state.decisions.openIds = []
   state.incidents = { incidents: {}, order: [], counter: 0 }
   state.pendingEffects = []

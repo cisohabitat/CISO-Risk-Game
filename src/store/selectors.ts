@@ -1449,6 +1449,28 @@ export function enquirySpeaksTo(state: GameState, index: ContentIndex, investiga
  * cleared (AI second-year re-test): the reasons are kept until the clock runs
  * again, and the banner should not outlive them.
  */
+/** How long a SOC warning stays on the Briefing without a hunt to answer it. */
+export const SOC_WARNING_DAYS = 28
+
+/**
+ * SOC warnings from the last four weeks that no targeted hunt has answered
+ * since. Read from what the player was sent, not from the campaign behind
+ * it, so the Briefing reveals nothing the inbox did not.
+ */
+export function openSocWarnings(state: GameState, index: ContentIndex): { messageId: string; day: number; subject: string; where?: string }[] {
+  const lastHunt = state.team.assignments
+    .filter((assignment) => assignment.refId === 'inv-threat-hunt' && assignment.status !== 'abandoned')
+    .reduce((day, assignment) => Math.max(day, assignment.startedDay), -1)
+  return state.inbox.messages
+    .filter((message) => message.signalCampaignId !== undefined && state.currentDay - message.day <= SOC_WARNING_DAYS && message.day > lastHunt)
+    .sort((a, b) => a.day - b.day)
+    .map((message) => {
+      const nodeId = message.relatedNodeIds?.[0]
+      const where = nodeId && state.organisation.nodes[nodeId]?.discovered ? index.node.get(nodeId)?.name : undefined
+      return { messageId: message.id, day: message.day, subject: message.subject, where }
+    })
+}
+
 export function livePauseReasons(state: GameState): PauseReason[] {
   return state.pauseReasons.filter((reason) => {
     switch (reason) {

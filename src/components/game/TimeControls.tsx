@@ -31,6 +31,8 @@ const PAUSE_REASON_TONE: Record<PauseReason, string> = {
   'assumption-invalidated': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
   'programme-blocked': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
   'objective-check': 'border-accent/40 bg-accent-soft text-accent-ink',
+  'soc-warning': 'border-band-elevated/50 bg-band-elevated-soft text-band-elevated',
+  'incident-closed': 'border-accent/40 bg-accent-soft text-accent-ink',
   'quarter-end': 'border-accent/40 bg-accent-soft text-accent-ink',
   'year-end': 'border-accent/40 bg-accent-soft text-accent-ink',
   player: 'border-line bg-surface-2 text-ink-muted',
@@ -44,6 +46,8 @@ const PAUSE_REASON_TEXT: Record<PauseReason, string> = {
   'assumption-invalidated': 'An assumption no longer holds',
   'programme-blocked': 'A programme is blocked',
   'objective-check': 'A security check ran',
+  'soc-warning': 'The SOC raised a warning',
+  'incident-closed': 'An incident closed',
   'quarter-end': 'Quarter end',
   'year-end': 'The year is over',
   player: 'Paused',
@@ -134,7 +138,7 @@ export function TimeControls({ compact = false }: { compact?: boolean }) {
         variant="secondary"
         className="compact min-h-9"
         disabled={state.finished}
-        title="Runs to the next thing that needs you: a decision, a board paper, an incident, a blocked programme or a business security check, and says which. Choose a speed to watch time pass."
+        title="Runs to the next thing that needs you: a decision, a board paper, an incident starting or closing, a SOC warning, a blocked programme or a business security check, and says which. Choose a speed to watch time pass."
         onClick={() => { dispatch({ type: 'setSpeed', speed: 'paused' }); advanceDays(UI_SKIP_DAYS, true) }}
       >
         {compact ? 'Skip ahead' : 'Advance to next event'}

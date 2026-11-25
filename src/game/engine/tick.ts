@@ -8,6 +8,7 @@
 import type { ContentIndex, GameEffect, GameEventDef, GameState, PauseReason } from '../types'
 import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, DAYS_PER_WEEK, clamp01, money } from '../types'
 import { createRng } from './rng'
+import { DIFFICULTY_PROFILES } from './setup'
 import { applyEffects, scheduledEffectDay } from './effects'
 import { applyDrift } from '../controls/effectiveness'
 import { maintainedControlIds, tickProgrammes } from '../programmes/progression'
@@ -332,6 +333,7 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       relatedNodeIds: [signal.nodeId],
       signalCampaignId: signal.campaignId,
     })
+    pauseReasons.add('soc-warning')
     if (signal.strength === 'clear') highlights.push('The SOC has confirmed suspicious activity.')
   }
   for (const campaignId of threatResult.disrupted) {
@@ -377,6 +379,33 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       highlights.push('An incident has begun.')
     }
   }
+  // An incident floor, part of the threat step (owner, 25 November: design
+  // issue F). The live campaign furthest along breaks through; with none
+  // live, a route is drawn from the seeded stream.
+  // The day is spread over the two months before the floor, read from the
+  // seed rather than drawn, so the seeded stream every other draw uses is
+  // untouched: a fixed day put the first incident on 1 July in most years.
+  const floor = DIFFICULTY_PROFILES[state.difficulty].incidentFloorDay
+  const floorDay = floor === undefined ? undefined : floor - (seedHash(`${state.seed}:${state.year ?? 1}`) % 61)
+  if (floorDay !== undefined && day >= floorDay && state.flags['incident.floor'] !== true
+    && !Object.values(state.incidents.incidents).some((incident) => incident.startedDay >= 0)) {
+    state.flags['incident.floor'] = true
+    const live = state.threats.campaigns
+      .filter((campaign) => !campaign.disrupted && !campaign.incidentId && index.attackPath.has(campaign.pathId))
+      .sort((a, b) => b.stepIndex - a.stepIndex || a.startedDay - b.startedDay)[0]
+    const path = live ? index.attackPath.get(live.pathId)! : rng.pick(index.content.attackPaths)
+    const incident = createIncident(state, index, {
+      familyId: path.incidentFamilyId,
+      campaign: live,
+      actorId: live?.actorId,
+      pathId: path.id,
+      detected: live?.detected ?? false,
+    })
+    if (incident) {
+      pauseReasons.add('incident')
+      highlights.push('An incident has begun.')
+    }
+  }
   queued.push(...threatResult.effects)
 
   // 12. Incidents progress.
@@ -395,6 +424,7 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       priority: transition.phase === 'closed' ? 'notable' : 'critical',
       pinned: transition.phase !== 'closed',
     })
+    if (transition.phase === 'closed') pauseReasons.add('incident-closed')
   }
   for (const finding of incidentResult.findings) {
     pushMessage(state, {
@@ -696,4 +726,14 @@ export function closePlayedYear(state: GameState, index: ContentIndex, allowUnan
   state.speed = 'paused'
   state.pauseReasons = ['year-end']
   return true
+}
+
+/** A stable number from a string, for spreading a fixed day without drawing from the stream. */
+function seedHash(text: string): number {
+  let hash = 2166136261
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
 }

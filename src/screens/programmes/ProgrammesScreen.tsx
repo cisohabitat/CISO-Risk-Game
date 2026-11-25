@@ -147,6 +147,20 @@ export function ProgrammesScreen() {
                                   Costs {money(blocker.budget ?? 0)}, more than the {money(Math.max(0, state.resources.budgetRemaining))} left this year.
                                 </p>
                               )}
+                              {/* A free way past a priced blocker, at the cost of
+                                  the last stage (owner, 25 November: design G). */}
+                              {(blocker.budget ?? 0) > 0 && (
+                                <div className="mt-2">
+                                  <Button
+                                    variant="quiet"
+                                    size="sm"
+                                    className="compact min-h-9"
+                                    onClick={() => { const result = dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id, descope: true }); if (result.ok) setBlockerReceipt({ gameId: state.gameId, text: `${programme.name}: ${blocker.name} worked around. ${result.message}` }) }}
+                                  >
+                                    Work around it: finish without the last stage
+                                  </Button>
+                                </div>
+                              )}
                             </li>
                           ))}
                         </ul>

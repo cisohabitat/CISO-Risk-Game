@@ -155,9 +155,10 @@ describe('reports the player has already overtaken', () => {
     // The recovery test enquiry can turn up the same evidence as the message
     // in which Jo "went looking for the last recovery test report". A partial
     // result finds only some of what it could, so the seeds are ones where it
-    // does: overtaken-2 stopped being one when the threat variety moved every
+    // does: the set moved when the threat variety, then the mid-year incident
+    // floor (25 November), moved every
     // seed's draws.
-    for (const seed of ['overtaken-1', 'overtaken-3']) {
+    for (const seed of ['overtaken-2', 'overtaken-4']) {
       const state = newGame(index, { seed })
       applyAction(state, index, {
         type: 'startInvestigation', investigationId: 'inv-recovery-test', leaderId: index.content.leaders[0]!.id,

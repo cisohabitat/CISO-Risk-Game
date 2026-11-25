@@ -109,6 +109,22 @@ and reassurance. The owner also accepted a design list:
 - check previews vary by difficulty;
 - the board is slow to warm for a quarter after a material incident;
 - one Year Two check, on the service desk assistant.
+On 25 November 2026 the owner asked for the design list from eleven AI
+playtest rounds to be fixed (`docs/playtests/2026-11-25-design-list.md`):
+- SOC warnings and incident closures stop Skip ahead, and recent warnings sit
+  on the Briefing with a way to commission a hunt;
+- a year meeting one of five objectives or fewer is Difficult;
+- Resilience above developing needs a recovery test, a restore or a finished
+  programme;
+- the post-incident £400k is once a year and costs a little board confidence;
+- CISO and High pressure years have an incident by mid-year
+  (`incidentFloorDay` in the profile, spread over the two months before by
+  the seed);
+- a priced blocker can be worked around for nothing, losing the programme's
+  last stage;
+- each objective delay records its cause.
+
+Board-reply and headline variety remain writing work.
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers
@@ -253,9 +269,15 @@ been fixed and moved to `docs/FINDINGS.md`.
 
   A player who takes the launch conditions and the Kestrel quarantine meets
   all five in 18 / 13 / 9 of 25 years (guided, CISO, high pressure), about
-  what an ungated year managed. The ladder's objectives missed read 0.93 /
-  1.47 / 1.20, and missed per programme 0.40 / 0.81 / 1.13 (was 0.37 / 0.41
-  / 1.06).
+  what an ungated year managed. Since the mid-year incident floor of
+  25 November the ladder's objectives missed read 0.93 / 1.87 / 1.93 (were
+  0.93 / 1.47 / 1.27), and missed per programme 0.40 / 1.04 / 1.81 (were
+  0.40 / 0.81 / 1.19). A competent CISO player (launch conditions, Kestrel
+  quarantine, identity programme, a recovery test, every paper briefed) met
+  3.1 objectives and was never Difficult; with the floor and the objective
+  cap they meet 2.6, and 6 of 25 years are Difficult. Each of those met 0 or
+  1 objective after a severe incident, and 2 had their incident from the
+  floor. Whether that weight is right is a playtest question.
 
 - **The board hears about incidents, but recovers by year end.** Since
   19 November (`src/game/incidents/board.ts`):

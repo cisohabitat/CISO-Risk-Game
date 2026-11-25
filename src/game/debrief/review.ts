@@ -405,9 +405,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // terms instead of adding them and put all four in `developing`, which is a
   // dial with no room to move.
   const UNTESTED_CEILING = 0.74
-  const resilience = tested
+  // Above developing needs something done: a recovery test, a restore or a
+  // finished programme. A year that built and tested nothing read strong
+  // because its one incident was small (owner, 25 November: design issue D).
+  const prepared = exercised || programmesThisYear(state).some((programme) => programme.status === 'complete')
+  const PASSIVE_CEILING = 0.51
+  const resilience = Math.min(prepared ? 1 : PASSIVE_CEILING, tested
     ? clamp01(1 - worstConsequence * 0.8)
-    : Math.min(UNTESTED_CEILING, clamp01(0.18 + 0.75 * recoveryCapability + (exercised ? 0.14 : 0)))
+    : Math.min(UNTESTED_CEILING, clamp01(0.18 + 0.75 * recoveryCapability + (exercised ? 0.14 : 0))))
 
   dimensions.push({
     id: 'resilience',
@@ -426,6 +431,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           developing: 'When the organisation was tested, it took real damage, and an incident was still running when the year was written up.',
           weak: 'When the organisation was tested, the consequences ran well beyond what the business could absorb, and an incident was still running when the year was written up.',
         } as const)[band(resilience)]
+      : tested && !prepared && clamp01(1 - worstConsequence * 0.8) > PASSIVE_CEILING
+      ? 'The organisation came through its incident with little lasting damage, but nothing was built or tested to show it could take a harder one.'
       : tested
       ? ({
           strong: 'The organisation was tested and came through with little lasting damage.',
@@ -781,7 +788,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
 
   const capabilityTested = exercises.length > 0 || restoreTaken || sandboxRestore ||
     (tested && !stillRunning && resilience >= 0.52)
-  const assessment = overallAssessment(dimensions, capabilityTested)
+  const assessment = overallAssessment(dimensions, capabilityTested, { met: achieved, total: objectives.length })
   const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning)
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`

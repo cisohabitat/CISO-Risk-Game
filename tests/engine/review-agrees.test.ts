@@ -92,6 +92,12 @@ describe('the annual review agrees with itself', () => {
       tested += 1
       const running = Object.values(state.incidents.incidents).some((i) => i.phase !== 'closed')
       const resilience = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
+      // A year that built and tested nothing is held at developing however
+      // small its incident was, and says why (owner, 25 November: design D).
+      if (resilience.narrative.includes('nothing was built or tested')) {
+        expect(resilience.band).toBe('developing')
+        continue
+      }
       expect(resilience.narrative, `${label}: ${resilience.band} beside "${resilience.narrative}"`).toContain(
         sentences[resilience.band]![running ? 1 : 0],
       )

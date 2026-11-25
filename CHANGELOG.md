@@ -6,6 +6,20 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+Design changes the owner chose on 25 November from eleven rounds of AI
+playtests (`docs/playtests/2026-11-25-design-list.md`):
+- A SOC warning and an incident closing now stop Skip ahead. Recent warnings
+  sit on the Briefing, with a way to commission a hunt.
+- On CISO and High pressure, a year has an incident by mid-year.
+- A year that meets one business objective in five, or none, is rated
+  Difficult.
+- Resilience reads above developing only if something was built or tested.
+- The post-incident £400k comes once a year, and the board asks what it
+  bought.
+- A blocker with a price can be worked around for nothing. The programme then
+  finishes without its last stage.
+- Each delay to a business objective now says where it came from.
+
 - Fixed: briefing the board's chair on a risk never counted as the board
   having heard it, so "A material risk the board has not heard about" could
   follow a briefing. It counts now.

@@ -53,7 +53,7 @@ export type PlayerAction =
   | { type: 'startProgramme'; programmeId: string; budget: number; sponsorId?: string }
   | { type: 'setProgrammeStatus'; programmeId: string; status: 'active' | 'paused' }
   | { type: 'accelerateProgramme'; programmeId: string; budget: number }
-  | { type: 'resolveProgrammeBlocker'; programmeId: string; blockerId: string }
+  | { type: 'resolveProgrammeBlocker'; programmeId: string; blockerId: string; descope?: boolean }
   | { type: 'meetStakeholder'; stakeholderId: string; approach: 'listen' | 'brief' | 'press' }
   | { type: 'hire'; fn: CyberFunction }
   | { type: 'markRead'; messageId: string }
@@ -173,6 +173,14 @@ function describeStop(state: GameState, index: ContentIndex, reasons: PauseReaso
       case 'objective-check': {
         const latest = state.inbox.messages.findLast((message) => message.type === 'business' && message.day === state.currentDay)
         return `Stopped on ${date}: ${latest?.subject ?? 'a business security check ran'}.`
+      }
+      case 'soc-warning': {
+        const latest = state.inbox.messages.findLast((message) => message.signalCampaignId !== undefined && message.day === state.currentDay)
+        return `Stopped on ${date}: the SOC raised a warning${latest?.subject ? ` (${latest.subject.toLowerCase()})` : ''}.`
+      }
+      case 'incident-closed': {
+        const latest = state.inbox.messages.findLast((message) => message.type === 'incident' && message.day === state.currentDay)
+        return `Stopped on ${date}: ${latest?.subject ?? 'an incident closed'}. Its debrief is ready.`
       }
       case 'year-end':
         return `Stopped on ${date}: the last day of the year.`
@@ -737,6 +745,15 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       const blockerDef = def.blockers.find((b) => b.id === action.blockerId)
       const active = programme.blockers.find((b) => b.id === action.blockerId && !b.resolved)
       if (!blockerDef || !active) return fail('That blocker is not active.')
+      // Working round a priced blocker costs no money and gives up the last
+      // stage instead: Identity sat at 99% to December behind a £120k shim
+      // with £110k left (owner, 25 November: design issue G).
+      if (action.descope) {
+        if (!(blockerDef.resolution.budget && blockerDef.resolution.budget > 0)) return fail('Only a blocker with a price can be worked around this way.')
+        applyEffects(state, [{ type: 'programme.resolveBlocker', programmeId: def.id, blockerId: action.blockerId, descope: true }], { index, rng, source: 'blocker' })
+        commit()
+        return { ok: true, message: `${def.name} goes on without it. It can finish, but its last stage will not be delivered.` }
+      }
       if (blockerDef.resolution.focus && state.resources.focusRemaining < blockerDef.resolution.focus) return fail('Clearing that blocker needs attention you do not have this week.')
       if (blockerDef.resolution.budget && !spendBudget(state, blockerDef.resolution.budget, `Resolved ${blockerDef.name} for ${def.name}`)) {
         return fail('There is not enough budget to clear that blocker.')

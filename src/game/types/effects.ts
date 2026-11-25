@@ -35,7 +35,7 @@ export type GameEffect =
   | { type: 'programme.progress'; programmeId: string; delta: number }
   | { type: 'programme.status'; programmeId: string; status: 'proposed' | 'active' | 'paused' | 'complete' | 'at-risk' }
   | { type: 'programme.blocker'; programmeId: string; blockerId: string }
-  | { type: 'programme.resolveBlocker'; programmeId: string; blockerId: string }
+  | { type: 'programme.resolveBlocker'; programmeId: string; blockerId: string; descope?: boolean }
   | { type: 'programme.sponsor'; programmeId: string; stakeholderId: string }
   | { type: 'evidence.reveal'; evidenceId: string; note?: string }
   | { type: 'node.reveal'; nodeId: string; confidence?: number; verified?: boolean }
@@ -50,7 +50,7 @@ export type GameEffect =
   | { type: 'threat.interest'; actorId: string; delta: number }
   | { type: 'threat.setback'; actorId: string; stages: number; note?: string }
   | { type: 'objective.progress'; objectiveId: string; delta: number }
-  | { type: 'objective.delay'; objectiveId: string; days: number }
+  | { type: 'objective.delay'; objectiveId: string; days: number; /** What caused it, for the objective card. */ cause?: string }
   | { type: 'objective.status'; objectiveId: string; status: 'planned' | 'active' | 'at-risk' | 'achieved' | 'failed' }
   | { type: 'risk.open'; scenarioId: string }
   | { type: 'risk.status'; scenarioId: string; status: 'emerging' | 'open' | 'accepted' | 'treated' | 'closed' }

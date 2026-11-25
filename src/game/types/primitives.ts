@@ -147,6 +147,14 @@ export type PauseReason =
   | 'programme-blocked'
   /** A business security check on an objective ran today (16fe0ee playtest, M-02). */
   | 'objective-check'
+  /**
+   * The SOC raised a warning today. Warnings were mail only, passed inside
+   * long skips, and the review then asked why nobody hunted (owner,
+   * 25 November: design issues A and B).
+   */
+  | 'soc-warning'
+  /** An incident closed today, and its debrief is ready. */
+  | 'incident-closed'
   | 'quarter-end'
   | 'year-end'
   | 'player'

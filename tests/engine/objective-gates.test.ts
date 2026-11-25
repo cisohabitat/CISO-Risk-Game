@@ -9,6 +9,8 @@ function at(day: number, seed = 'objective-gates') {
   const state = newGame(index, { seed })
   state.currentDay = day
   state.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  // Isolated from the mid-year incident floor (25 November, design F).
+  state.flags['incident.floor'] = true
   state.decisions.openIds = []
   state.threats.actors = {}; state.threats.campaigns = []
   state.pendingEffects = []
@@ -59,12 +61,16 @@ it('carries a security check into the second year, on the service desk assistant
   const { finishYear } = await import('@/game/debrief/review')
   const first = newGame(index, { seed: 'objective-gates-y2' })
   first.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  // Isolated from the mid-year incident floor (25 November, design F).
+  first.flags['incident.floor'] = true
   runDays(first, index, 364)
   finishYear(first, index)
   const second = beginNextYear(index, first)
   expect(second.business.objectives['obj-y2-assistant']).toBeDefined()
   second.currentDay = 159
   second.events.suppressedEventIds = index.content.events.map((event) => event.id)
+  // Isolated from the mid-year incident floor (25 November, design F).
+  second.flags['incident.floor'] = true
   second.decisions.openIds = []
   second.threats.actors = {}; second.threats.campaigns = []
   second.pendingEffects = []

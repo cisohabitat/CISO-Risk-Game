@@ -26,7 +26,7 @@ why the same estate went two ways.
 Send a link and everyone starts on the same year:
 
 ```
-https://<where the game is hosted>/?seed=class-15&mode=ciso
+https://<where the game is hosted>/?seed=class-5&mode=ciso
 ```
 
 The start screen says the link chose the year, and shows the seed. Without
@@ -41,19 +41,20 @@ sit-after-breach`) before relying on the table.
 `pnpm cohort 30 ciso class` played thirty seeds in *The inherited mess* as a
 light, engaged year (answer what is asked, file each board paper, run the
 identity programme, commission two enquiries), and the same seeds again with
-a player who does nothing. Recalibrated on 23 November 2026, when objectives
-began to wait for their security checks: a change to the year's events changes
-later seeded incident draws. These are engine observations, not a
+a player who does nothing. Recalibrated on 25 November 2026, when CISO and
+High pressure years gained an incident by mid-year: a change to the year's
+events changes later seeded incident draws. The two quiet rows are Guided
+(`pnpm cohort 30 guided class`). These are engine observations, not a
 promise about a student's choices or an independently observed classroom.
 
 | Seed | Played engaged | Played idle | Use it for |
 |---|---|---|---|
-| `class-15` | No incident | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. |
-| `class-3`, `class-20` | One incident (platform tampering 10 May; data exposure 29 April) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? |
+| `class-12`, Guided | No incident | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. Send it with `&mode=guided`: since 25 November a CISO or High pressure year always has an incident by mid-year. |
+| `class-1`, Guided | Two data exposures (22 August, 24 September) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? Also Guided. |
 | `class-5` | Ransomware 6 June (severe) | Ransomware 22 May | **The crisis year.** Ransomware either way; the difference is what was ready for it. |
-| `class-2` | No incident | Ransomware 4 October, and again 18 December | **The recovery conversation.** Compare the clean engaged run with the idle ransomware. What was tested, and what would the review still ask even without an incident? |
-| `class-21` | No incident | Payment diversion 24 April; legacy platform compromise 6 September | **Two routes.** Fraud is followed by a different weakness. Does treating or discussing the first incident establish that the rest of the estate is covered? |
-| `class-10` | Data exposure 30 September, destructive attack 8 December | Data exposure 30 May, targeted data theft 4 August | **The comparison year.** The same world gives an engaged player two late incidents and an idle one two early ones. Put two students' reviews side by side. |
+| `class-26` | Ransomware 20 May and 24 October | Ransomware 25 March, 23 July and 12 December | **The recovery conversation.** Ransomware either way, but how often, and what could recovery do each time? What was tested between the first and the second? |
+| `class-21` | Supplier-driven disruption 31 May | Payment diversion 24 April; legacy platform compromise 6 September | **Two routes.** Fraud is followed by a different weakness. Does treating or discussing the first incident establish that the rest of the estate is covered? |
+| `class-10` | Legacy platform compromise 7 May, data exposure 21 July, supplier disruption 8 October | Data exposure 7 May, ransomware 19 October | **The comparison year.** The same world, two very different autumns. Put two students' reviews side by side. |
 
 Treat the dates as typical rather than promised: a student who plays
 differently meets a different year, which is the point. Re-run

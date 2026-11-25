@@ -51,7 +51,9 @@ describe('resilience is not awarded for a quiet year', () => {
     // About one idle year in five has no incident; search until two are found
     // rather than hoping a fixed fourteen seeds contain one.
     for (let seed = 0; seed < 40 && quiet < 2; seed += 1) {
-      const state = newGame(index, { seed: `res-${seed}` })
+      // Guided: since 25 November CISO and High years always have an incident
+      // by mid-year (design F), so a quiet year is found on Guided.
+      const state = newGame(index, { seed: `res-${seed}`, difficulty: 'guided' })
       runDays(state, index, 364)
       if (Object.keys(state.incidents.incidents).length > 0) continue
       quiet += 1

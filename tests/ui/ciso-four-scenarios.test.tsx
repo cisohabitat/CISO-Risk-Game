@@ -23,6 +23,8 @@ it.each<Difficulty>(['ciso', 'high-pressure'])('runs Skip to the next stop in ev
     state.reviews.pendingQuarter = undefined
     state.threats.actors = {}; state.threats.campaigns = []
     state.events.suppressedEventIds = store.index!.content.events.map((event) => event.id)
+    // Isolated from the mid-year incident floor (25 November, design F).
+    state.flags['incident.floor'] = true
     for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
     useGameStore.setState({ state })
     store.setScreen(workspace)
@@ -86,6 +88,8 @@ it('announces a timed budget refund with its recorded source and opens the recei
   state.currentDay = 200; state.resources.weekIndex = 28
   state.decisions.openIds = []; state.threats.actors = {}; state.threats.campaigns = []
   state.events.suppressedEventIds = store.index!.content.events.map((event) => event.id)
+  // Isolated from the mid-year incident floor (25 November, design F).
+  state.flags['incident.floor'] = true
   for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
   state.pendingEffects = [{ id: 'refund', day: 201, source: 'refund', effects: [{ type: 'budget.change', amount: 60, note: 'Duplicate tooling cancelled' }] }]
   useGameStore.setState({ state, ui: { ...store.ui, toasts: [] } })

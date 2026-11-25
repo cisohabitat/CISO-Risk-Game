@@ -4955,3 +4955,22 @@ Fixed the same day:
 
 The £400k twice, "in hand" scored by outcome, and Skip held with a decision
 open were checked: they are the owner's design or work as built.
+
+## 25 November 2026 — the design list
+
+Recorded in `docs/playtests/2026-11-25-design-list.md`.
+
+The owner asked for the standing design list from eleven AI playtest rounds
+to be fixed: A, B, C, D, E, F, G and I. H is writing work.
+
+The objective cap was first set at two of five. Combined with the mid-year
+incident floor, it rated 13 of 25 competent CISO years Difficult, against
+none before. At one of five, 6 years are Difficult; each met 0 or 1
+objective after a severe incident.
+
+The floor on a fixed day put most first incidents on that day, so the day
+is now spread over the two months before by a seed hash.
+
+Costs on CISO, for the same competent player:
+- incidents 1.44 → 1.80;
+- objectives 3.1 → 2.6.

@@ -474,6 +474,20 @@ changes.
   and `effortAllocation` read it. The reconstruction credits any
   `inv-threat-hunt` whose window overlaps the intrusion. The board paper
   disables a third optional topic.
+- Design list of 25 November (`docs/playtests/2026-11-25-design-list.md`):
+  - PauseReasons `soc-warning` and `incident-closed`; `openSocWarnings`
+    (selectors) and `SocWarnings` on the Briefing.
+  - `overallAssessment` takes the objectives met, and one in five or fewer
+    caps the verdict at Difficult.
+  - Resilience is capped at developing (`PASSIVE_CEILING`) without a test,
+    restore or finished programme.
+  - `opt-post-leverage` is gated by `post-funding.taken`.
+  - `incidentFloorDay` in `DIFFICULTY_PROFILES` (CISO 182, High 150): the
+    floor runs inside tick step 11, and is spread by `seedHash`, not the
+    stream. Fixtures that clear incidents set `flags['incident.floor']`.
+  - `resolveProgrammeBlocker` with `descope` sets `descoped`, and the last
+    milestone is skipped.
+  - `objective.delay` takes an optional `cause`, kept in `delayLog`.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

@@ -23,6 +23,11 @@ export function ObjectiveTracker() {
             its day and the status follows the next, so the card read "In
             delivery" at 100% (baf4cf9 playtest, CS-15). */}
         <p className="mt-1 text-sm">{runtime.status === 'achieved' ? 100 : Math.min(99, Math.floor(runtime.progress * 100))}% delivered{runtime.delayDays > 0 ? ` · ${runtime.delayDays} days of imposed delay recorded` : ''}.</p>
+        {/* Where the delay came from (owner, 25 November: design issue I).
+            Older saves recorded only the total. */}
+        {runtime.delayDays > 0 && (runtime.delayLog?.length ?? 0) > 0 && <ul className="mt-1 space-y-0.5 text-xs text-ink-muted" aria-label="Where the delay came from">
+          {runtime.delayLog!.map((entry) => <li key={entry.cause}>{entry.days} {entry.days === 1 ? 'day' : 'days'}: {entry.cause}, from {shortDate(entry.day)}</li>)}
+        </ul>}
         {pace?.atRisk && <p className="mt-1 text-sm text-band-elevated">The date looks at risk at the average pace observed so far. Review competing work and the delay already recorded; the pace can improve.</p>}
         {runtime.status === 'failed' && <p className="mt-1 text-sm">Delivery was incomplete when the original commitment passed. Recorded delay, concurrent security work and service disruption can all consume the margin.</p>}
         {/* A security check is shown before it happens, so its cost can be

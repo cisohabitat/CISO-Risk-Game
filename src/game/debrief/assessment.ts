@@ -5,7 +5,7 @@ const VALUES = { weak: 0.2, developing: 0.45, solid: 0.68, strong: 0.88 } as con
 const ORDER: Assessment[] = ['Difficult', 'Mixed', 'Credible', 'Exceptional']
 
 /** Equal weights, with minimum standards that a good average cannot conceal. */
-export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean): {
+export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean, objectives?: { met: number; total: number }): {
   label: Assessment
   reason?: string
 } {
@@ -15,7 +15,15 @@ export function overallAssessment(dimensions: AnnualReviewDimension[], capabilit
   const critical = weak.filter((dimension) => dimension.id === 'prioritisation' || dimension.id === 'team-sustainability' || dimension.id === 'business-enablement')
   let ceiling: Assessment = 'Exceptional'
   let reason: string | undefined
-  if (weak.length >= 3) {
+  // A year that met one objective in five or fewer is Difficult, whatever
+  // else held: 1 of 5 was rated Mixed while 4 of 5 was rated Difficult
+  // (owner, 25 November: design issue C). Two of five was tried first and
+  // made 13 of 25 competent CISO years Difficult once the mid-year incident
+  // floor landed; one of five catches the inverted years the playtest found.
+  if (objectives && objectives.total > 0 && objectives.met * 5 <= objectives.total) {
+    ceiling = 'Difficult'
+    reason = `the business met only ${objectives.met} of its ${objectives.total} objectives`
+  } else if (weak.length >= 3) {
     ceiling = 'Difficult'
     reason = `three or more dimensions were weak: ${weak.map((dimension) => dimension.label.toLowerCase()).join(', ')}`
   } else if (critical.length > 0) {

@@ -11,8 +11,8 @@ import { testIndex } from './helpers'
 const index = testIndex()
 const situation = index.content.situations?.[0]?.id
 
-function idleYear(seed: string): { family: string; month: number }[] {
-  const state = newGame(index, { seed, difficulty: 'ciso', situation })
+function idleYear(seed: string, difficulty: 'guided' | 'ciso' = 'ciso'): { family: string; month: number }[] {
+  const state = newGame(index, { seed, difficulty, situation })
   runDays(state, index, 364)
   return Object.values(state.incidents.incidents)
     .sort((a, b) => a.startedDay - b.startedDay)
@@ -20,18 +20,18 @@ function idleYear(seed: string): { family: string; month: number }[] {
 }
 
 describe('the facilitator pack names seeds that still give the years it says', () => {
-  it('class-15, class-3 and class-20 are quiet years for a player who does nothing', () => {
-    for (const seed of ['class-15', 'class-3', 'class-20']) expect(idleYear(seed), seed).toEqual([])
+  // Guided: since 25 November CISO years always have an incident by mid-year.
+  it('class-12 and class-1 are quiet Guided years for a player who does nothing', () => {
+    for (const seed of ['class-12', 'class-1']) expect(idleYear(seed, 'guided'), seed).toEqual([])
   })
 
   it('class-5 opens with a ransomware in May', () => {
     expect(idleYear('class-5')[0]).toEqual({ family: 'Ransomware and service encryption', month: 5 })
   })
 
-  it('class-2 is an October ransomware that comes back in December', () => {
-    expect(idleYear('class-2')).toEqual([
-      { family: 'Ransomware and service encryption', month: 10 },
-      { family: 'Ransomware and service encryption', month: 12 },
+  it('class-26 is ransomware three times', () => {
+    expect(idleYear('class-26').map((incident) => incident.family)).toEqual([
+      'Ransomware and service encryption', 'Ransomware and service encryption', 'Ransomware and service encryption',
     ])
   })
 

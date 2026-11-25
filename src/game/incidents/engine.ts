@@ -158,7 +158,7 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
             for (const objective of index.content.objectives) {
               const runtime = state.business.objectives[objective.id]
               if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue
-              result.effects.push({ type: 'objective.delay', objectiveId: objective.id, days })
+              result.effects.push({ type: 'objective.delay', objectiveId: objective.id, days, cause: `the response to the ${(index.incidentFamily.get(incident.familyId)?.name ?? 'incident').toLowerCase()}` })
             }
           }
         }
@@ -243,7 +243,7 @@ function applyServiceDisruption(
       const runtime = state.business.objectives[objective.id]
       if (!runtime || runtime.status === 'achieved' || runtime.status === 'failed') continue
       if (!objective.dependencyNodeIds.some((nodeId) => incidentTouchesNode(index, incident, nodeId))) continue
-      effects.push({ type: 'objective.delay', objectiveId: objective.id, days: 1 })
+      effects.push({ type: 'objective.delay', objectiveId: objective.id, days: 1, cause: `disruption from the ${(index.incidentFamily.get(incident.familyId)?.name ?? 'incident').toLowerCase()}` })
     }
   }
 }

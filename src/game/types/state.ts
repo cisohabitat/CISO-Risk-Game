@@ -93,6 +93,12 @@ export interface ControlState {
 
 export interface ProgrammeRuntime {
   id: string
+  /**
+   * A priced blocker was worked around instead of paid for: the programme
+   * finishes without its last milestone's controls (owner, 25 November:
+   * design issue G).
+   */
+  descoped?: boolean
   status: 'proposed' | 'active' | 'paused' | 'complete' | 'at-risk'
   progress: number
   startedDay?: number
@@ -472,6 +478,12 @@ export interface BusinessObjectiveRuntime {
   status: 'planned' | 'active' | 'at-risk' | 'achieved' | 'failed'
   targetDay: number
   delayDays: number
+  /**
+   * Where each delay came from, so the card can say: "73 days of imposed
+   * delay" with no programme running read as unexplained (owner,
+   * 25 November: design issue I).
+   */
+  delayLog?: { day: number; days: number; cause: string }[]
   /**
    * Days of delivery still owed to a delay that arrived before there was
    * progress to take it from. Absent in older saves.

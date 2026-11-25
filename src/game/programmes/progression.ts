@@ -133,6 +133,9 @@ export function tickProgrammes(state: GameState, index: ContentIndex, rng: Rng):
     for (const milestone of def.milestones) {
       if (programme.completedMilestoneIds.includes(milestone.id)) continue
       if (programme.progress + 1e-9 < milestone.atProgress) continue
+      // Descoped: the last stage is not delivered, so its controls do not land.
+      const last = def.milestones.reduce((top, m) => (m.atProgress > top.atProgress ? m : top), def.milestones[0]!)
+      if (programme.descoped && milestone.id === last.id) continue
       programme.completedMilestoneIds.push(milestone.id)
       result.milestones.push({
         programmeId: programme.id,

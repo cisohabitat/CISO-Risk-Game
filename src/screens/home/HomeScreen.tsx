@@ -2,6 +2,7 @@ import { DeliveryWatch, GuidedExploration } from '@/components/game/GuidedProgre
 import { ObjectiveTracker } from '@/components/game/ObjectiveTracker'
 import { BudgetActivity, QuietWeekNote, SkippedMail } from '@/components/game/BriefingNotes'
 import { CapacityNotice } from '@/components/game/CapacityNotice'
+import { SocWarnings } from '@/components/game/SocWarnings'
 import { ProgrammeCommitments } from '@/components/game/ProgrammeCommitments'
 /**
  * Home / CISO briefing (plan §28.1): the day, what needs you, what changed and
@@ -127,6 +128,7 @@ export function HomeScreen() {
             </CardBody>
           </Card>
         ))}
+        <SocWarnings />
         <DecisionList
           limit={4}
           emphasizeFirst={state.reviews.pendingQuarter === undefined && blocked.length === 0}
@@ -161,7 +163,7 @@ export function HomeScreen() {
 
       <Disclosure summary="How a week works">
         <ol className="list-decimal space-y-2 pl-5">
-          <li>Skip ahead runs to the next thing that needs you (a decision, a board paper, an incident, a blocked programme or a business security check) and says which. Choose a speed to run between those instead.</li>
+          <li>Skip ahead runs to the next thing that needs you (a decision, a board paper, an incident starting or closing, a SOC warning, a blocked programme or a business security check) and says which. Choose a speed to run between those instead.</li>
           <li>At 2× and 4×, an action holds time, including a refused action so you can read why. Choose a speed again when you are ready.</li>
           <li>Read what is waiting, then choose one concern to understand. Enquiries cost attention and sometimes budget; their results arrive later in Inbox and Evidence.</li>
           <li>Use evidence to test a hypothesis, raise a risk and choose what to fund or accept. Programmes also need staffing; pausing competing work can relieve workload.</li>

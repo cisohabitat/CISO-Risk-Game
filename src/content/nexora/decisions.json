@@ -898,11 +898,14 @@
           ] },
         { "id": "opt-post-report", "label": "Produce a standard post-incident report", "description": "Facts, timeline, actions.", "visibleKnownEffects": ["Expected, and nobody's decisions are on trial", "The board gets the timeline, not the judgement"],
           "immediateEffects": [ { "type": "board.confidence", "delta": 0.01 } ] },
-        { "id": "opt-post-leverage", "label": "Use it to fund the programme", "description": "Take the moment and ask for what you needed before it happened.", "visibleKnownEffects": ["Likely to succeed now", "May be seen as opportunistic"],
+        { "id": "opt-post-leverage", "label": "Use it to fund the programme", "description": "Take the moment and ask for what you needed before it happened.", "visibleKnownEffects": ["£400k, once a year", "The board will want to know what it bought", "May be seen as opportunistic"],
+          "requirements": { "condition": { "kind": "not", "condition": { "kind": "flag.set", "flag": "post-funding.taken" } }, "conditionUnmet": "The board released post-incident money once this year and will not do it twice" },
           "immediateEffects": [
             { "type": "budget.change", "amount": 400, "note": "Post-incident funding released." },
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": -0.05, "reason": "You used the incident to reopen the budget." },
-            { "type": "board.confidence", "delta": 0.03 },
+            { "type": "board.confidence", "delta": -0.03 },
+            { "type": "stakeholder.concern", "stakeholderId": "stk-board", "concern": "What the post-incident money bought" },
+            { "type": "flag.set", "flag": "post-funding.taken" },
             { "type": "operationalTolerance", "delta": 0.08 }
           ] }
       ]

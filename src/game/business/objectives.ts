@@ -133,7 +133,7 @@ export function checkObjectiveGates(state: GameState, index: ContentIndex): Gate
       met,
       effects: met
         ? [{ type: 'objective.progress', objectiveId: def.id, delta: gate.progress }]
-        : [{ type: 'objective.delay', objectiveId: def.id, days: gate.delayDays }],
+        : [{ type: 'objective.delay', objectiveId: def.id, days: gate.delayDays, cause: `the security check by ${gate.by}` }],
     })
   }
   return checks

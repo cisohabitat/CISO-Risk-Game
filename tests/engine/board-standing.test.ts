@@ -70,6 +70,8 @@ describe('the board standing', () => {
 
   it('remembers a good paper for a season, not a month', () => {
     const state = newGame(index, { seed: 'board-memory' })
+    // About standing, not incidents: isolated from the mid-year floor.
+    state.flags['incident.floor'] = true
     runDays(state, index, 91)
     const before = state.stakeholders.boardConfidence
     fileIfDue(state)

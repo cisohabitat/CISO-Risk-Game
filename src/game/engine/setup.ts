@@ -86,6 +86,15 @@ export interface DifficultyProfile {
    * `who` gives only who checks and when.
    */
   gatePreview: 'full' | 'who'
+  /**
+   * The day by which a year has had an incident. If none has started, the
+   * live campaign furthest along breaks through; with none live, one is
+   * drawn. Its consequence still reads the controls and recovery in place.
+   * CISO years with no incident at all and High years whose first came in
+   * November did not test the player (owner, 25 November: design issue F).
+   * Absent on Guided.
+   */
+  incidentFloorDay?: number
 }
 
 /** The two identity engineering roles every briefing names; the other three vacancies fall elsewhere. */
@@ -120,6 +129,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     investigationSpeed: 1,
     showsDecisionCoaching: false,
     gatePreview: 'full',
+    incidentFloorDay: 182,
   },
   // High pressure makes the world harsher and leaves the player's levers close
   // to intact. Squeezing both — as this used to — cuts the very channels
@@ -137,6 +147,7 @@ export const DIFFICULTY_PROFILES: Record<Difficulty, DifficultyProfile> = {
     investigationSpeed: 1.1,
     showsDecisionCoaching: false,
     gatePreview: 'who',
+    incidentFloorDay: 150,
   },
 }
 
