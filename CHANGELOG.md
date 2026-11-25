@@ -6,6 +6,10 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+## 0.1.0-rc.3 — 25 November 2026 — third release candidate
+
+Fixes from the ninth and tenth rounds of AI playtests, on rc.2 and after.
+
 - Fixed: a risk you put in a board paper was still reviewed as one nothing
   you did went near. So was a risk whose route an incident took, once you
   had handled the incident.
