@@ -797,6 +797,11 @@ test.describe('a first year at Nexora', () => {
   })
 
   test('the harder modes do not print the answer above the options', async ({ page }) => {
+    // Twenty-five stops of a CISO year, each answering a decision. Since the
+    // 25 November design lists the year stops more often (SOC warnings,
+    // incident closures, December), and the test took 49 s locally against a
+    // 90 s limit: WebKit in CI runs about twice as slow and timed out.
+    test.setTimeout(240_000)
     // Guided explains; CISO does not. The note is the profile's
     // `showsDecisionCoaching`, so this is the dial seen from the outside.
     await startCampaign(page, 'e2e-coach') // the start screen defaults to CISO

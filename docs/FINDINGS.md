@@ -4993,3 +4993,12 @@ Measured:
   and now in 0;
 - the longest Skip jump fell from 69 to 39 days;
 - the competent CISO player's Difficult years rose from 6 to 8 of 25.
+
+The WebKit failure on `caaa9fd` was a timeout, not a broken page. "The
+harder modes do not print the answer above the options" walks 25 stops of a
+CISO year. With the stops the design lists added, it took 49 s locally
+against a 90 s limit. WebKit in CI runs about twice as slow, and the timeout
+landed wherever the test happened to be, which read as "waiting for element
+to be stable". It passed alone and in its full shard locally, once WebKit
+could be installed here. It now has 240 s, as two other long walks already
+do.
