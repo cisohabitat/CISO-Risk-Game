@@ -29,6 +29,7 @@ import { pushMessage } from '../inbox/messages'
 import { recomputeUnderstanding } from '../knowledge/discovery'
 import { refreshHypothesisConfidence, refreshScenarioAssessments } from '../risk/review'
 import { activeIncidents, createIncident } from '../incidents/create'
+import { huntBlockedReason } from '../threats/hunt'
 
 export interface TickResult {
   day: number
@@ -334,6 +335,9 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       signalCampaignId: signal.campaignId,
     })
     pauseReasons.add('soc-warning')
+    // Whether a hunt was possible when the warning came, so the review does
+    // not blame a hunt nobody could have commissioned (MJ-25).
+    if (huntBlockedReason(state, index)) state.flags[`unhuntable.${signal.campaignId}.${signal.stage}`] = true
     if (signal.strength === 'clear') highlights.push('The SOC has confirmed suspicious activity.')
   }
   for (const campaignId of threatResult.disrupted) {

@@ -498,6 +498,14 @@ changes.
   - `incidentName` (selectors) numbers repeats.
   - Board replies escalate on repeated empty papers.
   - `chooseHeadline` takes `{ missed, incidents }`.
+- 26 November (5033820 playtest):
+  - `huntBlockedReason` (`src/game/threats/hunt.ts`) is shared by the SOC
+    card and the reconstruction, via `unhuntable.<campaign>.<stage>` flags
+    set at each warning.
+  - `openRisk` records a `risk-opened` history entry.
+  - `accelerateProgramme` refuses a second acceleration.
+  - Resilience reads the worse of consequence and `dataImpact`.
+  - `overallAssessment` caps two of five objectives at Mixed.
 - A security check on an objective is a stop (`objective-check`), named by
   its letter. The review caps communication below strong for anything kept
   quiet and business enablement at solid for a missed objective. A board

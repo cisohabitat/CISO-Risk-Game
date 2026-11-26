@@ -129,7 +129,9 @@ delays that pause delivery rather than take it back; two December decisions;
 the card-data question by 2 August; six-month acceptance renewals; numbered
 repeat incidents; and board replies and headlines that read the year. With
 both lists, a competent CISO player meets 2.6 objectives and 8 of 25 years
-are Difficult (was 0 before 25 November).
+are Difficult (was 0 before 25 November). Since 26 November two of five
+objectives caps the verdict at Mixed, and the same player is Credible in 2
+of 25 CISO years (was 8).
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers

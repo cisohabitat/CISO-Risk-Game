@@ -15,7 +15,7 @@ export function ProgrammeJourney({ programme }: { programme: ProgrammeView }) {
         <span className="journey-marker" aria-hidden="true">{milestone.complete ? '✓' : String(position + 1).padStart(2, '0')}</span>
         <div className="min-w-0 pb-4">
           <p className="text-sm font-medium leading-snug">{milestone.name}</p>
-          <p className="mt-1 text-xs text-ink-muted">{milestone.complete ? 'Completed' : programme.status === 'complete' ? 'Not recorded' : position === next ? 'Next milestone' : 'Ahead'}</p>
+          <p className="mt-1 text-xs text-ink-muted">{milestone.complete ? 'Completed' : programme.status === 'complete' ? (programme.descoped ? 'Dropped when you worked round a blocker' : 'Not recorded') : position === next ? 'Next milestone' : 'Ahead'}</p>
         </div>
       </li>)}
     </ol>

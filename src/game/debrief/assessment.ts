@@ -26,6 +26,11 @@ export function overallAssessment(dimensions: AnnualReviewDimension[], capabilit
   } else if (weak.length >= 3) {
     ceiling = 'Difficult'
     reason = `three or more dimensions were weak: ${weak.map((dimension) => dimension.label.toLowerCase()).join(', ')}`
+  } else if (objectives && objectives.total > 0 && objectives.met * 5 <= objectives.total * 2) {
+    // Two of five is not a credible year for the business: one was rated
+    // Credible beside "3 were missed" (5033820 playtest, MJ-24).
+    ceiling = 'Mixed'
+    reason = `the business met only ${objectives.met} of its ${objectives.total} objectives`
   } else if (critical.length > 0) {
     ceiling = 'Mixed'
     reason = `${critical.map((dimension) => dimension.label.toLowerCase()).join(' and ')} ${critical.length === 1 ? 'was' : 'were'} weak`

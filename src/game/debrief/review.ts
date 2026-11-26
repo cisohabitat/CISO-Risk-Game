@@ -350,7 +350,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // recovery controls they established assurance over themselves — and is
   // capped below `strong` when it was not, because nothing demonstrated it.
   const incidents = Object.values(state.incidents.incidents)
-  const worstConsequence = incidents.reduce((max, i) => Math.max(max, i.consequence), 0)
+  // Data that left counts as damage as much as downtime: "came through with
+  // little lasting damage" and "It held" sat over years whose customer
+  // records left (5033820 playtest, MJ-28).
+  const worstConsequence = incidents.reduce((max, i) => Math.max(max, i.consequence, i.dataImpact ?? 0), 0)
 
   const RECOVERY_EXERCISES = ['inv-recovery-test', 'inv-ir-readiness']
   const exercises = state.team.assignments.filter(
@@ -603,7 +606,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       for (const def of index.content.objectives) {
         const gate = state.business.objectives[def.id]?.gate
         if (!def.gate || gate === undefined) continue
-        lines.push(gate === 'met' ? `${def.name}: ${def.gate.by} cleared it` : `${def.name}: held by ${def.gate.by}, ${def.gate.delayDays} days lost`)
+        lines.push(gate === 'met' ? `${def.name}: ${def.gate.by} cleared it` : `${def.name}: not cleared by ${def.gate.by}; delivery paused ${def.gate.delayDays} days`)
       }
       lines.unshift(`${achieved} of ${objectives.length} objectives achieved; ${failed} missed; ${pending} still in delivery`)
       // Money committed beyond the year. It used to disappear into the floor on
@@ -927,6 +930,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   }
   // Emergency spend still owed at the close. £750k carried into next year
   // was named only inside one dimension's evidence (baf4cf9 playtest, MJ-11).
+  // The other way round too: overspend was named and 80% left unspent was not
+  // (5033820 playtest, MN-47).
+  if (state.resources.unfundedCommitment === 0 && state.resources.budgetTotal > 0 && state.resources.budgetRemaining >= state.resources.budgetTotal * 0.5) {
+    narrative.push(`You end the year with ${money(state.resources.budgetRemaining)} of the ${money(state.resources.budgetTotal)} allocation unspent. Finance will ask what it was for, and whether next year needs it.`)
+  }
   if (state.resources.unfundedCommitment > 0) {
     narrative.push(`You end the year owing finance ${money(state.resources.unfundedCommitment)} of emergency spend beyond the allocation. Next year's plan starts by paying it back.`)
   }

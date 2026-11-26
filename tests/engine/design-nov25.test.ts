@@ -46,13 +46,15 @@ describe('design issues, 25 November', () => {
     const ids = ['risk-understanding', 'prioritisation', 'resilience', 'programme-execution', 'business-enablement', 'communication', 'team-sustainability', 'blind-spots']
     const strong = ids.map((id) => ({ id, label: id, band: 'strong', narrative: '', evidence: [] })) as unknown as AnnualReviewDimension[]
     expect(overallAssessment(strong, true, { met: 1, total: 5 }).label).toBe('Difficult')
-    expect(overallAssessment(strong, true, { met: 2, total: 5 }).label).toBe('Exceptional')
+    // Two of five is capped at Mixed since 26 November (5033820 playtest, MJ-24).
+    expect(overallAssessment(strong, true, { met: 2, total: 5 }).label).toBe('Mixed')
+    expect(overallAssessment(strong, true, { met: 3, total: 5 }).label).toBe('Exceptional')
   })
 
   it('D: resilience above developing needs something built or tested', () => {
     const state = newGame(index, { seed: 'passive-resilience' })
     const incident = createIncident(state, index, { familyId: index.content.incidentFamilies[0]!.id })!
-    incident.phase = 'closed'; incident.consequence = 0.05
+    incident.phase = 'closed'; incident.consequence = 0.05; incident.dataImpact = 0
     state.currentDay = 363
     const resilience = () => buildAnnualReview(state, index).dimensions.find((d) => d.id === 'resilience')!
     expect(resilience().band).toBe('developing')

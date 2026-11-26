@@ -381,6 +381,10 @@ export function undiscoveredCount(state: GameState): { nodes: number; edges: num
 
 export interface ProgrammeView {
   id: string
+  /** Already accelerated this year; a programme is accelerated once. */
+  accelerated?: boolean
+  /** Finished without its last stage, after a blocker was worked around. */
+  descoped?: boolean
   name: string
   shortName: string
   description: string
@@ -408,6 +412,8 @@ export function programmeViews(state: GameState, index: ContentIndex): Programme
     const activeBlockers = runtime.blockers.filter((blocker) => !blocker.resolved)
     return {
       id: def.id,
+      accelerated: runtime.accelerated === true,
+      descoped: runtime.descoped === true,
       name: def.name,
       shortName: def.shortName,
       description: def.description,

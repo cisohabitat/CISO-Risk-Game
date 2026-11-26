@@ -35,7 +35,7 @@ it('names each security check in business enablement', () => {
   state.business.objectives['obj-new-market']!.gate = 'met'
   const enablement = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'business-enablement')!
   expect(enablement.evidence.join(' | ')).toContain('Launch the new customer platform: the go-live review cleared it')
-  expect(enablement.evidence.join(' | ')).toContain('Complete and integrate the Kestrel acquisition: held by the integration auditors, 45 days lost')
+  expect(enablement.evidence.join(' | ')).toContain('Complete and integrate the Kestrel acquisition: not cleared by the integration auditors; delivery paused 45 days')
   expect(enablement.evidence.join(' | ')).toContain('Enter the Nordic market: the Nordic acquiring bank cleared it')
   expect(enablement.narrative).toContain('held at a security check')
 })

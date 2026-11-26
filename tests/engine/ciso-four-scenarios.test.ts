@@ -9,7 +9,7 @@ const index = testIndex()
 it('distinguishes real incident outcomes from a separate restore exercise without changing its grade', () => {
   const state = newGame(index, { seed: 'incident-not-exercise' })
   const incident = createIncident(state, index, { familyId: index.content.incidentFamilies[0]!.id })!
-  incident.phase = 'closed'; incident.consequence = 0.1
+  incident.phase = 'closed'; incident.consequence = 0.1; incident.dataImpact = 0
   // Something built, so the band reads the incident (25 November, design D).
   state.programmes.programmes['prog-identity'] = { ...state.programmes.programmes['prog-identity']!, status: 'complete', completedDay: 200 }
   const before = structuredClone(state)

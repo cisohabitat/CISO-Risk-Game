@@ -29,6 +29,7 @@ export function ProgrammesScreen() {
   const [budget, setBudget] = useState(0)
   const [sponsorId, setSponsorId] = useState('')
   const [blockerReceipt, setBlockerReceipt] = useState<{ gameId: string; text: string }>()
+  const [confirmAccelerate, setConfirmAccelerate] = useState<string>()
 
   const programmes = useMemo(() => (state ? programmeViews(state, index) : []), [state, index])
   // Which of the player's own risks each programme would move. A card listed
@@ -98,7 +99,7 @@ export function ProgrammesScreen() {
                         </p>
                       </div>
                       <Badge tone={programme.status === 'at-risk' ? 'elevated' : programme.status === 'complete' ? 'low' : 'moderate'} glyph={false}>
-                        {statusLabel(programme.status)}
+                        {statusLabel(programme.status)}{programme.status === 'complete' && programme.descoped ? ', last stage dropped' : ''}
                       </Badge>
                     </div>
                     {programme.latestBlockerNote && <p className="text-xs text-ink-muted">Latest recorded blocker update: {programme.latestBlockerNote}</p>}
@@ -197,20 +198,31 @@ export function ProgrammesScreen() {
                         >
                           {programme.status === 'paused' ? 'Resume' : 'Pause'}
                         </Button>
-                        <Button
-                          variant="quiet"
-                          size="sm"
-                          className="compact min-h-9"
-                          onClick={() =>
-                            dispatch({
-                              type: 'accelerateProgramme',
-                              programmeId: programme.id,
-                              budget: programmeAccelerationCost(programme.budgetCost),
-                            })
-                          }
-                        >
-                          Accelerate ({money(programmeAccelerationCost(programme.budgetCost))})
-                        </Button>
+                        {/* Two presses: the first says what it costs. One click spent
+                            £175k in week two, and the button still offered it again
+                            (5033820 playtest, MJ-27). */}
+                        {programme.accelerated ? (
+                          <span className="self-center text-sm text-ink-muted">Accelerated</span>
+                        ) : confirmAccelerate === programme.id ? (
+                          <>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="compact min-h-9"
+                              onClick={() => {
+                                setConfirmAccelerate(undefined)
+                                dispatch({ type: 'accelerateProgramme', programmeId: programme.id, budget: programmeAccelerationCost(programme.budgetCost) })
+                              }}
+                            >
+                              Spend {money(programmeAccelerationCost(programme.budgetCost))} and 2 attention to accelerate
+                            </Button>
+                            <Button variant="quiet" size="sm" className="compact min-h-9" onClick={() => setConfirmAccelerate(undefined)}>Keep the pace</Button>
+                          </>
+                        ) : (
+                          <Button variant="quiet" size="sm" className="compact min-h-9" onClick={() => setConfirmAccelerate(programme.id)}>
+                            Accelerate ({money(programmeAccelerationCost(programme.budgetCost))})…
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>

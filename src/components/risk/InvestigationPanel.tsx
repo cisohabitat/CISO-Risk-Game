@@ -278,7 +278,10 @@ export function InvestigationPanel() {
                     name="leader"
                     value={leader.id}
                     checked={leaderId === leader.id}
-                    onChange={() => { setLeaderId(leader.id); setOverloadAccepted(false) }}
+                    // The acknowledgement holds across a change of lead: it
+                    // was cleared on every change, and four players ticked it
+                    // twice (5033820 playtest, MN-41).
+                    onChange={() => setLeaderId(leader.id)}
                     className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
                     style={{ minHeight: 0 }}
                   />

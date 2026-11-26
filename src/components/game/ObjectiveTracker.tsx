@@ -34,7 +34,7 @@ export function ObjectiveTracker() {
         {/* A security check is shown before it happens, so its cost can be
             seen coming rather than met in a letter (19 November). */}
         {def.gate && (runtime.gate !== undefined
-          ? <p className="mt-1 text-sm">Security check, {shortDate(def.gate.checkDay)}: {runtime.gate === 'met' ? 'cleared.' : `held; ${def.gate.delayDays} days lost.`}</p>
+          ? <p className="mt-1 text-sm">Security check, {shortDate(def.gate.checkDay)}: {runtime.gate === 'met' ? 'cleared.' : `not cleared, because the work it asked about had not been done; delivery paused ${def.gate.delayDays} days.`}</p>
           : runtime.status !== 'achieved' && runtime.status !== 'failed' && <p className="mt-1 text-sm">Security check on {shortDate(def.gate.checkDay)}: {DIFFICULTY_PROFILES[state.difficulty].gatePreview === 'full' ? def.gate.preview : `by ${def.gate.by}.`}{runtime.progress >= GATE_HOLD ? ' Delivery is ready and waits for it.' : ''}</p>)}
         {/* Set by any decision that moved delivery on, including connecting
             Kestrel on schedule: "security support" sat beside a held check

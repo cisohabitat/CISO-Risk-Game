@@ -550,6 +550,15 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
 
     case 'openRisk': {
       applyEffects(state, [{ type: 'risk.open', scenarioId: action.scenarioId }], { index, rng, source: 'player' })
+      // Recorded as raising, as a hypothesis raised is: a risk raised from the
+      // register on 2 January was still "nothing you did went near it"
+      // (5033820 playtest, MJ-06).
+      state.history.entries.push({
+        day: state.currentDay,
+        kind: 'risk-opened',
+        summary: `${index.riskScenario.get(action.scenarioId)?.title ?? action.scenarioId} was raised as a risk scenario.`,
+        refs: [action.scenarioId],
+      })
       commit()
       return { ok: true, message: 'Risk scenario opened.' }
     }
@@ -719,6 +728,9 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (programme.status !== 'active' && programme.status !== 'at-risk') {
         return fail('Only a live programme can be accelerated.')
       }
+      // Once: a second press spent £175k more for nothing, the pace being a
+      // flag (5033820 playtest, MJ-27).
+      if (programme.accelerated) return fail('This programme is already accelerated.')
       if (!Number.isFinite(action.budget) || action.budget < programmeAccelerationCost(def.budgetCost)) return fail('Acceleration needs the quoted additional funding.')
       if (state.resources.focusRemaining < FOCUS_COSTS.programmeIntervention) return fail('You have no attention left this week to push that programme.')
       if (!spendBudget(state, action.budget, `Accelerated ${def.name}`)) return fail('There is not enough budget left this year.')

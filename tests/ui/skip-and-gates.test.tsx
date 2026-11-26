@@ -20,7 +20,7 @@ it('shows each security check before it happens, and how it went after', () => {
   const region = screen.getByRole('region', { name: 'Business objectives' })
   expect(region).toHaveTextContent('Security check on')
   expect(region).toHaveTextContent('Go-live review. It will ask who can administer checkout and how they sign in.')
-  expect(region).toHaveTextContent('held; 45 days lost.')
+  expect(region).toHaveTextContent('not cleared, because the work it asked about had not been done; delivery paused 45 days.')
 })
 
 // 19 November: Skip runs past the mail, so the Briefing says what arrived.

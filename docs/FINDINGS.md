@@ -5002,3 +5002,17 @@ landed wherever the test happened to be, which read as "waiting for element
 to be stable". It passed alone and in its full shard locally, once WebKit
 could be installed here. It now has 240 s, as two other long walks already
 do.
+
+## 26 November 2026 — 15-run matrix on 5033820 (pass 12)
+
+Recorded in `docs/playtests/2026-11-26-owner-supplied-5033820-matrix.md`.
+
+Two record-keeping holes:
+- the "Raise" button (`openRisk`) wrote no history entry, so the review's
+  credit for raised risks only ever saw risks raised through hypotheses;
+- the SOC card and the reconstruction asked different questions about
+  whether a hunt was possible.
+
+Both are fixed. Accelerate takes two presses and happens once. Resilience
+counts data that left. Two of five objectives caps the verdict at Mixed. The
+competent CISO player is now Credible in 2 of 25 years, against 8.

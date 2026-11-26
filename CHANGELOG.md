@@ -6,6 +6,20 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+- Accelerating a programme now asks first, says what it costs, and can only
+  be done once.
+- The SOC warning card no longer offers a hunt you cannot afford or staff,
+  and the incident review does not blame a hunt nobody could commission.
+- A risk raised from the register now counts in the review as one you went
+  near.
+- Customer data leaving counts against Resilience. A year meeting two of
+  five objectives is rated Mixed at best.
+- A security check that does not clear now says so plainly.
+- The close names a budget left mostly unspent.
+- A programme finished by working round a blocker says its last stage was
+  dropped.
+- Changing the lead on an enquiry no longer clears the workload tick.
+
 The owner's second design list of 25 November
 (`docs/playtests/2026-11-25-design-list.md`):
 - On Guided, a quiet year that delivered four or five objectives is not

@@ -344,7 +344,11 @@ export function buildReconstruction(
     && (assignment.dueDay ?? assignment.startedDay) >= intrusionFrom)
   const huntNote = hunts.some((assignment) => assignment.status === 'complete' && assignment.dueDay <= incident.startedDay)
     ? 'a targeted hunt returned while it was under way, but did not find it, and the intrusion still reached the business'
-    : hunts.length > 0 ? 'a targeted hunt was under way before impact but had not returned' : 'no targeted hunt ran between the first warning and impact'
+    : hunts.length > 0 ? 'a targeted hunt was under way before impact but had not returned'
+      // Not blamed when no hunt could be commissioned at any warning: the
+      // budget or the SOC could not take one (5033820 playtest, MJ-25).
+      : warningsUnhuntable(state, incident.campaignId) ? 'no targeted hunt could be commissioned at any warning, because the budget or the SOC could not take one'
+      : 'no targeted hunt ran between the first warning and impact'
   const weeks = Math.max(1, Math.round(ranFor / 7))
   // First, because the lists are cut at six and the narrative reads three:
   // how long it ran unseen is the line the year turns on.
@@ -396,4 +400,11 @@ export function buildReconstruction(
     relatedAssumptionIds: relatedAssumptions,
     narrative,
   }
+}
+
+/** Every warning this campaign raised came when a hunt could not be commissioned. */
+function warningsUnhuntable(state: GameState, campaignId: string | undefined): boolean {
+  if (!campaignId) return false
+  const raised = Object.keys(state.flags).filter((flag) => flag.startsWith(`signal.${campaignId}.`))
+  return raised.length > 0 && raised.every((flag) => state.flags[`unhuntable.${flag.slice('signal.'.length)}`] === true)
 }
