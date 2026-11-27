@@ -6,6 +6,14 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+## 0.1.0-rc.5 — 27 November 2026 — fifth release candidate
+
+The owner's second design list of 25 November, the eleventh and twelfth
+rounds of AI playtests, and a softer CISO year.
+
+- A material incident now takes less of the business's delivery time with
+  it. A competent CISO year meets about three objectives in five again.
+
 - Accelerating a programme now asks first, says what it costs, and can only
   be done once.
 - The SOC warning card no longer offers a hunt you cannot afford or staff,

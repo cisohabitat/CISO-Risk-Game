@@ -699,7 +699,7 @@ open in waves, each later wave with a findings letter:
 ransomware asks about the ransom only once there is word on what recovery can
 do. Skip ahead also stops on the day a business security check runs, and an objective waits for its check rather than finishing first. Two incidents at once get a panel each. "Stop something" names what it will stop, and the review credits a risk you put in a board paper or briefed to the chair. Since 25 November a SOC warning stops Skip ahead and sits on the Briefing, CISO and High pressure years have an incident by mid-year, a priced blocker can be worked around at the cost of its last stage, and each objective delay names its cause and pauses delivery rather than taking it back. December has decisions of its own. Accelerating a programme asks first and happens once. Releases are cut by the hand-run Release workflow, which tags, publishes the
 notes with a ZIP of the built site, and tests the live deployment. The latest
-release candidate is 0.1.0-rc.4 (25 November 2026); `CHANGELOG.md`
+release candidate is 0.1.0-rc.5 (27 November 2026); `CHANGELOG.md`
 has its notes. A programme blocked by something with a price (a compatibility shim, a
 licence) holds at 90% until you pay for it. The Briefing's rail badge counts everything the Briefing says needs you. A decision's receipt names any work it stopped, and the board paper's submit
 button says when material items are missing. An incident's reconstruction says, for each control on the route that did not

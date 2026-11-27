@@ -130,8 +130,10 @@ the card-data question by 2 August; six-month acceptance renewals; numbered
 repeat incidents; and board replies and headlines that read the year. With
 both lists, a competent CISO player meets 2.6 objectives and 8 of 25 years
 are Difficult (was 0 before 25 November). Since 26 November two of five
-objectives caps the verdict at Mixed, and the same player is Credible in 2
-of 25 CISO years (was 8).
+objectives caps the verdict at Mixed. On 27 November the owner asked for
+that to be softened: incident diversion fell from 60 to 40 days per unit of
+consequence, and the competent CISO player meets 3.1 objectives again, with
+4 Difficult years of 25 (was 8).
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers
@@ -261,7 +263,7 @@ been fixed and moved to `docs/FINDINGS.md`.
   The same day a delay that arrived before there was progress to take it from
   became days owed (`delayOwedDays`): opposing the launch on day 22 had cost
   nothing. A material incident now diverts the whole organisation: every
-  objective in delivery loses 60 days per unit of consequence above 0.3
+  objective in delivery loses 40 days (60 until 27 November) per unit of consequence above 0.3
   (`DIVERSION_DAYS` in `src/game/incidents/engine.ts`), scaled since 16
   November by how ready recovery was. Since 17 November three objectives
   carry security gates. Since 23 November an objective waits at 99% for its

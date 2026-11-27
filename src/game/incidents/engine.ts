@@ -70,9 +70,12 @@ function authoredLines(
 /**
  * Days of delivery every objective loses per unit of consequence above the
  * floor: a moderate incident stays with the security team, a severe one takes
- * the organisation with it (0.5 costs 12 days, 0.7 costs 24, 0.9 costs 36).
+ * the organisation with it (0.5 costs 8 days, 0.7 costs 16, 0.9 costs 24).
+ * 60 until 27 November: with the mid-year incident floor and delays that
+ * pause, a competent CISO player met 2.6 objectives and was Credible in 2 of
+ * 25 years. At 40 they meet 3.1, where they were before 25 November.
  */
-const DIVERSION_DAYS = 60
+const DIVERSION_DAYS = 40
 /** Below this consequence the response stays with the security team. */
 const DIVERSION_FLOOR = 0.3
 

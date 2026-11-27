@@ -5016,3 +5016,25 @@ Two record-keeping holes:
 Both are fixed. Accelerate takes two presses and happens once. Resilience
 counts data that left. Two of five objectives caps the verdict at Mixed. The
 competent CISO player is now Credible in 2 of 25 years, against 8.
+
+## 27 November 2026 — softening the CISO year
+
+The owner asked for the CISO year to be softened. A competent player (launch
+conditions, Kestrel quarantine, identity on day 20, a recovery test, every
+paper filed and briefed) was measured over 25 seeds against two levers.
+
+| Lever | Objectives | Credible | Mixed | Difficult |
+|---|---|---|---|---|
+| None | 2.6 | 2 | 15 | 8 |
+| Diversion 60 → 40 days | 3.1 | 4 | 17 | 4 |
+| Delays pause 90% of their days | 3.1 | 7 | 13 | 5 |
+| Both | 3.5 | 8 | 14 | 3 |
+
+The 90% lever would make a check that says it costs 45 days pause only 41,
+which contradicts the owner's 17 November choice. So only the diversion
+changed (`DIVERSION_DAYS` 40). After it:
+- Guided is unchanged at 4.8 objectives;
+- High pressure meets 3.4 objectives (was 3.1);
+- the ladder misses 0.67 / 1.53 / 1.33 objectives.
+
+The soak is clean, and the facilitator seeds still hold.
