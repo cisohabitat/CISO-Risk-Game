@@ -78,7 +78,7 @@ it('carries a security check into the second year, on the service desk assistant
   second.controls.controls['ctl-dlp']!.coverage = 0.2
   runDays(second, index, 2)
   expect(second.business.objectives['obj-y2-assistant']!.gate).toBe('unmet')
-  expect(second.inbox.messages.some((message) => message.subject === 'Data protection review: assistant held')).toBe(true)
+  expect(second.inbox.messages.some((message) => message.subject === 'Data protection review: assistant not cleared')).toBe(true)
 })
 
 // 16fe0ee playtest (M-02): a check that cost an objective 45 days passed

@@ -172,6 +172,8 @@ export interface OpenDecisionView {
     label: string
     description: string
     visibleKnownEffects: string[]
+    /** What taking this option assumes, recorded with it when it is chosen. */
+    assumes: string[]
     programmeCommitment?: { programmeId: string; reviewAfterDays: number }
     budgetCost?: number
     /** Attention the option spends this week, from its requirements. */
@@ -236,6 +238,10 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             label: option.label,
             description: renderDecisionText(option.description, state, index, runtime),
             visibleKnownEffects: option.visibleKnownEffects.map((text) => renderDecisionText(text, state, index, runtime)),
+            // An assumption the game records with a choice is shown on the
+            // choice: a playtester read "an assumption you recorded" about one
+            // they had never seen (427b290 playtest, MJ-30).
+            assumes: (option.assumptionIds ?? []).flatMap((assumptionId) => index.assumption.get(assumptionId)?.statement ?? []),
             programmeCommitment: option.programmeCommitment,
             budgetCost: budgetCost > 0 ? budgetCost : undefined,
             focusCost: requirements?.focus || undefined,
@@ -1521,5 +1527,8 @@ export function livePauseReasons(state: GameState): PauseReason[] {
 export function wantsYouCount(state: GameState, index: ContentIndex): number {
   const blocked = programmeViews(state, index).filter((p) => p.blockers.length > 0 && (p.status === 'active' || p.status === 'at-risk')).length
   const pressing = collisions(state, index).filter((collision) => collision.verdict !== 'covered').length
-  return openDecisions(state, index).length + (state.reviews.pendingQuarter !== undefined ? 1 : 0) + blocked + pressing
+  // A SOC warning card sits under "Waiting on you", so it counts: the brief
+  // said "Nothing is waiting on you today" above one (427b290 playtest, CS-26).
+  const warnings = openSocWarnings(state, index).length > 0 ? 1 : 0
+  return openDecisions(state, index).length + (state.reviews.pendingQuarter !== undefined ? 1 : 0) + blocked + pressing + warnings
 }

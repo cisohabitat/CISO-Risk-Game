@@ -5038,3 +5038,25 @@ changed (`DIVERSION_DAYS` 40). After it:
 - the ladder misses 0.67 / 1.53 / 1.33 objectives.
 
 The soak is clean, and the facilitator seeds still hold.
+
+## 27 November 2026 — 15-run matrix on 427b290 (pass 13)
+
+Recorded in `docs/playtests/2026-11-27-owner-supplied-427b290-matrix.md`.
+
+Two attribution faults:
+- The debrief's "What hurt" matched a past decision to an incident by
+  control alone. Segmentation is on most routes, so the warehouse acceptance
+  was blamed for attacks that never went near the warehouse. A decision about
+  named systems now needs one of them on the route.
+- Assumptions recorded with an option were announced as "an assumption you
+  recorded", and the player had never seen them. The option now shows its
+  assumption, and the stop names the decision.
+
+Also fixed:
+- block fixes confirm before spending;
+- the "34 December" date;
+- the "platform held" letter;
+- headlines that ignored how hard the year was hit;
+- the Briefing saying nothing was waiting above a SOC card.
+
+The ladder's figures are unchanged from rc.5.

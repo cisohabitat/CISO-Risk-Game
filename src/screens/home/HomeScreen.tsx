@@ -18,7 +18,7 @@ import { Terms } from '@/components/game/Terms'
 import { PatternNotice } from '@/components/risk/PatternNotice'
 import { Onboarding } from '@/components/game/Onboarding'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
-import { wantsYouCount, briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
+import { wantsYouCount, openSocWarnings, briefing, collisions, patternSuggestions, topConcerns, visibleRisks, undiscoveredCount, programmeViews, teamView, quarterProgress } from '@/store/selectors'
 import { attentionLeft, bandTone, capacityTone, confidenceTone, money, plural, shortDate, trendBadge, statusLabel } from '@/lib/formatting/labels'
 import { RISK_BAND_LABEL } from '@/game/risk/bands'
 
@@ -80,7 +80,7 @@ export function HomeScreen() {
         {/* The situation, named from the first morning: "Surprise me" told the
             player its pick only inside a decision paper (15-run playtest, November). */}
         <p className="mt-1 text-sm text-ink-muted">{view.dateLabel}{state.situationId && index.situation.get(state.situationId) ? ` · ${index.situation.get(state.situationId)!.name}` : ''}</p>
-        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}.</p>}
+        {wantsYou > 0 && <p className="mt-2 text-xs text-ink-muted" role="note" aria-label="Attention breakdown">{plural(view.openDecisions, 'open decision')} · {state.reviews.pendingQuarter !== undefined ? '1 board paper' : '0 board papers'} · {plural(blocked.length, 'blocked programme')} · {plural(pressing.length, 'trade-off')}{openSocWarnings(state, index).length > 0 ? ' · a SOC warning' : ''}.</p>}
         {patterns.length > 0 && <p className="mt-2 text-xs text-ink-muted">{plural(patterns.length, 'suggested hypothesis', 'suggested hypotheses')} to explore when you have time.</p>}
         {view.openDecisions > 0 && <p className="mt-2 text-sm text-ink-muted">Start with the next decision below.</p>}
       </header>

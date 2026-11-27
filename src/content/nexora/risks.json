@@ -39,7 +39,7 @@
   ],
   "assumptions": [
     { "id": "asm-mfa-admins", "statement": "Multi-factor authentication covers all external and administrative access.", "validationRuleId": "mfa-covers-external-admins", "reviewAfterDays": 90, "linkedNodeIds": ["node-idp", "node-net-remote"] },
-    { "id": "asm-supplier-no-priv", "statement": "The managed service provider holds no standing privileged access.", "validationRuleId": "supplier-has-no-privileged-access", "reviewAfterDays": 60, "linkedNodeIds": ["node-sup-msp", "node-idp"] },
+    { "id": "asm-supplier-no-priv", "statement": "The provider's standing accounts do not reach into the identity platform.", "validationRuleId": "supplier-has-no-privileged-access", "reviewAfterDays": 60, "linkedNodeIds": ["node-sup-msp", "node-idp"] },
     { "id": "asm-legacy-isolated", "statement": "The legacy estate remains isolated from the production environment.", "validationRuleId": "legacy-remains-isolated", "reviewAfterDays": 60, "linkedNodeIds": ["node-dc-legacy", "node-net-prod"] },
     { "id": "asm-backup-tolerance", "statement": "Backups recover critical services within business tolerance.", "validationRuleId": "backups-recover-within-tolerance", "reviewAfterDays": 90, "linkedNodeIds": ["node-backup"] },
     { "id": "asm-platform-holds", "statement": "The customer platform does not go down before its recovery is re-planned.", "validationRuleId": "platform-not-lost", "reviewAfterDays": 60, "linkedNodeIds": ["node-svc-platform", "node-backup"] },

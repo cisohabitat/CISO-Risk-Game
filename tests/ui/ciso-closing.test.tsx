@@ -63,6 +63,9 @@ it('confirms clearing the CIO blocker with actual attention and budget spent', (
   useGameStore.setState({ state })
   render(<ProgrammesScreen />)
   fireEvent.click(screen.getByRole('button', { name: 'Hold the line with the CIO' }))
+  // The first press says what it spends; nothing is spent until the second (427b290 playtest, MJ-27).
+  expect(useGameStore.getState().state!.resources.focusRemaining).toBe(5)
+  fireEvent.click(screen.getByRole('button', { name: 'Spend 1 attention: hold the line with the CIO' }))
   expect(screen.getByRole('status', { name: 'Blocker cleared' })).toHaveTextContent('Used 1 attention and £0k budget')
   expect(useGameStore.getState().state!.resources.budgetRemaining).toBe(105)
   expect(screen.queryByRole('button', { name: 'Hold the line with the CIO' })).toBeNull()

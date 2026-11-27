@@ -14,6 +14,8 @@ const MONTHS = [
 /** A real year, because the header shows the date to the player. */
 const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 export const DECEMBER_START_DAY = 334
+/** 31 December. */
+export const YEAR_LAST_DAY = 364
 /**
  * How far one Skip ahead may run: to the next thing that needs the player, at
  * most the rest of the year. It was a seven-day cap until 17 November.

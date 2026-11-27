@@ -6,11 +6,17 @@ export function priorRouteChoices(state: GameState, index: ContentIndex, inciden
   const path = incident.pathId ? index.attackPath.get(incident.pathId) : undefined
   if (!path) return []
   const routeControls = new Set(path.steps.flatMap((step) => step.controlIds))
+  const routeNodes = new Set(path.steps.map((step) => step.nodeId))
   return state.history.decisionsLog.filter((entry) => entry.day < incident.startedDay).slice().reverse().flatMap((entry) => {
     const runtime = state.decisions.decisions[entry.decisionId]
     const def = runtime ? index.decision.get(runtime.defId) : undefined
     const option = def?.options.find((item) => item.id === entry.optionId)
     if (!runtime || !def || !option) return []
+    // A decision about named systems is cited only when the attack went
+    // through one of them: the warehouse acceptance left segmentation weak,
+    // and every route that crossed a segment blamed it (427b290 playtest,
+    // MJ-29).
+    if (def.relatedNodeIds && def.relatedNodeIds.length > 0 && !def.relatedNodeIds.some((id) => routeNodes.has(id))) return []
     const controls = new Set(option.unaddressedControlIds ?? [])
     for (const effect of option.immediateEffects) {
       if ('controlId' in effect && 'delta' in effect && (effect.type === 'control.exceptions' ? effect.delta > 0 : effect.delta < 0)) controls.add(effect.controlId)

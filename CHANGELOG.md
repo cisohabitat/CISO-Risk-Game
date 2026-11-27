@@ -6,6 +6,25 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+The thirteenth round of AI playtests.
+
+- An incident's debrief no longer blames a decision about systems the attack
+  never touched. Supplier access left in place and Kestrel connected on
+  schedule are now named when the attack came that way.
+- A decision option that records an assumption says so, and says what it is.
+  When one stops holding, the clock stops and names the decision it came
+  from. Accepting the warehouse risk says it goes on your register.
+- Paying to clear a programme blocker now takes a second press that says
+  what it spends and what is left.
+- A security check that does not clear says "not cleared" in its letter too.
+- A hunt commissioned too late to report says so, rather than promising a
+  result on "34 December". The SOC card says when a hunt is already running.
+- The year's headline reads how hard the year was hit: no "It held" over
+  ransomware, and no "did not hold" over a small incident contained early.
+- The Briefing counts a waiting SOC warning, rather than saying nothing is
+  waiting above it.
+- The review no longer repeats a sentence.
+
 ## 0.1.0-rc.5 — 27 November 2026 — fifth release candidate
 
 The owner's second design list of 25 November, the eleventh and twelfth

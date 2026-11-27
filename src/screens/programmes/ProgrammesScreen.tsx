@@ -30,6 +30,7 @@ export function ProgrammesScreen() {
   const [sponsorId, setSponsorId] = useState('')
   const [blockerReceipt, setBlockerReceipt] = useState<{ gameId: string; text: string }>()
   const [confirmAccelerate, setConfirmAccelerate] = useState<string>()
+  const [confirmBlocker, setConfirmBlocker] = useState<string>()
 
   const programmes = useMemo(() => (state ? programmeViews(state, index) : []), [state, index])
   // Which of the player's own risks each programme would move. A card listed
@@ -130,19 +131,36 @@ export function ProgrammesScreen() {
                               {/* Refused after the click, with £20k left and a
                                   £120k price on the button. Decisions already
                                   disable what the year cannot pay for. */}
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                className="compact mt-2 min-h-9"
-                                disabled={
-                                  (blocker.budget ?? 0) > state.resources.budgetRemaining ||
-                                  (blocker.focus ?? 0) > state.resources.focusRemaining
-                                }
-                                onClick={() => { const before = useGameStore.getState().state!; const result = dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id }); const after = useGameStore.getState().state!; if (result.ok) setBlockerReceipt({ gameId: state.gameId, text: `${programme.name}: ${blocker.name} cleared. Used ${before.resources.focusRemaining - after.resources.focusRemaining} attention and ${money(before.resources.budgetRemaining - after.resources.budgetRemaining)} budget. ${result.message}` }) }}
-                              >
-                                {blocker.resolution}
-                                {blocker.budget ? ` (${money(blocker.budget)})` : ''}
-                              </Button>
+                              {/* Two presses, as Accelerate: the first says what it
+                                  costs. A £150k fix went through on one click
+                                  (427b290 playtest, MJ-27). */}
+                              {confirmBlocker === `${programme.id}:${blocker.id}` ? (
+                                <span className="mt-2 flex flex-wrap gap-2">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="compact min-h-9"
+                                    onClick={() => { setConfirmBlocker(undefined); const before = useGameStore.getState().state!; const result = dispatch({ type: 'resolveProgrammeBlocker', programmeId: programme.id, blockerId: blocker.id }); const after = useGameStore.getState().state!; if (result.ok) setBlockerReceipt({ gameId: state.gameId, text: `${programme.name}: ${blocker.name} cleared. Used ${before.resources.focusRemaining - after.resources.focusRemaining} attention and ${money(before.resources.budgetRemaining - after.resources.budgetRemaining)} budget. ${result.message}` }) }}
+                                  >
+                                    {blockerSpendLabel(blocker, state.resources.budgetRemaining)}
+                                  </Button>
+                                  <Button variant="quiet" size="sm" className="compact min-h-9" onClick={() => setConfirmBlocker(undefined)}>Not yet</Button>
+                                </span>
+                              ) : (
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  className="compact mt-2 min-h-9"
+                                  disabled={
+                                    (blocker.budget ?? 0) > state.resources.budgetRemaining ||
+                                    (blocker.focus ?? 0) > state.resources.focusRemaining
+                                  }
+                                  onClick={() => setConfirmBlocker(`${programme.id}:${blocker.id}`)}
+                                >
+                                  {blocker.resolution}
+                                  {blocker.budget ? ` (${money(blocker.budget)})` : ''}
+                                </Button>
+                              )}
                               {(blocker.budget ?? 0) > state.resources.budgetRemaining && (
                                 <p className="mt-1 text-xs text-band-elevated">
                                   Costs {money(blocker.budget ?? 0)}, more than the {money(Math.max(0, state.resources.budgetRemaining))} left this year.
@@ -409,4 +427,13 @@ export function ProgrammesScreen() {
       })()}
     </div>
   )
+}
+
+/** "Spend £150k and 1 attention: …, leaving £270k": what the second press does. */
+function blockerSpendLabel(blocker: { resolution: string; budget?: number; focus?: number }, budgetRemaining: number): string {
+  const costs = [blocker.budget ? money(blocker.budget) : '', blocker.focus ? `${blocker.focus} attention` : ''].filter(Boolean)
+  const spend = costs.length > 0 ? `Spend ${costs.join(' and ')}` : 'Confirm'
+  const left = blocker.budget ? `, leaving ${money(Math.max(0, budgetRemaining - blocker.budget))}` : ''
+  const action = /^[A-Z][a-z]/.test(blocker.resolution) ? `${blocker.resolution.charAt(0).toLowerCase()}${blocker.resolution.slice(1)}` : blocker.resolution
+  return `${spend}: ${action}${left}`
 }

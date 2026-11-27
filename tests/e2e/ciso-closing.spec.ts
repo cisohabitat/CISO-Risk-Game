@@ -49,6 +49,8 @@ test('clearing the CIO constraint leaves a receipt and an unaffordable shim stay
   await goTo(page, 'Programmes')
   await expect(page.getByRole('button', { name: /^Fund a compatibility shim/ })).toBeDisabled()
   await page.getByRole('button', { name: 'Hold the line with the CIO', exact: true }).click()
+  // A fix that spends asks once more, saying what (427b290 playtest, MJ-27).
+  await page.getByRole('button', { name: 'Spend 1 attention: hold the line with the CIO' }).click()
   await expect(page.getByRole('status', { name: 'Blocker cleared' })).toContainText('Used 1 attention and £0k budget')
   // The shim has a price, so since 22 November it holds Identity short of completion.
   await expect(page.getByText('the programme cannot finish, or reach its last milestone, past 90% until it is paid for', { exact: false }).first()).toBeVisible()

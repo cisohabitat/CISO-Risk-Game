@@ -184,12 +184,13 @@
           ],
           "delayedEffects": [ { "dayOffset": 50, "effects": [ { "type": "control.coverage", "controlId": "ctl-3p-access", "delta": 0.25 }, { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.2 }, { "type": "control.exceptions", "controlId": "ctl-3p-access", "delta": -0.2 } ], "note": "The break-glass path for supplier access is live." } ] },
         { "id": "opt-msp-monitor", "label": "Leave access in place, monitor it closely", "description": "Accept the access, but make sure you would see it being misused.", "visibleKnownEffects": ["No operational disruption", "You are detecting rather than preventing"],
+          "unaddressedControlIds": ["ctl-3p-access"],
           "immediateEffects": [
             { "type": "control.monitoring", "controlId": "ctl-3p-access", "delta": 0.18 },
             { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.06 },
             { "type": "stakeholder.trust", "stakeholderId": "stk-coo", "delta": 0.03, "reason": "You did not disrupt operations." }
           ],
-          "assumptionIds": ["asm-supplier-no-priv"] },
+          "assumptionIds": ["asm-soc-coverage"] },
         { "id": "opt-msp-nothing", "unaddressedControlIds": ["ctl-3p-access"], "label": "Leave it for now", "description": "There are bigger problems this quarter.", "visibleKnownEffects": ["No disruption, and no conversation with the provider", "The standing accounts stay as they are"],
           "immediateEffects": [ { "type": "flag.set", "flag": "msp.deferred" }, { "type": "event.schedule", "eventId": "evt-con-msp-deferred-returns", "dayOffset": 90 } ],
           "assumptionIds": ["asm-supplier-no-priv"] }
@@ -221,7 +222,7 @@
             { "type": "objective.progress", "objectiveId": "obj-cloud-migration", "delta": 0.05 }
           ],
           "assumptionIds": ["asm-retirement"] },
-        { "id": "opt-legacy-accept", "unaddressedControlIds": ["ctl-vuln", "ctl-segmentation"], "label": "Accept until retirement, with compensating controls", "description": "Accept the exposure until the platform is retired, with monitoring in the meantime.", "visibleKnownEffects": ["No operational disruption", "Depends on the retirement date holding"],
+        { "id": "opt-legacy-accept", "unaddressedControlIds": ["ctl-vuln", "ctl-segmentation"], "label": "Accept until retirement, with compensating controls", "description": "Accept the exposure until the platform is retired, with monitoring in the meantime.", "visibleKnownEffects": ["No operational disruption", "Depends on the retirement date holding", "Puts the legacy outage on your risk register, as accepted"],
           "immediateEffects": [
             { "type": "control.monitoring", "controlId": "ctl-logging", "delta": 0.04 },
             { "type": "risk.open", "scenarioId": "risk-legacy-outage" },
@@ -310,6 +311,7 @@
       "teaches": "Integration deadlines and security conditions are usually negotiable together, not separately.",
       "options": [
         { "id": "opt-acq-connect", "label": "Connect on schedule", "description": "Do not be the reason the deal timetable slips.", "visibleKnownEffects": ["Integration proceeds", "You inherit whatever is already in their estate"],
+          "unaddressedControlIds": ["ctl-segmentation"],
           "immediateEffects": [
             { "type": "stakeholder.trust", "stakeholderId": "stk-cfo", "delta": 0.07, "reason": "You did not delay the acquisition." },
             { "type": "objective.progress", "objectiveId": "obj-acquisition", "delta": 0.12 },

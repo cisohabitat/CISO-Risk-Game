@@ -32,7 +32,7 @@ import { pushMessage } from '../inbox/messages'
 import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
-import { dateOf, yearWord } from '../time'
+import { dateOf, YEAR_LAST_DAY, yearWord } from '../time'
 
 export type PlayerAction =
   | { type: 'advance'; days: number; stopOnUpdate?: boolean; holdYearEnd?: boolean }
@@ -143,7 +143,7 @@ export function budgetBlockReason(state: GameState, option: DecisionOptionDef): 
  * Immer); the engine itself only needs determinism.
  */
 /** What a Skip ahead stopped for, in one line. */
-function describeStop(state: GameState, index: ContentIndex, reasons: PauseReason[]): string {
+export function describeStop(state: GameState, index: ContentIndex, reasons: PauseReason[]): string {
   const date = dateOf(state.currentDay)
   const pending = state.reviews.pendingQuarter
   for (const reason of reasons) {
@@ -168,8 +168,16 @@ function describeStop(state: GameState, index: ContentIndex, reasons: PauseReaso
       }
       case 'programme-blocked':
         return `Stopped on ${date}: a programme is blocked.`
-      case 'assumption-invalidated':
-        return `Stopped on ${date}: an assumption you recorded no longer holds.`
+      case 'assumption-invalidated': {
+        // Name the choice it came with: most were recorded by an option, not
+        // typed, and "you recorded" read as an accusation (427b290, MJ-30).
+        const latest = Object.values(state.assumptions.assumptions).findLast((assumption) => assumption.invalidatedDay === state.currentDay)
+        const linked = latest?.linkedDecisionId ? state.decisions.decisions[latest.linkedDecisionId] : undefined
+        const title = linked ? index.decision.get(linked.defId)?.title : undefined
+        if (latest && title) return `Stopped on ${date}: an assumption behind your decision on "${title}" no longer holds: ${latest.statement}`
+        if (latest) return `Stopped on ${date}: an assumption on the record no longer holds: ${latest.statement}`
+        return `Stopped on ${date}: an assumption on the record no longer holds.`
+      }
       case 'objective-check': {
         const latest = state.inbox.messages.findLast((message) => message.type === 'business' && message.day === state.currentDay)
         return `Stopped on ${date}: ${latest?.subject ?? 'a business security check ran'}.`
@@ -430,7 +438,11 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
         refs: [assignment.id],
       })
       commit()
-      return { ok: true, message: `${def.name} commissioned. Expect a result around ${dateOf(assignment.dueDay)}.` }
+      // A hunt commissioned on 21 December promised "around 34 December"
+      // (427b290 playtest, MN-49).
+      return { ok: true, message: assignment.dueDay > YEAR_LAST_DAY
+        ? `${def.name} commissioned. It will not report before the year ends; the result comes after 31 December.`
+        : `${def.name} commissioned. Expect a result around ${dateOf(assignment.dueDay)}.` }
     }
 
     case 'createHypothesis': {

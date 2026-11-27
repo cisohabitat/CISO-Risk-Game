@@ -800,7 +800,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const quietFloor = DIFFICULTY_PROFILES[state.difficulty].quietYearFloor
   const assessment = overallAssessment(dimensions, capabilityTested, { met: achieved, total: objectives.length },
     quietFloor && incidents.length === 0 && achieved * 5 >= objectives.length * 4 ? quietFloor : undefined)
-  const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning, { missed: failed, incidents: incidents.length })
+  const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning, {
+    missed: failed,
+    incidents: incidents.length,
+    worst: worstConsequence,
+    // Services taken down (ransomware, a destructive attack): a family whose
+    // base disruption is severe, at a material consequence.
+    encrypted: incidents.some((incident) => (index.incidentFamily.get(incident.familyId)?.baseDisruption ?? 0) >= 0.7 && incident.consequence >= 0.3),
+  })
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`
 
@@ -1009,10 +1016,11 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
           .filter(Boolean)
           .join('; ') + '.'
 
+  // A sentence said twice read as a fault (427b290 playtest, CS-28).
   return {
     day: state.currentDay,
-    dimensions,
-    narrative,
+    dimensions: dimensions.map((dimension) => ({ ...dimension, evidence: [...new Set(dimension.evidence)] })),
+    narrative: [...new Set(narrative)],
     headline,
     performanceBand,
     businessOutcome,
@@ -1047,7 +1055,7 @@ function previousYearLine(state: GameState): string | undefined {
  * dimensions that actually diverged: the strongest, the weakest, and the
  * tension between them.
  */
-export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false, year: { missed?: number; incidents?: number } = {}): string {
+export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false, year: { missed?: number; incidents?: number; worst?: number; encrypted?: boolean } = {}): string {
   const score = (id: string) => {
     const dimension = dimensions.find((d) => d.id === id)
     return dimension ? bandValue(dimension.band) : 0.5
@@ -1104,7 +1112,12 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
   if (stillRunning) return 'The year closed with an incident still running.'
   // "Tested, and it held." sat beside a Mixed year with missed objectives, and
   // beside four incidents on an unverified picture (16fe0ee playtest, M-04).
+  // "It held" sat over a ransom paid and over two encryptions; "did not hold"
+  // over a 5 of 5 Credible year whose one theft was contained early (427b290
+  // playtest, MJ-10). How hard the year was hit decides which.
+  const hitHard = year.encrypted === true || (year.worst ?? 0) >= 0.5
   if (hadIncident && strong('resilience')) {
+    if (hitHard) return 'It was hit hard, and it recovered.'
     if (weak('business-enablement')) return 'It held under attack, and the business paid for it in delivery.'
     if ((year.incidents ?? 0) >= 3) return `Tested ${year.incidents === 3 ? 'three' : 'four or more'} times, and it held.`
     // Risk understanding, not blind spots: blind spots read weak in most
@@ -1113,7 +1126,7 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
     return 'Tested, and it held.'
   }
   if (failing('team-sustainability')) return 'Delivered on the backs of people who cannot do it again.'
-  if (hadIncident && (weakest.id === 'resilience' || weak('resilience'))) return 'Tested, and it did not hold.'
+  if (hadIncident && (weakest.id === 'resilience' || weak('resilience')) && (year.worst === undefined || year.worst >= 0.3)) return 'Tested, and it did not hold.'
   if (!hadIncident && business >= 0.68 && programme >= 0.68 && !failing('resilience')) {
     return 'A quiet year that bought the organisation real capability.'
   }

@@ -506,6 +506,18 @@ changes.
   - `accelerateProgramme` refuses a second acceleration.
   - Resilience reads the worse of consequence and `dataImpact`.
   - `overallAssessment` caps two of five objectives at Mixed.
+- 27 November (427b290 playtest):
+  - `priorRouteChoices` cites a decision with `relatedNodeIds` only when one
+    of them is on the attack path's steps.
+  - `OpenDecisionView` options carry `assumes` (statements of the option's
+    `assumptionIds`), shown on the decision card.
+  - `describeStop` (exported from the orchestrator) names the decision behind
+    a failed assumption.
+  - `huntBlockedReason` reports a hunt already running;
+    `huntReportsAfterYearEnd` and `YEAR_LAST_DAY` (`src/game/time.ts`).
+  - `chooseHeadline` takes `{ worst, encrypted }`.
+  - `wantsYouCount` counts open SOC warnings.
+  - Blocker fixes confirm on a second press.
 - `DIVERSION_DAYS` is 40 since 27 November (was 60), to bring competent CISO
   play back to about three objectives.
 - A security check on an objective is a stop (`objective-check`), named by

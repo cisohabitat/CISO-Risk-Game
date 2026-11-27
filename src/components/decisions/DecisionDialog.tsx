@@ -217,6 +217,11 @@ export function DecisionDialog({ decisionId, onClose }: { decisionId: string; on
                     </ul>
                   </div>
                 )}
+                {option.assumes.length > 0 && (
+                  <span className="decision-assumes mt-2 block text-sm text-ink-muted text-pretty">
+                    Choosing this records {option.assumes.length === 1 ? 'an assumption' : 'assumptions'}: {option.assumes.join(' ')} If {option.assumes.length === 1 ? 'it stops' : 'one stops'} holding, the clock stops to tell you.
+                  </span>
+                )}
                 {option.exceedsBudget && (
                   <span className="mt-2 block text-sm text-band-elevated">
                     Emergency incident spend: this commits more than the year has left. The shortfall is unbudgeted, reported to the CFO and carried into next year.
