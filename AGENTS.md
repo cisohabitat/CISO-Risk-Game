@@ -555,7 +555,7 @@ changes.
 - Releases follow `docs/release/RELEASING.md`; the tag, the GitHub Release
   and the live suite come from the hand-run Release workflow
   (`.github/workflows/release.yml`), not from a local tag push. 0.1.0-rc.1 was cut on
-  22 November 2026, 0.1.0-rc.2 on 23 November 0.1.0-rc.3 and 0.1.0-rc.4 on 25 November and 0.1.0-rc.5 on 27 November; keep an "Unreleased" heading at the top of the CHANGELOG
+  22 November 2026, 0.1.0-rc.2 on 23 November 0.1.0-rc.3 and 0.1.0-rc.4 on 25 November 0.1.0-rc.5 on 27 November and 0.1.0-rc.6 on 28 November; keep an "Unreleased" heading at the top of the CHANGELOG
   (`tests/e2e/release-pages.spec.ts` reads it).
 - A blocker whose resolution has a `budget` holds its programme at
   `PAID_BLOCKER_HOLD` (0.9) until resolved, with one "Held short of

@@ -6,7 +6,10 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
-The thirteenth round of AI playtests.
+## 0.1.0-rc.6 — 28 November 2026 — sixth release candidate
+
+The thirteenth round of AI playtests, and the owner's request to fix its
+whole design list.
 
 - An incident's debrief no longer blames a decision about systems the attack
   never touched. Supplier access left in place and Kestrel connected on
