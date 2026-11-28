@@ -151,10 +151,10 @@ export function RiskDetail({ risk }: { risk: VisibleRisk }) {
         {risk.status === 'emerging' && <p className="text-sm text-ink-muted text-pretty">This concern is emerging. Raise it to make it eligible for a board paper; funding or linking treatment alone does not raise it. You still choose whether to include it in each paper.</p>}
         <div className={cn('flex flex-wrap gap-2', !(risk.reviewDue && risk.status !== 'closed') && 'border-t border-line pt-4')}>
           {risk.status === 'emerging' && (
-            <Button variant="primary" size="sm" onClick={() => dispatch({ type: 'openRisk', scenarioId: risk.id })}>
+            <Button variant="primary" size="sm" disabled={state.resources.focusRemaining < 1} onClick={() => dispatch({ type: 'openRisk', scenarioId: risk.id })}>
               {/* One verb for one act: the board paper says a risk is raised,
                   and this said "open", which a playtester did not connect. */}
-              Raise as a risk scenario
+              Raise as a risk scenario (1 attention)
             </Button>
           )}
           {(risk.status === 'open' || risk.status === 'emerging') && (

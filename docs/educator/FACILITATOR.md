@@ -51,10 +51,10 @@ promise about a student's choices or an independently observed classroom.
 | Seed | Played engaged | Played idle | Use it for |
 |---|---|---|---|
 | `class-12`, Guided | No incident | No incident | **The quiet year.** Nothing goes wrong. Does anyone notice what they never checked? The review's blind spots are the lesson. Send it with `&mode=guided`: since 25 November a CISO or High pressure year always has an incident by mid-year. |
-| `class-1`, Guided | Two data exposures (22 August, 24 September) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? Also Guided. |
-| `class-5` | Ransomware 6 June (severe), then platform tampering 3 October | Ransomware 22 May | **The crisis year.** Ransomware either way; the difference is what was ready for it, and what came after. |
-| `class-26` | Ransomware 20 May and 23 October | Ransomware 25 March, 23 July and 12 December | **The recovery conversation.** Ransomware either way, but how often, and what could recovery do each time? What was tested between the first and the second? |
-| `class-10` | Legacy platform compromise 7 May, data exposure 21 July, supplier disruption 8 October | Data exposure 7 May, then a destructive attack 31 October | **Two routes, and the comparison year.** The idle year's data exposure is followed by a different weakness; the engaged year meets three. Does treating the first establish that the rest of the estate is covered? Put two students' reviews side by side. |
+| `class-1`, Guided | Two data exposures (25 August, 26 September) | No incident | **Doing more is not always quieter.** The idle player had nothing happen; the engaged one did. Was the engaged year worse, or did it just find out more? Also Guided. |
+| `class-5` | Ransomware 6 June (severe) | Ransomware 22 May | **The crisis year.** Ransomware either way; the difference is what was ready for it. |
+| `class-62` | Platform tampering 5 May, then ransomware 24 November | Ransomware 5 May and 10 November | **The recovery conversation.** Ransomware either way, but how often, and what could recovery do each time? The idle year meets it twice; what was tested between the first and the second? |
+| `class-10` | Legacy platform compromise 7 May | Data exposure 7 May, then a destructive attack 31 October | **Two routes, and the comparison year.** The idle year's data exposure is followed by a different weakness; the engaged year meets a different one again. Does treating the first establish that the rest of the estate is covered? Put two students' reviews side by side. |
 
 Treat the dates as typical rather than promised: a student who plays
 differently meets a different year, which is the point. Re-run

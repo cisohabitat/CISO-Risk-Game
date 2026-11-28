@@ -7,8 +7,9 @@
  * had no way to act on "stop something". `{{pressedFunction}}` is resolved
  * here, in one place, for the interface and the harness alike.
  */
+import { scaledPostIncidentAmount } from '../budget/post-incident'
 import type { ContentIndex, DecisionRuntime, GameState } from '../types'
-import { CAMPAIGN_DAYS, DAYS_PER_QUARTER } from '../types'
+import { CAMPAIGN_DAYS, DAYS_PER_QUARTER, money } from '../types'
 import { functionName, functionTitle, leaderForFunction, mostPressedFunction } from '../team/capacity'
 import { unreportedScenarios } from '../risk/unreported'
 import { stopCandidate } from '../team/assignments'
@@ -34,6 +35,8 @@ export function renderDecisionText(
   return text
     .replace(/\{\{programmeReview:([^}]+)\}\}/g, (_, id: string) => state.history.entries.findLast((entry) => entry.kind === 'programme-review' && entry.day === state.currentDay && entry.refs?.includes(id))?.summary ?? 'No dated programme review was recorded.')
     .replaceAll('{{closedIncident}}', incidentName ?? 'the earlier incident')
+    .replaceAll('{{postFunding}}', postFunding(state, incident))
+    .replaceAll('{{refundUse}}', refundUse(state))
     .replaceAll('{{pressedFunction}}', functionName(mostPressedFunction(state)))
     .replaceAll('{{PressedFunction}}', functionTitle(mostPressedFunction(state)))
     .replaceAll('{{pressedLeader}}', pressedLeader(state, index))
@@ -138,4 +141,17 @@ function acceptedRisks(state: GameState, index: ContentIndex): string {
     .map((scenario) => index.riskScenario.get(scenario.id)?.title)
     .filter((title): title is string => Boolean(title))
   return titles.length > 0 ? titles.join('; ') : 'none, as it turns out'
+}
+
+/** "£280k, of which £150k pays down unbudgeted spend": what the post-incident money is, before it is asked for. */
+function postFunding(state: GameState, incident: GameState['incidents']['incidents'][string] | undefined): string {
+  const amount = scaledPostIncidentAmount(state, 400, incident)
+  const owed = Math.min(amount, state.resources.unfundedCommitment)
+  return owed > 0 ? `${money(amount)}, of which ${money(owed)} pays down the unbudgeted spend` : money(amount)
+}
+
+/** Said in the letter when money that came back went first against what is owed: it paid down debt silently (427b290 playtest, MN-01). */
+function refundUse(state: GameState): string {
+  const repaid = state.history.entries.findLast((entry) => entry.kind === 'budget' && entry.day === state.currentDay && entry.summary.includes('paid against the unbudgeted spend'))
+  return repaid ? ` Finance has set it against the unbudgeted spend first: ${repaid.summary.charAt(0).toLowerCase()}${repaid.summary.slice(1)}` : ''
 }

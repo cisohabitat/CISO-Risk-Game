@@ -17,10 +17,12 @@ export const DECEMBER_START_DAY = 334
 /** 31 December. */
 export const YEAR_LAST_DAY = 364
 /**
- * How far one Skip ahead may run: to the next thing that needs the player, at
- * most the rest of the year. It was a seven-day cap until 17 November.
+ * How far one Skip ahead may ask to run: to the next thing that needs the
+ * player. It was a seven-day cap until 17 November, then uncapped; since
+ * 28 November it stops after three weeks of nothing (`SKIP_LIMIT_DAYS`).
  */
 export const UI_SKIP_DAYS = 364
+export const SKIP_LIMIT_DAYS = 21
 
 /**
  * Day 0 is the first Monday of the campaign year.

@@ -66,7 +66,7 @@ describe('80611b8 playtest fixes', () => {
     const state = newGame(index, { seed: 'quiet-two' })
     state.currentDay = 363
     state.stakeholders.boardConfidence = 0.95
-    for (const quarter of [1, 2, 3]) state.reviews.quarters.push({ quarter, day: quarter * 91, topicsChosen: [], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true })
+    for (const quarter of [1, 2, 3]) state.reviews.quarters.push({ quarter, day: quarter * 91, topicsChosen: ['risk:fixture'], recommendationIds: [], uncertaintyCommunicated: true, boardReaction: '', completed: true })
     const band = () => buildAnnualReview(state, index).dimensions.find((d) => d.id === 'communication')!.band
     const quiet = (id: string, defId: string, optionId: string) => {
       state.decisions.decisions[id] = { id, defId, createdDay: 100, selectedOptionId: optionId, resolvedDay: 101, resolvedByDefault: false, rationaleTagIds: [], assumptionIds: [] }

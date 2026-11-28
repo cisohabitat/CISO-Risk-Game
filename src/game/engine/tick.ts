@@ -142,8 +142,20 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
   const objectiveResult = tickObjectives(state, index)
   for (const id of objectiveResult.achieved) {
     const def = index.objective.get(id)
-    if (def) highlights.push(`${def.name} delivered.`)
+    if (!def) continue
+    highlights.push(`${def.name} delivered.`)
+    // Said in a letter as a miss is, so the stop has something to show.
+    const owner = def.ownerStakeholderId ? index.stakeholder.get(def.ownerStakeholderId) : undefined
+    pushMessage(state, {
+      from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',
+      subject: `Delivered: ${def.name}`,
+      body: `${def.name} has been delivered. The annual review will count it among the objectives met.`,
+      type: 'business',
+      priority: 'notable',
+      relatedNodeIds: [],
+    })
   }
+  if (objectiveResult.achieved.length + objectiveResult.failed.length > 0) pauseReasons.add('objective-outcome')
   for (const id of objectiveResult.atRisk) {
     const def = index.objective.get(id)
     if (def) highlights.push(`${def.name} is slipping.`)
@@ -174,7 +186,7 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
     // A check that costs an objective 45 days stops a Skip ahead: it passed
     // silently inside 40-day jumps in eight runs (16fe0ee playtest, M-02).
     pauseReasons.add('objective-check')
-    highlights.push(check.met ? `${def.name}: security sign-off given.` : `${def.name}: held for a security condition.`)
+    highlights.push(check.met ? `${def.name}: security sign-off given.` : `${def.name}: security check not cleared; delivery paused.`)
     pushMessage(state, {
       from: owner ? `${owner.name}, ${owner.role}` : 'Nexora Group',
       subject: text.subject,
@@ -216,6 +228,7 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
   // Enquiries announce themselves when they finish; a programme, the largest
   // thing a player builds, used to finish with a toast about its last
   // milestone and nothing in the inbox.
+  if (programmeResult.completed.length > 0) pauseReasons.add('programme-complete')
   for (const programmeId of programmeResult.completed) {
     const programme = index.programme.get(programmeId)
     if (!programme) continue
@@ -389,7 +402,11 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
   // The day is spread over the two months before the floor, read from the
   // seed rather than drawn, so the seeded stream every other draw uses is
   // untouched: a fixed day put the first incident on 1 July in most years.
-  const floor = DIFFICULTY_PROFILES[state.difficulty].incidentFloorDay
+  // A situation can set one too: a Guided year after the breach had no
+  // incident at all (427b290 playtest, MJ-21; owner, 28 November).
+  const situationFloor = typeof state.flags['situation.incident-floor-day'] === 'number' ? state.flags['situation.incident-floor-day'] as number : undefined
+  const profileFloor = DIFFICULTY_PROFILES[state.difficulty].incidentFloorDay
+  const floor = profileFloor === undefined ? situationFloor : situationFloor === undefined ? profileFloor : Math.min(profileFloor, situationFloor)
   const floorDay = floor === undefined ? undefined : floor - (seedHash(`${state.seed}:${state.year ?? 1}`) % 61)
   if (floorDay !== undefined && day >= floorDay && state.flags['incident.floor'] !== true
     && !Object.values(state.incidents.incidents).some((incident) => incident.startedDay >= 0)) {
@@ -479,6 +496,20 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       if (decision) pauseReasons.add('decision-deadline')
     }
     const wording = eventWording(fired.def, state.events.firedCount?.[fired.def.id] ?? 1)
+    // A threat letter about a system a live intrusion is crossing is a
+    // warning about that intrusion: it gets the SOC card and the debrief's
+    // link, as the SOC's own signals do. Seven runs had SOC mail only in the
+    // Inbox, and debriefs with "no exact warning link" (427b290 playtest,
+    // MJ-04).
+    const onRoute = fired.def.type === 'threat' && fired.def.relatedNodeIds.length > 0
+      ? state.threats.campaigns.find((campaign) => !campaign.disrupted && !campaign.incidentId
+        && index.attackPath.get(campaign.pathId)?.steps.some((step) => fired.def.relatedNodeIds.includes(step.nodeId)))
+      : undefined
+    if (onRoute) {
+      state.flags[`signal.${onRoute.id}.event-${fired.def.id}`] = true
+      if (huntBlockedReason(state, index)) state.flags[`unhuntable.${onRoute.id}.event-${fired.def.id}`] = true
+      pauseReasons.add('soc-warning')
+    }
     // The overload message comes from whoever runs the overloaded function; it
     // was signed by the SOC head while the decision it opened named engineering.
     pushMessage(state, {
@@ -491,6 +522,7 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       decisionId: decisionRuntimeId,
       relatedNodeIds: fired.def.relatedNodeIds,
       eventId: fired.def.id,
+      signalCampaignId: onRoute?.id,
       returnGroup: fired.returnGroup,
       pinned: fired.def.priority === 'critical',
     })

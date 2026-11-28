@@ -4,8 +4,9 @@ import { applyAction, newGame, runDays } from '@/game/engine/orchestrator'
 import { createIncident } from '@/game/incidents/create'
 
 // 19 November: each closed incident gets its own "After the incident"
-// reflection, at most two a year. It was once a year, on the latest.
-it('asks about each closed incident in turn, and stops at two', () => {
+// reflection, at most two a year. It was once a year, on the latest. Since
+// 28 November there is no cap (427b290 playtest, MJ-01).
+it('asks about each closed incident in turn, every one of them', () => {
   const index = testIndex()
   const state = newGame(index, { seed: 'reflection-each' })
   state.currentDay = 100
@@ -29,7 +30,7 @@ it('asks about each closed incident in turn, and stops at two', () => {
     }
   }
   const asked = reflections().map((d) => d.incidentId)
-  expect(asked.length).toBe(2)
-  expect(new Set(asked).size).toBe(2)
+  expect(asked.length).toBe(3)
+  expect(new Set(asked).size).toBe(3)
   expect(asked.every((id) => ids.includes(id!))).toBe(true)
 })

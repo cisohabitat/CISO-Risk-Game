@@ -682,9 +682,11 @@ campaign only. A board paper in its final week holds Skip ahead as a waiting
 decision does.
 
 Skip ahead runs to the next thing that needs the player: a decision, a board
-paper, an incident or a blocked programme. It names what it stopped for. There
-is no seven-day cap and no weekly hold, and mail waits in the Inbox; the
-Briefing lists what arrived while you skipped. The
+paper, an incident, a blocked programme, an objective met or missed, or a
+programme finished. It names what it stopped for, and stops after three weeks
+of nothing. Mail waits in the Inbox; the Briefing lists what arrived while you
+skipped. Every closed incident is followed the next day by its "After the
+incident" reflection. The
 platform launch, the Kestrel integration and the Nordic market each have a
 security check before their date: a go-live review, the integration auditors
 and the acquiring bank. A check that finds the work done speeds delivery a

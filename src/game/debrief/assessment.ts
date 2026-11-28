@@ -5,7 +5,7 @@ const VALUES = { weak: 0.2, developing: 0.45, solid: 0.68, strong: 0.88 } as con
 const ORDER: Assessment[] = ['Difficult', 'Mixed', 'Credible', 'Exceptional']
 
 /** Equal weights, with minimum standards that a good average cannot conceal. */
-export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean, objectives?: { met: number; total: number }, floor?: Assessment): {
+export function overallAssessment(dimensions: AnnualReviewDimension[], capabilityTested: boolean, objectives?: { met: number; total: number }, floor?: Assessment, consequence?: string): {
   label: Assessment
   reason?: string
 } {
@@ -31,6 +31,12 @@ export function overallAssessment(dimensions: AnnualReviewDimension[], capabilit
     // Credible beside "3 were missed" (5033820 playtest, MJ-24).
     ceiling = 'Mixed'
     reason = `the business met only ${objectives.met} of its ${objectives.total} objectives`
+  } else if (consequence) {
+    // What the year cost, as well as how it was run: a ransom paid, debt left
+    // for finance, or a second incident through a route still open read
+    // Credible (427b290 playtest, MJ-24; owner, 28 November).
+    ceiling = 'Mixed'
+    reason = consequence
   } else if (critical.length > 0) {
     ceiling = 'Mixed'
     reason = `${critical.map((dimension) => dimension.label.toLowerCase()).join(' and ')} ${critical.length === 1 ? 'was' : 'were'} weak`

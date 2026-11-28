@@ -15,7 +15,7 @@ it('explains the emerging-to-board transition before raising a concern', async (
   home.unmount()
   render(<RiskScreen />)
   expect(screen.getByText(/funding or linking treatment alone does not raise it/)).toBeInTheDocument()
-  fireEvent.click(screen.getByRole('button', { name: 'Raise as a risk scenario', exact: true }))
+  fireEvent.click(screen.getByRole('button', { name: /^Raise as a risk scenario/ }))
   expect(useGameStore.getState().state!.risks.scenarios[scenarioId]!.status).toBe('open')
   expect(screen.queryByText(/funding or linking treatment alone does not raise it/)).toBeNull()
 })

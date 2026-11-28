@@ -19,7 +19,7 @@ export interface EffectTiming {
 }
 
 export type GameEffect =
-  | { type: 'budget.change'; amount: number; note?: string }
+  | { type: 'budget.change'; amount: number; note?: string; /** Scaled to the decision's incident and the days left (`scaledPostIncidentAmount`). */ scaled?: 'post-incident' }
   | { type: 'focus.change'; amount: number }
   | { type: 'capacity.change'; fn: FunctionTarget; delta: number; temporary?: EffectTiming }
   | { type: 'stakeholder.trust'; stakeholderId: string; delta: number; reason?: string }

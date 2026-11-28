@@ -205,8 +205,12 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
       // Who did the finding, said apart: "38 of 38 systems known" after no
       // enquiry read as the player's work (owner, 25 November: design L).
       (() => {
+        // Examined first: "38 of 38 systems known" still led the line after a
+        // year of no enquiries, beside 69 unexamined on the Briefing (427b290
+        // playtest, MJ-05).
         const examinedSystems = Object.values(state.organisation.nodes).filter((node) => node.exists && node.discovered && node.verified).length
-        return `${discovery.systems.discovered} of ${discovery.systems.total} systems known by the year end; ${examinedSystems === 0 ? 'none' : examinedSystems} examined by your own enquiries, the rest named in correspondence or inherited; ${discovery.systems.remaining} never came to light`
+        const named = discovery.systems.discovered - examinedSystems
+        return `${examinedSystems === 0 ? 'None' : examinedSystems} of ${discovery.systems.total} systems examined by your own enquiries; ${named} more named in correspondence or inherited and taken on trust; ${discovery.systems.remaining} never came to light`
       })(),
       `${discovery.dependencies.discovered} of ${discovery.dependencies.total} dependencies known by the year end; ${discovery.dependencies.remaining} never came to light`,
       `${examined.examined} of ${examined.reachable} things you could have examined yourself, you did`,
@@ -327,7 +331,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
         lines.push(
           surfaced
             ? `${effort.missed.title} was among the largest risks ${laterYear ? 'the year began with' : 'you inherited'}, and nothing you did went near it`
-            : `A risk that never reached your register was among the largest ${laterYear ? 'the year began with' : 'you inherited'}: ${effort.missed.title}. Nothing you did went near it`,
+            // No blame for what never surfaced: it is what the close reveals
+            // (427b290 playtest, MJ-06; owner, 28 November).
+            : `Found at the year end, not before: ${effort.missed.title} was among the largest risks ${laterYear ? 'the year began with' : 'you inherited'}, and nothing in the year brought it to your register`,
         )
       }
       return lines
@@ -419,7 +425,16 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // because its one incident was small (owner, 25 November: design issue D).
   const prepared = exercised || programmesThisYear(state).some((programme) => programme.status === 'complete')
   const PASSIVE_CEILING = 0.51
-  const resilience = Math.min(prepared ? 1 : PASSIVE_CEILING, tested
+  // Services taken down (ransomware, a destructive attack): a family whose
+  // base disruption is severe, at a material consequence.
+  const encrypted = incidents.some((incident) => (index.incidentFamily.get(incident.familyId)?.baseDisruption ?? 0) >= 0.7 && incident.consequence >= 0.3)
+  // The same route twice: the weakness was still open.
+  const pathCounts = incidents.reduce((counts, incident) => (incident.pathId ? counts.set(incident.pathId, (counts.get(incident.pathId) ?? 0) + 1) : counts), new Map<string, number>())
+  const repeatRoute = [...pathCounts.values()].some((count) => count >= 2)
+  // Solid after two encryptions through the same route (427b290 playtest,
+  // MJ-28; owner, 28 November): an outage or a repeat caps it at developing.
+  const HIT_CEILING = encrypted || repeatRoute ? 0.51 : 1
+  const resilience = Math.min(HIT_CEILING, prepared ? 1 : PASSIVE_CEILING, tested
     ? clamp01(1 - worstConsequence * 0.8)
     : Math.min(UNTESTED_CEILING, clamp01(0.18 + 0.75 * recoveryCapability + (exercised ? 0.14 : 0))))
 
@@ -538,17 +553,24 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // 4. Programme execution.
   const started = programmesThisYear(state)
   const completed = started.filter((p) => p.status === 'complete')
-  const delivery = clamp01(started.length === 0 ? 0 : started.reduce((sum, programme) => sum + (programme.status === 'complete' ? 1 : clamp01(programme.progress)), 0) / started.length)
+  // A programme finished by working round a blocker dropped its last stage,
+  // and counts for three quarters; one still running short of people at the
+  // close caps execution at solid. A worked-around programme counted as
+  // done, and "strong" sat beside "starved of people" (427b290 playtest,
+  // MJ-24, CS-24).
+  const delivery = clamp01(started.length === 0 ? 0 : started.reduce((sum, programme) => sum + (programme.status === 'complete' ? (programme.descoped ? 0.75 : 1) : clamp01(programme.progress)), 0) / started.length)
+  const starved = started.some((programme) => (programme.status === 'active' || programme.status === 'at-risk') && programme.staffing <= 0.5)
   const relevance = programmeRelevance(state, index, started.map((programme) => programme.id))
   // Delivery still earns credit. The top band additionally requires choosing
   // work in the upper half of this campaign's programme materiality range.
   const relevanceLimited = relevance !== undefined && relevance < 0.5 && delivery >= 0.75
-  const execution = relevanceLimited ? 0.74 : delivery
+  const execution = relevanceLimited || starved ? Math.min(0.74, delivery) : delivery
   const executionEvidence = started.map((programme) => {
     const def = index.programme.get(programme.id)
     return `${def?.name ?? programme.id}: ${programmeDeliveryPercent(programme)}% delivered`
   })
   if (relevanceLimited) executionEvidence.unshift('Programme execution is capped at solid because delivery and relevance are assessed together.')
+  if (starved && !relevanceLimited && delivery > 0.74) executionEvidence.unshift('Programme execution is capped at solid because a programme ended the year short of the people it needed.')
   if (started.length > 0 && !state.risks.initialMateriality) executionEvidence.unshift('The opening risk snapshot is unavailable; programme relevance uses the current risk picture.')
   dimensions.push({
     id: 'programme-execution',
@@ -571,7 +593,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // An objective still in delivery is neither credit nor failure: half of each.
   // A missed objective caps the band at solid: "strong" sat beside a missed
   // objective 55 days late (16fe0ee playtest, m-13).
-  const enablement = Math.min(failed > 0 ? 0.74 : 1, clamp01(objectives.length === 0 ? 0.5 : (achieved + pending * 0.5) / objectives.length))
+  // Two objectives held at a security check because the work was not done
+  // caps it at developing: such a year read "solid" (427b290 playtest, MJ-08).
+  const heldAtChecks = objectives.filter((o) => o.gate === 'unmet').length
+  const enablement = Math.min(heldAtChecks >= 2 ? 0.51 : 1, failed > 0 ? 0.74 : 1, clamp01(objectives.length === 0 ? 0.5 : (achieved + pending * 0.5) / objectives.length))
   dimensions.push({
     id: 'business-enablement',
     label: 'Business enablement',
@@ -630,11 +655,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const incidentNews = Object.values(state.incidents.incidents).flatMap((incident) => {
     // Dated: two incidents of one kind read as one line twice (4653160 playtest).
     const name = `${index.incidentFamily.get(incident.familyId)?.name.toLowerCase() ?? 'incident'} of ${dateOf(incident.startedDay)}`
-    if (incident.boardHeardElsewhereDay !== undefined) return [{ elsewhere: true, line: `The board heard about the ${name} elsewhere before it heard from you${incident.boardInformedDay !== undefined ? `; your briefing followed on ${dateOf(incident.boardInformedDay)}` : ''}.` }]
-    // A reassurance that did not hold reads as a board misled, not informed.
-    if (incident.boardInformedDay !== undefined && incident.boardBriefingTone === 'reassuring' && incident.phase === 'closed' && incident.consequence >= BOARD_MATERIAL) return [{ elsewhere: true, line: `You told the board on ${dateOf(incident.boardInformedDay)} that the ${name} was in hand, and it was not.` }]
-    if (incident.boardInformedDay !== undefined) return [{ elsewhere: false, line: `You briefed the board on the ${name} on ${dateOf(incident.boardInformedDay)}${briefedInTime(incident) ? ', inside the time it expected' : ', later than it expected'}.` }]
-    return []
+    const news: { elsewhere: boolean; misled?: boolean; line: string }[] = []
+    if (incident.boardHeardElsewhereDay !== undefined) news.push({ elsewhere: true, line: `The board heard about the ${name} elsewhere before it heard from you${incident.boardInformedDay !== undefined ? `; your briefing followed on ${dateOf(incident.boardInformedDay)}` : ''}.` })
+    // A reassurance that did not hold reads as a board misled, not informed,
+    // and is said even when the board also heard elsewhere: a second "in
+    // hand" went unmentioned (427b290 playtest, MJ-07).
+    if (incident.boardInformedDay !== undefined && incident.boardBriefingTone === 'reassuring' && incident.phase === 'closed' && incident.consequence >= BOARD_MATERIAL) news.push({ elsewhere: true, misled: true, line: `You told the board on ${dateOf(incident.boardInformedDay)} that the ${name} was in hand, and it was not.` })
+    else if (incident.boardInformedDay !== undefined && incident.boardHeardElsewhereDay === undefined) news.push({ elsewhere: false, line: `You briefed the board on the ${name} on ${dateOf(incident.boardInformedDay)}${briefedInTime(incident) ? ', inside the time it expected' : ', later than it expected'}.` })
+    return news
   })
   const heardElsewhere = incidentNews.some((news) => news.elsewhere)
   const communication = Math.min(heardElsewhere ? 0.74 : 1, clamp01(0.6 * boardConfidence + 0.4 * clamp01(quarters.length / 3)))
@@ -651,6 +679,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const keptQuiet = Object.values(state.decisions.decisions)
     .filter((decision) => decision.selectedOptionId !== undefined && QUIET[decision.defId]?.option === decision.selectedOptionId)
     .map((decision) => QUIET[decision.defId]!.line)
+  // A programme presented as on track that audit then found behind is an
+  // account that was not so: it left Communication strong (427b290
+  // playtest, MJ-07).
+  if (state.events.firedEventIds.includes('evt-con-audit-overstated')) keptQuiet.push('You presented a programme to audit as on track, and audit found it was not.')
   // Something kept from the board, a bank or a regulator caps the band below
   // strong, as hearing of an incident elsewhere does: concealment sat beside
   // "strong" in 16fe0ee playtest runs 05, 10 and 12 (M-11).
@@ -658,7 +690,16 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // whether they had hidden one thing or four (80611b8 playtest, MJ-07).
   const lapses = keptQuiet.length + incidentNews.filter((news) => news.elsewhere).length
   const COMMUNICATION_CAP = [1, 0.74, 0.51, 0.29]
-  const communicationScore = Math.min(COMMUNICATION_CAP[Math.min(lapses, 3)]!, communication)
+  // Telling the board something that was not so is worse than not telling
+  // it: "in hand, and it was not" sat beside Communication solid, and
+  // beside strong (427b290 playtest, MJ-07). It caps the band at developing
+  // on its own.
+  const misled = incidentNews.some((news) => news.misled)
+  // Papers that raised nothing are not communication: three empty papers read
+  // "the board came to rely on your judgement" (427b290 playtest, MJ-08).
+  const emptyPapers = quarters.filter((paper) => paper.topicsChosen.length === 0).length
+  const emptyCap = emptyPapers >= 2 ? 0.51 : 1
+  const communicationScore = Math.min(emptyCap, COMMUNICATION_CAP[Math.min(lapses + (misled ? 1 : 0), 3)]!, communication)
   dimensions.push({
     id: 'communication',
     label: 'Communication and escalation',
@@ -714,7 +755,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   // again: a cost-cutter's team, three posts held empty, read "strong" (15-run
   // playtest, November). With three or more vacancies it can be solid at most.
   const vacancies = functions.reduce((sum, fn) => sum + fn.vacancies, 0)
-  const ceiling = spent.length >= 2 ? 0.29 : spent.length === 1 ? 0.51 : vacancies >= 3 ? 0.74 : 1
+  // Four posts or more held empty caps it at developing: "rested, with 5
+  // posts empty" read solid in every cost-cutting run (427b290 playtest,
+  // MJ-08, MN-18). Only for a team rested because little was asked of it, in
+  // a year that left three quarters of its money unspent: Nexora starts with
+  // five posts empty, and a year that did its work is read through its load.
+  const restedButShort = vacancies >= 4 && strain < 0.5 && state.resources.budgetRemaining > state.resources.budgetTotal * 0.75
+  const ceiling = spent.length >= 2 ? 0.29 : spent.length === 1 || restedButShort ? 0.51 : vacancies >= 3 ? 0.74 : 1
   const sustainability = Math.min(ceiling, clamp01(0.55 * morale + 0.45 * (1 - strain)))
   dimensions.push({
     id: 'team-sustainability',
@@ -727,6 +774,8 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     narrative:
       spent.length > 0
         ? `Your ${spent.map((fn) => functionName(fn.fn)).join(' and ')} ${spent.length === 1 ? 'function is' : 'functions are'} spent. The rest of the team cannot cover that indefinitely.`
+        : restedButShort
+          ? `Your team ends the year rested but short, with ${vacancies} posts empty; it could not carry a year that asked more of it.`
         : sustainability >= 0.52
           ? vacancies >= 3
             ? `Your team ends the year rested, with ${vacancies} posts empty; a year that asked more of it would find the gap.`
@@ -798,15 +847,18 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const capabilityTested = exercises.length > 0 || restoreTaken || sandboxRestore ||
     (tested && !stillRunning && resilience >= 0.52)
   const quietFloor = DIFFICULTY_PROFILES[state.difficulty].quietYearFloor
+  const ransomPaid = Object.values(state.decisions.decisions).some((decision) => decision.selectedOptionId === 'opt-ransom-pay' || decision.selectedOptionId === 'opt-extortion-pay')
+  const consequence = ransomPaid ? 'a ransom was paid'
+    : repeatRoute ? 'a second incident came through a route that was still open'
+    : state.resources.unfundedCommitment > state.resources.budgetTotal * 0.1 ? `the year ends owing finance ${money(state.resources.unfundedCommitment)}`
+    : undefined
   const assessment = overallAssessment(dimensions, capabilityTested, { met: achieved, total: objectives.length },
-    quietFloor && incidents.length === 0 && achieved * 5 >= objectives.length * 4 ? quietFloor : undefined)
+    quietFloor && incidents.length === 0 && achieved * 5 >= objectives.length * 4 ? quietFloor : undefined, consequence)
   const headline = chooseHeadline(dimensions, incidents.length > 0, stillRunning, {
     missed: failed,
     incidents: incidents.length,
     worst: worstConsequence,
-    // Services taken down (ransomware, a destructive attack): a family whose
-    // base disruption is severe, at a material consequence.
-    encrypted: incidents.some((incident) => (index.incidentFamily.get(incident.familyId)?.baseDisruption ?? 0) >= 0.7 && incident.consequence >= 0.3),
+    encrypted,
   })
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`
@@ -967,6 +1019,14 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   } else if (nextYear === 'trimmed') {
     narrative.push('You gave finance a named line back and kept the rest: a smaller cut, on terms you could explain.')
   }
+  // An incident that closed too late for its reflection is said to have, so
+  // the last one of a busy year does not just go unprocessed (427b290
+  // playtest, MJ-01).
+  const reflection = index.content.events.find((event) => event.incidentContext === 'latest-closed')?.decisionId
+  if (reflection) {
+    const unreflected = incidents.filter((incident) => incident.phase === 'closed' && !Object.values(state.decisions.decisions).some((decision) => decision.defId === reflection && decision.incidentId === incident.id && decision.resolvedDay !== undefined))
+    for (const incident of unreflected) narrative.push(`The ${(index.incidentFamily.get(incident.familyId)?.name ?? 'incident').toLowerCase()} of ${dateOf(incident.startedDay)} closed on ${dateOf(incident.resolvedDay ?? incident.phaseEnteredDay)}, and the year ended before what it taught was put to anyone. It carries into next year's planning.`)
+  }
   if (state.flags['recovery.deferred'] === true) {
     narrative.push('The recovery capability you built went into peak trading untested, on the assumption it would hold. It was not asked to.')
   }
@@ -1002,7 +1062,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     // September" read as a mail title, not a sentence (baf4cf9 playtest, MN-19).
     returns.sort((a, b) => a.day - b.day)
     const what = (message: (typeof returns)[number]) => (message.subject.startsWith('Followed up: ') ? message.body : message.subject).trim().replace(/\.$/, '')
-    if (returns.length > 0) narrative.push(`"${option.label}"${runtime.resolvedByDefault ? ', taken by default,' : ''} on "${def.title}" came back later: ${returns.map((message) => `on ${dateOf(message.day)}, ${what(message).charAt(0).toLowerCase()}${what(message).slice(1)}`).join('; ')}.`)
+    // A letter left unopened is said to be one: "on 17 February, the CEO has
+    // noticed…" read as an event the player was never shown (427b290
+    // playtest, MJ-15).
+    if (returns.length > 0) narrative.push(`"${option.label}"${runtime.resolvedByDefault ? ', taken by default,' : ''} on "${def.title}" came back later: ${returns.map((message) => `on ${dateOf(message.day)}${message.read ? '' : ', in a letter you did not open'}, ${what(message).charAt(0).toLowerCase()}${what(message).slice(1)}`).join('; ')}.`)
   }
 
   const businessOutcome =

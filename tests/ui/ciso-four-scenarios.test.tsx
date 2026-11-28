@@ -28,7 +28,9 @@ it.each<Difficulty>(['ciso', 'high-pressure'])('runs Skip to the next stop in ev
     for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
     useGameStore.setState({ state })
     store.setScreen(workspace)
-    const result = useGameStore.getState().dispatch({ type: 'advance', days: 364, stopOnUpdate: true })
+    // Three weeks at most a press since 28 November, so press again.
+    let result = useGameStore.getState().dispatch({ type: 'advance', days: 364, stopOnUpdate: true })
+    while (result.ok && result.message.includes('three weeks have passed')) result = useGameStore.getState().dispatch({ type: 'advance', days: 364, stopOnUpdate: true })
     expect(result.ok).toBe(true)
     expect(useGameStore.getState().state!.currentDay).toBe(2 * 91)
     expect(result.message).toContain('Q2 board paper is ready')

@@ -215,6 +215,12 @@ export function tickIncidents(state: GameState, index: ContentIndex, rng: Rng): 
             'How the actor got in is for the year-end reconstruction.',
         )
         if (state.incidents.activeId === incidentId) state.incidents.activeId = undefined
+        // Its reflection follows the next day, every time. It came 9 or 10
+        // days late, when it came at all, and a third incident had none
+        // (427b290 playtest, MJ-01; owner, 28 November).
+        for (const def of index.content.events) {
+          if (def.incidentContext === 'latest-closed') state.events.scheduled.push({ eventId: def.id, day: state.currentDay + 1 })
+        }
         result.interrupts = true
         break
       }

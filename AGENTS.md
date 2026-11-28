@@ -67,7 +67,9 @@ changes.
   quarter's paper, a paper's final week, an incident, a blocked programme,
   an invalidated assumption, the year end) and names it ("Stopped on …").
   Since 17 November there is no seven-day cap, no weekly hold and no stop
-  for mail or refunds; those wait in the Inbox and the budget toast.
+  for mail or refunds; those wait in the Inbox and the budget toast. Since
+  28 November it also stops on `objective-outcome`, `programme-complete` and
+  `skip-limit` (`SKIP_LIMIT_DAYS`, 21, in `src/game/time.ts`).
   Existing pending-decision and final-week paper guards remain.
 - Weak business enablement now shares the Mixed ceiling with prioritisation and
   team sustainability. Keep eight equal weights and existing other safeguards.
@@ -518,6 +520,29 @@ changes.
   - `chooseHeadline` takes `{ worst, encrypted }`.
   - `wantsYouCount` counts open SOC warnings.
   - Blocker fixes confirm on a second press.
+- 28 November (owner, "fix all" on the 427b290 design list):
+  - An incident closing schedules every `incidentContext: 'latest-closed'`
+    event for the next day; the reflection has no yearly cap.
+  - A threat event whose `relatedNodeIds` cross a live campaign's path gets
+    that campaign's `signalCampaignId` and `signal.`/`unhuntable.` flags.
+  - `overallAssessment` takes a fifth argument, a consequence (ransom paid,
+    repeat route, debt over a tenth of the allocation), capping at Mixed.
+  - Resilience caps at developing after an outage-class incident (family
+    `baseDisruption` 0.7 or more, consequence 0.3 or more) or a repeat route.
+  - Communication: a failed reassurance is an extra lapse; two or more empty
+    papers cap it at developing; a false "on track" to audit counts as kept
+    quiet. Team: four or more posts empty in a rested year that left three
+    quarters of the budget unspent caps it at developing. Business
+    enablement: two objectives held at checks cap it at developing.
+    Execution: a worked-around programme counts 0.75; a starved one caps it
+    at solid.
+  - `budget.change` takes `scaled: 'post-incident'`
+    (`src/game/budget/post-incident.ts`); `{{postFunding}}` and
+    `{{refundUse}}` placeholders in `describe.ts`.
+  - `openRisk` costs 1 attention and refuses a risk already raised.
+  - `situation.incident-floor-day` (a situation's setup flag) sets an
+    incident floor alongside the profile's.
+  - Objectives record `supportedBy` (decision titles) for the card.
 - `DIVERSION_DAYS` is 40 since 27 November (was 60), to bring competent CISO
   play back to about three objectives.
 - A security check on an objective is a stop (`objective-check`), named by

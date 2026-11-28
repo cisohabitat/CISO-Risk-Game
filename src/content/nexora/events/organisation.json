@@ -943,8 +943,8 @@
       "type": "programme",
       "title": "Two tools doing the same job",
       "from": "Nadia Farrell, Director of Procurement and Supplier Management",
-      "body": "We were paying for two products that do broadly the same thing, bought by different teams eighteen months apart. I have cancelled the one fewer people use, and the £90k comes back to the cyber budget this year.",
-      "priority": "routine",
+      "body": "We were paying for two products that do broadly the same thing, bought by different teams eighteen months apart. I have cancelled the one fewer people use, and the £90k comes back to the cyber budget this year.{{refundUse}}",
+      "priority": "notable",
       "availableFromDay": 135,
       "conditions": [],
       "weight": 7,
@@ -1021,17 +1021,12 @@
         {
           "kind": "incident.closedWithoutDecision",
           "decisionId": "dec-post-incident"
-        },
-        {
-          "kind": "event.firedFewerThan",
-          "eventId": "evt-org-post-incident",
-          "value": 2
         }
       ],
       "weight": 30,
       "pinned": false,
       "oncePerCampaign": false,
-      "cooldownDays": 14,
+      "cooldownDays": 3,
       "decisionId": "dec-post-incident",
       "relatedNodeIds": [],
       "tags": [

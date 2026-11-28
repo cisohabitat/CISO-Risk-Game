@@ -26,17 +26,22 @@ describe('Skip ahead public updates', () => {
     state.pendingEffects.push({ id: 'skip-result', day: 243, source: 'decision:dec-pentest-scope', note: 'The report is in.', effects: [] })
     const result = applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
     expect(result.ok).toBe(true)
-    expect(state.currentDay).toBe(270)
+    // Three weeks at most since 28 November (427b290 playtest, MJ-02).
+    expect(state.currentDay).toBe(261)
+    expect(result.message).toContain('three weeks have passed')
     expect(state.inbox.messages.some((message) => message.subject === 'Followed up: Penetration test scope')).toBe(true)
   })
 
-  it('runs past a missed business commitment, whose letter waits in the inbox', () => {
+  // A missed objective passed inside long jumps in silence; since 28 November
+  // it stops Skip ahead (427b290 playtest, MJ-02).
+  it('stops on a missed business commitment, and names it', () => {
     const { state, index } = quiet()
     const objective = state.business.objectives['obj-platform-launch']!
     objective.status = 'active'; objective.progress = 0.5
     state.currentDay = objective.targetDay
-    applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
-    expect(state.currentDay).toBeGreaterThan(objective.targetDay + 1)
+    const result = applyAction(state, index, { type: 'advance', days: 30, stopOnUpdate: true })
+    expect(state.currentDay).toBe(objective.targetDay + 1)
+    expect(result.message).toContain('missed its date')
     expect(state.inbox.messages.some((message) => message.subject.startsWith('Missed:'))).toBe(true)
   })
 

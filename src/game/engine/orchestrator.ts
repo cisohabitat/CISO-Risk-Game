@@ -32,7 +32,7 @@ import { pushMessage } from '../inbox/messages'
 import { buildQuarterReview } from '../debrief/quarter'
 import { effectsAsPaid, optionBudgetCost } from '../decisions/cost'
 import { evaluateCondition } from '../events/conditions'
-import { dateOf, YEAR_LAST_DAY, yearWord } from '../time'
+import { dateOf, SKIP_LIMIT_DAYS, YEAR_LAST_DAY, yearWord } from '../time'
 
 export type PlayerAction =
   | { type: 'advance'; days: number; stopOnUpdate?: boolean; holdYearEnd?: boolean }
@@ -190,6 +190,18 @@ export function describeStop(state: GameState, index: ContentIndex, reasons: Pau
         const latest = state.inbox.messages.findLast((message) => message.type === 'incident' && message.day === state.currentDay)
         return `Stopped on ${date}: ${latest?.subject ?? 'an incident closed'}. Its debrief is ready.`
       }
+      case 'objective-outcome': {
+        const latest = state.inbox.messages.findLast((message) => message.type === 'business' && message.day === state.currentDay && /^(Missed|Delivered): /.test(message.subject))
+        if (latest?.subject.startsWith('Missed: ')) return `Stopped on ${date}: ${latest.subject.slice(8)} missed its date.`
+        if (latest) return `Stopped on ${date}: ${latest.subject.slice(11)} was delivered.`
+        return `Stopped on ${date}: an objective was met or missed.`
+      }
+      case 'programme-complete': {
+        const done = Object.values(state.programmes.programmes).find((programme) => programme.status === 'complete' && programme.completedDay === state.currentDay)
+        return `Stopped on ${date}: ${done ? index.programme.get(done.id)?.name ?? 'a programme' : 'a programme'} is complete.`
+      }
+      case 'skip-limit':
+        return `Stopped on ${date}: three weeks have passed with nothing that needed you.`
       case 'year-end':
         return `Stopped on ${date}: the last day of the year.`
       default:
@@ -263,6 +275,15 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
           // seven-day cap, mail and budget stops and weekly holds, which
           // players read as "does nothing" or "jumped six weeks").
           return { ok: true, message: action.stopOnUpdate ? describeStop(state, index, result.pauseReasons) : '', ticks }
+        }
+        // Three weeks at most: a 54-day Skip passed a missed objective and
+        // fifteen letters (427b290 playtest, MJ-02; owner, 28 November).
+        if (action.stopOnUpdate && i + 1 >= SKIP_LIMIT_DAYS && i + 1 < action.days && state.currentDay < CAMPAIGN_DAYS) {
+          state.paused = true
+          state.speed = 'paused'
+          state.pauseReasons = ['skip-limit']
+          result.shouldAutosave = true
+          return { ok: true, message: describeStop(state, index, ['skip-limit']), ticks }
         }
         // A paper entering its final week is the one stop the clock itself does
         // not make.
@@ -561,6 +582,12 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
     }
 
     case 'openRisk': {
+      // Raising a named concern takes attention, as working a hypothesis up
+      // does (2): it was free and instant beside a confirmed, costed path
+      // (427b290 playtest, MN-50; owner, 28 November).
+      const existing = state.risks.scenarios[action.scenarioId]
+      if (existing && existing.status !== 'emerging') return fail('That risk has already been raised.')
+      if (!spendFocus(state, FOCUS_COSTS.escalation)) return fail('Raising a risk takes attention, and none is left this week.')
       applyEffects(state, [{ type: 'risk.open', scenarioId: action.scenarioId }], { index, rng, source: 'player' })
       // Recorded as raising, as a hypothesis raised is: a risk raised from the
       // register on 2 January was still "nothing you did went near it"

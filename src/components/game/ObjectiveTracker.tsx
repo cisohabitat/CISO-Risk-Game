@@ -39,7 +39,7 @@ export function ObjectiveTracker() {
         {/* Set by any decision that moved delivery on, including connecting
             Kestrel on schedule: "security support" sat beside a held check
             on a year with no security work (baf4cf9 playtest, MN-27). */}
-        {runtime.securitySupported && <p className="mt-1 text-xs text-ink-muted">A decision of yours moved this objective on.</p>}
+        {(runtime.supportedBy?.length ?? 0) > 0 && <p className="mt-1 text-xs text-ink-muted">Moved on by your decision on {runtime.supportedBy!.map((title) => `"${title}"`).join(' and ')}.</p>}
       </CardBody></Card></li>
     })}</ul>
   </section>

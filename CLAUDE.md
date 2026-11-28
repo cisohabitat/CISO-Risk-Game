@@ -92,7 +92,7 @@ work is playtesting, tightening and rewriting unclear text — not new mechanics
 On 17 November 2026 the owner chose two design changes from the decision
 paper on six playtest rounds. First, Skip ahead runs to the next thing that
 needs the player and names it, with no seven-day cap, weekly hold or mail
-stop. Second, three first-year objectives carry a security gate
+stop (since 28 November it also stops after three weeks of nothing). Second, three first-year objectives carry a security gate
 (`gate` on an objective in `people.json`, checked in tick step 4): the
 platform launch, the Kestrel integration and the Nordic market. Each is
 checked once on its day. If the condition holds, delivery gains a little;
@@ -104,7 +104,8 @@ On 19 November 2026 the owner made the board incident-aware
 (`src/game/incidents/board.ts`). Briefing it is now a choice between candour
 and reassurance. The owner also accepted a design list:
 - the review names briefings and security checks;
-- one "After the incident" reflection per incident, at most two a year;
+- one "After the incident" reflection per incident, at most two a year
+  (since 28 November every closed incident has one, the next day);
 - emergency spend is labelled unbudgeted and reported to the CFO;
 - check previews vary by difficulty;
 - the board is slow to warm for a quarter after a material incident;
@@ -116,7 +117,8 @@ playtest rounds to be fixed (`docs/playtests/2026-11-25-design-list.md`):
 - a year meeting one of five objectives or fewer is Difficult;
 - Resilience above developing needs a recovery test, a restore or a finished
   programme;
-- the post-incident £400k is once a year and costs a little board confidence;
+- the post-incident £400k is once a year and costs a little board confidence
+  (since 28 November scaled to the incident and the months left);
 - CISO and High pressure years have an incident by mid-year
   (`incidentFloorDay` in the profile, spread over the two months before by
   the seed);
@@ -134,6 +136,19 @@ objectives caps the verdict at Mixed. On 27 November the owner asked for
 that to be softened: incident diversion fell from 60 to 40 days per unit of
 consequence, and the competent CISO player meets 3.1 objectives again, with
 4 Difficult years of 25 (was 8).
+On 28 November the owner asked for the whole 427b290 design list to be fixed
+(`docs/playtests/2026-11-27-owner-supplied-427b290-matrix.md`, "Fix all"):
+Skip ahead stops after three weeks and when an objective is met or missed or
+a programme finishes; a reflection follows every incident; threat letters
+about a live route are SOC warnings; the review separates what was seen from
+what the close reveals, scores "in hand" and a false "on track" against
+communication, and caps the verdict at Mixed for a ransom paid, a repeat
+route or debt; resilience caps at developing after an outage-class incident
+or a repeat; candour no longer costs confidence; the £400k is scaled; free
+options for the SOC renewal, the test scope and an overloaded team; raising
+a named concern costs 1 attention; "After the breach" always has an incident
+by about day 240. The competent CISO player meets 3.3 objectives, with 3
+Difficult years of 25.
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers

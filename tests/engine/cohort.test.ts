@@ -29,9 +29,11 @@ describe('the facilitator pack names seeds that still give the years it says', (
     expect(idleYear('class-5')[0]).toEqual({ family: 'Ransomware and service encryption', month: 5 })
   })
 
-  it('class-26 is ransomware three times', () => {
-    expect(idleYear('class-26').map((incident) => incident.family)).toEqual([
-      'Ransomware and service encryption', 'Ransomware and service encryption', 'Ransomware and service encryption',
+  // class-26 was ransomware three times until reflections came the day after
+  // every incident (28 November) moved the draws; class-62 is twice.
+  it('class-62 is ransomware twice', () => {
+    expect(idleYear('class-62').map((incident) => incident.family)).toEqual([
+      'Ransomware and service encryption', 'Ransomware and service encryption',
     ])
   })
 

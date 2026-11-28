@@ -35,10 +35,12 @@ it.each(['sit-inherited-mess', 'sit-new-money', 'sit-tidy', 'sit-after-breach'])
   await waitFor(() => expect(useGameStore.getState().state?.situationId).toBe(situationId))
   expect(useGameStore.getState().state!.difficulty).toBe('guided')
 })
-it('runs a UI skip as far as a headless advance when nothing needs the player', () => {
+// Since 28 November a UI skip stops after three weeks of nothing; a headless
+// advance runs its days.
+it('runs a UI skip three weeks when nothing needs the player, and a headless advance its days', () => {
   const original = quiet(329)
   useGameStore.getState().advanceDays(30, true)
-  expect(useGameStore.getState().state!.currentDay).toBe(359)
+  expect(useGameStore.getState().state!.currentDay).toBe(350)
   const headless = structuredClone(original)
   runDays(headless, useGameStore.getState().index!, 30)
   expect(headless.currentDay).toBe(359)

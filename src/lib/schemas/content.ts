@@ -83,7 +83,7 @@ const effectTiming = {
 }
 
 export const effectSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('budget.change'), amount: z.number(), note: z.string().optional() }),
+  z.object({ type: z.literal('budget.change'), amount: z.number(), note: z.string().optional(), scaled: z.literal('post-incident').optional() }),
   z.object({ type: z.literal('focus.change'), amount: z.number() }),
   z.object({ type: z.literal('capacity.change'), fn: functionTarget, delta: z.number(), temporary: z.object(effectTiming).optional() }),
   z.object({ type: z.literal('stakeholder.trust'), stakeholderId: id, delta: z.number(), reason: z.string().optional() }),

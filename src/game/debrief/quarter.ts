@@ -157,6 +157,18 @@ export function buildQuarterReview(
     reaction = `${opening} ${focus}${covered.length > 0 ? ` The material agenda covered: ${covered.map((id) => listed(topics.find((topic) => topic.id === id)!.label)).join('; ')}.` : optional.length > 0 ? '' : ' The selected updates are noted; no current item was classified as material.'}${alsoNoted}`
   }
 
+  // Read from what the paper asked for and what it left unsaid: the same
+  // reply came back to papers with three recommendations and with none
+  // (427b290 playtest, MJ-09; owner, 28 November). No effect: words only.
+  if (input.topics.length > 0 || input.recommendations.length > 0) {
+    const asked = input.recommendations.flatMap((id) => (id.startsWith('programme:') ? [index.programme.get(id.slice('programme:'.length))] : [])).filter((def): def is NonNullable<typeof def> => def !== undefined)
+    const unfunded = asked.filter((def) => state.programmes.programmes[def.id]?.status === 'proposed' && def.budgetCost > state.resources.budgetRemaining)
+    if (input.recommendations.length === 0) reaction += ' The paper recommends nothing, and the chair asks what you want the committee to do with it.'
+    else if (unfunded.length > 0) reaction += ` It asks how you mean to fund ${unfunded.map((def) => def.name).join(' and ')}, which the year's budget cannot cover as it stands.`
+    else if (asked.length > 0) reaction += ` It will hear more on ${asked.map((def) => def.name).join(' and ')} at the next committee.`
+    if (!input.communicateUncertainty && (state.organisation.understanding['overall'] ?? 0) < 0.4) reaction += ' It notices the paper does not say what you do not yet know.'
+  }
+
   if (input.communicateUncertainty) {
     // Honest uncertainty, communicated well, builds durable credibility.
     const understanding = state.organisation.understanding['overall'] ?? 0

@@ -31,7 +31,11 @@ it('runs Skip to the day a paper enters its final week, and says so', () => {
   state.flags['incident.floor'] = true
   // Security checks stop a skip too (23 November); this test is about the paper.
   for (const objective of Object.values(state.business.objectives)) objective.gate = 'met'
-  const result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
+  // So do objectives met or missed, and finished programmes (28 November).
+  for (const objective of Object.values(state.business.objectives)) objective.status = 'achieved'
+  // Skip stops after three weeks of nothing (28 November), so press it again.
+  let result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
+  while (result.message.includes('three weeks have passed')) result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
   expect(state.currentDay).toBe(3 * DAYS_PER_QUARTER - 1 - 7)
   expect(result.message).toContain('the Q2 board paper is due in 7 days')
 })

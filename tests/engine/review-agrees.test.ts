@@ -297,7 +297,8 @@ describe('the budget cut agreed in a quiet autumn', () => {
     // Middling morale and nothing on the team's plate: rated solid, and told in
     // the same row that its goodwill had run out.
     const state = newGame(index, { seed: 'team-sentence' })
-    for (const fn of Object.values(state.team.functions)) fn.morale = 0.5
+    // Fully staffed: a rested team with posts empty is its own case (28 November).
+    for (const fn of Object.values(state.team.functions)) { fn.morale = 0.5; fn.vacancies = 0 }
     const team = buildAnnualReview(state, index).dimensions.find((d) => d.id === 'team-sustainability')!
     expect(team.band).toBe('solid')
     expect(team.narrative).not.toMatch(/goodwill/)

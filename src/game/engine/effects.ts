@@ -5,6 +5,7 @@
  * is the only place that knows *how* to change it. Anything that bypasses this
  * reducer is an architectural regression.
  */
+import { scaledPostIncidentAmount } from '../budget/post-incident'
 import type { ContentIndex, CyberFunction, EffectTiming, FunctionTarget, GameEffect, GameState } from '../types'
 import { programmeDeliveryPercent } from '../programmes/reporting'
 import { minimumProgrammeFunding } from '../programmes/funding'
@@ -113,6 +114,8 @@ export function applyEffect(
   switch (effect.type) {
     case 'budget.change': {
       const before = state.resources.budgetRemaining
+      const scaledFor = effect.scaled === 'post-incident' && context.decisionId ? state.decisions.decisions[context.decisionId]?.incidentId : undefined
+      const amount = effect.scaled === 'post-incident' ? scaledPostIncidentAmount(state, effect.amount, scaledFor ? state.incidents.incidents[scaledFor] : undefined) : effect.amount
       // Floored, like `focus.change` and `capacity.change` below, and like
       // `spendBudget`, which refuses any player action that would overdraw.
       // This case was the one resource effect without a floor, so a costly
@@ -123,12 +126,12 @@ export function applyEffect(
       // Money that comes back pays the unbudgeted spend first: a £400k grant
       // and a £90k refund went to "available" while £260k and £140k stayed
       // owed to finance (80611b8 playtest, MJ-11).
-      const repaid = effect.amount > 0 ? Math.min(effect.amount, state.resources.unfundedCommitment) : 0
+      const repaid = amount > 0 ? Math.min(amount, state.resources.unfundedCommitment) : 0
       if (repaid > 0) {
         state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment - repaid)
         state.history.entries.push({ day: state.currentDay, kind: 'budget', summary: `${money(repaid)} paid against the unbudgeted spend; ${money(state.resources.unfundedCommitment)} still owed to finance.` })
       }
-      state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + effect.amount - repaid))
+      state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + amount - repaid))
       recordBudgetMovement(state, before, effect.note ?? index.event.get(context.source.replace(/^event:/, ''))?.title ?? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title ?? 'Budget adjustment')
       if (effect.note) outcome.notes.push(effect.note)
       break
@@ -377,6 +380,10 @@ export function applyEffect(
       // Security actively helping an objective makes it measurably easier to
       // deliver, and the annual review reports it.
       if (effect.delta > 0) objective.securitySupported = true
+      // Named on the card: "A decision of yours moved this objective on" named
+      // none (427b290 playtest, MN-27).
+      const by = effect.delta > 0 ? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title : undefined
+      if (by && !(objective.supportedBy ?? []).includes(by)) objective.supportedBy = [...(objective.supportedBy ?? []), by]
       break
     }
     case 'objective.delay': {

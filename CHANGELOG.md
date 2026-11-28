@@ -25,6 +25,42 @@ The thirteenth round of AI playtests.
   waiting above it.
 - The review no longer repeats a sentence.
 
+The owner then asked for the rest of that round's design list to be fixed.
+
+- Every closed incident is followed the next day by its "After the
+  incident" reflection, however many the year has. One that closes too late
+  is named in the review.
+- Skip ahead stops after three weeks of nothing, and when an objective is
+  met or missed or a programme finishes.
+- A threat letter about a system an intrusion is crossing is a SOC warning,
+  with its card, and the debrief links it.
+- The review says which systems you examined first, and names a risk nobody
+  could see as found at the year end rather than one you ignored. A letter
+  you did not open is said to be one.
+- Telling the board an incident is in hand when it is not, or telling audit
+  a programme is on track when it is not, counts against communication
+  every time. Two empty board papers do too.
+- A ransom paid, a second incident through the same route, or debt left for
+  finance caps the year at Mixed. An encryption or a repeat caps resilience
+  at developing.
+- A rested team with posts held empty in a year that spent little, two
+  objectives held at their checks, a programme finished by working round its
+  last stage, and one short of people at the close are all read for what
+  they are.
+- Notifying the regulator and restating a figure no longer cost the board's
+  confidence.
+- The post-incident money is scaled to the incident and the months left, and
+  says beforehand how much of it pays down unbudgeted spend. Refunds say so
+  too.
+- The SOC renewal, the test scope and an overloaded team each have an option
+  that costs no money.
+- Raising a risk from the register takes 1 attention.
+- A year after the breach always has an incident, whatever the mode.
+- Board replies say when a paper recommends nothing, or recommends what the
+  budget cannot pay for.
+- The cloud migration's slip names its cause, and the objective card names
+  the decision that moved it on.
+
 ## 0.1.0-rc.5 — 27 November 2026 — fifth release candidate
 
 The owner's second design list of 25 November, the eleventh and twelfth

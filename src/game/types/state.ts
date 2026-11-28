@@ -491,6 +491,8 @@ export interface BusinessObjectiveRuntime {
   delayOwedDays?: number
   conditionsAttached: string[]
   securitySupported: boolean
+  /** The decisions that moved it on, by title. Absent in older saves. */
+  supportedBy?: string[]
   /** How the objective's security gate was answered, once checked. Absent before, and in older saves. */
   gate?: 'met' | 'unmet'
 }

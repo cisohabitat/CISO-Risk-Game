@@ -87,6 +87,8 @@ it('stops Skip ahead on the day of a security check, naming it', () => {
   const { state, index } = at(220)
   state.reviews.pendingQuarter = undefined
   state.controls.controls['ctl-dlp']!.coverage = 0.2
+  // A missed objective stops a skip too (28 November); this test is about the check.
+  for (const [id, objective] of Object.entries(state.business.objectives)) if (id !== 'obj-acquisition') objective.status = 'achieved'
   const result = applyAction(state, index, { type: 'advance', days: 364, stopOnUpdate: true })
   expect(state.currentDay).toBe(230)
   expect(result.message).toContain('Kestrel: auditors')

@@ -155,6 +155,12 @@ export type PauseReason =
   | 'soc-warning'
   /** An incident closed today, and its debrief is ready. */
   | 'incident-closed'
+  /** An objective was met or missed today, or a programme finished: they
+   * passed inside 30- and 50-day jumps in silence (427b290 playtest, MJ-02). */
+  | 'objective-outcome'
+  | 'programme-complete'
+  /** Skip ahead ran three weeks without anything stopping it. */
+  | 'skip-limit'
   | 'quarter-end'
   | 'year-end'
   | 'player'

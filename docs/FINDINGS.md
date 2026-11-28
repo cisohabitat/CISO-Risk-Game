@@ -5060,3 +5060,20 @@ Also fixed:
 - the Briefing saying nothing was waiting above a SOC card.
 
 The ladder's figures are unchanged from rc.5.
+
+## 28 November 2026 — the 427b290 design list, fixed
+
+The owner asked for every design item from the pass 13 report to be fixed.
+The list and the measurements are in
+`docs/playtests/2026-11-27-owner-supplied-427b290-matrix.md`, "Fix all".
+
+Two first attempts overshot:
+- A cap on Team for four or more empty posts caught every player, because
+  Nexora starts with five. It now applies only to a rested year that left
+  three quarters of its budget unspent.
+- A verdict cap for any debt over 5% of the allocation turned 11 defensive
+  years Mixed. It is a tenth now; the report's case was 15%.
+
+After both, the competent player reads Guided 25 / 0 / 0, CISO 6 / 16 / 3
+and High 8 / 15 / 2 (Credible / Mixed / Difficult), against 24 / 1 / 0,
+4 / 17 / 4 and 9 / 13 / 3 before.

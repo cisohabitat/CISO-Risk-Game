@@ -828,6 +828,10 @@
                           },
                           "note": {
                             "type": "string"
+                          },
+                          "scaled": {
+                            "type": "string",
+                            "const": "post-incident"
                           }
                         },
                         "required": [
@@ -3106,6 +3110,10 @@
                           },
                           "note": {
                             "type": "string"
+                          },
+                          "scaled": {
+                            "type": "string",
+                            "const": "post-incident"
                           }
                         },
                         "required": [
@@ -4443,6 +4451,10 @@
                                 },
                                 "note": {
                                   "type": "string"
+                                },
+                                "scaled": {
+                                  "type": "string",
+                                  "const": "post-incident"
                                 }
                               },
                               "required": [
@@ -5938,6 +5950,10 @@
                     },
                     "note": {
                       "type": "string"
+                    },
+                    "scaled": {
+                      "type": "string",
+                      "const": "post-incident"
                     }
                   },
                   "required": [
@@ -7435,6 +7451,10 @@
                     },
                     "note": {
                       "type": "string"
+                    },
+                    "scaled": {
+                      "type": "string",
+                      "const": "post-incident"
                     }
                   },
                   "required": [

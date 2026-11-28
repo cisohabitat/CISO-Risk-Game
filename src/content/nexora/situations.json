@@ -40,6 +40,11 @@
           "type": "stakeholder.concern",
           "stakeholderId": "stk-ceo",
           "concern": "Whether it could happen again"
+        },
+        {
+          "type": "flag.set",
+          "flag": "situation.incident-floor-day",
+          "value": 240
         }
       ]
     },
