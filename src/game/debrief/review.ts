@@ -362,9 +362,15 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const worstConsequence = incidents.reduce((max, i) => Math.max(max, i.consequence, i.dataImpact ?? 0), 0)
 
   const RECOVERY_EXERCISES = ['inv-recovery-test', 'inv-ir-readiness']
+  // A test that came back thin was attempted, not demonstrated: one read "2
+  // recovery exercises completed" (57c9605 playtest, MN-54).
+  const THIN = 0.3
   const exercises = state.team.assignments.filter(
-    (a) => a.status === 'complete' && RECOVERY_EXERCISES.includes(a.refId),
+    (a) => a.status === 'complete' && RECOVERY_EXERCISES.includes(a.refId) && a.quality >= THIN,
   )
+  const thinExercises = state.team.assignments.filter(
+    (a) => a.status === 'complete' && RECOVERY_EXERCISES.includes(a.refId) && a.quality < THIN,
+  ).length
   const recoveryControls = index.content.controls
     .filter((c) => c.category === 'recovery')
     .map((c) => state.controls.controls[c.id])
@@ -543,6 +549,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
             ? 'No separate recovery exercise was recorded. This assessment uses the incident outcomes above; it does not demonstrate a rehearsed restore.'
             : 'Recovery was never exercised',
       )
+      if (thinExercises > 0) lines.push(`${thinExercises} recovery exercise${thinExercises === 1 ? '' : 's'} came back thin: attempted, and inconclusive`)
       lines.push(
         `${selfAssured.length} of ${recoveryControls.length} recovery controls carried assurance you established yourself`,
       )
@@ -676,8 +683,13 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     'dec-inc-statement': { option: 'opt-statement-quiet', line: 'You fixed the skimmed checkout quietly rather than tell customers.' },
     'dec-sit-tidy-numbers': { option: 'opt-tidy-quiet', line: "You corrected your predecessor's figure without telling the committee it had changed." },
   }
+  // Not quiet if a board paper then reported the incident it was about: "you
+  // absorbed the misdirected payment rather than report it" sat beside a Q2
+  // paper that reported it (57c9605 playtest, MJ-07).
+  const reportedIncidents = new Set(quarters.flatMap((paper) => paper.topicsChosen.filter((topic) => topic.startsWith('incident:')).map((topic) => topic.slice('incident:'.length))))
   const keptQuiet = Object.values(state.decisions.decisions)
     .filter((decision) => decision.selectedOptionId !== undefined && QUIET[decision.defId]?.option === decision.selectedOptionId)
+    .filter((decision) => !(decision.incidentId && reportedIncidents.has(decision.incidentId)))
     .map((decision) => QUIET[decision.defId]!.line)
   // A programme presented as on track that audit then found behind is an
   // account that was not so: it left Communication strong (427b290
@@ -697,7 +709,9 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
   const misled = incidentNews.some((news) => news.misled)
   // Papers that raised nothing are not communication: three empty papers read
   // "the board came to rely on your judgement" (427b290 playtest, MJ-08).
-  const emptyPapers = quarters.filter((paper) => paper.topicsChosen.length === 0).length
+  // A paper missed at its deadline told the board as little: a cost-cutter's
+  // three read Communication solid (57c9605 playtest, MJ-08).
+  const emptyPapers = quarters.filter((paper) => paper.topicsChosen.length === 0).length + papers.missed
   const emptyCap = emptyPapers >= 2 ? 0.51 : 1
   const communicationScore = Math.min(emptyCap, COMMUNICATION_CAP[Math.min(lapses + (misled ? 1 : 0), 3)]!, communication)
   dimensions.push({
@@ -859,6 +873,7 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     incidents: incidents.length,
     worst: worstConsequence,
     encrypted,
+    verdict: assessment.label,
   })
   const ordinal = yearWord(state.year)
   const performanceBand = `${assessment.label} ${ordinal} year`
@@ -1118,7 +1133,7 @@ function previousYearLine(state: GameState): string | undefined {
  * dimensions that actually diverged: the strongest, the weakest, and the
  * tension between them.
  */
-export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false, year: { missed?: number; incidents?: number; worst?: number; encrypted?: boolean } = {}): string {
+export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident: boolean, stillRunning = false, year: { missed?: number; incidents?: number; worst?: number; encrypted?: boolean; verdict?: string } = {}): string {
   const score = (id: string) => {
     const dimension = dimensions.find((d) => d.id === id)
     return dimension ? bandValue(dimension.band) : 0.5
@@ -1189,7 +1204,11 @@ export function chooseHeadline(dimensions: AnnualReviewDimension[], hadIncident:
     return 'Tested, and it held.'
   }
   if (failing('team-sustainability')) return 'Delivered on the backs of people who cannot do it again.'
-  if (hadIncident && (weakest.id === 'resilience' || weak('resilience')) && (year.worst === undefined || year.worst >= 0.3)) return 'Tested, and it did not hold.'
+  // Not over a year the review calls Credible: it headed a Credible 4 of 5
+  // year (57c9605 playtest, MJ-10).
+  const creditable = year.verdict === 'Credible' || year.verdict === 'Exceptional'
+  if (hadIncident && !creditable && (weakest.id === 'resilience' || weak('resilience')) && (year.worst === undefined || year.worst >= 0.3)) return 'Tested, and it did not hold.'
+  if (hadIncident && creditable && (weakest.id === 'resilience' || weak('resilience'))) return 'Tested, and it cost something, but the year held together.'
   if (!hadIncident && business >= 0.68 && programme >= 0.68 && !failing('resilience')) {
     return 'A quiet year that bought the organisation real capability.'
   }

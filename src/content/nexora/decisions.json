@@ -725,7 +725,7 @@
       "relatedNodeIds": [],
       "options": [
         { "id": "opt-hire-recruit", "label": "Recruit properly", "description": "Take the time to hire the right people.", "visibleKnownEffects": ["One identity vacancy filled after sixty days; other vacancies remain", "Permanent capability; Team shows other recruitment needs"],
-          "immediateEffects": [ { "type": "budget.change", "amount": -140 }, { "type": "event.schedule", "eventId": "evt-org-new-starter", "dayOffset": 55 } ],
+          "immediateEffects": [ { "type": "budget.change", "amount": -120 }, { "type": "event.schedule", "eventId": "evt-org-new-starter", "dayOffset": 55 } ],
           "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "team.vacancyFilled", "fn": "iam" }, { "type": "team.morale", "delta": 0.05 } ], "note": "A new identity engineer has joined." } ] },
         { "id": "opt-hire-contract", "label": "Bring in contractors now", "description": "Buy capacity immediately at a premium.", "visibleKnownEffects": ["Capacity within weeks", "Expensive, and it leaves when the money stops"],
           "immediateEffects": [
@@ -996,14 +996,16 @@
             { "type": "capacity.change", "fn": "most-pressed", "delta": 1.5 },
             { "type": "team.morale", "delta": 0.06 }
           ] },
-        { "id": "opt-overload-defer", "label": "Let routine work wait for two months", "description": "Patching rounds, log reviews and access recertification pause so the stretched team can carry what you started.", "visibleKnownEffects": ["Costs no money and stops nothing you started", "Routine hygiene waits two months, and drifts while it does"],
+        { "id": "opt-overload-defer", "label": "Let routine work wait for two months", "description": "Patching rounds, log reviews and access recertification pause so the stretched team can carry what you started.", "visibleKnownEffects": ["Costs no money and stops nothing you started", "The load comes off for two months", "Patching and log review fall two months behind, and vulnerability exposure rises while they do"],
           "immediateEffects": [
-            { "type": "capacity.change", "fn": "most-pressed", "delta": 0.75 },
-            { "type": "team.morale", "fn": "most-pressed", "delta": 0.06 },
-            { "type": "control.operational", "controlId": "ctl-vuln", "delta": -0.05 },
-            { "type": "control.monitoring", "controlId": "ctl-logging", "delta": -0.03 }
+            { "type": "capacity.change", "fn": "most-pressed", "delta": 1.25 },
+            { "type": "team.morale", "fn": "most-pressed", "delta": 0.12 },
+            { "type": "leader.morale", "leaderId": "most-pressed", "delta": 0.1 }
           ],
-          "delayedEffects": [ { "dayOffset": 60, "effects": [ { "type": "capacity.change", "fn": "most-pressed", "delta": -0.75 } ], "note": "Routine work is back on the team's plate, two months behind." } ] },
+          "delayedEffects": [
+            { "dayOffset": 7, "effects": [ { "type": "control.operational", "controlId": "ctl-vuln", "delta": -0.05 }, { "type": "control.monitoring", "controlId": "ctl-logging", "delta": -0.03 } ], "note": "The patching round and the log review you deferred have been skipped this month." },
+            { "dayOffset": 60, "effects": [ { "type": "capacity.change", "fn": "most-pressed", "delta": -1.25 } ], "note": "Routine work is back on the team's plate, two months behind." }
+          ] },
         { "id": "opt-overload-push", "label": "Ask them to push through the quarter", "description": "It is only a few more weeks.", "visibleKnownEffects": ["Nothing stops, and nothing is spent", "The most stretched people carry it, and not all of them stay"],
           "immediateEffects": [
             { "type": "team.morale", "fn": "most-pressed", "delta": -0.1 },

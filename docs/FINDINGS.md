@@ -5061,6 +5061,18 @@ Also fixed:
 
 The ladder's figures are unchanged from rc.5.
 
+## 28 November 2026 — 15-run matrix on 57c9605 (pass 14)
+
+Recorded in `docs/playtests/2026-11-28-owner-supplied-57c9605-matrix.md`.
+
+The assumption that failed the day after it was recorded was one the player
+had already disproved: the isolation rule fails only once the legacy route
+is discovered. It is now said on the option and recorded as contradicted.
+The free overload relief added 0.75 days a week; it adds 1.25 now, and an
+expert-like player is Credible in 5 of 25 CISO years, against none. Team
+stays weak in 20 of 25 because morale recovers only below half load, which
+is the stated design and left to the owner.
+
 ## 28 November 2026 — the 427b290 design list, fixed
 
 The owner asked for every design item from the pass 13 report to be fixed.

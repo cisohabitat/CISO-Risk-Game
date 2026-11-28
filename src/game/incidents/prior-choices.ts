@@ -34,5 +34,7 @@ export function priorRouteChoices(state: GameState, index: ContentIndex, inciden
       ? 'With every other option beyond the budget left, the deadline default selected'
       : runtime.resolvedByDefault === true ? 'The deadline default selected' : runtime.resolvedByDefault === false ? 'You chose' : 'The recorded choice was'
     return [{ decisionId: runtime.id, text: `${actor} "${option.label}" in "${def.title}" before this incident. ${stillWeak.map((id) => index.control.get(id)?.shortName ?? id).join(', ')} still showed a gap at reconstruction.` }]
-  }).slice(0, 2)
+  // The same choice made twice (the overload decision, asked each quarter)
+  // read as one sentence printed twice (57c9605 playtest, CS-28).
+  }).filter((choice, i, all) => all.findIndex((other) => other.text === choice.text) === i).slice(0, 2)
 }

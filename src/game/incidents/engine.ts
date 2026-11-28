@@ -356,7 +356,13 @@ export function buildReconstruction(
     : hunts.length > 0 ? 'a targeted hunt was under way before impact but had not returned'
       // Not blamed when no hunt could be commissioned at any warning: the
       // budget or the SOC could not take one (5033820 playtest, MJ-25).
-      : warningsUnhuntable(state, incident.campaignId) ? 'no targeted hunt could be commissioned at any warning, because the budget or the SOC could not take one'
+      // Said without "could not be commissioned" when hunts ran at other
+      // times: three hunts were commissioned in that year (57c9605 playtest,
+      // MJ-15).
+      : warningsUnhuntable(state, incident.campaignId)
+        ? state.team.assignments.some((assignment) => assignment.refId === 'inv-threat-hunt' && assignment.status !== 'abandoned')
+          ? 'no hunt you commissioned was running while it was under way, and when its warnings came the budget or the SOC could not take another'
+          : 'no targeted hunt could be commissioned at any warning, because the budget or the SOC could not take one'
       : 'no targeted hunt ran between the first warning and impact'
   const weeks = Math.max(1, Math.round(ranFor / 7))
   // First, because the lists are cut at six and the narrative reads three:

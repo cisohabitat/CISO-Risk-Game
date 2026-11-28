@@ -543,6 +543,15 @@ changes.
   - `situation.incident-floor-day` (a situation's setup flag) sets an
     incident floor alongside the profile's.
   - Objectives record `supportedBy` (decision titles) for the card.
+- 28 November (57c9605 playtest):
+  - `knownContradiction` (`src/game/assumptions/validation.ts`): an
+    assumption the player's own findings already contradict is shown on the
+    option (`assumesContradicted`) and recorded as invalidated on the day.
+  - Failed assumptions are optional board topics.
+  - Decision cards add "<objective> waits N days" for every
+    `objective.delay` an option carries.
+  - `chooseHeadline` takes `verdict`; `HIRE_COST` in the orchestrator.
+  - Urgent threat events add the `soc-warning` stop.
 - `DIVERSION_DAYS` is 40 since 27 November (was 60), to bring competent CISO
   play back to about three objectives.
 - A security check on an objective is a stop (`objective-check`), named by

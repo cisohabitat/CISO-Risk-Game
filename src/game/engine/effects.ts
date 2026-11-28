@@ -17,7 +17,7 @@ import { createIncident } from '../incidents/create'
 import { pushMessage } from '../inbox/messages'
 import { functionName, leaderForFunction, mostPressedFunction, refreshCommittedCapacity } from '../team/capacity'
 import { stopWork } from '../team/assignments'
-import { evaluateAssumption } from '../assumptions/validation'
+import { evaluateAssumption, knownContradiction } from '../assumptions/validation'
 import type { Rng } from './rng'
 import { ownValue, referenceField, unsafeKey } from '../security/references'
 
@@ -127,12 +127,15 @@ export function applyEffect(
       // and a £90k refund went to "available" while £260k and £140k stayed
       // owed to finance (80611b8 playtest, MJ-11).
       const repaid = amount > 0 ? Math.min(amount, state.resources.unfundedCommitment) : 0
+      const source = effect.note ?? index.event.get(context.source.replace(/^event:/, ''))?.title ?? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title ?? 'Budget adjustment'
       if (repaid > 0) {
         state.resources.unfundedCommitment = round2(state.resources.unfundedCommitment - repaid)
-        state.history.entries.push({ day: state.currentDay, kind: 'budget', summary: `${money(repaid)} paid against the unbudgeted spend; ${money(state.resources.unfundedCommitment)} still owed to finance.` })
+        // Named: "£90k paid against the unbudgeted spend" said nothing of
+        // where it came from (57c9605 playtest, MN-01).
+        state.history.entries.push({ day: state.currentDay, kind: 'budget', summary: `${money(repaid)} paid against the unbudgeted spend (${source.replace(/\.$/, '')}); ${money(state.resources.unfundedCommitment)} still owed to finance.` })
       }
       state.resources.budgetRemaining = Math.max(0, round2(state.resources.budgetRemaining + amount - repaid))
-      recordBudgetMovement(state, before, effect.note ?? index.event.get(context.source.replace(/^event:/, ''))?.title ?? index.decision.get(context.source.replace(/^decision(?:-default)?:/, ''))?.title ?? 'Budget adjustment')
+      recordBudgetMovement(state, before, source)
       if (effect.note) outcome.notes.push(effect.note)
       break
     }
@@ -637,6 +640,16 @@ export function recordAssumption(
     heldWhenRecorded: evaluateAssumption(state, context.index, def.validationRuleId)?.holds ?? true,
     nextReviewDay: state.currentDay + def.reviewAfterDays,
     acknowledged: false,
+  }
+  // Already contradicted by what the player has found: recorded as such, not
+  // announced the next day as a surprise (57c9605 playtest, MJ-32).
+  const known = knownContradiction(state, context.index, defId)
+  if (known) {
+    const recorded = state.assumptions.assumptions[id]!
+    recorded.status = 'invalidated'
+    recorded.invalidatedDay = state.currentDay
+    recorded.invalidationReason = `${known} You had already found this when you relied on it.`
+    recorded.acknowledged = true
   }
   return id
 }

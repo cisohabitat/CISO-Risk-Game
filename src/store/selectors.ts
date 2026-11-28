@@ -29,6 +29,7 @@ import { consequenceBand, describeChange, exposureBand, residualBand } from '@/g
 import type { IconName } from '@/components/ui/icons'
 import { imposedTake, optionBudgetCost } from '@/game/decisions/cost'
 import { evaluateCondition } from '@/game/events/conditions'
+import { knownContradiction } from '@/game/assumptions/validation'
 import { DIFFICULTY_PROFILES } from '@/game/engine/setup'
 import { calculateControlEffectiveness, controlBand } from '@/game/controls/effectiveness'
 import { capacityBand, nextFunctionMorale, functionName, functionStrain, functionTitle, hiringUnderWay, moraleLabel, teamStrain } from '@/game/team/capacity'
@@ -174,6 +175,8 @@ export interface OpenDecisionView {
     visibleKnownEffects: string[]
     /** What taking this option assumes, recorded with it when it is chosen. */
     assumes: string[]
+    /** Of those, any that what the player has already found contradicts, with why. */
+    assumesContradicted: string[]
     programmeCommitment?: { programmeId: string; reviewAfterDays: number }
     budgetCost?: number
     /** Attention the option spends this week, from its requirements. */
@@ -237,11 +240,19 @@ export function openDecisions(state: GameState, index: ContentIndex): OpenDecisi
             id: option.id,
             label: option.label,
             description: renderDecisionText(option.description, state, index, runtime),
-            visibleKnownEffects: option.visibleKnownEffects.map((text) => renderDecisionText(text, state, index, runtime)),
+            // Every delay the option imposes is said, with its length: "20 days:
+            // your decision on 'Finance asks for the cyber budget back'" came
+            // after a refusal whose card mentioned none (57c9605 playtest, MJ-16).
+            visibleKnownEffects: [
+              ...option.visibleKnownEffects.map((text) => renderDecisionText(text, state, index, runtime)),
+              ...[...option.immediateEffects, ...(option.delayedEffects ?? []).flatMap((delayed) => delayed.effects)]
+                .flatMap((effect) => (effect.type === 'objective.delay' && index.objective.get(effect.objectiveId) ? [`${index.objective.get(effect.objectiveId)!.name} waits ${effect.days} days`] : [])),
+            ],
             // An assumption the game records with a choice is shown on the
             // choice: a playtester read "an assumption you recorded" about one
             // they had never seen (427b290 playtest, MJ-30).
             assumes: (option.assumptionIds ?? []).flatMap((assumptionId) => index.assumption.get(assumptionId)?.statement ?? []),
+            assumesContradicted: (option.assumptionIds ?? []).flatMap((assumptionId) => knownContradiction(state, index, assumptionId) ?? []),
             programmeCommitment: option.programmeCommitment,
             budgetCost: budgetCost > 0 ? budgetCost : undefined,
             focusCost: requirements?.focus || undefined,

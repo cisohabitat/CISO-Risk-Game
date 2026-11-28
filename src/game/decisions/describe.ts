@@ -108,7 +108,11 @@ export function nextBoard(day: number): string {
  */
 function unseenRisk(state: GameState, index: ContentIndex): string | undefined {
   const top = unreportedScenarios(state)[0]
-  return top ? index.riskScenario.get(top.id)?.title : undefined
+  const title = top ? index.riskScenario.get(top.id)?.title : undefined
+  // Named as the player raised it too: the scenario's own title read as a
+  // risk nobody had raised (57c9605 playtest, MJ-06, MN-09).
+  const raisedAs = top ? Object.values(state.risks.hypotheses).find((hypothesis) => hypothesis.status === 'converted' && hypothesis.linkedScenarioId === top.id && hypothesis.title !== title)?.title : undefined
+  return title && raisedAs ? `${title} (which you raised as "${raisedAs}")` : title
 }
 
 /**

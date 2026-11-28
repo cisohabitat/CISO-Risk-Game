@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import { Badge, Button, Card, CardBody, Disclosure, EmptyState, Fact, Meter, SectionHeading } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { teamView } from '@/store/selectors'
+import { HIRE_COST } from '@/game/engine/orchestrator'
 import { capacityTone, money, plural, shortDate } from '@/lib/formatting/labels'
 import { cn } from '@/lib/utils/cn'
 import { PersonPortrait } from '@/components/game/Person'
@@ -55,7 +56,7 @@ export function TeamScreen() {
                     {fn.vacancies > 0 && (
                       <Button variant="quiet" size="sm" className="compact min-h-9" disabled={fn.incoming >= fn.vacancies}
                         onClick={() => dispatch({ type: 'hire', fn: fn.fn as never })}>
-                        {fn.incoming >= fn.vacancies ? 'Recruiting…' : `${fn.hiring ? 'Recruit another' : 'Recruit'} (${money(120)})`}
+                        {fn.incoming >= fn.vacancies ? 'Recruiting…' : `${fn.hiring ? 'Recruit another' : 'Recruit'} (${money(HIRE_COST)})`}
                       </Button>
                     )}
                   </div>

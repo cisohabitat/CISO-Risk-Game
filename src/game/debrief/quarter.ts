@@ -61,7 +61,10 @@ export function materialTopics(state: GameState, index: ContentIndex): { id: str
     out.push({
       id: `assumption:${assumption.id}`,
       label: `Assumption failed: ${assumption.statement}`,
-      material: !reported.has(`assumption:${assumption.id}`),
+      // Offered, not required: a failed assumption the game recorded with an
+      // option became a required item a day after it was chosen (57c9605
+      // playtest, MJ-30, MJ-32). The risk behind it is what the board needs.
+      material: false,
     })
   }
   for (const programme of Object.values(state.programmes.programmes)) {
@@ -163,8 +166,20 @@ export function buildQuarterReview(
   if (input.topics.length > 0 || input.recommendations.length > 0) {
     const asked = input.recommendations.flatMap((id) => (id.startsWith('programme:') ? [index.programme.get(id.slice('programme:'.length))] : [])).filter((def): def is NonNullable<typeof def> => def !== undefined)
     const unfunded = asked.filter((def) => state.programmes.programmes[def.id]?.status === 'proposed' && def.budgetCost > state.resources.budgetRemaining)
-    if (input.recommendations.length === 0) reaction += ' The paper recommends nothing, and the chair asks what you want the committee to do with it.'
-    else if (unfunded.length > 0) reaction += ` It asks how you mean to fund ${unfunded.map((def) => def.name).join(' and ')}, which the year's budget cannot cover as it stands.`
+    // Said once, then as a pattern: the same sentence came back three
+    // quarters running (57c9605 playtest, MJ-09).
+    const earlier = state.reviews.quarters.filter((paper) => paper.completed && paper.quarter < input.quarter)
+    const unrecommended = earlier.filter((paper) => paper.recommendationIds.length === 0 && paper.topicsChosen.length > 0).length
+    const askedBefore = (name: string) => earlier.some((paper) => paper.boardReaction.includes(`fund ${name}`) || paper.boardReaction.includes(`and ${name}, which`))
+    const newlyUnfunded = unfunded.filter((def) => !askedBefore(def.name))
+    if (input.recommendations.length === 0) {
+      reaction += unrecommended === 0
+        ? ' The paper recommends nothing, and the chair asks what you want the committee to do with it.'
+        : unrecommended === 1
+          ? ' Again the paper asks the committee for nothing. The chair wonders aloud whether the committee is being informed or consulted.'
+          : ' Another paper without a recommendation. The committee has stopped expecting you to ask it for anything.'
+    } else if (newlyUnfunded.length > 0) reaction += ` It asks how you mean to fund ${newlyUnfunded.map((def) => def.name).join(' and ')}, which the year's budget cannot cover as it stands.`
+    else if (unfunded.length > 0) reaction += ` It has asked before how ${unfunded.map((def) => def.name).join(' and ')} would be paid for, and is still waiting for the answer.`
     else if (asked.length > 0) reaction += ` It will hear more on ${asked.map((def) => def.name).join(' and ')} at the next committee.`
     if (!input.communicateUncertainty && (state.organisation.understanding['overall'] ?? 0) < 0.4) reaction += ' It notices the paper does not say what you do not yet know.'
   }

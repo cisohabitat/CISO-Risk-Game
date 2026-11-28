@@ -6,6 +6,25 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+The fourteenth round of AI playtests.
+
+- An option whose assumption you have already disproved says so before you
+  choose it, and is not announced the next day as a surprise. Failed
+  assumptions are offered to the board, not required.
+- Letting routine work wait now takes real load off an overloaded team for
+  two months, and says what it costs in patching. Debriefs no longer cite
+  it as what hurt.
+- Every decision card states each delay it imposes on an objective.
+- A Credible year is not headed "did not hold".
+- An incident a paper reported is not counted as kept quiet; a missed paper
+  counts as an empty one; a recovery test that came back thin is not an
+  exercise.
+- Urgent threat mail stops the clock. Board replies vary when a paper again
+  recommends nothing.
+- Debt paid down by a refund names the refund. Programme funding keeps a
+  fifth of what is left by default and says what remains. Recruiting costs
+  the same everywhere.
+
 ## 0.1.0-rc.6 — 28 November 2026 — sixth release candidate
 
 The thirteenth round of AI playtests, and the owner's request to fix its

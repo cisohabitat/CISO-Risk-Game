@@ -329,7 +329,10 @@ export function ProgrammesScreen() {
                       disabled={state.resources.budgetRemaining < minimumProgrammeFunding(programme.budgetCost) || attentionShort}
                       onClick={() => {
                         setStarting(programme)
-                        setBudget(Math.min(programme.budgetCost, Math.floor(state.resources.budgetRemaining)))
+                        // A fifth of what is left kept back by default: the full
+                        // price swept the year's last £530k, and an incident a
+                        // fortnight later went unbudgeted (57c9605 playtest, MN-51).
+                        setBudget(Math.min(programme.budgetCost, Math.max(minimumProgrammeFunding(programme.budgetCost), Math.floor(state.resources.budgetRemaining * 0.8))))
                         setSponsorId('')
                       }}
                     >
@@ -385,6 +388,7 @@ export function ProgrammesScreen() {
                 {budget >= starting.budgetCost
                   ? 'fully funded'
                   : 'underfunded, which will slow delivery'}
+                {` · leaves ${money(Math.max(0, state.resources.budgetRemaining - budget))} for the rest of the year`}
               </span>
             </label>
 

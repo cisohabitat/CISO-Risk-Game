@@ -510,6 +510,10 @@ export function tickDay(state: GameState, index: ContentIndex, holdYearEnd = fal
       if (huntBlockedReason(state, index)) state.flags[`unhuntable.${onRoute.id}.event-${fired.def.id}`] = true
       pauseReasons.add('soc-warning')
     }
+    // Urgent threat mail stops the clock too, on a route or not: a supplier
+    // compromise in the sector passed inside a 4x run, 63 days before the
+    // supplier incident (57c9605 playtest, MJ-04).
+    if (fired.def.type === 'threat' && (fired.def.priority === 'urgent' || fired.def.priority === 'critical')) pauseReasons.add('soc-warning')
     // The overload message comes from whoever runs the overloaded function; it
     // was signed by the SOC head while the decision it opened named engineering.
     pushMessage(state, {

@@ -13,7 +13,9 @@ it('offers a programme that can be partially funded and keeps both slider endpoi
   const slider = screen.getByRole('slider')
   expect(slider).toHaveAttribute('min', '425')
   expect(slider).toHaveAttribute('max', '600')
-  expect(slider).toHaveValue('600')
+  // A fifth of what is left is kept back by default (57c9605 playtest, MN-51).
+  expect(slider).toHaveValue('480')
+  expect(screen.getByText(/leaves £120k for the rest of the year/)).toBeTruthy()
   fireEvent.change(slider, { target: { value: '425' } })
   fireEvent.click(screen.getByRole('button', { name: 'Start the programme', exact: true }))
   expect(useGameStore.getState().state!.resources.budgetRemaining).toBe(175)

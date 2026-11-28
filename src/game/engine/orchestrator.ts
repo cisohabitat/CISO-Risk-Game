@@ -97,6 +97,9 @@ export function newGame(index: ContentIndex, options: NewGameOptions): GameState
 
 
 /** What each kind of intervention costs of the player's week. Read by the screens that offer them. */
+/** One post recruited, on the Team screen and in the vacancy decision alike (57c9605 playtest, CS-29). */
+export const HIRE_COST = 120
+
 export const FOCUS_COSTS = {
   investigation: 1,
   deepRiskReview: 2,
@@ -184,6 +187,10 @@ export function describeStop(state: GameState, index: ContentIndex, reasons: Pau
       }
       case 'soc-warning': {
         const latest = state.inbox.messages.findLast((message) => message.signalCampaignId !== undefined && message.day === state.currentDay)
+        if (!latest) {
+          const urgent = state.inbox.messages.findLast((message) => message.type === 'threat' && message.day === state.currentDay)
+          if (urgent) return `Stopped on ${date}: ${urgent.subject}.`
+        }
         return `Stopped on ${date}: the SOC raised a warning${latest?.subject ? ` (${latest.subject.toLowerCase()})` : ''}.`
       }
       case 'incident-closed': {
@@ -882,7 +889,7 @@ export function applyAction(state: GameState, index: ContentIndex, action: Playe
       if (fn.vacancies <= 0) return fail('There is no open vacancy in that team.')
       const incoming = state.pendingEffects.flatMap((entry) => entry.effects).filter((effect) => effect.type === 'team.vacancyFilled' && effect.fn === action.fn).length
       if (incoming >= fn.vacancies) return fail('Recruitment already covers the remaining vacancies in that team.')
-      const cost = 120
+      const cost = HIRE_COST
       if (!spendBudget(state, cost, `Recruitment for ${functionName(action.fn)}`)) return fail('There is not enough budget to recruit.')
       state.pendingEffects.push({
         id: `hire-${action.fn}-${state.currentDay}`,

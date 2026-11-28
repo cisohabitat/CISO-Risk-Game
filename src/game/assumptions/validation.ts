@@ -326,3 +326,17 @@ export function assumptionEnquiries(state: GameState, index: ContentIndex, assum
         : reveal.kind === 'node-discovered' ? enquiry.revealsNodeIds.includes(reveal.nodeId) : false,
   ).map((enquiry) => enquiry.name)
 }
+
+/**
+ * Why an assumption is already contradicted by what the player has found, or
+ * undefined. Only for a rule whose evidence is already in view, so it says
+ * nothing about hidden truth (57c9605 playtest, MJ-32).
+ */
+export function knownContradiction(state: GameState, index: ContentIndex, defId: string): string | undefined {
+  const def = index.assumption.get(defId)
+  const rule = def ? VALIDATION_RULES[def.validationRuleId] : undefined
+  if (!rule) return undefined
+  const verdict = rule.evaluate(state, index)
+  if (verdict.holds) return undefined
+  return hasBeenRevealed(state, rule.revealedBy, state.currentDay) ? verdict.reason ?? 'What you have found contradicts it.' : undefined
+}
