@@ -32,7 +32,8 @@ for (const setup of [{ mode: 'Guided', id: 'guided', scenario: 'A tidy inheritan
 }
 
 // Since 17 November Skip runs to the next stop; with nothing pending from
-// Week 48 that is the final day, which it must reach without closing the year.
+// Week 48 it reaches the final day (in two presses since 28 November) without
+// closing the year.
 test('the Right Arrow shortcut cannot skip from Week 48 past the year close', async ({ page }) => {
   const save = prepareCampaign('bounded-shortcut', 'day:1', 'guided') as { state: GameState }
   save.state.currentDay = 329
@@ -42,6 +43,10 @@ test('the Right Arrow shortcut cannot skip from Week 48 past the year close', as
   for (const objective of Object.values(save.state.business.objectives)) objective.status = 'achieved'
   save.state.events.suppressedEventIds = readdirSync('src/content/nexora/events').filter((file) => file.endsWith('.json')).flatMap((file) => (JSON.parse(readFileSync(`src/content/nexora/events/${file}`, 'utf8')) as { events: { id: string }[] }).events.map((event) => event.id))
   await openPreparedCampaign(page, save)
+  await page.locator('#main').focus()
+  await page.keyboard.press('ArrowRight')
+  // Three weeks at most a press since 28 November: 17 December, then the last day.
+  await expect(page.locator('.morning-brief')).toContainText('17 December')
   await page.locator('#main').focus()
   await page.keyboard.press('ArrowRight')
   await expect(page.locator('.morning-brief')).toContainText('31 December')
