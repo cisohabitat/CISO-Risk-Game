@@ -27,9 +27,12 @@ export function boardWorthy(incident: IncidentRuntime, family: IncidentFamilyDef
   return incident.consequence >= BOARD_MATERIAL || family.regulatoryInterest >= BOARD_REGULATORY
 }
 
-/** Phases in which a briefing is news: confirmed, and not yet written up. */
+/** Phases in which a briefing is news: confirmed, and not yet written up.
+ * The response phase was missing, so an incident that sat in it past the
+ * three days offered no briefing and was then marked "heard elsewhere"
+ * (57c9605 playtest, MJ-33). */
 export function canBriefBoard(incident: IncidentRuntime): boolean {
-  return incident.boardInformedDay === undefined && ['escalation', 'containment', 'consequence', 'recovery'].includes(incident.phase)
+  return incident.boardInformedDay === undefined && ['escalation', 'response', 'containment', 'consequence', 'recovery'].includes(incident.phase)
 }
 
 /** Briefed within the window, and before the board heard elsewhere. */

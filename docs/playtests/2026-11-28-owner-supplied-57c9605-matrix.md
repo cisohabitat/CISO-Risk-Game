@@ -96,3 +96,43 @@ Checked, not defects, or owner calls:
   failures. Coverage: 94% of events, 100% of decisions.
 
 Tests: `tests/engine/pass14-fixes.test.ts`.
+
+## Fix all (28 November)
+
+The owner asked for the rest to be fixed and released.
+
+| Issue | Change |
+|---|---|
+| MJ-31 | Morale now recovers at 0.002 a day below half load (was 0.0012) and 0.0006 between half and seven-tenths (was nothing). Decline is unchanged and still faster. |
+| MJ-33 | The board could not be briefed while an incident was in its response phase, which can outlast the three days the board waits. It can now. |
+| MN-53 | An assumption that stopped holding sits on the Briefing for a fortnight, with its reason and a way to the risk it belongs to. |
+| MN-08 | The quarter recap leaves the Briefing four weeks into the quarter. |
+| MN-52 | The blind-spots line says its "taken on trust" count is of material items. |
+| MN-05, MN-06 | The vacancy decision names all five empty posts; the first-week option no longer promises "23 open entries" the register does not show. |
+| CS-01 | The paper deadline reads "by the end of Q2, 1 July". |
+| Release | The Release workflow waits up to ten minutes for the deployment to serve the new version before the live suite runs. |
+
+Not changed: Guided can still have a year with no incident. A floor for a
+Guided year with no enquiry would remove the facilitator pack's quiet year
+(`class-12`), and Guided not promising an incident was the owner's choice of
+25 November.
+
+### Measured
+
+A competent player and an expert-like one (two programmes, an enquiry a
+month, the free relief at every overload), 25 years each, Credible / Mixed /
+Difficult:
+
+| Mode | Competent | Expert |
+|---|---|---|
+| Guided | 25 / 0 / 0 (4.72 objectives) | 23 / 2 / 0, 2 of the 23 Exceptional (4.60) |
+| CISO | 10 / 13 / 2 (3.28), was 6 / 16 / 3 | 10 / 14 / 1 (3.72), was 5 / 19 / 1 |
+| High pressure | 11 / 12 / 2 (3.44), was 8 / 15 / 2 | 11 / 10 / 4 (3.12) |
+
+On CISO, Team is weak in 13 of 25 expert years (was 20). A faster recovery
+(0.0025 / 0.001) was tried first and made the competent player Credible in
+13 of 25, which moved the year too far.
+
+Ladder: incidents 0.60 / 1.40 / 2.20, objectives missed 0.60 / 1.60 / 1.53.
+Soak clean over 300 years and 60 two-year campaigns; coverage 94% of events,
+100% of decisions.

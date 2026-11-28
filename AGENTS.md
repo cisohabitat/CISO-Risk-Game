@@ -552,6 +552,10 @@ changes.
     `objective.delay` an option carries.
   - `chooseHeadline` takes `verdict`; `HIRE_COST` in the orchestrator.
   - Urgent threat events add the `soc-warning` stop.
+  - `nextFunctionMorale` recovers 0.002 a day below half load and 0.0006
+    between half and seven-tenths.
+  - `canBriefBoard` includes the response phase.
+  - The Release workflow waits for the deployment to serve the version.
 - `DIVERSION_DAYS` is 40 since 27 November (was 60), to bring competent CISO
   play back to about three objectives.
 - A security check on an objective is a stop (`objective-check`), named by
@@ -564,7 +568,7 @@ changes.
 - Releases follow `docs/release/RELEASING.md`; the tag, the GitHub Release
   and the live suite come from the hand-run Release workflow
   (`.github/workflows/release.yml`), not from a local tag push. 0.1.0-rc.1 was cut on
-  22 November 2026, 0.1.0-rc.2 on 23 November 0.1.0-rc.3 and 0.1.0-rc.4 on 25 November 0.1.0-rc.5 on 27 November and 0.1.0-rc.6 on 28 November; keep an "Unreleased" heading at the top of the CHANGELOG
+  22 November 2026, 0.1.0-rc.2 on 23 November 0.1.0-rc.3 and 0.1.0-rc.4 on 25 November 0.1.0-rc.5 on 27 November and 0.1.0-rc.6 and 0.1.0-rc.7 on 28 November; keep an "Unreleased" heading at the top of the CHANGELOG
   (`tests/e2e/release-pages.spec.ts` reads it).
 - A blocker whose resolution has a `budget` holds its programme at
   `PAID_BLOCKER_HOLD` (0.9) until resolved, with one "Held short of

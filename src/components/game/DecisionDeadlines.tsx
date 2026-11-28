@@ -20,7 +20,7 @@ export function DecisionDeadlines() {
   return <div aria-label="Decision deadlines" className={visible ? 'mb-4 rounded-lg border border-band-high/50 bg-band-high-soft p-3' : undefined} role="status">
     {due.length > 0 && <p className="font-medium">{skipHeld ? 'Skip ahead is held for a waiting decision' : 'Work approaching its deadline'}</p>}
     {quarter !== undefined && <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-      <span>Q{quarter} board paper ready · reports Q{quarter} results to the {quarter < 4 ? `Q${quarter + 1}` : 'year-end'} committee · submit by {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}.</span>
+      <span>Q{quarter} board paper ready · reports Q{quarter} results to the {quarter < 4 ? `Q${quarter + 1}` : 'year-end'} committee · submit by the end of Q{Math.min(4, quarter + 1)}, {shortDate(boardDeadline!)}{boardDue ? ` · ${state.currentDay === boardDeadline ? 'due today' : `in ${boardDeadline! - state.currentDay} days`}` : ''}.</span>
       {screen !== 'board' && <Button variant="secondary" size="sm" onClick={() => { useGameStore.getState().dispatch({ type: 'setSpeed', speed: 'paused' }); setUi({ openBoardPaper: true }); useGameStore.getState().setScreen('board') }}>Open the Q{quarter} board paper</Button>}
     </div>}
     {due.length > 0 && <p className="mt-1 text-sm">Pause time to review them. Unanswered decisions will be taken out of your hands at their deadline.</p>}

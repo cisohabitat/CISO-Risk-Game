@@ -6,6 +6,8 @@ in `docs/release/RELEASING.md`; the measured detail behind every fix is in
 
 ## Unreleased
 
+## 0.1.0-rc.7 — 28 November 2026 — seventh release candidate
+
 The fourteenth round of AI playtests.
 
 - An option whose assumption you have already disproved says so before you
@@ -24,6 +26,11 @@ The fourteenth round of AI playtests.
 - Debt paid down by a refund names the refund. Programme funding keeps a
   fifth of what is left by default and says what remains. Recruiting costs
   the same everywhere.
+- A team worn down in the spring recovers through the autumn, rather than
+  staying spent at moderate load.
+- The board can be briefed while an incident is in its response phase.
+- An assumption that stops holding sits on the Briefing for a fortnight.
+- The quarter recap leaves the Briefing four weeks into the quarter.
 
 ## 0.1.0-rc.6 — 28 November 2026 — sixth release candidate
 

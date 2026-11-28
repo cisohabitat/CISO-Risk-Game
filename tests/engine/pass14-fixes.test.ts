@@ -85,3 +85,19 @@ describe('57c9605 playtest fixes', () => {
     expect(state.history.entries.at(-1)!.summary).toContain('(A duplicate tool has been cancelled)')
   })
 })
+
+// "Fix all" on the 57c9605 report (owner, 28 November).
+describe('57c9605 fix all', () => {
+  it('offers a board briefing while an incident is in its response phase (MJ-33)', async () => {
+    const { canBriefBoard } = await import('@/game/incidents/board')
+    expect(canBriefBoard({ phase: 'response', boardInformedDay: undefined } as never)).toBe(true)
+  })
+
+  it('lets a worn function recover at three-fifths load (MJ-31)', async () => {
+    const { nextFunctionMorale } = await import('@/game/team/capacity')
+    const state = newGame(index, { seed: 'recover' })
+    const fn = state.team.functions.engineering!
+    fn.morale = 0.1; fn.vacancies = 0; fn.capacity = 4; fn.committed = 2.4
+    expect(nextFunctionMorale(state, 'engineering')).toBeGreaterThan(0.1)
+  })
+})

@@ -19,7 +19,7 @@
             { "type": "flag.set", "flag": "start.services" },
             { "type": "event.schedule", "eventId": "evt-con-start-services-recalled", "dayOffset": 95 }
           ] },
-        { "id": "opt-first-register", "label": "Start with the inherited risk register", "description": "Work the 23 open entries you have been handed.", "visibleKnownEffects": ["Fastest way to sound informed this morning", "The register may not describe anything current"],
+        { "id": "opt-first-register", "label": "Start with the inherited risk register", "description": "Work through the inherited register you have been handed.", "visibleKnownEffects": ["Fastest way to sound informed this morning", "The register may not describe anything current"],
           "immediateEffects": [
             { "type": "evidence.reveal", "evidenceId": "ev-audit-stale-register", "note": "Inherited risk register" },
             { "type": "evidence.reveal", "evidenceId": "ev-audit-repeat-finding", "note": "Inherited risk register" },
@@ -718,7 +718,7 @@
     {
       "id": "dec-hire-or-outsource",
       "title": "Five vacancies and a long recruitment cycle",
-      "description": "Two roles have been open for over six months. Recruitment takes about two months when it works.",
+      "description": "Five posts are empty across the team, and the two identity engineering roles have been open for over six months. Recruitment takes about two months when it works.",
       "context": "The team is carrying the gap. That is not free, and it is not sustainable.",
       "defaultOptionId": "opt-hire-recruit",
       "requiresRationale": false, "rationaleTagIds": ["rat-resources", "rat-material", "rat-enables-business", "rat-precedent", "rat-reversible", "rat-more-evidence"],

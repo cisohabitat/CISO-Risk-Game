@@ -128,6 +128,23 @@ export function HomeScreen() {
             </CardBody>
           </Card>
         ))}
+        {/* A failed assumption stopped the clock with nothing to read on the
+            Briefing (57c9605 playtest, MN-53). Shown for a fortnight. */}
+        {Object.values(state.assumptions.assumptions)
+          .filter((assumption) => assumption.status === 'invalidated' && assumption.invalidatedDay !== undefined && assumption.invalidatedDay !== assumption.createdDay && state.currentDay - assumption.invalidatedDay <= 14)
+          .map((assumption) => (
+            <Card key={assumption.id} className="mb-3 border-band-elevated/40">
+              <CardBody className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-medium text-balance">An assumption no longer holds: {assumption.statement}</p>
+                  <p className="mt-0.5 text-sm text-ink-muted text-pretty">{assumption.invalidationReason}</p>
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => { useGameStore.getState().setUi({ riskTab: 'risks', selectedScenarioId: assumption.linkedScenarioIds[0] }); setScreen('risk') }}>
+                  Review the risk
+                </Button>
+              </CardBody>
+            </Card>
+          ))}
         <SocWarnings />
         <DecisionList
           limit={4}

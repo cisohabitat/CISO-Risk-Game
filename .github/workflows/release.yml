@@ -64,6 +64,18 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: ./.github/actions/setup
       - run: pnpm exec playwright install --with-deps chromium
+      # Wait for the deployment to serve this version: rc.6's live suite
+      # started a minute after the push and failed on the old /about page.
+      - name: Wait for the deployment to carry this version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          for attempt in $(seq 1 40); do
+            if curl -fsS https://ciso-risk-game.vercel.app/about | grep -qF "$version"; then
+              echo "Deployment serves v$version"; exit 0
+            fi
+            sleep 15
+          done
+          echo "The deployment did not serve v$version within ten minutes"; exit 1
       - run: pnpm test:e2e:live
         env:
           BASE_URL: https://ciso-risk-game.vercel.app

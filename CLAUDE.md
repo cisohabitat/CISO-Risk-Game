@@ -148,7 +148,9 @@ or a repeat; candour no longer costs confidence; the £400k is scaled; free
 options for the SOC renewal, the test scope and an overloaded team; raising
 a named concern costs 1 attention; "After the breach" always has an incident
 by about day 240. The competent CISO player meets 3.3 objectives, with 3
-Difficult years of 25.
+Difficult years of 25. The same day, after the 57c9605 playtest, the owner
+had morale recover faster (0.002 / 0.0006 a day below half and
+seven-tenths load) and the competent CISO player is Credible in 10 of 25.
 On 22 November 2026 the owner chose that a blocker with a price holds its
 programme at 90%, short of its last milestone, until it is paid for
 (`PAID_BLOCKER_HOLD` in `src/game/programmes/progression.ts`). Blockers

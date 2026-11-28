@@ -281,7 +281,11 @@ export function nextFunctionMorale(state: GameState, fn: CyberFunction): number 
   const runtime = state.team.functions[fn]
   if (!runtime) return 0
   const strain = functionStrain(state, fn)
-  const workloadChange = strain > 0.7 ? -0.006 * (1 + (strain - 0.7) * 5) : strain < 0.5 ? 0.0012 : 0
+  // Recovery stays slower than decline, but it happens: a function worn to
+  // nothing in the spring stayed at nothing at three-fifths load all autumn,
+  // and every expert year read Team weak (57c9605 playtest, MJ-31; owner,
+  // 28 November). It was 0.0012 a day below half load and nothing above.
+  const workloadChange = strain > 0.7 ? -0.006 * (1 + (strain - 0.7) * 5) : strain < 0.5 ? 0.002 : 0.0006
   // Preserve the daily reducer's clamp before applying the vacancy penalty.
   return clamp01(clamp01(runtime.morale + workloadChange) - 0.0015 * runtime.vacancies * strain)
 }

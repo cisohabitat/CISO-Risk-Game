@@ -5073,6 +5073,11 @@ expert-like player is Credible in 5 of 25 CISO years, against none. Team
 stays weak in 20 of 25 because morale recovers only below half load, which
 is the stated design and left to the owner.
 
+The owner then asked for the rest to be fixed: morale recovers faster
+(0.002 / 0.0006 a day, against 0.0012 / 0), and a competent CISO player is
+Credible in 10 of 25 years, against 6. The board can be briefed in an
+incident's response phase, which had no briefing button.
+
 ## 28 November 2026 — the 427b290 design list, fixed
 
 The owner asked for every design item from the pass 13 report to be fixed.

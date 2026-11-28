@@ -851,7 +851,10 @@ export function buildAnnualReview(state: GameState, index: ContentIndex): Annual
     evidence: [
       ...(unseen.systems.length > 0 ? [`${unseen.systems.length} material system${unseen.systems.length === 1 ? ' was' : 's were'} never discovered`] : []),
       ...(unseen.dependencies.length > 0 ? [`${unseen.dependencies.length} material dependenc${unseen.dependencies.length === 1 ? 'y was' : 'ies were'} never discovered, of ${discovery.dependencies.remaining} unseen in all`] : []),
-      ...(onTrust > 0 ? [`${onTrust} ${onTrust === 1 ? 'was' : 'were'} known about but taken on trust`] : []),
+      // Says which count it is: "25 were known about but taken on trust" sat
+      // beside "37 more ... taken on trust", which counts every system
+      // (57c9605 playtest, MN-52).
+      ...(onTrust > 0 ? [`${onTrust} material ${onTrust === 1 ? 'item was' : 'items were'} known about but taken on trust`] : []),
       ...unexaminedAssumptions(state, index).map(
         (a) => `"${quotedInline(a.statement)}" was relied on from ${dateOf(a.createdDay)}, not tested after that, and not true`,
       ),

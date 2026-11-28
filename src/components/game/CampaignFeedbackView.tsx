@@ -3,6 +3,7 @@ import { Button, Disclosure } from '@/components/ui/primitives'
 import { useCampaignIndex, useGameStore } from '@/store/game-store'
 import { money, plural, shortDate } from '@/lib/formatting/labels'
 import { quarterFeedback } from '@/store/quarter-feedback'
+import { DAYS_PER_QUARTER } from '@/game/types'
 
 export function CampaignFeedbackView({ kind }: { kind: 'decision' | 'quarter' }) {
   const state = useGameStore((store) => store.state)
@@ -61,6 +62,9 @@ export function CampaignFeedbackView({ kind }: { kind: 'decision' | 'quarter' })
   }
 
   if (!transition) return null
+  // Gone four weeks into the quarter: "Q3 in the record. Q4 ahead." still sat
+  // on the Briefing on 31 December (57c9605 playtest, MN-08).
+  if (transition.quarter <= 4 && state.currentDay - (transition.quarter - 1) * DAYS_PER_QUARTER > 28) return null
   const quarter = transition.quarter - 1
   const { choices, completed, board, pending, outstanding, blocked, strengths, concerns, next } = quarterFeedback(state, index, quarter)
   return <section className="feedback-paper quarter-paper" aria-labelledby="quarter-recap-heading">
